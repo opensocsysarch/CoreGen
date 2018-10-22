@@ -1,0 +1,15 @@
+//
+// _CGCLIConfig_h_
+//
+// Copyright (C) 2017-2018 Tactical Computing Laboratories, LLC
+// All Rights Reserved
+// contact@tactcomplabs.com
+//
+// See LICENSE in the top level directory for licensing details
+//
+
+#define CGCLI_VERSION_MAJOR @CGCLI_VERSION_MAJOR@
+#define CGCLI_VERSION_MINOR @CGCLI_VERSION_MINOR@
+#define CGCLI_VERSION_PATCH @CGCLI_VERSION_PATCH@
+
+// EOF

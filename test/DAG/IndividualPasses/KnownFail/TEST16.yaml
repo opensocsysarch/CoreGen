@@ -1,0 +1,3045 @@
+Registers:
+  - RegName: TEST51.0.reg
+    Width: 64
+    Index: 0
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST51.1.reg
+    Width: 64
+    Index: 1
+    PseudoName: pseudoreg.1
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST51.2.reg
+    Width: 64
+    Index: 2
+    PseudoName: pseudoreg.2
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST51.3.reg
+    Width: 64
+    Index: 3
+    PseudoName: pseudoreg.3
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST51.4.reg
+    Width: 64
+    Index: 4
+    PseudoName: pseudoreg.4
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST51.5.reg
+    Width: 64
+    Index: 5
+    PseudoName: pseudoreg.5
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST51.6.reg
+    Width: 64
+    Index: 6
+    PseudoName: pseudoreg.6
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST51.7.reg
+    Width: 64
+    Index: 7
+    PseudoName: pseudoreg.7
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST51.8.reg
+    Width: 64
+    Index: 8
+    PseudoName: pseudoreg.8
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST51.9.reg
+    Width: 64
+    Index: 9
+    PseudoName: pseudoreg.9
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST51.10.reg
+    Width: 64
+    Index: 10
+    PseudoName: pseudoreg.10
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST51.11.reg
+    Width: 64
+    Index: 11
+    PseudoName: pseudoreg.11
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST51.12.reg
+    Width: 64
+    Index: 12
+    PseudoName: pseudoreg.12
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST51.13.reg
+    Width: 64
+    Index: 13
+    PseudoName: pseudoreg.13
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST51.14.reg
+    Width: 64
+    Index: 14
+    PseudoName: pseudoreg.14
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST51.15.reg
+    Width: 64
+    Index: 15
+    PseudoName: pseudoreg.15
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST51.16.reg
+    Width: 64
+    Index: 16
+    PseudoName: pseudoreg.16
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST51.17.reg
+    Width: 64
+    Index: 17
+    PseudoName: pseudoreg.17
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST51.18.reg
+    Width: 64
+    Index: 18
+    PseudoName: pseudoreg.18
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST51.19.reg
+    Width: 64
+    Index: 19
+    PseudoName: pseudoreg.19
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST51.20.reg
+    Width: 64
+    Index: 20
+    PseudoName: pseudoreg.20
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST51.21.reg
+    Width: 64
+    Index: 21
+    PseudoName: pseudoreg.21
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST51.22.reg
+    Width: 64
+    Index: 22
+    PseudoName: pseudoreg.22
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST51.23.reg
+    Width: 64
+    Index: 23
+    PseudoName: pseudoreg.23
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST51.24.reg
+    Width: 64
+    Index: 24
+    PseudoName: pseudoreg.24
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST51.25.reg
+    Width: 64
+    Index: 25
+    PseudoName: pseudoreg.25
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST51.26.reg
+    Width: 64
+    Index: 26
+    PseudoName: pseudoreg.26
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST51.27.reg
+    Width: 64
+    Index: 27
+    PseudoName: pseudoreg.27
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST51.28.reg
+    Width: 64
+    Index: 28
+    PseudoName: pseudoreg.28
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST51.29.reg
+    Width: 64
+    Index: 29
+    PseudoName: pseudoreg.29
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST51.30.reg
+    Width: 64
+    Index: 30
+    PseudoName: pseudoreg.30
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST51.31.reg
+    Width: 64
+    Index: 31
+    PseudoName: pseudoreg.31
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST51.32.reg
+    Width: 64
+    Index: 32
+    PseudoName: pseudoreg.32
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST51.33.reg
+    Width: 64
+    Index: 33
+    PseudoName: pseudoreg.33
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST51.34.reg
+    Width: 64
+    Index: 34
+    PseudoName: pseudoreg.34
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST51.35.reg
+    Width: 64
+    Index: 35
+    PseudoName: pseudoreg.35
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST51.36.reg
+    Width: 64
+    Index: 36
+    PseudoName: pseudoreg.36
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST51.37.reg
+    Width: 64
+    Index: 37
+    PseudoName: pseudoreg.37
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST51.38.reg
+    Width: 64
+    Index: 38
+    PseudoName: pseudoreg.38
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST51.39.reg
+    Width: 64
+    Index: 39
+    PseudoName: pseudoreg.39
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST51.40.reg
+    Width: 64
+    Index: 40
+    PseudoName: pseudoreg.40
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST51.41.reg
+    Width: 64
+    Index: 41
+    PseudoName: pseudoreg.41
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST51.42.reg
+    Width: 64
+    Index: 42
+    PseudoName: pseudoreg.42
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST51.43.reg
+    Width: 64
+    Index: 43
+    PseudoName: pseudoreg.43
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST51.44.reg
+    Width: 64
+    Index: 44
+    PseudoName: pseudoreg.44
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST51.45.reg
+    Width: 64
+    Index: 45
+    PseudoName: pseudoreg.45
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST51.46.reg
+    Width: 64
+    Index: 46
+    PseudoName: pseudoreg.46
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST51.47.reg
+    Width: 64
+    Index: 47
+    PseudoName: pseudoreg.47
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST51.48.reg
+    Width: 64
+    Index: 48
+    PseudoName: pseudoreg.48
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST51.49.reg
+    Width: 64
+    Index: 49
+    PseudoName: pseudoreg.49
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST51.50.reg
+    Width: 64
+    Index: 50
+    PseudoName: pseudoreg.50
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST51.51.reg
+    Width: 64
+    Index: 51
+    PseudoName: pseudoreg.51
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST51.52.reg
+    Width: 64
+    Index: 52
+    PseudoName: pseudoreg.52
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST51.53.reg
+    Width: 64
+    Index: 53
+    PseudoName: pseudoreg.53
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST51.54.reg
+    Width: 64
+    Index: 54
+    PseudoName: pseudoreg.54
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST51.55.reg
+    Width: 64
+    Index: 55
+    PseudoName: pseudoreg.55
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST51.56.reg
+    Width: 64
+    Index: 56
+    PseudoName: pseudoreg.56
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST51.57.reg
+    Width: 64
+    Index: 57
+    PseudoName: pseudoreg.57
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST51.58.reg
+    Width: 64
+    Index: 58
+    PseudoName: pseudoreg.58
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST51.59.reg
+    Width: 64
+    Index: 59
+    PseudoName: pseudoreg.59
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST51.60.reg
+    Width: 64
+    Index: 60
+    PseudoName: pseudoreg.60
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST51.61.reg
+    Width: 64
+    Index: 61
+    PseudoName: pseudoreg.61
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST51.62.reg
+    Width: 64
+    Index: 62
+    PseudoName: pseudoreg.62
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST51.63.reg
+    Width: 64
+    Index: 63
+    PseudoName: pseudoreg.63
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST51.0.csr
+    Width: 64
+    Index: 0
+    PseudoName: csr.0
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST51.1.csr
+    Width: 64
+    Index: 1
+    PseudoName: csr.1
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST51.2.csr
+    Width: 64
+    Index: 2
+    PseudoName: csr.2
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST51.3.csr
+    Width: 64
+    Index: 3
+    PseudoName: csr.3
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST51.4.csr
+    Width: 64
+    Index: 4
+    PseudoName: csr.4
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST51.5.csr
+    Width: 64
+    Index: 5
+    PseudoName: csr.5
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST51.6.csr
+    Width: 64
+    Index: 6
+    PseudoName: csr.6
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST51.7.csr
+    Width: 64
+    Index: 7
+    PseudoName: csr.7
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST51.8.csr
+    Width: 64
+    Index: 8
+    PseudoName: csr.8
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST51.9.csr
+    Width: 64
+    Index: 9
+    PseudoName: csr.9
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST51.10.csr
+    Width: 64
+    Index: 10
+    PseudoName: csr.10
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST51.11.csr
+    Width: 64
+    Index: 11
+    PseudoName: csr.11
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST51.12.csr
+    Width: 64
+    Index: 12
+    PseudoName: csr.12
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST51.13.csr
+    Width: 64
+    Index: 13
+    PseudoName: csr.13
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST51.14.csr
+    Width: 64
+    Index: 14
+    PseudoName: csr.14
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST51.15.csr
+    Width: 64
+    Index: 15
+    PseudoName: csr.15
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST51.16.csr
+    Width: 64
+    Index: 16
+    PseudoName: csr.16
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST51.17.csr
+    Width: 64
+    Index: 17
+    PseudoName: csr.17
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST51.18.csr
+    Width: 64
+    Index: 18
+    PseudoName: csr.18
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST51.19.csr
+    Width: 64
+    Index: 19
+    PseudoName: csr.19
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST51.20.csr
+    Width: 64
+    Index: 20
+    PseudoName: csr.20
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST51.21.csr
+    Width: 64
+    Index: 21
+    PseudoName: csr.21
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST51.22.csr
+    Width: 64
+    Index: 22
+    PseudoName: csr.22
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST51.23.csr
+    Width: 64
+    Index: 23
+    PseudoName: csr.23
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST51.24.csr
+    Width: 64
+    Index: 24
+    PseudoName: csr.24
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST51.25.csr
+    Width: 64
+    Index: 25
+    PseudoName: csr.25
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST51.26.csr
+    Width: 64
+    Index: 26
+    PseudoName: csr.26
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST51.27.csr
+    Width: 64
+    Index: 27
+    PseudoName: csr.27
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST51.28.csr
+    Width: 64
+    Index: 28
+    PseudoName: csr.28
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST51.29.csr
+    Width: 64
+    Index: 29
+    PseudoName: csr.29
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST51.30.csr
+    Width: 64
+    Index: 30
+    PseudoName: csr.30
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST51.31.csr
+    Width: 64
+    Index: 31
+    PseudoName: csr.31
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST51.32.csr
+    Width: 64
+    Index: 32
+    PseudoName: csr.32
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST51.33.csr
+    Width: 64
+    Index: 33
+    PseudoName: csr.33
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST51.34.csr
+    Width: 64
+    Index: 34
+    PseudoName: csr.34
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST51.35.csr
+    Width: 64
+    Index: 35
+    PseudoName: csr.35
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST51.36.csr
+    Width: 64
+    Index: 36
+    PseudoName: csr.36
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST51.37.csr
+    Width: 64
+    Index: 37
+    PseudoName: csr.37
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST51.38.csr
+    Width: 64
+    Index: 38
+    PseudoName: csr.38
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST51.39.csr
+    Width: 64
+    Index: 39
+    PseudoName: csr.39
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST51.40.csr
+    Width: 64
+    Index: 40
+    PseudoName: csr.40
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST51.41.csr
+    Width: 64
+    Index: 41
+    PseudoName: csr.41
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST51.42.csr
+    Width: 64
+    Index: 42
+    PseudoName: csr.42
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST51.43.csr
+    Width: 64
+    Index: 43
+    PseudoName: csr.43
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST51.44.csr
+    Width: 64
+    Index: 44
+    PseudoName: csr.44
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST51.45.csr
+    Width: 64
+    Index: 45
+    PseudoName: csr.45
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST51.46.csr
+    Width: 64
+    Index: 46
+    PseudoName: csr.46
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST51.47.csr
+    Width: 64
+    Index: 47
+    PseudoName: csr.47
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST51.48.csr
+    Width: 64
+    Index: 48
+    PseudoName: csr.48
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST51.49.csr
+    Width: 64
+    Index: 49
+    PseudoName: csr.49
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST51.50.csr
+    Width: 64
+    Index: 50
+    PseudoName: csr.50
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST51.51.csr
+    Width: 64
+    Index: 51
+    PseudoName: csr.51
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST51.52.csr
+    Width: 64
+    Index: 52
+    PseudoName: csr.52
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST51.53.csr
+    Width: 64
+    Index: 53
+    PseudoName: csr.53
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST51.54.csr
+    Width: 64
+    Index: 54
+    PseudoName: csr.54
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST51.55.csr
+    Width: 64
+    Index: 55
+    PseudoName: csr.55
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST51.56.csr
+    Width: 64
+    Index: 56
+    PseudoName: csr.56
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST51.57.csr
+    Width: 64
+    Index: 57
+    PseudoName: csr.57
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST51.58.csr
+    Width: 64
+    Index: 58
+    PseudoName: csr.58
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST51.59.csr
+    Width: 64
+    Index: 59
+    PseudoName: csr.59
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST51.60.csr
+    Width: 64
+    Index: 60
+    PseudoName: csr.60
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST51.61.csr
+    Width: 64
+    Index: 61
+    PseudoName: csr.61
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST51.62.csr
+    Width: 64
+    Index: 62
+    PseudoName: csr.62
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST51.63.csr
+    Width: 64
+    Index: 63
+    PseudoName: csr.63
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+RegClasses:
+  - RegisterClassName: TEST51.regclass
+    NumRegisters: 63
+    Registers:
+      - TEST51.1.reg
+      - TEST51.2.reg
+      - TEST51.3.reg
+      - TEST51.4.reg
+      - TEST51.5.reg
+      - TEST51.6.reg
+      - TEST51.7.reg
+      - TEST51.8.reg
+      - TEST51.9.reg
+      - TEST51.10.reg
+      - TEST51.11.reg
+      - TEST51.12.reg
+      - TEST51.13.reg
+      - TEST51.14.reg
+      - TEST51.15.reg
+      - TEST51.16.reg
+      - TEST51.17.reg
+      - TEST51.18.reg
+      - TEST51.19.reg
+      - TEST51.20.reg
+      - TEST51.21.reg
+      - TEST51.22.reg
+      - TEST51.23.reg
+      - TEST51.24.reg
+      - TEST51.25.reg
+      - TEST51.26.reg
+      - TEST51.27.reg
+      - TEST51.28.reg
+      - TEST51.29.reg
+      - TEST51.30.reg
+      - TEST51.31.reg
+      - TEST51.32.reg
+      - TEST51.33.reg
+      - TEST51.34.reg
+      - TEST51.35.reg
+      - TEST51.36.reg
+      - TEST51.37.reg
+      - TEST51.38.reg
+      - TEST51.39.reg
+      - TEST51.40.reg
+      - TEST51.41.reg
+      - TEST51.42.reg
+      - TEST51.43.reg
+      - TEST51.44.reg
+      - TEST51.45.reg
+      - TEST51.46.reg
+      - TEST51.47.reg
+      - TEST51.48.reg
+      - TEST51.49.reg
+      - TEST51.50.reg
+      - TEST51.51.reg
+      - TEST51.52.reg
+      - TEST51.53.reg
+      - TEST51.54.reg
+      - TEST51.55.reg
+      - TEST51.56.reg
+      - TEST51.57.reg
+      - TEST51.58.reg
+      - TEST51.59.reg
+      - TEST51.60.reg
+      - TEST51.61.reg
+      - TEST51.62.reg
+      - TEST51.63.reg
+  - RegisterClassName: TEST51.csrregclass
+    NumRegisters: 63
+    Registers:
+      - TEST51.1.csr
+      - TEST51.2.csr
+      - TEST51.3.csr
+      - TEST51.4.csr
+      - TEST51.5.csr
+      - TEST51.6.csr
+      - TEST51.7.csr
+      - TEST51.8.csr
+      - TEST51.9.csr
+      - TEST51.10.csr
+      - TEST51.11.csr
+      - TEST51.12.csr
+      - TEST51.13.csr
+      - TEST51.14.csr
+      - TEST51.15.csr
+      - TEST51.16.csr
+      - TEST51.17.csr
+      - TEST51.18.csr
+      - TEST51.19.csr
+      - TEST51.20.csr
+      - TEST51.21.csr
+      - TEST51.22.csr
+      - TEST51.23.csr
+      - TEST51.24.csr
+      - TEST51.25.csr
+      - TEST51.26.csr
+      - TEST51.27.csr
+      - TEST51.28.csr
+      - TEST51.29.csr
+      - TEST51.30.csr
+      - TEST51.31.csr
+      - TEST51.32.csr
+      - TEST51.33.csr
+      - TEST51.34.csr
+      - TEST51.35.csr
+      - TEST51.36.csr
+      - TEST51.37.csr
+      - TEST51.38.csr
+      - TEST51.39.csr
+      - TEST51.40.csr
+      - TEST51.41.csr
+      - TEST51.42.csr
+      - TEST51.43.csr
+      - TEST51.44.csr
+      - TEST51.45.csr
+      - TEST51.46.csr
+      - TEST51.47.csr
+      - TEST51.48.csr
+      - TEST51.49.csr
+      - TEST51.50.csr
+      - TEST51.51.csr
+      - TEST51.52.csr
+      - TEST51.53.csr
+      - TEST51.54.csr
+      - TEST51.55.csr
+      - TEST51.56.csr
+      - TEST51.57.csr
+      - TEST51.58.csr
+      - TEST51.59.csr
+      - TEST51.60.csr
+      - TEST51.61.csr
+      - TEST51.62.csr
+      - TEST51.63.csr
+ISAs:
+  - ISAName: TEST51.isa
+InstFormats:
+  - InstFormatName: TEST51.if
+    ISA: TEST51.isa
+    FormatWidth: 32
+    Fields:
+      - FieldName: opcode
+        FieldType: CGInstCode
+        FieldWidth: 8
+        StartBit: 0
+        EndBit: 7
+        MandatoryField: true
+      - FieldName: RB
+        FieldType: CGInstReg
+        FieldWidth: 8
+        StartBit: 8
+        EndBit: 15
+        MandatoryField: false
+        RegClass: TEST51.regclass
+      - FieldName: RA
+        FieldType: CGInstReg
+        FieldWidth: 8
+        StartBit: 16
+        EndBit: 23
+        MandatoryField: false
+        RegClass: TEST51.regclass
+      - FieldName: RT
+        FieldType: CGInstReg
+        FieldWidth: 8
+        StartBit: 24
+        EndBit: 31
+        MandatoryField: false
+        RegClass: TEST51.csrregclass
+Insts:
+  - Inst: TEST51.inst0
+    ISA: TEST51.isa
+    InstFormat: TEST51.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 1
+  - Inst: TEST51.inst1
+    ISA: TEST51.isa
+    InstFormat: TEST51.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 2
+  - Inst: TEST51.inst2
+    ISA: TEST51.isa
+    InstFormat: TEST51.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 3
+  - Inst: TEST51.inst3
+    ISA: TEST51.isa
+    InstFormat: TEST51.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 4
+  - Inst: TEST51.inst4
+    ISA: TEST51.isa
+    InstFormat: TEST51.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 5
+  - Inst: TEST51.inst5
+    ISA: TEST51.isa
+    InstFormat: TEST51.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 6
+  - Inst: TEST51.inst6
+    ISA: TEST51.isa
+    InstFormat: TEST51.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 7
+  - Inst: TEST51.inst7
+    ISA: TEST51.isa
+    InstFormat: TEST51.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 8
+  - Inst: TEST51.inst8
+    ISA: TEST51.isa
+    InstFormat: TEST51.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 9
+  - Inst: TEST51.inst9
+    ISA: TEST51.isa
+    InstFormat: TEST51.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 10
+  - Inst: TEST51.inst10
+    ISA: TEST51.isa
+    InstFormat: TEST51.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 11
+  - Inst: TEST51.inst11
+    ISA: TEST51.isa
+    InstFormat: TEST51.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 12
+  - Inst: TEST51.inst12
+    ISA: TEST51.isa
+    InstFormat: TEST51.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 13
+  - Inst: TEST51.inst13
+    ISA: TEST51.isa
+    InstFormat: TEST51.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 14
+  - Inst: TEST51.inst14
+    ISA: TEST51.isa
+    InstFormat: TEST51.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 15
+  - Inst: TEST51.inst15
+    ISA: TEST51.isa
+    InstFormat: TEST51.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 16
+  - Inst: TEST51.inst16
+    ISA: TEST51.isa
+    InstFormat: TEST51.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 17
+  - Inst: TEST51.inst17
+    ISA: TEST51.isa
+    InstFormat: TEST51.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 18
+  - Inst: TEST51.inst18
+    ISA: TEST51.isa
+    InstFormat: TEST51.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 19
+  - Inst: TEST51.inst19
+    ISA: TEST51.isa
+    InstFormat: TEST51.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 20
+  - Inst: TEST51.inst20
+    ISA: TEST51.isa
+    InstFormat: TEST51.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 21
+  - Inst: TEST51.inst21
+    ISA: TEST51.isa
+    InstFormat: TEST51.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 22
+  - Inst: TEST51.inst22
+    ISA: TEST51.isa
+    InstFormat: TEST51.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 23
+  - Inst: TEST51.inst23
+    ISA: TEST51.isa
+    InstFormat: TEST51.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 24
+  - Inst: TEST51.inst24
+    ISA: TEST51.isa
+    InstFormat: TEST51.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 25
+  - Inst: TEST51.inst25
+    ISA: TEST51.isa
+    InstFormat: TEST51.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 26
+  - Inst: TEST51.inst26
+    ISA: TEST51.isa
+    InstFormat: TEST51.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 27
+  - Inst: TEST51.inst27
+    ISA: TEST51.isa
+    InstFormat: TEST51.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 28
+  - Inst: TEST51.inst28
+    ISA: TEST51.isa
+    InstFormat: TEST51.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 29
+  - Inst: TEST51.inst29
+    ISA: TEST51.isa
+    InstFormat: TEST51.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 30
+  - Inst: TEST51.inst30
+    ISA: TEST51.isa
+    InstFormat: TEST51.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 31
+  - Inst: TEST51.inst31
+    ISA: TEST51.isa
+    InstFormat: TEST51.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 32
+  - Inst: TEST51.inst32
+    ISA: TEST51.isa
+    InstFormat: TEST51.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 33
+  - Inst: TEST51.inst33
+    ISA: TEST51.isa
+    InstFormat: TEST51.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 34
+  - Inst: TEST51.inst34
+    ISA: TEST51.isa
+    InstFormat: TEST51.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 35
+  - Inst: TEST51.inst35
+    ISA: TEST51.isa
+    InstFormat: TEST51.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 36
+  - Inst: TEST51.inst36
+    ISA: TEST51.isa
+    InstFormat: TEST51.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 37
+  - Inst: TEST51.inst37
+    ISA: TEST51.isa
+    InstFormat: TEST51.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 38
+  - Inst: TEST51.inst38
+    ISA: TEST51.isa
+    InstFormat: TEST51.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 39
+  - Inst: TEST51.inst39
+    ISA: TEST51.isa
+    InstFormat: TEST51.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 40
+  - Inst: TEST51.inst40
+    ISA: TEST51.isa
+    InstFormat: TEST51.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 41
+  - Inst: TEST51.inst41
+    ISA: TEST51.isa
+    InstFormat: TEST51.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 42
+  - Inst: TEST51.inst42
+    ISA: TEST51.isa
+    InstFormat: TEST51.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 43
+  - Inst: TEST51.inst43
+    ISA: TEST51.isa
+    InstFormat: TEST51.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 44
+  - Inst: TEST51.inst44
+    ISA: TEST51.isa
+    InstFormat: TEST51.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 45
+  - Inst: TEST51.inst45
+    ISA: TEST51.isa
+    InstFormat: TEST51.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 46
+  - Inst: TEST51.inst46
+    ISA: TEST51.isa
+    InstFormat: TEST51.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 47
+  - Inst: TEST51.inst47
+    ISA: TEST51.isa
+    InstFormat: TEST51.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 48
+  - Inst: TEST51.inst48
+    ISA: TEST51.isa
+    InstFormat: TEST51.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 49
+  - Inst: TEST51.inst49
+    ISA: TEST51.isa
+    InstFormat: TEST51.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 50
+  - Inst: TEST51.inst50
+    ISA: TEST51.isa
+    InstFormat: TEST51.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 51
+  - Inst: TEST51.inst51
+    ISA: TEST51.isa
+    InstFormat: TEST51.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 52
+  - Inst: TEST51.inst52
+    ISA: TEST51.isa
+    InstFormat: TEST51.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 53
+  - Inst: TEST51.inst53
+    ISA: TEST51.isa
+    InstFormat: TEST51.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 54
+  - Inst: TEST51.inst54
+    ISA: TEST51.isa
+    InstFormat: TEST51.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 55
+  - Inst: TEST51.inst55
+    ISA: TEST51.isa
+    InstFormat: TEST51.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 56
+  - Inst: TEST51.inst56
+    ISA: TEST51.isa
+    InstFormat: TEST51.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 57
+  - Inst: TEST51.inst57
+    ISA: TEST51.isa
+    InstFormat: TEST51.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 58
+  - Inst: TEST51.inst58
+    ISA: TEST51.isa
+    InstFormat: TEST51.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 59
+  - Inst: TEST51.inst59
+    ISA: TEST51.isa
+    InstFormat: TEST51.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 60
+  - Inst: TEST51.inst60
+    ISA: TEST51.isa
+    InstFormat: TEST51.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 61
+  - Inst: TEST51.inst61
+    ISA: TEST51.isa
+    InstFormat: TEST51.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 62
+  - Inst: TEST51.inst62
+    ISA: TEST51.isa
+    InstFormat: TEST51.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 63
+  - Inst: TEST51.inst63
+    ISA: TEST51.isa
+    InstFormat: TEST51.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 64
+PseudoInsts:
+  - PseudoInst: TEST51.pinst0
+    ISA: TEST51.isa
+    Inst: TEST51.inst0
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 0
+  - PseudoInst: TEST51.pinst1
+    ISA: TEST51.isa
+    Inst: TEST51.inst1
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 1
+  - PseudoInst: TEST51.pinst2
+    ISA: TEST51.isa
+    Inst: TEST51.inst2
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 2
+  - PseudoInst: TEST51.pinst3
+    ISA: TEST51.isa
+    Inst: TEST51.inst3
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 3
+  - PseudoInst: TEST51.pinst4
+    ISA: TEST51.isa
+    Inst: TEST51.inst4
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 4
+  - PseudoInst: TEST51.pinst5
+    ISA: TEST51.isa
+    Inst: TEST51.inst5
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 5
+  - PseudoInst: TEST51.pinst6
+    ISA: TEST51.isa
+    Inst: TEST51.inst6
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 6
+  - PseudoInst: TEST51.pinst7
+    ISA: TEST51.isa
+    Inst: TEST51.inst7
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 7
+  - PseudoInst: TEST51.pinst8
+    ISA: TEST51.isa
+    Inst: TEST51.inst8
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 8
+  - PseudoInst: TEST51.pinst9
+    ISA: TEST51.isa
+    Inst: TEST51.inst9
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 9
+  - PseudoInst: TEST51.pinst10
+    ISA: TEST51.isa
+    Inst: TEST51.inst10
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 10
+  - PseudoInst: TEST51.pinst11
+    ISA: TEST51.isa
+    Inst: TEST51.inst11
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 11
+  - PseudoInst: TEST51.pinst12
+    ISA: TEST51.isa
+    Inst: TEST51.inst12
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 12
+  - PseudoInst: TEST51.pinst13
+    ISA: TEST51.isa
+    Inst: TEST51.inst13
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 13
+  - PseudoInst: TEST51.pinst14
+    ISA: TEST51.isa
+    Inst: TEST51.inst14
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 14
+  - PseudoInst: TEST51.pinst15
+    ISA: TEST51.isa
+    Inst: TEST51.inst15
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 15
+  - PseudoInst: TEST51.pinst16
+    ISA: TEST51.isa
+    Inst: TEST51.inst16
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 16
+  - PseudoInst: TEST51.pinst17
+    ISA: TEST51.isa
+    Inst: TEST51.inst17
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 17
+  - PseudoInst: TEST51.pinst18
+    ISA: TEST51.isa
+    Inst: TEST51.inst18
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 18
+  - PseudoInst: TEST51.pinst19
+    ISA: TEST51.isa
+    Inst: TEST51.inst19
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 19
+  - PseudoInst: TEST51.pinst20
+    ISA: TEST51.isa
+    Inst: TEST51.inst20
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 20
+  - PseudoInst: TEST51.pinst21
+    ISA: TEST51.isa
+    Inst: TEST51.inst21
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 21
+  - PseudoInst: TEST51.pinst22
+    ISA: TEST51.isa
+    Inst: TEST51.inst22
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 22
+  - PseudoInst: TEST51.pinst23
+    ISA: TEST51.isa
+    Inst: TEST51.inst23
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 23
+  - PseudoInst: TEST51.pinst24
+    ISA: TEST51.isa
+    Inst: TEST51.inst24
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 24
+  - PseudoInst: TEST51.pinst25
+    ISA: TEST51.isa
+    Inst: TEST51.inst25
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 25
+  - PseudoInst: TEST51.pinst26
+    ISA: TEST51.isa
+    Inst: TEST51.inst26
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 26
+  - PseudoInst: TEST51.pinst27
+    ISA: TEST51.isa
+    Inst: TEST51.inst27
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 27
+  - PseudoInst: TEST51.pinst28
+    ISA: TEST51.isa
+    Inst: TEST51.inst28
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 28
+  - PseudoInst: TEST51.pinst29
+    ISA: TEST51.isa
+    Inst: TEST51.inst29
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 29
+  - PseudoInst: TEST51.pinst30
+    ISA: TEST51.isa
+    Inst: TEST51.inst30
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 30
+  - PseudoInst: TEST51.pinst31
+    ISA: TEST51.isa
+    Inst: TEST51.inst31
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 31
+  - PseudoInst: TEST51.pinst32
+    ISA: TEST51.isa
+    Inst: TEST51.inst32
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 32
+  - PseudoInst: TEST51.pinst33
+    ISA: TEST51.isa
+    Inst: TEST51.inst33
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 33
+  - PseudoInst: TEST51.pinst34
+    ISA: TEST51.isa
+    Inst: TEST51.inst34
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 34
+  - PseudoInst: TEST51.pinst35
+    ISA: TEST51.isa
+    Inst: TEST51.inst35
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 35
+  - PseudoInst: TEST51.pinst36
+    ISA: TEST51.isa
+    Inst: TEST51.inst36
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 36
+  - PseudoInst: TEST51.pinst37
+    ISA: TEST51.isa
+    Inst: TEST51.inst37
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 37
+  - PseudoInst: TEST51.pinst38
+    ISA: TEST51.isa
+    Inst: TEST51.inst38
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 38
+  - PseudoInst: TEST51.pinst39
+    ISA: TEST51.isa
+    Inst: TEST51.inst39
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 39
+  - PseudoInst: TEST51.pinst40
+    ISA: TEST51.isa
+    Inst: TEST51.inst40
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 40
+  - PseudoInst: TEST51.pinst41
+    ISA: TEST51.isa
+    Inst: TEST51.inst41
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 41
+  - PseudoInst: TEST51.pinst42
+    ISA: TEST51.isa
+    Inst: TEST51.inst42
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 42
+  - PseudoInst: TEST51.pinst43
+    ISA: TEST51.isa
+    Inst: TEST51.inst43
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 43
+  - PseudoInst: TEST51.pinst44
+    ISA: TEST51.isa
+    Inst: TEST51.inst44
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 44
+  - PseudoInst: TEST51.pinst45
+    ISA: TEST51.isa
+    Inst: TEST51.inst45
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 45
+  - PseudoInst: TEST51.pinst46
+    ISA: TEST51.isa
+    Inst: TEST51.inst46
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 46
+  - PseudoInst: TEST51.pinst47
+    ISA: TEST51.isa
+    Inst: TEST51.inst47
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 47
+  - PseudoInst: TEST51.pinst48
+    ISA: TEST51.isa
+    Inst: TEST51.inst48
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 48
+  - PseudoInst: TEST51.pinst49
+    ISA: TEST51.isa
+    Inst: TEST51.inst49
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 49
+  - PseudoInst: TEST51.pinst50
+    ISA: TEST51.isa
+    Inst: TEST51.inst50
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 50
+  - PseudoInst: TEST51.pinst51
+    ISA: TEST51.isa
+    Inst: TEST51.inst51
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 51
+  - PseudoInst: TEST51.pinst52
+    ISA: TEST51.isa
+    Inst: TEST51.inst52
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 52
+  - PseudoInst: TEST51.pinst53
+    ISA: TEST51.isa
+    Inst: TEST51.inst53
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 53
+  - PseudoInst: TEST51.pinst54
+    ISA: TEST51.isa
+    Inst: TEST51.inst54
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 54
+  - PseudoInst: TEST51.pinst55
+    ISA: TEST51.isa
+    Inst: TEST51.inst55
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 55
+  - PseudoInst: TEST51.pinst56
+    ISA: TEST51.isa
+    Inst: TEST51.inst56
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 56
+  - PseudoInst: TEST51.pinst57
+    ISA: TEST51.isa
+    Inst: TEST51.inst57
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 57
+  - PseudoInst: TEST51.pinst58
+    ISA: TEST51.isa
+    Inst: TEST51.inst58
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 58
+  - PseudoInst: TEST51.pinst59
+    ISA: TEST51.isa
+    Inst: TEST51.inst59
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 59
+  - PseudoInst: TEST51.pinst60
+    ISA: TEST51.isa
+    Inst: TEST51.inst60
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 60
+  - PseudoInst: TEST51.pinst61
+    ISA: TEST51.isa
+    Inst: TEST51.inst61
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 61
+  - PseudoInst: TEST51.pinst62
+    ISA: TEST51.isa
+    Inst: TEST51.inst62
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 62
+  - PseudoInst: TEST51.pinst63
+    ISA: TEST51.isa
+    Inst: TEST51.inst63
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 63
+Caches:
+  - Cache: FOO.CACHE
+    Sets: 2
+    Ways: 16
+  - Cache: TEST51.L2.cache
+    Sets: 2
+    Ways: 8
+  - Cache: TEST51.core0.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST51.L2.cache
+  - Cache: TEST51.L2.cache
+    Sets: 2
+    Ways: 8
+  - Cache: TEST51.core1.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST51.L2.cache
+  - Cache: TEST51.L2.cache
+    Sets: 2
+    Ways: 8
+  - Cache: TEST51.core2.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST51.L2.cache
+  - Cache: TEST51.L2.cache
+    Sets: 2
+    Ways: 8
+  - Cache: TEST51.core3.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST51.L2.cache
+  - Cache: TEST51.L2.cache
+    Sets: 2
+    Ways: 8
+  - Cache: TEST51.core4.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST51.L2.cache
+  - Cache: TEST51.L2.cache
+    Sets: 2
+    Ways: 8
+  - Cache: TEST51.core5.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST51.L2.cache
+  - Cache: TEST51.L2.cache
+    Sets: 2
+    Ways: 8
+  - Cache: TEST51.core6.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST51.L2.cache
+  - Cache: TEST51.L2.cache
+    Sets: 2
+    Ways: 8
+  - Cache: TEST51.core7.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST51.L2.cache
+  - Cache: TEST51.L2.cache
+    Sets: 2
+    Ways: 8
+  - Cache: TEST51.core8.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST51.L2.cache
+  - Cache: TEST51.L2.cache
+    Sets: 2
+    Ways: 8
+  - Cache: TEST51.core9.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST51.L2.cache
+  - Cache: TEST51.L2.cache
+    Sets: 2
+    Ways: 8
+  - Cache: TEST51.core10.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST51.L2.cache
+  - Cache: TEST51.L2.cache
+    Sets: 2
+    Ways: 8
+  - Cache: TEST51.core11.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST51.L2.cache
+  - Cache: TEST51.L2.cache
+    Sets: 2
+    Ways: 8
+  - Cache: TEST51.core12.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST51.L2.cache
+  - Cache: TEST51.L2.cache
+    Sets: 2
+    Ways: 8
+  - Cache: TEST51.core13.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST51.L2.cache
+  - Cache: TEST51.L2.cache
+    Sets: 2
+    Ways: 8
+  - Cache: TEST51.core14.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST51.L2.cache
+  - Cache: TEST51.L2.cache
+    Sets: 2
+    Ways: 8
+  - Cache: TEST51.core15.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST51.L2.cache
+  - Cache: TEST51.L2.cache
+    Sets: 2
+    Ways: 8
+Extensions:
+  - Extension: TEST51.ext0
+    MajorVersion: 13
+    MinorVersion: 14
+    Type: unknown
+    ProjectInfo:
+      - Project: TEST51.ext0
+        Type: unknown
+        ChiselMajorVersion: 3
+        ChiselMinorVersion: 0
+    Registers:
+      - RegName: TEST51.ext0.reg
+        Width: 64
+        Index: 0
+        IsFixedValue: false
+        IsSIMD: false
+        RWReg: false
+        ROReg: false
+        CSRReg: true
+        AMSReg: false
+    RegClasses:
+      - RegisterClassName: TEST51.ext0.regclass
+        NumRegisters: 1
+        Registers:
+          - TEST51.ext0.reg
+    ISAs:
+      - ISAName: TEST51.ext0.isa
+    RTLFile: TEST51.ext0.v
+  - Extension: TEST51.ext1
+    MajorVersion: 13
+    MinorVersion: 14
+    Type: unknown
+    ProjectInfo:
+      - Project: TEST51.ext1
+        Type: unknown
+        ChiselMajorVersion: 3
+        ChiselMinorVersion: 0
+    Registers:
+      - RegName: TEST51.ext1.reg
+        Width: 64
+        Index: 0
+        IsFixedValue: false
+        IsSIMD: false
+        RWReg: false
+        ROReg: false
+        CSRReg: true
+        AMSReg: false
+    RegClasses:
+      - RegisterClassName: TEST51.ext1.regclass
+        NumRegisters: 1
+        Registers:
+          - TEST51.ext1.reg
+    ISAs:
+      - ISAName: TEST51.ext1.isa
+    RTLFile: TEST51.ext1.v
+  - Extension: TEST51.ext2
+    MajorVersion: 13
+    MinorVersion: 14
+    Type: unknown
+    ProjectInfo:
+      - Project: TEST51.ext2
+        Type: unknown
+        ChiselMajorVersion: 3
+        ChiselMinorVersion: 0
+    Registers:
+      - RegName: TEST51.ext2.reg
+        Width: 64
+        Index: 0
+        IsFixedValue: false
+        IsSIMD: false
+        RWReg: false
+        ROReg: false
+        CSRReg: true
+        AMSReg: false
+    RegClasses:
+      - RegisterClassName: TEST51.ext2.regclass
+        NumRegisters: 1
+        Registers:
+          - TEST51.ext2.reg
+    ISAs:
+      - ISAName: TEST51.ext2.isa
+    RTLFile: TEST51.ext2.v
+  - Extension: TEST51.ext3
+    MajorVersion: 13
+    MinorVersion: 14
+    Type: unknown
+    ProjectInfo:
+      - Project: TEST51.ext3
+        Type: unknown
+        ChiselMajorVersion: 3
+        ChiselMinorVersion: 0
+    Registers:
+      - RegName: TEST51.ext3.reg
+        Width: 64
+        Index: 0
+        IsFixedValue: false
+        IsSIMD: false
+        RWReg: false
+        ROReg: false
+        CSRReg: true
+        AMSReg: false
+    RegClasses:
+      - RegisterClassName: TEST51.ext3.regclass
+        NumRegisters: 1
+        Registers:
+          - TEST51.ext3.reg
+    ISAs:
+      - ISAName: TEST51.ext3.isa
+    RTLFile: TEST51.ext3.v
+  - Extension: TEST51.ext4
+    MajorVersion: 13
+    MinorVersion: 14
+    Type: unknown
+    ProjectInfo:
+      - Project: TEST51.ext4
+        Type: unknown
+        ChiselMajorVersion: 3
+        ChiselMinorVersion: 0
+    Registers:
+      - RegName: TEST51.ext4.reg
+        Width: 64
+        Index: 0
+        IsFixedValue: false
+        IsSIMD: false
+        RWReg: false
+        ROReg: false
+        CSRReg: true
+        AMSReg: false
+    RegClasses:
+      - RegisterClassName: TEST51.ext4.regclass
+        NumRegisters: 1
+        Registers:
+          - TEST51.ext4.reg
+    ISAs:
+      - ISAName: TEST51.ext4.isa
+    RTLFile: TEST51.ext4.v
+  - Extension: TEST51.ext5
+    MajorVersion: 13
+    MinorVersion: 14
+    Type: unknown
+    ProjectInfo:
+      - Project: TEST51.ext5
+        Type: unknown
+        ChiselMajorVersion: 3
+        ChiselMinorVersion: 0
+    Registers:
+      - RegName: TEST51.ext5.reg
+        Width: 64
+        Index: 0
+        IsFixedValue: false
+        IsSIMD: false
+        RWReg: false
+        ROReg: false
+        CSRReg: true
+        AMSReg: false
+    RegClasses:
+      - RegisterClassName: TEST51.ext5.regclass
+        NumRegisters: 1
+        Registers:
+          - TEST51.ext5.reg
+    ISAs:
+      - ISAName: TEST51.ext5.isa
+    RTLFile: TEST51.ext5.v
+  - Extension: TEST51.ext6
+    MajorVersion: 13
+    MinorVersion: 14
+    Type: unknown
+    ProjectInfo:
+      - Project: TEST51.ext6
+        Type: unknown
+        ChiselMajorVersion: 3
+        ChiselMinorVersion: 0
+    Registers:
+      - RegName: TEST51.ext6.reg
+        Width: 64
+        Index: 0
+        IsFixedValue: false
+        IsSIMD: false
+        RWReg: false
+        ROReg: false
+        CSRReg: true
+        AMSReg: false
+    RegClasses:
+      - RegisterClassName: TEST51.ext6.regclass
+        NumRegisters: 1
+        Registers:
+          - TEST51.ext6.reg
+    ISAs:
+      - ISAName: TEST51.ext6.isa
+    RTLFile: TEST51.ext6.v
+  - Extension: TEST51.ext7
+    MajorVersion: 13
+    MinorVersion: 14
+    Type: unknown
+    ProjectInfo:
+      - Project: TEST51.ext7
+        Type: unknown
+        ChiselMajorVersion: 3
+        ChiselMinorVersion: 0
+    Registers:
+      - RegName: TEST51.ext7.reg
+        Width: 64
+        Index: 0
+        IsFixedValue: false
+        IsSIMD: false
+        RWReg: false
+        ROReg: false
+        CSRReg: true
+        AMSReg: false
+    RegClasses:
+      - RegisterClassName: TEST51.ext7.regclass
+        NumRegisters: 1
+        Registers:
+          - TEST51.ext7.reg
+    ISAs:
+      - ISAName: TEST51.ext7.isa
+    RTLFile: TEST51.ext7.v
+  - Extension: TEST51.ext8
+    MajorVersion: 13
+    MinorVersion: 14
+    Type: unknown
+    ProjectInfo:
+      - Project: TEST51.ext8
+        Type: unknown
+        ChiselMajorVersion: 3
+        ChiselMinorVersion: 0
+    Registers:
+      - RegName: TEST51.ext8.reg
+        Width: 64
+        Index: 0
+        IsFixedValue: false
+        IsSIMD: false
+        RWReg: false
+        ROReg: false
+        CSRReg: true
+        AMSReg: false
+    RegClasses:
+      - RegisterClassName: TEST51.ext8.regclass
+        NumRegisters: 1
+        Registers:
+          - TEST51.ext8.reg
+    ISAs:
+      - ISAName: TEST51.ext8.isa
+    RTLFile: TEST51.ext8.v
+  - Extension: TEST51.ext9
+    MajorVersion: 13
+    MinorVersion: 14
+    Type: unknown
+    ProjectInfo:
+      - Project: TEST51.ext9
+        Type: unknown
+        ChiselMajorVersion: 3
+        ChiselMinorVersion: 0
+    Registers:
+      - RegName: TEST51.ext9.reg
+        Width: 64
+        Index: 0
+        IsFixedValue: false
+        IsSIMD: false
+        RWReg: false
+        ROReg: false
+        CSRReg: true
+        AMSReg: false
+    RegClasses:
+      - RegisterClassName: TEST51.ext9.regclass
+        NumRegisters: 1
+        Registers:
+          - TEST51.ext9.reg
+    ISAs:
+      - ISAName: TEST51.ext9.isa
+    RTLFile: TEST51.ext9.v
+  - Extension: TEST51.ext10
+    MajorVersion: 13
+    MinorVersion: 14
+    Type: unknown
+    ProjectInfo:
+      - Project: TEST51.ext10
+        Type: unknown
+        ChiselMajorVersion: 3
+        ChiselMinorVersion: 0
+    Registers:
+      - RegName: TEST51.ext10.reg
+        Width: 64
+        Index: 0
+        IsFixedValue: false
+        IsSIMD: false
+        RWReg: false
+        ROReg: false
+        CSRReg: true
+        AMSReg: false
+    RegClasses:
+      - RegisterClassName: TEST51.ext10.regclass
+        NumRegisters: 1
+        Registers:
+          - TEST51.ext10.reg
+    ISAs:
+      - ISAName: TEST51.ext10.isa
+    RTLFile: TEST51.ext10.v
+  - Extension: TEST51.ext11
+    MajorVersion: 13
+    MinorVersion: 14
+    Type: unknown
+    ProjectInfo:
+      - Project: TEST51.ext11
+        Type: unknown
+        ChiselMajorVersion: 3
+        ChiselMinorVersion: 0
+    Registers:
+      - RegName: TEST51.ext11.reg
+        Width: 64
+        Index: 0
+        IsFixedValue: false
+        IsSIMD: false
+        RWReg: false
+        ROReg: false
+        CSRReg: true
+        AMSReg: false
+    RegClasses:
+      - RegisterClassName: TEST51.ext11.regclass
+        NumRegisters: 1
+        Registers:
+          - TEST51.ext11.reg
+    ISAs:
+      - ISAName: TEST51.ext11.isa
+    RTLFile: TEST51.ext11.v
+  - Extension: TEST51.ext12
+    MajorVersion: 13
+    MinorVersion: 14
+    Type: unknown
+    ProjectInfo:
+      - Project: TEST51.ext12
+        Type: unknown
+        ChiselMajorVersion: 3
+        ChiselMinorVersion: 0
+    Registers:
+      - RegName: TEST51.ext12.reg
+        Width: 64
+        Index: 0
+        IsFixedValue: false
+        IsSIMD: false
+        RWReg: false
+        ROReg: false
+        CSRReg: true
+        AMSReg: false
+    RegClasses:
+      - RegisterClassName: TEST51.ext12.regclass
+        NumRegisters: 1
+        Registers:
+          - TEST51.ext12.reg
+    ISAs:
+      - ISAName: TEST51.ext12.isa
+    RTLFile: TEST51.ext12.v
+  - Extension: TEST51.ext13
+    MajorVersion: 13
+    MinorVersion: 14
+    Type: unknown
+    ProjectInfo:
+      - Project: TEST51.ext13
+        Type: unknown
+        ChiselMajorVersion: 3
+        ChiselMinorVersion: 0
+    Registers:
+      - RegName: TEST51.ext13.reg
+        Width: 64
+        Index: 0
+        IsFixedValue: false
+        IsSIMD: false
+        RWReg: false
+        ROReg: false
+        CSRReg: true
+        AMSReg: false
+    RegClasses:
+      - RegisterClassName: TEST51.ext13.regclass
+        NumRegisters: 1
+        Registers:
+          - TEST51.ext13.reg
+    ISAs:
+      - ISAName: TEST51.ext13.isa
+    RTLFile: TEST51.ext13.v
+  - Extension: TEST51.ext14
+    MajorVersion: 13
+    MinorVersion: 14
+    Type: unknown
+    ProjectInfo:
+      - Project: TEST51.ext14
+        Type: unknown
+        ChiselMajorVersion: 3
+        ChiselMinorVersion: 0
+    Registers:
+      - RegName: TEST51.ext14.reg
+        Width: 64
+        Index: 0
+        IsFixedValue: false
+        IsSIMD: false
+        RWReg: false
+        ROReg: false
+        CSRReg: true
+        AMSReg: false
+    RegClasses:
+      - RegisterClassName: TEST51.ext14.regclass
+        NumRegisters: 1
+        Registers:
+          - TEST51.ext14.reg
+    ISAs:
+      - ISAName: TEST51.ext14.isa
+    RTLFile: TEST51.ext14.v
+  - Extension: TEST51.ext15
+    MajorVersion: 13
+    MinorVersion: 14
+    Type: unknown
+    ProjectInfo:
+      - Project: TEST51.ext15
+        Type: unknown
+        ChiselMajorVersion: 3
+        ChiselMinorVersion: 0
+    Registers:
+      - RegName: TEST51.ext15.reg
+        Width: 64
+        Index: 0
+        IsFixedValue: false
+        IsSIMD: false
+        RWReg: false
+        ROReg: false
+        CSRReg: true
+        AMSReg: false
+    RegClasses:
+      - RegisterClassName: TEST51.ext15.regclass
+        NumRegisters: 1
+        Registers:
+          - TEST51.ext15.reg
+    ISAs:
+      - ISAName: TEST51.ext15.isa
+    RTLFile: TEST51.ext15.v
+Cores:
+  - Core: TEST51.core0
+    Cache: TEST51.core0.L1.cache
+    ISA: TEST51.isa
+    RegisterClasses:
+      - RegClass: TEST51.regclass
+      - RegClass: TEST51.csrregclass
+    Extensions:
+      - Extension: TEST51.ext0
+  - Core: TEST51.core1
+    Cache: TEST51.core1.L1.cache
+    ISA: TEST51.isa
+    RegisterClasses:
+      - RegClass: TEST51.regclass
+      - RegClass: TEST51.csrregclass
+    Extensions:
+      - Extension: TEST51.ext1
+  - Core: TEST51.core2
+    Cache: TEST51.core2.L1.cache
+    ISA: TEST51.isa
+    RegisterClasses:
+      - RegClass: TEST51.regclass
+      - RegClass: TEST51.csrregclass
+    Extensions:
+      - Extension: TEST51.ext2
+  - Core: TEST51.core3
+    Cache: TEST51.core3.L1.cache
+    ISA: TEST51.isa
+    RegisterClasses:
+      - RegClass: TEST51.regclass
+      - RegClass: TEST51.csrregclass
+    Extensions:
+      - Extension: TEST51.ext3
+  - Core: TEST51.core4
+    Cache: TEST51.core4.L1.cache
+    ISA: TEST51.isa
+    RegisterClasses:
+      - RegClass: TEST51.regclass
+      - RegClass: TEST51.csrregclass
+    Extensions:
+      - Extension: TEST51.ext4
+  - Core: TEST51.core5
+    Cache: TEST51.core5.L1.cache
+    ISA: TEST51.isa
+    RegisterClasses:
+      - RegClass: TEST51.regclass
+      - RegClass: TEST51.csrregclass
+    Extensions:
+      - Extension: TEST51.ext5
+  - Core: TEST51.core6
+    Cache: TEST51.core6.L1.cache
+    ISA: TEST51.isa
+    RegisterClasses:
+      - RegClass: TEST51.regclass
+      - RegClass: TEST51.csrregclass
+    Extensions:
+      - Extension: TEST51.ext6
+  - Core: TEST51.core7
+    Cache: TEST51.core7.L1.cache
+    ISA: TEST51.isa
+    RegisterClasses:
+      - RegClass: TEST51.regclass
+      - RegClass: TEST51.csrregclass
+    Extensions:
+      - Extension: TEST51.ext7
+  - Core: TEST51.core8
+    Cache: TEST51.core8.L1.cache
+    ISA: TEST51.isa
+    RegisterClasses:
+      - RegClass: TEST51.regclass
+      - RegClass: TEST51.csrregclass
+    Extensions:
+      - Extension: TEST51.ext8
+  - Core: TEST51.core9
+    Cache: TEST51.core9.L1.cache
+    ISA: TEST51.isa
+    RegisterClasses:
+      - RegClass: TEST51.regclass
+      - RegClass: TEST51.csrregclass
+    Extensions:
+      - Extension: TEST51.ext9
+  - Core: TEST51.core10
+    Cache: TEST51.core10.L1.cache
+    ISA: TEST51.isa
+    RegisterClasses:
+      - RegClass: TEST51.regclass
+      - RegClass: TEST51.csrregclass
+    Extensions:
+      - Extension: TEST51.ext10
+  - Core: TEST51.core11
+    Cache: TEST51.core11.L1.cache
+    ISA: TEST51.isa
+    RegisterClasses:
+      - RegClass: TEST51.regclass
+      - RegClass: TEST51.csrregclass
+    Extensions:
+      - Extension: TEST51.ext11
+  - Core: TEST51.core12
+    Cache: TEST51.core12.L1.cache
+    ISA: TEST51.isa
+    RegisterClasses:
+      - RegClass: TEST51.regclass
+      - RegClass: TEST51.csrregclass
+    Extensions:
+      - Extension: TEST51.ext12
+  - Core: TEST51.core13
+    Cache: TEST51.core13.L1.cache
+    ISA: TEST51.isa
+    RegisterClasses:
+      - RegClass: TEST51.regclass
+      - RegClass: TEST51.csrregclass
+    Extensions:
+      - Extension: TEST51.ext13
+  - Core: TEST51.core14
+    Cache: TEST51.core14.L1.cache
+    ISA: TEST51.isa
+    RegisterClasses:
+      - RegClass: TEST51.regclass
+      - RegClass: TEST51.csrregclass
+    Extensions:
+      - Extension: TEST51.ext14
+  - Core: TEST51.core15
+    Cache: TEST51.core15.L1.cache
+    ISA: TEST51.isa
+    RegisterClasses:
+      - RegClass: TEST51.regclass
+      - RegClass: TEST51.csrregclass
+    Extensions:
+      - Extension: TEST51.ext15
+Socs:
+  - Soc: TEST51.soc
+    Cores:
+      - Core: TEST51.core0
+      - Core: TEST51.core1
+      - Core: TEST51.core2
+      - Core: TEST51.core3
+      - Core: TEST51.core4
+      - Core: TEST51.core5
+      - Core: TEST51.core6
+      - Core: TEST51.core7
+      - Core: TEST51.core8
+      - Core: TEST51.core9
+      - Core: TEST51.core10
+      - Core: TEST51.core11
+      - Core: TEST51.core12
+      - Core: TEST51.core13
+      - Core: TEST51.core14
+      - Core: TEST51.core15

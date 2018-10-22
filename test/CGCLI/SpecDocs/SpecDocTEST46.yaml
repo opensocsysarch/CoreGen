@@ -1,0 +1,1679 @@
+Registers:
+  - RegName: TEST46.0.reg
+    Width: 64
+    Index: 0
+    PseudoName: pseudoreg.0
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST46.1.reg
+    Width: 64
+    Index: 1
+    PseudoName: pseudoreg.1
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST46.2.reg
+    Width: 64
+    Index: 2
+    PseudoName: pseudoreg.2
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST46.3.reg
+    Width: 64
+    Index: 3
+    PseudoName: pseudoreg.3
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST46.4.reg
+    Width: 64
+    Index: 4
+    PseudoName: pseudoreg.4
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST46.5.reg
+    Width: 64
+    Index: 5
+    PseudoName: pseudoreg.5
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST46.6.reg
+    Width: 64
+    Index: 6
+    PseudoName: pseudoreg.6
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST46.7.reg
+    Width: 64
+    Index: 7
+    PseudoName: pseudoreg.7
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST46.8.reg
+    Width: 64
+    Index: 8
+    PseudoName: pseudoreg.8
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST46.9.reg
+    Width: 64
+    Index: 9
+    PseudoName: pseudoreg.9
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST46.10.reg
+    Width: 64
+    Index: 10
+    PseudoName: pseudoreg.10
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST46.11.reg
+    Width: 64
+    Index: 11
+    PseudoName: pseudoreg.11
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST46.12.reg
+    Width: 64
+    Index: 12
+    PseudoName: pseudoreg.12
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST46.13.reg
+    Width: 64
+    Index: 13
+    PseudoName: pseudoreg.13
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST46.14.reg
+    Width: 64
+    Index: 14
+    PseudoName: pseudoreg.14
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST46.15.reg
+    Width: 64
+    Index: 15
+    PseudoName: pseudoreg.15
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST46.0.csr
+    Width: 64
+    Index: 0
+    PseudoName: csr.0
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST46.1.csr
+    Width: 64
+    Index: 1
+    PseudoName: csr.1
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST46.2.csr
+    Width: 64
+    Index: 2
+    PseudoName: csr.2
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST46.3.csr
+    Width: 64
+    Index: 3
+    PseudoName: csr.3
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST46.4.csr
+    Width: 64
+    Index: 4
+    PseudoName: csr.4
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST46.5.csr
+    Width: 64
+    Index: 5
+    PseudoName: csr.5
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST46.6.csr
+    Width: 64
+    Index: 6
+    PseudoName: csr.6
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST46.7.csr
+    Width: 64
+    Index: 7
+    PseudoName: csr.7
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST46.8.csr
+    Width: 64
+    Index: 8
+    PseudoName: csr.8
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST46.9.csr
+    Width: 64
+    Index: 9
+    PseudoName: csr.9
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST46.10.csr
+    Width: 64
+    Index: 10
+    PseudoName: csr.10
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST46.11.csr
+    Width: 64
+    Index: 11
+    PseudoName: csr.11
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST46.12.csr
+    Width: 64
+    Index: 12
+    PseudoName: csr.12
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST46.13.csr
+    Width: 64
+    Index: 13
+    PseudoName: csr.13
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST46.14.csr
+    Width: 64
+    Index: 14
+    PseudoName: csr.14
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST46.15.csr
+    Width: 64
+    Index: 15
+    PseudoName: csr.15
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+RegClasses:
+  - RegisterClassName: TEST46.regclass
+    NumRegisters: 16
+    Registers:
+      - TEST46.0.reg
+      - TEST46.1.reg
+      - TEST46.2.reg
+      - TEST46.3.reg
+      - TEST46.4.reg
+      - TEST46.5.reg
+      - TEST46.6.reg
+      - TEST46.7.reg
+      - TEST46.8.reg
+      - TEST46.9.reg
+      - TEST46.10.reg
+      - TEST46.11.reg
+      - TEST46.12.reg
+      - TEST46.13.reg
+      - TEST46.14.reg
+      - TEST46.15.reg
+  - RegisterClassName: TEST46.csrregclass
+    NumRegisters: 16
+    Registers:
+      - TEST46.0.csr
+      - TEST46.1.csr
+      - TEST46.2.csr
+      - TEST46.3.csr
+      - TEST46.4.csr
+      - TEST46.5.csr
+      - TEST46.6.csr
+      - TEST46.7.csr
+      - TEST46.8.csr
+      - TEST46.9.csr
+      - TEST46.10.csr
+      - TEST46.11.csr
+      - TEST46.12.csr
+      - TEST46.13.csr
+      - TEST46.14.csr
+      - TEST46.15.csr
+ISAs:
+  - ISAName: TEST46.isa
+InstFormats:
+  - InstFormatName: TEST46.if
+    ISA: TEST46.isa
+    FormatWidth: 32
+    Fields:
+      - FieldName: opcode
+        FieldType: CGInstCode
+        FieldWidth: 8
+        StartBit: 0
+        EndBit: 7
+        MandatoryField: true
+      - FieldName: RB
+        FieldType: CGInstReg
+        FieldWidth: 8
+        StartBit: 8
+        EndBit: 15
+        MandatoryField: false
+        RegClass: TEST46.regclass
+      - FieldName: RA
+        FieldType: CGInstReg
+        FieldWidth: 8
+        StartBit: 16
+        EndBit: 23
+        MandatoryField: false
+        RegClass: TEST46.regclass
+      - FieldName: RT
+        FieldType: CGInstReg
+        FieldWidth: 8
+        StartBit: 24
+        EndBit: 31
+        MandatoryField: false
+        RegClass: TEST46.csrregclass
+Insts:
+  - Inst: TEST46.inst0
+    ISA: TEST46.isa
+    InstFormat: TEST46.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 1
+  - Inst: TEST46.inst1
+    ISA: TEST46.isa
+    InstFormat: TEST46.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 2
+  - Inst: TEST46.inst2
+    ISA: TEST46.isa
+    InstFormat: TEST46.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 3
+  - Inst: TEST46.inst3
+    ISA: TEST46.isa
+    InstFormat: TEST46.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 4
+  - Inst: TEST46.inst4
+    ISA: TEST46.isa
+    InstFormat: TEST46.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 5
+  - Inst: TEST46.inst5
+    ISA: TEST46.isa
+    InstFormat: TEST46.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 6
+  - Inst: TEST46.inst6
+    ISA: TEST46.isa
+    InstFormat: TEST46.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 7
+  - Inst: TEST46.inst7
+    ISA: TEST46.isa
+    InstFormat: TEST46.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 8
+  - Inst: TEST46.inst8
+    ISA: TEST46.isa
+    InstFormat: TEST46.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 9
+  - Inst: TEST46.inst9
+    ISA: TEST46.isa
+    InstFormat: TEST46.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 10
+  - Inst: TEST46.inst10
+    ISA: TEST46.isa
+    InstFormat: TEST46.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 11
+  - Inst: TEST46.inst11
+    ISA: TEST46.isa
+    InstFormat: TEST46.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 12
+  - Inst: TEST46.inst12
+    ISA: TEST46.isa
+    InstFormat: TEST46.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 13
+  - Inst: TEST46.inst13
+    ISA: TEST46.isa
+    InstFormat: TEST46.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 14
+  - Inst: TEST46.inst14
+    ISA: TEST46.isa
+    InstFormat: TEST46.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 15
+  - Inst: TEST46.inst15
+    ISA: TEST46.isa
+    InstFormat: TEST46.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 16
+PseudoInsts:
+  - PseudoInst: TEST46.pinst0
+    ISA: TEST46.isa
+    Inst: TEST46.inst0
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 0
+  - PseudoInst: TEST46.pinst1
+    ISA: TEST46.isa
+    Inst: TEST46.inst1
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 1
+  - PseudoInst: TEST46.pinst2
+    ISA: TEST46.isa
+    Inst: TEST46.inst2
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 2
+  - PseudoInst: TEST46.pinst3
+    ISA: TEST46.isa
+    Inst: TEST46.inst3
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 3
+  - PseudoInst: TEST46.pinst4
+    ISA: TEST46.isa
+    Inst: TEST46.inst4
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 4
+  - PseudoInst: TEST46.pinst5
+    ISA: TEST46.isa
+    Inst: TEST46.inst5
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 5
+  - PseudoInst: TEST46.pinst6
+    ISA: TEST46.isa
+    Inst: TEST46.inst6
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 6
+  - PseudoInst: TEST46.pinst7
+    ISA: TEST46.isa
+    Inst: TEST46.inst7
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 7
+  - PseudoInst: TEST46.pinst8
+    ISA: TEST46.isa
+    Inst: TEST46.inst8
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 8
+  - PseudoInst: TEST46.pinst9
+    ISA: TEST46.isa
+    Inst: TEST46.inst9
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 9
+  - PseudoInst: TEST46.pinst10
+    ISA: TEST46.isa
+    Inst: TEST46.inst10
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 10
+  - PseudoInst: TEST46.pinst11
+    ISA: TEST46.isa
+    Inst: TEST46.inst11
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 11
+  - PseudoInst: TEST46.pinst12
+    ISA: TEST46.isa
+    Inst: TEST46.inst12
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 12
+  - PseudoInst: TEST46.pinst13
+    ISA: TEST46.isa
+    Inst: TEST46.inst13
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 13
+  - PseudoInst: TEST46.pinst14
+    ISA: TEST46.isa
+    Inst: TEST46.inst14
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 14
+  - PseudoInst: TEST46.pinst15
+    ISA: TEST46.isa
+    Inst: TEST46.inst15
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 15
+Caches:
+  - Cache: TEST46.L2.cache
+    Sets: 2
+    Ways: 8
+  - Cache: TEST46.core0.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST46.L2.cache
+  - Cache: TEST46.L2.cache
+    Sets: 2
+    Ways: 8
+  - Cache: TEST46.core1.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST46.L2.cache
+  - Cache: TEST46.L2.cache
+    Sets: 2
+    Ways: 8
+  - Cache: TEST46.core2.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST46.L2.cache
+  - Cache: TEST46.L2.cache
+    Sets: 2
+    Ways: 8
+  - Cache: TEST46.core3.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST46.L2.cache
+  - Cache: TEST46.L2.cache
+    Sets: 2
+    Ways: 8
+  - Cache: TEST46.core4.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST46.L2.cache
+  - Cache: TEST46.L2.cache
+    Sets: 2
+    Ways: 8
+  - Cache: TEST46.core5.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST46.L2.cache
+  - Cache: TEST46.L2.cache
+    Sets: 2
+    Ways: 8
+  - Cache: TEST46.core6.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST46.L2.cache
+  - Cache: TEST46.L2.cache
+    Sets: 2
+    Ways: 8
+  - Cache: TEST46.core7.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST46.L2.cache
+  - Cache: TEST46.L2.cache
+    Sets: 2
+    Ways: 8
+  - Cache: TEST46.core8.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST46.L2.cache
+  - Cache: TEST46.L2.cache
+    Sets: 2
+    Ways: 8
+  - Cache: TEST46.core9.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST46.L2.cache
+  - Cache: TEST46.L2.cache
+    Sets: 2
+    Ways: 8
+  - Cache: TEST46.core10.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST46.L2.cache
+  - Cache: TEST46.L2.cache
+    Sets: 2
+    Ways: 8
+  - Cache: TEST46.core11.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST46.L2.cache
+  - Cache: TEST46.L2.cache
+    Sets: 2
+    Ways: 8
+  - Cache: TEST46.core12.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST46.L2.cache
+  - Cache: TEST46.L2.cache
+    Sets: 2
+    Ways: 8
+  - Cache: TEST46.core13.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST46.L2.cache
+  - Cache: TEST46.L2.cache
+    Sets: 2
+    Ways: 8
+  - Cache: TEST46.core14.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST46.L2.cache
+  - Cache: TEST46.L2.cache
+    Sets: 2
+    Ways: 8
+  - Cache: TEST46.core15.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST46.L2.cache
+  - Cache: TEST46.L2.cache
+    Sets: 2
+    Ways: 8
+  - Cache: TEST46.core16.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST46.L2.cache
+  - Cache: TEST46.L2.cache
+    Sets: 2
+    Ways: 8
+  - Cache: TEST46.core17.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST46.L2.cache
+  - Cache: TEST46.L2.cache
+    Sets: 2
+    Ways: 8
+  - Cache: TEST46.core18.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST46.L2.cache
+  - Cache: TEST46.L2.cache
+    Sets: 2
+    Ways: 8
+  - Cache: TEST46.core19.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST46.L2.cache
+  - Cache: TEST46.L2.cache
+    Sets: 2
+    Ways: 8
+  - Cache: TEST46.core20.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST46.L2.cache
+  - Cache: TEST46.L2.cache
+    Sets: 2
+    Ways: 8
+  - Cache: TEST46.core21.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST46.L2.cache
+  - Cache: TEST46.L2.cache
+    Sets: 2
+    Ways: 8
+  - Cache: TEST46.core22.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST46.L2.cache
+  - Cache: TEST46.L2.cache
+    Sets: 2
+    Ways: 8
+  - Cache: TEST46.core23.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST46.L2.cache
+  - Cache: TEST46.L2.cache
+    Sets: 2
+    Ways: 8
+  - Cache: TEST46.core24.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST46.L2.cache
+  - Cache: TEST46.L2.cache
+    Sets: 2
+    Ways: 8
+  - Cache: TEST46.core25.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST46.L2.cache
+  - Cache: TEST46.L2.cache
+    Sets: 2
+    Ways: 8
+  - Cache: TEST46.core26.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST46.L2.cache
+  - Cache: TEST46.L2.cache
+    Sets: 2
+    Ways: 8
+  - Cache: TEST46.core27.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST46.L2.cache
+  - Cache: TEST46.L2.cache
+    Sets: 2
+    Ways: 8
+  - Cache: TEST46.core28.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST46.L2.cache
+  - Cache: TEST46.L2.cache
+    Sets: 2
+    Ways: 8
+  - Cache: TEST46.core29.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST46.L2.cache
+  - Cache: TEST46.L2.cache
+    Sets: 2
+    Ways: 8
+  - Cache: TEST46.core30.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST46.L2.cache
+  - Cache: TEST46.L2.cache
+    Sets: 2
+    Ways: 8
+  - Cache: TEST46.core31.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST46.L2.cache
+  - Cache: TEST46.L2.cache
+    Sets: 2
+    Ways: 8
+  - Cache: TEST46.core32.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST46.L2.cache
+  - Cache: TEST46.L2.cache
+    Sets: 2
+    Ways: 8
+  - Cache: TEST46.core33.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST46.L2.cache
+  - Cache: TEST46.L2.cache
+    Sets: 2
+    Ways: 8
+  - Cache: TEST46.core34.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST46.L2.cache
+  - Cache: TEST46.L2.cache
+    Sets: 2
+    Ways: 8
+  - Cache: TEST46.core35.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST46.L2.cache
+  - Cache: TEST46.L2.cache
+    Sets: 2
+    Ways: 8
+  - Cache: TEST46.core36.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST46.L2.cache
+  - Cache: TEST46.L2.cache
+    Sets: 2
+    Ways: 8
+  - Cache: TEST46.core37.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST46.L2.cache
+  - Cache: TEST46.L2.cache
+    Sets: 2
+    Ways: 8
+  - Cache: TEST46.core38.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST46.L2.cache
+  - Cache: TEST46.L2.cache
+    Sets: 2
+    Ways: 8
+  - Cache: TEST46.core39.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST46.L2.cache
+  - Cache: TEST46.L2.cache
+    Sets: 2
+    Ways: 8
+  - Cache: TEST46.core40.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST46.L2.cache
+  - Cache: TEST46.L2.cache
+    Sets: 2
+    Ways: 8
+  - Cache: TEST46.core41.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST46.L2.cache
+  - Cache: TEST46.L2.cache
+    Sets: 2
+    Ways: 8
+  - Cache: TEST46.core42.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST46.L2.cache
+  - Cache: TEST46.L2.cache
+    Sets: 2
+    Ways: 8
+  - Cache: TEST46.core43.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST46.L2.cache
+  - Cache: TEST46.L2.cache
+    Sets: 2
+    Ways: 8
+  - Cache: TEST46.core44.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST46.L2.cache
+  - Cache: TEST46.L2.cache
+    Sets: 2
+    Ways: 8
+  - Cache: TEST46.core45.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST46.L2.cache
+  - Cache: TEST46.L2.cache
+    Sets: 2
+    Ways: 8
+  - Cache: TEST46.core46.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST46.L2.cache
+  - Cache: TEST46.L2.cache
+    Sets: 2
+    Ways: 8
+  - Cache: TEST46.core47.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST46.L2.cache
+  - Cache: TEST46.L2.cache
+    Sets: 2
+    Ways: 8
+  - Cache: TEST46.core48.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST46.L2.cache
+  - Cache: TEST46.L2.cache
+    Sets: 2
+    Ways: 8
+  - Cache: TEST46.core49.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST46.L2.cache
+  - Cache: TEST46.L2.cache
+    Sets: 2
+    Ways: 8
+  - Cache: TEST46.core50.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST46.L2.cache
+  - Cache: TEST46.L2.cache
+    Sets: 2
+    Ways: 8
+  - Cache: TEST46.core51.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST46.L2.cache
+  - Cache: TEST46.L2.cache
+    Sets: 2
+    Ways: 8
+  - Cache: TEST46.core52.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST46.L2.cache
+  - Cache: TEST46.L2.cache
+    Sets: 2
+    Ways: 8
+  - Cache: TEST46.core53.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST46.L2.cache
+  - Cache: TEST46.L2.cache
+    Sets: 2
+    Ways: 8
+  - Cache: TEST46.core54.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST46.L2.cache
+  - Cache: TEST46.L2.cache
+    Sets: 2
+    Ways: 8
+  - Cache: TEST46.core55.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST46.L2.cache
+  - Cache: TEST46.L2.cache
+    Sets: 2
+    Ways: 8
+  - Cache: TEST46.core56.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST46.L2.cache
+  - Cache: TEST46.L2.cache
+    Sets: 2
+    Ways: 8
+  - Cache: TEST46.core57.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST46.L2.cache
+  - Cache: TEST46.L2.cache
+    Sets: 2
+    Ways: 8
+  - Cache: TEST46.core58.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST46.L2.cache
+  - Cache: TEST46.L2.cache
+    Sets: 2
+    Ways: 8
+  - Cache: TEST46.core59.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST46.L2.cache
+  - Cache: TEST46.L2.cache
+    Sets: 2
+    Ways: 8
+  - Cache: TEST46.core60.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST46.L2.cache
+  - Cache: TEST46.L2.cache
+    Sets: 2
+    Ways: 8
+  - Cache: TEST46.core61.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST46.L2.cache
+  - Cache: TEST46.L2.cache
+    Sets: 2
+    Ways: 8
+  - Cache: TEST46.core62.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST46.L2.cache
+  - Cache: TEST46.L2.cache
+    Sets: 2
+    Ways: 8
+  - Cache: TEST46.core63.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST46.L2.cache
+  - Cache: TEST46.L2.cache
+    Sets: 2
+    Ways: 8
+Extensions:
+  - Extension: TEST46.ext
+    MajorVersion: 13
+    MinorVersion: 14
+    Type: unknown
+    ProjectInfo:
+      - Project: TEST46.ext
+        Type: unknown
+        ChiselMajorVersion: 3
+        ChiselMinorVersion: 0
+    Registers:
+      - RegName: TEST46.ext.reg
+        Width: 64
+        Index: 0
+        IsFixedValue: false
+        IsSIMD: false
+        RWReg: false
+        ROReg: false
+        CSRReg: true
+        AMSReg: false
+    RegClasses:
+      - RegisterClassName: TEST46.ext.regclass
+        NumRegisters: 1
+        Registers:
+          - TEST46.ext.reg
+    ISAs:
+      - ISAName: TEST46.ext.isa
+Cores:
+  - Core: TEST46.core0
+    Cache: TEST46.core0.L1.cache
+    ISA: TEST46.isa
+    RegisterClasses:
+      - RegClass: TEST46.regclass
+      - RegClass: TEST46.csrregclass
+    Extensions:
+      - Extension: TEST46.ext
+  - Core: TEST46.core1
+    Cache: TEST46.core1.L1.cache
+    ISA: TEST46.isa
+    RegisterClasses:
+      - RegClass: TEST46.regclass
+      - RegClass: TEST46.csrregclass
+    Extensions:
+      - Extension: TEST46.ext
+  - Core: TEST46.core2
+    Cache: TEST46.core2.L1.cache
+    ISA: TEST46.isa
+    RegisterClasses:
+      - RegClass: TEST46.regclass
+      - RegClass: TEST46.csrregclass
+    Extensions:
+      - Extension: TEST46.ext
+  - Core: TEST46.core3
+    Cache: TEST46.core3.L1.cache
+    ISA: TEST46.isa
+    RegisterClasses:
+      - RegClass: TEST46.regclass
+      - RegClass: TEST46.csrregclass
+    Extensions:
+      - Extension: TEST46.ext
+  - Core: TEST46.core4
+    Cache: TEST46.core4.L1.cache
+    ISA: TEST46.isa
+    RegisterClasses:
+      - RegClass: TEST46.regclass
+      - RegClass: TEST46.csrregclass
+    Extensions:
+      - Extension: TEST46.ext
+  - Core: TEST46.core5
+    Cache: TEST46.core5.L1.cache
+    ISA: TEST46.isa
+    RegisterClasses:
+      - RegClass: TEST46.regclass
+      - RegClass: TEST46.csrregclass
+    Extensions:
+      - Extension: TEST46.ext
+  - Core: TEST46.core6
+    Cache: TEST46.core6.L1.cache
+    ISA: TEST46.isa
+    RegisterClasses:
+      - RegClass: TEST46.regclass
+      - RegClass: TEST46.csrregclass
+    Extensions:
+      - Extension: TEST46.ext
+  - Core: TEST46.core7
+    Cache: TEST46.core7.L1.cache
+    ISA: TEST46.isa
+    RegisterClasses:
+      - RegClass: TEST46.regclass
+      - RegClass: TEST46.csrregclass
+    Extensions:
+      - Extension: TEST46.ext
+  - Core: TEST46.core8
+    Cache: TEST46.core8.L1.cache
+    ISA: TEST46.isa
+    RegisterClasses:
+      - RegClass: TEST46.regclass
+      - RegClass: TEST46.csrregclass
+    Extensions:
+      - Extension: TEST46.ext
+  - Core: TEST46.core9
+    Cache: TEST46.core9.L1.cache
+    ISA: TEST46.isa
+    RegisterClasses:
+      - RegClass: TEST46.regclass
+      - RegClass: TEST46.csrregclass
+    Extensions:
+      - Extension: TEST46.ext
+  - Core: TEST46.core10
+    Cache: TEST46.core10.L1.cache
+    ISA: TEST46.isa
+    RegisterClasses:
+      - RegClass: TEST46.regclass
+      - RegClass: TEST46.csrregclass
+    Extensions:
+      - Extension: TEST46.ext
+  - Core: TEST46.core11
+    Cache: TEST46.core11.L1.cache
+    ISA: TEST46.isa
+    RegisterClasses:
+      - RegClass: TEST46.regclass
+      - RegClass: TEST46.csrregclass
+    Extensions:
+      - Extension: TEST46.ext
+  - Core: TEST46.core12
+    Cache: TEST46.core12.L1.cache
+    ISA: TEST46.isa
+    RegisterClasses:
+      - RegClass: TEST46.regclass
+      - RegClass: TEST46.csrregclass
+    Extensions:
+      - Extension: TEST46.ext
+  - Core: TEST46.core13
+    Cache: TEST46.core13.L1.cache
+    ISA: TEST46.isa
+    RegisterClasses:
+      - RegClass: TEST46.regclass
+      - RegClass: TEST46.csrregclass
+    Extensions:
+      - Extension: TEST46.ext
+  - Core: TEST46.core14
+    Cache: TEST46.core14.L1.cache
+    ISA: TEST46.isa
+    RegisterClasses:
+      - RegClass: TEST46.regclass
+      - RegClass: TEST46.csrregclass
+    Extensions:
+      - Extension: TEST46.ext
+  - Core: TEST46.core15
+    Cache: TEST46.core15.L1.cache
+    ISA: TEST46.isa
+    RegisterClasses:
+      - RegClass: TEST46.regclass
+      - RegClass: TEST46.csrregclass
+    Extensions:
+      - Extension: TEST46.ext
+  - Core: TEST46.core16
+    Cache: TEST46.core16.L1.cache
+    ISA: TEST46.isa
+    RegisterClasses:
+      - RegClass: TEST46.regclass
+      - RegClass: TEST46.csrregclass
+    Extensions:
+      - Extension: TEST46.ext
+  - Core: TEST46.core17
+    Cache: TEST46.core17.L1.cache
+    ISA: TEST46.isa
+    RegisterClasses:
+      - RegClass: TEST46.regclass
+      - RegClass: TEST46.csrregclass
+    Extensions:
+      - Extension: TEST46.ext
+  - Core: TEST46.core18
+    Cache: TEST46.core18.L1.cache
+    ISA: TEST46.isa
+    RegisterClasses:
+      - RegClass: TEST46.regclass
+      - RegClass: TEST46.csrregclass
+    Extensions:
+      - Extension: TEST46.ext
+  - Core: TEST46.core19
+    Cache: TEST46.core19.L1.cache
+    ISA: TEST46.isa
+    RegisterClasses:
+      - RegClass: TEST46.regclass
+      - RegClass: TEST46.csrregclass
+    Extensions:
+      - Extension: TEST46.ext
+  - Core: TEST46.core20
+    Cache: TEST46.core20.L1.cache
+    ISA: TEST46.isa
+    RegisterClasses:
+      - RegClass: TEST46.regclass
+      - RegClass: TEST46.csrregclass
+    Extensions:
+      - Extension: TEST46.ext
+  - Core: TEST46.core21
+    Cache: TEST46.core21.L1.cache
+    ISA: TEST46.isa
+    RegisterClasses:
+      - RegClass: TEST46.regclass
+      - RegClass: TEST46.csrregclass
+    Extensions:
+      - Extension: TEST46.ext
+  - Core: TEST46.core22
+    Cache: TEST46.core22.L1.cache
+    ISA: TEST46.isa
+    RegisterClasses:
+      - RegClass: TEST46.regclass
+      - RegClass: TEST46.csrregclass
+    Extensions:
+      - Extension: TEST46.ext
+  - Core: TEST46.core23
+    Cache: TEST46.core23.L1.cache
+    ISA: TEST46.isa
+    RegisterClasses:
+      - RegClass: TEST46.regclass
+      - RegClass: TEST46.csrregclass
+    Extensions:
+      - Extension: TEST46.ext
+  - Core: TEST46.core24
+    Cache: TEST46.core24.L1.cache
+    ISA: TEST46.isa
+    RegisterClasses:
+      - RegClass: TEST46.regclass
+      - RegClass: TEST46.csrregclass
+    Extensions:
+      - Extension: TEST46.ext
+  - Core: TEST46.core25
+    Cache: TEST46.core25.L1.cache
+    ISA: TEST46.isa
+    RegisterClasses:
+      - RegClass: TEST46.regclass
+      - RegClass: TEST46.csrregclass
+    Extensions:
+      - Extension: TEST46.ext
+  - Core: TEST46.core26
+    Cache: TEST46.core26.L1.cache
+    ISA: TEST46.isa
+    RegisterClasses:
+      - RegClass: TEST46.regclass
+      - RegClass: TEST46.csrregclass
+    Extensions:
+      - Extension: TEST46.ext
+  - Core: TEST46.core27
+    Cache: TEST46.core27.L1.cache
+    ISA: TEST46.isa
+    RegisterClasses:
+      - RegClass: TEST46.regclass
+      - RegClass: TEST46.csrregclass
+    Extensions:
+      - Extension: TEST46.ext
+  - Core: TEST46.core28
+    Cache: TEST46.core28.L1.cache
+    ISA: TEST46.isa
+    RegisterClasses:
+      - RegClass: TEST46.regclass
+      - RegClass: TEST46.csrregclass
+    Extensions:
+      - Extension: TEST46.ext
+  - Core: TEST46.core29
+    Cache: TEST46.core29.L1.cache
+    ISA: TEST46.isa
+    RegisterClasses:
+      - RegClass: TEST46.regclass
+      - RegClass: TEST46.csrregclass
+    Extensions:
+      - Extension: TEST46.ext
+  - Core: TEST46.core30
+    Cache: TEST46.core30.L1.cache
+    ISA: TEST46.isa
+    RegisterClasses:
+      - RegClass: TEST46.regclass
+      - RegClass: TEST46.csrregclass
+    Extensions:
+      - Extension: TEST46.ext
+  - Core: TEST46.core31
+    Cache: TEST46.core31.L1.cache
+    ISA: TEST46.isa
+    RegisterClasses:
+      - RegClass: TEST46.regclass
+      - RegClass: TEST46.csrregclass
+    Extensions:
+      - Extension: TEST46.ext
+  - Core: TEST46.core32
+    Cache: TEST46.core32.L1.cache
+    ISA: TEST46.isa
+    RegisterClasses:
+      - RegClass: TEST46.regclass
+      - RegClass: TEST46.csrregclass
+    Extensions:
+      - Extension: TEST46.ext
+  - Core: TEST46.core33
+    Cache: TEST46.core33.L1.cache
+    ISA: TEST46.isa
+    RegisterClasses:
+      - RegClass: TEST46.regclass
+      - RegClass: TEST46.csrregclass
+    Extensions:
+      - Extension: TEST46.ext
+  - Core: TEST46.core34
+    Cache: TEST46.core34.L1.cache
+    ISA: TEST46.isa
+    RegisterClasses:
+      - RegClass: TEST46.regclass
+      - RegClass: TEST46.csrregclass
+    Extensions:
+      - Extension: TEST46.ext
+  - Core: TEST46.core35
+    Cache: TEST46.core35.L1.cache
+    ISA: TEST46.isa
+    RegisterClasses:
+      - RegClass: TEST46.regclass
+      - RegClass: TEST46.csrregclass
+    Extensions:
+      - Extension: TEST46.ext
+  - Core: TEST46.core36
+    Cache: TEST46.core36.L1.cache
+    ISA: TEST46.isa
+    RegisterClasses:
+      - RegClass: TEST46.regclass
+      - RegClass: TEST46.csrregclass
+    Extensions:
+      - Extension: TEST46.ext
+  - Core: TEST46.core37
+    Cache: TEST46.core37.L1.cache
+    ISA: TEST46.isa
+    RegisterClasses:
+      - RegClass: TEST46.regclass
+      - RegClass: TEST46.csrregclass
+    Extensions:
+      - Extension: TEST46.ext
+  - Core: TEST46.core38
+    Cache: TEST46.core38.L1.cache
+    ISA: TEST46.isa
+    RegisterClasses:
+      - RegClass: TEST46.regclass
+      - RegClass: TEST46.csrregclass
+    Extensions:
+      - Extension: TEST46.ext
+  - Core: TEST46.core39
+    Cache: TEST46.core39.L1.cache
+    ISA: TEST46.isa
+    RegisterClasses:
+      - RegClass: TEST46.regclass
+      - RegClass: TEST46.csrregclass
+    Extensions:
+      - Extension: TEST46.ext
+  - Core: TEST46.core40
+    Cache: TEST46.core40.L1.cache
+    ISA: TEST46.isa
+    RegisterClasses:
+      - RegClass: TEST46.regclass
+      - RegClass: TEST46.csrregclass
+    Extensions:
+      - Extension: TEST46.ext
+  - Core: TEST46.core41
+    Cache: TEST46.core41.L1.cache
+    ISA: TEST46.isa
+    RegisterClasses:
+      - RegClass: TEST46.regclass
+      - RegClass: TEST46.csrregclass
+    Extensions:
+      - Extension: TEST46.ext
+  - Core: TEST46.core42
+    Cache: TEST46.core42.L1.cache
+    ISA: TEST46.isa
+    RegisterClasses:
+      - RegClass: TEST46.regclass
+      - RegClass: TEST46.csrregclass
+    Extensions:
+      - Extension: TEST46.ext
+  - Core: TEST46.core43
+    Cache: TEST46.core43.L1.cache
+    ISA: TEST46.isa
+    RegisterClasses:
+      - RegClass: TEST46.regclass
+      - RegClass: TEST46.csrregclass
+    Extensions:
+      - Extension: TEST46.ext
+  - Core: TEST46.core44
+    Cache: TEST46.core44.L1.cache
+    ISA: TEST46.isa
+    RegisterClasses:
+      - RegClass: TEST46.regclass
+      - RegClass: TEST46.csrregclass
+    Extensions:
+      - Extension: TEST46.ext
+  - Core: TEST46.core45
+    Cache: TEST46.core45.L1.cache
+    ISA: TEST46.isa
+    RegisterClasses:
+      - RegClass: TEST46.regclass
+      - RegClass: TEST46.csrregclass
+    Extensions:
+      - Extension: TEST46.ext
+  - Core: TEST46.core46
+    Cache: TEST46.core46.L1.cache
+    ISA: TEST46.isa
+    RegisterClasses:
+      - RegClass: TEST46.regclass
+      - RegClass: TEST46.csrregclass
+    Extensions:
+      - Extension: TEST46.ext
+  - Core: TEST46.core47
+    Cache: TEST46.core47.L1.cache
+    ISA: TEST46.isa
+    RegisterClasses:
+      - RegClass: TEST46.regclass
+      - RegClass: TEST46.csrregclass
+    Extensions:
+      - Extension: TEST46.ext
+  - Core: TEST46.core48
+    Cache: TEST46.core48.L1.cache
+    ISA: TEST46.isa
+    RegisterClasses:
+      - RegClass: TEST46.regclass
+      - RegClass: TEST46.csrregclass
+    Extensions:
+      - Extension: TEST46.ext
+  - Core: TEST46.core49
+    Cache: TEST46.core49.L1.cache
+    ISA: TEST46.isa
+    RegisterClasses:
+      - RegClass: TEST46.regclass
+      - RegClass: TEST46.csrregclass
+    Extensions:
+      - Extension: TEST46.ext
+  - Core: TEST46.core50
+    Cache: TEST46.core50.L1.cache
+    ISA: TEST46.isa
+    RegisterClasses:
+      - RegClass: TEST46.regclass
+      - RegClass: TEST46.csrregclass
+    Extensions:
+      - Extension: TEST46.ext
+  - Core: TEST46.core51
+    Cache: TEST46.core51.L1.cache
+    ISA: TEST46.isa
+    RegisterClasses:
+      - RegClass: TEST46.regclass
+      - RegClass: TEST46.csrregclass
+    Extensions:
+      - Extension: TEST46.ext
+  - Core: TEST46.core52
+    Cache: TEST46.core52.L1.cache
+    ISA: TEST46.isa
+    RegisterClasses:
+      - RegClass: TEST46.regclass
+      - RegClass: TEST46.csrregclass
+    Extensions:
+      - Extension: TEST46.ext
+  - Core: TEST46.core53
+    Cache: TEST46.core53.L1.cache
+    ISA: TEST46.isa
+    RegisterClasses:
+      - RegClass: TEST46.regclass
+      - RegClass: TEST46.csrregclass
+    Extensions:
+      - Extension: TEST46.ext
+  - Core: TEST46.core54
+    Cache: TEST46.core54.L1.cache
+    ISA: TEST46.isa
+    RegisterClasses:
+      - RegClass: TEST46.regclass
+      - RegClass: TEST46.csrregclass
+    Extensions:
+      - Extension: TEST46.ext
+  - Core: TEST46.core55
+    Cache: TEST46.core55.L1.cache
+    ISA: TEST46.isa
+    RegisterClasses:
+      - RegClass: TEST46.regclass
+      - RegClass: TEST46.csrregclass
+    Extensions:
+      - Extension: TEST46.ext
+  - Core: TEST46.core56
+    Cache: TEST46.core56.L1.cache
+    ISA: TEST46.isa
+    RegisterClasses:
+      - RegClass: TEST46.regclass
+      - RegClass: TEST46.csrregclass
+    Extensions:
+      - Extension: TEST46.ext
+  - Core: TEST46.core57
+    Cache: TEST46.core57.L1.cache
+    ISA: TEST46.isa
+    RegisterClasses:
+      - RegClass: TEST46.regclass
+      - RegClass: TEST46.csrregclass
+    Extensions:
+      - Extension: TEST46.ext
+  - Core: TEST46.core58
+    Cache: TEST46.core58.L1.cache
+    ISA: TEST46.isa
+    RegisterClasses:
+      - RegClass: TEST46.regclass
+      - RegClass: TEST46.csrregclass
+    Extensions:
+      - Extension: TEST46.ext
+  - Core: TEST46.core59
+    Cache: TEST46.core59.L1.cache
+    ISA: TEST46.isa
+    RegisterClasses:
+      - RegClass: TEST46.regclass
+      - RegClass: TEST46.csrregclass
+    Extensions:
+      - Extension: TEST46.ext
+  - Core: TEST46.core60
+    Cache: TEST46.core60.L1.cache
+    ISA: TEST46.isa
+    RegisterClasses:
+      - RegClass: TEST46.regclass
+      - RegClass: TEST46.csrregclass
+    Extensions:
+      - Extension: TEST46.ext
+  - Core: TEST46.core61
+    Cache: TEST46.core61.L1.cache
+    ISA: TEST46.isa
+    RegisterClasses:
+      - RegClass: TEST46.regclass
+      - RegClass: TEST46.csrregclass
+    Extensions:
+      - Extension: TEST46.ext
+  - Core: TEST46.core62
+    Cache: TEST46.core62.L1.cache
+    ISA: TEST46.isa
+    RegisterClasses:
+      - RegClass: TEST46.regclass
+      - RegClass: TEST46.csrregclass
+    Extensions:
+      - Extension: TEST46.ext
+  - Core: TEST46.core63
+    Cache: TEST46.core63.L1.cache
+    ISA: TEST46.isa
+    RegisterClasses:
+      - RegClass: TEST46.regclass
+      - RegClass: TEST46.csrregclass
+    Extensions:
+      - Extension: TEST46.ext
+Socs:
+  - Soc: TEST46.soc
+    Cores:
+      - Core: TEST46.core0
+      - Core: TEST46.core1
+      - Core: TEST46.core2
+      - Core: TEST46.core3
+      - Core: TEST46.core4
+      - Core: TEST46.core5
+      - Core: TEST46.core6
+      - Core: TEST46.core7
+      - Core: TEST46.core8
+      - Core: TEST46.core9
+      - Core: TEST46.core10
+      - Core: TEST46.core11
+      - Core: TEST46.core12
+      - Core: TEST46.core13
+      - Core: TEST46.core14
+      - Core: TEST46.core15
+      - Core: TEST46.core16
+      - Core: TEST46.core17
+      - Core: TEST46.core18
+      - Core: TEST46.core19
+      - Core: TEST46.core20
+      - Core: TEST46.core21
+      - Core: TEST46.core22
+      - Core: TEST46.core23
+      - Core: TEST46.core24
+      - Core: TEST46.core25
+      - Core: TEST46.core26
+      - Core: TEST46.core27
+      - Core: TEST46.core28
+      - Core: TEST46.core29
+      - Core: TEST46.core30
+      - Core: TEST46.core31
+      - Core: TEST46.core32
+      - Core: TEST46.core33
+      - Core: TEST46.core34
+      - Core: TEST46.core35
+      - Core: TEST46.core36
+      - Core: TEST46.core37
+      - Core: TEST46.core38
+      - Core: TEST46.core39
+      - Core: TEST46.core40
+      - Core: TEST46.core41
+      - Core: TEST46.core42
+      - Core: TEST46.core43
+      - Core: TEST46.core44
+      - Core: TEST46.core45
+      - Core: TEST46.core46
+      - Core: TEST46.core47
+      - Core: TEST46.core48
+      - Core: TEST46.core49
+      - Core: TEST46.core50
+      - Core: TEST46.core51
+      - Core: TEST46.core52
+      - Core: TEST46.core53
+      - Core: TEST46.core54
+      - Core: TEST46.core55
+      - Core: TEST46.core56
+      - Core: TEST46.core57
+      - Core: TEST46.core58
+      - Core: TEST46.core59
+      - Core: TEST46.core60
+      - Core: TEST46.core61
+      - Core: TEST46.core62
+      - Core: TEST46.core63

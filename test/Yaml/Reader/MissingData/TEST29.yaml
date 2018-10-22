@@ -1,0 +1,2671 @@
+ProjectInfo:
+  - ProjectName: TEST61
+    ProjectRoot: ./
+    ProjectType: unknown
+    ChiselMajorVersion: 3
+    ChiselMinorVersion: 0
+Registers:
+  - RegName: TEST61.0.reg
+    Width: 64
+    Index: 0
+    PseudoName: pseudoreg.0
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    Shared: false
+  - RegName: TEST61.1.reg
+    Width: 64
+    Index: 1
+    PseudoName: pseudoreg.1
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    Shared: false
+  - RegName: TEST61.2.reg
+    Width: 64
+    Index: 2
+    PseudoName: pseudoreg.2
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    Shared: false
+  - RegName: TEST61.3.reg
+    Width: 64
+    Index: 3
+    PseudoName: pseudoreg.3
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    Shared: false
+  - RegName: TEST61.4.reg
+    Width: 64
+    Index: 4
+    PseudoName: pseudoreg.4
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    Shared: false
+  - RegName: TEST61.5.reg
+    Width: 64
+    Index: 5
+    PseudoName: pseudoreg.5
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    Shared: false
+  - RegName: TEST61.6.reg
+    Width: 64
+    Index: 6
+    PseudoName: pseudoreg.6
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    Shared: false
+  - RegName: TEST61.7.reg
+    Width: 64
+    Index: 7
+    PseudoName: pseudoreg.7
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    Shared: false
+  - RegName: TEST61.8.reg
+    Width: 64
+    Index: 8
+    PseudoName: pseudoreg.8
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    Shared: false
+  - RegName: TEST61.9.reg
+    Width: 64
+    Index: 9
+    PseudoName: pseudoreg.9
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    Shared: false
+  - RegName: TEST61.10.reg
+    Width: 64
+    Index: 10
+    PseudoName: pseudoreg.10
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    Shared: false
+  - RegName: TEST61.11.reg
+    Width: 64
+    Index: 11
+    PseudoName: pseudoreg.11
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    Shared: false
+  - RegName: TEST61.12.reg
+    Width: 64
+    Index: 12
+    PseudoName: pseudoreg.12
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    Shared: false
+  - RegName: TEST61.13.reg
+    Width: 64
+    Index: 13
+    PseudoName: pseudoreg.13
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    Shared: false
+  - RegName: TEST61.14.reg
+    Width: 64
+    Index: 14
+    PseudoName: pseudoreg.14
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    Shared: false
+  - RegName: TEST61.15.reg
+    Width: 64
+    Index: 15
+    PseudoName: pseudoreg.15
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    Shared: false
+  - RegName: TEST61.16.reg
+    Width: 64
+    Index: 16
+    PseudoName: pseudoreg.16
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    Shared: false
+  - RegName: TEST61.17.reg
+    Width: 64
+    Index: 17
+    PseudoName: pseudoreg.17
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    Shared: false
+  - RegName: TEST61.18.reg
+    Width: 64
+    Index: 18
+    PseudoName: pseudoreg.18
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    Shared: false
+  - RegName: TEST61.19.reg
+    Width: 64
+    Index: 19
+    PseudoName: pseudoreg.19
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    Shared: false
+  - RegName: TEST61.20.reg
+    Width: 64
+    Index: 20
+    PseudoName: pseudoreg.20
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    Shared: false
+  - RegName: TEST61.21.reg
+    Width: 64
+    Index: 21
+    PseudoName: pseudoreg.21
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    Shared: false
+  - RegName: TEST61.22.reg
+    Width: 64
+    Index: 22
+    PseudoName: pseudoreg.22
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    Shared: false
+  - RegName: TEST61.23.reg
+    Width: 64
+    Index: 23
+    PseudoName: pseudoreg.23
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    Shared: false
+  - RegName: TEST61.24.reg
+    Width: 64
+    Index: 24
+    PseudoName: pseudoreg.24
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    Shared: false
+  - RegName: TEST61.25.reg
+    Width: 64
+    Index: 25
+    PseudoName: pseudoreg.25
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    Shared: false
+  - RegName: TEST61.26.reg
+    Width: 64
+    Index: 26
+    PseudoName: pseudoreg.26
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    Shared: false
+  - RegName: TEST61.27.reg
+    Width: 64
+    Index: 27
+    PseudoName: pseudoreg.27
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    Shared: false
+  - RegName: TEST61.28.reg
+    Width: 64
+    Index: 28
+    PseudoName: pseudoreg.28
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    Shared: false
+  - RegName: TEST61.29.reg
+    Width: 64
+    Index: 29
+    PseudoName: pseudoreg.29
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    Shared: false
+  - RegName: TEST61.30.reg
+    Width: 64
+    Index: 30
+    PseudoName: pseudoreg.30
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    Shared: false
+  - RegName: TEST61.31.reg
+    Width: 64
+    Index: 31
+    PseudoName: pseudoreg.31
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    Shared: false
+  - RegName: TEST61.32.reg
+    Width: 64
+    Index: 32
+    PseudoName: pseudoreg.32
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    Shared: false
+  - RegName: TEST61.33.reg
+    Width: 64
+    Index: 33
+    PseudoName: pseudoreg.33
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    Shared: false
+  - RegName: TEST61.34.reg
+    Width: 64
+    Index: 34
+    PseudoName: pseudoreg.34
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    Shared: false
+  - RegName: TEST61.35.reg
+    Width: 64
+    Index: 35
+    PseudoName: pseudoreg.35
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    Shared: false
+  - RegName: TEST61.36.reg
+    Width: 64
+    Index: 36
+    PseudoName: pseudoreg.36
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    Shared: false
+  - RegName: TEST61.37.reg
+    Width: 64
+    Index: 37
+    PseudoName: pseudoreg.37
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    Shared: false
+  - RegName: TEST61.38.reg
+    Width: 64
+    Index: 38
+    PseudoName: pseudoreg.38
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    Shared: false
+  - RegName: TEST61.39.reg
+    Width: 64
+    Index: 39
+    PseudoName: pseudoreg.39
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    Shared: false
+  - RegName: TEST61.40.reg
+    Width: 64
+    Index: 40
+    PseudoName: pseudoreg.40
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    Shared: false
+  - RegName: TEST61.41.reg
+    Width: 64
+    Index: 41
+    PseudoName: pseudoreg.41
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    Shared: false
+  - RegName: TEST61.42.reg
+    Width: 64
+    Index: 42
+    PseudoName: pseudoreg.42
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    Shared: false
+  - RegName: TEST61.43.reg
+    Width: 64
+    Index: 43
+    PseudoName: pseudoreg.43
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    Shared: false
+  - RegName: TEST61.44.reg
+    Width: 64
+    Index: 44
+    PseudoName: pseudoreg.44
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    Shared: false
+  - RegName: TEST61.45.reg
+    Width: 64
+    Index: 45
+    PseudoName: pseudoreg.45
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    Shared: false
+  - RegName: TEST61.46.reg
+    Width: 64
+    Index: 46
+    PseudoName: pseudoreg.46
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    Shared: false
+  - RegName: TEST61.47.reg
+    Width: 64
+    Index: 47
+    PseudoName: pseudoreg.47
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    Shared: false
+  - RegName: TEST61.48.reg
+    Width: 64
+    Index: 48
+    PseudoName: pseudoreg.48
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    Shared: false
+  - RegName: TEST61.49.reg
+    Width: 64
+    Index: 49
+    PseudoName: pseudoreg.49
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    Shared: false
+  - RegName: TEST61.50.reg
+    Width: 64
+    Index: 50
+    PseudoName: pseudoreg.50
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    Shared: false
+  - RegName: TEST61.51.reg
+    Width: 64
+    Index: 51
+    PseudoName: pseudoreg.51
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    Shared: false
+  - RegName: TEST61.52.reg
+    Width: 64
+    Index: 52
+    PseudoName: pseudoreg.52
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    Shared: false
+  - RegName: TEST61.53.reg
+    Width: 64
+    Index: 53
+    PseudoName: pseudoreg.53
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    Shared: false
+  - RegName: TEST61.54.reg
+    Width: 64
+    Index: 54
+    PseudoName: pseudoreg.54
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    Shared: false
+  - RegName: TEST61.55.reg
+    Width: 64
+    Index: 55
+    PseudoName: pseudoreg.55
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    Shared: false
+  - RegName: TEST61.56.reg
+    Width: 64
+    Index: 56
+    PseudoName: pseudoreg.56
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    Shared: false
+  - RegName: TEST61.57.reg
+    Width: 64
+    Index: 57
+    PseudoName: pseudoreg.57
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    Shared: false
+  - RegName: TEST61.58.reg
+    Width: 64
+    Index: 58
+    PseudoName: pseudoreg.58
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    Shared: false
+  - RegName: TEST61.59.reg
+    Width: 64
+    Index: 59
+    PseudoName: pseudoreg.59
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    Shared: false
+  - RegName: TEST61.60.reg
+    Width: 64
+    Index: 60
+    PseudoName: pseudoreg.60
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    Shared: false
+  - RegName: TEST61.61.reg
+    Width: 64
+    Index: 61
+    PseudoName: pseudoreg.61
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    Shared: false
+  - RegName: TEST61.62.reg
+    Width: 64
+    Index: 62
+    PseudoName: pseudoreg.62
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    Shared: false
+  - RegName: TEST61.63.reg
+    Width: 64
+    Index: 63
+    PseudoName: pseudoreg.63
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    Shared: false
+  - RegName: TEST61.0.csr
+    Width: 64
+    Index: 0
+    PseudoName: csr.0
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    Shared: false
+  - RegName: TEST61.1.csr
+    Width: 64
+    Index: 1
+    PseudoName: csr.1
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    Shared: false
+  - RegName: TEST61.2.csr
+    Width: 64
+    Index: 2
+    PseudoName: csr.2
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    Shared: false
+  - RegName: TEST61.3.csr
+    Width: 64
+    Index: 3
+    PseudoName: csr.3
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    Shared: false
+  - RegName: TEST61.4.csr
+    Width: 64
+    Index: 4
+    PseudoName: csr.4
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    Shared: false
+  - RegName: TEST61.5.csr
+    Width: 64
+    Index: 5
+    PseudoName: csr.5
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    Shared: false
+  - RegName: TEST61.6.csr
+    Width: 64
+    Index: 6
+    PseudoName: csr.6
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    Shared: false
+  - RegName: TEST61.7.csr
+    Width: 64
+    Index: 7
+    PseudoName: csr.7
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    Shared: false
+  - RegName: TEST61.8.csr
+    Width: 64
+    Index: 8
+    PseudoName: csr.8
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    Shared: false
+  - RegName: TEST61.9.csr
+    Width: 64
+    Index: 9
+    PseudoName: csr.9
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    Shared: false
+  - RegName: TEST61.10.csr
+    Width: 64
+    Index: 10
+    PseudoName: csr.10
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    Shared: false
+  - RegName: TEST61.11.csr
+    Width: 64
+    Index: 11
+    PseudoName: csr.11
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    Shared: false
+  - RegName: TEST61.12.csr
+    Width: 64
+    Index: 12
+    PseudoName: csr.12
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    Shared: false
+  - RegName: TEST61.13.csr
+    Width: 64
+    Index: 13
+    PseudoName: csr.13
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    Shared: false
+  - RegName: TEST61.14.csr
+    Width: 64
+    Index: 14
+    PseudoName: csr.14
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    Shared: false
+  - RegName: TEST61.15.csr
+    Width: 64
+    Index: 15
+    PseudoName: csr.15
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    Shared: false
+  - RegName: TEST61.16.csr
+    Width: 64
+    Index: 16
+    PseudoName: csr.16
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    Shared: false
+  - RegName: TEST61.17.csr
+    Width: 64
+    Index: 17
+    PseudoName: csr.17
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    Shared: false
+  - RegName: TEST61.18.csr
+    Width: 64
+    Index: 18
+    PseudoName: csr.18
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    Shared: false
+  - RegName: TEST61.19.csr
+    Width: 64
+    Index: 19
+    PseudoName: csr.19
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    Shared: false
+  - RegName: TEST61.20.csr
+    Width: 64
+    Index: 20
+    PseudoName: csr.20
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    Shared: false
+  - RegName: TEST61.21.csr
+    Width: 64
+    Index: 21
+    PseudoName: csr.21
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    Shared: false
+  - RegName: TEST61.22.csr
+    Width: 64
+    Index: 22
+    PseudoName: csr.22
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    Shared: false
+  - RegName: TEST61.23.csr
+    Width: 64
+    Index: 23
+    PseudoName: csr.23
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    Shared: false
+  - RegName: TEST61.24.csr
+    Width: 64
+    Index: 24
+    PseudoName: csr.24
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    Shared: false
+  - RegName: TEST61.25.csr
+    Width: 64
+    Index: 25
+    PseudoName: csr.25
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    Shared: false
+  - RegName: TEST61.26.csr
+    Width: 64
+    Index: 26
+    PseudoName: csr.26
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    Shared: false
+  - RegName: TEST61.27.csr
+    Width: 64
+    Index: 27
+    PseudoName: csr.27
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    Shared: false
+  - RegName: TEST61.28.csr
+    Width: 64
+    Index: 28
+    PseudoName: csr.28
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    Shared: false
+  - RegName: TEST61.29.csr
+    Width: 64
+    Index: 29
+    PseudoName: csr.29
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    Shared: false
+  - RegName: TEST61.30.csr
+    Width: 64
+    Index: 30
+    PseudoName: csr.30
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    Shared: false
+  - RegName: TEST61.31.csr
+    Width: 64
+    Index: 31
+    PseudoName: csr.31
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    Shared: false
+  - RegName: TEST61.32.csr
+    Width: 64
+    Index: 32
+    PseudoName: csr.32
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    Shared: false
+  - RegName: TEST61.33.csr
+    Width: 64
+    Index: 33
+    PseudoName: csr.33
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    Shared: false
+  - RegName: TEST61.34.csr
+    Width: 64
+    Index: 34
+    PseudoName: csr.34
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    Shared: false
+  - RegName: TEST61.35.csr
+    Width: 64
+    Index: 35
+    PseudoName: csr.35
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    Shared: false
+  - RegName: TEST61.36.csr
+    Width: 64
+    Index: 36
+    PseudoName: csr.36
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    Shared: false
+  - RegName: TEST61.37.csr
+    Width: 64
+    Index: 37
+    PseudoName: csr.37
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    Shared: false
+  - RegName: TEST61.38.csr
+    Width: 64
+    Index: 38
+    PseudoName: csr.38
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    Shared: false
+  - RegName: TEST61.39.csr
+    Width: 64
+    Index: 39
+    PseudoName: csr.39
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    Shared: false
+  - RegName: TEST61.40.csr
+    Width: 64
+    Index: 40
+    PseudoName: csr.40
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    Shared: false
+  - RegName: TEST61.41.csr
+    Width: 64
+    Index: 41
+    PseudoName: csr.41
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    Shared: false
+  - RegName: TEST61.42.csr
+    Width: 64
+    Index: 42
+    PseudoName: csr.42
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    Shared: false
+  - RegName: TEST61.43.csr
+    Width: 64
+    Index: 43
+    PseudoName: csr.43
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    Shared: false
+  - RegName: TEST61.44.csr
+    Width: 64
+    Index: 44
+    PseudoName: csr.44
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    Shared: false
+  - RegName: TEST61.45.csr
+    Width: 64
+    Index: 45
+    PseudoName: csr.45
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    Shared: false
+  - RegName: TEST61.46.csr
+    Width: 64
+    Index: 46
+    PseudoName: csr.46
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    Shared: false
+  - RegName: TEST61.47.csr
+    Width: 64
+    Index: 47
+    PseudoName: csr.47
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    Shared: false
+  - RegName: TEST61.48.csr
+    Width: 64
+    Index: 48
+    PseudoName: csr.48
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    Shared: false
+  - RegName: TEST61.49.csr
+    Width: 64
+    Index: 49
+    PseudoName: csr.49
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    Shared: false
+  - RegName: TEST61.50.csr
+    Width: 64
+    Index: 50
+    PseudoName: csr.50
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    Shared: false
+  - RegName: TEST61.51.csr
+    Width: 64
+    Index: 51
+    PseudoName: csr.51
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    Shared: false
+  - RegName: TEST61.52.csr
+    Width: 64
+    Index: 52
+    PseudoName: csr.52
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    Shared: false
+  - RegName: TEST61.53.csr
+    Width: 64
+    Index: 53
+    PseudoName: csr.53
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    Shared: false
+  - RegName: TEST61.54.csr
+    Width: 64
+    Index: 54
+    PseudoName: csr.54
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    Shared: false
+  - RegName: TEST61.55.csr
+    Width: 64
+    Index: 55
+    PseudoName: csr.55
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    Shared: false
+  - RegName: TEST61.56.csr
+    Width: 64
+    Index: 56
+    PseudoName: csr.56
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    Shared: false
+  - RegName: TEST61.57.csr
+    Width: 64
+    Index: 57
+    PseudoName: csr.57
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    Shared: false
+  - RegName: TEST61.58.csr
+    Width: 64
+    Index: 58
+    PseudoName: csr.58
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    Shared: false
+  - RegName: TEST61.59.csr
+    Width: 64
+    Index: 59
+    PseudoName: csr.59
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    Shared: false
+  - RegName: TEST61.60.csr
+    Width: 64
+    Index: 60
+    PseudoName: csr.60
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    Shared: false
+  - RegName: TEST61.61.csr
+    Width: 64
+    Index: 61
+    PseudoName: csr.61
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    Shared: false
+  - RegName: TEST61.62.csr
+    Width: 64
+    Index: 62
+    PseudoName: csr.62
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    Shared: false
+  - RegName: TEST61.63.csr
+    Width: 64
+    Index: 63
+    PseudoName: csr.63
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    Shared: false
+RegClasses:
+  - RegisterClassName: TEST61.regclass
+    Registers:
+      - TEST61.0.reg
+      - TEST61.1.reg
+      - TEST61.2.reg
+      - TEST61.3.reg
+      - TEST61.4.reg
+      - TEST61.5.reg
+      - TEST61.6.reg
+      - TEST61.7.reg
+      - TEST61.8.reg
+      - TEST61.9.reg
+      - TEST61.10.reg
+      - TEST61.11.reg
+      - TEST61.12.reg
+      - TEST61.13.reg
+      - TEST61.14.reg
+      - TEST61.15.reg
+      - TEST61.16.reg
+      - TEST61.17.reg
+      - TEST61.18.reg
+      - TEST61.19.reg
+      - TEST61.20.reg
+      - TEST61.21.reg
+      - TEST61.22.reg
+      - TEST61.23.reg
+      - TEST61.24.reg
+      - TEST61.25.reg
+      - TEST61.26.reg
+      - TEST61.27.reg
+      - TEST61.28.reg
+      - TEST61.29.reg
+      - TEST61.30.reg
+      - TEST61.31.reg
+      - TEST61.32.reg
+      - TEST61.33.reg
+      - TEST61.34.reg
+      - TEST61.35.reg
+      - TEST61.36.reg
+      - TEST61.37.reg
+      - TEST61.38.reg
+      - TEST61.39.reg
+      - TEST61.40.reg
+      - TEST61.41.reg
+      - TEST61.42.reg
+      - TEST61.43.reg
+      - TEST61.44.reg
+      - TEST61.45.reg
+      - TEST61.46.reg
+      - TEST61.47.reg
+      - TEST61.48.reg
+      - TEST61.49.reg
+      - TEST61.50.reg
+      - TEST61.51.reg
+      - TEST61.52.reg
+      - TEST61.53.reg
+      - TEST61.54.reg
+      - TEST61.55.reg
+      - TEST61.56.reg
+      - TEST61.57.reg
+      - TEST61.58.reg
+      - TEST61.59.reg
+      - TEST61.60.reg
+      - TEST61.61.reg
+      - TEST61.62.reg
+      - TEST61.63.reg
+  - RegisterClassName: TEST61.csrregclass
+    Registers:
+      - TEST61.0.csr
+      - TEST61.1.csr
+      - TEST61.2.csr
+      - TEST61.3.csr
+      - TEST61.4.csr
+      - TEST61.5.csr
+      - TEST61.6.csr
+      - TEST61.7.csr
+      - TEST61.8.csr
+      - TEST61.9.csr
+      - TEST61.10.csr
+      - TEST61.11.csr
+      - TEST61.12.csr
+      - TEST61.13.csr
+      - TEST61.14.csr
+      - TEST61.15.csr
+      - TEST61.16.csr
+      - TEST61.17.csr
+      - TEST61.18.csr
+      - TEST61.19.csr
+      - TEST61.20.csr
+      - TEST61.21.csr
+      - TEST61.22.csr
+      - TEST61.23.csr
+      - TEST61.24.csr
+      - TEST61.25.csr
+      - TEST61.26.csr
+      - TEST61.27.csr
+      - TEST61.28.csr
+      - TEST61.29.csr
+      - TEST61.30.csr
+      - TEST61.31.csr
+      - TEST61.32.csr
+      - TEST61.33.csr
+      - TEST61.34.csr
+      - TEST61.35.csr
+      - TEST61.36.csr
+      - TEST61.37.csr
+      - TEST61.38.csr
+      - TEST61.39.csr
+      - TEST61.40.csr
+      - TEST61.41.csr
+      - TEST61.42.csr
+      - TEST61.43.csr
+      - TEST61.44.csr
+      - TEST61.45.csr
+      - TEST61.46.csr
+      - TEST61.47.csr
+      - TEST61.48.csr
+      - TEST61.49.csr
+      - TEST61.50.csr
+      - TEST61.51.csr
+      - TEST61.52.csr
+      - TEST61.53.csr
+      - TEST61.54.csr
+      - TEST61.55.csr
+      - TEST61.56.csr
+      - TEST61.57.csr
+      - TEST61.58.csr
+      - TEST61.59.csr
+      - TEST61.60.csr
+      - TEST61.61.csr
+      - TEST61.62.csr
+      - TEST61.63.csr
+ISAs:
+  - ISAName: TEST61.isa
+InstFormats:
+  - InstFormatName: TEST61.if
+    ISA: TEST61.isa
+    FormatWidth: 32
+    Fields:
+      - FieldName: opcode
+        FieldType: CGInstCode
+        FieldWidth: 8
+        StartBit: 0
+        EndBit: 7
+        MandatoryField: true
+      - FieldName: RB
+        FieldType: CGInstReg
+        FieldWidth: 8
+        StartBit: 8
+        EndBit: 15
+        MandatoryField: false
+        RegClass: TEST61.regclass
+      - FieldName: RA
+        FieldType: CGInstReg
+        FieldWidth: 8
+        StartBit: 16
+        EndBit: 23
+        MandatoryField: false
+        RegClass: TEST61.regclass
+      - FieldName: RT
+        FieldType: CGInstReg
+        FieldWidth: 8
+        StartBit: 24
+        EndBit: 31
+        MandatoryField: false
+        RegClass: TEST61.csrregclass
+Insts:
+  - Inst: TEST61.inst0
+    ISA: TEST61.isa
+    InstFormat: TEST61.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 1
+  - Inst: TEST61.inst1
+    ISA: TEST61.isa
+    InstFormat: TEST61.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 2
+  - Inst: TEST61.inst2
+    ISA: TEST61.isa
+    InstFormat: TEST61.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 3
+  - Inst: TEST61.inst3
+    ISA: TEST61.isa
+    InstFormat: TEST61.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 4
+  - Inst: TEST61.inst4
+    ISA: TEST61.isa
+    InstFormat: TEST61.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 5
+  - Inst: TEST61.inst5
+    ISA: TEST61.isa
+    InstFormat: TEST61.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 6
+  - Inst: TEST61.inst6
+    ISA: TEST61.isa
+    InstFormat: TEST61.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 7
+  - Inst: TEST61.inst7
+    ISA: TEST61.isa
+    InstFormat: TEST61.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 8
+  - Inst: TEST61.inst8
+    ISA: TEST61.isa
+    InstFormat: TEST61.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 9
+  - Inst: TEST61.inst9
+    ISA: TEST61.isa
+    InstFormat: TEST61.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 10
+  - Inst: TEST61.inst10
+    ISA: TEST61.isa
+    InstFormat: TEST61.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 11
+  - Inst: TEST61.inst11
+    ISA: TEST61.isa
+    InstFormat: TEST61.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 12
+  - Inst: TEST61.inst12
+    ISA: TEST61.isa
+    InstFormat: TEST61.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 13
+  - Inst: TEST61.inst13
+    ISA: TEST61.isa
+    InstFormat: TEST61.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 14
+  - Inst: TEST61.inst14
+    ISA: TEST61.isa
+    InstFormat: TEST61.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 15
+  - Inst: TEST61.inst15
+    ISA: TEST61.isa
+    InstFormat: TEST61.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 16
+  - Inst: TEST61.inst16
+    ISA: TEST61.isa
+    InstFormat: TEST61.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 17
+  - Inst: TEST61.inst17
+    ISA: TEST61.isa
+    InstFormat: TEST61.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 18
+  - Inst: TEST61.inst18
+    ISA: TEST61.isa
+    InstFormat: TEST61.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 19
+  - Inst: TEST61.inst19
+    ISA: TEST61.isa
+    InstFormat: TEST61.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 20
+  - Inst: TEST61.inst20
+    ISA: TEST61.isa
+    InstFormat: TEST61.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 21
+  - Inst: TEST61.inst21
+    ISA: TEST61.isa
+    InstFormat: TEST61.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 22
+  - Inst: TEST61.inst22
+    ISA: TEST61.isa
+    InstFormat: TEST61.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 23
+  - Inst: TEST61.inst23
+    ISA: TEST61.isa
+    InstFormat: TEST61.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 24
+  - Inst: TEST61.inst24
+    ISA: TEST61.isa
+    InstFormat: TEST61.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 25
+  - Inst: TEST61.inst25
+    ISA: TEST61.isa
+    InstFormat: TEST61.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 26
+  - Inst: TEST61.inst26
+    ISA: TEST61.isa
+    InstFormat: TEST61.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 27
+  - Inst: TEST61.inst27
+    ISA: TEST61.isa
+    InstFormat: TEST61.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 28
+  - Inst: TEST61.inst28
+    ISA: TEST61.isa
+    InstFormat: TEST61.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 29
+  - Inst: TEST61.inst29
+    ISA: TEST61.isa
+    InstFormat: TEST61.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 30
+  - Inst: TEST61.inst30
+    ISA: TEST61.isa
+    InstFormat: TEST61.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 31
+  - Inst: TEST61.inst31
+    ISA: TEST61.isa
+    InstFormat: TEST61.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 32
+  - Inst: TEST61.inst32
+    ISA: TEST61.isa
+    InstFormat: TEST61.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 33
+  - Inst: TEST61.inst33
+    ISA: TEST61.isa
+    InstFormat: TEST61.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 34
+  - Inst: TEST61.inst34
+    ISA: TEST61.isa
+    InstFormat: TEST61.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 35
+  - Inst: TEST61.inst35
+    ISA: TEST61.isa
+    InstFormat: TEST61.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 36
+  - Inst: TEST61.inst36
+    ISA: TEST61.isa
+    InstFormat: TEST61.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 37
+  - Inst: TEST61.inst37
+    ISA: TEST61.isa
+    InstFormat: TEST61.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 38
+  - Inst: TEST61.inst38
+    ISA: TEST61.isa
+    InstFormat: TEST61.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 39
+  - Inst: TEST61.inst39
+    ISA: TEST61.isa
+    InstFormat: TEST61.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 40
+  - Inst: TEST61.inst40
+    ISA: TEST61.isa
+    InstFormat: TEST61.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 41
+  - Inst: TEST61.inst41
+    ISA: TEST61.isa
+    InstFormat: TEST61.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 42
+  - Inst: TEST61.inst42
+    ISA: TEST61.isa
+    InstFormat: TEST61.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 43
+  - Inst: TEST61.inst43
+    ISA: TEST61.isa
+    InstFormat: TEST61.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 44
+  - Inst: TEST61.inst44
+    ISA: TEST61.isa
+    InstFormat: TEST61.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 45
+  - Inst: TEST61.inst45
+    ISA: TEST61.isa
+    InstFormat: TEST61.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 46
+  - Inst: TEST61.inst46
+    ISA: TEST61.isa
+    InstFormat: TEST61.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 47
+  - Inst: TEST61.inst47
+    ISA: TEST61.isa
+    InstFormat: TEST61.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 48
+  - Inst: TEST61.inst48
+    ISA: TEST61.isa
+    InstFormat: TEST61.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 49
+  - Inst: TEST61.inst49
+    ISA: TEST61.isa
+    InstFormat: TEST61.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 50
+  - Inst: TEST61.inst50
+    ISA: TEST61.isa
+    InstFormat: TEST61.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 51
+  - Inst: TEST61.inst51
+    ISA: TEST61.isa
+    InstFormat: TEST61.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 52
+  - Inst: TEST61.inst52
+    ISA: TEST61.isa
+    InstFormat: TEST61.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 53
+  - Inst: TEST61.inst53
+    ISA: TEST61.isa
+    InstFormat: TEST61.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 54
+  - Inst: TEST61.inst54
+    ISA: TEST61.isa
+    InstFormat: TEST61.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 55
+  - Inst: TEST61.inst55
+    ISA: TEST61.isa
+    InstFormat: TEST61.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 56
+  - Inst: TEST61.inst56
+    ISA: TEST61.isa
+    InstFormat: TEST61.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 57
+  - Inst: TEST61.inst57
+    ISA: TEST61.isa
+    InstFormat: TEST61.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 58
+  - Inst: TEST61.inst58
+    ISA: TEST61.isa
+    InstFormat: TEST61.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 59
+  - Inst: TEST61.inst59
+    ISA: TEST61.isa
+    InstFormat: TEST61.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 60
+  - Inst: TEST61.inst60
+    ISA: TEST61.isa
+    InstFormat: TEST61.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 61
+  - Inst: TEST61.inst61
+    ISA: TEST61.isa
+    InstFormat: TEST61.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 62
+  - Inst: TEST61.inst62
+    ISA: TEST61.isa
+    InstFormat: TEST61.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 63
+  - Inst: TEST61.inst63
+    ISA: TEST61.isa
+    InstFormat: TEST61.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 64
+PseudoInsts:
+  - PseudoInst: TEST61.pinst0
+    ISA: TEST61.isa
+    Inst: TEST61.inst0
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 0
+  - PseudoInst: TEST61.pinst1
+    ISA: TEST61.isa
+    Inst: TEST61.inst1
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 1
+  - PseudoInst: TEST61.pinst2
+    ISA: TEST61.isa
+    Inst: TEST61.inst2
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 2
+  - PseudoInst: TEST61.pinst3
+    ISA: TEST61.isa
+    Inst: TEST61.inst3
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 3
+  - PseudoInst: TEST61.pinst4
+    ISA: TEST61.isa
+    Inst: TEST61.inst4
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 4
+  - PseudoInst: TEST61.pinst5
+    ISA: TEST61.isa
+    Inst: TEST61.inst5
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 5
+  - PseudoInst: TEST61.pinst6
+    ISA: TEST61.isa
+    Inst: TEST61.inst6
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 6
+  - PseudoInst: TEST61.pinst7
+    ISA: TEST61.isa
+    Inst: TEST61.inst7
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 7
+  - PseudoInst: TEST61.pinst8
+    ISA: TEST61.isa
+    Inst: TEST61.inst8
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 8
+  - PseudoInst: TEST61.pinst9
+    ISA: TEST61.isa
+    Inst: TEST61.inst9
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 9
+  - PseudoInst: TEST61.pinst10
+    ISA: TEST61.isa
+    Inst: TEST61.inst10
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 10
+  - PseudoInst: TEST61.pinst11
+    ISA: TEST61.isa
+    Inst: TEST61.inst11
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 11
+  - PseudoInst: TEST61.pinst12
+    ISA: TEST61.isa
+    Inst: TEST61.inst12
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 12
+  - PseudoInst: TEST61.pinst13
+    ISA: TEST61.isa
+    Inst: TEST61.inst13
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 13
+  - PseudoInst: TEST61.pinst14
+    ISA: TEST61.isa
+    Inst: TEST61.inst14
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 14
+  - PseudoInst: TEST61.pinst15
+    ISA: TEST61.isa
+    Inst: TEST61.inst15
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 15
+  - PseudoInst: TEST61.pinst16
+    ISA: TEST61.isa
+    Inst: TEST61.inst16
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 16
+  - PseudoInst: TEST61.pinst17
+    ISA: TEST61.isa
+    Inst: TEST61.inst17
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 17
+  - PseudoInst: TEST61.pinst18
+    ISA: TEST61.isa
+    Inst: TEST61.inst18
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 18
+  - PseudoInst: TEST61.pinst19
+    ISA: TEST61.isa
+    Inst: TEST61.inst19
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 19
+  - PseudoInst: TEST61.pinst20
+    ISA: TEST61.isa
+    Inst: TEST61.inst20
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 20
+  - PseudoInst: TEST61.pinst21
+    ISA: TEST61.isa
+    Inst: TEST61.inst21
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 21
+  - PseudoInst: TEST61.pinst22
+    ISA: TEST61.isa
+    Inst: TEST61.inst22
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 22
+  - PseudoInst: TEST61.pinst23
+    ISA: TEST61.isa
+    Inst: TEST61.inst23
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 23
+  - PseudoInst: TEST61.pinst24
+    ISA: TEST61.isa
+    Inst: TEST61.inst24
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 24
+  - PseudoInst: TEST61.pinst25
+    ISA: TEST61.isa
+    Inst: TEST61.inst25
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 25
+  - PseudoInst: TEST61.pinst26
+    ISA: TEST61.isa
+    Inst: TEST61.inst26
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 26
+  - PseudoInst: TEST61.pinst27
+    ISA: TEST61.isa
+    Inst: TEST61.inst27
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 27
+  - PseudoInst: TEST61.pinst28
+    ISA: TEST61.isa
+    Inst: TEST61.inst28
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 28
+  - PseudoInst: TEST61.pinst29
+    ISA: TEST61.isa
+    Inst: TEST61.inst29
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 29
+  - PseudoInst: TEST61.pinst30
+    ISA: TEST61.isa
+    Inst: TEST61.inst30
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 30
+  - PseudoInst: TEST61.pinst31
+    ISA: TEST61.isa
+    Inst: TEST61.inst31
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 31
+  - PseudoInst: TEST61.pinst32
+    ISA: TEST61.isa
+    Inst: TEST61.inst32
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 32
+  - PseudoInst: TEST61.pinst33
+    ISA: TEST61.isa
+    Inst: TEST61.inst33
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 33
+  - PseudoInst: TEST61.pinst34
+    ISA: TEST61.isa
+    Inst: TEST61.inst34
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 34
+  - PseudoInst: TEST61.pinst35
+    ISA: TEST61.isa
+    Inst: TEST61.inst35
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 35
+  - PseudoInst: TEST61.pinst36
+    ISA: TEST61.isa
+    Inst: TEST61.inst36
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 36
+  - PseudoInst: TEST61.pinst37
+    ISA: TEST61.isa
+    Inst: TEST61.inst37
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 37
+  - PseudoInst: TEST61.pinst38
+    ISA: TEST61.isa
+    Inst: TEST61.inst38
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 38
+  - PseudoInst: TEST61.pinst39
+    ISA: TEST61.isa
+    Inst: TEST61.inst39
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 39
+  - PseudoInst: TEST61.pinst40
+    ISA: TEST61.isa
+    Inst: TEST61.inst40
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 40
+  - PseudoInst: TEST61.pinst41
+    ISA: TEST61.isa
+    Inst: TEST61.inst41
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 41
+  - PseudoInst: TEST61.pinst42
+    ISA: TEST61.isa
+    Inst: TEST61.inst42
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 42
+  - PseudoInst: TEST61.pinst43
+    ISA: TEST61.isa
+    Inst: TEST61.inst43
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 43
+  - PseudoInst: TEST61.pinst44
+    ISA: TEST61.isa
+    Inst: TEST61.inst44
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 44
+  - PseudoInst: TEST61.pinst45
+    ISA: TEST61.isa
+    Inst: TEST61.inst45
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 45
+  - PseudoInst: TEST61.pinst46
+    ISA: TEST61.isa
+    Inst: TEST61.inst46
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 46
+  - PseudoInst: TEST61.pinst47
+    ISA: TEST61.isa
+    Inst: TEST61.inst47
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 47
+  - PseudoInst: TEST61.pinst48
+    ISA: TEST61.isa
+    Inst: TEST61.inst48
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 48
+  - PseudoInst: TEST61.pinst49
+    ISA: TEST61.isa
+    Inst: TEST61.inst49
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 49
+  - PseudoInst: TEST61.pinst50
+    ISA: TEST61.isa
+    Inst: TEST61.inst50
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 50
+  - PseudoInst: TEST61.pinst51
+    ISA: TEST61.isa
+    Inst: TEST61.inst51
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 51
+  - PseudoInst: TEST61.pinst52
+    ISA: TEST61.isa
+    Inst: TEST61.inst52
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 52
+  - PseudoInst: TEST61.pinst53
+    ISA: TEST61.isa
+    Inst: TEST61.inst53
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 53
+  - PseudoInst: TEST61.pinst54
+    ISA: TEST61.isa
+    Inst: TEST61.inst54
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 54
+  - PseudoInst: TEST61.pinst55
+    ISA: TEST61.isa
+    Inst: TEST61.inst55
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 55
+  - PseudoInst: TEST61.pinst56
+    ISA: TEST61.isa
+    Inst: TEST61.inst56
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 56
+  - PseudoInst: TEST61.pinst57
+    ISA: TEST61.isa
+    Inst: TEST61.inst57
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 57
+  - PseudoInst: TEST61.pinst58
+    ISA: TEST61.isa
+    Inst: TEST61.inst58
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 58
+  - PseudoInst: TEST61.pinst59
+    ISA: TEST61.isa
+    Inst: TEST61.inst59
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 59
+  - PseudoInst: TEST61.pinst60
+    ISA: TEST61.isa
+    Inst: TEST61.inst60
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 60
+  - PseudoInst: TEST61.pinst61
+    ISA: TEST61.isa
+    Inst: TEST61.inst61
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 61
+  - PseudoInst: TEST61.pinst62
+    ISA: TEST61.isa
+    Inst: TEST61.inst62
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 62
+  - PseudoInst: TEST61.pinst63
+    ISA: TEST61.isa
+    Inst: TEST61.inst63
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 63
+Caches:
+  - Cache: TEST61.L2.cache
+    Sets: 2
+    Ways: 8
+  - Cache: TEST61.core0.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST61.L2.cache
+  - Cache: TEST61.L2.cache
+    Sets: 2
+    Ways: 8
+  - Cache: TEST61.core1.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST61.L2.cache
+  - Cache: TEST61.L2.cache
+    Sets: 2
+    Ways: 8
+  - Cache: TEST61.core2.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST61.L2.cache
+  - Cache: TEST61.L2.cache
+    Sets: 2
+    Ways: 8
+  - Cache: TEST61.core3.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST61.L2.cache
+  - Cache: TEST61.L2.cache
+    Sets: 2
+    Ways: 8
+Comms:
+  - Comm: TEST61.comm
+    Type: Bus
+    Width: 0
+    Endpoints:
+      []
+Scratchpads:
+  - Scratchpad: TEST61.0.spad
+    MemSize: 1024
+    RqstPorts: 1
+    RspPorts: 1
+    StartAddr: 34359739392
+  - Scratchpad: TEST61.1.spad
+    MemSize: 2048
+    RqstPorts: 1
+    RspPorts: 1
+    StartAddr: 34359740416
+  - Scratchpad: TEST61.2.spad
+    MemSize: 3072
+    RqstPorts: 1
+    RspPorts: 1
+    StartAddr: 34359741440
+  - Scratchpad: TEST61.3.spad
+    MemSize: 4096
+    RqstPorts: 1
+    RspPorts: 1
+    StartAddr: 34359742464
+MemoryControllers:
+  - MemoryController: TEST61.0.mctrl
+    Ports: 2
+  - MemoryController: TEST61.1.mctrl
+    Ports: 2
+  - MemoryController: TEST61.2.mctrl
+    Ports: 2
+  - MemoryController: TEST61.3.mctrl
+    Ports: 2
+VTPControllers:
+  - VTP: TEST61.vtp
+Extensions:
+  - Extension: TEST61.ext0
+    Type: unknown
+    Registers:
+      - RegName: TEST61.ext0.reg
+        Width: 64
+        Index: 0
+        IsFixedValue: false
+        IsSIMD: false
+        RWReg: false
+        ROReg: false
+        CSRReg: true
+        AMSReg: false
+        Shared: false
+    RegClasses:
+      - RegisterClassName: TEST61.ext0.regclass
+        Registers:
+          - TEST61.ext0.reg
+    ISAs:
+      - ISAName: TEST61.ext0.isa
+    RTLFile: TEST61.ext0.v
+  - Extension: TEST61.ext1
+    Type: unknown
+    Registers:
+      - RegName: TEST61.ext1.reg
+        Width: 64
+        Index: 0
+        IsFixedValue: false
+        IsSIMD: false
+        RWReg: false
+        ROReg: false
+        CSRReg: true
+        AMSReg: false
+        Shared: false
+    RegClasses:
+      - RegisterClassName: TEST61.ext1.regclass
+        Registers:
+          - TEST61.ext1.reg
+    ISAs:
+      - ISAName: TEST61.ext1.isa
+    RTLFile: TEST61.ext1.v
+  - Extension: TEST61.ext2
+    Type: unknown
+    Registers:
+      - RegName: TEST61.ext2.reg
+        Width: 64
+        Index: 0
+        IsFixedValue: false
+        IsSIMD: false
+        RWReg: false
+        ROReg: false
+        CSRReg: true
+        AMSReg: false
+        Shared: false
+    RegClasses:
+      - RegisterClassName: TEST61.ext2.regclass
+        Registers:
+          - TEST61.ext2.reg
+    ISAs:
+      - ISAName: TEST61.ext2.isa
+    RTLFile: TEST61.ext2.v
+  - Extension: TEST61.ext3
+    Type: unknown
+    Registers:
+      - RegName: TEST61.ext3.reg
+        Width: 64
+        Index: 0
+        IsFixedValue: false
+        IsSIMD: false
+        RWReg: false
+        ROReg: false
+        CSRReg: true
+        AMSReg: false
+        Shared: false
+    RegClasses:
+      - RegisterClassName: TEST61.ext3.regclass
+        Registers:
+          - TEST61.ext3.reg
+    ISAs:
+      - ISAName: TEST61.ext3.isa
+    RTLFile: TEST61.ext3.v
+Cores:
+  - Core: TEST61.core0
+    Cache: TEST61.core0.L1.cache
+    ISA: TEST61.isa
+    RegisterClasses:
+      - RegClass: TEST61.regclass
+      - RegClass: TEST61.csrregclass
+    Extensions:
+      - Extension: TEST61.ext0
+  - Core: TEST61.core1
+    Cache: TEST61.core1.L1.cache
+    ISA: TEST61.isa
+    RegisterClasses:
+      - RegClass: TEST61.regclass
+      - RegClass: TEST61.csrregclass
+    Extensions:
+      - Extension: TEST61.ext1
+  - Core: TEST61.core2
+    Cache: TEST61.core2.L1.cache
+    ISA: TEST61.isa
+    RegisterClasses:
+      - RegClass: TEST61.regclass
+      - RegClass: TEST61.csrregclass
+    Extensions:
+      - Extension: TEST61.ext2
+  - Core: TEST61.core3
+    Cache: TEST61.core3.L1.cache
+    ISA: TEST61.isa
+    RegisterClasses:
+      - RegClass: TEST61.regclass
+      - RegClass: TEST61.csrregclass
+    Extensions:
+      - Extension: TEST61.ext3
+Socs:
+  - Soc: TEST61.soc
+    Cores:
+      - Core: TEST61.core0
+      - Core: TEST61.core1
+      - Core: TEST61.core2
+      - Core: TEST61.core3
