@@ -43,7 +43,7 @@ sudo apt-get install -y libllvm-6.0-ocaml-dev libllvm6.0 llvm-6.0 llvm-6.0-dev l
 ```
 1. Clone the CoreGen repository
 ```
-git clone FOO
+git clone https://github.com/opensocsysarch/CoreGen.git
 ```
 1. Setup your build tree
 ```
@@ -75,7 +75,7 @@ sudo apt-get install -y libllvm-6.0-ocaml-dev libllvm6.0 llvm-6.0 llvm-6.0-dev l
 ```
 1. Clone the CoreGen repository
 ```
-git clone FOO
+git clone https://github.com/opensocsysarch/CoreGen.git
 ```
 1. Setup your build tree
 ```
@@ -111,7 +111,7 @@ sudo yum install rpm-build rpmdevtools
 ``scl enable llvm-toolset-7 bash``
 1. Clone the CoreGen repository
 ```
-git clone FOO
+git clone https://github.com/opensocsysarch/CoreGen.git
 ```
 1. Setup your build tree
 ```
@@ -143,7 +143,7 @@ brew install llvm@5
 ```
 1. Clone the CoreGen repository
 ```
-git clone FOO
+git clone https://github.com/opensocsysarch/CoreGen.git
 ```
 1. Setup your build tree
 ```
