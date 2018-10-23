@@ -1,5 +1,16 @@
 # CoreGen Integrated Developement Environment
 
+# Table of Contents
+1. [Getting Started](## Getting Started)
+2. [Prerequisites](## Prerequisites)
+3. [Building](## Building)
+4. [CMake Build Options](## CMake Build Options)
+5. [Contributing](## Contributing)
+6. [Testing](## Contributing)
+7. [License](## License)
+8. [Authors](## Authors)
+9. [Acknowledgements](## Acknowledgements)
+
 ## Getting Started
 
 ## Prerequisites
