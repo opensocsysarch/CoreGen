@@ -3,8 +3,7 @@
 # All Rights Reserved
 # contact@tactcomplabs.com
 #
-# CoreGen can not be copied and/or distributed without the
-# express permission of Tactical Computing Laboratories, LLC
+# See LICENSE in the top level directory for licensing details
 #
 
 include_directories(${COREGEN_INCLUDE_PATH})
