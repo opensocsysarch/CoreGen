@@ -1,4 +1,4 @@
-# include/CoreGen CMakeLists.txt
+# include/CoreGen/StoneCutter CMakeLists.txt
 #
 # Copyright (C) 2017-2018 Tactical Computing Laboratories, LLC
 # All Rights Reserved
@@ -7,9 +7,7 @@
 # See LICENSE in the top level directory for licensing details
 #
 
-add_subdirectory(CoreGenBackend)
-add_subdirectory(CoreGenPlugin)
-add_subdirectory(CoreGenCodegen)
-add_subdirectory(StoneCutter)
-
-#-- EOF
+install(DIRECTORY "."
+        DESTINATION "include/StoneCutter"
+        FILES_MATCHING
+        PATTERN "*.h")

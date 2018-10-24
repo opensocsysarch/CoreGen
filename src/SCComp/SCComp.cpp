@@ -14,7 +14,7 @@
 #include <fstream>
 #include <streambuf>
 
-#include "StoneCutter.h"
+#include "CoreGen/StoneCutter/StoneCutter.h"
 
 // ------------------------------------------------- MAIN
 int main( int argc, char **argv ){

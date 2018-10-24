@@ -8,7 +8,7 @@
 // See LICENSE in the top level directory for licensing details
 //
 
-#include "SCOpts.h"
+#include "CoreGen/StoneCutter/SCOpts.h"
 
 // ------------------------------------------------- CONSTRUCTOR
 SCOpts::SCOpts(SCMsg *M, int A, char **C)
