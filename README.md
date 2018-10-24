@@ -206,6 +206,8 @@ CoreGen is licensed under an Apache-style license - see the [LICENSE](LICENSE) f
 
 ## External Packages
 * CoreGen makes use of the yaml-cpp (https://github.com/jbeder/yaml-cpp) library for its internal IR parsing.  yaml-cpp carries an MIT license.
+* CoreGen's StoneCutter infrastructure makes use of the LLVM compiler (http://www.llvm.org).  LLVM carries a 
+UIUC, BSD-style license.
 
 ## Authors
 * *John Leidel* - *Chief Scientist* - [Tactical Computing Labs](http://www.tactcomplabs.com)
