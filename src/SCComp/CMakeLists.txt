@@ -9,8 +9,6 @@
 
 add_executable(sccomp SCComp.cpp)
 
-#include_directories(../StoneCutter)
-
 include_directories(${COREGEN_INCLUDE_PATH})
 
 target_link_libraries(sccomp SCComp)

@@ -179,7 +179,7 @@ make
 * -DCOREGEN\_BUILD\_TGZ=ON : Enable TGZ builds (generic)
 
 ### Debugging Options
-* -DBUILD\_COREGEN\_MEMORY\_SANITY=ON : Enables Clang's memory sanitizer testing.  You MUST be uses Clang as your target C++ compiler!!
+* -DBUILD\_COREGEN\_MEMORY\_SANITY=ON : Enables Clang's memory sanitizer testing.  You MUST be using Clang as your target C++ compiler!!
 
 ### Test Options
 * -DBUILD\_ALL\_TESTING=ON : Enable ALL unit tests for CoreGen
