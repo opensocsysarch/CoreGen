@@ -82,6 +82,39 @@ public:
 
   /// SCOpts: Is verbosity enabled?
   bool IsVerbose() { return isVerbose; }
+
+  /// SCOpts: Set the 'keep' option
+  bool SetKeep() { isKeep = true; return true; }
+
+  /// SCOpts: Sets the 'parse' option
+  bool SetParse() { isParse = true; return true; }
+
+  /// SCOpts: Sets the 'ir' option
+  bool SetIR() { isIR = true; return true; }
+
+  /// SCOpts: Sets the 'optimize' option
+  bool SetOptimize() { isOptimize = true; return true; }
+
+  /// SCOpts: Sets thes 'codegen' option
+  bool SetCG() { isCG = true; return true; }
+
+  /// SCOpts: Sets the 'verbose' option
+  bool SetVerbose() { isVerbose = true; return true; }
+
+  /// SCOpts: Disables the 'parse' option
+  bool UnsetParse() { isParse = false; return true; }
+
+  /// SCOpts: Disables the 'ir' option
+  bool UnsetIR() { isIR = false; return true; }
+
+  /// SCOpts: Disables the 'optimize' option
+  bool UnsetOptimize() { isOptimize = false; return true; }
+
+  /// SCOpts: Disables thes 'codegen' option
+  bool UnsetCG() { isCG = false; return true; }
+
+  /// SCOpts: Disables the 'verbose' option
+  bool UnsetVerbose() { isVerbose = false; return true; }
 };
 
 #endif // _STONECUTTER_SCOPTS_H_
