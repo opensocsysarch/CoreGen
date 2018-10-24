@@ -44,6 +44,8 @@ private:
   bool isCG;        ///< SCOpts: Execute the codegen
   bool isVerbose;   ///< SCOpts: Enable verbosity
 
+  std::string OutFile;  ///< SCOpts: Output file designator
+
   std::vector<std::string> FileList;  ///< SCOpts: List of files to compile
 
   SCMsg *Msgs;    ///< SCOpts: Message handlers
@@ -82,6 +84,15 @@ public:
 
   /// SCOpts: Is verbosity enabled?
   bool IsVerbose() { return isVerbose; }
+
+  /// SCOpts: Retrieve the output file name
+  std::string GetOutputFile() { return OutFile; }
+
+  /// SCOpts: Set the output file name
+  bool SetOutputFile( std::string O ){ OutFile = O; return true; }
+
+  /// SCOpts: Determines whether an output file name has been set
+  bool IsOutputFile() { if( OutFile.length() > 0 ){ return true;} return false; }
 
   /// SCOpts: Set the 'keep' option
   bool SetKeep() { isKeep = true; return true; }
