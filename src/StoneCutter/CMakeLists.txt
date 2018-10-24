@@ -11,13 +11,16 @@ set(SCCompSrcs
  SCOpts.cpp
  SCExec.cpp
  SCMsg.cpp
- SCOpts.h
- SCExec.h
- SCMsg.h
- StoneCutter.h
 )
 
+include_directories(${COREGEN_INCLUDE_PATH})
+
 llvm_map_components_to_libnames(llvm_libs support core irreader)
+
 add_library(SCComp ${SCCompSrcs})
+
 target_link_libraries(SCComp ${llvm_libs})
 
+install(TARGETS SCComp DESTINATION lib)
+
+#-- EOF

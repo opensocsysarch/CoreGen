@@ -8,7 +8,7 @@
 // See LICENSE in the top level directory for licensing details
 //
 
-#include "SCExec.h"
+#include "CoreGen/StoneCutter/SCExec.h"
 
 // ------------------------------------------------- CONSTRUCTOR
 SCExec::SCExec( SCOpts *O, SCMsg *M )

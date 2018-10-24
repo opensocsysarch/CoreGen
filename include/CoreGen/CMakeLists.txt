@@ -6,6 +6,10 @@
 #
 # See LICENSE in the top level directory for licensing details
 #
+
 add_subdirectory(CoreGenBackend)
 add_subdirectory(CoreGenPlugin)
 add_subdirectory(CoreGenCodegen)
+add_subdirectory(StoneCutter)
+
+#-- EOF

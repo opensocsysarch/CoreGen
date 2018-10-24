@@ -1,4 +1,4 @@
-# SCComp CMakeLists.txt
+# include/CoreGen/StoneCutter CMakeLists.txt
 #
 # Copyright (C) 2017-2018 Tactical Computing Laboratories, LLC
 # All Rights Reserved
@@ -7,10 +7,7 @@
 # See LICENSE in the top level directory for licensing details
 #
 
-add_executable(sccomp SCComp.cpp)
-
-include_directories(${COREGEN_INCLUDE_PATH})
-
-target_link_libraries(sccomp SCComp)
-
-#-- EOF
+install(DIRECTORY "."
+        DESTINATION "include/StoneCutter"
+        FILES_MATCHING
+        PATTERN "*.h")
