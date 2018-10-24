@@ -11,9 +11,13 @@ if(BUILD_ALL_TESTING)
   set(BUILD_COREGEN_DAG_TESTING "ON")
   set(BUILD_COREGEN_CGCLI_TESTING "ON")
   set(BUILD_COREGEN_PLUGIN_TESTING "ON")
+  set(BUILD_COREGEN_STONECUTTER_TESTING "ON")
 endif()
 
 add_subdirectory(Yaml)
 add_subdirectory(DAG)
 add_subdirectory(CGCLI)
 add_subdirectory(Plugins)
+add_subdirectory(StoneCutter)
+
+#-- EOF
