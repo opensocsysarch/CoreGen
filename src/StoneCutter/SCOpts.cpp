@@ -38,7 +38,7 @@ bool SCOpts::ParseOpts(bool *isHelp){
 
   // sanity check the args
   if( argc == 1 ){
-    Msgs->PrintMsg( L_ERROR,  "Insufficient arguments" );
+    Msgs->PrintMsg( L_ERROR,  "No input files found" );
     return false;
   }
 
@@ -91,16 +91,17 @@ void SCOpts::PrintVersion(){
 
 // ------------------------------------------------- PRINTHELP
 void SCOpts::PrintHelp(){
-  Msgs->PrintRawMsg("sccomp [options] /path/to/input.sc");
-  Msgs->PrintRawMsg("--------------------------------------------------------");
-  Msgs->PrintRawMsg(" -k|--keep               : Keep intermediate files");
-  Msgs->PrintRawMsg(" -p|--parse              : Parse but do not compile");
-  Msgs->PrintRawMsg(" -O|--optimize           : Execute the optimizer" );
-  Msgs->PrintRawMsg(" -N|--no-optimize        : Do not execute the optimizer" );
-  Msgs->PrintRawMsg(" -h|--help               : Print the help menu");
-  Msgs->PrintRawMsg(" -v|--verbose            : Enable verbosity");
-  Msgs->PrintRawMsg(" -V|--version            : Print the version info");
-  Msgs->PrintRawMsg("--------------------------------------------------------");
+  Msgs->PrintRawMsg("sccomp [Options] /path/to/input.sc");
+  Msgs->PrintRawMsg("Options:");
+  Msgs->PrintRawMsg("     -h|-help|--help               : Print the help menu");
+  Msgs->PrintRawMsg("     -k|-keep|--keep               : Keep intermediate files");
+  Msgs->PrintRawMsg("     -p|-parse|--parse             : Parse but do not compile");
+  Msgs->PrintRawMsg("     -V|-version|--version         : Print the version info");
+  Msgs->PrintRawMsg(" ");
+  Msgs->PrintRawMsg("Execution Options:");
+  Msgs->PrintRawMsg("     -O|-optimize|--optimize       : Execute the optimizer" );
+  Msgs->PrintRawMsg("     -N|-no-optimize|--no-optimize : Do not execute the optimizer" );
+  Msgs->PrintRawMsg("     -v|-verbose|--verbose         : Enable verbosity");
 }
 
 // EOF
