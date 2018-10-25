@@ -1,5 +1,7 @@
 # CoreGen Integrated Developement Environment
 
+[![Documentation](https://codedocs.xyz/opensocsysarch/CoreGen.svg)](https://codedocs.xyz/opensocsysarch/CoreGen/)
+
 ## Getting Started
 
 ## Prerequisites
