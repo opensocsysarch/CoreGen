@@ -20,6 +20,8 @@
 #include <memory>
 #include <string>
 #include <vector>
+#include <fstream>
+#include <streambuf>
 
 // StoneCutter Headers
 #include "CoreGen/StoneCutter/SCOpts.h"

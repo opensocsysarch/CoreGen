@@ -13,7 +13,8 @@
 // ------------------------------------------------- CONSTRUCTOR
 SCOpts::SCOpts(SCMsg *M, int A, char **C)
   : argc(A), argv(C),
-  isKeep(false), isParse(true), isIR(true), isOptimize(true), isCG(true), isVerbose(false),
+  isKeep(false), isParse(true), isIR(true),
+  isOptimize(true), isCG(true), isVerbose(false),
   Msgs(M) {}
 
 int argc;         ///< SCOpts: ARGC command line info
@@ -51,7 +52,7 @@ bool SCOpts::ParseOpts(bool *isHelp){
       *isHelp = true;
       this->PrintHelp();
       return true;
-    }else if( (s=="p") || (s=="-parse") || (s=="--parse") ){
+    }else if( (s=="-p") || (s=="-parse") || (s=="--parse") ){
       isParse = true;
       isCG = false;
     }else if( (s=="-o") || (s=="-outfile") || (s=="--outfile") ){
@@ -81,7 +82,7 @@ bool SCOpts::ParseOpts(bool *isHelp){
     isCG = true;
   }
 
-  if( !*isHelp ){
+  if( !*isHelp && (FileList.size() == 0) ){
     Msgs->PrintMsg( L_ERROR, "No input files found" );
     return false;
   }

@@ -26,7 +26,11 @@ bool SCExec::Exec(){
   for( unsigned i=0; i<Opts->GetNumInputFiles(); i++ ){
 
     // Read the file into a buffer
-    std::string Buf;
+    std::ifstream t(Opts->GetInputFile(i));
+    std::string Buf( (std::istreambuf_iterator<char>(t)),
+                     (std::istreambuf_iterator<char>()));
+
+    // Init a new parser
     Parser = new SCParser( Buf, Opts->GetInputFile(i), Msgs );
 
     // We always want to execute the parser, if not, we fail
@@ -34,6 +38,11 @@ bool SCExec::Exec(){
     // IR for code generation
     if( Opts->IsParse() ){
       // execute the parser
+      if( !Parser->Parse() ){
+        Msgs->PrintMsg( L_ERROR, "Failed to parse " + Opts->GetInputFile(i) );
+        delete Parser;
+        return false;
+      }
     }else{
       // we have failed
       delete Parser;
@@ -63,6 +72,7 @@ bool SCExec::Exec(){
     }
 
     delete Parser;
+    return true;
   }
 
   // We always want to execute the parser, if not, we fail

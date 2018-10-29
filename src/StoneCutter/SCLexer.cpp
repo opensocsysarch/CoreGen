@@ -10,10 +10,19 @@
 
 #include "CoreGen/StoneCutter/SCLexer.h"
 
-SCLexer::SCLexer(std::string B) : InBuf(B), LineNum(0) {
+SCLexer::SCLexer(std::string B) : InBuf(B), LineNum(1), CurChar(0) {
 }
 
 SCLexer::~SCLexer(){
+}
+
+int SCLexer::GetNext(){
+  if( (unsigned)(CurChar) >= InBuf.size() ){
+    return EOF;
+  }
+  int TChar = InBuf[CurChar];
+  CurChar++;
+  return TChar;
 }
 
 int SCLexer::GetTok(){
@@ -21,14 +30,16 @@ int SCLexer::GetTok(){
 
   // Skip any whitespace.
   while (isspace(LastChar))
-    LastChar = getchar();
+    LastChar = GetNext();
 
   if (isalpha(LastChar)) { // identifier: [a-zA-Z][a-zA-Z0-9]*
     IdentifierStr = LastChar;
-    while (isalnum((LastChar = getchar())))
+    while (isalnum((LastChar = GetNext())))
       IdentifierStr += LastChar;
 
     // walk all the potential identifiers
+    if( IdentifierStr == "def")
+      return tok_def;
     if (IdentifierStr == "inst")
       return tok_inst;
     if (IdentifierStr == "extern")
@@ -44,7 +55,7 @@ int SCLexer::GetTok(){
     std::string NumStr;
     do {
       NumStr += LastChar;
-      LastChar = getchar();
+      LastChar = GetNext();
     } while (isdigit(LastChar) || LastChar == '.');
 
     NumVal = strtod(NumStr.c_str(), nullptr);
@@ -54,13 +65,14 @@ int SCLexer::GetTok(){
   if (LastChar == '#') {
     // Comment until end of line.
     do
-      LastChar = getchar();
+      LastChar = GetNext();
     while (LastChar != EOF && LastChar != '\n' && LastChar != '\r');
 
     if (LastChar != EOF){
       LineNum++;
       return GetTok();
     }
+    LineNum++;
   }
 
   // Check for end of file.  Don't eat the EOF.
@@ -69,7 +81,7 @@ int SCLexer::GetTok(){
 
   // Otherwise, just return the character as its ascii value.
   int ThisChar = LastChar;
-  LastChar = getchar();
+  LastChar = GetNext();
   if( ThisChar == '\r' )
     LineNum++;
   return ThisChar;
