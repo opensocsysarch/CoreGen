@@ -89,6 +89,14 @@ bool SCOpts::ParseOpts(bool *isHelp){
   return true;
 }
 
+// ------------------------------------------------- GetInputFile
+std::string SCOpts::GetInputFile( unsigned F ){
+  if( F > (FileList.size()-1) ){
+    return "";
+  }
+  return FileList[F];
+}
+
 // ------------------------------------------------- PRINTVERSION
 void SCOpts::PrintVersion(){
   Msgs->PrintRawMsg("Version " + std::to_string(SC_MAJOR_VERSION)

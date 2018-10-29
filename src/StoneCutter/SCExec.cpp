@@ -13,18 +13,57 @@
 // ------------------------------------------------- CONSTRUCTOR
 SCExec::SCExec( SCOpts *O, SCMsg *M )
   : Opts(O), Msgs(M){
-    initBinopPrecedence();
 }
 
 // ------------------------------------------------- DESTRUCTOR
 SCExec::~SCExec(){}
 
-// ------------------------------------------------- INITBINOPPRECEDENCE
-void SCExec::initBinopPrecedence(void){
-}
-
 // ------------------------------------------------- EXEC
 bool SCExec::Exec(){
+
+  // for each file, read it into a buffer and parse it
+  // accordingly
+  for( unsigned i=0; i<Opts->GetNumInputFiles(); i++ ){
+
+    // Read the file into a buffer
+    std::string Buf;
+    Parser = new SCParser( Buf, Opts->GetInputFile(i), Msgs );
+
+    // We always want to execute the parser, if not, we fail
+    // this may change in the future where we can read in
+    // IR for code generation
+    if( Opts->IsParse() ){
+      // execute the parser
+    }else{
+      // we have failed
+      delete Parser;
+      return false;
+    }
+
+    // Do we execute the LLVM IR codegen?
+    if( Opts->IsIR() ){
+      // execute the IR codegen
+    }else{
+      // else, we return now
+      return true;
+    }
+
+    // Do we execute the optimizer on the IR?
+    if( Opts->IsOptimize() ){
+      // execute the optimizer
+    }// keep going, we may be running -O0
+
+    // Do we execute the Chisel codegen?
+    if( Opts->IsCG() ){
+      // Execute the Chisel codegen
+    }
+
+    // Do we toss the intermediate files?
+    if( !Opts->IsKeep() ){
+    }
+
+    delete Parser;
+  }
 
   // We always want to execute the parser, if not, we fail
   // this may change in the future where we can read in
@@ -34,28 +73,6 @@ bool SCExec::Exec(){
   }else{
     // we have failed
     return false;
-  }
-
-  // Do we execute the LLVM IR codegen?
-  if( Opts->IsIR() ){
-    // execute the IR codegen
-  }else{
-    // else, we return now
-    return true;
-  }
-
-  // Do we execute the optimizer on the IR?
-  if( Opts->IsOptimize() ){
-    // execute the optimizer
-  }// keep going, we may be running -O0
-
-  // Do we execute the Chisel codegen?
-  if( Opts->IsCG() ){
-    // Execute the Chisel codegen
-  }
-
-  // Do we toss the intermediate files?
-  if( !Opts->IsKeep() ){
   }
 
   return true;
