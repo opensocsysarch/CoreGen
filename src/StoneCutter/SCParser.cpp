@@ -10,10 +10,16 @@
 
 #include "CoreGen/StoneCutter/SCParser.h"
 
+LLVMContext SCParser::TheContext;
+IRBuilder<> SCParser::Builder(TheContext);
+std::unique_ptr<Module> SCParser::TheModule;
+std::map<std::string, Value *> SCParser::NamedValues;
+
 SCParser::SCParser(std::string B, std::string F, SCMsg *M)
   : CurTok(-1), InBuf(B), FileName(F), Msgs(M), Lex(new SCLexer(B)),
     InFunc(false) {
-    InitBinopPrecedence();
+  TheModule = llvm::make_unique<Module>("StoneCutter", TheContext);
+  InitBinopPrecedence();
 }
 
 SCParser::~SCParser(){
@@ -307,8 +313,12 @@ std::unique_ptr<PrototypeAST> SCParser::ParseExtern(){
 }
 
 void SCParser::HandleDefinition() {
-  if (ParseDefinition()) {
-    fprintf(stderr, "Parsed a function definition.\n");
+  if (auto FnAST = ParseDefinition()) {
+    if (auto *FnIR = FnAST->codegen()) {
+      fprintf(stderr, "Read function definition:");
+      FnIR->print(errs());
+      fprintf(stderr, "\n");
+    }
   } else {
     // Skip token for error recovery.
     GetNextToken();
@@ -316,8 +326,12 @@ void SCParser::HandleDefinition() {
 }
 
 void SCParser::HandleExtern() {
-  if (ParseExtern()) {
-    fprintf(stderr, "Parsed an extern\n");
+  if (auto ProtoAST = ParseExtern()) {
+    if (auto *FnIR = ProtoAST->codegen()) {
+      fprintf(stderr, "Read extern: ");
+      FnIR->print(errs());
+      fprintf(stderr, "\n");
+    }
   } else {
     // Skip token for error recovery.
     GetNextToken();
@@ -325,17 +339,26 @@ void SCParser::HandleExtern() {
 }
 
 void SCParser::HandleRegClass() {
-  if(ParseRegClass()){
-    fprintf(stderr, "Parsed a register class\n");
-  } else {
+  // evaluate a register class definition
+  if(auto RegClassAST = ParseRegClass()){
+    if( auto *FnIR = RegClassAST->codegen()){
+      fprintf(stderr, "Read register class definition");
+      FnIR->print(errs());
+      fprintf(stderr, "\n");
+    }
+  }else{
     GetNextToken();
   }
 }
 
 void SCParser::HandleTopLevelExpression() {
   // Evaluate a top-level expression into an anonymous function.
-  if (ParseTopLevelExpr()) {
-    fprintf(stderr, "Parsed a top-level expr\n");
+  if (auto FnAST = ParseTopLevelExpr()) {
+    if (auto *FnIR = FnAST->codegen()) {
+      fprintf(stderr, "Read top-level expression:");
+      FnIR->print(errs());
+      fprintf(stderr, "\n");
+    }
   } else {
     // Skip token for error recovery.
     GetNextToken();
@@ -349,6 +372,123 @@ void SCParser::HandleFuncClose(){
     GetNextToken();
   }
 }
+
+//===----------------------------------------------------------------------===//
+// Code Generation
+//===----------------------------------------------------------------------===//
+Value *NumberExprAST::codegen() {
+  return ConstantFP::get(SCParser::TheContext, APFloat(Val));
+}
+
+Value *VariableExprAST::codegen() {
+  // Look this variable up in the function.
+  Value *V = SCParser::NamedValues[Name];
+  if (!V)
+    return LogErrorV("Unknown variable name");
+  return V;
+}
+
+Value *BinaryExprAST::codegen() {
+  Value *L = LHS->codegen();
+  Value *R = RHS->codegen();
+  if (!L || !R)
+    return nullptr;
+
+  switch (Op) {
+  case '+':
+    return SCParser::Builder.CreateFAdd(L, R, "addtmp");
+  case '-':
+    return SCParser::Builder.CreateFSub(L, R, "subtmp");
+  case '*':
+    return SCParser::Builder.CreateFMul(L, R, "multmp");
+  case '<':
+    L = SCParser::Builder.CreateFCmpULT(L, R, "cmptmp");
+    // Convert bool 0/1 to double 0.0 or 1.0
+    return SCParser::Builder.CreateUIToFP(L, Type::getDoubleTy(TheContext), "booltmp");
+  default:
+    return LogErrorV("invalid binary operator");
+  }
+}
+
+Value *CallExprAST::codegen() {
+  // Look up the name in the global module table.
+  Function *CalleeF = SCParser::TheModule->getFunction(Callee);
+  if (!CalleeF)
+    return LogErrorV("Unknown function referenced");
+
+  // If argument mismatch error.
+  if (CalleeF->arg_size() != Args.size())
+    return LogErrorV("Incorrect # arguments passed");
+
+  std::vector<Value *> ArgsV;
+  for (unsigned i = 0, e = Args.size(); i != e; ++i) {
+    ArgsV.push_back(Args[i]->codegen());
+    if (!ArgsV.back())
+      return nullptr;
+  }
+
+  return SCParser::Builder.CreateCall(CalleeF, ArgsV, "calltmp");
+}
+
+Function *PrototypeAST::codegen() {
+  // Make the function type:  double(double,double) etc.
+  std::vector<Type *> Doubles(Args.size(), Type::getDoubleTy(TheContext));
+  FunctionType *FT =
+      FunctionType::get(Type::getDoubleTy(SCParser::TheContext), Doubles, false);
+
+  Function *F =
+      Function::Create(FT, Function::ExternalLinkage, Name, SCParser::TheModule.get());
+
+  // Set names for all arguments.
+  unsigned Idx = 0;
+  for (auto &Arg : F->args())
+    Arg.setName(Args[Idx++]);
+
+  return F;
+}
+
+Value *RegClassAST::codegen(){
+  // TODO
+  return nullptr;
+}
+
+Function *FunctionAST::codegen() {
+  // First, check for an existing function from a previous 'extern' declaration.
+  Function *TheFunction = SCParser::TheModule->getFunction(Proto->getName());
+
+  if (!TheFunction)
+    TheFunction = Proto->codegen();
+
+  if (!TheFunction)
+    return nullptr;
+
+  // Create a new basic block to start insertion into.
+  BasicBlock *BB = BasicBlock::Create(SCParser::TheContext, "entry", TheFunction);
+  SCParser::Builder.SetInsertPoint(BB);
+
+  // Record the function arguments in the NamedValues map.
+  SCParser::NamedValues.clear();
+  for (auto &Arg : TheFunction->args())
+    SCParser::NamedValues[Arg.getName()] = &Arg;
+
+  if (Value *RetVal = Body->codegen()) {
+    // Finish off the function.
+    SCParser::Builder.CreateRet(RetVal);
+
+    // Validate the generated code, checking for consistency.
+    verifyFunction(*TheFunction);
+
+    return TheFunction;
+  }
+
+  // Error reading body, remove function.
+  TheFunction->eraseFromParent();
+  return nullptr;
+}
+
+//===----------------------------------------------------------------------===//
+// Error Handlers
+//===----------------------------------------------------------------------===//
 
 std::unique_ptr<ExprAST> SCParser::LogError(std::string Str) {
   Msgs->PrintMsg( L_ERROR, "Line " + std::to_string(Lex->GetLineNum()) + " : " + Str );
@@ -367,6 +507,12 @@ std::unique_ptr<RegClassAST> SCParser::LogErrorR(std::string Str) {
 
 std::unique_ptr<FunctionAST> SCParser::LogErrorF(std::string Str) {
   LogError(Str);
+  return nullptr;
+}
+
+Value *LogErrorV(std::string Str){
+  //LogError(Str);
+  // TODO, fix error handling
   return nullptr;
 }
 

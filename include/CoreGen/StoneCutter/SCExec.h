@@ -27,6 +27,7 @@
 #include "CoreGen/StoneCutter/SCOpts.h"
 #include "CoreGen/StoneCutter/SCMsg.h"
 #include "CoreGen/StoneCutter/SCParser.h"
+#include "CoreGen/StoneCutter/SCLLCodeGen.h"
 
 // LLVM Headers
 #include "llvm/ADT/APFloat.h"

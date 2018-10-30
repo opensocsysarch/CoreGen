@@ -13,6 +13,8 @@ set(SCCompSrcs
  SCMsg.cpp
  SCLexer.cpp
  SCParser.cpp
+# SCAST.cpp
+ SCLLCodeGen.cpp
 )
 
 include_directories(${COREGEN_INCLUDE_PATH})

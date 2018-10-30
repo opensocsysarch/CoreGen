@@ -49,9 +49,27 @@ bool SCExec::Exec(){
       return false;
     }
 
+    SCLLCodeGen *CG;
+
     // Do we execute the LLVM IR codegen?
     if( Opts->IsIR() ){
       // execute the IR codegen
+      std::string OFile;
+
+      // if the output file name is null,
+      // we print to stdout
+      if( Opts->GetOutputFile().length() != 0 ){
+        // file name format: /path/to/output.ll
+        OFile = Opts->GetOutputFile() + ".ll";
+      }
+
+      CG = new SCLLCodeGen(Parser,Msgs,OFile);
+      if( !CG->GenerateLL() ){
+        Msgs->PrintMsg( L_ERROR, "Failed to generate IR for " +
+                        Opts->GetInputFile(i) );
+        delete CG;
+        return false;
+      }
     }else{
       // else, we return now
       return true;
@@ -71,6 +89,7 @@ bool SCExec::Exec(){
     if( !Opts->IsKeep() ){
     }
 
+    delete CG;
     delete Parser;
     return true;
   }
