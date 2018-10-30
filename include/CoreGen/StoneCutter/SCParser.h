@@ -43,6 +43,9 @@ private:
   SCMsg *Msgs;                          ///< StoneCutter message handler
   SCLexer *Lex;                         ///< StoneCutter Lexer
 
+  // flags
+  bool InFunc;                          ///< Determines whether the parser is in a function body
+
   std::map<char, int> BinopPrecedence;  ///< StoneCutter binary operand precedence
 
   // private functions
@@ -93,6 +96,9 @@ private:
   /// Parse extern prototypes
   std::unique_ptr<PrototypeAST> ParseExtern();
 
+  /// Parse the closing of a function body
+  bool ParseCloseBracket();
+
   /// Handles definition parsing
   void HandleDefinition();
 
@@ -105,6 +111,9 @@ private:
   /// Handles top-level expressions
   void HandleTopLevelExpression();
 
+  // Handles function closing
+  void HandleFuncClose();
+
   /// Logs an error
   std::unique_ptr<ExprAST> LogError(std::string Str);
 
@@ -113,6 +122,9 @@ private:
 
   /// Logs a register class error
   std::unique_ptr<RegClassAST> LogErrorR(std::string Str);
+
+  /// Logs a function error
+  std::unique_ptr<FunctionAST> LogErrorF(std::string Str);
 };
 
 #endif

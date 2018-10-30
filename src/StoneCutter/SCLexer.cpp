@@ -22,6 +22,8 @@ int SCLexer::GetNext(){
   }
   int TChar = InBuf[CurChar];
   CurChar++;
+  if( TChar == '\r')
+    LineNum++;
   return TChar;
 }
 
@@ -64,9 +66,9 @@ int SCLexer::GetTok(){
 
   if (LastChar == '#') {
     // Comment until end of line.
-    do
+    do{
       LastChar = GetNext();
-    while (LastChar != EOF && LastChar != '\n' && LastChar != '\r');
+    }while (LastChar != EOF && LastChar != '\n' && LastChar != '\r');
 
     if (LastChar != EOF){
       LineNum++;

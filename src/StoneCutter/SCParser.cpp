@@ -11,7 +11,8 @@
 #include "CoreGen/StoneCutter/SCParser.h"
 
 SCParser::SCParser(std::string B, std::string F, SCMsg *M)
-  : CurTok(-1), InBuf(B), FileName(F), Msgs(M), Lex(new SCLexer(B)) {
+  : CurTok(-1), InBuf(B), FileName(F), Msgs(M), Lex(new SCLexer(B)),
+    InFunc(false) {
     InitBinopPrecedence();
 }
 
@@ -75,6 +76,9 @@ bool SCParser::Parse(){
       break;
     case tok_regclass:
       HandleRegClass();
+      break;
+    case '}':
+      HandleFuncClose();
       break;
     default:
       HandleTopLevelExpression();
@@ -257,9 +261,28 @@ std::unique_ptr<FunctionAST> SCParser::ParseDefinition() {
   if (!Proto)
     return nullptr;
 
+  // check for open instruction body
+  if( CurTok != '{' )
+    return LogErrorF("Expected '{' to open instruction body");
+  if( InFunc ){
+    return LogErrorF("Found mismatch '{'");
+  }
+  GetNextToken(); // eat the '{'
+  InFunc = true;
+
   if (auto E = ParseExpression())
     return llvm::make_unique<FunctionAST>(std::move(Proto), std::move(E));
   return nullptr;
+}
+
+bool SCParser::ParseCloseBracket(){
+  if( !InFunc ){
+    LogErrorF("Found mismatched '}'");
+    return false;
+  }
+  InFunc = false;
+  GetNextToken(); // get the next token
+  return true;
 }
 
 std::unique_ptr<RegClassAST> SCParser::ParseRegClass(){
@@ -318,6 +341,14 @@ void SCParser::HandleTopLevelExpression() {
   }
 }
 
+void SCParser::HandleFuncClose(){
+  if( ParseCloseBracket()){
+    fprintf(stderr, "Parsed a function body\n");
+  }else{
+    GetNextToken();
+  }
+}
+
 std::unique_ptr<ExprAST> SCParser::LogError(std::string Str) {
   Msgs->PrintMsg( L_ERROR, "Line " + std::to_string(Lex->GetLineNum()) + " : " + Str );
   return nullptr;
@@ -329,6 +360,11 @@ std::unique_ptr<PrototypeAST> SCParser::LogErrorP(std::string Str) {
 }
 
 std::unique_ptr<RegClassAST> SCParser::LogErrorR(std::string Str) {
+  LogError(Str);
+  return nullptr;
+}
+
+std::unique_ptr<FunctionAST> SCParser::LogErrorF(std::string Str) {
   LogError(Str);
   return nullptr;
 }
