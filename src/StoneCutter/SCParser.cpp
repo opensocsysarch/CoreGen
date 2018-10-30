@@ -272,6 +272,7 @@ std::unique_ptr<FunctionAST> SCParser::ParseDefinition() {
 
   if (auto E = ParseExpression())
     return llvm::make_unique<FunctionAST>(std::move(Proto), std::move(E));
+
   return nullptr;
 }
 
