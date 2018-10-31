@@ -14,16 +14,69 @@ LLVMContext SCParser::TheContext;
 IRBuilder<> SCParser::Builder(TheContext);
 std::unique_ptr<Module> SCParser::TheModule;
 std::map<std::string, Value *> SCParser::NamedValues;
+std::unique_ptr<legacy::FunctionPassManager> SCParser::TheFPM;
 
 SCParser::SCParser(std::string B, std::string F, SCMsg *M)
   : CurTok(-1), InBuf(B), FileName(F), Msgs(M), Lex(new SCLexer(B)),
-    InFunc(false) {
-  TheModule = llvm::make_unique<Module>("StoneCutter", TheContext);
+    InFunc(false), IsOpt(false) {
+  TheModule = llvm::make_unique<Module>(StringRef(FileName), TheContext);
+  InitBinopPrecedence();
+}
+
+SCParser::SCParser(SCMsg *M)
+  : CurTok(-1), Msgs(M), Lex(nullptr),
+    InFunc(false), IsOpt(false) {
   InitBinopPrecedence();
 }
 
 SCParser::~SCParser(){
 }
+
+bool SCParser::SetInputs( std::string B, std::string F ){
+  InBuf = B;
+  FileName = F;
+  if( Lex ){
+    delete Lex;
+  }
+  Lex = new SCLexer(InBuf);
+  TheModule = llvm::make_unique<Module>(StringRef(FileName), TheContext);
+
+  return true;
+}
+
+//===----------------------------------------------------------------------===//
+// Optimizer
+//===----------------------------------------------------------------------===//
+
+void SCParser::InitModuleandPassManager(){
+  // create a new pass manager
+  TheFPM = llvm::make_unique<legacy::FunctionPassManager>(TheModule.get());
+
+  // enable simple peephole opts and bit-twiddling opts
+  TheFPM->add(createInstructionCombiningPass());
+
+  // enable reassociatio of epxressions
+  TheFPM->add(createReassociatePass());
+
+  // eliminate common subexpressions
+  TheFPM->add(createGVNPass());
+
+  // simplify the control flow graph
+  TheFPM->add(createCFGSimplificationPass());
+
+  // Init it!
+  TheFPM->doInitialization();
+}
+
+bool SCParser::Optimize(){
+  InitModuleandPassManager();
+  IsOpt = true;
+  return true;
+}
+
+//===----------------------------------------------------------------------===//
+// Parser
+//===----------------------------------------------------------------------===//
 
 void SCParser::InitBinopPrecedence(){
   BinopPrecedence['='] = 10;
@@ -315,9 +368,9 @@ std::unique_ptr<PrototypeAST> SCParser::ParseExtern(){
 void SCParser::HandleDefinition() {
   if (auto FnAST = ParseDefinition()) {
     if (auto *FnIR = FnAST->codegen()) {
-      fprintf(stderr, "Read function definition:");
-      FnIR->print(errs());
-      fprintf(stderr, "\n");
+      //fprintf(stderr, "Read function definition:");
+      //FnIR->print(errs());
+      //fprintf(stderr, "\n");
     }
   } else {
     // Skip token for error recovery.
@@ -328,9 +381,9 @@ void SCParser::HandleDefinition() {
 void SCParser::HandleExtern() {
   if (auto ProtoAST = ParseExtern()) {
     if (auto *FnIR = ProtoAST->codegen()) {
-      fprintf(stderr, "Read extern: ");
-      FnIR->print(errs());
-      fprintf(stderr, "\n");
+      //fprintf(stderr, "Read extern: ");
+      //FnIR->print(errs());
+      //fprintf(stderr, "\n");
     }
   } else {
     // Skip token for error recovery.
@@ -342,9 +395,9 @@ void SCParser::HandleRegClass() {
   // evaluate a register class definition
   if(auto RegClassAST = ParseRegClass()){
     if( auto *FnIR = RegClassAST->codegen()){
-      fprintf(stderr, "Read register class definition");
-      FnIR->print(errs());
-      fprintf(stderr, "\n");
+      //fprintf(stderr, "Read register class definition");
+      //FnIR->print(errs());
+      //fprintf(stderr, "\n");
     }
   }else{
     GetNextToken();
@@ -355,9 +408,9 @@ void SCParser::HandleTopLevelExpression() {
   // Evaluate a top-level expression into an anonymous function.
   if (auto FnAST = ParseTopLevelExpr()) {
     if (auto *FnIR = FnAST->codegen()) {
-      fprintf(stderr, "Read top-level expression:");
-      FnIR->print(errs());
-      fprintf(stderr, "\n");
+      //fprintf(stderr, "Read top-level expression:");
+      //FnIR->print(errs());
+      //fprintf(stderr, "\n");
     }
   } else {
     // Skip token for error recovery.
@@ -366,8 +419,8 @@ void SCParser::HandleTopLevelExpression() {
 }
 
 void SCParser::HandleFuncClose(){
-  if( ParseCloseBracket()){
-    fprintf(stderr, "Parsed a function body\n");
+  if(ParseCloseBracket()){
+    //fprintf(stderr, "Parsed a function body\n");
   }else{
     GetNextToken();
   }
@@ -432,7 +485,7 @@ Value *CallExprAST::codegen() {
 
 Function *PrototypeAST::codegen() {
   // Make the function type:  double(double,double) etc.
-  std::vector<Type *> Doubles(Args.size(), Type::getDoubleTy(TheContext));
+  std::vector<Type *> Doubles(Args.size(), Type::getDoubleTy(SCParser::TheContext));
   FunctionType *FT =
       FunctionType::get(Type::getDoubleTy(SCParser::TheContext), Doubles, false);
 
@@ -448,7 +501,6 @@ Function *PrototypeAST::codegen() {
 }
 
 Value *RegClassAST::codegen(){
-  // TODO
   return nullptr;
 }
 

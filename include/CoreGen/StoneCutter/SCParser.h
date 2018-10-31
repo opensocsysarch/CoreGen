@@ -11,20 +11,7 @@
 #ifndef _STONECUTTER_SCParser_H_
 #define _STONECUTTER_SCParser_H_
 
-#include "CoreGen/StoneCutter/SCLexer.h"
-#include "CoreGen/StoneCutter/SCMsg.h"
-
-#include "llvm/ADT/APFloat.h"
-#include "llvm/ADT/STLExtras.h"
-#include "llvm/IR/BasicBlock.h"
-#include "llvm/IR/Constants.h"
-#include "llvm/IR/DerivedTypes.h"
-#include "llvm/IR/Function.h"
-#include "llvm/IR/IRBuilder.h"
-#include "llvm/IR/LLVMContext.h"
-#include "llvm/IR/Module.h"
-#include "llvm/IR/Type.h"
-#include "llvm/IR/Verifier.h"
+// standard headers
 #include <algorithm>
 #include <cctype>
 #include <cstdio>
@@ -34,6 +21,28 @@
 #include <string>
 #include <vector>
 
+// CoreGen headers
+#include "CoreGen/StoneCutter/SCLexer.h"
+#include "CoreGen/StoneCutter/SCMsg.h"
+
+// LLVM headers
+#include "llvm/ADT/APFloat.h"
+#include "llvm/ADT/STLExtras.h"
+#include "llvm/IR/BasicBlock.h"
+#include "llvm/IR/Constants.h"
+#include "llvm/IR/DerivedTypes.h"
+#include "llvm/IR/Function.h"
+#include "llvm/IR/IRBuilder.h"
+#include "llvm/IR/LLVMContext.h"
+#include "llvm/IR/LegacyPassManager.h"
+#include "llvm/IR/Module.h"
+#include "llvm/IR/Type.h"
+#include "llvm/IR/Verifier.h"
+#include "llvm/Support/TargetSelect.h"
+#include "llvm/Target/TargetMachine.h"
+#include "llvm/Transforms/Scalar.h"
+#include "llvm/Transforms/Scalar/GVN.h"
+
 using namespace llvm;
 
 
@@ -42,11 +51,22 @@ public:
   /// Default constructor
   SCParser(std::string, std::string, SCMsg *);
 
+  /// Overloaded constructor
+  SCParser(SCMsg *);
+
   /// Default destructor
   ~SCParser();
 
   /// Parse the input set
   bool Parse();
+
+  /// Sets the input buffer and input file names
+  bool SetInputs( std::string, std::string );
+
+  /// Execute the optimizer against the IR
+  bool Optimize();
+
+  // AST Classes
 
   /// ExprAST - Base class for all expression nodes.
   class ExprASTContainer {
@@ -150,6 +170,7 @@ public:
   static IRBuilder<> Builder;
   static std::unique_ptr<Module> TheModule;
   static std::map<std::string, Value *> NamedValues;
+  static std::unique_ptr<legacy::FunctionPassManager> TheFPM;
 
 private:
 
@@ -161,17 +182,14 @@ private:
 
   // flags
   bool InFunc;                          ///< Determines whether the parser is in a function body
-
-#if 0
-  LLVMContext TheContext;                     ///< LLVM Context
-  std::unique_ptr<Module> TheModule;          ///< LLVM functions and Globals
-  IRBuilder<> Builder;                        ///< IR Builder
-  std::map<std::string, Value *> NamedValues; ///< Values in current scope
-#endif
+  bool IsOpt;                           ///< Determines whether to run the optimizer
 
   std::map<char, int> BinopPrecedence;  ///< StoneCutter binary operand precedence
 
   // private functions
+
+  /// Initialize the pass manager
+  void InitModuleandPassManager();
 
   /// Get the next token
   int GetNextToken();

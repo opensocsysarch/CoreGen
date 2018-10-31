@@ -23,7 +23,15 @@ bool SCLLCodeGen::GenerateLL(){
     return false;
   }
 
-  SCParser::TheModule->print(errs(),nullptr);
+  if( OutputFile.length() == 0 ){
+    // output to stdout
+    SCParser::TheModule->print(outs(),nullptr);
+  }else{
+    StringRef FileName(OutputFile);
+    std::error_code EC;
+    raw_fd_ostream OS(FileName,EC,llvm::sys::fs::F_Append);
+    SCParser::TheModule->print(OS,nullptr);
+  }
 
   return true;
 }

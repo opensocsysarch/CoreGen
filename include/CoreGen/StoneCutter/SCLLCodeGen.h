@@ -11,6 +11,17 @@
 #ifndef _STONECUTTER_SCLLCODEGEN_H_
 #define _STONECUTTER_SCLLCODEGEN_H_
 
+// standard headers
+#include <algorithm>
+#include <cctype>
+#include <cstdio>
+#include <cstdlib>
+#include <map>
+#include <memory>
+#include <string>
+#include <vector>
+
+// llvm headers
 #include "llvm/ADT/APFloat.h"
 #include "llvm/ADT/STLExtras.h"
 #include "llvm/IR/BasicBlock.h"
@@ -22,15 +33,10 @@
 #include "llvm/IR/Module.h"
 #include "llvm/IR/Type.h"
 #include "llvm/IR/Verifier.h"
-#include <algorithm>
-#include <cctype>
-#include <cstdio>
-#include <cstdlib>
-#include <map>
-#include <memory>
-#include <string>
-#include <vector>
+#include "llvm/Support/raw_ostream.h"
+#include "llvm/Support/FileSystem.h"
 
+// coregen headers
 #include "CoreGen/StoneCutter/SCParser.h"
 #include "CoreGen/StoneCutter/SCMsg.h"
 

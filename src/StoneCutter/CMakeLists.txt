@@ -13,13 +13,12 @@ set(SCCompSrcs
  SCMsg.cpp
  SCLexer.cpp
  SCParser.cpp
-# SCAST.cpp
  SCLLCodeGen.cpp
 )
 
 include_directories(${COREGEN_INCLUDE_PATH})
 
-llvm_map_components_to_libnames(llvm_libs support core irreader)
+llvm_map_components_to_libnames(llvm_libs support core irreader mcjit ipo executionengine instrumentation transformutils vectorize scalaropts instcombine)
 
 add_library(SCComp ${SCCompSrcs})
 

@@ -21,6 +21,12 @@
 #include <string>
 #include <vector>
 #include <fstream>
+#include <sstream>
+#include <ctime>
+#include <sys/stat.h>
+#include <sys/time.h>
+#include <time.h>
+#include <unistd.h>
 #include <streambuf>
 
 // StoneCutter Headers
@@ -28,6 +34,7 @@
 #include "CoreGen/StoneCutter/SCMsg.h"
 #include "CoreGen/StoneCutter/SCParser.h"
 #include "CoreGen/StoneCutter/SCLLCodeGen.h"
+#include "CoreGen/StoneCutter/SCUtil.h"
 
 // LLVM Headers
 #include "llvm/ADT/APFloat.h"
