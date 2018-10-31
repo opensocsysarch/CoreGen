@@ -22,25 +22,6 @@ SCExec::~SCExec(){}
 // ------------------------------------------------- EXEC
 bool SCExec::Exec(){
 
-  // remove the stale ouptput file
-  if( Opts->GetOutputFile().length() > 0 ){
-    if( SCFileExists(Opts->GetOutputFile()) ){
-      SCDeleteFile(Opts->GetOutputFile());
-    }
-  }
-
-  // Init a new parser
-  Parser = new SCParser( Msgs );
-
-  // Do we execute the optimizer on the IR?
-  if( !Opts->IsOptimize() ){
-    if( !Parser->Optimize() ){
-      Msgs->PrintMsg( L_ERROR, "Failed to initialize the optimizer" );
-      delete Parser;
-      return false;
-    }
-  }
-
   // for each file, read it into a buffer and parse it
   // accordingly
   // we utilize a common output file
@@ -51,10 +32,19 @@ bool SCExec::Exec(){
     std::string Buf( (std::istreambuf_iterator<char>(t)),
                      (std::istreambuf_iterator<char>()));
 
-    if( !Parser->SetInputs(Buf,Opts->GetInputFile(i)) ){
-      Msgs->PrintMsg( L_ERROR, "Failed to set parser input" );
-      delete Parser;
+    Parser = new SCParser(Buf,Opts->GetInputFile(i),Msgs);
+    if( !Parser ){
+      Msgs->PrintMsg( L_ERROR, "Failed to initiate the StoneCutter parser" );
       return false;
+    }
+
+    // Do we execute the inline optimizer?
+    if( Opts->IsOptimize() ){
+      if( !Parser->Optimize() ){
+        Msgs->PrintMsg( L_ERROR, "Failed to initialize the optimizer" );
+        delete Parser;
+        return false;
+      }
     }
 
     // We always want to execute the parser, if not, we fail
@@ -72,44 +62,40 @@ bool SCExec::Exec(){
       delete Parser;
       return false;
     }
-#if 0
 
     SCLLCodeGen *CG;
 
     // Do we execute the LLVM IR codegen?
     if( Opts->IsIR() ){
-      // if the output file name is null,
-      // we print to stdout
-      CG = new SCLLCodeGen(Parser,Msgs,Opts->GetOutputFile());
+      // prep a new output file name; append '.ll'
+      CG = new SCLLCodeGen(Parser,Msgs,Opts->GetInputFile(i) + ".ll");
       if( !CG->GenerateLL() ){
         Msgs->PrintMsg( L_ERROR, "Failed to generate IR for " +
                         Opts->GetInputFile(i) );
         delete CG;
+        delete Parser;
         return false;
       }
-    }else{
-      // else, we return now
-      return true;
     }
-#endif
-  }
 
-
-  // Do we execute the IR codegen?
-  if( Opts->IsIR() ){
-    SCLLCodeGen *CG = new SCLLCodeGen(Parser,Msgs,Opts->GetOutputFile());
-    if( !CG->GenerateLL() ){
-      Msgs->PrintMsg( L_ERROR, "Failed to generate LLVM IR" );
+    if( CG ){
       delete CG;
-      delete Parser;
     }
+    delete Parser;
   }
 
   // Do we toss the intermediate files?
   if( !Opts->IsKeep() ){
+    // remove all the LL files
+    for( unsigned i=0; i<Opts->GetNumInputFiles(); i++ ){
+      if( !SCDeleteFile(Opts->GetInputFile(i)+".ll") ){
+        Msgs->PrintMsg( L_ERROR, "Failed to delete LLVM IR file " +
+                        Opts->GetInputFile(i) + ".ll" );
+        return false;
+      }
+    }
   }
 
-  delete Parser;
   return true;
 }
 

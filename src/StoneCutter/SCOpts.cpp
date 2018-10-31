@@ -17,7 +17,7 @@ SCOpts::SCOpts(SCMsg *M, int A, char **C)
   isOptimize(true), isCG(true), isVerbose(false),
   Msgs(M) {}
 
-int argc;         ///< SCOpts: ARGC command line info
+  int argc;         ///< SCOpts: ARGC command line info
   char **argv;      ///< SCOpts: ARGV command line info
 
   bool isKeep;      ///< SCOpts: Keep intermediate files
@@ -62,6 +62,8 @@ bool SCOpts::ParseOpts(bool *isHelp){
       }
       OutFile = std::string(argv[i+1]);
       i++;
+    }else if( (s=="-k") || (s=="-keep") || (s=="--keep") ){
+      isKeep = true;
     }else if( (s=="-O") || (s=="-optimize") || (s=="--optimize") ){
       isOptimize = true;
     }else if( (s=="-N") || (s=="-no-optimize") || (s=="--no-optimize") ) {

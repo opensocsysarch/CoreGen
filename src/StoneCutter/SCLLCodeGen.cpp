@@ -29,7 +29,7 @@ bool SCLLCodeGen::GenerateLL(){
   }else{
     StringRef FileName(OutputFile);
     std::error_code EC;
-    raw_fd_ostream OS(FileName,EC,llvm::sys::fs::F_Append);
+    raw_fd_ostream OS(FileName,EC,llvm::sys::fs::F_None);
     SCParser::TheModule->print(OS,nullptr);
   }
 

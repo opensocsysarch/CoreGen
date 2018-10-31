@@ -13,8 +13,8 @@
 LLVMContext SCParser::TheContext;
 IRBuilder<> SCParser::Builder(TheContext);
 std::unique_ptr<Module> SCParser::TheModule;
-std::map<std::string, Value *> SCParser::NamedValues;
 std::unique_ptr<legacy::FunctionPassManager> SCParser::TheFPM;
+std::map<std::string, Value *> SCParser::NamedValues;
 
 SCParser::SCParser(std::string B, std::string F, SCMsg *M)
   : CurTok(-1), InBuf(B), FileName(F), Msgs(M), Lex(new SCLexer(B)),
@@ -30,6 +30,9 @@ SCParser::SCParser(SCMsg *M)
 }
 
 SCParser::~SCParser(){
+  TheModule.reset();
+  TheFPM.reset();
+  NamedValues.clear();
 }
 
 bool SCParser::SetInputs( std::string B, std::string F ){
