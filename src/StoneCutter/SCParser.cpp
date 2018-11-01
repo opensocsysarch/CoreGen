@@ -67,6 +67,30 @@ void SCParser::InitModuleandPassManager(){
   // simplify the control flow graph
   TheFPM->add(createCFGSimplificationPass());
 
+  // constant propogations
+  TheFPM->add(createConstantPropagationPass());
+
+  // induction variable simplification pass
+  TheFPM->add(createIndVarSimplifyPass());
+
+  // loop invariant code motion
+  TheFPM->add(createLICMPass());
+
+  // loop deletion
+  TheFPM->add(createLoopDeletionPass());
+
+  // loop idiom
+  TheFPM->add(createLoopIdiomPass());
+
+  // loop re-roller
+  TheFPM->add(createLoopRerollPass());
+
+  // loop rotation
+  TheFPM->add(createLoopRotatePass());
+
+  // loop unswitching
+  TheFPM->add(createLoopUnswitchPass());
+
   // Init it!
   TheFPM->doInitialization();
 }
