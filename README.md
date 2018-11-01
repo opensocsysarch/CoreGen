@@ -73,7 +73,7 @@ sudo apt-get update
 ```
 1.  Install the system dependencies:
 ```
-sudo apt-get install -y libllvm-6.0-ocaml-dev libllvm6.0 llvm-6.0 llvm-6.0-dev llvm-6.0-doc llvm-6.0-examples llvm-6.0-runtime clang-6.0 clang-tools-6.0 clang-6.0-doc libclang-common-6.0-dev libclang-6.0-dev libclang1-6.0 clang-format-6.0 python-clang-6.0
+sudo apt-get install -y clang-6.0 lldb-6.0 lld-6.0 libllvm6.0 llvm-6.0 llvm-6.0-dev llvm-6.0-doc llvm-6.0-examples llvm-6.0-runtime
 ```
 1. Clone the CoreGen repository
 ```
@@ -162,6 +162,30 @@ cmake -DLLVM_DIR=/usr/local/opt/llvm\@5/lib/cmake/llvm ../
 make
 ```
 
+#### Arch Linux
+
+1.  Install the system dependencies:
+```
+sudo pacman -S git cmake make llvm6 llvm6-libs clang
+```
+1. Clone the CoreGen repository
+```
+git clone https://github.com/opensocsysarch/CoreGen.git
+```
+1. Setup your build tree
+```
+cd CoreGen
+mkdir build
+cd build
+```
+1. Execute CMake to generate the makefiles
+```
+cmake -DLLVM_DIR=/usr/lib/cmake/llvm ../
+```
+1. Execute the build
+```
+make
+```
 ## CMake Build Options
 
 ### Standard Build Options
