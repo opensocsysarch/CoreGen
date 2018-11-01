@@ -596,6 +596,10 @@ Function *FunctionAST::codegen() {
   return nullptr;
 }
 
+Value *IfExprAST::codegen() {
+  return nullptr;
+}
+
 //===----------------------------------------------------------------------===//
 // Error Handlers
 //===----------------------------------------------------------------------===//
