@@ -47,7 +47,13 @@ enum SCToken {
 
   // primary
   tok_identifier = -6,
-  tok_number     = -7
+  tok_number     = -7,
+
+  // conditionals
+  tok_if          = -8,
+  tok_then        = -9,
+  tok_elseif      = -10,
+  tok_else        = -11,
 };
 
 class SCLexer{

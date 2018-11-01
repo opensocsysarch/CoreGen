@@ -23,10 +23,12 @@ bool SCLLCodeGen::GenerateLL(){
     return false;
   }
 
+  // this should probably be deprecated
   if( OutputFile.length() == 0 ){
     // output to stdout
     SCParser::TheModule->print(outs(),nullptr);
   }else{
+    // output to file
     StringRef FileName(OutputFile);
     std::error_code EC;
     raw_fd_ostream OS(FileName,EC,llvm::sys::fs::F_None);

@@ -48,6 +48,14 @@ int SCLexer::GetTok(){
       return tok_extern;
     if (IdentifierStr == "regclass")
       return tok_regclass;
+    if( IdentifierStr == "if" )
+      return tok_if;
+    if( IdentifierStr == "else" )
+      return tok_else;
+    if( IdentifierStr == "then" )
+      return tok_then;
+    if( IdentifierStr == "elseif" )
+      return tok_elseif;
 
     // the identifier
     return tok_identifier;

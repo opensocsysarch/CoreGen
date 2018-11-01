@@ -76,6 +76,19 @@ public:
       virtual Value *codegen() = 0;
   };
 
+  /// IfExprAST - Expression class for conditionals
+  class IfExprASTContainer : public ExprASTContainer {
+    std::unique_ptr<ExprASTContainer> Cond, Then, Else;
+
+    public:
+      IfExprASTContainer(std::unique_ptr<ExprASTContainer> Cond,
+                         std::unique_ptr<ExprASTContainer> Then,
+                         std::unique_ptr<ExprASTContainer> Else)
+        : Cond(std::move(Cond)), Then(std::move(Then)), Else(std::move(Else)) {}
+
+      Value *codegen() override;
+  };
+
   /// NumberExprAST - Expression class for numeric literals like "1.0".
   class NumberExprASTContainer : public ExprASTContainer {
     double Val;
@@ -219,6 +232,9 @@ private:
   /// Parse expressions
   std::unique_ptr<ExprASTContainer> ParseExpression();
 
+  /// Parse conditional expressions
+  std::unique_ptr<ExprASTContainer> ParseIfExpr();
+
   /// Parse prototypes
   std::unique_ptr<PrototypeASTContainer> ParsePrototype();
 
@@ -280,6 +296,7 @@ typedef SCParser::CallExprASTContainer CallExprAST;
 typedef SCParser::PrototypeASTContainer PrototypeAST;
 typedef SCParser::FunctionASTContainer FunctionAST;
 typedef SCParser::RegClassASTContainer RegClassAST;
+typedef SCParser::IfExprASTContainer IfExprAST;
 
 #endif
 
