@@ -13,10 +13,11 @@
 // ------------------------------------------------- CONSTRUCTOR
 SCOpts::SCOpts(SCMsg *M, int A, char **C)
   : argc(A), argv(C),
-  isKeep(false), isParse(true), isIR(true), isOptimize(true), isCG(true), isVerbose(false),
+  isKeep(false), isParse(true), isIR(true),
+  isOptimize(true), isCG(true), isVerbose(false),
   Msgs(M) {}
 
-int argc;         ///< SCOpts: ARGC command line info
+  int argc;         ///< SCOpts: ARGC command line info
   char **argv;      ///< SCOpts: ARGV command line info
 
   bool isKeep;      ///< SCOpts: Keep intermediate files
@@ -51,7 +52,7 @@ bool SCOpts::ParseOpts(bool *isHelp){
       *isHelp = true;
       this->PrintHelp();
       return true;
-    }else if( (s=="p") || (s=="-parse") || (s=="--parse") ){
+    }else if( (s=="-p") || (s=="-parse") || (s=="--parse") ){
       isParse = true;
       isCG = false;
     }else if( (s=="-o") || (s=="-outfile") || (s=="--outfile") ){
@@ -61,6 +62,8 @@ bool SCOpts::ParseOpts(bool *isHelp){
       }
       OutFile = std::string(argv[i+1]);
       i++;
+    }else if( (s=="-k") || (s=="-keep") || (s=="--keep") ){
+      isKeep = true;
     }else if( (s=="-O") || (s=="-optimize") || (s=="--optimize") ){
       isOptimize = true;
     }else if( (s=="-N") || (s=="-no-optimize") || (s=="--no-optimize") ) {
@@ -81,12 +84,20 @@ bool SCOpts::ParseOpts(bool *isHelp){
     isCG = true;
   }
 
-  if( !*isHelp ){
+  if( !*isHelp && (FileList.size() == 0) ){
     Msgs->PrintMsg( L_ERROR, "No input files found" );
     return false;
   }
 
   return true;
+}
+
+// ------------------------------------------------- GetInputFile
+std::string SCOpts::GetInputFile( unsigned F ){
+  if( F > (FileList.size()-1) ){
+    return "";
+  }
+  return FileList[F];
 }
 
 // ------------------------------------------------- PRINTVERSION

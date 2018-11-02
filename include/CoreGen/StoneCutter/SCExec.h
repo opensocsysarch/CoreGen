@@ -20,10 +20,21 @@
 #include <memory>
 #include <string>
 #include <vector>
+#include <fstream>
+#include <sstream>
+#include <ctime>
+#include <sys/stat.h>
+#include <sys/time.h>
+#include <time.h>
+#include <unistd.h>
+#include <streambuf>
 
 // StoneCutter Headers
-#include "SCOpts.h"
-#include "SCMsg.h"
+#include "CoreGen/StoneCutter/SCOpts.h"
+#include "CoreGen/StoneCutter/SCMsg.h"
+#include "CoreGen/StoneCutter/SCParser.h"
+#include "CoreGen/StoneCutter/SCLLCodeGen.h"
+#include "CoreGen/StoneCutter/SCUtil.h"
 
 // LLVM Headers
 #include "llvm/ADT/APFloat.h"
@@ -40,38 +51,21 @@
 
 using namespace llvm;
 
-/*! SCExec: Lexer Tokens */
-enum Token {
-  tok_eof = -1       // Token: End of File
-
-  // commands
-
-  // primary
-};
-
 class SCExec{
 private:
   // private variables
-  SCOpts *Opts;     /*! SCExec: Options object */
-  SCMsg *Msgs;      /*! SCExec: Messages object */
-
-  std::string IdentifierStr;  /*! SCExec: Filled in if tok_identifier */
-  double NumVal;              /*! SCExec: Filled in if tok_number */
-  int CurTok;                 /*! SCExec: Current token */
-
-  std::map<char, int> BinopPrec;  /*! SCExec: Binary operand precedence */
-
-  // private functions
-  void initBinopPrecedence(void);
+  SCOpts *Opts;       ///< SCExec: Options object
+  SCMsg *Msgs;        ///< SCExec: Messages object
+  SCParser *Parser;   ///< SCExec: Parser object
 
 public:
-  /*! SCExec: Constructor */
+  /// SCExec: Constructor
   SCExec(SCOpts *, SCMsg *);
 
-  /*! SCExec: Destructor */
+  /// SCExec: Destructor
   ~SCExec();
 
-  /*! SCExec: Execute the compiler with the given options */
+  /// SCExec: Execute the compiler with the given options
   bool Exec();
 };
 

@@ -16,7 +16,7 @@
 #include <vector>
 #include <streambuf>
 
-#include "SCMsg.h"
+#include "CoreGen/StoneCutter/SCMsg.h"
 
 
 #ifndef SC_MAJOR_VERSION
@@ -87,6 +87,12 @@ public:
 
   /// SCOpts: Retrieve the output file name
   std::string GetOutputFile() { return OutFile; }
+
+  /// SCOpts: Get the number of input files
+  unsigned GetNumInputFiles() { return FileList.size(); }
+
+  /// SCOpts: Get the target input file
+  std::string GetInputFile( unsigned );
 
   /// SCOpts: Set the output file name
   bool SetOutputFile( std::string O ){ OutFile = O; return true; }
