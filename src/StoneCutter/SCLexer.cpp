@@ -22,8 +22,9 @@ int SCLexer::GetNext(){
   }
   int TChar = InBuf[CurChar];
   CurChar++;
-  if( TChar == '\r')
+  if( TChar == '\n' ){
     LineNum++;
+  }
   return TChar;
 }
 
@@ -36,8 +37,9 @@ int SCLexer::GetTok(){
 
   if (isalpha(LastChar)) { // identifier: [a-zA-Z][a-zA-Z0-9]*
     IdentifierStr = LastChar;
-    while (isalnum((LastChar = GetNext())))
+    while (isalnum((LastChar = GetNext()))){
       IdentifierStr += LastChar;
+    }
 
     // walk all the potential identifiers
     if( IdentifierStr == "def")
@@ -79,10 +81,8 @@ int SCLexer::GetTok(){
     }while (LastChar != EOF && LastChar != '\n' && LastChar != '\r');
 
     if (LastChar != EOF){
-      LineNum++;
       return GetTok();
     }
-    LineNum++;
   }
 
   // Check for end of file.  Don't eat the EOF.
@@ -92,8 +92,6 @@ int SCLexer::GetTok(){
   // Otherwise, just return the character as its ascii value.
   int ThisChar = LastChar;
   LastChar = GetNext();
-  if( ThisChar == '\r' )
-    LineNum++;
   return ThisChar;
 }
 
