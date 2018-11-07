@@ -55,10 +55,13 @@ void SCParser::InitModuleandPassManager(){
   // create a new pass manager
   TheFPM = llvm::make_unique<legacy::FunctionPassManager>(TheModule.get());
 
+  // promote allocas to registers
+  TheFPM->add(createPromoteMemoryToRegisterPass());
+
   // enable simple peephole opts and bit-twiddling opts
   TheFPM->add(createInstructionCombiningPass());
 
-  // enable reassociatio of epxressions
+  // enable reassociation of epxressions
   TheFPM->add(createReassociatePass());
 
   // eliminate common subexpressions
