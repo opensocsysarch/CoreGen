@@ -54,6 +54,10 @@ enum SCToken {
   tok_then        = -9,
   tok_elseif      = -10,
   tok_else        = -11,
+
+  // loop control
+  tok_for         = -12,
+  tok_in          = -13
 };
 
 class SCLexer{
