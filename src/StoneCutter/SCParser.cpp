@@ -180,6 +180,46 @@ bool SCParser::Parse(){
   return true;
 }
 
+bool SCParser::GetVarAttr( std::string Str, VarAttrs &V ){
+
+  // parse the variable attribute string
+  // and determine what type of variable it is
+
+  // common types for speed
+  int Idx = 0;
+  while( VarAttrEntryTable[Idx].Name != "." ){
+    if( Str == VarAttrEntryTable[Idx].Name ){
+      V.width     = VarAttrEntryTable[Idx].width;
+      V.elems     = VarAttrEntryTable[Idx].elems;
+      V.defSign   = VarAttrEntryTable[Idx].IsDefSign;
+      V.defVector = VarAttrEntryTable[Idx].IsDefVector;
+      V.defFloat  = VarAttrEntryTable[Idx].IsDefFloat;
+      return true;
+    }
+    Idx++;
+  }
+
+  if( Str[0] == 'u' ){
+    // unsigned variable
+    V.elems     = 1;
+    V.defSign   = false;
+    V.defVector = false;
+    V.defFloat  = false;
+    V.width     = std::stoi( Str.substr(1,Str.length()-1) );
+    return true;
+  }else if( Str[0] == 's' ){
+    // signed variable
+    V.elems = 1;
+    V.defSign   = true;
+    V.defVector = false;
+    V.defFloat  = false;
+    V.width     = std::stoi( Str.substr(1,Str.length()-1) );
+    return true;
+  }
+
+  return false;
+}
+
 int SCParser::GetNextToken(){
   return CurTok = Lex->GetTok();
 }
@@ -415,15 +455,46 @@ std::unique_ptr<RegClassAST> SCParser::ParseRegClassDef(){
     return LogErrorR("Expected '(' in regclass prototype");
 
   std::vector<std::string> ArgNames;
-  while (GetNextToken() == tok_identifier)
+  std::vector<VarAttrs> ArgAttrs;
+
+  // try to pull the next identifier
+  GetNextToken();
+
+  while (CurTok == tok_identifier){
+  //while (GetNextToken() == tok_identifier){
+    std::string Type = Lex->GetIdentifierStr();
+    VarAttrs VAttr;
+    if( !GetVarAttr( Type, VAttr ) ){
+      return LogErrorR("Unknown variable type: " + Type );
+    }
+
+    if( GetNextToken() != tok_identifier ){
+      return LogErrorR("Expected variable name");
+    }
+
+    // add them to our vector
+    ArgAttrs.push_back(VAttr);
     ArgNames.push_back(Lex->GetIdentifierStr());
+
+    // Look for the comma
+    GetNextToken();
+    if( CurTok == ',' ){
+      // eat the comma
+      GetNextToken();
+    }else{
+      break;
+    }
+  }
+
   if (CurTok != ')')
     return LogErrorR("Expected ')' in regclass prototype");
 
   // success.
   GetNextToken(); // eat ')'.
 
-  return llvm::make_unique<RegClassAST>(RName, std::move(ArgNames));
+  return llvm::make_unique<RegClassAST>(RName,
+                                        std::move(ArgNames),
+                                        std::move(ArgAttrs));
 }
 
 std::unique_ptr<FunctionAST> SCParser::ParseDefinition() {
