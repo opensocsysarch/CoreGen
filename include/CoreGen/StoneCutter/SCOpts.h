@@ -41,7 +41,8 @@ private:
   bool isParse;     ///< SCOpts: Parse the incoming input
   bool isIR;        ///< SCOpts: Generate IR
   bool isOptimize;  ///< SCOpts: Execute the optimizer
-  bool isCG;        ///< SCOpts: Execute the codegen
+  bool isChisel;    ///< SCOpts: Execute the chisel codegen
+  bool isCG;        ///< SCOpts: Execute the object codegen
   bool isVerbose;   ///< SCOpts: Enable verbosity
 
   std::string OutFile;  ///< SCOpts: Output file designator
@@ -76,6 +77,9 @@ public:
   /// SCOpts: Do we execute the codegen
   bool IsCG() { return isCG; }
 
+  /// SCOpts: Do we generate chisel output
+  bool IsChisel() { return isChisel; }
+
   /// SCOpts: Do we execute the parser
   bool IsParse() { return isParse; }
 
@@ -100,6 +104,9 @@ public:
   /// SCOpts: Determines whether an output file name has been set
   bool IsOutputFile() { if( OutFile.length() > 0 ){ return true;} return false; }
 
+  /// SCOpts: Set the 'chisel' option
+  bool SetChisel() { isChisel = true; return true; }
+
   /// SCOpts: Set the 'keep' option
   bool SetKeep() { isKeep = true; return true; }
 
@@ -117,6 +124,9 @@ public:
 
   /// SCOpts: Sets the 'verbose' option
   bool SetVerbose() { isVerbose = true; return true; }
+
+  /// SCOpts: Disables the 'chisel' option
+  bool UnsetChisel() { isChisel = false; return false; }
 
   /// SCOpts: Disables the 'parse' option
   bool UnsetParse() { isParse = false; return true; }

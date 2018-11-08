@@ -80,6 +80,18 @@ bool SCExec::Exec(){
       }
     }
 
+    // Do we generate Chisel?
+    if( Opts->IsChisel() ){
+      if( !Opts->IsIR() ){
+        Msgs->PrintMsg( L_ERROR, "LLVM IR is required for Chisel output" );
+        delete CG;
+        delete Parser;
+        return false;
+      }
+
+      // TODO, generate the chisel output
+    }
+
     // Do we execute the object codegen
     if( Opts->IsCG() ){
       if( !Opts->IsIR() ){
