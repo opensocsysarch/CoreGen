@@ -14,7 +14,7 @@
 SCOpts::SCOpts(SCMsg *M, int A, char **C)
   : argc(A), argv(C),
   isKeep(false), isParse(true), isIR(true),
-  isOptimize(true), isCG(true), isVerbose(false),
+  isOptimize(true), isCG(false), isVerbose(false),
   Msgs(M) {}
 
   int argc;         ///< SCOpts: ARGC command line info

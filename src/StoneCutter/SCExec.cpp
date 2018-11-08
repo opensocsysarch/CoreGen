@@ -80,6 +80,24 @@ bool SCExec::Exec(){
       }
     }
 
+    // Do we execute the object codegen
+    if( Opts->IsCG() ){
+      if( !Opts->IsIR() ){
+        Msgs->PrintMsg( L_ERROR, "LLVM IR is required for object files" );
+        delete CG;
+        delete Parser;
+        return false;
+      }
+
+      if( !CG->GenerateObjFile() ){
+        Msgs->PrintMsg( L_ERROR, "Failed to generate object file for " +
+                                  Opts->GetInputFile(i) );
+        delete CG;
+        delete Parser;
+        return false;
+      }
+    }
+
     if( CG ){
       delete CG;
     }
@@ -89,11 +107,23 @@ bool SCExec::Exec(){
   // Do we toss the intermediate files?
   if( !Opts->IsKeep() ){
     // remove all the LL files
-    for( unsigned i=0; i<Opts->GetNumInputFiles(); i++ ){
-      if( !SCDeleteFile(Opts->GetInputFile(i)+".ll") ){
-        Msgs->PrintMsg( L_ERROR, "Failed to delete LLVM IR file " +
+    if( Opts->IsIR() ){
+      for( unsigned i=0; i<Opts->GetNumInputFiles(); i++ ){
+        if( !SCDeleteFile(Opts->GetInputFile(i)+".ll") ){
+          Msgs->PrintMsg( L_ERROR, "Failed to delete LLVM IR file " +
                         Opts->GetInputFile(i) + ".ll" );
-        return false;
+          return false;
+        }
+      }
+    }
+    // remove all the object files
+    if( Opts->IsCG() ){
+      for( unsigned i=0; i<Opts->GetNumInputFiles(); i++ ){
+        if( !SCDeleteFile(Opts->GetInputFile(i)+".o") ){
+          Msgs->PrintMsg( L_ERROR, "Failed to delete LLVM object file " +
+                          Opts->GetInputFile(i) + ".o" );
+          return false;
+        }
       }
     }
   }
