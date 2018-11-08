@@ -68,7 +68,9 @@ bool SCExec::Exec(){
     // Do we execute the LLVM IR codegen?
     if( Opts->IsIR() ){
       // prep a new output file name; append '.ll'
-      CG = new SCLLCodeGen(Parser,Msgs,Opts->GetInputFile(i) + ".ll");
+      CG = new SCLLCodeGen(Parser,Msgs,
+                           Opts->GetInputFile(i) + ".ll",
+                           Opts->GetInputFile(i) + ".o");
       if( !CG->GenerateLL() ){
         Msgs->PrintMsg( L_ERROR, "Failed to generate IR for " +
                         Opts->GetInputFile(i) );
