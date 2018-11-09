@@ -1,25 +1,30 @@
 #!/bin/bash
 
-CGCLI_PATH=$1
+SCCOMP_PATH=$1
 
-$CGCLI_PATH/cgcli -h
+if [ ! -f $SCCOMP_PATH/sccomp ]; then
+  echo "COULD NOT FIND $SCCOMP_PATH/sccomp"
+  exit -1
+fi
+
+$SCCOMP_PATH/sccomp -h
 retVal=$?
 if [ ! $? -eq 0 ]; then
-  echo "$CGCLI_PATH/sccomp -h failed with return code = $retVal"
+  echo "$SCCOMP_PATH/sccomp -h failed with return code = $retVal"
   exit $retVal
 fi
 
-$CGCLI_PATH/cgcli -help
+$SCCOMP_PATH/sccomp -help
 retVal=$?
 if [ ! $? -eq 0 ]; then
-  echo "$CGCLI_PATH/sccomp -help failed with return code = $retVal"
+  echo "$SCCOMP_PATH/sccomp -help failed with return code = $retVal"
   exit $retVal
 fi
 
-$CGCLI_PATH/cgcli --help
+$SCCOMP_PATH/sccomp --help
 retVal=$?
 if [ ! $? -eq 0 ]; then
-  echo "$CGCLI_PATH/sccomp --help failed with return code = $retVal"
+  echo "$SCCOMP_PATH/sccomp --help failed with return code = $retVal"
   exit $retVal
 fi
 
