@@ -461,7 +461,6 @@ std::unique_ptr<RegClassAST> SCParser::ParseRegClassDef(){
   GetNextToken();
 
   while (CurTok == tok_identifier){
-  //while (GetNextToken() == tok_identifier){
     std::string Type = Lex->GetIdentifierStr();
     VarAttrs VAttr;
     if( !GetVarAttr( Type, VAttr ) ){
@@ -700,7 +699,7 @@ Value *VariableExprAST::codegen() {
   // Look this variable up in the function.
   Value *V = SCParser::NamedValues[Name];
   if (!V)
-    return LogErrorV("Unknown variable name");
+    return LogErrorV("Unknown variable name: " + Name);
   return V;
 }
 
@@ -764,6 +763,33 @@ Function *PrototypeAST::codegen() {
 }
 
 Value *RegClassAST::codegen(){
+  //Value *V = NamedValues[Name];
+
+  for( unsigned i=0; i<Args.size(); i++ ){
+    Type *VType;
+    if( (Attrs[i].defFloat) && (Attrs[i].width==32) ){
+      VType = Type::getFloatTy(SCParser::TheContext);
+    }else if( (Attrs[i].defFloat) && (Attrs[i].width==64) ){
+      VType = Type::getDoubleTy(SCParser::TheContext);
+    }else{
+      VType = Type::getIntNTy(SCParser::TheContext,Attrs[i].width);
+    }
+
+    GlobalVariable *val = new GlobalVariable(*SCParser::TheModule,
+                                             VType,
+                                             false,
+                                             GlobalValue::ExternalLinkage,
+                                             nullptr,
+                                             Twine(Args[i]),
+                                             nullptr,
+                                             GlobalVariable::NotThreadLocal,
+                                             0 );
+    if( !val ){
+      return LogErrorV( "Failed to lower register class to global: regclass = "+
+                        Name + " register=" + Args[i]);
+    }
+  }
+
   return nullptr;
 }
 

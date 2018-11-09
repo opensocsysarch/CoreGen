@@ -11,6 +11,7 @@
 #ifndef _STONECUTTER_SCUTIL_H_
 #define _STONECUTTER_SCUTIL_H_
 
+// standard headers
 #include <sys/stat.h>
 #include <sys/time.h>
 #include <time.h>
@@ -21,6 +22,19 @@
 #include <fstream>
 #include <sstream>
 #include <ctime>
+
+// llvm headers
+#include "llvm/IR/BasicBlock.h"
+#include "llvm/IR/Constants.h"
+#include "llvm/IR/DerivedTypes.h"
+#include "llvm/IR/Function.h"
+#include "llvm/IR/IRBuilder.h"
+#include "llvm/IR/LLVMContext.h"
+#include "llvm/IR/LegacyPassManager.h"
+#include "llvm/IR/Module.h"
+#include "llvm/IR/Type.h"
+#include "llvm/IR/Verifier.h"
+#include "llvm/IR/GlobalVariable.h"
 
 typedef struct{
   unsigned width;
@@ -64,6 +78,16 @@ inline bool SCDeleteFile(const std::string& name){
     return false;
   }else{
     return true;
+  }
+}
+
+inline Type *GetLLVarType( VarAttrs VA, LLVMContext TC ){
+  if( (VA.defFloat) && (VA.width==32) ){
+    return Type::getFloatTy(TC);
+  }else if( (VA.defFloat) && (VA.width==64) ){
+    return Type::getDoubleTy(TC);
+  }else{
+    return Type::getIntNTy(TC,VA.width);
   }
 }
 
