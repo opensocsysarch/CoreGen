@@ -12,5 +12,6 @@ if(BUILD_COREGEN_STONECUTTER_TESTING)
 endif()
 
 add_subdirectory(CLI)
+add_subdirectory(Parser)
 
 #-- EOF
