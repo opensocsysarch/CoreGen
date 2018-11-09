@@ -24,6 +24,7 @@
 // CoreGen headers
 #include "CoreGen/StoneCutter/SCLexer.h"
 #include "CoreGen/StoneCutter/SCMsg.h"
+#include "CoreGen/StoneCutter/SCUtil.h"
 
 // LLVM headers
 #include "llvm/ADT/APFloat.h"
@@ -38,6 +39,7 @@
 #include "llvm/IR/Module.h"
 #include "llvm/IR/Type.h"
 #include "llvm/IR/Verifier.h"
+#include "llvm/IR/GlobalVariable.h"
 #include "llvm/Support/TargetSelect.h"
 #include "llvm/Target/TargetMachine.h"
 #include "llvm/Transforms/Scalar.h"
@@ -48,6 +50,7 @@ using namespace llvm;
 
 class SCParser{
 public:
+
   /// Default constructor
   SCParser(std::string, std::string, SCMsg *);
 
@@ -157,10 +160,13 @@ public:
   class RegClassASTContainer {
     std::string Name;
     std::vector<std::string> Args;
+    std::vector<VarAttrs> Attrs;
 
   public:
-    RegClassASTContainer(const std::string &Name, std::vector<std::string> Args)
-      : Name(Name), Args(std::move(Args)) {}
+    RegClassASTContainer(const std::string &Name,
+                         std::vector<std::string> Args,
+                         std::vector<VarAttrs> Attrs)
+      : Name(Name), Args(std::move(Args)), Attrs(std::move(Attrs)) {}
 
     const std::string &getName() const { return Name; }
     Value *codegen();
@@ -223,6 +229,9 @@ private:
 
   /// Get the next token
   int GetNextToken();
+
+  /// Parse the variable definition and return the complementary VarAttr
+  bool GetVarAttr( std::string Str, VarAttrs &V );
 
   /// Get the token precedence
   int GetTokPrecedence();
