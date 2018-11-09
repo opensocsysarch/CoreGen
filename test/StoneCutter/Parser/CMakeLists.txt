@@ -1,4 +1,4 @@
-# CoreGen test/StoneCutter/Parser CMakeLists.txt
+# CoreGen test/StoneCutter CMakeLists.txt
 # Copyright (C) 2017-2018 Tactical Computing Laboratories, LLC
 # All Rights Reserved
 # contact@tactcomplabs.com
@@ -6,29 +6,12 @@
 # See LICENSE in the top level directory for licensing details
 #
 
-include_directories(${COREGEN_INCLUDE_PATH})
-include_directories(${YAML_PATH}/include)
-
-find_program (BASH_EXECUTABLE bash)
-if (BASH_EXECUTABLE)
-  message(STATUS "FOUND BASH AT ${BASH_EXECUTABLE}")
-else ()
-  message(FATAL_ERROR "COULD NOT FIND BASH SHELL")
-endif ()
-
-
-file(GLOB TEST_SRCS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} *.sh)
-
 if(BUILD_COREGEN_STONECUTTER_PARSER_TESTING)
-foreach(testSrc ${TEST_SRCS})
-  # Extract the file name
-  get_filename_component(testName ${testSrc} NAME_WE)
-
-  # Add the tests for execution
-  add_test(NAME ${testName}
-    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-    COMMAND ${BASH_EXECUTABLE} ${testSrc} ${COREGEN_BUILD_DIR}/src/SCComp)
-  set_tests_properties( ${testName} PROPERTIES PASS_REGULAR_EXPRESSION "")
-endforeach(testSrc)
+  set(BUILD_COREGEN_STONECUTTER_PARSER_KNOWNPASS_TESTING "ON")
+  set(BUILD_COREGEN_STONECUTTER_PARSER_KNOWNFAIL_TESTING "ON")
 endif()
 
+add_subdirectory(KnownPass)
+add_subdirectory(KnownFail)
+
+#-- EOF
