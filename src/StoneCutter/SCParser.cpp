@@ -18,7 +18,7 @@ std::map<std::string, Value *> SCParser::NamedValues;
 
 SCParser::SCParser(std::string B, std::string F, SCMsg *M)
   : CurTok(-1), InBuf(B), FileName(F), Msgs(M), Lex(new SCLexer(B)),
-    InFunc(false), IsOpt(false) {
+    InFunc(false), IsOpt(false), Rtn(true) {
   TheModule = llvm::make_unique<Module>(StringRef(FileName), TheContext);
   InitBinopPrecedence();
 }
@@ -155,7 +155,7 @@ bool SCParser::Parse(){
   while(true){
     switch(CurTok){
     case tok_eof:
-      return true;
+      return Rtn;
     case ';':
       GetNextToken();
       break;
@@ -177,7 +177,7 @@ bool SCParser::Parse(){
     }
   }
 
-  return true;
+  return Rtn;
 }
 
 bool SCParser::GetVarAttr( std::string Str, VarAttrs &V ){
@@ -556,6 +556,7 @@ void SCParser::HandleDefinition() {
     }
   } else {
     // Skip token for error recovery.
+    Rtn = false;
     GetNextToken();
   }
 }
@@ -569,6 +570,7 @@ void SCParser::HandleExtern() {
     }
   } else {
     // Skip token for error recovery.
+    Rtn = false;
     GetNextToken();
   }
 }
@@ -582,6 +584,7 @@ void SCParser::HandleRegClass() {
       //fprintf(stderr, "\n");
     }
   }else{
+    Rtn = false;
     GetNextToken();
   }
 }
@@ -596,6 +599,7 @@ void SCParser::HandleTopLevelExpression() {
     }
   } else {
     // Skip token for error recovery.
+    Rtn = false;
     GetNextToken();
   }
 }
@@ -604,6 +608,7 @@ void SCParser::HandleFuncClose(){
   if(ParseCloseBracket()){
     //fprintf(stderr, "Parsed a function body\n");
   }else{
+    Rtn = false;
     GetNextToken();
   }
 }

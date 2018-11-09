@@ -220,6 +220,8 @@ private:
   bool InFunc;                          ///< Determines whether the parser is in a function body
   bool IsOpt;                           ///< Determines whether to run the optimizer
 
+  bool Rtn;                             ///< Return status of the parser
+
   std::map<char, int> BinopPrecedence;  ///< StoneCutter binary operand precedence
 
   // private functions

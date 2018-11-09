@@ -1,31 +1,36 @@
 #!/bin/bash
 
-CGCLI_PATH=$1
+SCCOMP_PATH=$1
+
+if [ ! -f $SCCOMP_PATH/sccomp ]; then
+  echo "COULD NOT FIND $SCCOMP_PATH/sccomp"
+  exit -1
+fi
 
 FILE=test.KEEP.sc
 touch $FILE
 echo "# this is a stonecutter source file" >> $FILE 2>&1
 
-$CGCLI_PATH/cgcli -k $FILE
+$SCCOMP_PATH/sccomp -k $FILE
 retVal=$?
 if [ ! $? -eq 0 ]; then
-  echo "$CGCLI_PATH/sccomp -k $FILE failed with return code = $retVal"
+  echo "$SCCOMP_PATH/sccomp -k $FILE failed with return code = $retVal"
   rm -Rf $FILE
   exit $retVal
 fi
 
-$CGCLI_PATH/cgcli -keep $FILE
+$SCCOMP_PATH/sccomp -keep $FILE
 retVal=$?
 if [ ! $? -eq 0 ]; then
-  echo "$CGCLI_PATH/sccomp -keep $FILE failed with return code = $retVal"
+  echo "$SCCOMP_PATH/sccomp -keep $FILE failed with return code = $retVal"
   rm -Rf $FILE
   exit $retVal
 fi
 
-$CGCLI_PATH/cgcli --keep $FILE
+$SCCOMP_PATH/sccomp --keep $FILE
 retVal=$?
 if [ ! $? -eq 0 ]; then
-  echo "$CGCLI_PATH/sccomp --keep $FILE failed with return code = $retVal"
+  echo "$SCCOMP_PATH/sccomp --keep $FILE failed with return code = $retVal"
   rm -Rf $FILE
   exit $retVal
 fi
