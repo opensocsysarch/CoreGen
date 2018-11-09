@@ -155,6 +155,10 @@ bool SCParser::Parse(){
   while(true){
     switch(CurTok){
     case tok_eof:
+      if( InFunc ){
+        // no close bracket found
+        return false;
+      }
       return Rtn;
     case ';':
       GetNextToken();
