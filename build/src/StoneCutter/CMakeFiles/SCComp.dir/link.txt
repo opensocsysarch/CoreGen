@@ -1,0 +1,1 @@
+/usr/bin/ar qc libSCComp.a  CMakeFiles/SCComp.dir/SCOpts.cpp.o CMakeFiles/SCComp.dir/SCExec.cpp.o CMakeFiles/SCComp.dir/SCMsg.cpp.o CMakeFiles/SCComp.dir/SCLexer.cpp.o CMakeFiles/SCComp.dir/SCParser.cpp.o CMakeFiles/SCComp.dir/SCLLCodeGen.cpp.o

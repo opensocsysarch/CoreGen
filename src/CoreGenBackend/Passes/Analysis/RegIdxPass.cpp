@@ -22,6 +22,37 @@ RegIdxPass::~RegIdxPass(){
 }
 
 bool RegIdxPass::Execute(){
+  std::ofstream mystream("yamlwritetest.txt", std::ios::app);
+  mystream << ":- regClassReg(X, Y)," << std::endl
+           << "regClassReg(X, Z)," << std::endl
+           << "regIndex(Y, W)," << std::endl
+           << "regIndex(Z, W)," << std::endl
+           << "Y != Z." << std::endl;
+  mystream.close();
+  if (system("clingo yamlwritetest.txt") == 7680){
+    return true;
+  }
+  else{
+    return false;
+  }
+  /*
+  mystream.open("out.txt", std::ios::app);
+  mystream << system("clingo test.lp");
+  FILE *pipe = popen("clingo yamlwritetest.txt", "r");
+  char buffer;
+  int count = 0;
+  fseek(pipe, 64, SEEK_SET);
+  while (!feof(pipe)){
+    count++;
+    buffer = fgetc(pipe);
+    if (buffer == 'U'){
+      mystream << count;
+    }
+    mystream << buffer;
+  }
+  pclose(pipe);
+  mystream.close();
+  ////////////////////////////////////////////////////////////
   // Get the correct DAG level: 1
   CoreGenDAG *D1 = DAG->GetDAGFromLevel(this->GetLevel());
   if( D1 == nullptr ){
@@ -61,6 +92,7 @@ bool RegIdxPass::Execute(){
   }
 
   return rtn;
+  */
 }
 
 // EOF

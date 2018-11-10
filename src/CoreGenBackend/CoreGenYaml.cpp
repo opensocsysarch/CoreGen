@@ -9,6 +9,8 @@
 //
 
 #include "CoreGen/CoreGenBackend/CoreGenYaml.h"
+#include <fstream>
+#include <algorithm>
 
 CoreGenYaml::CoreGenYaml( std::string F, CoreGenPluginMgr *P,
                           CoreGenEnv *En, CoreGenProj *Pr, CoreGenErrno *E )
@@ -1300,8 +1302,24 @@ bool CoreGenYaml::ReadProjYaml(const YAML::Node& ProjNodes ){
   return true;
 }
 
+std::string CoreGenYaml::PrepForASP(std::string RemStr){
+  std::string NewStr = "";
+  for (int i = 0;i < RemStr.length(); i++){
+    if (RemStr[i] != '.'){
+      if (RemStr[i] < 91 && RemStr[i] > 63){
+        NewStr += RemStr[i] + 32;
+      }
+      else{
+        NewStr += RemStr[i];
+      }
+    }
+  }
+  return NewStr;
+}
+
 bool CoreGenYaml::ReadRegisterYaml(const YAML::Node& RegNodes,
                                    std::vector<CoreGenReg *> &Regs){
+  std::ofstream mystream("yamlwritetest.txt", std::ios::app);
 
   for( unsigned i=0; i<RegNodes.size(); i++ ){
     const YAML::Node& Node = RegNodes[i];
@@ -1312,6 +1330,8 @@ bool CoreGenYaml::ReadRegisterYaml(const YAML::Node& RegNodes,
       return false;
     }
     std::string Name = Node["RegName"].as<std::string>();
+
+    mystream << "reg(" << PrepForASP(Name) << ")." << std::endl;
 
     if( !CheckValidNode(Node,"Width") ){
       PrintParserError(Node,
@@ -1327,6 +1347,9 @@ bool CoreGenYaml::ReadRegisterYaml(const YAML::Node& RegNodes,
       return false;
     }
     int Index = Node["Index"].as<int>();
+
+    mystream << "regIndex(" << PrepForASP(Name) << ", " << Index << ")." << std::endl;
+
     if( !CheckValidNode(Node,"IsFixedValue") ){
       PrintParserError(Node,
                        "Register",
@@ -1422,13 +1445,14 @@ bool CoreGenYaml::ReadRegisterYaml(const YAML::Node& RegNodes,
     // add the register object
     Regs.push_back(R);
   }
-
+  mystream.close();
   return true;
 }
 
 bool CoreGenYaml::ReadRegisterClassYaml(const YAML::Node& RegClassNodes,
                                         std::vector<CoreGenRegClass *> &RegClasses,
                                         std::vector<CoreGenReg *> &Regs){
+  std::ofstream mystream("yamlwritetest.txt", std::ios::app);
   for( unsigned i=0; i<RegClassNodes.size(); i++ ){
     const YAML::Node& Node = RegClassNodes[i];
     if( !CheckValidNode(Node,"RegisterClassName") ){
@@ -1438,6 +1462,7 @@ bool CoreGenYaml::ReadRegisterClassYaml(const YAML::Node& RegClassNodes,
       return false;
     }
     std::string Name = Node["RegisterClassName"].as<std::string>();
+    mystream << "regClass(" << PrepForASP(Name) << ")." << std::endl;
 #if 0
     // currently unused
     int NumRegs = Node["NumRegisters"].as<int>();
@@ -1466,6 +1491,7 @@ bool CoreGenYaml::ReadRegisterClassYaml(const YAML::Node& RegClassNodes,
         for( unsigned k=0; k<Regs.size(); k++ ){
           if( Regs[k]->GetName() == RName ){
             RC->InsertReg(Regs[k]);
+            mystream << "regClassReg(" << PrepForASP(Name) << ", " << PrepForASP(RName) << ")." << std::endl;
             found = true;
           }
         } // end unsigned k
@@ -1487,6 +1513,7 @@ bool CoreGenYaml::ReadRegisterClassYaml(const YAML::Node& RegClassNodes,
 
     RegClasses.push_back(RC);
   }
+  mystream.close();
   return true;
 }
 
