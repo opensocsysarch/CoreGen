@@ -1,6 +1,7 @@
 # CoreGen Integrated Developement Environment
 
 [![Documentation](https://codedocs.xyz/opensocsysarch/CoreGen.svg)](https://codedocs.xyz/opensocsysarch/CoreGen/)
+[![GitHub license](https://img.shields.io/badge/license-APACHE2-blue.svg)](https://raw.githubusercontent.com/opensocsysarch/CoreGen/master/LICENSE)
 
 ## Getting Started
 
