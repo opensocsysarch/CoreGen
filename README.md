@@ -3,6 +3,9 @@
 [![Documentation](https://codedocs.xyz/opensocsysarch/CoreGen.svg)](https://codedocs.xyz/opensocsysarch/CoreGen/)
 [![GitHub license](https://img.shields.io/badge/license-APACHE2-blue.svg)](https://raw.githubusercontent.com/opensocsysarch/CoreGen/master/LICENSE)
 
+[![GitHub issues](https://img.shields.io/github/issues/badges/shields.svg)](https://github.com/opensocsysarch/CoreGen/issues)
+
+
 ## Getting Started
 
 ## Prerequisites
