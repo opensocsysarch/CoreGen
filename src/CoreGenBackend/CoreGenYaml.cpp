@@ -1837,7 +1837,8 @@ bool CoreGenYaml::ReadCacheYaml(const YAML::Node& CacheNodes,
       if( SC == nullptr ){
         return false;
       }
-      C->SetChildCache( SC );
+      C->SetChildCache( SC );   // set the child of the parent
+      SC->SetParentCache( C );  // set the parent of the child
     }
 
     if( Node["RTL"] ){
