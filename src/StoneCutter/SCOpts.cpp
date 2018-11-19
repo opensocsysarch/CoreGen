@@ -17,22 +17,6 @@ SCOpts::SCOpts(SCMsg *M, int A, char **C)
   isOptimize(true), isChisel(true), isCG(false), isVerbose(false),
   Msgs(M) {}
 
-#if 0
-  int argc;         ///< SCOpts: ARGC command line info
-  char **argv;      ///< SCOpts: ARGV command line info
-
-  bool isKeep;      ///< SCOpts: Keep intermediate files
-  bool isParse;     ///< SCOpts: Parse the incoming input
-  bool isIR;        ///< SCOpts: Generate IR
-  bool isOptimize;  ///< SCOpts: Execute the optimizer
-  bool isCG;        ///< SCOpts: Execute the codegen
-  bool isVerbose;   ///< SCOpts: Enable verbosity
-
-  std::vector<std::string> FileList;  ///< SCOpts: List of files to compile
-
-  SCMsg *Msgs;    ///< SCOpts: Message handlers
-#endif
-
 // ------------------------------------------------- DESTRUCTOR
 SCOpts::~SCOpts(){}
 
@@ -58,16 +42,6 @@ bool SCOpts::ParseOpts(bool *isHelp){
       isParse = true;   // enable parsing
       isCG = false;     // disable object files
       isChisel = false; // disable chisel
-#if 0
-    // deprecated
-    }else if( (s=="-o") || (s=="-outfile") || (s=="--outfile") ){
-      if( (i+1)>=argc){
-        Msgs->PrintMsg( L_ERROR, "--outfile requires an argument" );
-        return false;
-      }
-      OutFile = std::string(argv[i+1]);
-      i++;
-#endif
     }else if( (s=="-c") || (s=="-chisel") || (s=="--chisel") ){
       isChisel = true;
     }else if( (s=="-o") || (s=="-object") || (s=="--object") ){
@@ -131,10 +105,6 @@ void SCOpts::PrintHelp(){
   Msgs->PrintRawMsg("     -V|-version|--version               : Print the version info");
   Msgs->PrintRawMsg(" ");
   Msgs->PrintRawMsg("Execution Options:");
-#if 0
-  // deprecated
-  Msgs->PrintRawMsg("     -o|-outfile|--outfile file.out : Set the output file" );
-#endif
   Msgs->PrintRawMsg("     -O|-optimize|--optimize             : Execute the optimizer" );
   Msgs->PrintRawMsg("     -N|-no-optimize|--no-optimize       : Do not execute the optimizer" );
   Msgs->PrintRawMsg("     -D|-disable-chisel|--disable-chisel : Disables Chisel output" );

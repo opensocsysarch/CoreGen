@@ -225,7 +225,11 @@ bool SCParser::GetVarAttr( std::string Str, VarAttrs &V ){
 }
 
 int SCParser::GetNextToken(){
-  return CurTok = Lex->GetTok();
+  CurTok = Lex->GetTok();
+#if 0
+  std::cout << "CurTok = " << CurTok << std::endl;
+#endif
+  return CurTok;
 }
 
 int SCParser::GetTokPrecedence(){
@@ -374,6 +378,11 @@ std::unique_ptr<ExprAST> SCParser::ParseBinOpRHS(int ExprPrec,
 std::unique_ptr<ExprAST> SCParser::ParseForExpr() {
   GetNextToken();  // eat the for.
 
+  if (CurTok != '(' )
+    return LogError("expected '(' for loop control statement");
+
+  GetNextToken(); // eat the '('
+
   if (CurTok != tok_identifier)
     return LogError("expected identifier after for");
 
@@ -388,7 +397,7 @@ std::unique_ptr<ExprAST> SCParser::ParseForExpr() {
   auto Start = ParseExpression();
   if (!Start)
     return nullptr;
-  if (CurTok != ',')
+  if (CurTok != ';')
     return LogError("expected ',' after for start value");
   GetNextToken();
 
@@ -398,24 +407,41 @@ std::unique_ptr<ExprAST> SCParser::ParseForExpr() {
 
   // The step value is optional.
   std::unique_ptr<ExprAST> Step;
-  if (CurTok == ',') {
+  if (CurTok == ';') {
     GetNextToken();
     Step = ParseExpression();
     if (!Step)
       return nullptr;
   }
 
-  if (CurTok != tok_in)
-    return LogError("expected 'in' after for : " + Lex->GetIdentifierStr());
-  GetNextToken();  // eat 'in'.
+  if (CurTok != ')')
+    return LogError("expected ')' for loop control statement");
 
-  auto Body = ParseExpression();
-  if (!Body)
-    return nullptr;
+  GetNextToken(); // eat ')'
+
+  // check for open bracket
+  if (CurTok != '{'){
+    return LogError("expected '}' for loop control body");
+  }
+  GetNextToken(); // eat '{'
+
+  std::vector<std::unique_ptr<ExprAST>> BodyExpr;
+  while( CurTok != '}' ){
+    auto Body = ParseExpression();
+    if( !Body )
+      return nullptr;
+    BodyExpr.push_back(std::move(Body));
+  }
+
+  // handle close bracket
+  if( CurTok != '}' ){
+    return LogError("expected '}' for loop control body");
+  }
+  GetNextToken(); // eat the '}'
 
   return llvm::make_unique<ForExprAST>(IdName, std::move(Start),
                                        std::move(End), std::move(Step),
-                                       std::move(Body));
+                                       std::move(BodyExpr));
 }
 
 std::unique_ptr<ExprAST> SCParser::ParseExpression() {
@@ -655,8 +681,15 @@ Value *ForExprAST::codegen() {
   // Emit the body of the loop.  This, like any other expr, can change the
   // current BB.  Note that we ignore the value computed by the body, but don't
   // allow an error.
+#if 0
   if (!Body->codegen())
     return nullptr;
+#endif
+
+  if( BodyExpr.size() == 0 ) return nullptr;
+  for( unsigned i=0; i<BodyExpr.size(); i++ ){
+    BodyExpr[i]->codegen();
+  }
 
   // Emit the step value.
   Value *StepVal = nullptr;
