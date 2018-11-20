@@ -849,7 +849,9 @@ Function *FunctionAST::codegen() {
     return nullptr;
 
   // Create a new basic block to start insertion into.
-  BasicBlock *BB = BasicBlock::Create(SCParser::TheContext, "entry", TheFunction);
+  BasicBlock *BB = BasicBlock::Create(SCParser::TheContext,
+                                      "entry." + Proto->getName(),
+                                      TheFunction);
   SCParser::Builder.SetInsertPoint(BB);
 
   // Record the function arguments in the NamedValues map.
