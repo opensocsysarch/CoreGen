@@ -215,6 +215,7 @@ public:
   static std::unique_ptr<Module> TheModule;
   static std::map<std::string, Value *> NamedValues;
   static std::unique_ptr<legacy::FunctionPassManager> TheFPM;
+  static unsigned LabelIncr;
 
 private:
 

@@ -15,18 +15,21 @@ IRBuilder<> SCParser::Builder(TheContext);
 std::unique_ptr<Module> SCParser::TheModule;
 std::unique_ptr<legacy::FunctionPassManager> SCParser::TheFPM;
 std::map<std::string, Value *> SCParser::NamedValues;
+unsigned SCParser::LabelIncr;
 
 SCParser::SCParser(std::string B, std::string F, SCMsg *M)
   : CurTok(-1), InBuf(B), FileName(F), Msgs(M), Lex(new SCLexer(B)),
     InFunc(false), IsOpt(false), Rtn(true) {
   TheModule = llvm::make_unique<Module>(StringRef(FileName), TheContext);
   InitBinopPrecedence();
+  LabelIncr = 0;
 }
 
 SCParser::SCParser(SCMsg *M)
   : CurTok(-1), Msgs(M), Lex(nullptr),
     InFunc(false), IsOpt(false) {
   InitBinopPrecedence();
+  LabelIncr = 0;
 }
 
 SCParser::~SCParser(){
