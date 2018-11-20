@@ -35,6 +35,7 @@ private:
   bool CheckPlugins;    ///< CGCLIOpts: Check the plugin options
   bool ListSysPasses;   ///< CGCLIOpts: Did the user request to list the sys passes
   bool ExecSysPass;     ///< CGCLIOpts: Execute a system pass
+  bool ASPSolver;       ///< CGCLIOpts: Execute the ASP Solver
 
   std::string IRFile;   ///< CGCLIOpts: Input IR File
   std::string OutFile;  ///< CGCLIOpts: Output IR File
@@ -42,6 +43,7 @@ private:
   std::string ProjName; ///< CGCLIOpts: Project Name
   std::string ProjRoot; ///< CGCLIOpts: Project Root
   std::string Archive;  ///< CGCLIOpts: Archive Path
+  std::string ASP;      ///< CGCLIOpts: ASP Input text
 
   std::vector<std::string> EnablePass;  ///< CGCLIOpts: Manually enabled passes
   std::vector<std::string> DisablePass; ///< CGCLIOpts: Manually disabled passes
@@ -117,6 +119,9 @@ public:
   /// Check to see if system passes are enabled
   bool IsSysPassEnabled() { return ExecSysPass; }
 
+  // Check to see if the ASP pass is enabled
+  bool IsASPEnabled() { return ASPSolver; }
+
   /// Check to see if the group passes are enabled
   bool IsGroupPasses() { return GroupPasses; }
 
@@ -134,6 +139,9 @@ public:
 
   /// Retrieve the number of selected plugins
   unsigned GetNumPlugins() { return Plugins.size(); }
+
+  /// Retrieve the ASP input string
+  std::string GetASPStr() { return ASP; }
 
   /// Retrieve the target plugin name
   std::string GetPlugin(unsigned P){

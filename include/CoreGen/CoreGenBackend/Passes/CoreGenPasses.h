@@ -44,6 +44,7 @@
 #include "CoreGen/CoreGenBackend/Passes/Analysis/CommSafetyPass.h"
 #include "CoreGen/CoreGenBackend/Passes/Analysis/PInstSafetyPass.h"
 #include "CoreGen/CoreGenBackend/Passes/Analysis/CommSafetyPass.h"
+#include "CoreGen/CoreGenBackend/Passes/Analysis/ASPSolverPass.h"
 
 // CoreGen Optimization Passes
 
