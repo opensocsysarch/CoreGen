@@ -294,6 +294,10 @@ std::unique_ptr<ExprAST> SCParser::ParseIdentifierExpr() {
   // Eat the ')'.
   GetNextToken();
 
+  if( CurTok == ';' ){
+    GetNextToken(); // eat ';'
+  }
+
   return llvm::make_unique<CallExprAST>(IdName, std::move(Args));
 }
 
