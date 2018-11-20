@@ -659,11 +659,16 @@ Value *ForExprAST::codegen() {
   if (!StartVal)
     return nullptr;
 
+  unsigned LocalLabel = SCParser::LabelIncr;
+  SCParser::LabelIncr++;
+
   // Make the new basic block for the loop header, inserting after current
   // block.
   Function *TheFunction = Builder.GetInsertBlock()->getParent();
   BasicBlock *PreheaderBB = SCParser::Builder.GetInsertBlock();
-  BasicBlock *LoopBB = BasicBlock::Create(SCParser::TheContext, "loop", TheFunction);
+  BasicBlock *LoopBB = BasicBlock::Create(SCParser::TheContext,
+                                          "loop."+std::to_string(LocalLabel),
+                                          TheFunction);
 
   // Insert an explicit fall through from the current block to the LoopBB.
   Builder.CreateBr(LoopBB);
@@ -705,7 +710,9 @@ Value *ForExprAST::codegen() {
     StepVal = ConstantFP::get(SCParser::TheContext, APFloat(1.0));
   }
 
-  Value *NextVar = Builder.CreateFAdd(Variable, StepVal, "nextvar");
+  Value *NextVar = Builder.CreateFAdd(Variable,
+                                      StepVal,
+                                      "nextvar" + std::to_string(LocalLabel));
 
   // Compute the end condition.
   Value *EndCond = End->codegen();
@@ -714,12 +721,16 @@ Value *ForExprAST::codegen() {
 
   // Convert condition to a bool by comparing non-equal to 0.0.
   EndCond = Builder.CreateFCmpONE(
-      EndCond, ConstantFP::get(SCParser::TheContext, APFloat(0.0)), "loopcond");
+      EndCond, ConstantFP::get(SCParser::TheContext,
+                               APFloat(0.0)),
+                               "loopcond" + std::to_string(LocalLabel));
 
   // Create the "after loop" block and insert it.
   BasicBlock *LoopEndBB = Builder.GetInsertBlock();
   BasicBlock *AfterBB =
-      BasicBlock::Create(SCParser::TheContext, "afterloop", TheFunction);
+      BasicBlock::Create(SCParser::TheContext,
+                         "afterloop." + std::to_string(LocalLabel),
+                         TheFunction);
 
   // Insert the conditional branch into the end of LoopEndBB.
   Builder.CreateCondBr(EndCond, LoopBB, AfterBB);
