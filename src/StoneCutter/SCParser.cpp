@@ -329,7 +329,7 @@ std::unique_ptr<ExprAST> SCParser::ParseIfExpr() {
 std::unique_ptr<ExprAST> SCParser::ParsePrimary() {
   switch (CurTok) {
   default:
-    return LogError("unknown token when expecting an expression");
+    return LogError("unknown token when expecting an expression" );
   case tok_identifier:
     return ParseIdentifierExpr();
   case tok_number:
