@@ -200,6 +200,9 @@ bool CoreGenReg::InsertSubReg( std::string Name, unsigned Start, unsigned End ){
   }else if( End <= Start ){
     Errno->SetError(CGERR_ERROR, "Subregister start and/or end bits out of range" );
     return false;
+  }else if( (int)(End) >= width ){
+    Errno->SetError(CGERR_ERROR, "Subregister end bit beyond register width" );
+    return false;
   }
   SubRegs.push_back(std::tuple<std::string,unsigned,unsigned>(Name,Start,End));
   return true;
