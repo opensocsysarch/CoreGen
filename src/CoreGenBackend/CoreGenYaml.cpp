@@ -679,6 +679,28 @@ void CoreGenYaml::WriteRegYaml(YAML::Emitter *out,
       *out << YAML:: Value << "false";
     }
 
+    // write out the subregister encodings
+    if( Regs[i]->GetNumSubRegs() > 0 ){
+      *out << YAML::Key << "SubRegs" << YAML::Value << YAML::BeginSeq;
+      for( unsigned j=0; j<Regs[i]->GetNumSubRegs(); j++ ){
+        *out << YAML::BeginMap;
+
+        std::string SRName;
+        unsigned SRStart;
+        unsigned SREnd;
+        if( !Regs[i]->GetSubReg(j,SRName,SRStart,SREnd) ){
+          // dump out
+          return ;
+        }
+        *out << YAML::Key << "SubReg" << YAML::Value << SRName;
+        *out << YAML::Key << "StartBit" << YAML::Value << SRStart;
+        *out << YAML::Key << "EndBit" << YAML::Value << SREnd;
+
+        *out << YAML::EndMap;
+      }
+      *out << YAML::EndSeq;
+    }
+
     if( Regs[i]->IsRTL() ){
       *out << YAML::Key << "RTL";
       *out << YAML::Value << Regs[i]->GetRTL();
@@ -1429,6 +1451,45 @@ bool CoreGenYaml::ReadRegisterYaml(const YAML::Node& RegNodes,
 
     R->SetShared(IsShared);
 
+    // Check for subregisters
+    const YAML::Node& SNode = Node["SubRegs"];
+    if( SNode ){
+      if( SNode.size() == 0 ){
+        PrintParserError(SNode, "SubRegs", "SubReg" );
+        return false;
+      }
+      for( unsigned j=0; j<SNode.size(); j++ ){
+        const YAML::Node& LSNode = SNode[j];
+
+        // name
+        if( !CheckValidNode(LSNode, "SubReg") ){
+          PrintParserError(LSNode, "SubRegs", "SubReg" );
+          return false;
+        }
+        std::string SName = LSNode["SubReg"].as<std::string>();
+
+        // start bit
+        if( !CheckValidNode(LSNode, "StartBit") ){
+          PrintParserError(LSNode, "SubRegs", "StartBit" );
+          return false;
+        }
+        unsigned SB = LSNode["StartBit"].as<unsigned>();
+
+        // end bit
+        if( !CheckValidNode(LSNode, "EndBit") ){
+          PrintParserError(LSNode, "SubRegs", "EndBit" );
+          return false;
+        }
+        unsigned EB = LSNode["EndBit"].as<unsigned>();
+
+        // insert the subreg into the register
+        if( !R->InsertSubReg(SName,SB,EB) ){
+          return false;
+        }
+      }
+    }
+
+    // Check for custom RTL
     if( CheckValidNode(Node,"RTL") ){
       R->SetRTL( Node["RTL"].as<std::string>());
     }
