@@ -1892,7 +1892,10 @@ bool CoreGenYaml::ReadCoreYaml(const YAML::Node& CoreNodes,
 
     // handle the thread units
     unsigned ThreadUnits = 1;
-    if( CheckValidNode(Node,"ThreadUnits") ){
+    if( Node["ThreadUnits"] ){
+      if( !CheckValidNode(Node,"ThreadUnits") ){
+        return false;
+      }
       ThreadUnits = Node["ThreadUnits"].as<unsigned>();
       if( !C->SetNumThreadUnits(ThreadUnits) ){
         return false;
