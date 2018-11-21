@@ -148,7 +148,7 @@ bool CoreGenReg::SetFixedVals( std::vector<uint64_t> FixedVals ){
     return false;
   }
   isFixedValue = true;
-  for( int i=0; i<FixedVals.size(); i++ ){
+  for( unsigned i=0; i<FixedVals.size(); i++ ){
     fixedVals.push_back(FixedVals[i]);
   }
   return true;
@@ -170,6 +170,39 @@ bool CoreGenReg::GetFixedVals( std::vector<uint64_t> &FixedVals ){
     return true;
   }
   return false;
+}
+
+bool CoreGenReg::GetSubReg( unsigned Idx,
+                            std::string &Name,
+                            unsigned &Start,
+                            unsigned &End ){
+  if( Idx > (SubRegs.size()-1) ){
+    Errno->SetError(CGERR_ERROR, "Subregister index out of bound: "
+                    + std::to_string(Idx ) );
+    return false;
+  }
+
+  // retrieve all the data
+  Name  = std::get<0>(SubRegs[Idx]);
+  Start = std::get<1>(SubRegs[Idx]);
+  End   = std::get<2>(SubRegs[Idx]);
+
+  return true;
+}
+
+bool CoreGenReg::InsertSubReg( std::string Name, unsigned Start, unsigned End ){
+  if( Name.length() == 0 ){
+    Errno->SetError(CGERR_ERROR, "Subregister name is null" );
+    return false;
+  }else if( End == 0 ){
+    Errno->SetError(CGERR_ERROR, "Subregister end bit cannot be 0" );
+    return false;
+  }else if( End <= Start ){
+    Errno->SetError(CGERR_ERROR, "Subregister start and/or end bits out of range" );
+    return false;
+  }
+  SubRegs.push_back(std::tuple<std::string,unsigned,unsigned>(Name,Start,End));
+  return true;
 }
 
 CoreGenReg::~CoreGenReg() {

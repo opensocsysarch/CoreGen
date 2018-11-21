@@ -25,6 +25,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <tuple>
 
 #include "CoreGen/CoreGenBackend/CoreGenErrno.h"
 #include "CoreGen/CoreGenBackend/CoreGenNode.h"
@@ -45,6 +46,10 @@ private:
   uint32_t attrs;         ///< CoreGenReg: Register Attributes
 
   std::vector<uint64_t> fixedVals;    ///< CoreGenReg: Fixed Value Vector
+  std::vector<std::tuple< std::string,  // Subregister name
+                          unsigned,     // Subregister start bit
+                          unsigned>     // Subregister end bit
+                            > SubRegs; ///< CoreGenReg: Subregister encodings
 
 public:
   /// CoreGenReg: Register Attributes
@@ -108,6 +113,15 @@ public:
   /// Retrieve the register attributes
   uint32_t GetAttrs() { return attrs; }
 
+  /// Retrieve the number of subregisters
+  unsigned GetNumSubRegs() { return SubRegs.size(); }
+
+  /// Retrieve the target subregister data
+  bool GetSubReg( unsigned Idx,
+                  std::string &Name,
+                  unsigned &Start,
+                  unsigned &End );
+
   /// Retrieve the register pseudo name
   std::string GetPseudoName();
 
@@ -128,6 +142,9 @@ public:
 
   /// Set the register pseudo name
   bool SetPseudoName( std::string PseudoName );
+
+  /// Insert a new subregister
+  bool InsertSubReg( std::string Name, unsigned Start, unsigned End );
 
   /// Default destructor
   ~CoreGenReg();
