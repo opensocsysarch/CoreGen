@@ -665,6 +665,13 @@ void CoreGenYaml::WriteRegYaml(YAML::Emitter *out,
       *out << YAML:: Value << "false";
     }
 
+    *out << YAML::Key << "TUSReg";
+    if( Regs[i]->IsTUSAttr() ){
+      *out << YAML:: Value << "true";
+    }else{
+      *out << YAML:: Value << "false";
+    }
+
     *out << YAML::Key << "Shared";
     if( Regs[i]->IsShared() ){
       *out << YAML:: Value << "true";
@@ -1354,6 +1361,7 @@ bool CoreGenYaml::ReadRegisterYaml(const YAML::Node& RegNodes,
     bool ROReg = false;
     bool CSRReg = false;
     bool AMSReg = false;
+    bool TUSReg = false;
     bool IsShared = false;
 
     if( CheckValidNode(Node,"IsSIMD") ){
@@ -1370,6 +1378,9 @@ bool CoreGenYaml::ReadRegisterYaml(const YAML::Node& RegNodes,
     }
     if( CheckValidNode(Node,"AMSReg") ){
       AMSReg = Node["AMSReg"].as<bool>();
+    }
+    if( CheckValidNode(Node,"TUSReg") ){
+      TUSReg = Node["TUSReg"].as<bool>();
     }
     if( CheckValidNode(Node,"Shared") ){
       IsShared = Node["Shared"].as<bool>();
@@ -1410,6 +1421,9 @@ bool CoreGenYaml::ReadRegisterYaml(const YAML::Node& RegNodes,
     }
     if( AMSReg ){
       Attrs |= CoreGenReg::CGRegAMS;
+    }
+    if( TUSReg ){
+      Attrs |= CoreGenReg::CGRegTUS;
     }
     R->SetAttrs(Attrs);
 
