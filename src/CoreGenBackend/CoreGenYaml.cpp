@@ -235,6 +235,9 @@ void CoreGenYaml::WriteCoreYaml( YAML::Emitter *out,
 
     // write out all the internal references as aliases
 
+    *out << YAML::Key << "ThreadUnits";
+    *out << YAML::Value << Cores[i]->GetNumThreadUnits();
+
     CoreGenCache *Cache = Cores[i]->GetCache();
     if( Cache ){
       *out << YAML::Key << "Cache";
@@ -1885,6 +1888,15 @@ bool CoreGenYaml::ReadCoreYaml(const YAML::Node& CoreNodes,
     CoreGenCore *C = new CoreGenCore( Name, ISA, Errno );
     if( C == nullptr ){
       return false;
+    }
+
+    // handle the thread units
+    unsigned ThreadUnits = 1;
+    if( CheckValidNode(Node,"ThreadUnits") ){
+      ThreadUnits = Node["ThreadUnits"].as<unsigned>();
+      if( !C->SetNumThreadUnits(ThreadUnits) ){
+        return false;
+      }
     }
 
     // handle the cache
