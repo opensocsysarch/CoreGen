@@ -235,6 +235,9 @@ void CoreGenYaml::WriteCoreYaml( YAML::Emitter *out,
 
     // write out all the internal references as aliases
 
+    *out << YAML::Key << "ThreadUnits";
+    *out << YAML::Value << Cores[i]->GetNumThreadUnits();
+
     CoreGenCache *Cache = Cores[i]->GetCache();
     if( Cache ){
       *out << YAML::Key << "Cache";
@@ -657,6 +660,13 @@ void CoreGenYaml::WriteRegYaml(YAML::Emitter *out,
 
     *out << YAML::Key << "AMSReg";
     if( Regs[i]->IsAMSAttr() ){
+      *out << YAML:: Value << "true";
+    }else{
+      *out << YAML:: Value << "false";
+    }
+
+    *out << YAML::Key << "TUSReg";
+    if( Regs[i]->IsTUSAttr() ){
       *out << YAML:: Value << "true";
     }else{
       *out << YAML:: Value << "false";
@@ -1351,6 +1361,7 @@ bool CoreGenYaml::ReadRegisterYaml(const YAML::Node& RegNodes,
     bool ROReg = false;
     bool CSRReg = false;
     bool AMSReg = false;
+    bool TUSReg = false;
     bool IsShared = false;
 
     if( CheckValidNode(Node,"IsSIMD") ){
@@ -1367,6 +1378,9 @@ bool CoreGenYaml::ReadRegisterYaml(const YAML::Node& RegNodes,
     }
     if( CheckValidNode(Node,"AMSReg") ){
       AMSReg = Node["AMSReg"].as<bool>();
+    }
+    if( CheckValidNode(Node,"TUSReg") ){
+      TUSReg = Node["TUSReg"].as<bool>();
     }
     if( CheckValidNode(Node,"Shared") ){
       IsShared = Node["Shared"].as<bool>();
@@ -1407,6 +1421,9 @@ bool CoreGenYaml::ReadRegisterYaml(const YAML::Node& RegNodes,
     }
     if( AMSReg ){
       Attrs |= CoreGenReg::CGRegAMS;
+    }
+    if( TUSReg ){
+      Attrs |= CoreGenReg::CGRegTUS;
     }
     R->SetAttrs(Attrs);
 
@@ -1885,6 +1902,18 @@ bool CoreGenYaml::ReadCoreYaml(const YAML::Node& CoreNodes,
     CoreGenCore *C = new CoreGenCore( Name, ISA, Errno );
     if( C == nullptr ){
       return false;
+    }
+
+    // handle the thread units
+    unsigned ThreadUnits = 1;
+    if( Node["ThreadUnits"] ){
+      if( !CheckValidNode(Node,"ThreadUnits") ){
+        return false;
+      }
+      ThreadUnits = Node["ThreadUnits"].as<unsigned>();
+      if( !C->SetNumThreadUnits(ThreadUnits) ){
+        return false;
+      }
     }
 
     // handle the cache

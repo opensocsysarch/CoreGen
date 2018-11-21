@@ -52,7 +52,8 @@ public:
     CGRegRO   = 0x01,     ///< CGRegAttr: Read-Only Register
     CGRegRW   = 0x02,     ///< CGRegAttr: Read-Write Register
     CGRegCSR  = 0x04,     ///< CGRegAttr: CSR
-    CGRegAMS  = 0x08      ///< CGRegAttr: Arithmetic Machine State
+    CGRegAMS  = 0x08,     ///< CGRegAttr: Arithmetic Machine State
+    CGRegTUS  = 0x10      ///< CGRegAttr: Thread unit shared
   }CGRegAttr;             ///< CoreGenReg: Register attributes
 
   /// Default Constructor
@@ -77,6 +78,9 @@ public:
   /// Is the register an AMS register?
   bool IsAMSAttr();
 
+  /// Is the register shared across thread units?
+  bool IsTUSAttr();
+
   /// Is the register file shared?
   bool IsShared() { return isShared; }
 
@@ -99,7 +103,7 @@ public:
   bool SetFixedVals( std::vector<uint64_t> FixedVals );
 
   /// Set the fixed register value for a SIMD index
-  bool SetFixedVals( uint64_t FixedVal, int Idx );
+  bool SetFixedVals( uint64_t FixedVal, unsigned Idx );
 
   /// Retrieve the register attributes
   uint32_t GetAttrs() { return attrs; }
@@ -120,7 +124,7 @@ public:
   bool SetIndex( int index );
 
   /// Set the register sharing flag
-  bool SetShared(bool S){ isShared = S; return true;}
+  bool SetShared(bool S);
 
   /// Set the register pseudo name
   bool SetPseudoName( std::string PseudoName );

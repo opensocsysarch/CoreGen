@@ -34,6 +34,7 @@ class CoreGenCore : public CoreGenNode{
 private:
   CoreGenCache *Cache;                  ///< CoreGenCore: First connected cache hierarchy
   CoreGenISA *ISA;                      ///< CoreGenCore: ISA Implementation
+  unsigned ThreadUnits;                 ///< CoreGenCore: SMT Thread Units
 
   std::vector<CoreGenRegClass *> Regs;  ///< CoreGenCore: Supported registers
   std::vector<CoreGenNode *> Exts;      ///< CoreGenCore: Supported extensions
@@ -57,6 +58,9 @@ public:
   /// Add an extension
   bool InsertExt( CoreGenNode *Ext );
 
+  /// Sets the number of thread units
+  bool SetNumThreadUnits( unsigned TU );
+
   /// Retrieve the cache hierarchy
   CoreGenCache *GetCache() { return Cache; }
 
@@ -68,6 +72,9 @@ public:
 
   /// Retrieve the number of implemented extensions
   unsigned GetNumExt() { return Exts.size(); }
+
+  /// Retrieve the number of thread units
+  unsigned GetNumThreadUnits() { return ThreadUnits; }
 
   /// Retrieve the target register class
   CoreGenRegClass *GetRegClass( unsigned C );

@@ -68,6 +68,26 @@ bool CoreGenReg::IsAMSAttr(){
   return false;
 }
 
+bool CoreGenReg::IsTUSAttr(){
+  if( (attrs & CoreGenReg::CGRegTUS) > 0 ){
+    return true;
+  }
+  return false;
+}
+
+bool CoreGenReg::SetShared( bool S ){
+  if( S ){
+    if( (attrs & CoreGenReg::CGRegTUS) > 0 ){
+      // registers shared across cores cannot be TUS
+      // if all cores can see the reg, then all threads
+      // can see the reg
+      attrs &= ~(1 << CoreGenReg::CGRegTUS);
+    }
+  }
+  isShared = S;
+  return true;
+}
+
 bool CoreGenReg::UnsetAttrs( uint32_t Attr ){
   if( (Attr & CoreGenReg::CGRegRO) > 0 ){
     attrs &= ~(1 << CoreGenReg::CGRegRO);
@@ -80,6 +100,9 @@ bool CoreGenReg::UnsetAttrs( uint32_t Attr ){
   }
   if( (Attr & CoreGenReg::CGRegCSR) > 0 ){
     attrs &= ~(1 << CoreGenReg::CGRegCSR);
+  }
+  if( (Attr & CoreGenReg::CGRegTUS) > 0 ){
+    attrs &= ~(1 << CoreGenReg::CGRegTUS);
   }
   return true;
 }
@@ -111,6 +134,9 @@ bool CoreGenReg::SetAttrs( uint32_t Attr ){
   }else if( (Attr & CoreGenReg::CGRegAMS) > 0 ){
     // unset CSR
     attrs &= ~(1 << CoreGenReg::CGRegCSR);
+  }else if( (Attr & CoreGenReg::CGRegTUS) > 0 ){
+    // TUS registers cannot be shared across cores
+    isShared = false;
   }
 
   attrs |= Attr;
@@ -128,7 +154,7 @@ bool CoreGenReg::SetFixedVals( std::vector<uint64_t> FixedVals ){
   return true;
 }
 
-bool CoreGenReg::SetFixedVals( uint64_t FixedVal, int Idx ){
+bool CoreGenReg::SetFixedVals( uint64_t FixedVal, unsigned Idx ){
   if( Idx > (fixedVals.size()-1) ){
     return false;
   }
