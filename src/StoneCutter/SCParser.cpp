@@ -15,18 +15,21 @@ IRBuilder<> SCParser::Builder(TheContext);
 std::unique_ptr<Module> SCParser::TheModule;
 std::unique_ptr<legacy::FunctionPassManager> SCParser::TheFPM;
 std::map<std::string, Value *> SCParser::NamedValues;
+unsigned SCParser::LabelIncr;
 
 SCParser::SCParser(std::string B, std::string F, SCMsg *M)
   : CurTok(-1), InBuf(B), FileName(F), Msgs(M), Lex(new SCLexer(B)),
     InFunc(false), IsOpt(false), Rtn(true) {
   TheModule = llvm::make_unique<Module>(StringRef(FileName), TheContext);
   InitBinopPrecedence();
+  LabelIncr = 0;
 }
 
 SCParser::SCParser(SCMsg *M)
   : CurTok(-1), Msgs(M), Lex(nullptr),
     InFunc(false), IsOpt(false) {
   InitBinopPrecedence();
+  LabelIncr = 0;
 }
 
 SCParser::~SCParser(){
@@ -225,7 +228,11 @@ bool SCParser::GetVarAttr( std::string Str, VarAttrs &V ){
 }
 
 int SCParser::GetNextToken(){
-  return CurTok = Lex->GetTok();
+  CurTok = Lex->GetTok();
+#if 0
+  std::cout << "CurTok = " << CurTok << std::endl;
+#endif
+  return CurTok;
 }
 
 int SCParser::GetTokPrecedence(){
@@ -322,7 +329,7 @@ std::unique_ptr<ExprAST> SCParser::ParseIfExpr() {
 std::unique_ptr<ExprAST> SCParser::ParsePrimary() {
   switch (CurTok) {
   default:
-    return LogError("unknown token when expecting an expression");
+    return LogError("unknown token when expecting an expression" );
   case tok_identifier:
     return ParseIdentifierExpr();
   case tok_number:
@@ -374,6 +381,11 @@ std::unique_ptr<ExprAST> SCParser::ParseBinOpRHS(int ExprPrec,
 std::unique_ptr<ExprAST> SCParser::ParseForExpr() {
   GetNextToken();  // eat the for.
 
+  if (CurTok != '(' )
+    return LogError("expected '(' for loop control statement");
+
+  GetNextToken(); // eat the '('
+
   if (CurTok != tok_identifier)
     return LogError("expected identifier after for");
 
@@ -388,7 +400,7 @@ std::unique_ptr<ExprAST> SCParser::ParseForExpr() {
   auto Start = ParseExpression();
   if (!Start)
     return nullptr;
-  if (CurTok != ',')
+  if (CurTok != ';')
     return LogError("expected ',' after for start value");
   GetNextToken();
 
@@ -398,24 +410,41 @@ std::unique_ptr<ExprAST> SCParser::ParseForExpr() {
 
   // The step value is optional.
   std::unique_ptr<ExprAST> Step;
-  if (CurTok == ',') {
+  if (CurTok == ';') {
     GetNextToken();
     Step = ParseExpression();
     if (!Step)
       return nullptr;
   }
 
-  if (CurTok != tok_in)
-    return LogError("expected 'in' after for : " + Lex->GetIdentifierStr());
-  GetNextToken();  // eat 'in'.
+  if (CurTok != ')')
+    return LogError("expected ')' for loop control statement");
 
-  auto Body = ParseExpression();
-  if (!Body)
-    return nullptr;
+  GetNextToken(); // eat ')'
+
+  // check for open bracket
+  if (CurTok != '{'){
+    return LogError("expected '}' for loop control body");
+  }
+  GetNextToken(); // eat '{'
+
+  std::vector<std::unique_ptr<ExprAST>> BodyExpr;
+  while( CurTok != '}' ){
+    auto Body = ParseExpression();
+    if( !Body )
+      return nullptr;
+    BodyExpr.push_back(std::move(Body));
+  }
+
+  // handle close bracket
+  if( CurTok != '}' ){
+    return LogError("expected '}' for loop control body");
+  }
+  GetNextToken(); // eat the '}'
 
   return llvm::make_unique<ForExprAST>(IdName, std::move(Start),
                                        std::move(End), std::move(Step),
-                                       std::move(Body));
+                                       std::move(BodyExpr));
 }
 
 std::unique_ptr<ExprAST> SCParser::ParseExpression() {
@@ -630,11 +659,16 @@ Value *ForExprAST::codegen() {
   if (!StartVal)
     return nullptr;
 
+  unsigned LocalLabel = SCParser::LabelIncr;
+  SCParser::LabelIncr++;
+
   // Make the new basic block for the loop header, inserting after current
   // block.
   Function *TheFunction = Builder.GetInsertBlock()->getParent();
   BasicBlock *PreheaderBB = SCParser::Builder.GetInsertBlock();
-  BasicBlock *LoopBB = BasicBlock::Create(SCParser::TheContext, "loop", TheFunction);
+  BasicBlock *LoopBB = BasicBlock::Create(SCParser::TheContext,
+                                          "loop."+std::to_string(LocalLabel),
+                                          TheFunction);
 
   // Insert an explicit fall through from the current block to the LoopBB.
   Builder.CreateBr(LoopBB);
@@ -655,8 +689,15 @@ Value *ForExprAST::codegen() {
   // Emit the body of the loop.  This, like any other expr, can change the
   // current BB.  Note that we ignore the value computed by the body, but don't
   // allow an error.
+#if 0
   if (!Body->codegen())
     return nullptr;
+#endif
+
+  if( BodyExpr.size() == 0 ) return nullptr;
+  for( unsigned i=0; i<BodyExpr.size(); i++ ){
+    BodyExpr[i]->codegen();
+  }
 
   // Emit the step value.
   Value *StepVal = nullptr;
@@ -669,7 +710,9 @@ Value *ForExprAST::codegen() {
     StepVal = ConstantFP::get(SCParser::TheContext, APFloat(1.0));
   }
 
-  Value *NextVar = Builder.CreateFAdd(Variable, StepVal, "nextvar");
+  Value *NextVar = Builder.CreateFAdd(Variable,
+                                      StepVal,
+                                      "nextvar" + std::to_string(LocalLabel));
 
   // Compute the end condition.
   Value *EndCond = End->codegen();
@@ -678,12 +721,16 @@ Value *ForExprAST::codegen() {
 
   // Convert condition to a bool by comparing non-equal to 0.0.
   EndCond = Builder.CreateFCmpONE(
-      EndCond, ConstantFP::get(SCParser::TheContext, APFloat(0.0)), "loopcond");
+      EndCond, ConstantFP::get(SCParser::TheContext,
+                               APFloat(0.0)),
+                               "loopcond" + std::to_string(LocalLabel));
 
   // Create the "after loop" block and insert it.
   BasicBlock *LoopEndBB = Builder.GetInsertBlock();
   BasicBlock *AfterBB =
-      BasicBlock::Create(SCParser::TheContext, "afterloop", TheFunction);
+      BasicBlock::Create(SCParser::TheContext,
+                         "afterloop." + std::to_string(LocalLabel),
+                         TheFunction);
 
   // Insert the conditional branch into the end of LoopEndBB.
   Builder.CreateCondBr(EndCond, LoopBB, AfterBB);
@@ -816,7 +863,9 @@ Function *FunctionAST::codegen() {
     return nullptr;
 
   // Create a new basic block to start insertion into.
-  BasicBlock *BB = BasicBlock::Create(SCParser::TheContext, "entry", TheFunction);
+  BasicBlock *BB = BasicBlock::Create(SCParser::TheContext,
+                                      "entry." + Proto->getName(),
+                                      TheFunction);
   SCParser::Builder.SetInsertPoint(BB);
 
   // Record the function arguments in the NamedValues map.

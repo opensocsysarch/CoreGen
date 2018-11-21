@@ -236,6 +236,9 @@ public:
   /// Set the output path for the target system pass
   bool SetPassOutputPath( std::string Pass, std::string Path );
 
+  /// Set the input string for the target system pass
+  bool SetPassInputStr( std::string Pass, std::string Str );
+
   /// Execute the codegen
   bool ExecuteCodegen();
 

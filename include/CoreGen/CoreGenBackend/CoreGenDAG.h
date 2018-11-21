@@ -101,6 +101,7 @@ private:
   friend class CommSafetyPass;
   friend class PInstSafetyPass;
   friend class CommSafetyPass;
+  friend class ASPSolverPass;
 
   // -- Data Passes
   friend class StatsPass;

@@ -43,6 +43,7 @@ private:
   CoreGenNode *TNode;       ///< CoreGenPass: Target node for pass inquiry
   bool ReqTarget;           ///< CoreGenPass: Does the pass require a target node?
   std::string OutPath;      ///< CoreGenPass: Output path for data
+  std::string InStr;        ///< CoreGenPass: Input string
   std::string PassName;     ///< CoreGenPass: Pass name
   std::string Desc;         ///< CoreGenPass: Pass Description
   std::ostream *OutStream;  ///< CoreGenPass: Output stream
@@ -88,7 +89,8 @@ public:
               std::ostream *O,
               CoreGenDAG *D,
               CoreGenErrno *E) : Type(T), Level(L), TNode(nullptr), ReqTarget(RT),
-                                 OutPath(""), PassName(P), Desc(De), OutStream(O), DAG(D),
+                                 OutPath(""), InStr(""), PassName(P), Desc(De),
+                                 OutStream(O), DAG(D),
                                  Errno(E) {}
 
   /// Default destructor
@@ -116,8 +118,20 @@ public:
     return false;
   }
 
+  /// Sets the input string
+  bool SetInStr(std::string In){
+    if( In.length() > 0 ){
+      InStr = In;
+      return true;
+    }
+    return false;
+  }
+
   /// Retrieves the output path
   std::string GetOutputPath() { return OutPath; }
+
+  /// Retrieves the input stirng
+  std::string GetInStr() { return InStr; }
 
   /// Retrieve the type of pass
   CGPassType GetPassType() { return Type; }

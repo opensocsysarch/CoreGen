@@ -83,6 +83,7 @@ public:
   class ForExprASTContainer : public ExprASTContainer {
     std::string VarName;
     std::unique_ptr<ExprASTContainer> Start, End, Step, Body;
+    std::vector<std::unique_ptr<ExprASTContainer>> BodyExpr;
 
   public:
     ForExprASTContainer(const std::string &VarName,
@@ -92,6 +93,13 @@ public:
                         std::unique_ptr<ExprASTContainer> Body)
       : VarName(VarName), Start(std::move(Start)), End(std::move(End)),
       Step(std::move(Step)), Body(std::move(Body)) {}
+    ForExprASTContainer(const std::string &VarName,
+                        std::unique_ptr<ExprASTContainer> Start,
+                        std::unique_ptr<ExprASTContainer> End,
+                        std::unique_ptr<ExprASTContainer> Step,
+                        std::vector<std::unique_ptr<ExprASTContainer>> BodyExpr)
+      : VarName(VarName), Start(std::move(Start)), End(std::move(End)),
+      Step(std::move(Step)), BodyExpr(std::move(BodyExpr)) {}
 
     Value *codegen() override;
   };
@@ -207,6 +215,7 @@ public:
   static std::unique_ptr<Module> TheModule;
   static std::map<std::string, Value *> NamedValues;
   static std::unique_ptr<legacy::FunctionPassManager> TheFPM;
+  static unsigned LabelIncr;
 
 private:
 

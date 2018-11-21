@@ -25,6 +25,7 @@ SafeDeletePass.cpp
 CommSafetyPass.cpp
 PInstSafetyPass.cpp
 CommSafetyPass.cpp
+ASPSolverPass.cpp
 )
 
 include_directories(${COREGEN_INCLUDE_PATH})
