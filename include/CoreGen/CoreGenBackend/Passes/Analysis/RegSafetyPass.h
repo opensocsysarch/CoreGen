@@ -39,6 +39,15 @@ private:
   /// Find the registers whose indices exceed their target field width
   bool FindRegWidthRestrictions(CoreGenReg *Reg);
 
+  /// Find overlapping SubReg names
+  bool FindOverlappingSubRegNames(CoreGenReg *Reg);
+
+  /// Find overlappign SubReg bit fields
+  bool FindOverlappingSubRegFields(CoreGenReg *Reg);
+
+  /// Test the SubReg values for various conditions
+  bool TestSubRegs(CoreGenReg *Reg);
+
 public:
   /// Default constructor
   RegSafetyPass(std::ostream *O, CoreGenDAG *D, CoreGenErrno *E);

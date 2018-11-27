@@ -65,6 +65,56 @@ bool RegSafetyPass::FindRegWidthRestrictions(CoreGenReg *R){
   return true;
 }
 
+bool RegSafetyPass::FindOverlappingSubRegNames(CoreGenReg *R){
+  std::unordered_map<std::string,unsigned> NameMap;
+
+  for( unsigned i=0; i<R->GetNumSubRegs(); i++ ){
+    std::string Name;
+    unsigned Start;
+    unsigned End;
+    if( !R->GetSubReg(i,Name,Start,End) ){
+      WriteMsg( "Failed to retrieve SubReg details at index=" +
+                std::to_string(i) + " for register=" + R->GetName() );
+      return false;
+    }
+    NameMap[Name]++;
+  }
+
+  bool rtn = true;
+
+  for( auto val : NameMap ){
+    if( val.second > 1 ){
+      WriteMsg( "Found duplicate SubReg names in register=" +
+                R->GetName() + "; SubReg=" + val.first );
+      rtn = false;
+    }
+  }
+
+  return rtn;
+}
+
+bool RegSafetyPass::FindOverlappingSubRegFields(CoreGenReg *R){
+  return true;
+}
+
+bool RegSafetyPass::TestSubRegs(CoreGenReg *R){
+  if( R->GetNumSubRegs() == 0 ){
+    return true;
+  }
+
+  bool rtn = true;
+
+  if( !FindOverlappingSubRegNames(R) ){
+    rtn = false;
+  }
+
+  if( !FindOverlappingSubRegFields(R) ){
+    rtn = false;
+  }
+
+  return rtn;
+}
+
 bool RegSafetyPass::Execute(){
   // Get the correct DAG level
   CoreGenDAG *D3 = DAG->GetDAGFromLevel(this->GetLevel());
@@ -86,6 +136,9 @@ bool RegSafetyPass::Execute(){
         rtn = false;
       }
       if( !FindRegWidthRestrictions(REG) ){
+        rtn = false;
+      }
+      if( !TestSubRegs(REG) ){
         rtn = false;
       }
     }

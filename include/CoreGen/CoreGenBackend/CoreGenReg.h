@@ -26,6 +26,7 @@
 #include <string>
 #include <vector>
 #include <tuple>
+#include <unordered_map>
 
 #include "CoreGen/CoreGenBackend/CoreGenErrno.h"
 #include "CoreGen/CoreGenBackend/CoreGenNode.h"
