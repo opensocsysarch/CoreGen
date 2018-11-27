@@ -127,15 +127,6 @@ bool RegSafetyPass::FindOverlappingSubRegFields(CoreGenReg *R){
 
   bool rtn = true;
 
-  // Examine the bits for direct collisions
-  for( unsigned i=0; i<StartBits.size(); i++ ){
-    if( StartBits[i] == EndBits[i] ){
-      WriteMsg( "Found a SubReg with zero bit space; StartBit & EndBit = " +
-                std::to_string(StartBits[i]) );
-      rtn = false;
-    }
-  }
-
   // Examine the overlap
   for( unsigned i=0; i<(StartBits.size()-1); i++ ){
     if( StartBits[i] >= EndBits[i+1] ){
