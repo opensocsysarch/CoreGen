@@ -66,6 +66,12 @@ bool RegSafetyPass::FindRegWidthRestrictions(CoreGenReg *R){
 }
 
 bool RegSafetyPass::FindOverlappingSubRegNames(CoreGenReg *R){
+
+  if( R->GetNumSubRegs() == 1 ){
+    // no sense in checking against a single register
+    return true;
+  }
+
   std::unordered_map<std::string,unsigned> NameMap;
 
   for( unsigned i=0; i<R->GetNumSubRegs(); i++ ){
@@ -94,7 +100,61 @@ bool RegSafetyPass::FindOverlappingSubRegNames(CoreGenReg *R){
 }
 
 bool RegSafetyPass::FindOverlappingSubRegFields(CoreGenReg *R){
-  return true;
+
+  if( R->GetNumSubRegs() == 1 ){
+    // no sense in checking against a single register
+    return true;
+  }
+
+  std::vector<unsigned> StartBits;
+  std::vector<unsigned> EndBits;
+
+  for( unsigned i=0; i<R->GetNumSubRegs(); i++ ){
+    std::string Name;
+    unsigned Start;
+    unsigned End;
+    if( !R->GetSubReg(i,Name,Start,End) ){
+      WriteMsg( "Failed to retrieve SubReg details at index=" +
+                std::to_string(i) + " for register=" + R->GetName() );
+      return false;
+    }
+    StartBits.push_back(Start);
+    EndBits.push_back(End);
+  }
+
+  std::sort(StartBits.begin(), StartBits.end());
+  std::sort(EndBits.begin(), EndBits.end());
+
+  bool rtn = true;
+
+  // Examine the bits for direct collisions
+  for( unsigned i=0; i<StartBits.size(); i++ ){
+    if( StartBits[i] == EndBits[i] ){
+      WriteMsg( "Found a SubReg with zero bit space; StartBit & EndBit = " +
+                std::to_string(StartBits[i]) );
+      rtn = false;
+    }
+  }
+
+  // Examine the overlap
+  for( unsigned i=0; i<(StartBits.size()-1); i++ ){
+    if( StartBits[i] >= EndBits[i+1] ){
+      WriteMsg( "Found overlapping SubReg bitspace for register=" +
+                R->GetName() + " at StartBit=" +
+                std::to_string(StartBits[i]) + " and EndBit=" +
+                std::to_string(EndBits[i+1]) );
+      rtn = false;
+    }
+    if( StartBits[i+1] <= EndBits[i] ){
+      WriteMsg( "Found overlapping SubReg bitspace for register=" +
+                R->GetName() + " at StartBit=" +
+                std::to_string(StartBits[i+1]) + " and EndBit=" +
+                std::to_string(EndBits[i]) );
+      rtn = false;
+    }
+  }
+
+  return rtn;
 }
 
 bool RegSafetyPass::TestSubRegs(CoreGenReg *R){
