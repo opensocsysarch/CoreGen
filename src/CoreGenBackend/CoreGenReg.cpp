@@ -195,11 +195,6 @@ bool CoreGenReg::InsertSubReg( std::string Name, unsigned Start, unsigned End ){
     Errno->SetError(CGERR_ERROR,
                     "Subregister name is null: " + this->GetName() + ":" + Name);
     return false;
-  }else if( End == 0 ){
-    Errno->SetError(CGERR_ERROR,
-                    "Subregister end bit cannot be 0: "
-                    + this->GetName() + ":" + Name );
-    return false;
   }else if( End < Start ){
     Errno->SetError(CGERR_ERROR,
                     "Subregister start and/or end bits out of range: "
