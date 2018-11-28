@@ -159,6 +159,21 @@ bool SpecDoc::WriteRegisterClassTex(CoreGenDAG *DAG, std::ofstream &ofs ){
             Attrs+=":";
           }
           Attrs+="AMS";
+          OrVal = true;
+        }
+        if( REG->IsTUSAttr() ){
+          if( OrVal ){
+            Attrs+=":";
+          }
+          Attrs+="TUS";
+          OrVal = true;
+        }
+        if( REG->IsShared() ){
+          if( OrVal ){
+            Attrs+=":";
+          }
+          Attrs+="SH";
+          OrVal = true;
         }
 
         ofs << EscapeUnderscore(REG->GetName())   << " & "  << std::hex << "0x" << REG->GetIndex() << std::dec
