@@ -192,16 +192,23 @@ bool CoreGenReg::GetSubReg( unsigned Idx,
 
 bool CoreGenReg::InsertSubReg( std::string Name, unsigned Start, unsigned End ){
   if( Name.length() == 0 ){
-    Errno->SetError(CGERR_ERROR, "Subregister name is null" );
+    Errno->SetError(CGERR_ERROR,
+                    "Subregister name is null: " + this->GetName() + ":" + Name);
     return false;
   }else if( End == 0 ){
-    Errno->SetError(CGERR_ERROR, "Subregister end bit cannot be 0" );
+    Errno->SetError(CGERR_ERROR,
+                    "Subregister end bit cannot be 0: "
+                    + this->GetName() + ":" + Name );
     return false;
-  }else if( End <= Start ){
-    Errno->SetError(CGERR_ERROR, "Subregister start and/or end bits out of range" );
+  }else if( End < Start ){
+    Errno->SetError(CGERR_ERROR,
+                    "Subregister start and/or end bits out of range: "
+                    + this->GetName() + ":" + Name );
     return false;
   }else if( (int)(End) >= width ){
-    Errno->SetError(CGERR_ERROR, "Subregister end bit beyond register width" );
+    Errno->SetError(CGERR_ERROR,
+                    "Subregister end bit beyond register width: "
+                    + this->GetName() + ":" + Name );
     return false;
   }
   SubRegs.push_back(std::tuple<std::string,unsigned,unsigned>(Name,Start,End));
