@@ -175,6 +175,72 @@ bool SpecDoc::WriteRegisterClassTex(CoreGenDAG *DAG, std::ofstream &ofs ){
     }
   }
 
+  // count subregs
+  unsigned count = 0;
+  for( unsigned i=0; i<DAG->GetDimSize(); i++ ){
+    CoreGenNode *N = DAG->FindNodeByIndex(i);
+    if( N->GetType() == CGRegC ){
+      CoreGenRegClass *RC = static_cast<CoreGenRegClass *>(N);
+      for( unsigned j=0; j<RC->GetNumReg(); j++ ){
+        count += RC->GetReg(j)->GetNumSubRegs();
+      }
+    }
+  }
+
+  // if we have at least one subreg, print them
+  for( unsigned i=0; i<DAG->GetDimSize(); i++ ){
+    CoreGenNode *N = DAG->FindNodeByIndex(i);
+    if( N->GetType() == CGRegC ){
+      CoreGenRegClass *RC = static_cast<CoreGenRegClass *>(N);
+      unsigned count = 0;
+      for( unsigned j=0; j<RC->GetNumReg(); j++ ){
+        count += RC->GetReg(j)->GetNumSubRegs();
+      }
+      if( count > 0 ){
+        ofs << std::endl << std::endl;
+        ofs << "\\subsection{" << RC->GetName() << " Register Fields" << "}" << std::endl;
+        ofs << "\\label{sec:" << RC->GetName() << "RegisterFields}" << std::endl;
+        for( unsigned j=0; j<RC->GetNumReg(); j++ ){
+          CoreGenReg *REG = RC->GetReg(j);
+          if( REG->GetNumSubRegs() > 0 ){
+            ofs << "\\subsubsection{" << REG->GetName() << " SubRegister Fields"
+                << "}" << std::endl;
+            ofs << "\\label{sec:" << RC->GetName() << REG->GetName()
+                << "SubRegs}" << std::endl;
+
+            ofs << std::endl << std::endl;
+            ofs << "\\begin{table}[h]" << std::endl;
+            ofs << "\\begin{center}" << std::endl;
+            ofs << "\\caption{" << RC->GetName() << ":" << REG->GetName()
+                << " Sub Registers}" << std::endl;
+            ofs << "\\label{tab:" << RC->GetName() << REG->GetName()
+                << "Registers}" << std::endl;
+            ofs << "\\begin{tabular}{c c c}" << std::endl;
+            ofs << "\\hline" << std::endl;
+            ofs << "\\textbf{Name} & \\textbf{StartBit} & \\textbf{EndBit} \\\\"
+                << std::endl;
+            ofs << "\\hline" << std::endl;
+
+            for( unsigned k=0; k<REG->GetNumSubRegs(); k++ ){
+              std::string SRName;
+              unsigned StartBit;
+              unsigned EndBit;
+              if( !REG->GetSubReg( k, SRName, StartBit, EndBit ) ){
+                return false;
+              }
+              ofs << SRName << " & " << StartBit << " & " << EndBit << "\\\\"
+                  << std::endl;
+            }
+
+            ofs << "\\end{tabular}" << std::endl;
+            ofs << "\\end{center}" << std::endl;
+            ofs << "\\end{table}" << std::endl;
+          }
+        }
+      }
+    }
+  }
+
   return true;
 }
 
