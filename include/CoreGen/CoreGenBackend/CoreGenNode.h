@@ -56,6 +56,7 @@ private:
   std::string RTLFile;                  ///< CoreGenNode: User-directed external RTL file
   CGNodeType Type;                      ///< CoreGenNode: Type of CoreGen node
   std::vector<CoreGenNode *> CNodes;    ///< CoreGenNode: Child DAG nodes
+  std::string ASP;                      ///< CoreGenNode: ASP representation of the node
 
   CoreGenNode *PluginNode;              ///< CoreGenNode: Overridden Plugin Node
 
@@ -135,6 +136,11 @@ public:
 
   /// Set the overridden plugin node
   bool SetOverriddenNode( CoreGenNode *Node );
+
+  /// Append to the ASP String
+  void AppendASP( std::string ASPString) { ASP += ASPString; }
+
+  std::string GetASP() { return ASP; }
 };
 
 #endif

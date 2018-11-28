@@ -11,13 +11,13 @@
 
 #include "CoreGen/CoreGenBackend/CoreGenNode.h"
 
-CoreGenNode::CoreGenNode() : PluginNode(NULL), Errno(NULL) {}
+CoreGenNode::CoreGenNode() : PluginNode(NULL), Errno(NULL), ASP(""){}
 
 CoreGenNode::CoreGenNode(CGNodeType T, CoreGenErrno *E)
-  : Type(T), PluginNode(NULL), Errno(E) {}
+  : Type(T), PluginNode(NULL), Errno(E), ASP("") {}
 
 CoreGenNode::CoreGenNode(CGNodeType T, std::string N, CoreGenErrno *E)
-    : Name(N), Type(T), PluginNode(NULL), Errno(E) {}
+    : Name(N), Type(T), PluginNode(NULL), Errno(E), ASP("") {}
 
 CoreGenNode::~CoreGenNode() {}
 

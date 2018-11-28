@@ -1319,7 +1319,7 @@ std::string CoreGenYaml::PrepForASP(std::string RemStr){
 
 bool CoreGenYaml::ReadRegisterYaml(const YAML::Node& RegNodes,
                                    std::vector<CoreGenReg *> &Regs){
-  std::ofstream mystream("yamlwritetest.txt", std::ios::app);
+  std::ofstream mystream("aspdag.lp", std::ios::app);
 
   for( unsigned i=0; i<RegNodes.size(); i++ ){
     const YAML::Node& Node = RegNodes[i];
@@ -1330,8 +1330,11 @@ bool CoreGenYaml::ReadRegisterYaml(const YAML::Node& RegNodes,
       return false;
     }
     std::string Name = Node["RegName"].as<std::string>();
+    std::string ASPName = PrepForASP(Name);
+    std::string ASP = "";
 
-    mystream << "reg(" << PrepForASP(Name) << ")." << std::endl;
+    mystream << "reg(" << ASPName << ")." << std::endl;
+    ASP += "reg(" + ASPName + ").\n";
 
     if( !CheckValidNode(Node,"Width") ){
       PrintParserError(Node,
@@ -1340,6 +1343,8 @@ bool CoreGenYaml::ReadRegisterYaml(const YAML::Node& RegNodes,
       return false;
     }
     int Width = Node["Width"].as<int>();
+    ASP += "regWidth(" + ASPName + ", " + std::to_string(Width) + ").\n";
+
     if( !CheckValidNode(Node,"Index") ){
       PrintParserError(Node,
                        "Register",
@@ -1348,7 +1353,8 @@ bool CoreGenYaml::ReadRegisterYaml(const YAML::Node& RegNodes,
     }
     int Index = Node["Index"].as<int>();
 
-    mystream << "regIndex(" << PrepForASP(Name) << ", " << Index << ")." << std::endl;
+    mystream << "regIndex(" << ASPName << ", " << Index << ")." << std::endl;
+    ASP += "regIndex(" + ASPName + ", " + std::to_string(Index) + ").\n";
 
     if( !CheckValidNode(Node,"IsFixedValue") ){
       PrintParserError(Node,
@@ -1357,6 +1363,12 @@ bool CoreGenYaml::ReadRegisterYaml(const YAML::Node& RegNodes,
       return false;
     }
     bool IFV = Node["IsFixedValue"].as<bool>();
+    if (IFV){
+      ASP += "regFixed(" + ASPName + ", true).\n";
+    }
+    else{
+      ASP += "regFixed(" + ASPName + ", false).\n";
+    }
     std::vector<uint64_t> FixedVals;
 
     if( IFV ){
@@ -1403,12 +1415,14 @@ bool CoreGenYaml::ReadRegisterYaml(const YAML::Node& RegNodes,
 
     if( CheckValidNode(Node,"PseudoName") ){
       R->SetPseudoName(Node["PseudoName"].as<std::string>());
+      ASP += "regPseudoName(" + ASPName + ", " + Node["PseudoName"].as<std::string>() + ").\n";
     }
 
     // set the simd attrs
     if( IsSIMD && CheckValidNode(Node,"SIMDWidth") ){
       int SIMDWidth = Node["SIMDWidth"].as<int>();
       R->SetSIMD(SIMDWidth);
+      ASP += "regSIMDWidth(" + ASPName + ", " + std::to_string(SIMDWidth) + ").\n";
     }
 
     if( IFV ){
@@ -1432,15 +1446,25 @@ bool CoreGenYaml::ReadRegisterYaml(const YAML::Node& RegNodes,
       Attrs |= CoreGenReg::CGRegAMS;
     }
     R->SetAttrs(Attrs);
+    ASP += "regAttrs(" + ASPName + ", " + std::to_string(Attrs) + ").\n";
 
     R->SetShared(IsShared);
+    if (IsShared){
+      ASP += "regShared(" + ASPName + ", true).\n";
+    }
+    else{
+      ASP += "regShared(" + ASPName + ", false).\n";
+    }
 
     if( CheckValidNode(Node,"RTL") ){
       R->SetRTL( Node["RTL"].as<std::string>());
+      ASP += "regRTL(" + ASPName + ", " + Node["RTL"].as<std::string>() + ").\n";
     }
     if( CheckValidNode(Node,"RTLFile") ){
       R->SetRTLFile( Node["RTLFile"].as<std::string>());
     }
+
+    R->AppendASP(ASP);
 
     // add the register object
     Regs.push_back(R);
@@ -1452,7 +1476,7 @@ bool CoreGenYaml::ReadRegisterYaml(const YAML::Node& RegNodes,
 bool CoreGenYaml::ReadRegisterClassYaml(const YAML::Node& RegClassNodes,
                                         std::vector<CoreGenRegClass *> &RegClasses,
                                         std::vector<CoreGenReg *> &Regs){
-  std::ofstream mystream("yamlwritetest.txt", std::ios::app);
+  std::ofstream mystream("aspdag.lp", std::ios::app);
   for( unsigned i=0; i<RegClassNodes.size(); i++ ){
     const YAML::Node& Node = RegClassNodes[i];
     if( !CheckValidNode(Node,"RegisterClassName") ){
@@ -1462,7 +1486,11 @@ bool CoreGenYaml::ReadRegisterClassYaml(const YAML::Node& RegClassNodes,
       return false;
     }
     std::string Name = Node["RegisterClassName"].as<std::string>();
-    mystream << "regClass(" << PrepForASP(Name) << ")." << std::endl;
+    std::string ASPName = PrepForASP(Name);
+    std::string ASP = "";
+
+    mystream << "regClass(" << ASPName << ")." << std::endl;
+    ASP += "regClass(" + ASPName + ").\n";
 #if 0
     // currently unused
     int NumRegs = Node["NumRegisters"].as<int>();
@@ -1491,7 +1519,8 @@ bool CoreGenYaml::ReadRegisterClassYaml(const YAML::Node& RegClassNodes,
         for( unsigned k=0; k<Regs.size(); k++ ){
           if( Regs[k]->GetName() == RName ){
             RC->InsertReg(Regs[k]);
-            mystream << "regClassReg(" << PrepForASP(Name) << ", " << PrepForASP(RName) << ")." << std::endl;
+            mystream << "regClassReg(" << ASPName << ", " << PrepForASP(RName) << ")." << std::endl;
+            ASP += "regClassReg(" + ASPName + ", " + PrepForASP(RName) + ").\n";
             found = true;
           }
         } // end unsigned k
@@ -1510,6 +1539,8 @@ bool CoreGenYaml::ReadRegisterClassYaml(const YAML::Node& RegClassNodes,
     if( CheckValidNode(Node,"RTLFile") ){
       RC->SetRTLFile( Node["RTLFile"].as<std::string>());
     }
+
+    RC->AppendASP(ASP);
 
     RegClasses.push_back(RC);
   }
@@ -1836,12 +1867,19 @@ bool CoreGenYaml::ReadPseudoInstYaml(const YAML::Node& PInstNodes,
 
 bool CoreGenYaml::ReadCacheYaml(const YAML::Node& CacheNodes,
                                 std::vector<CoreGenCache *> &Caches){
+  std::ofstream mystream("aspdag.lp", std::ios::app);
+
   for( unsigned i=0; i<CacheNodes.size(); i++ ){
     const YAML::Node& Node = CacheNodes[i];
 
     std::string Name = Node["Cache"].as<std::string>();
+    std::string ASPName = PrepForASP(Name);
     int Sets = Node["Sets"].as<int>();
     int Ways = Node["Ways"].as<int>();
+
+    mystream << "cache(" << ASPName << ")." << std::endl;
+    mystream << "cacheSets(" << ASPName << ", "  << Sets << ")." << std::endl;
+    mystream << "cacheWays(" << ASPName << ", "  << Ways << ")." << std::endl;
 
     std::string SubLevel;
     if( Node["SubLevel"] ){
@@ -1864,6 +1902,9 @@ bool CoreGenYaml::ReadCacheYaml(const YAML::Node& CacheNodes,
       if( SC == nullptr ){
         return false;
       }
+      mystream << "isParentCache(" << ASPName << ")." << std::endl;
+      mystream << "isChildCache(" << PrepForASP(SC->GetName()) << ")." << std::endl;
+      mystream << "parentCacheOf(" << ASPName << ", " << PrepForASP(SC->GetName()) << ")." << std::endl;
       C->SetChildCache( SC );
     }
 
@@ -1876,6 +1917,8 @@ bool CoreGenYaml::ReadCacheYaml(const YAML::Node& CacheNodes,
 
     Caches.push_back(C);
   }
+
+  mystream.close();
   return true;
 }
 
