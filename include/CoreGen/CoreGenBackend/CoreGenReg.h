@@ -25,6 +25,8 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <tuple>
+#include <unordered_map>
 
 #include "CoreGen/CoreGenBackend/CoreGenErrno.h"
 #include "CoreGen/CoreGenBackend/CoreGenNode.h"
@@ -45,6 +47,10 @@ private:
   uint32_t attrs;         ///< CoreGenReg: Register Attributes
 
   std::vector<uint64_t> fixedVals;    ///< CoreGenReg: Fixed Value Vector
+  std::vector<std::tuple< std::string,  // Subregister name
+                          unsigned,     // Subregister start bit
+                          unsigned>     // Subregister end bit
+                            > SubRegs; ///< CoreGenReg: Subregister encodings
 
 public:
   /// CoreGenReg: Register Attributes
@@ -52,7 +58,8 @@ public:
     CGRegRO   = 0x01,     ///< CGRegAttr: Read-Only Register
     CGRegRW   = 0x02,     ///< CGRegAttr: Read-Write Register
     CGRegCSR  = 0x04,     ///< CGRegAttr: CSR
-    CGRegAMS  = 0x08      ///< CGRegAttr: Arithmetic Machine State
+    CGRegAMS  = 0x08,     ///< CGRegAttr: Arithmetic Machine State
+    CGRegTUS  = 0x10      ///< CGRegAttr: Thread unit shared
   }CGRegAttr;             ///< CoreGenReg: Register attributes
 
   /// Default Constructor
@@ -77,6 +84,9 @@ public:
   /// Is the register an AMS register?
   bool IsAMSAttr();
 
+  /// Is the register shared across thread units?
+  bool IsTUSAttr();
+
   /// Is the register file shared?
   bool IsShared() { return isShared; }
 
@@ -99,10 +109,19 @@ public:
   bool SetFixedVals( std::vector<uint64_t> FixedVals );
 
   /// Set the fixed register value for a SIMD index
-  bool SetFixedVals( uint64_t FixedVal, int Idx );
+  bool SetFixedVals( uint64_t FixedVal, unsigned Idx );
 
   /// Retrieve the register attributes
   uint32_t GetAttrs() { return attrs; }
+
+  /// Retrieve the number of subregisters
+  unsigned GetNumSubRegs() { return SubRegs.size(); }
+
+  /// Retrieve the target subregister data
+  bool GetSubReg( unsigned Idx,
+                  std::string &Name,
+                  unsigned &Start,
+                  unsigned &End );
 
   /// Retrieve the register pseudo name
   std::string GetPseudoName();
@@ -120,10 +139,13 @@ public:
   bool SetIndex( int index );
 
   /// Set the register sharing flag
-  bool SetShared(bool S){ isShared = S; return true;}
+  bool SetShared(bool S);
 
   /// Set the register pseudo name
   bool SetPseudoName( std::string PseudoName );
+
+  /// Insert a new subregister
+  bool InsertSubReg( std::string Name, unsigned Start, unsigned End );
 
   /// Default destructor
   ~CoreGenReg();

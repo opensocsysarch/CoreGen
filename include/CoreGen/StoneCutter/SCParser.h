@@ -24,6 +24,7 @@
 // CoreGen headers
 #include "CoreGen/StoneCutter/SCLexer.h"
 #include "CoreGen/StoneCutter/SCMsg.h"
+#include "CoreGen/StoneCutter/SCUtil.h"
 
 // LLVM headers
 #include "llvm/ADT/APFloat.h"
@@ -38,6 +39,7 @@
 #include "llvm/IR/Module.h"
 #include "llvm/IR/Type.h"
 #include "llvm/IR/Verifier.h"
+#include "llvm/IR/GlobalVariable.h"
 #include "llvm/Support/TargetSelect.h"
 #include "llvm/Target/TargetMachine.h"
 #include "llvm/Transforms/Scalar.h"
@@ -48,6 +50,7 @@ using namespace llvm;
 
 class SCParser{
 public:
+
   /// Default constructor
   SCParser(std::string, std::string, SCMsg *);
 
@@ -74,6 +77,31 @@ public:
       virtual ~ExprASTContainer() = default;
 
       virtual Value *codegen() = 0;
+  };
+
+  /// ForExprAST - Expression class for for/in.
+  class ForExprASTContainer : public ExprASTContainer {
+    std::string VarName;
+    std::unique_ptr<ExprASTContainer> Start, End, Step, Body;
+    std::vector<std::unique_ptr<ExprASTContainer>> BodyExpr;
+
+  public:
+    ForExprASTContainer(const std::string &VarName,
+                        std::unique_ptr<ExprASTContainer> Start,
+                        std::unique_ptr<ExprASTContainer> End,
+                        std::unique_ptr<ExprASTContainer> Step,
+                        std::unique_ptr<ExprASTContainer> Body)
+      : VarName(VarName), Start(std::move(Start)), End(std::move(End)),
+      Step(std::move(Step)), Body(std::move(Body)) {}
+    ForExprASTContainer(const std::string &VarName,
+                        std::unique_ptr<ExprASTContainer> Start,
+                        std::unique_ptr<ExprASTContainer> End,
+                        std::unique_ptr<ExprASTContainer> Step,
+                        std::vector<std::unique_ptr<ExprASTContainer>> BodyExpr)
+      : VarName(VarName), Start(std::move(Start)), End(std::move(End)),
+      Step(std::move(Step)), BodyExpr(std::move(BodyExpr)) {}
+
+    Value *codegen() override;
   };
 
   /// IfExprAST - Expression class for conditionals
@@ -140,10 +168,13 @@ public:
   class RegClassASTContainer {
     std::string Name;
     std::vector<std::string> Args;
+    std::vector<VarAttrs> Attrs;
 
   public:
-    RegClassASTContainer(const std::string &Name, std::vector<std::string> Args)
-      : Name(Name), Args(std::move(Args)) {}
+    RegClassASTContainer(const std::string &Name,
+                         std::vector<std::string> Args,
+                         std::vector<VarAttrs> Attrs)
+      : Name(Name), Args(std::move(Args)), Attrs(std::move(Attrs)) {}
 
     const std::string &getName() const { return Name; }
     Value *codegen();
@@ -184,6 +215,7 @@ public:
   static std::unique_ptr<Module> TheModule;
   static std::map<std::string, Value *> NamedValues;
   static std::unique_ptr<legacy::FunctionPassManager> TheFPM;
+  static unsigned LabelIncr;
 
 private:
 
@@ -197,6 +229,8 @@ private:
   bool InFunc;                          ///< Determines whether the parser is in a function body
   bool IsOpt;                           ///< Determines whether to run the optimizer
 
+  bool Rtn;                             ///< Return status of the parser
+
   std::map<char, int> BinopPrecedence;  ///< StoneCutter binary operand precedence
 
   // private functions
@@ -206,6 +240,9 @@ private:
 
   /// Get the next token
   int GetNextToken();
+
+  /// Parse the variable definition and return the complementary VarAttr
+  bool GetVarAttr( std::string Str, VarAttrs &V );
 
   /// Get the token precedence
   int GetTokPrecedence();
@@ -253,6 +290,9 @@ private:
   /// Parse extern prototypes
   std::unique_ptr<PrototypeASTContainer> ParseExtern();
 
+  /// Parse a for loop
+  std::unique_ptr<ExprASTContainer> ParseForExpr();
+
   /// Parse the closing of a function body
   bool ParseCloseBracket();
 
@@ -297,6 +337,7 @@ typedef SCParser::PrototypeASTContainer PrototypeAST;
 typedef SCParser::FunctionASTContainer FunctionAST;
 typedef SCParser::RegClassASTContainer RegClassAST;
 typedef SCParser::IfExprASTContainer IfExprAST;
+typedef SCParser::ForExprASTContainer ForExprAST;
 
 #endif
 

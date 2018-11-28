@@ -47,7 +47,7 @@ bool CacheLevelPass::Execute(){
       }
 
       // check my child status
-      if( (C->IsSubLevel()) && (C->GetSubCache() == nullptr ) ){
+      if( (C->IsParentLevel()) && (C->GetSubCache() == nullptr ) ){
         WriteMsg( "Identified a parent cache level with no child and the sublevel flag is set at Index:Name = " +
                 std::to_string(i) + ":" + C->GetName());
         rtn = false;

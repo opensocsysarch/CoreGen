@@ -90,8 +90,11 @@ public:
   /// Print all the pass information for system passes to the status stream
   bool PrintSysPassInfo();
 
-  /// Sets the output path for the target system path
+  /// Sets the output path for the target system pass
   bool SetPassOutputPath( std::string Pass, std::string Path );
+
+  /// Sets the intput string for the target system pass
+  bool SetPassInputStr( std::string Pass, std::string Str );
 };
 
 #endif

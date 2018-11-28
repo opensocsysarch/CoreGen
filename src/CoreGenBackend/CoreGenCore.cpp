@@ -11,7 +11,7 @@
 #include "CoreGen/CoreGenBackend/CoreGenCore.h"
 
 CoreGenCore::CoreGenCore( std::string N, CoreGenISA *I, CoreGenErrno *E)
-  : CoreGenNode(CGCore,N,E), Cache(NULL), ISA(I){
+  : CoreGenNode(CGCore,N,E), Cache(NULL), ISA(I), ThreadUnits(1){
   InsertChild(static_cast<CoreGenNode *>(ISA));
 }
 
@@ -86,6 +86,15 @@ CoreGenNode *CoreGenCore::GetExt( unsigned E ){
   }
 
   return Exts[E];
+}
+
+bool CoreGenCore::SetNumThreadUnits( unsigned TU ){
+  if( TU == 0 ){
+    Errno->SetError( CGERR_ERROR, "Cannot set thread units to zero" );
+    return false;
+  }
+  ThreadUnits = TU;
+  return true;
 }
 
 // EOF

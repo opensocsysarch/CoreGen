@@ -12,10 +12,11 @@
 
 CGCLIOpts::CGCLIOpts( int argc, char **argv )
   : ParseSuccess(false),HelpSelected(false),ManualPasses(false),
-    GroupPasses(false), DataPasses(false), AnalysisPasses(false), OptPasses(false),
-    ListPasses(false), Verify(false), ExecPass(false),
+    GroupPasses(false), DataPasses(false), AnalysisPasses(false),
+    OptPasses(false), ListPasses(false), Verify(false), ExecPass(false),
     CGChisel(false), CGComp(false), CGVersion(false), CheckPlugins(false),
-    ListSysPasses(false), ExecSysPass(false), ProjName("UNKNOWN"){
+    ListSysPasses(false), ExecSysPass(false), ASPSolver(false),
+    ProjName("UNKNOWN"){
   // setup default project root
   char PATH[FILENAME_MAX];
   if( getcwd(PATH,sizeof(PATH)) == NULL ){
@@ -57,13 +58,14 @@ void CGCLIOpts::PrintOptions(){
   std::cout << " Pass Options:" << std::endl;
   std::cout << "\t--enable-pass \"PASS1,PASS2,...\"       : Explicitly enable passes" << std::endl;
   std::cout << "\t--disable-pass \"PASS1,PASS2,...\"      : Explicitly disable passes" << std::endl;
-  std::cout << "\t--enable-sys-pass \"PASS1:ARG1,PASS2\": Explicitly enable system pass" << std::endl;
+  std::cout << "\t--enable-sys-pass \"PASS1:ARG1,PASS2\"  : Explicitly enable system pass" << std::endl;
   std::cout << "\t--disable-all-passes                  : Disable all the passes" << std::endl;
   std::cout << "\t--enable-data-passes                  : Enable all data passes" << std::endl;
   std::cout << "\t--enable-analysis-passes              : Enable all analysis passes" << std::endl;
   std::cout << "\t--enable-opt-passes                   : Enable all optimization passes" << std::endl;
   std::cout << "\t--list-passes                         : List all the passes and return" << std::endl;
   std::cout << "\t--list-sys-passes                     : List all the system passes" << std::endl;
+  std::cout << "\t--asp \"ASP Text\"                      : Execute ASP solver with input" << std::endl;
   std::cout << std::endl;
 }
 
@@ -353,6 +355,20 @@ bool CGCLIOpts::ParseOpts( int argc, char **argv ){
       }
       ExecSysPass = true;
       Verify = true;
+      i++;
+    }else if( s == "--asp" ){
+      // ASP pass selection
+      if( i+1 > (argc-1) ){
+        std::cout << "Error : --asp requires an argument" << std::endl;
+        return false;
+      }
+      std::string P(argv[i+1]);
+      ASP = P;
+      if( ASP.length() == 0 ){
+        std::cout << "Error : ASP string must be non null" << std::endl;
+        return false;
+      }
+      ASPSolver = true;
       i++;
     }else if( s == "--disable-all-passes" ){
       ManualPasses = true;

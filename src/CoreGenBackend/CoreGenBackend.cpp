@@ -160,6 +160,14 @@ bool CoreGenBackend::SetPassOutputPath( std::string Pass, std::string Path ){
   return PassMgr->SetPassOutputPath(Pass,Path);
 }
 
+bool CoreGenBackend::SetPassInputStr( std::string Pass, std::string Str ){
+  if( PassMgr == nullptr ){
+    Errno->SetError(CGERR_ERROR, "PassMgr has not been enabled");
+    return false;
+  }
+  return PassMgr->SetPassInputStr(Pass,Str);
+}
+
 bool CoreGenBackend::ExecutePassType(CGPassType T ){
   if( PassMgr == nullptr ){
     Errno->SetError(CGERR_ERROR, "PassMgr has not been enabled");
@@ -298,6 +306,9 @@ bool CoreGenBackend::InitPassMgr(std::ostream *O){
   }
   if( Proj == nullptr ){
     return false;
+  }
+  if( PassMgr ){
+    return true;
   }
   PassMgr = new CoreGenPassMgr(O,Errno, DAG, Proj);
   if( PassMgr == nullptr ){

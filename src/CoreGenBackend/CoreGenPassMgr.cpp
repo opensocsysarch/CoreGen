@@ -104,6 +104,7 @@ void CoreGenPassMgr::InitExtPasses(std::ostream *O){
 
 void CoreGenPassMgr::InitSysPasses(std::ostream *O){
   SysPasses.push_back(static_cast<CoreGenPass *>(new SafeDeletePass(O,DAG,Errno)));
+  SysPasses.push_back(static_cast<CoreGenPass *>(new ASPSolverPass(O,DAG,Errno)));
   SysPasses.push_back(static_cast<CoreGenPass *>(new InstTable(O,DAG,Errno)));
   SysPasses.push_back(static_cast<CoreGenPass *>(new SpecDoc(O,DAG,Errno)));
 }
@@ -154,6 +155,17 @@ bool CoreGenPassMgr::SetPassOutputPath( std::string Pass, std::string Path ){
     CoreGenPass *P = (*it);
     if( P->GetName() == Pass ){
       return P->SetOutputPath(Path);
+    }
+  }
+  return false;
+}
+
+bool CoreGenPassMgr::SetPassInputStr( std::string Pass, std::string Str ){
+  std::vector<CoreGenPass *>::iterator it;
+  for( it=SysPasses.begin(); it != SysPasses.end(); ++it ){
+    CoreGenPass *P = (*it);
+    if( P->GetName() == Pass ){
+      return P->SetInStr(Str);
     }
   }
   return false;
