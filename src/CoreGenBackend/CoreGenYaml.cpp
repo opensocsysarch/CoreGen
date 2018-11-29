@@ -235,6 +235,9 @@ void CoreGenYaml::WriteCoreYaml( YAML::Emitter *out,
 
     // write out all the internal references as aliases
 
+    *out << YAML::Key << "ThreadUnits";
+    *out << YAML::Value << Cores[i]->GetNumThreadUnits();
+
     CoreGenCache *Cache = Cores[i]->GetCache();
     if( Cache ){
       *out << YAML::Key << "Cache";
@@ -662,11 +665,40 @@ void CoreGenYaml::WriteRegYaml(YAML::Emitter *out,
       *out << YAML:: Value << "false";
     }
 
+    *out << YAML::Key << "TUSReg";
+    if( Regs[i]->IsTUSAttr() ){
+      *out << YAML:: Value << "true";
+    }else{
+      *out << YAML:: Value << "false";
+    }
+
     *out << YAML::Key << "Shared";
     if( Regs[i]->IsShared() ){
       *out << YAML:: Value << "true";
     }else{
       *out << YAML:: Value << "false";
+    }
+
+    // write out the subregister encodings
+    if( Regs[i]->GetNumSubRegs() > 0 ){
+      *out << YAML::Key << "SubRegs" << YAML::Value << YAML::BeginSeq;
+      for( unsigned j=0; j<Regs[i]->GetNumSubRegs(); j++ ){
+        *out << YAML::BeginMap;
+
+        std::string SRName;
+        unsigned SRStart;
+        unsigned SREnd;
+        if( !Regs[i]->GetSubReg(j,SRName,SRStart,SREnd) ){
+          // dump out
+          return ;
+        }
+        *out << YAML::Key << "SubReg" << YAML::Value << SRName;
+        *out << YAML::Key << "StartBit" << YAML::Value << SRStart;
+        *out << YAML::Key << "EndBit" << YAML::Value << SREnd;
+
+        *out << YAML::EndMap;
+      }
+      *out << YAML::EndSeq;
     }
 
     if( Regs[i]->IsRTL() ){
@@ -1351,6 +1383,7 @@ bool CoreGenYaml::ReadRegisterYaml(const YAML::Node& RegNodes,
     bool ROReg = false;
     bool CSRReg = false;
     bool AMSReg = false;
+    bool TUSReg = false;
     bool IsShared = false;
 
     if( CheckValidNode(Node,"IsSIMD") ){
@@ -1367,6 +1400,9 @@ bool CoreGenYaml::ReadRegisterYaml(const YAML::Node& RegNodes,
     }
     if( CheckValidNode(Node,"AMSReg") ){
       AMSReg = Node["AMSReg"].as<bool>();
+    }
+    if( CheckValidNode(Node,"TUSReg") ){
+      TUSReg = Node["TUSReg"].as<bool>();
     }
     if( CheckValidNode(Node,"Shared") ){
       IsShared = Node["Shared"].as<bool>();
@@ -1408,10 +1444,52 @@ bool CoreGenYaml::ReadRegisterYaml(const YAML::Node& RegNodes,
     if( AMSReg ){
       Attrs |= CoreGenReg::CGRegAMS;
     }
+    if( TUSReg ){
+      Attrs |= CoreGenReg::CGRegTUS;
+    }
     R->SetAttrs(Attrs);
 
     R->SetShared(IsShared);
 
+    // Check for subregisters
+    const YAML::Node& SNode = Node["SubRegs"];
+    if( SNode ){
+      if( SNode.size() == 0 ){
+        PrintParserError(SNode, "SubRegs", "SubReg" );
+        return false;
+      }
+      for( unsigned j=0; j<SNode.size(); j++ ){
+        const YAML::Node& LSNode = SNode[j];
+
+        // name
+        if( !CheckValidNode(LSNode, "SubReg") ){
+          PrintParserError(LSNode, "SubRegs", "SubReg" );
+          return false;
+        }
+        std::string SName = LSNode["SubReg"].as<std::string>();
+
+        // start bit
+        if( !CheckValidNode(LSNode, "StartBit") ){
+          PrintParserError(LSNode, "SubRegs", "StartBit" );
+          return false;
+        }
+        unsigned SB = LSNode["StartBit"].as<unsigned>();
+
+        // end bit
+        if( !CheckValidNode(LSNode, "EndBit") ){
+          PrintParserError(LSNode, "SubRegs", "EndBit" );
+          return false;
+        }
+        unsigned EB = LSNode["EndBit"].as<unsigned>();
+
+        // insert the subreg into the register
+        if( !R->InsertSubReg(SName,SB,EB) ){
+          return false;
+        }
+      }
+    }
+
+    // Check for custom RTL
     if( CheckValidNode(Node,"RTL") ){
       R->SetRTL( Node["RTL"].as<std::string>());
     }
@@ -1885,6 +1963,18 @@ bool CoreGenYaml::ReadCoreYaml(const YAML::Node& CoreNodes,
     CoreGenCore *C = new CoreGenCore( Name, ISA, Errno );
     if( C == nullptr ){
       return false;
+    }
+
+    // handle the thread units
+    unsigned ThreadUnits = 1;
+    if( Node["ThreadUnits"] ){
+      if( !CheckValidNode(Node,"ThreadUnits") ){
+        return false;
+      }
+      ThreadUnits = Node["ThreadUnits"].as<unsigned>();
+      if( !C->SetNumThreadUnits(ThreadUnits) ){
+        return false;
+      }
     }
 
     // handle the cache
