@@ -11,7 +11,7 @@ Registers:
     AMSReg: false
   - RegName: TEST51.1.reg
     Width: 64
-    Index: 0
+    Index: 1
     PseudoName: pseudoreg.1
     IsFixedValue: false
     IsSIMD: false

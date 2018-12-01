@@ -33,7 +33,7 @@ bool ASPSolverPass::Execute(){
   }
   std::ofstream out("aspdag.lp");
   if( this->GetInStr().length() == 0 ){
-    WriteMsg( "Error: not input ASP rule defined" );
+    WriteMsg( "Error: no input ASP rule defined" );
     Errno->SetError( CGERR_STATUS, this->GetName() +
                      " : no ASP rule defined" );
     return false;
@@ -48,6 +48,23 @@ bool ASPSolverPass::Execute(){
 
   // execute the ASP solver
   // TODO
+
+  //Build DAG in ASP
+  for(unsigned i = 0; i < D3->GetDimSize(); i++){
+    CoreGenNode *N = static_cast<CoreGenNode *>(D3->FindNodeByIndex(i));
+    if(N->GetASP().length() > 0){
+      out << N->GetASP();
+    }
+  }
+  out.close();
+
+  std::string cmd = "clingo aspdag.lp " + ASPFile;
+  if (system(cmd.c_str()) == 7680){
+    rtn = true;
+  }
+  else{
+    rtn = false;
+  }
 
   return rtn;
 }

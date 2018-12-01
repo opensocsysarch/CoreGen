@@ -109,11 +109,13 @@ int ExecuteCoregen( CGCLIOpts *Opts ){
   // check for the asp solver
   if( Opts->IsASPEnabled() ){
     // output the solver block to a tmp file
-    std::string ASPPath = Opts->GetProjectRoot() + "/asptmp.tmp";
+    std::string ASPPath = Opts->GetProjectRoot() + "/" + Opts->GetASPStr();
     std::cout << ASPPath << std::endl;
+    /*
     std::ofstream out(ASPPath);
     out << Opts->GetASPStr();
     out.close();
+    */
 
     // setup the solver
     if( !CG->SetPassInputStr( "ASPSolverPass", ASPPath ) ){

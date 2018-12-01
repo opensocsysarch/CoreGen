@@ -1451,7 +1451,8 @@ bool CoreGenYaml::ReadRegisterYaml(const YAML::Node& RegNodes,
 
     if( CheckValidNode(Node,"PseudoName") ){
       R->SetPseudoName(Node["PseudoName"].as<std::string>());
-      ASP += "regPseudoName(" + ASPName + ", " + Node["PseudoName"].as<std::string>() + ").\n";
+      std::string ASPPseudoName = PrepForASP(Node["PseudoName"].as<std::string>());
+      ASP += "regPseudoName(" + ASPName + ", " + ASPPseudoName + ").\n";
     }
 
     // set the simd attrs
@@ -1672,7 +1673,7 @@ bool CoreGenYaml::ReadInstFormatYaml(const YAML::Node& InstFormatNodes,
     std::string ASPName = PrepForASP(Name);
     std::string ASP = "";
 
-    ASP += "instFormat(" + ASPName + ".)\n";
+    ASP += "instFormat(" + ASPName + ").\n";
 
     if( !CheckValidNode(Node,"ISA") ){
       PrintParserError(Node,
@@ -2037,9 +2038,9 @@ bool CoreGenYaml::ReadCacheYaml(const YAML::Node& CacheNodes,
       //mystream << "parentCacheOf(" << ASPName << ", " << PrepForASP(SC->GetName()) << ")." << std::endl;
 
       ASP += "cacheParentOf(" + ASPName + ", " + ASPSubLevel + ").\n";
-      ASP += "cacheChildeOf(" + ASPSubLevel + ", " + ASPName + ").\n";
       C->SetChildCache( SC );
       SC->SetParentCache( C );  // set the parent of the child
+      SC->AppendASP("cacheChildeOf(" + ASPSubLevel + ", " + ASPName + ").\n");
     }
 
     if( Node["RTL"] ){
