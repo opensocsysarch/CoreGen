@@ -1497,7 +1497,7 @@ bool CoreGenYaml::ReadRegisterYaml(const YAML::Node& RegNodes,
 
     // Check for subregisters
     //TODO: represent subregisters with ASP
-    //Are start and endbits in subreg or just here?
+    //QUESTION: Are start and endbits in subreg or just here?
     const YAML::Node& SNode = Node["SubRegs"];
     if( SNode ){
       if( SNode.size() == 0 ){
@@ -1556,7 +1556,7 @@ bool CoreGenYaml::ReadRegisterYaml(const YAML::Node& RegNodes,
 bool CoreGenYaml::ReadRegisterClassYaml(const YAML::Node& RegClassNodes,
                                         std::vector<CoreGenRegClass *> &RegClasses,
                                         std::vector<CoreGenReg *> &Regs){
-  std::ofstream mystream("aspdag.lp", std::ios::app);
+  //std::ofstream mystream("aspdag.lp", std::ios::app);
   for( unsigned i=0; i<RegClassNodes.size(); i++ ){
     const YAML::Node& Node = RegClassNodes[i];
     if( !CheckValidNode(Node,"RegisterClassName") ){
@@ -1569,7 +1569,7 @@ bool CoreGenYaml::ReadRegisterClassYaml(const YAML::Node& RegClassNodes,
     std::string ASPName = PrepForASP(Name);
     std::string ASP = "";
 
-    mystream << "regClass(" << ASPName << ")." << std::endl;
+    //mystream << "regClass(" << ASPName << ")." << std::endl;
     ASP += "regClass(" + ASPName + ").\n";
 #if 0
     // currently unused
@@ -1594,13 +1594,14 @@ bool CoreGenYaml::ReadRegisterClassYaml(const YAML::Node& RegClassNodes,
       for( unsigned j=0; j<RNode.size(); j++ ){
         // insert each node into the register class
         std::string RName = RNode[j].as<std::string>();
+        std::string ASPRName = PrepForASP(RName);
 
         bool found = false;
         for( unsigned k=0; k<Regs.size(); k++ ){
           if( Regs[k]->GetName() == RName ){
             RC->InsertReg(Regs[k]);
-            mystream << "regClassReg(" << ASPName << ", " << PrepForASP(RName) << ")." << std::endl;
-            ASP += "regClassReg(" + ASPName + ", " + PrepForASP(RName) + ").\n";
+            //mystream << "regClassReg(" << ASPName << ", " << PrepForASP(RName) << ")." << std::endl;
+            ASP += "regClassReg(" + ASPName + ", " + ASPRName + ").\n";
             found = true;
           }
         } // end unsigned k
@@ -1613,6 +1614,7 @@ bool CoreGenYaml::ReadRegisterClassYaml(const YAML::Node& RegClassNodes,
       } // end unsigned j
     } // end if
 
+    //QUESTION: Is this administrative or part of the architecture?
     if( CheckValidNode(Node,"RTL") ){
       RC->SetRTL( Node["RTL"].as<std::string>());
     }
@@ -1624,10 +1626,11 @@ bool CoreGenYaml::ReadRegisterClassYaml(const YAML::Node& RegClassNodes,
 
     RegClasses.push_back(RC);
   }
-  mystream.close();
+  //mystream.close();
   return true;
 }
 
+//QUESTION: does this need to be represented?
 bool CoreGenYaml::ReadISAYaml(const YAML::Node& ISANodes,
                               std::vector<CoreGenISA *> &ISAs){
   for( unsigned i=0; i<ISANodes.size(); i++ ){
