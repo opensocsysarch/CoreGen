@@ -295,6 +295,10 @@ string
 -
 vector
 -
+tuple
+-
+unordered_map
+-
 CoreGen/CoreGenBackend/CoreGenErrno.h
 ../include/CoreGen/CoreGenBackend/CoreGen/CoreGenBackend/CoreGenErrno.h
 CoreGen/CoreGenBackend/CoreGenNode.h
@@ -798,7 +802,5 @@ yaml-cpp/node/emit.h
 CoreGen/CoreGenBackend/CoreGenYaml.h
 /home/fconlon/Documents/CoreGen/src/CoreGenBackend/CoreGen/CoreGenBackend/CoreGenYaml.h
 fstream
--
-algorithm
 -
 

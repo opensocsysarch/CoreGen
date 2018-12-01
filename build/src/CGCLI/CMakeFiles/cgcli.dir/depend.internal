@@ -32,6 +32,7 @@ src/CGCLI/CMakeFiles/cgcli.dir/CGCLIMain.cpp.o
  ../include/CoreGen/CoreGenBackend/CoreGenVTP.h
  ../include/CoreGen/CoreGenBackend/CoreGenVersion.h
  ../include/CoreGen/CoreGenBackend/CoreGenYaml.h
+ ../include/CoreGen/CoreGenBackend/Passes/Analysis/ASPSolverPass.h
  ../include/CoreGen/CoreGenBackend/Passes/Analysis/CacheLevelPass.h
  ../include/CoreGen/CoreGenBackend/Passes/Analysis/CommSafetyPass.h
  ../include/CoreGen/CoreGenBackend/Passes/Analysis/CoreSafetyPass.h

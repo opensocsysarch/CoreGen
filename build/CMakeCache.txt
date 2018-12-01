@@ -359,7 +359,7 @@ PS2PDF_CONVERTER_FLAGS:STRING=-dMaxSubsetPct=100 -dCompatibilityLevel=1.3 -dSubs
 RM:FILEPATH=/usr/bin/rm
 
 //Dependencies for the target
-SCComp_LIB_DEPENDS:STATIC=general;LLVMSupport;general;LLVMCore;general;LLVMIRReader;general;LLVMMCJIT;general;LLVMipo;general;LLVMExecutionEngine;general;LLVMInstrumentation;general;LLVMTransformUtils;general;LLVMVectorize;general;LLVMScalarOpts;general;LLVMInstCombine;
+SCComp_LIB_DEPENDS:STATIC=general;LLVMSupport;general;LLVMCore;general;LLVMIRReader;general;LLVMMCJIT;general;LLVMipo;general;LLVMExecutionEngine;general;LLVMInstrumentation;general;LLVMTransformUtils;general;LLVMVectorize;general;LLVMScalarOpts;general;LLVMInstCombine;general;LLVMX86CodeGen;general;LLVMAArch64CodeGen;general;LLVMARMCodeGen;general;LLVMMipsCodeGen;general;LLVMPowerPCCodeGen;general;LLVMX86AsmParser;general;LLVMAArch64AsmParser;general;LLVMARMAsmParser;general;LLVMMipsAsmParser;general;LLVMPowerPCAsmParser;
 
 //Dependencies for the target
 SamplePlugin_LIB_DEPENDS:STATIC=general;CoreGenPluginImpl;
@@ -503,7 +503,7 @@ CMAKE_MODULE_LINKER_FLAGS_RELWITHDEBINFO-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_NM
 CMAKE_NM-ADVANCED:INTERNAL=1
 //number of local generators
-CMAKE_NUMBER_OF_MAKEFILES:INTERNAL=41
+CMAKE_NUMBER_OF_MAKEFILES:INTERNAL=44
 //ADVANCED property for variable: CMAKE_OBJCOPY
 CMAKE_OBJCOPY-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_OBJDUMP

@@ -52,6 +52,9 @@ set(CMAKE_MAKEFILE_DEPENDS
   "../test/Plugins/CMakeLists.txt"
   "../test/StoneCutter/CLI/CMakeLists.txt"
   "../test/StoneCutter/CMakeLists.txt"
+  "../test/StoneCutter/Parser/CMakeLists.txt"
+  "../test/StoneCutter/Parser/KnownFail/CMakeLists.txt"
+  "../test/StoneCutter/Parser/KnownPass/CMakeLists.txt"
   "../test/Yaml/CMakeLists.txt"
   "../test/Yaml/Reader/CMakeLists.txt"
   "../test/Yaml/Reader/MissingData/CMakeLists.txt"
@@ -139,6 +142,9 @@ set(CMAKE_MAKEFILE_PRODUCTS
   "test/Plugins/CMakeFiles/CMakeDirectoryInformation.cmake"
   "test/StoneCutter/CMakeFiles/CMakeDirectoryInformation.cmake"
   "test/StoneCutter/CLI/CMakeFiles/CMakeDirectoryInformation.cmake"
+  "test/StoneCutter/Parser/CMakeFiles/CMakeDirectoryInformation.cmake"
+  "test/StoneCutter/Parser/KnownPass/CMakeFiles/CMakeDirectoryInformation.cmake"
+  "test/StoneCutter/Parser/KnownFail/CMakeFiles/CMakeDirectoryInformation.cmake"
   )
 
 # Dependency information for all targets:

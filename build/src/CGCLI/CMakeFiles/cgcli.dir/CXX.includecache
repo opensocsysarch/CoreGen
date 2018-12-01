@@ -441,6 +441,10 @@ string
 -
 vector
 -
+tuple
+-
+unordered_map
+-
 CoreGen/CoreGenBackend/CoreGenErrno.h
 ../include/CoreGen/CoreGenBackend/CoreGen/CoreGenBackend/CoreGenErrno.h
 CoreGen/CoreGenBackend/CoreGenNode.h
@@ -569,6 +573,20 @@ CoreGen/CoreGenBackend/CoreGenProj.h
 ../include/CoreGen/CoreGenBackend/CoreGen/CoreGenBackend/CoreGenProj.h
 CoreGen/CoreGenBackend/CoreGenDAG.h
 ../include/CoreGen/CoreGenBackend/CoreGen/CoreGenBackend/CoreGenDAG.h
+
+../include/CoreGen/CoreGenBackend/Passes/Analysis/ASPSolverPass.h
+iostream
+-
+string
+-
+vector
+-
+CoreGen/CoreGenBackend/CoreGenPass.h
+../include/CoreGen/CoreGenBackend/Passes/Analysis/CoreGen/CoreGenBackend/CoreGenPass.h
+CoreGen/CoreGenBackend/CoreGenDAG.h
+../include/CoreGen/CoreGenBackend/Passes/Analysis/CoreGen/CoreGenBackend/CoreGenDAG.h
+CoreGen/CoreGenBackend/CoreGenErrno.h
+../include/CoreGen/CoreGenBackend/Passes/Analysis/CoreGen/CoreGenBackend/CoreGenErrno.h
 
 ../include/CoreGen/CoreGenBackend/Passes/Analysis/CacheLevelPass.h
 iostream
@@ -895,6 +913,8 @@ CoreGen/CoreGenBackend/Passes/Analysis/PInstSafetyPass.h
 ../include/CoreGen/CoreGenBackend/Passes/CoreGen/CoreGenBackend/Passes/Analysis/PInstSafetyPass.h
 CoreGen/CoreGenBackend/Passes/Analysis/CommSafetyPass.h
 ../include/CoreGen/CoreGenBackend/Passes/CoreGen/CoreGenBackend/Passes/Analysis/CommSafetyPass.h
+CoreGen/CoreGenBackend/Passes/Analysis/ASPSolverPass.h
+../include/CoreGen/CoreGenBackend/Passes/CoreGen/CoreGenBackend/Passes/Analysis/ASPSolverPass.h
 
 ../include/CoreGen/CoreGenBackend/Passes/Data/InstTable.h
 iostream

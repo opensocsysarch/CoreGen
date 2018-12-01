@@ -16,6 +16,7 @@ file(REMOVE_RECURSE
   "CMakeFiles/AnalysisPassObjs.dir/SafeDeletePass.cpp.o"
   "CMakeFiles/AnalysisPassObjs.dir/CommSafetyPass.cpp.o"
   "CMakeFiles/AnalysisPassObjs.dir/PInstSafetyPass.cpp.o"
+  "CMakeFiles/AnalysisPassObjs.dir/ASPSolverPass.cpp.o"
 )
 
 # Per-language clean rules from dependency scanning.

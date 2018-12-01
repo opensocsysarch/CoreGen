@@ -431,7 +431,8 @@ CoreGenBackend_EXTERNAL_OBJECTS = \
 "/home/fconlon/Documents/CoreGen/build/src/CoreGenBackend/Passes/Analysis/CMakeFiles/AnalysisPassObjs.dir/RegClassSafetyPass.cpp.o" \
 "/home/fconlon/Documents/CoreGen/build/src/CoreGenBackend/Passes/Analysis/CMakeFiles/AnalysisPassObjs.dir/SafeDeletePass.cpp.o" \
 "/home/fconlon/Documents/CoreGen/build/src/CoreGenBackend/Passes/Analysis/CMakeFiles/AnalysisPassObjs.dir/CommSafetyPass.cpp.o" \
-"/home/fconlon/Documents/CoreGen/build/src/CoreGenBackend/Passes/Analysis/CMakeFiles/AnalysisPassObjs.dir/PInstSafetyPass.cpp.o"
+"/home/fconlon/Documents/CoreGen/build/src/CoreGenBackend/Passes/Analysis/CMakeFiles/AnalysisPassObjs.dir/PInstSafetyPass.cpp.o" \
+"/home/fconlon/Documents/CoreGen/build/src/CoreGenBackend/Passes/Analysis/CMakeFiles/AnalysisPassObjs.dir/ASPSolverPass.cpp.o"
 
 src/CoreGenBackend/libCoreGenBackend.a: src/CoreGenBackend/CMakeFiles/CoreGenBackend.dir/CoreGenBackend.cpp.o
 src/CoreGenBackend/libCoreGenBackend.a: src/CoreGenBackend/CMakeFiles/CoreGenBackend.dir/CoreGenEncoding.cpp.o
@@ -478,6 +479,7 @@ src/CoreGenBackend/libCoreGenBackend.a: src/CoreGenBackend/Passes/Analysis/CMake
 src/CoreGenBackend/libCoreGenBackend.a: src/CoreGenBackend/Passes/Analysis/CMakeFiles/AnalysisPassObjs.dir/SafeDeletePass.cpp.o
 src/CoreGenBackend/libCoreGenBackend.a: src/CoreGenBackend/Passes/Analysis/CMakeFiles/AnalysisPassObjs.dir/CommSafetyPass.cpp.o
 src/CoreGenBackend/libCoreGenBackend.a: src/CoreGenBackend/Passes/Analysis/CMakeFiles/AnalysisPassObjs.dir/PInstSafetyPass.cpp.o
+src/CoreGenBackend/libCoreGenBackend.a: src/CoreGenBackend/Passes/Analysis/CMakeFiles/AnalysisPassObjs.dir/ASPSolverPass.cpp.o
 src/CoreGenBackend/libCoreGenBackend.a: src/CoreGenBackend/CMakeFiles/CoreGenBackend.dir/build.make
 src/CoreGenBackend/libCoreGenBackend.a: src/CoreGenBackend/CMakeFiles/CoreGenBackend.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/fconlon/Documents/CoreGen/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_26) "Linking CXX static library libCoreGenBackend.a"

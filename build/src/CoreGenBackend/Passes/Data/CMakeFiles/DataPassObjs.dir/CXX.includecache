@@ -289,6 +289,10 @@ string
 -
 vector
 -
+tuple
+-
+unordered_map
+-
 CoreGen/CoreGenBackend/CoreGenErrno.h
 ../include/CoreGen/CoreGenBackend/CoreGen/CoreGenBackend/CoreGenErrno.h
 CoreGen/CoreGenBackend/CoreGenNode.h

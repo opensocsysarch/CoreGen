@@ -40,6 +40,7 @@ endif()
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
   include("/home/fconlon/Documents/CoreGen/build/test/StoneCutter/CLI/cmake_install.cmake")
+  include("/home/fconlon/Documents/CoreGen/build/test/StoneCutter/Parser/cmake_install.cmake")
 
 endif()
 

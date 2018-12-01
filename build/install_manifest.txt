@@ -72,6 +72,7 @@
 /usr/local/include/CoreGenBackend/./Passes/Analysis/SafeDeletePass.h
 /usr/local/include/CoreGenBackend/./Passes/Analysis/EncodingGapPass.h
 /usr/local/include/CoreGenBackend/./Passes/Analysis/CoreSafetyPass.h
+/usr/local/include/CoreGenBackend/./Passes/Analysis/ASPSolverPass.h
 /usr/local/include/CoreGenBackend/./Passes/Analysis/RegIdxPass.h
 /usr/local/include/CoreGenBackend/./Passes/Analysis/RegFieldPass.h
 /usr/local/include/CoreGenBackend/./Passes/Analysis/ICacheCheckerPass.h
@@ -113,6 +114,7 @@
 /usr/local/include/CoreGenBackend/Passes/./Analysis/SafeDeletePass.h
 /usr/local/include/CoreGenBackend/Passes/./Analysis/EncodingGapPass.h
 /usr/local/include/CoreGenBackend/Passes/./Analysis/CoreSafetyPass.h
+/usr/local/include/CoreGenBackend/Passes/./Analysis/ASPSolverPass.h
 /usr/local/include/CoreGenBackend/Passes/./Analysis/RegIdxPass.h
 /usr/local/include/CoreGenBackend/Passes/./Analysis/RegFieldPass.h
 /usr/local/include/CoreGenBackend/Passes/./Analysis/ICacheCheckerPass.h
@@ -133,6 +135,7 @@
 /usr/local/include/CoreGenBackend/Passes/Analysis/./SafeDeletePass.h
 /usr/local/include/CoreGenBackend/Passes/Analysis/./EncodingGapPass.h
 /usr/local/include/CoreGenBackend/Passes/Analysis/./CoreSafetyPass.h
+/usr/local/include/CoreGenBackend/Passes/Analysis/./ASPSolverPass.h
 /usr/local/include/CoreGenBackend/Passes/Analysis/./RegIdxPass.h
 /usr/local/include/CoreGenBackend/Passes/Analysis/./RegFieldPass.h
 /usr/local/include/CoreGenBackend/Passes/Analysis/./ICacheCheckerPass.h

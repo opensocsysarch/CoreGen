@@ -278,6 +278,19 @@ src/CoreGenBackend/Passes/Analysis/CMakeFiles/AnalysisPassObjs.dir/PInstSafetyPa
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/AnalysisPassObjs.dir/PInstSafetyPass.cpp.s"
 	cd /home/fconlon/Documents/CoreGen/build/src/CoreGenBackend/Passes/Analysis && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/fconlon/Documents/CoreGen/src/CoreGenBackend/Passes/Analysis/PInstSafetyPass.cpp -o CMakeFiles/AnalysisPassObjs.dir/PInstSafetyPass.cpp.s
 
+src/CoreGenBackend/Passes/Analysis/CMakeFiles/AnalysisPassObjs.dir/ASPSolverPass.cpp.o: src/CoreGenBackend/Passes/Analysis/CMakeFiles/AnalysisPassObjs.dir/flags.make
+src/CoreGenBackend/Passes/Analysis/CMakeFiles/AnalysisPassObjs.dir/ASPSolverPass.cpp.o: ../src/CoreGenBackend/Passes/Analysis/ASPSolverPass.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/fconlon/Documents/CoreGen/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_18) "Building CXX object src/CoreGenBackend/Passes/Analysis/CMakeFiles/AnalysisPassObjs.dir/ASPSolverPass.cpp.o"
+	cd /home/fconlon/Documents/CoreGen/build/src/CoreGenBackend/Passes/Analysis && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/AnalysisPassObjs.dir/ASPSolverPass.cpp.o -c /home/fconlon/Documents/CoreGen/src/CoreGenBackend/Passes/Analysis/ASPSolverPass.cpp
+
+src/CoreGenBackend/Passes/Analysis/CMakeFiles/AnalysisPassObjs.dir/ASPSolverPass.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/AnalysisPassObjs.dir/ASPSolverPass.cpp.i"
+	cd /home/fconlon/Documents/CoreGen/build/src/CoreGenBackend/Passes/Analysis && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/fconlon/Documents/CoreGen/src/CoreGenBackend/Passes/Analysis/ASPSolverPass.cpp > CMakeFiles/AnalysisPassObjs.dir/ASPSolverPass.cpp.i
+
+src/CoreGenBackend/Passes/Analysis/CMakeFiles/AnalysisPassObjs.dir/ASPSolverPass.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/AnalysisPassObjs.dir/ASPSolverPass.cpp.s"
+	cd /home/fconlon/Documents/CoreGen/build/src/CoreGenBackend/Passes/Analysis && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/fconlon/Documents/CoreGen/src/CoreGenBackend/Passes/Analysis/ASPSolverPass.cpp -o CMakeFiles/AnalysisPassObjs.dir/ASPSolverPass.cpp.s
+
 AnalysisPassObjs: src/CoreGenBackend/Passes/Analysis/CMakeFiles/AnalysisPassObjs.dir/ICacheCheckerPass.cpp.o
 AnalysisPassObjs: src/CoreGenBackend/Passes/Analysis/CMakeFiles/AnalysisPassObjs.dir/DanglingRegionPass.cpp.o
 AnalysisPassObjs: src/CoreGenBackend/Passes/Analysis/CMakeFiles/AnalysisPassObjs.dir/DanglingNodePass.cpp.o
@@ -295,6 +308,7 @@ AnalysisPassObjs: src/CoreGenBackend/Passes/Analysis/CMakeFiles/AnalysisPassObjs
 AnalysisPassObjs: src/CoreGenBackend/Passes/Analysis/CMakeFiles/AnalysisPassObjs.dir/SafeDeletePass.cpp.o
 AnalysisPassObjs: src/CoreGenBackend/Passes/Analysis/CMakeFiles/AnalysisPassObjs.dir/CommSafetyPass.cpp.o
 AnalysisPassObjs: src/CoreGenBackend/Passes/Analysis/CMakeFiles/AnalysisPassObjs.dir/PInstSafetyPass.cpp.o
+AnalysisPassObjs: src/CoreGenBackend/Passes/Analysis/CMakeFiles/AnalysisPassObjs.dir/ASPSolverPass.cpp.o
 AnalysisPassObjs: src/CoreGenBackend/Passes/Analysis/CMakeFiles/AnalysisPassObjs.dir/build.make
 
 .PHONY : AnalysisPassObjs

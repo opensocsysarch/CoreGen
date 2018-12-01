@@ -15,6 +15,7 @@ src/StoneCutter/CMakeFiles/SCComp.dir/SCLLCodeGen.cpp.o
  ../include/CoreGen/StoneCutter/SCLexer.h
  ../include/CoreGen/StoneCutter/SCMsg.h
  ../include/CoreGen/StoneCutter/SCParser.h
+ ../include/CoreGen/StoneCutter/SCUtil.h
  /home/fconlon/Documents/CoreGen/src/StoneCutter/SCLLCodeGen.cpp
 src/StoneCutter/CMakeFiles/SCComp.dir/SCLexer.cpp.o
  ../include/CoreGen/StoneCutter/SCLexer.h
@@ -30,4 +31,5 @@ src/StoneCutter/CMakeFiles/SCComp.dir/SCParser.cpp.o
  ../include/CoreGen/StoneCutter/SCLexer.h
  ../include/CoreGen/StoneCutter/SCMsg.h
  ../include/CoreGen/StoneCutter/SCParser.h
+ ../include/CoreGen/StoneCutter/SCUtil.h
  /home/fconlon/Documents/CoreGen/src/StoneCutter/SCParser.cpp

@@ -1350,7 +1350,7 @@ std::string CoreGenYaml::PrepForASP(std::string RemStr){
 
 bool CoreGenYaml::ReadRegisterYaml(const YAML::Node& RegNodes,
                                    std::vector<CoreGenReg *> &Regs){
-  std::ofstream mystream("aspdag.lp", std::ios::app);
+  //std::ofstream mystream("aspdag.lp", std::ios::app);
 
   for( unsigned i=0; i<RegNodes.size(); i++ ){
     const YAML::Node& Node = RegNodes[i];
@@ -1364,7 +1364,7 @@ bool CoreGenYaml::ReadRegisterYaml(const YAML::Node& RegNodes,
     std::string ASPName = PrepForASP(Name);
     std::string ASP = "";
 
-    mystream << "reg(" << ASPName << ")." << std::endl;
+    //mystream << "reg(" << ASPName << ")." << std::endl;
     ASP += "reg(" + ASPName + ").\n";
 
     if( !CheckValidNode(Node,"Width") ){
@@ -1384,7 +1384,7 @@ bool CoreGenYaml::ReadRegisterYaml(const YAML::Node& RegNodes,
     }
     int Index = Node["Index"].as<int>();
 
-    mystream << "regIndex(" << ASPName << ", " << Index << ")." << std::endl;
+    //mystream << "regIndex(" << ASPName << ", " << Index << ")." << std::endl;
     ASP += "regIndex(" + ASPName + ", " + std::to_string(Index) + ").\n";
 
     if( !CheckValidNode(Node,"IsFixedValue") ){
@@ -1395,10 +1395,10 @@ bool CoreGenYaml::ReadRegisterYaml(const YAML::Node& RegNodes,
     }
     bool IFV = Node["IsFixedValue"].as<bool>();
     if (IFV){
-      ASP += "regFixed(" + ASPName + ", true).\n";
+      ASP += "regIsFixed(" + ASPName + ", true).\n";
     }
     else{
-      ASP += "regFixed(" + ASPName + ", false).\n";
+      ASP += "regIsFixed(" + ASPName + ", false).\n";
     }
     std::vector<uint64_t> FixedVals;
 
@@ -1410,6 +1410,7 @@ bool CoreGenYaml::ReadRegisterYaml(const YAML::Node& RegNodes,
         return false;
       }
       FixedVals.push_back( Node["FixedValue"].as<uint64_t>() );
+      ASP += "regFixedVal(" + ASPName + ", " + Node["FixedValue"].as<std::string>() + ").\n";
     }
 
     bool IsSIMD = false;
@@ -1419,7 +1420,7 @@ bool CoreGenYaml::ReadRegisterYaml(const YAML::Node& RegNodes,
     bool AMSReg = false;
     bool TUSReg = false;
     bool IsShared = false;
-
+    //ASP TODO: add isX rules to ASPSolverPass
     if( CheckValidNode(Node,"IsSIMD") ){
       IsSIMD = Node["IsSIMD"].as<bool>();
     }
@@ -1495,6 +1496,8 @@ bool CoreGenYaml::ReadRegisterYaml(const YAML::Node& RegNodes,
     }
 
     // Check for subregisters
+    //TODO: represent subregisters with ASP
+    //Are start and endbits in subreg or just here?
     const YAML::Node& SNode = Node["SubRegs"];
     if( SNode ){
       if( SNode.size() == 0 ){
@@ -1546,7 +1549,7 @@ bool CoreGenYaml::ReadRegisterYaml(const YAML::Node& RegNodes,
     // add the register object
     Regs.push_back(R);
   }
-  mystream.close();
+  //mystream.close();
   return true;
 }
 

@@ -351,7 +351,7 @@ src/CoreGenBackend/preinstall: src/CoreGenBackend/Passes/preinstall
 src/CoreGenBackend/CMakeFiles/CoreGenBackend.dir/all: src/CoreGenPlugin/CMakeFiles/CoreGenPluginImpl.dir/all
 	$(MAKE) -f src/CoreGenBackend/CMakeFiles/CoreGenBackend.dir/build.make src/CoreGenBackend/CMakeFiles/CoreGenBackend.dir/depend
 	$(MAKE) -f src/CoreGenBackend/CMakeFiles/CoreGenBackend.dir/build.make src/CoreGenBackend/CMakeFiles/CoreGenBackend.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/fconlon/Documents/CoreGen/build/CMakeFiles --progress-num=17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40 "Built target CoreGenBackend"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/fconlon/Documents/CoreGen/build/CMakeFiles --progress-num=17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41 "Built target CoreGenBackend"
 .PHONY : src/CoreGenBackend/CMakeFiles/CoreGenBackend.dir/all
 
 # Include target in all.
@@ -361,7 +361,7 @@ all: src/CoreGenBackend/CMakeFiles/CoreGenBackend.dir/all
 
 # Build rule for subdir invocation for target.
 src/CoreGenBackend/CMakeFiles/CoreGenBackend.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/fconlon/Documents/CoreGen/build/CMakeFiles 77
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/fconlon/Documents/CoreGen/build/CMakeFiles 76
 	$(MAKE) -f CMakeFiles/Makefile2 src/CoreGenBackend/CMakeFiles/CoreGenBackend.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/fconlon/Documents/CoreGen/build/CMakeFiles 0
 .PHONY : src/CoreGenBackend/CMakeFiles/CoreGenBackend.dir/rule
@@ -549,7 +549,7 @@ all: src/CoreGenPlugin/CMakeFiles/CoreGenPluginImpl.dir/all
 
 # Build rule for subdir invocation for target.
 src/CoreGenPlugin/CMakeFiles/CoreGenPluginImpl.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/fconlon/Documents/CoreGen/build/CMakeFiles 53
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/fconlon/Documents/CoreGen/build/CMakeFiles 51
 	$(MAKE) -f CMakeFiles/Makefile2 src/CoreGenPlugin/CMakeFiles/CoreGenPluginImpl.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/fconlon/Documents/CoreGen/build/CMakeFiles 0
 .PHONY : src/CoreGenPlugin/CMakeFiles/CoreGenPluginImpl.dir/rule
@@ -595,7 +595,7 @@ src/CoreGenPlugin/SamplePlugin/CMakeFiles/SamplePlugin.dir/all: src/CoreGenBacke
 src/CoreGenPlugin/SamplePlugin/CMakeFiles/SamplePlugin.dir/all: src/yaml/yaml-cpp/CMakeFiles/yaml-cpp.dir/all
 	$(MAKE) -f src/CoreGenPlugin/SamplePlugin/CMakeFiles/SamplePlugin.dir/build.make src/CoreGenPlugin/SamplePlugin/CMakeFiles/SamplePlugin.dir/depend
 	$(MAKE) -f src/CoreGenPlugin/SamplePlugin/CMakeFiles/SamplePlugin.dir/build.make src/CoreGenPlugin/SamplePlugin/CMakeFiles/SamplePlugin.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/fconlon/Documents/CoreGen/build/CMakeFiles --progress-num=54,55,56 "Built target SamplePlugin"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/fconlon/Documents/CoreGen/build/CMakeFiles --progress-num=55,56,57 "Built target SamplePlugin"
 .PHONY : src/CoreGenPlugin/SamplePlugin/CMakeFiles/SamplePlugin.dir/all
 
 # Include target in all.
@@ -605,7 +605,7 @@ all: src/CoreGenPlugin/SamplePlugin/CMakeFiles/SamplePlugin.dir/all
 
 # Build rule for subdir invocation for target.
 src/CoreGenPlugin/SamplePlugin/CMakeFiles/SamplePlugin.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/fconlon/Documents/CoreGen/build/CMakeFiles 80
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/fconlon/Documents/CoreGen/build/CMakeFiles 79
 	$(MAKE) -f CMakeFiles/Makefile2 src/CoreGenPlugin/SamplePlugin/CMakeFiles/SamplePlugin.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/fconlon/Documents/CoreGen/build/CMakeFiles 0
 .PHONY : src/CoreGenPlugin/SamplePlugin/CMakeFiles/SamplePlugin.dir/rule
@@ -662,7 +662,7 @@ src/CoreGenCodegen/CMakeFiles/CoreGenCodegen.dir/all: src/CoreGenBackend/Passes/
 src/CoreGenCodegen/CMakeFiles/CoreGenCodegen.dir/all: src/yaml/yaml-cpp/CMakeFiles/yaml-cpp.dir/all
 	$(MAKE) -f src/CoreGenCodegen/CMakeFiles/CoreGenCodegen.dir/build.make src/CoreGenCodegen/CMakeFiles/CoreGenCodegen.dir/depend
 	$(MAKE) -f src/CoreGenCodegen/CMakeFiles/CoreGenCodegen.dir/build.make src/CoreGenCodegen/CMakeFiles/CoreGenCodegen.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/fconlon/Documents/CoreGen/build/CMakeFiles --progress-num=41,42 "Built target CoreGenCodegen"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/fconlon/Documents/CoreGen/build/CMakeFiles --progress-num=42 "Built target CoreGenCodegen"
 .PHONY : src/CoreGenCodegen/CMakeFiles/CoreGenCodegen.dir/all
 
 # Include target in all.
@@ -672,7 +672,7 @@ all: src/CoreGenCodegen/CMakeFiles/CoreGenCodegen.dir/all
 
 # Build rule for subdir invocation for target.
 src/CoreGenCodegen/CMakeFiles/CoreGenCodegen.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/fconlon/Documents/CoreGen/build/CMakeFiles 51
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/fconlon/Documents/CoreGen/build/CMakeFiles 49
 	$(MAKE) -f CMakeFiles/Makefile2 src/CoreGenCodegen/CMakeFiles/CoreGenCodegen.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/fconlon/Documents/CoreGen/build/CMakeFiles 0
 .PHONY : src/CoreGenCodegen/CMakeFiles/CoreGenCodegen.dir/rule
@@ -717,7 +717,7 @@ src/StoneCutter/preinstall:
 src/StoneCutter/CMakeFiles/SCComp.dir/all:
 	$(MAKE) -f src/StoneCutter/CMakeFiles/SCComp.dir/build.make src/StoneCutter/CMakeFiles/SCComp.dir/depend
 	$(MAKE) -f src/StoneCutter/CMakeFiles/SCComp.dir/build.make src/StoneCutter/CMakeFiles/SCComp.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/fconlon/Documents/CoreGen/build/CMakeFiles --progress-num=48,49,50,51,52,53 "Built target SCComp"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/fconlon/Documents/CoreGen/build/CMakeFiles --progress-num=48,49,50,51,52,53,54 "Built target SCComp"
 .PHONY : src/StoneCutter/CMakeFiles/SCComp.dir/all
 
 # Include target in all.
@@ -727,7 +727,7 @@ all: src/StoneCutter/CMakeFiles/SCComp.dir/all
 
 # Build rule for subdir invocation for target.
 src/StoneCutter/CMakeFiles/SCComp.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/fconlon/Documents/CoreGen/build/CMakeFiles 6
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/fconlon/Documents/CoreGen/build/CMakeFiles 7
 	$(MAKE) -f CMakeFiles/Makefile2 src/StoneCutter/CMakeFiles/SCComp.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/fconlon/Documents/CoreGen/build/CMakeFiles 0
 .PHONY : src/StoneCutter/CMakeFiles/SCComp.dir/rule
@@ -772,7 +772,7 @@ src/SCComp/preinstall:
 src/SCComp/CMakeFiles/sccomp.dir/all: src/StoneCutter/CMakeFiles/SCComp.dir/all
 	$(MAKE) -f src/SCComp/CMakeFiles/sccomp.dir/build.make src/SCComp/CMakeFiles/sccomp.dir/depend
 	$(MAKE) -f src/SCComp/CMakeFiles/sccomp.dir/build.make src/SCComp/CMakeFiles/sccomp.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/fconlon/Documents/CoreGen/build/CMakeFiles --progress-num=69,70 "Built target sccomp"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/fconlon/Documents/CoreGen/build/CMakeFiles --progress-num=70,71 "Built target sccomp"
 .PHONY : src/SCComp/CMakeFiles/sccomp.dir/all
 
 # Include target in all.
@@ -782,7 +782,7 @@ all: src/SCComp/CMakeFiles/sccomp.dir/all
 
 # Build rule for subdir invocation for target.
 src/SCComp/CMakeFiles/sccomp.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/fconlon/Documents/CoreGen/build/CMakeFiles 8
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/fconlon/Documents/CoreGen/build/CMakeFiles 9
 	$(MAKE) -f CMakeFiles/Makefile2 src/SCComp/CMakeFiles/sccomp.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/fconlon/Documents/CoreGen/build/CMakeFiles 0
 .PHONY : src/SCComp/CMakeFiles/sccomp.dir/rule
@@ -829,7 +829,7 @@ src/CGCLI/CMakeFiles/cgcli.dir/all: src/StoneCutter/CMakeFiles/SCComp.dir/all
 src/CGCLI/CMakeFiles/cgcli.dir/all: src/yaml/yaml-cpp/CMakeFiles/yaml-cpp.dir/all
 	$(MAKE) -f src/CGCLI/CMakeFiles/cgcli.dir/build.make src/CGCLI/CMakeFiles/cgcli.dir/depend
 	$(MAKE) -f src/CGCLI/CMakeFiles/cgcli.dir/build.make src/CGCLI/CMakeFiles/cgcli.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/fconlon/Documents/CoreGen/build/CMakeFiles --progress-num=57,58,59,60 "Built target cgcli"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/fconlon/Documents/CoreGen/build/CMakeFiles --progress-num=58,59,60 "Built target cgcli"
 .PHONY : src/CGCLI/CMakeFiles/cgcli.dir/all
 
 # Include target in all.
@@ -839,7 +839,7 @@ all: src/CGCLI/CMakeFiles/cgcli.dir/all
 
 # Build rule for subdir invocation for target.
 src/CGCLI/CMakeFiles/cgcli.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/fconlon/Documents/CoreGen/build/CMakeFiles 87
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/fconlon/Documents/CoreGen/build/CMakeFiles 86
 	$(MAKE) -f CMakeFiles/Makefile2 src/CGCLI/CMakeFiles/cgcli.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/fconlon/Documents/CoreGen/build/CMakeFiles 0
 .PHONY : src/CGCLI/CMakeFiles/cgcli.dir/rule
@@ -917,12 +917,12 @@ src/yaml/yaml-cpp/preinstall: src/yaml/yaml-cpp/util/preinstall
 src/yaml/yaml-cpp/CMakeFiles/releasable.dir/all:
 	$(MAKE) -f src/yaml/yaml-cpp/CMakeFiles/releasable.dir/build.make src/yaml/yaml-cpp/CMakeFiles/releasable.dir/depend
 	$(MAKE) -f src/yaml/yaml-cpp/CMakeFiles/releasable.dir/build.make src/yaml/yaml-cpp/CMakeFiles/releasable.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/fconlon/Documents/CoreGen/build/CMakeFiles --progress-num= "Built target releasable"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/fconlon/Documents/CoreGen/build/CMakeFiles --progress-num=67 "Built target releasable"
 .PHONY : src/yaml/yaml-cpp/CMakeFiles/releasable.dir/all
 
 # Build rule for subdir invocation for target.
 src/yaml/yaml-cpp/CMakeFiles/releasable.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/fconlon/Documents/CoreGen/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/fconlon/Documents/CoreGen/build/CMakeFiles 1
 	$(MAKE) -f CMakeFiles/Makefile2 src/yaml/yaml-cpp/CMakeFiles/releasable.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/fconlon/Documents/CoreGen/build/CMakeFiles 0
 .PHONY : src/yaml/yaml-cpp/CMakeFiles/releasable.dir/rule
@@ -981,7 +981,7 @@ clean: src/yaml/yaml-cpp/CMakeFiles/debuggable.dir/clean
 src/yaml/yaml-cpp/CMakeFiles/yaml-cpp.dir/all:
 	$(MAKE) -f src/yaml/yaml-cpp/CMakeFiles/yaml-cpp.dir/build.make src/yaml/yaml-cpp/CMakeFiles/yaml-cpp.dir/depend
 	$(MAKE) -f src/yaml/yaml-cpp/CMakeFiles/yaml-cpp.dir/build.make src/yaml/yaml-cpp/CMakeFiles/yaml-cpp.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/fconlon/Documents/CoreGen/build/CMakeFiles --progress-num=71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99,100 "Built target yaml-cpp"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/fconlon/Documents/CoreGen/build/CMakeFiles --progress-num=72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99,100 "Built target yaml-cpp"
 .PHONY : src/yaml/yaml-cpp/CMakeFiles/yaml-cpp.dir/all
 
 # Include target in all.
@@ -991,7 +991,7 @@ all: src/yaml/yaml-cpp/CMakeFiles/yaml-cpp.dir/all
 
 # Build rule for subdir invocation for target.
 src/yaml/yaml-cpp/CMakeFiles/yaml-cpp.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/fconlon/Documents/CoreGen/build/CMakeFiles 30
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/fconlon/Documents/CoreGen/build/CMakeFiles 29
 	$(MAKE) -f CMakeFiles/Makefile2 src/yaml/yaml-cpp/CMakeFiles/yaml-cpp.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/fconlon/Documents/CoreGen/build/CMakeFiles 0
 .PHONY : src/yaml/yaml-cpp/CMakeFiles/yaml-cpp.dir/rule
@@ -1072,7 +1072,7 @@ src/yaml/yaml-cpp/util/preinstall:
 src/yaml/yaml-cpp/util/CMakeFiles/sandbox.dir/all: src/yaml/yaml-cpp/CMakeFiles/yaml-cpp.dir/all
 	$(MAKE) -f src/yaml/yaml-cpp/util/CMakeFiles/sandbox.dir/build.make src/yaml/yaml-cpp/util/CMakeFiles/sandbox.dir/depend
 	$(MAKE) -f src/yaml/yaml-cpp/util/CMakeFiles/sandbox.dir/build.make src/yaml/yaml-cpp/util/CMakeFiles/sandbox.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/fconlon/Documents/CoreGen/build/CMakeFiles --progress-num=67,68 "Built target sandbox"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/fconlon/Documents/CoreGen/build/CMakeFiles --progress-num=68,69 "Built target sandbox"
 .PHONY : src/yaml/yaml-cpp/util/CMakeFiles/sandbox.dir/all
 
 # Include target in all.
@@ -1082,7 +1082,7 @@ all: src/yaml/yaml-cpp/util/CMakeFiles/sandbox.dir/all
 
 # Build rule for subdir invocation for target.
 src/yaml/yaml-cpp/util/CMakeFiles/sandbox.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/fconlon/Documents/CoreGen/build/CMakeFiles 32
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/fconlon/Documents/CoreGen/build/CMakeFiles 31
 	$(MAKE) -f CMakeFiles/Makefile2 src/yaml/yaml-cpp/util/CMakeFiles/sandbox.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/fconlon/Documents/CoreGen/build/CMakeFiles 0
 .PHONY : src/yaml/yaml-cpp/util/CMakeFiles/sandbox.dir/rule
@@ -1119,7 +1119,7 @@ all: src/yaml/yaml-cpp/util/CMakeFiles/parse.dir/all
 
 # Build rule for subdir invocation for target.
 src/yaml/yaml-cpp/util/CMakeFiles/parse.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/fconlon/Documents/CoreGen/build/CMakeFiles 32
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/fconlon/Documents/CoreGen/build/CMakeFiles 31
 	$(MAKE) -f CMakeFiles/Makefile2 src/yaml/yaml-cpp/util/CMakeFiles/parse.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/fconlon/Documents/CoreGen/build/CMakeFiles 0
 .PHONY : src/yaml/yaml-cpp/util/CMakeFiles/parse.dir/rule
@@ -1156,7 +1156,7 @@ all: src/yaml/yaml-cpp/util/CMakeFiles/read.dir/all
 
 # Build rule for subdir invocation for target.
 src/yaml/yaml-cpp/util/CMakeFiles/read.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/fconlon/Documents/CoreGen/build/CMakeFiles 32
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/fconlon/Documents/CoreGen/build/CMakeFiles 31
 	$(MAKE) -f CMakeFiles/Makefile2 src/yaml/yaml-cpp/util/CMakeFiles/read.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/fconlon/Documents/CoreGen/build/CMakeFiles 0
 .PHONY : src/yaml/yaml-cpp/util/CMakeFiles/read.dir/rule
@@ -1652,16 +1652,19 @@ test/Plugins/preinstall:
 
 # Convenience name for "all" pass in the directory.
 test/StoneCutter/all: test/StoneCutter/CLI/all
+test/StoneCutter/all: test/StoneCutter/Parser/all
 
 .PHONY : test/StoneCutter/all
 
 # Convenience name for "clean" pass in the directory.
 test/StoneCutter/clean: test/StoneCutter/CLI/clean
+test/StoneCutter/clean: test/StoneCutter/Parser/clean
 
 .PHONY : test/StoneCutter/clean
 
 # Convenience name for "preinstall" pass in the directory.
 test/StoneCutter/preinstall: test/StoneCutter/CLI/preinstall
+test/StoneCutter/preinstall: test/StoneCutter/Parser/preinstall
 
 .PHONY : test/StoneCutter/preinstall
 
@@ -1682,6 +1685,63 @@ test/StoneCutter/CLI/clean:
 test/StoneCutter/CLI/preinstall:
 
 .PHONY : test/StoneCutter/CLI/preinstall
+
+#=============================================================================
+# Directory level rules for directory test/StoneCutter/Parser
+
+# Convenience name for "all" pass in the directory.
+test/StoneCutter/Parser/all: test/StoneCutter/Parser/KnownPass/all
+test/StoneCutter/Parser/all: test/StoneCutter/Parser/KnownFail/all
+
+.PHONY : test/StoneCutter/Parser/all
+
+# Convenience name for "clean" pass in the directory.
+test/StoneCutter/Parser/clean: test/StoneCutter/Parser/KnownPass/clean
+test/StoneCutter/Parser/clean: test/StoneCutter/Parser/KnownFail/clean
+
+.PHONY : test/StoneCutter/Parser/clean
+
+# Convenience name for "preinstall" pass in the directory.
+test/StoneCutter/Parser/preinstall: test/StoneCutter/Parser/KnownPass/preinstall
+test/StoneCutter/Parser/preinstall: test/StoneCutter/Parser/KnownFail/preinstall
+
+.PHONY : test/StoneCutter/Parser/preinstall
+
+#=============================================================================
+# Directory level rules for directory test/StoneCutter/Parser/KnownPass
+
+# Convenience name for "all" pass in the directory.
+test/StoneCutter/Parser/KnownPass/all:
+
+.PHONY : test/StoneCutter/Parser/KnownPass/all
+
+# Convenience name for "clean" pass in the directory.
+test/StoneCutter/Parser/KnownPass/clean:
+
+.PHONY : test/StoneCutter/Parser/KnownPass/clean
+
+# Convenience name for "preinstall" pass in the directory.
+test/StoneCutter/Parser/KnownPass/preinstall:
+
+.PHONY : test/StoneCutter/Parser/KnownPass/preinstall
+
+#=============================================================================
+# Directory level rules for directory test/StoneCutter/Parser/KnownFail
+
+# Convenience name for "all" pass in the directory.
+test/StoneCutter/Parser/KnownFail/all:
+
+.PHONY : test/StoneCutter/Parser/KnownFail/all
+
+# Convenience name for "clean" pass in the directory.
+test/StoneCutter/Parser/KnownFail/clean:
+
+.PHONY : test/StoneCutter/Parser/KnownFail/clean
+
+# Convenience name for "preinstall" pass in the directory.
+test/StoneCutter/Parser/KnownFail/preinstall:
+
+.PHONY : test/StoneCutter/Parser/KnownFail/preinstall
 
 #=============================================================================
 # Special targets to cleanup operation of make.

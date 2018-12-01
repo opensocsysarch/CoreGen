@@ -182,6 +182,33 @@ AnalysisPassObjs/fast:
 	cd /home/fconlon/Documents/CoreGen/build && $(MAKE) -f src/CoreGenBackend/Passes/Analysis/CMakeFiles/AnalysisPassObjs.dir/build.make src/CoreGenBackend/Passes/Analysis/CMakeFiles/AnalysisPassObjs.dir/build
 .PHONY : AnalysisPassObjs/fast
 
+ASPSolverPass.o: ASPSolverPass.cpp.o
+
+.PHONY : ASPSolverPass.o
+
+# target to build an object file
+ASPSolverPass.cpp.o:
+	cd /home/fconlon/Documents/CoreGen/build && $(MAKE) -f src/CoreGenBackend/Passes/Analysis/CMakeFiles/AnalysisPassObjs.dir/build.make src/CoreGenBackend/Passes/Analysis/CMakeFiles/AnalysisPassObjs.dir/ASPSolverPass.cpp.o
+.PHONY : ASPSolverPass.cpp.o
+
+ASPSolverPass.i: ASPSolverPass.cpp.i
+
+.PHONY : ASPSolverPass.i
+
+# target to preprocess a source file
+ASPSolverPass.cpp.i:
+	cd /home/fconlon/Documents/CoreGen/build && $(MAKE) -f src/CoreGenBackend/Passes/Analysis/CMakeFiles/AnalysisPassObjs.dir/build.make src/CoreGenBackend/Passes/Analysis/CMakeFiles/AnalysisPassObjs.dir/ASPSolverPass.cpp.i
+.PHONY : ASPSolverPass.cpp.i
+
+ASPSolverPass.s: ASPSolverPass.cpp.s
+
+.PHONY : ASPSolverPass.s
+
+# target to generate assembly for a file
+ASPSolverPass.cpp.s:
+	cd /home/fconlon/Documents/CoreGen/build && $(MAKE) -f src/CoreGenBackend/Passes/Analysis/CMakeFiles/AnalysisPassObjs.dir/build.make src/CoreGenBackend/Passes/Analysis/CMakeFiles/AnalysisPassObjs.dir/ASPSolverPass.cpp.s
+.PHONY : ASPSolverPass.cpp.s
+
 CacheLevelPass.o: CacheLevelPass.cpp.o
 
 .PHONY : CacheLevelPass.o
@@ -655,6 +682,9 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... install"
+	@echo "... ASPSolverPass.o"
+	@echo "... ASPSolverPass.i"
+	@echo "... ASPSolverPass.s"
 	@echo "... CacheLevelPass.o"
 	@echo "... CacheLevelPass.i"
 	@echo "... CacheLevelPass.s"
