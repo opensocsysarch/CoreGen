@@ -23,6 +23,7 @@ bool CoreGenInstFormat::InsertField( std::string Name, unsigned StartBit,
   if( StartBit > EndBit ){
     return false;
   }
+  //QUESTION: Where did this vector come from?
   Format.push_back(
     std::tuple< std::string,unsigned,
                 unsigned,CGInstField,bool>(Name,StartBit,

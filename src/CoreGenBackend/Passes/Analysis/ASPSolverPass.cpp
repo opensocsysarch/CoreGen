@@ -31,7 +31,7 @@ bool ASPSolverPass::Execute(){
                      std::to_string(this->GetLevel()));
     return false;
   }
-
+  std::ofstream out("aspdag.lp");
   if( this->GetInStr().length() == 0 ){
     WriteMsg( "Error: not input ASP rule defined" );
     Errno->SetError( CGERR_STATUS, this->GetName() +

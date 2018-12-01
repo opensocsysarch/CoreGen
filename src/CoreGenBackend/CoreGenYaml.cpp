@@ -1669,6 +1669,10 @@ bool CoreGenYaml::ReadInstFormatYaml(const YAML::Node& InstFormatNodes,
       return false;
     }
     std::string Name = Node["InstFormatName"].as<std::string>();
+    std::string ASPName = PrepForASP(Name);
+    std::string ASP = "";
+
+    ASP += "instFormat(" + ASPName + ".)\n";
 
     if( !CheckValidNode(Node,"ISA") ){
       PrintParserError(Node,
@@ -1677,6 +1681,10 @@ bool CoreGenYaml::ReadInstFormatYaml(const YAML::Node& InstFormatNodes,
       return false;
     }
     std::string ISA = Node["ISA"].as<std::string>();
+    std::string ASPISA = PrepForASP(ISA);
+
+    //QUESTION: How needed is this?
+    ASP += "instFormatISA(" + ASPName + ", " + ASPISA + ").\n";
 #if 0
     int FormatWidth = Node["FormatWidth"].as<int>();
 #endif
@@ -1730,15 +1738,23 @@ bool CoreGenYaml::ReadInstFormatYaml(const YAML::Node& InstFormatNodes,
           return false;
         }
         std::string FieldName = LFNode["FieldName"].as<std::string>();
+        std::string ASPFieldName = PrepForASP(FieldName);
+
+        //QUESTION: Make sure field name is not unique
+        ASP += "field(" + ASPFieldName + ").\n";
+        ASP += "instFormatField(" + ASPName + ", " + ASPFieldName + ").\n";
 
         if( !CheckValidNode(LFNode,"FieldType") ){
           PrintParserError(LFNode, "Fields", "FieldType" );
           return false;
         }
         std::string FieldType = LFNode["FieldType"].as<std::string>();
+
+        ASP += "fieldType(" + ASPFieldName + ", " + PrepForASP(FieldType) + ").\n";
 #if 0
         // currently unused
         int FieldWidth = LFNode["FieldWidth"].as<int>();
+        ASP += "fieldWidth(" + ASPFieldName + ", " + std::to_string(FieldWidth) + ").\n";
 #endif
         if( !CheckValidNode(LFNode,"StartBit") ){
           PrintParserError(LFNode,"Fields","StartBit");
@@ -1746,11 +1762,15 @@ bool CoreGenYaml::ReadInstFormatYaml(const YAML::Node& InstFormatNodes,
         }
         int StartBit = LFNode["StartBit"].as<int>();
 
+        ASP += "fieldStartBit(" + ASPFieldName + ", " + std::to_string(StartBit) + ").\n";
+
         if( !CheckValidNode(LFNode,"EndBit") ){
           PrintParserError(LFNode,"Fields","EndBit");
           return false;
         }
         int EndBit = LFNode["EndBit"].as<int>();
+
+        ASP += "fieldEndBit(" + ASPFieldName + ", " + std::to_string(EndBit) + ").\n";
 
         if( !CheckValidNode(LFNode,"MandatoryField") ){
           PrintParserError(LFNode,"Fields","MandatoryField");
@@ -1758,6 +1778,16 @@ bool CoreGenYaml::ReadInstFormatYaml(const YAML::Node& InstFormatNodes,
         }
         bool Mand = LFNode["MandatoryField"].as<bool>();
 
+        ASP += "fieldIsMandatory(" + ASPFieldName + ", ";
+
+        if(Mand){
+          ASP += "true).\n";
+        }
+        else {
+          ASP += "false).\n";
+        }
+
+        //ASPNOTE: Already described earlier
         CoreGenInstFormat::CGInstField FT;
         if( FieldType == "CGInstReg" ){
           FT = CoreGenInstFormat::CGInstReg;
@@ -1780,6 +1810,8 @@ bool CoreGenYaml::ReadInstFormatYaml(const YAML::Node& InstFormatNodes,
             return false;
           }
           std::string RegClass = LFNode["RegClass"].as<std::string>();
+          std::string ASPRegClass = PrepForASP(RegClass);
+
           CoreGenRegClass *RC = nullptr;
           for( unsigned k=0; k<RegClasses.size(); k++ ){
             if( RegClasses[k]->GetName() == RegClass ){
@@ -1793,6 +1825,9 @@ bool CoreGenYaml::ReadInstFormatYaml(const YAML::Node& InstFormatNodes,
                       + std::to_string(GetLineNum(LFNode["RegClass"])));
             return false;
           }
+
+          ASP += "fieldRegClass(" + ASPFieldName + ", " + ASPRegClass + ").\n";
+
           if( !IF->InsertRegFieldMap(FieldName,RC) ){
             Errno->SetError(CGERR_ERROR,
                   "Error: Could not insert register field mapping into InstructionFormat"
@@ -1809,6 +1844,8 @@ bool CoreGenYaml::ReadInstFormatYaml(const YAML::Node& InstFormatNodes,
     if( CheckValidNode(Node,"RTLFile") ){
       IF->SetRTLFile( Node["RTLFile"].as<std::string>());
     }
+
+    IF->AppendASP(ASP);
 
     Formats.push_back(IF);
   }
@@ -1950,23 +1987,30 @@ bool CoreGenYaml::ReadPseudoInstYaml(const YAML::Node& PInstNodes,
 
 bool CoreGenYaml::ReadCacheYaml(const YAML::Node& CacheNodes,
                                 std::vector<CoreGenCache *> &Caches){
-  std::ofstream mystream("aspdag.lp", std::ios::app);
+  //std::ofstream mystream("aspdag.lp", std::ios::app);
 
   for( unsigned i=0; i<CacheNodes.size(); i++ ){
     const YAML::Node& Node = CacheNodes[i];
 
     std::string Name = Node["Cache"].as<std::string>();
     std::string ASPName = PrepForASP(Name);
+    std::string ASP = "";
     int Sets = Node["Sets"].as<int>();
     int Ways = Node["Ways"].as<int>();
 
-    mystream << "cache(" << ASPName << ")." << std::endl;
-    mystream << "cacheSets(" << ASPName << ", "  << Sets << ")." << std::endl;
-    mystream << "cacheWays(" << ASPName << ", "  << Ways << ")." << std::endl;
+    //mystream << "cache(" << ASPName << ")." << std::endl;
+    //mystream << "cacheSets(" << ASPName << ", "  << Sets << ")." << std::endl;
+    //mystream << "cacheWays(" << ASPName << ", "  << Ways << ")." << std::endl;
+
+    ASP += "cache(" + ASPName + ").\n";
+    ASP += "cacheSets(" + ASPName + ", " + std::to_string(Sets) + ").\n";
+    ASP += "cacheWays(" + ASPName + ", " + std::to_string(Ways) + ").\n";
 
     std::string SubLevel;
+    std::string ASPSubLevel;
     if( Node["SubLevel"] ){
       SubLevel = Node["SubLevel"].as<std::string>();
+      ASPSubLevel = PrepForASP(SubLevel);
     }
 
     CoreGenCache *C = new CoreGenCache( Name, Sets, Ways, Errno );
@@ -1985,9 +2029,15 @@ bool CoreGenYaml::ReadCacheYaml(const YAML::Node& CacheNodes,
       if( SC == nullptr ){
         return false;
       }
-      mystream << "isParentCache(" << ASPName << ")." << std::endl;
-      mystream << "isChildCache(" << PrepForASP(SC->GetName()) << ")." << std::endl;
-      mystream << "parentCacheOf(" << ASPName << ", " << PrepForASP(SC->GetName()) << ")." << std::endl;
+      //this line can be done for all caches in one rule
+      //TODO: Add rule for this line to ASPSolverPass
+      //mystream << "isParentCache(" << ASPName << ")." << std::endl;
+
+      //mystream << "isChildCache(" << PrepForASP(SC->GetName()) << ")." << std::endl;
+      //mystream << "parentCacheOf(" << ASPName << ", " << PrepForASP(SC->GetName()) << ")." << std::endl;
+
+      ASP += "cacheParentOf(" + ASPName + ", " + ASPSubLevel + ").\n";
+      ASP += "cacheChildeOf(" + ASPSubLevel + ", " + ASPName + ").\n";
       C->SetChildCache( SC );
       SC->SetParentCache( C );  // set the parent of the child
     }
@@ -1999,10 +2049,12 @@ bool CoreGenYaml::ReadCacheYaml(const YAML::Node& CacheNodes,
       C->SetRTLFile( Node["RTLFile"].as<std::string>());
     }
 
+    C->AppendASP(ASP);
+
     Caches.push_back(C);
   }
 
-  mystream.close();
+  //mystream.close();
   return true;
 }
 
