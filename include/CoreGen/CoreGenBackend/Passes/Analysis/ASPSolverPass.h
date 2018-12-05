@@ -30,12 +30,16 @@
 
 class ASPSolverPass : public CoreGenPass{
 private:
+  std::vector<std::string> Files;
 public:
   /// Default constructor
   ASPSolverPass(std::ostream *O, CoreGenDAG *D, CoreGenErrno *E);
 
   /// Default destructor
   ~ASPSolverPass();
+
+  ///Set the files for each ASP Test
+  void SetFiles(std::vector<std::string>);
 
   /// Execute the pass
   virtual bool Execute() override;

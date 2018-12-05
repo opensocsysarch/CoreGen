@@ -21,6 +21,10 @@ ASPSolverPass::ASPSolverPass(std::ostream *O,
 ASPSolverPass::~ASPSolverPass(){
 }
 
+void ASPSolverPass::SetFiles(std::vector<std::string> F){
+  Files = F;
+}
+
 bool ASPSolverPass::Execute(){
   // Get the correct DAG level: 3
   CoreGenDAG *D3 = DAG->GetDAGFromLevel(this->GetLevel());
@@ -31,17 +35,24 @@ bool ASPSolverPass::Execute(){
                      std::to_string(this->GetLevel()));
     return false;
   }
-  std::ofstream out("aspdag.lp");
-  if( this->GetInStr().length() == 0 ){
-    WriteMsg( "Error: no input ASP rule defined" );
+
+  if( this->Files.size() == 0 ){
+    WriteMsg( "Error: no input ASP rules given" );
     Errno->SetError( CGERR_STATUS, this->GetName() +
-                     " : no ASP rule defined" );
+                     " : no ASP rules given" );
     return false;
   }
 
+  // this string contains the Path of the target
+  // ASP rule set(s)
+  std::string ASPPath = this->GetInStr();
+  std::string ASPDagFile = ASPPath + "/aspdag.lp";
+
+  std::ofstream out(ASPDagFile);
+
   // this string contains the file name of your target
   // ASP rule set
-  std::string ASPFile = this->GetInStr();
+  //std::string ASPFile = this->GetInStr();
 
   // return value
   bool rtn = true;
@@ -58,6 +69,18 @@ bool ASPSolverPass::Execute(){
   }
   out.close();
 
+  for(unsigned i = 0; i < Files.size(); i++){
+    std::string cmd = "clingo " + ASPDagFile + ASPPath + "/" + Files[i];
+    std::cout << "  " << Files[i] + "\t";
+    if (system(cmd.c_str()) == 7680){
+      std::cout << "PASSED" << std::endl;
+    }
+    else{
+      std::cout << "FAILED" << std::endl;
+      rtn = false;
+    }
+  }
+/*
   std::string cmd = "clingo aspdag.lp " + ASPFile;
   if (system(cmd.c_str()) == 7680){
     rtn = true;
@@ -65,7 +88,7 @@ bool ASPSolverPass::Execute(){
   else{
     rtn = false;
   }
-
+*/
   return rtn;
 }
 

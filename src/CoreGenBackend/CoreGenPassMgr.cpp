@@ -370,4 +370,9 @@ bool CoreGenPassMgr::PrintSysPassInfo(){
   return true;
 }
 
+void CoreGenPassMgr::SetASPFiles(std::vector<std::string> Files){
+  ASPSolverPass *A = (ASPSolverPass *)SysPasses[1];
+  A->SetFiles(Files);
+}
+
 // EOF

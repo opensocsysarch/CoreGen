@@ -65,7 +65,7 @@ void CGCLIOpts::PrintOptions(){
   std::cout << "\t--enable-opt-passes                   : Enable all optimization passes" << std::endl;
   std::cout << "\t--list-passes                         : List all the passes and return" << std::endl;
   std::cout << "\t--list-sys-passes                     : List all the system passes" << std::endl;
-  std::cout << "\t--asp \"ASP Text\"                      : Execute ASP solver with input" << std::endl;
+  std::cout << "\t--asp \"PROG1,PROG2,...\"                      : Execute ASP solver with input" << std::endl;
   std::cout << std::endl;
 }
 
@@ -356,15 +356,15 @@ bool CGCLIOpts::ParseOpts( int argc, char **argv ){
       ExecSysPass = true;
       Verify = true;
       i++;
-    }else if( s == "--asp" ){
+    }else if( s == "--asp" || s == "-asp" ){
       // ASP pass selection
       if( i+1 > (argc-1) ){
         std::cout << "Error : --asp requires an argument" << std::endl;
         return false;
       }
       std::string P(argv[i+1]);
-      ASP = P;
-      if( ASP.length() == 0 ){
+      ASPFiles = ParsePasses(P);
+      if( ASPFiles.size() == 0 ){
         std::cout << "Error : ASP string must be non null" << std::endl;
         return false;
       }
@@ -415,7 +415,7 @@ bool CGCLIOpts::ParseOpts( int argc, char **argv ){
   }
 
   if( !ExecPass && ((EnablePass.size()>0)||(DisablePass.size()>0)) ){
-    std::cout << "Warning: individual passes selected, but passes will not be executed" 
+    std::cout << "Warning: individual passes selected, but passes will not be executed"
       << std::endl;
     std::cout << "Add \"--pass\" to your command line arguments" << std::endl;
   }

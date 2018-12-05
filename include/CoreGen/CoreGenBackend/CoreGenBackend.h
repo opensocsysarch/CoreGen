@@ -253,6 +253,9 @@ public:
 
   /// Retrieve an object pointer to the target plugin
   CoreGenPlugin *GetPlugin( std::string Plugin );
+
+  /// Set the ASP Files to Test
+  void SetASPFiles(std::vector<std::string>);
 };
 
 #endif

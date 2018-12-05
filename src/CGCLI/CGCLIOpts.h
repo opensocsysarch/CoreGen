@@ -43,11 +43,12 @@ private:
   std::string ProjName; ///< CGCLIOpts: Project Name
   std::string ProjRoot; ///< CGCLIOpts: Project Root
   std::string Archive;  ///< CGCLIOpts: Archive Path
-  std::string ASP;      ///< CGCLIOpts: ASP Input text
+  //std::string ASP;      ///< CGCLIOpts: ASP Input text
 
   std::vector<std::string> EnablePass;  ///< CGCLIOpts: Manually enabled passes
   std::vector<std::string> DisablePass; ///< CGCLIOpts: Manually disabled passes
   std::vector<std::string> Plugins;     ///< CGCLIOpts: Plugins for checking
+  std::vector<std::string> ASPFiles;
 
   std::vector<std::tuple<std::string,bool,std::string>> EnableSysPass; ///< CGCLIOpts: Enabled System Passes
 
@@ -141,7 +142,7 @@ public:
   unsigned GetNumPlugins() { return Plugins.size(); }
 
   /// Retrieve the ASP input string
-  std::string GetASPStr() { return ASP; }
+  std::vector<std::string> GetASPFiles() { return ASPFiles; }
 
   /// Retrieve the target plugin name
   std::string GetPlugin(unsigned P){

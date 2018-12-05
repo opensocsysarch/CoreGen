@@ -2040,7 +2040,7 @@ bool CoreGenYaml::ReadCacheYaml(const YAML::Node& CacheNodes,
       ASP += "cacheParentOf(" + ASPName + ", " + ASPSubLevel + ").\n";
       C->SetChildCache( SC );
       SC->SetParentCache( C );  // set the parent of the child
-      SC->AppendASP("cacheChildeOf(" + ASPSubLevel + ", " + ASPName + ").\n");
+      SC->AppendASP("cacheChildOf(" + ASPSubLevel + ", " + ASPName + ").\n");
     }
 
     if( Node["RTL"] ){

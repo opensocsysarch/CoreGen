@@ -531,4 +531,8 @@ CoreGenPlugin *CoreGenBackend::GetPlugin( std::string Plugin ){
   return PluginMgr->GetPlugin(Plugin);
 }
 
+void CoreGenBackend::SetASPFiles(std::vector<std::string> Files){
+  PassMgr->SetASPFiles(Files);
+}
+
 // EOF
