@@ -587,6 +587,8 @@ CoreGen/CoreGenBackend/CoreGenDAG.h
 ../include/CoreGen/CoreGenBackend/Passes/Analysis/CoreGen/CoreGenBackend/CoreGenDAG.h
 CoreGen/CoreGenBackend/CoreGenErrno.h
 ../include/CoreGen/CoreGenBackend/Passes/Analysis/CoreGen/CoreGenBackend/CoreGenErrno.h
+CoreGen/CoreGenBackend/CoreGenUtil.h
+../include/CoreGen/CoreGenBackend/Passes/Analysis/CoreGen/CoreGenBackend/CoreGenUtil.h
 
 ../include/CoreGen/CoreGenBackend/Passes/Analysis/CacheLevelPass.h
 iostream

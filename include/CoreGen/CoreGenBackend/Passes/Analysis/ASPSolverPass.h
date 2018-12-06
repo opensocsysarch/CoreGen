@@ -27,6 +27,7 @@
 #include "CoreGen/CoreGenBackend/CoreGenPass.h"
 #include "CoreGen/CoreGenBackend/CoreGenDAG.h"
 #include "CoreGen/CoreGenBackend/CoreGenErrno.h"
+#include "CoreGen/CoreGenBackend/CoreGenUtil.h"
 
 class ASPSolverPass : public CoreGenPass{
 private:

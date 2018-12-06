@@ -70,8 +70,13 @@ bool ASPSolverPass::Execute(){
   out.close();
 
   for(unsigned i = 0; i < Files.size(); i++){
-    std::string cmd = "clingo " + ASPDagFile + ASPPath + "/" + Files[i];
-    std::cout << "  " << Files[i] + "\t";
+    double StartT = CGGetWallTime();
+    std::string cmd = "clingo " + ASPDagFile + " " + ASPPath + "/" + Files[i] + " > /dev/null";
+    double EndT = CGGetWallTime();
+    std::cout << "  " << Files[i];
+    CGPrintDots( Files[i].length() + 2, 30 );
+    std::cout << EndT - StartT;
+    CGPrintDots( CGDoubleToStr(EndT - StartT).length(), 30 );
     if (system(cmd.c_str()) == 7680){
       std::cout << "PASSED" << std::endl;
     }
