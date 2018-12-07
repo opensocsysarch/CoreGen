@@ -626,450 +626,258 @@ Caches:
     Sets: 1
     Ways: 1
     SubLevel: TEST39.L2.cache
-  - Cache: TEST39.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST39.core1.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST39.L2.cache
-  - Cache: TEST39.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST39.core2.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST39.L2.cache
-  - Cache: TEST39.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST39.core3.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST39.L2.cache
-  - Cache: TEST39.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST39.core4.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST39.L2.cache
-  - Cache: TEST39.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST39.core5.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST39.L2.cache
-  - Cache: TEST39.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST39.core6.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST39.L2.cache
-  - Cache: TEST39.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST39.core7.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST39.L2.cache
-  - Cache: TEST39.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST39.core8.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST39.L2.cache
-  - Cache: TEST39.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST39.core9.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST39.L2.cache
-  - Cache: TEST39.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST39.core10.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST39.L2.cache
-  - Cache: TEST39.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST39.core11.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST39.L2.cache
-  - Cache: TEST39.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST39.core12.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST39.L2.cache
-  - Cache: TEST39.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST39.core13.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST39.L2.cache
-  - Cache: TEST39.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST39.core14.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST39.L2.cache
-  - Cache: TEST39.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST39.core15.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST39.L2.cache
-  - Cache: TEST39.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST39.core16.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST39.L2.cache
-  - Cache: TEST39.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST39.core17.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST39.L2.cache
-  - Cache: TEST39.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST39.core18.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST39.L2.cache
-  - Cache: TEST39.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST39.core19.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST39.L2.cache
-  - Cache: TEST39.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST39.core20.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST39.L2.cache
-  - Cache: TEST39.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST39.core21.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST39.L2.cache
-  - Cache: TEST39.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST39.core22.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST39.L2.cache
-  - Cache: TEST39.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST39.core23.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST39.L2.cache
-  - Cache: TEST39.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST39.core24.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST39.L2.cache
-  - Cache: TEST39.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST39.core25.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST39.L2.cache
-  - Cache: TEST39.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST39.core26.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST39.L2.cache
-  - Cache: TEST39.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST39.core27.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST39.L2.cache
-  - Cache: TEST39.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST39.core28.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST39.L2.cache
-  - Cache: TEST39.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST39.core29.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST39.L2.cache
-  - Cache: TEST39.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST39.core30.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST39.L2.cache
-  - Cache: TEST39.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST39.core31.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST39.L2.cache
-  - Cache: TEST39.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST39.core32.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST39.L2.cache
-  - Cache: TEST39.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST39.core33.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST39.L2.cache
-  - Cache: TEST39.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST39.core34.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST39.L2.cache
-  - Cache: TEST39.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST39.core35.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST39.L2.cache
-  - Cache: TEST39.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST39.core36.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST39.L2.cache
-  - Cache: TEST39.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST39.core37.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST39.L2.cache
-  - Cache: TEST39.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST39.core38.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST39.L2.cache
-  - Cache: TEST39.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST39.core39.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST39.L2.cache
-  - Cache: TEST39.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST39.core40.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST39.L2.cache
-  - Cache: TEST39.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST39.core41.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST39.L2.cache
-  - Cache: TEST39.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST39.core42.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST39.L2.cache
-  - Cache: TEST39.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST39.core43.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST39.L2.cache
-  - Cache: TEST39.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST39.core44.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST39.L2.cache
-  - Cache: TEST39.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST39.core45.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST39.L2.cache
-  - Cache: TEST39.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST39.core46.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST39.L2.cache
-  - Cache: TEST39.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST39.core47.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST39.L2.cache
-  - Cache: TEST39.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST39.core48.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST39.L2.cache
-  - Cache: TEST39.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST39.core49.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST39.L2.cache
-  - Cache: TEST39.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST39.core50.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST39.L2.cache
-  - Cache: TEST39.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST39.core51.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST39.L2.cache
-  - Cache: TEST39.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST39.core52.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST39.L2.cache
-  - Cache: TEST39.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST39.core53.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST39.L2.cache
-  - Cache: TEST39.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST39.core54.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST39.L2.cache
-  - Cache: TEST39.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST39.core55.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST39.L2.cache
-  - Cache: TEST39.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST39.core56.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST39.L2.cache
-  - Cache: TEST39.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST39.core57.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST39.L2.cache
-  - Cache: TEST39.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST39.core58.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST39.L2.cache
-  - Cache: TEST39.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST39.core59.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST39.L2.cache
-  - Cache: TEST39.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST39.core60.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST39.L2.cache
-  - Cache: TEST39.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST39.core61.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST39.L2.cache
-  - Cache: TEST39.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST39.core62.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST39.L2.cache
-  - Cache: TEST39.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST39.core63.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST39.L2.cache
-  - Cache: TEST39.L2.cache
-    Sets: 2
-    Ways: 8
 Cores:
   - Core: TEST39.core0
     Cache: TEST39.core0.L1.cache

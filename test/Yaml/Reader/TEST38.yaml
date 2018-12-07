@@ -626,16 +626,10 @@ Caches:
     Sets: 1
     Ways: 1
     SubLevel: TEST38.L2.cache
-  - Cache: TEST38.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST38.core2.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST38.L2.cache
-  - Cache: TEST38.L2.cache
-    Sets: 2
-    Ways: 8
 Cores:
   - Core: TEST38.core1
     Cache: TEST38.core1.L1.cache
