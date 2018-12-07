@@ -93,6 +93,10 @@ int ExecuteCoregen( CGCLIOpts *Opts ){
     }else{
       // run individual passes
       std::vector<std::string> Passes = CG->GetPasses();
+      if( !Opts->CheckManualPassList(Passes) ){
+        delete CG;
+        return -1;
+      }
       for( unsigned i=0; i<Passes.size(); i++ ){
         if( Opts->IsPassEnabled( Passes[i] ) ){
           if( !CG->ExecutePass( Passes[i] ) ){
@@ -102,7 +106,7 @@ int ExecuteCoregen( CGCLIOpts *Opts ){
             return -1;
           }
         }
-      }
+      }//end for i->Passes.size()
     }
   }// IsPassEnabled
 

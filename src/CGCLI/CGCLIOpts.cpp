@@ -318,8 +318,9 @@ bool CGCLIOpts::ParseOpts( int argc, char **argv ){
       }
       // parse the pass names
       std::string P(argv[i+1]);
-      EnablePass = ParsePasses(P);
-      if( EnablePass.size() > 0 ){
+      std::vector<std::string> tmpV1 = ParsePasses(P);
+      EnablePass.insert(EnablePass.end(), tmpV1.begin(), tmpV1.end());
+      if( tmpV1.size() > 0 ){
         ManualPasses = true;
       }else{
         std::cout << "Error : --enable-pass requires an argument" << std::endl;
@@ -334,8 +335,9 @@ bool CGCLIOpts::ParseOpts( int argc, char **argv ){
       }
       // parse the pass names
       std::string P(argv[i+1]);
-      DisablePass = ParsePasses(P);
-      if( DisablePass.size() > 0 ){
+      std::vector<std::string> tmpV2 = ParsePasses(P);
+      DisablePass.insert(DisablePass.end(), tmpV2.begin(), tmpV2.end());
+      if( tmpV2.size() > 0 ){
         ManualPasses = true;
       }else{
         std::cout << "Error : --disable-pass requires an argument" << std::endl;
@@ -421,6 +423,33 @@ bool CGCLIOpts::ParseOpts( int argc, char **argv ){
   }
 
   return true;
+}
+
+bool CGCLIOpts::CheckManualPassList(std::vector<std::string> Passes){
+
+  bool rtn = true;
+
+  // check the EnablePass vector
+  for( unsigned i=0; i<EnablePass.size(); i++ ){
+    std::vector<std::string>::iterator it;
+    it = std::find(Passes.begin(),Passes.end(),EnablePass[i]);
+    if( it == Passes.end() ){
+      std::cout << "Unknown Enabled Pass: " << EnablePass[i] << std::endl;
+      rtn = false;
+    }
+  }
+
+  // check the DisablePass vector
+  for( unsigned i=0; i<DisablePass.size(); i++ ){
+    std::vector<std::string>::iterator it;
+    it = std::find(Passes.begin(),Passes.end(),DisablePass[i]);
+    if( it == Passes.end() ){
+      std::cout << "Unknown Disabled Pass: " << DisablePass[i] << std::endl;
+      rtn = false;
+    }
+  }
+
+  return rtn;
 }
 
 // EOF
