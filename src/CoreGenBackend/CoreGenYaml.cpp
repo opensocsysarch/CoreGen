@@ -2173,6 +2173,16 @@ bool CoreGenYaml::ReadCoreYaml(const YAML::Node& CoreNodes,
       ISAName = Node["ISA"].as<std::string>();
     }
 
+    std::string ASPName = PrepForASP(Name);
+    std::string ASPCache = PrepForASP(Cache);
+    std::string ASPISAName = PrepForASP(ISAName);
+    std::string ASP = "";
+
+    //QUESTION: Can a core have more than one cache?
+    ASP += "core(" + ASPName + ").\n";
+    ASP += "coreCache(" + ASPName + ", " + ASPCache + ").\n";
+    ASP += "coreISA(" + ASPName + ", " + ASPISAName + ").\n";
+
     // handle the isa
     CoreGenISA *ISA = nullptr;
     for( unsigned j=0; j<ISAs.size(); j++ ){
@@ -2197,6 +2207,8 @@ bool CoreGenYaml::ReadCoreYaml(const YAML::Node& CoreNodes,
         return false;
       }
       ThreadUnits = Node["ThreadUnits"].as<unsigned>();
+      std::string TU = Node["ThreadUnits"].as<std::string>();
+      ASP += "coreThreadUnits(" + ASPName + ", " + TU + ").\n";
       if( !C->SetNumThreadUnits(ThreadUnits) ){
         return false;
       }
@@ -2222,6 +2234,8 @@ bool CoreGenYaml::ReadCoreYaml(const YAML::Node& CoreNodes,
       for( unsigned k=0; k<FNode.size(); k++ ){
         const YAML::Node& LFNode = FNode[k];
         std::string RegClassName = LFNode["RegClass"].as<std::string>();
+        std::string ASPRCName = PrepForASP(RegClassName);
+        ASP += "coreRegClass(" + ASPName + ", " + ASPRCName + ").\n";
         CoreGenRegClass *RC = nullptr;
         for( unsigned a=0; a<RegClasses.size(); a++ ){
           if( RegClasses[a]->GetName() == RegClassName ){
@@ -2242,6 +2256,8 @@ bool CoreGenYaml::ReadCoreYaml(const YAML::Node& CoreNodes,
       C->SetRTLFile( Node["RTLFile"].as<std::string>());
     }
 
+    C->AppendASP(ASP);
+
     if( IsDuplicate(Node,
                     static_cast<CoreGenNode *>(C),
                     std::vector<CoreGenNode *>(Cores.begin(),Cores.end()) ) ){
@@ -2258,6 +2274,10 @@ bool CoreGenYaml::ReadSocYaml(const YAML::Node& SocNodes,
   for( unsigned i=0; i<SocNodes.size(); i++ ){
     const YAML::Node& Node = SocNodes[i];
     std::string Name = Node["Soc"].as<std::string>();
+    std::string ASPName = PrepForASP(Name);
+    std::string ASP = "";
+
+    ASP += "soc(" + ASPName + ").\n";
 
     CoreGenSoC *S = new CoreGenSoC( Name, Errno );
     if( S == nullptr ){
@@ -2270,6 +2290,8 @@ bool CoreGenYaml::ReadSocYaml(const YAML::Node& SocNodes,
       for( unsigned j=0; j<FNode.size(); j++ ){
         const YAML::Node& LFNode = FNode[j];
         std::string CoreName = LFNode["Core"].as<std::string>();
+        std::string ASPSocCN = PrepForASP(CoreName);
+        ASP += "socCore(" + ASPName + ", " + ASPSocCN + ").\n";
         CoreGenCore *C = nullptr;
         for( unsigned k=0; k<Cores.size(); k++ ){
           if( Cores[k]->GetName() == CoreName ){
@@ -2290,6 +2312,8 @@ bool CoreGenYaml::ReadSocYaml(const YAML::Node& SocNodes,
       S->SetRTLFile( Node["RTLFile"].as<std::string>());
     }
 
+    S->AppendASP(ASP);
+
     if( IsDuplicate(Node,
                     static_cast<CoreGenNode *>(S),
                     std::vector<CoreGenNode *>(Socs.begin(),Socs.end()) ) ){
@@ -2300,11 +2324,16 @@ bool CoreGenYaml::ReadSocYaml(const YAML::Node& SocNodes,
   return true;
 }
 
+//QUESTION: What is a Spad?
 bool CoreGenYaml::ReadSpadYaml(const YAML::Node& SpadNodes,
                                std::vector<CoreGenSpad *> &Spads){
   for( unsigned i=0; i<SpadNodes.size(); i++ ){
     const YAML::Node& Node = SpadNodes[i];
     std::string Name = Node["Scratchpad"].as<std::string>();
+    std::string ASPName = PrepForASP(Name);
+    std::string ASP = "";
+
+    ASP += "spad(" + ASPName + ").\n";
 
     unsigned MemSize = 0;
     unsigned RqstPorts = 0;
@@ -2312,15 +2341,23 @@ bool CoreGenYaml::ReadSpadYaml(const YAML::Node& SpadNodes,
     uint64_t StartAddr = 0x00ull;
     if( Node["MemSize"] ){
       MemSize = Node["MemSize"].as<unsigned>();
+      std::string ASPMemSize = std::to_string(MemSize);
+      ASP += "spadMemSize(" + ASPName + ", " + ASPMemSize + ").\n";
     }
     if( Node["RqstPorts"] ){
       RqstPorts = Node["RqstPorts"].as<unsigned>();
+      std::string ASPRqstPorts = std::to_string(RqstPorts);
+      ASP += "spadRqstPorts(" + ASPName + ", " + ASPRqstPorts + ").\n";
     }
     if( Node["RspPorts"] ){
       RspPorts = Node["RspPorts"].as<unsigned>();
+      std::string ASPRspPorts = std::to_string(RspPorts);
+      ASP += "spadRspPorts(" + ASPName + ", " + ASPRspPorts + ").\n";
     }
     if( Node["StartAddr"] ){
       StartAddr = Node["StartAddr"].as<uint64_t>();
+      std::string ASPStartAddr = std::to_string(StartAddr);
+      ASP += "spadStartAddr(" + ASPName + ", " + ASPStartAddr + ").\n";
     }
 
     CoreGenSpad *S = new CoreGenSpad(Name,Errno,MemSize,
@@ -2334,6 +2371,7 @@ bool CoreGenYaml::ReadSpadYaml(const YAML::Node& SpadNodes,
     }
 
     S->SetStartAddr( StartAddr );
+    S->AppendASP(ASP);
 
     if( IsDuplicate(Node,
                     static_cast<CoreGenNode *>(S),
@@ -2350,12 +2388,17 @@ bool CoreGenYaml::ReadMCtrlYaml(const YAML::Node& MCtrlNodes,
   for( unsigned i=0; i<MCtrlNodes.size(); i++ ){
     const YAML::Node& Node = MCtrlNodes[i];
     std::string Name = Node["MemoryController"].as<std::string>();
+    std::string ASPName = PrepForASP(Name);
+    std::string ASP = "";
+
+    ASP += "memCtrl(" + ASPName + ").\n";
 
     unsigned Ports = 0;
     if( Node["Ports"] ){
       Ports = Node["Ports"].as<unsigned>();
     }
 
+    ASP += "memCtrlPorts" + ASPName + ", " + std::to_string(Ports) + ").\n";
     CoreGenMCtrl *M = new CoreGenMCtrl(Name,Errno,Ports);
 
     if( Node["RTL"] ){
@@ -2364,6 +2407,8 @@ bool CoreGenYaml::ReadMCtrlYaml(const YAML::Node& MCtrlNodes,
     if( Node["RTLFile"] ){
       M->SetRTLFile( Node["RTLFile"].as<std::string>());
     }
+
+    M->AppendASP(ASP);
 
     if( IsDuplicate(Node,
                     static_cast<CoreGenNode *>(M),
@@ -2375,14 +2420,16 @@ bool CoreGenYaml::ReadMCtrlYaml(const YAML::Node& MCtrlNodes,
   return true;
 }
 
+//QUESTION: What is a VTP?
 bool CoreGenYaml::ReadVTPYaml( const YAML::Node& VTPNodes,
                                std::vector<CoreGenVTP *> &VTPs){
   for( unsigned i=0; i<VTPNodes.size(); i++ ){
     const YAML::Node& Node = VTPNodes[i];
     std::string Name = Node["VTP"].as<std::string>();
-
+    std::string ASPName = PrepForASP(Name);
+    std::string ASP = "vtp(" + ASPName + ").\n";
     CoreGenVTP *V = new CoreGenVTP(Name,Errno);
-
+    V->AppendASP(ASP);
     if( IsDuplicate(Node,
                     static_cast<CoreGenNode *>(V),
                     std::vector<CoreGenNode *>(VTPs.begin(),VTPs.end()) ) ){
