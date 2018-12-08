@@ -20,6 +20,29 @@ SpecDoc::SpecDoc(std::ostream *O,
 SpecDoc::~SpecDoc(){
 }
 
+std::string SpecDoc::EscapeUnderscore( std::string Str ){
+  std::string New;
+  for( unsigned i=0; i<Str.length(); i++ ){
+    if( Str[i] == '_' ){
+      New += '\\';
+    }
+    New += Str[i];
+  }
+  return New;
+}
+
+std::string SpecDoc::FixUnderscore( std::string Str ){
+  std::string New;
+  for( unsigned i=0; i<Str.length(); i++ ){
+    if( Str[i] == '_' ){
+      //New += '\\';
+      New += "\\string";
+    }
+    New += Str[i];
+  }
+  return New;
+}
+
 bool SpecDoc::WriteMakefile() {
   // build the output file name
   std::string OFile = this->GetOutputPath() + "/Makefile";
@@ -49,9 +72,9 @@ bool SpecDoc::WriteMakefile() {
   ofs << std::endl;
   ofs << "$(DOC).pdf: $(TEXT) $(FIGS)" << std::endl;
   ofs << "\techo $(FIGS)" << std::endl;
-  ofs << "\tpdflatex $(DOC)" << std::endl;
-  ofs << "\tpdflatex $(DOC)" << std::endl;
-  ofs << "\tpdflatex $(DOC)" << std::endl;
+  ofs << "\tpdflatex -halt-on-error $(DOC)" << std::endl;
+  ofs << "\tpdflatex -halt-on-error $(DOC)" << std::endl;
+  ofs << "\tpdflatex -halt-on-error $(DOC)" << std::endl;
   ofs << "clean:" << std::endl;
   ofs << "\trm -f *.aux *.bbl *.blg *.log *.lof *.lol *.lot *.out *.toc $(DOC).pdf" << std::endl;
 
@@ -92,19 +115,16 @@ bool SpecDoc::WriteRegisterClassTex(CoreGenDAG *DAG, std::ofstream &ofs ){
     CoreGenNode *N = DAG->FindNodeByIndex(i);
     if( N->GetType() == CGRegC ){
       CoreGenRegClass *RC = static_cast<CoreGenRegClass *>(N);
-      ofs << "\\subsection{Register Class: " << RC->GetName() << "}" << std::endl;
-      ofs << "\\label{sec:" << RC->GetName() << "}" << std::endl;
+      ofs << std::endl << std::endl;
+      ofs << "\\subsection{Register Class: " << EscapeUnderscore(RC->GetName()) << "}" << std::endl;
+      ofs << "\\label{sec:" << FixUnderscore(RC->GetName()) << "}" << std::endl;
 
       ofs << "The following table represents the registers configured in the "
-          << RC->GetName() << " register class." << std::endl;
+          << EscapeUnderscore(RC->GetName()) << " register class." << std::endl;
 
       // tabulate all the info on the registers
       ofs << std::endl << std::endl;
-      ofs << "\\begin{table}[h]" << std::endl;
-      ofs << "\\begin{center}" << std::endl;
-      ofs << "\\caption{" << RC->GetName() << " Registers}" << std::endl;
-      ofs << "\\label{tab:" << RC->GetName() << "Registers}" << std::endl;
-      ofs << "\\begin{tabular}{c c c c c c c c}" << std::endl;
+      ofs << "\\begin{longtable}[h]{c c c c c c c c}" << std::endl;
       ofs << "\\hline" << std::endl;
       ofs << "\\textbf{Name} & \\textbf{Index} & \\textbf{Width} & "
           << "\\textbf{Attrs} & \\textbf{SIMD} & \\textbf{SIMD Width} & "
@@ -139,9 +159,24 @@ bool SpecDoc::WriteRegisterClassTex(CoreGenDAG *DAG, std::ofstream &ofs ){
             Attrs+=":";
           }
           Attrs+="AMS";
+          OrVal = true;
+        }
+        if( REG->IsTUSAttr() ){
+          if( OrVal ){
+            Attrs+=":";
+          }
+          Attrs+="TUS";
+          OrVal = true;
+        }
+        if( REG->IsShared() ){
+          if( OrVal ){
+            Attrs+=":";
+          }
+          Attrs+="SH";
+          OrVal = true;
         }
 
-        ofs << REG->GetName()   << " & "  << std::hex << "0x" << REG->GetIndex() << std::dec
+        ofs << EscapeUnderscore(REG->GetName())   << " & "  << std::hex << "0x" << REG->GetIndex() << std::dec
             << " & "
             << REG->GetWidth()  << " & "  << Attrs            << " & ";
         if( REG->IsSIMD() ){
@@ -150,7 +185,7 @@ bool SpecDoc::WriteRegisterClassTex(CoreGenDAG *DAG, std::ofstream &ofs ){
           ofs << "N & 0 & ";
         }
         if( REG->GetPseudoName().length() > 0 ){
-          ofs << REG->GetPseudoName() << " & ";
+          ofs << EscapeUnderscore(REG->GetPseudoName()) << " & ";
         }else{
           ofs << "NA & ";
         }
@@ -169,9 +204,9 @@ bool SpecDoc::WriteRegisterClassTex(CoreGenDAG *DAG, std::ofstream &ofs ){
         }
       }
 
-      ofs << "\\end{tabular}" << std::endl;
-      ofs << "\\end{center}" << std::endl;
-      ofs << "\\end{table}" << std::endl;
+      ofs << "\\caption{" << EscapeUnderscore(RC->GetName()) << " Registers}" << std::endl;
+      ofs << "\\label{tab:" << FixUnderscore(RC->GetName()) << "Registers}" << std::endl;
+      ofs << "\\end{longtable}" << std::endl;
     }
   }
 
@@ -198,26 +233,26 @@ bool SpecDoc::WriteRegisterClassTex(CoreGenDAG *DAG, std::ofstream &ofs ){
       }
       if( count > 0 ){
         ofs << std::endl << std::endl;
-        ofs << "\\subsection{" << RC->GetName() << " Register Fields" << "}" << std::endl;
-        ofs << "\\label{sec:" << RC->GetName() << "RegisterFields}" << std::endl;
+        ofs << "\\subsection{ " << EscapeUnderscore(RC->GetName()) << " Register Fields" << "}" << std::endl;
+        ofs << "\\label{sec:" << FixUnderscore(RC->GetName()) << "RegisterFields}" << std::endl;
         for( unsigned j=0; j<RC->GetNumReg(); j++ ){
           CoreGenReg *REG = RC->GetReg(j);
           if( REG->GetNumSubRegs() > 0 ){
-            ofs << "\\subsubsection{" << REG->GetName() << " SubRegister Fields"
+            ofs << std::endl << std::endl;
+            ofs << "\\subsubsection{" << EscapeUnderscore(REG->GetName()) << " SubRegister Fields"
                 << "}" << std::endl;
-            ofs << "\\label{sec:" << RC->GetName() << REG->GetName()
+            ofs << "\\label{sec:" << FixUnderscore(RC->GetName())
+                << FixUnderscore(REG->GetName())
                 << "SubRegs}" << std::endl;
 
+            ofs << "The following table represents the subregister fields configured in the "
+                << EscapeUnderscore(REG->GetName()) << " register." << std::endl;
+
+
             ofs << std::endl << std::endl;
-            ofs << "\\begin{table}[h]" << std::endl;
-            ofs << "\\begin{center}" << std::endl;
-            ofs << "\\caption{" << RC->GetName() << ":" << REG->GetName()
-                << " Sub Registers}" << std::endl;
-            ofs << "\\label{tab:" << RC->GetName() << REG->GetName()
-                << "Registers}" << std::endl;
-            ofs << "\\begin{tabular}{c c c}" << std::endl;
+            ofs << "\\begin{longtable}[h]{c c c}" << std::endl;
             ofs << "\\hline" << std::endl;
-            ofs << "\\textbf{Name} & \\textbf{StartBit} & \\textbf{EndBit} \\\\"
+            ofs << "\\textbf{Name} & \\textbf{StartBit} & \\textbf{EndBit}\\\\"
                 << std::endl;
             ofs << "\\hline" << std::endl;
 
@@ -228,13 +263,17 @@ bool SpecDoc::WriteRegisterClassTex(CoreGenDAG *DAG, std::ofstream &ofs ){
               if( !REG->GetSubReg( k, SRName, StartBit, EndBit ) ){
                 return false;
               }
-              ofs << SRName << " & " << StartBit << " & " << EndBit << "\\\\"
+              ofs << EscapeUnderscore(SRName) << " & " << StartBit << " & " << EndBit << "\\\\"
                   << std::endl;
             }
 
-            ofs << "\\end{tabular}" << std::endl;
-            ofs << "\\end{center}" << std::endl;
-            ofs << "\\end{table}" << std::endl;
+            ofs << "\\caption{" << EscapeUnderscore(RC->GetName())
+                << ":" << EscapeUnderscore(REG->GetName())
+                << " Sub Registers}" << std::endl;
+            ofs << "\\label{tab:" << FixUnderscore(RC->GetName())
+                << FixUnderscore(REG->GetName())
+                << "SubRegs}" << std::endl;
+            ofs << "\\end{longtable}" << std::endl;
           }
         }
       }
@@ -277,12 +316,12 @@ bool SpecDoc::WriteInstFormatTex(CoreGenDAG *DAG, std::ofstream &ofs ){
     if( N->GetType() == CGInstF ){
       CoreGenInstFormat *IF = static_cast<CoreGenInstFormat *>(N);
 
-      ofs << "\\subsection{InstructionFormat: " << IF->GetName() << "}" << std::endl;
-      ofs << "\\label{sec:" << IF->GetName() << "}" << std::endl;
+      ofs << "\\subsection{InstructionFormat: " << EscapeUnderscore(IF->GetName()) << "}" << std::endl;
+      ofs << "\\label{sec:" << FixUnderscore(IF->GetName()) << "}" << std::endl;
       ofs << std::endl << std::endl;
 
-      ofs << "The following diagrams represent the " << IF->GetName()
-          << " instruction format from the " << IF->GetISA()->GetName()
+      ofs << "The following diagrams represent the " << EscapeUnderscore(IF->GetName())
+          << " instruction format from the " << EscapeUnderscore(IF->GetISA()->GetName())
           << " instruction set architecture." << std::endl;
 
       // draw an instruction format block diagram
@@ -348,8 +387,8 @@ bool SpecDoc::WriteInstFormatTex(CoreGenDAG *DAG, std::ofstream &ofs ){
       //print the end of the table
       ofs << "\\end{tabular}" << std::endl;
       ofs << "\\end{center}" << std::endl;
-      ofs << "\\caption{" << IF->GetName() << "}" << std::endl;
-      ofs << "\\label{fig:" << IF->GetName() << "}" << std::endl;
+      ofs << "\\caption{" << EscapeUnderscore(IF->GetName()) << "}" << std::endl;
+      ofs << "\\label{fig:" << FixUnderscore(IF->GetName()) << "}" << std::endl;
       ofs << "\\end{figure}" << std::endl;
 
       ofs << std::endl << std::endl;
@@ -357,8 +396,8 @@ bool SpecDoc::WriteInstFormatTex(CoreGenDAG *DAG, std::ofstream &ofs ){
       // print all the field details
       ofs << "\\begin{table}[h]" << std::endl;
       ofs << "\\begin{center}" << std::endl;
-      ofs << "\\caption{" << IF->GetName() << " Fields}" << std::endl;
-      ofs << "\\label{tab:" << IF->GetName() << "Fields}" << std::endl;
+      ofs << "\\caption{" << EscapeUnderscore(IF->GetName()) << " Fields}" << std::endl;
+      ofs << "\\label{tab:" << FixUnderscore(IF->GetName()) << "Fields}" << std::endl;
       ofs << "\\begin{tabular}{|c | c | c | c | c | c|}" << std::endl;
       ofs << "\\hline" << std::endl;
       ofs << "\\textbf{Name} & \\textbf{EndBit} & \\textbf{StartBit} & "
@@ -373,7 +412,7 @@ bool SpecDoc::WriteInstFormatTex(CoreGenDAG *DAG, std::ofstream &ofs ){
         ofs << IF->CGInstFieldToStr(IF->GetFieldType(IF->GetFieldName(j)))
             << " & ";
         if( IF->GetFieldType(IF->GetFieldName(j)) == CoreGenInstFormat::CGInstReg){
-          ofs << IF->GetFieldRegClass(IF->GetFieldName(j))->GetName()
+          ofs << EscapeUnderscore(IF->GetFieldRegClass(IF->GetFieldName(j))->GetName())
               << " & ";
         }else{
           ofs << "N/A & ";
@@ -410,24 +449,23 @@ bool SpecDoc::WriteInstTex(CoreGenDAG *DAG, std::ofstream &ofs ){
     if( N->GetType() == CGInst ){
       CoreGenInst *INST = static_cast<CoreGenInst *>(N);
 
-      ofs << "\\subsection{" << INST->GetName() << "}" << std::endl;
-      ofs << "\\label{sec:" << INST->GetName() << "}" << std::endl;
-      ofs << "The " << INST->GetName() << " instruction belongs to the "
-          << INST->GetISA()->GetName() << " instruction set.  It has the following features:"
+      ofs << "\\subsection{" << FixUnderscore(INST->GetName()) << "}" << std::endl;
+      ofs << "\\label{sec:" << FixUnderscore(INST->GetName()) << "}" << std::endl;
+      ofs << "The " << EscapeUnderscore(INST->GetName()) << " instruction belongs to the "
+          << EscapeUnderscore(INST->GetISA()->GetName()) << " instruction set.  It has the following features:"
           << std::endl;
 
       // print an instruction table
-      ofs << "\\begin{table}[h]" << std::endl;
-      ofs << "\\begin{center}" << std::endl;
-      ofs << "\\caption{" << INST->GetName() << " Information}" << std::endl;
-      ofs << "\\label{tab:" << INST->GetName() << "INFO}" << std::endl;
+      ofs << "\\begin{longtable}[h]" << std::endl;
+      ofs << "\\caption{" << EscapeUnderscore(INST->GetName()) << " Information}" << std::endl;
+      ofs << "\\label{tab:" << FixUnderscore(INST->GetName()) << "INFO}" << std::endl;
       ofs << "\\begin{tabular}{c c c}" << std::endl;
       ofs << "\\hline" << std::endl;
       ofs << "\\textbf{General Info} & &\\\\" << std::endl;
       ofs << "\\hline" << std::endl;
-      ofs << "Name & " << INST->GetName() << " &\\\\" << std::endl;
-      ofs << "ISA & " << INST->GetISA()->GetName() << " &\\\\" << std::endl;
-      ofs << "Instruction Format & " << INST->GetFormat()->GetName() << " &\\\\" << std::endl;
+      ofs << "Name & " << EscapeUnderscore(INST->GetName()) << " &\\\\" << std::endl;
+      ofs << "ISA & " << EscapeUnderscore(INST->GetISA()->GetName()) << " &\\\\" << std::endl;
+      ofs << "Instruction Format & " << EscapeUnderscore(INST->GetFormat()->GetName()) << " &\\\\" << std::endl;
       ofs << "\\hline" << std::endl;
 
       ofs << "\\textbf{Encoding Info} & &\\\\" << std::endl;
@@ -441,8 +479,7 @@ bool SpecDoc::WriteInstTex(CoreGenDAG *DAG, std::ofstream &ofs ){
 
       ofs << "\\hline" << std::endl;
       ofs << "\\end{tabular}" << std::endl;
-      ofs << "\\end{center}" << std::endl;
-      ofs << "\\end{table}" << std::endl;
+      ofs << "\\end{longtable}" << std::endl;
 
       ofs << std::endl << std::endl;
 
@@ -453,9 +490,9 @@ bool SpecDoc::WriteInstTex(CoreGenDAG *DAG, std::ofstream &ofs ){
         ofs << std::endl;
         ofs << "\\vspace{0.125in}" << std::endl;
         ofs << "\\begin{lstlisting}[frame=single,style=base,caption={"
-            << INST->GetName() << " StoneCutter Implementation"
+            << EscapeUnderscore(INST->GetName()) << " StoneCutter Implementation"
             << "},captionpos=b,label={lis:"
-            << INST->GetName()
+            << EscapeUnderscore(INST->GetName())
             << "}]"
             << std::endl;
         ofs << INST->GetImpl() << std::endl;
@@ -481,28 +518,27 @@ bool SpecDoc::WritePseudoInstTex(CoreGenDAG *DAG, std::ofstream &ofs ){
     if( N->GetType() == CGPInst ){
       CoreGenPseudoInst *INST = static_cast<CoreGenPseudoInst *>(N);
 
-      ofs << "\\subsection{" << INST->GetName() << "}" << std::endl;
-      ofs << "\\label{sec:" << INST->GetName() << "}" << std::endl;
-      ofs << "The " << INST->GetName() << " pseudo instruction belongs to the "
-          << INST->GetISA()->GetName() << " instruction set.  It is associated with the "
-          << INST->GetInst()->GetName() << " instruction.  It has the following features:"
+      ofs << "\\subsection{" << FixUnderscore(INST->GetName()) << "}" << std::endl;
+      ofs << "\\label{sec:" << FixUnderscore(INST->GetName()) << "}" << std::endl;
+      ofs << "The " << EscapeUnderscore(INST->GetName()) << " pseudo instruction belongs to the "
+          << EscapeUnderscore(INST->GetISA()->GetName()) << " instruction set.  It is associated with the "
+          << EscapeUnderscore(INST->GetInst()->GetName()) << " instruction.  It has the following features:"
           << std::endl;
 
       // print an instruction table
-      ofs << "\\begin{table}[h]" << std::endl;
-      ofs << "\\begin{center}" << std::endl;
-      ofs << "\\caption{" << INST->GetName() << " Information}" << std::endl;
-      ofs << "\\label{tab:" << INST->GetName() << "INFO}" << std::endl;
+      ofs << "\\begin{longtable}[h]" << std::endl;
+      ofs << "\\caption{" << EscapeUnderscore(INST->GetName()) << " Information}" << std::endl;
+      ofs << "\\label{tab:" << FixUnderscore(INST->GetName()) << "INFO}" << std::endl;
       ofs << "\\begin{tabular}{c c c}" << std::endl;
       ofs << "\\hline" << std::endl;
       ofs << "\\textbf{General Info} & &\\\\" << std::endl;
       ofs << "\\hline" << std::endl;
 
-      ofs << "Name & " << INST->GetName() << " &\\\\" << std::endl;
-      ofs << "ISA & " << INST->GetISA()->GetName() << " &\\\\" << std::endl;
-      ofs << "Instruction & " << INST->GetInst()->GetName()
-          << "[Section \\ref{sec:" << INST->GetInst()->GetName() << "}] &\\\\" << std::endl;
-      ofs << "Instruction Format & " << INST->GetInst()->GetFormat()->GetName() << " &\\\\" << std::endl;
+      ofs << "Name & " << EscapeUnderscore(INST->GetName()) << " &\\\\" << std::endl;
+      ofs << "ISA & " << EscapeUnderscore(INST->GetISA()->GetName()) << " &\\\\" << std::endl;
+      ofs << "Instruction & " << EscapeUnderscore(INST->GetInst()->GetName())
+          << "[Section \\ref{sec:" << EscapeUnderscore(INST->GetInst()->GetName()) << "}] &\\\\" << std::endl;
+      ofs << "Instruction Format & " << EscapeUnderscore(INST->GetInst()->GetFormat()->GetName()) << " &\\\\" << std::endl;
       ofs << "\\hline" << std::endl;
 
       ofs << "\\textbf{Encoding Info} & &\\\\" << std::endl;
@@ -517,8 +553,7 @@ bool SpecDoc::WritePseudoInstTex(CoreGenDAG *DAG, std::ofstream &ofs ){
 
       ofs << "\\hline" << std::endl;
       ofs << "\\end{tabular}" << std::endl;
-      ofs << "\\end{center}" << std::endl;
-      ofs << "\\end{table}" << std::endl;
+      ofs << "\\end{longtable}" << std::endl;
 
       ofs << std::endl << std::endl;
     }
@@ -581,6 +616,7 @@ bool SpecDoc::WriteTexfile(CoreGenDAG *DAG) {
   ofs << "\\usepackage{multirow}" << std::endl;
   ofs << "\\usepackage{float}" << std::endl;
   ofs << "\\usepackage{caption}" << std::endl;
+  ofs << "\\usepackage{url}" << std::endl;
   ofs << "\\RequirePackage{epstopdf}" << std::endl;
   ofs << "\\RequirePackage{tabularx}" << std::endl;
   ofs << "\\RequirePackage{xstring}" << std::endl;
@@ -592,23 +628,6 @@ bool SpecDoc::WriteTexfile(CoreGenDAG *DAG) {
   ofs << "\\newcommand{\\note}[1]{{\\bf [ NOTE: #1 ]}}" << std::endl;
 
   // tabuluar column widths for instruction formats
-#if 0
-  ofs << "\\newcolumntype{I}{>{\\centering\\arraybackslash}p{0.18in}}" << std::endl;  // 1-bit
-  ofs << "\\newcolumntype{W}{>{\\centering\\arraybackslash}p{0.36in}}" << std::endl;  // 2-bit
-  ofs << "\\newcolumntype{F}{>{\\centering\\arraybackslash}p{0.54in}}" << std::endl;  // 3-bit
-  ofs << "\\newcolumntype{Y}{>{\\centering\\arraybackslash}p{0.72in}}" << std::endl;  // 4-bit
-  ofs << "\\newcolumntype{R}{>{\\centering\\arraybackslash}p{0.9in}}" << std::endl;   // 5-bit
-  ofs << "\\newcolumntype{S}{>{\\centering\\arraybackslash}p{1.08in}}" << std::endl;  // 6-bit
-  ofs << "\\newcolumntype{O}{>{\\centering\\arraybackslash}p{1.26in}}" << std::endl;  // 7-bit
-  ofs << "\\newcolumntype{E}{>{\\centering\\arraybackslash}p{1.44in}}" << std::endl;  // 8-bit
-  ofs << "\\newcolumntype{T}{>{\\centering\\arraybackslash}p{1.8in}}" << std::endl;   // 10-bit
-  ofs << "\\newcolumntype{M}{>{\\centering\\arraybackslash}p{2.2in}}" << std::endl;   // 12-bit
-  ofs << "\\newcolumntype{K}{>{\\centering\\arraybackslash}p{2.88in}}" << std::endl;  // 16-bit
-  ofs << "\\newcolumntype{U}{>{\\centering\\arraybackslash}p{3.6in}}" << std::endl;   // 20-bit
-  ofs << "\\newcolumntype{L}{>{\\centering\\arraybackslash}p{3.6in}}" << std::endl;   // 20-bit
-  ofs << "\\newcolumntype{J}{>{\\centering\\arraybackslash}p{4.5in}}" << std::endl;   // 25-bit
-#endif
-
   ofs << "\\newcommand{\\instbit}[1]{\\mbox{\\scriptsize #1}}" << std::endl;
   ofs << "\\newcommand{\\instbitrange}[2]{~\\instbit{#1} \\hfill \\instbit{#2}~}" << std::endl;
   ofs << "\\newcommand{\\reglabel}[1]{\\hfill {\\tt #1}\\hfill\\ }" << std::endl;
@@ -616,6 +635,7 @@ bool SpecDoc::WriteTexfile(CoreGenDAG *DAG) {
   ofs << "\\newcommand{\\wpri}{\\textbf{WPRI}}" << std::endl;
   ofs << "\\newcommand{\\wlrl}{\\textbf{WLRL}}" << std::endl;
   ofs << "\\newcommand{\\warl}{\\textbf{WARL}}" << std::endl;
+  ofs << "\\newcommand\\purl[1]{\\protect\\url{#1}}" << std::endl;
 
 
   ofs << std::endl << std::endl;

@@ -199,6 +199,20 @@ void CoreGenYaml::PrintParserError(const YAML::Node Node,
   ParserErrorLine = GetLineNum(Node);
 }
 
+bool CoreGenYaml::IsDuplicate( const YAML::Node Node,
+                               CoreGenNode *N,
+                               std::vector<CoreGenNode *> V){
+  for( unsigned i=0; i<V.size(); i++ ){
+    if( N->GetName() == V[i]->GetName() ){
+      Errno->SetError(CGERR_ERROR, "Error: encountered duplicate node: " +
+                                    N->GetName() + " near line " +
+                                    std::to_string(GetLineNum(Node)) );
+      return true;
+    }
+  }
+  return false;
+}
+
 bool CoreGenYaml::CheckValidSequenceNode(const YAML::Node Node,
                                  std::string Token ){
   if( !Node[Token] || Node[Token].IsNull() || !Node[Token].IsSequence() ){
@@ -330,9 +344,10 @@ void CoreGenYaml::WriteSocYaml( YAML::Emitter *out,
 }
 
 void CoreGenYaml::PrintCache( YAML::Emitter *out,
-                              CoreGenCache *Cache ){
+                              CoreGenCache *Cache,
+                              std::vector<std::string> &Printed ){
   if( Cache->IsParentLevel() ){
-    PrintCache( out, Cache->GetSubCache() );
+    PrintCache( out, Cache->GetSubCache(), Printed );
   }
 
   for( unsigned i=0; i<CNames.size(); i++ ){
@@ -341,6 +356,15 @@ void CoreGenYaml::PrintCache( YAML::Emitter *out,
       return ;
     }
   }
+
+  for( unsigned i=0; i<Printed.size(); i++ ){
+    if( Printed[i] == Cache->GetName() ){
+      // this cache has already been referenced
+      return ;
+    }
+  }
+
+  Printed.push_back(Cache->GetName());
 
   // this cache node has not yet been referenced, print it
   *out << YAML::BeginMap;
@@ -373,8 +397,9 @@ void CoreGenYaml::WriteCacheYaml( YAML::Emitter *out,
   *out << YAML::BeginSeq;
 
   // recursive cache printer
+  std::vector<std::string> Printed;
   for( unsigned i=0; i<Caches.size(); i++ ){
-    PrintCache( out, Caches[i] );
+    PrintCache( out, Caches[i], Printed );
   }
 
   *out << YAML::EndSeq;
@@ -1547,6 +1572,11 @@ bool CoreGenYaml::ReadRegisterYaml(const YAML::Node& RegNodes,
 
     R->AppendASP(ASP);
 
+    if( IsDuplicate(Node,
+                    static_cast<CoreGenNode *>(R),
+                    std::vector<CoreGenNode *>(Regs.begin(),Regs.end()) ) ){
+      return false;
+    }
     // add the register object
     Regs.push_back(R);
   }
@@ -1625,6 +1655,11 @@ bool CoreGenYaml::ReadRegisterClassYaml(const YAML::Node& RegClassNodes,
 
     RC->AppendASP(ASP);
 
+    if( IsDuplicate(Node,
+                    static_cast<CoreGenNode *>(RC),
+                    std::vector<CoreGenNode *>(RegClasses.begin(),RegClasses.end()) ) ){
+      return false;
+    }
     RegClasses.push_back(RC);
   }
   //mystream.close();
@@ -1652,6 +1687,11 @@ bool CoreGenYaml::ReadISAYaml(const YAML::Node& ISANodes,
       ISA->SetRTLFile( Node["RTLFile"].as<std::string>());
     }
 
+    if( IsDuplicate(Node,
+                    static_cast<CoreGenNode *>(ISA),
+                    std::vector<CoreGenNode *>(ISAs.begin(),ISAs.end()) ) ){
+      return false;
+    }
     ISAs.push_back(ISA);
   }
   return true;
@@ -1848,6 +1888,11 @@ bool CoreGenYaml::ReadInstFormatYaml(const YAML::Node& InstFormatNodes,
 
     IF->AppendASP(ASP);
 
+    if( IsDuplicate(Node,
+                    static_cast<CoreGenNode *>(IF),
+                    std::vector<CoreGenNode *>(Formats.begin(),Formats.end()) ) ){
+      return false;
+    }
     Formats.push_back(IF);
   }
   return true;
@@ -1915,6 +1960,11 @@ bool CoreGenYaml::ReadInstYaml(const YAML::Node& InstNodes,
       Inst->SetRTLFile( Node["RTLFile"].as<std::string>());
     }
 
+    if( IsDuplicate(Node,
+                    static_cast<CoreGenNode *>(Inst),
+                    std::vector<CoreGenNode *>(Insts.begin(),Insts.end()) ) ){
+      return false;
+    }
     Insts.push_back(Inst);
   }
   return true;
@@ -1981,6 +2031,11 @@ bool CoreGenYaml::ReadPseudoInstYaml(const YAML::Node& PInstNodes,
       P->SetRTLFile( Node["RTLFile"].as<std::string>());
     }
 
+    if( IsDuplicate(Node,
+                    static_cast<CoreGenNode *>(P),
+                    std::vector<CoreGenNode *>(PInsts.begin(),PInsts.end()) ) ){
+      return false;
+    }
     PInsts.push_back(P);
   }
   return true;
@@ -2054,6 +2109,11 @@ bool CoreGenYaml::ReadCacheYaml(const YAML::Node& CacheNodes,
 
     C->AppendASP(ASP);
 
+    if( IsDuplicate(Node,
+                    static_cast<CoreGenNode *>(C),
+                    std::vector<CoreGenNode *>(Caches.begin(),Caches.end()) ) ){
+      return false;
+    }
     Caches.push_back(C);
   }
 
@@ -2147,6 +2207,11 @@ bool CoreGenYaml::ReadCoreYaml(const YAML::Node& CoreNodes,
       C->SetRTLFile( Node["RTLFile"].as<std::string>());
     }
 
+    if( IsDuplicate(Node,
+                    static_cast<CoreGenNode *>(C),
+                    std::vector<CoreGenNode *>(Cores.begin(),Cores.end()) ) ){
+      return false;
+    }
     Cores.push_back(C);
   }
   return true;
@@ -2190,6 +2255,11 @@ bool CoreGenYaml::ReadSocYaml(const YAML::Node& SocNodes,
       S->SetRTLFile( Node["RTLFile"].as<std::string>());
     }
 
+    if( IsDuplicate(Node,
+                    static_cast<CoreGenNode *>(S),
+                    std::vector<CoreGenNode *>(Socs.begin(),Socs.end()) ) ){
+      return false;
+    }
     Socs.push_back(S);
   }
   return true;
@@ -2230,6 +2300,11 @@ bool CoreGenYaml::ReadSpadYaml(const YAML::Node& SpadNodes,
 
     S->SetStartAddr( StartAddr );
 
+    if( IsDuplicate(Node,
+                    static_cast<CoreGenNode *>(S),
+                    std::vector<CoreGenNode *>(Spads.begin(),Spads.end()) ) ){
+      return false;
+    }
     Spads.push_back(S);
   }
   return true;
@@ -2255,6 +2330,11 @@ bool CoreGenYaml::ReadMCtrlYaml(const YAML::Node& MCtrlNodes,
       M->SetRTLFile( Node["RTLFile"].as<std::string>());
     }
 
+    if( IsDuplicate(Node,
+                    static_cast<CoreGenNode *>(M),
+                    std::vector<CoreGenNode *>(MCtrls.begin(),MCtrls.end()) ) ){
+      return false;
+    }
     MCtrls.push_back(M);
   }
   return true;
@@ -2268,6 +2348,11 @@ bool CoreGenYaml::ReadVTPYaml( const YAML::Node& VTPNodes,
 
     CoreGenVTP *V = new CoreGenVTP(Name,Errno);
 
+    if( IsDuplicate(Node,
+                    static_cast<CoreGenNode *>(V),
+                    std::vector<CoreGenNode *>(VTPs.begin(),VTPs.end()) ) ){
+      return false;
+    }
     VTPs.push_back(V);
   }
   return true;
@@ -2343,6 +2428,11 @@ bool CoreGenYaml::ReadPluginYaml(const YAML::Node& PluginNodes,
                                                     Major,
                                                     Minor,
                                                     Patch)->ClonePlugin(NodeName);
+    if( IsDuplicate(Node,
+                    static_cast<CoreGenNode *>(NewPlugin),
+                    std::vector<CoreGenNode *>(Plugins.begin(),Plugins.end()) ) ){
+      return false;
+    }
     Plugins.push_back(NewPlugin);
 
     // retrieve the features
@@ -2735,6 +2825,11 @@ bool CoreGenYaml::ReadExtYaml(const YAML::Node& ExtNodes,
       E->SetRTLFile( Node["RTLFile"].as<std::string>());
     }
 
+    if( IsDuplicate(Node,
+                    static_cast<CoreGenNode *>(E),
+                    std::vector<CoreGenNode *>(Exts.begin(),Exts.end()) ) ){
+      return false;
+    }
     Exts.push_back(E);
 
   }// end ExtNodes
@@ -2833,6 +2928,11 @@ bool CoreGenYaml::ReadCommYaml( const YAML::Node& CommNodes,
       }// endpoint loop
     }// endpoint handler
 
+    if( IsDuplicate(Node,
+                    static_cast<CoreGenNode *>(Comm),
+                    std::vector<CoreGenNode *>(Comms.begin(),Comms.end()) ) ){
+      return false;
+    }
     Comms.push_back(Comm);
   }
 

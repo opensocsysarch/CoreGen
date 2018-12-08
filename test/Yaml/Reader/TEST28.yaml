@@ -400,9 +400,6 @@ Caches:
     Sets: 1
     Ways: 1
     SubLevel: TEST28.L2.cache
-  - Cache: TEST28.L2.cache
-    Sets: 2
-    Ways: 8
 Cores:
   - Core: TEST28.core
     Cache: TEST28.L1.cache

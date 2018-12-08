@@ -66,6 +66,12 @@ private:
   /// Generate the LaTeX table headers for inst formats
   std::string GenerateInstFormatHeader(CoreGenInstFormat *IF);
 
+  /// Fix names containing underscores with \string
+  std::string FixUnderscore(std::string Str);
+
+  /// Fix names containing underscores with escapes '\\'
+  std::string EscapeUnderscore(std::string Str);
+
 public:
   /// Default constructor
   SpecDoc(std::ostream *O, CoreGenDAG *D, CoreGenErrno *E);

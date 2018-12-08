@@ -626,450 +626,258 @@ Caches:
     Sets: 1
     Ways: 1
     SubLevel: TEST44.L2.cache
-  - Cache: TEST44.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST44.core1.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST44.L2.cache
-  - Cache: TEST44.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST44.core2.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST44.L2.cache
-  - Cache: TEST44.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST44.core3.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST44.L2.cache
-  - Cache: TEST44.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST44.core4.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST44.L2.cache
-  - Cache: TEST44.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST44.core5.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST44.L2.cache
-  - Cache: TEST44.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST44.core6.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST44.L2.cache
-  - Cache: TEST44.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST44.core7.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST44.L2.cache
-  - Cache: TEST44.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST44.core8.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST44.L2.cache
-  - Cache: TEST44.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST44.core9.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST44.L2.cache
-  - Cache: TEST44.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST44.core10.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST44.L2.cache
-  - Cache: TEST44.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST44.core11.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST44.L2.cache
-  - Cache: TEST44.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST44.core12.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST44.L2.cache
-  - Cache: TEST44.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST44.core13.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST44.L2.cache
-  - Cache: TEST44.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST44.core14.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST44.L2.cache
-  - Cache: TEST44.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST44.core15.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST44.L2.cache
-  - Cache: TEST44.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST44.core16.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST44.L2.cache
-  - Cache: TEST44.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST44.core17.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST44.L2.cache
-  - Cache: TEST44.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST44.core18.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST44.L2.cache
-  - Cache: TEST44.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST44.core19.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST44.L2.cache
-  - Cache: TEST44.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST44.core20.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST44.L2.cache
-  - Cache: TEST44.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST44.core21.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST44.L2.cache
-  - Cache: TEST44.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST44.core22.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST44.L2.cache
-  - Cache: TEST44.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST44.core23.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST44.L2.cache
-  - Cache: TEST44.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST44.core24.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST44.L2.cache
-  - Cache: TEST44.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST44.core25.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST44.L2.cache
-  - Cache: TEST44.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST44.core26.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST44.L2.cache
-  - Cache: TEST44.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST44.core27.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST44.L2.cache
-  - Cache: TEST44.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST44.core28.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST44.L2.cache
-  - Cache: TEST44.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST44.core29.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST44.L2.cache
-  - Cache: TEST44.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST44.core30.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST44.L2.cache
-  - Cache: TEST44.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST44.core31.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST44.L2.cache
-  - Cache: TEST44.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST44.core32.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST44.L2.cache
-  - Cache: TEST44.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST44.core33.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST44.L2.cache
-  - Cache: TEST44.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST44.core34.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST44.L2.cache
-  - Cache: TEST44.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST44.core35.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST44.L2.cache
-  - Cache: TEST44.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST44.core36.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST44.L2.cache
-  - Cache: TEST44.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST44.core37.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST44.L2.cache
-  - Cache: TEST44.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST44.core38.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST44.L2.cache
-  - Cache: TEST44.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST44.core39.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST44.L2.cache
-  - Cache: TEST44.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST44.core40.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST44.L2.cache
-  - Cache: TEST44.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST44.core41.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST44.L2.cache
-  - Cache: TEST44.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST44.core42.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST44.L2.cache
-  - Cache: TEST44.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST44.core43.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST44.L2.cache
-  - Cache: TEST44.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST44.core44.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST44.L2.cache
-  - Cache: TEST44.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST44.core45.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST44.L2.cache
-  - Cache: TEST44.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST44.core46.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST44.L2.cache
-  - Cache: TEST44.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST44.core47.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST44.L2.cache
-  - Cache: TEST44.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST44.core48.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST44.L2.cache
-  - Cache: TEST44.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST44.core49.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST44.L2.cache
-  - Cache: TEST44.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST44.core50.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST44.L2.cache
-  - Cache: TEST44.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST44.core51.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST44.L2.cache
-  - Cache: TEST44.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST44.core52.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST44.L2.cache
-  - Cache: TEST44.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST44.core53.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST44.L2.cache
-  - Cache: TEST44.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST44.core54.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST44.L2.cache
-  - Cache: TEST44.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST44.core55.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST44.L2.cache
-  - Cache: TEST44.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST44.core56.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST44.L2.cache
-  - Cache: TEST44.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST44.core57.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST44.L2.cache
-  - Cache: TEST44.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST44.core58.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST44.L2.cache
-  - Cache: TEST44.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST44.core59.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST44.L2.cache
-  - Cache: TEST44.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST44.core60.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST44.L2.cache
-  - Cache: TEST44.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST44.core61.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST44.L2.cache
-  - Cache: TEST44.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST44.core62.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST44.L2.cache
-  - Cache: TEST44.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST44.core63.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST44.L2.cache
-  - Cache: TEST44.L2.cache
-    Sets: 2
-    Ways: 8
 Extensions:
   - Extension: TEST44.ext
     MajorVersion: 13
