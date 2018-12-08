@@ -1988,7 +1988,7 @@ bool CoreGenYaml::ReadPseudoInstYaml(const YAML::Node& PInstNodes,
 
 bool CoreGenYaml::ReadCacheYaml(const YAML::Node& CacheNodes,
                                 std::vector<CoreGenCache *> &Caches){
-  //std::ofstream mystream("aspdag.lp", std::ios::app);
+  //std::ofstream mystream("aspdag.tst", std::ios::app);
 
   for( unsigned i=0; i<CacheNodes.size(); i++ ){
     const YAML::Node& Node = CacheNodes[i];
@@ -2041,6 +2041,8 @@ bool CoreGenYaml::ReadCacheYaml(const YAML::Node& CacheNodes,
       C->SetChildCache( SC );
       SC->SetParentCache( C );  // set the parent of the child
       SC->AppendASP("cacheChildOf(" + ASPSubLevel + ", " + ASPName + ").\n");
+      //mystream << "Begin new read\n";
+      //mystream << SC->GetASP() << std::endl;
     }
 
     if( Node["RTL"] ){
