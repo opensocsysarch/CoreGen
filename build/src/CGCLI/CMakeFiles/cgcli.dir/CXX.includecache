@@ -1376,10 +1376,6 @@ CGCLIOpts.h
 CoreGen/CoreGenBackend/CoreGenBackend.h
 /home/fconlon/Documents/CoreGen/src/CGCLI/CoreGen/CoreGenBackend/CoreGenBackend.h
 
-/home/fconlon/Documents/CoreGen/src/CGCLI/CGCLIOpts.cpp
-CGCLIOpts.h
-/home/fconlon/Documents/CoreGen/src/CGCLI/CGCLIOpts.h
-
 /home/fconlon/Documents/CoreGen/src/CGCLI/CGCLIOpts.h
 iostream
 -

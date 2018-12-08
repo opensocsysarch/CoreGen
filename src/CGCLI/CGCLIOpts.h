@@ -37,6 +37,7 @@ private:
   bool ListSysPasses;   ///< CGCLIOpts: Did the user request to list the sys passes
   bool ExecSysPass;     ///< CGCLIOpts: Execute a system pass
   bool ASPSolver;       ///< CGCLIOpts: Execute the ASP Solver
+  bool ASPClean;        ///< CGCLIOpts: Clean up the ASP DAG file
 
   std::string IRFile;   ///< CGCLIOpts: Input IR File
   std::string OutFile;  ///< CGCLIOpts: Output IR File
@@ -138,6 +139,9 @@ public:
 
   /// Check to see if the check plugins option is enabled
   bool IsCheckPluginsEnabled() { return CheckPlugins; }
+
+  /// Check if ASP DAG needs to bee cleaned up
+  bool CleanASP() { return ASPClean; }
 
   /// Retrieve the number of selected plugins
   unsigned GetNumPlugins() { return Plugins.size(); }

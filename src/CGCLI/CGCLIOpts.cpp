@@ -16,7 +16,7 @@ CGCLIOpts::CGCLIOpts( int argc, char **argv )
     OptPasses(false), ListPasses(false), Verify(false), ExecPass(false),
     CGChisel(false), CGComp(false), CGVersion(false), CheckPlugins(false),
     ListSysPasses(false), ExecSysPass(false), ASPSolver(false),
-    ProjName("UNKNOWN"){
+    ProjName("UNKNOWN"), ASPClean(true){
   // setup default project root
   char PATH[FILENAME_MAX];
   if( getcwd(PATH,sizeof(PATH)) == NULL ){
@@ -65,7 +65,8 @@ void CGCLIOpts::PrintOptions(){
   std::cout << "\t--enable-opt-passes                   : Enable all optimization passes" << std::endl;
   std::cout << "\t--list-passes                         : List all the passes and return" << std::endl;
   std::cout << "\t--list-sys-passes                     : List all the system passes" << std::endl;
-  std::cout << "\t--asp \"PROG1,PROG2,...\"                      : Execute ASP solver with input" << std::endl;
+  std::cout << "\t--asp \"PROG1,PROG2,...\"               : Execute ASP solver with input" << std::endl;
+  std::cout << "\t--nocleanasp                          : Clean up the ASP DAG file" << std::endl;
   std::cout << std::endl;
 }
 
@@ -371,6 +372,9 @@ bool CGCLIOpts::ParseOpts( int argc, char **argv ){
         return false;
       }
       ASPSolver = true;
+      i++;
+    }else if ( s == "--nocleanasp" || s == "-nocleanasp"){
+      ASPClean = false;
       i++;
     }else if( s == "--disable-all-passes" ){
       ManualPasses = true;

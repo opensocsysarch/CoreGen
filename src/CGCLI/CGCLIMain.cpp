@@ -112,14 +112,8 @@ int ExecuteCoregen( CGCLIOpts *Opts ){
 
   // check for the asp solver
   if( Opts->IsASPEnabled() ){
-    // output the solver block to a tmp file
-    std::string ASPPath = Opts->GetProjectRoot();// + "/" + Opts->GetASPStr();
-    std::cout << ASPPath << std::endl;
-    /*
-    std::ofstream out(ASPPath);
-    out << Opts->GetASPStr();
-    out.close();
-    */
+    // get path to asp passes.
+    std::string ASPPath = Opts->GetProjectRoot();
 
     // setup the solver
     if( !CG->SetPassInputStr( "ASPSolverPass", ASPPath ) ){
@@ -136,15 +130,16 @@ int ExecuteCoregen( CGCLIOpts *Opts ){
       return -1;
     }
 
-    // delete the tmp file
-    /*
-    if( remove(ASPPath.c_str()) != 0 ){
-      std::cout << "Error deleting ASP Solver tmp file : "
-                << ASPPath << std::endl;
-      delete CG;
-      return -1;
+    // clean aspdag.lp if specified
+    if(Opts->CleanASP()){
+      std::string ASPFile = ASPPath + "/aspdag.lp";
+      if( remove(ASPFile.c_str()) != 0 ){
+        std::cout << "Error deleting ASP DAG file : "
+                  << ASPFile << std::endl;
+        delete CG;
+        return -1;
+      }
     }
-    */
   }
 
   // check for system passes

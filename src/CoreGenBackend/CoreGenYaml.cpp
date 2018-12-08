@@ -1358,6 +1358,7 @@ bool CoreGenYaml::ReadProjYaml(const YAML::Node& ProjNodes ){
   return true;
 }
 
+//QESTION: What are the valid chars used in YAML?
 std::string CoreGenYaml::PrepForASP(std::string RemStr){
   std::string NewStr = "";
   for (int i = 0;i < RemStr.length(); i++){
@@ -1562,6 +1563,7 @@ bool CoreGenYaml::ReadRegisterYaml(const YAML::Node& RegNodes,
     }
 
     // Check for custom RTL
+    // QUESTION: RTL? I forgot what this is.
     if( CheckValidNode(Node,"RTL") ){
       R->SetRTL( Node["RTL"].as<std::string>());
       ASP += "regRTL(" + ASPName + ", " + Node["RTL"].as<std::string>() + ").\n";
@@ -1604,6 +1606,7 @@ bool CoreGenYaml::ReadRegisterClassYaml(const YAML::Node& RegClassNodes,
     ASP += "regClass(" + ASPName + ").\n";
 #if 0
     // currently unused
+    // TODO: Add asp here?
     int NumRegs = Node["NumRegisters"].as<int>();
 #endif
 
@@ -1645,7 +1648,6 @@ bool CoreGenYaml::ReadRegisterClassYaml(const YAML::Node& RegClassNodes,
       } // end unsigned j
     } // end if
 
-    //QUESTION: Is this administrative or part of the architecture?
     if( CheckValidNode(Node,"RTL") ){
       RC->SetRTL( Node["RTL"].as<std::string>());
     }
@@ -1660,6 +1662,7 @@ bool CoreGenYaml::ReadRegisterClassYaml(const YAML::Node& RegClassNodes,
                     std::vector<CoreGenNode *>(RegClasses.begin(),RegClasses.end()) ) ){
       return false;
     }
+
     RegClasses.push_back(RC);
   }
   //mystream.close();
@@ -1678,7 +1681,11 @@ bool CoreGenYaml::ReadISAYaml(const YAML::Node& ISANodes,
       return false;
     }
     std::string ISAName = Node["ISAName"].as<std::string>();
+    std::string ASPName = PrepForASP(ISAName);
+    std::string ASP = "";
     CoreGenISA *ISA = new CoreGenISA(ISAName, Errno);
+
+    ASP += "isa(" + ASPName + ").\n";
 
     if( CheckValidNode(Node,"RTL") ){
       ISA->SetRTL( Node["RTL"].as<std::string>());
@@ -1687,11 +1694,14 @@ bool CoreGenYaml::ReadISAYaml(const YAML::Node& ISANodes,
       ISA->SetRTLFile( Node["RTLFile"].as<std::string>());
     }
 
+    ISA->AppendASP(ASP);
+
     if( IsDuplicate(Node,
                     static_cast<CoreGenNode *>(ISA),
                     std::vector<CoreGenNode *>(ISAs.begin(),ISAs.end()) ) ){
       return false;
     }
+
     ISAs.push_back(ISA);
   }
   return true;
@@ -1893,6 +1903,7 @@ bool CoreGenYaml::ReadInstFormatYaml(const YAML::Node& InstFormatNodes,
                     std::vector<CoreGenNode *>(Formats.begin(),Formats.end()) ) ){
       return false;
     }
+
     Formats.push_back(IF);
   }
   return true;
@@ -1908,6 +1919,14 @@ bool CoreGenYaml::ReadInstYaml(const YAML::Node& InstNodes,
     std::string Name = Node["Inst"].as<std::string>();
     std::string ISAName = Node["ISA"].as<std::string>();
     std::string InstFormat = Node["InstFormat"].as<std::string>();
+    std::string ASPName = PrepForASP(Name);
+    std::string ASPISAName = PrepForASP(ISAName);
+    std::string ASPIFName = PrepForASP(InstFormat);
+    std::string ASP = "";
+
+    ASP += "inst(" + ASPName + ").\n";
+    ASP += "instISA(" + ASPName + ", " + ASPISAName + ").\n";
+    ASP += "instIF(" + ASPName + ", " + ASPIFName + ").\n";
 
     // decode the ISA and InstFormat
     CoreGenInstFormat *IF = nullptr;
@@ -1940,7 +1959,9 @@ bool CoreGenYaml::ReadInstYaml(const YAML::Node& InstNodes,
       const YAML::Node& FNode = Node["Encodings"];
       for( unsigned k=0; k<FNode.size(); k++ ){
         const YAML::Node& LFNode = FNode[k];
+        //QUESTION: How does this relate to the inst format field?
         std::string FieldName = LFNode["EncodingField"].as<std::string>();
+        std::string ASPFieldName = PrepForASP(FieldName);
 #if 0
         // currently unused
         int FieldWidth = LFNode["EncodingWidth"].as<int>();
@@ -1959,6 +1980,8 @@ bool CoreGenYaml::ReadInstYaml(const YAML::Node& InstNodes,
     if( Node["RTLFile"] ){
       Inst->SetRTLFile( Node["RTLFile"].as<std::string>());
     }
+
+    Inst->AppendASP(ASP);
 
     if( IsDuplicate(Node,
                     static_cast<CoreGenNode *>(Inst),
@@ -1980,6 +2003,14 @@ bool CoreGenYaml::ReadPseudoInstYaml(const YAML::Node& PInstNodes,
     std::string Name = Node["PseudoInst"].as<std::string>();
     std::string ISAName = Node["ISA"].as<std::string>();
     std::string InstName = Node["Inst"].as<std::string>();
+    std::string ASPName = PrepForASP(Name);
+    std::string ASPISAName = PrepForASP(ISAName);
+    std::string ASPInstName = PrepForASP(InstName);
+    std::string ASP = "";
+
+    ASP += "pseudoInst(" + ASPName + ").\n";
+    ASP += "pseudoInstISA(" + ASPName + ", " + ASPISAName + ").\n";
+    ASP += "pseudoInstIN(" + ASPName + ", " + ASPInstName + ").\n";
 
     // decode the isa and instruction
     CoreGenISA *ISA = nullptr;
@@ -2011,6 +2042,7 @@ bool CoreGenYaml::ReadPseudoInstYaml(const YAML::Node& PInstNodes,
       const YAML::Node& FNode = Node["Encodings"];
       for( unsigned k=0; k<FNode.size(); k++ ){
         const YAML::Node& LFNode = FNode[k];
+        //QUESTION: Again, relationship to inst format field
         std::string FieldName = LFNode["EncodingField"].as<std::string>();
 #if 0
         // currently unused
@@ -2031,11 +2063,14 @@ bool CoreGenYaml::ReadPseudoInstYaml(const YAML::Node& PInstNodes,
       P->SetRTLFile( Node["RTLFile"].as<std::string>());
     }
 
+    P->AppendASP(ASP);
+
     if( IsDuplicate(Node,
                     static_cast<CoreGenNode *>(P),
                     std::vector<CoreGenNode *>(PInsts.begin(),PInsts.end()) ) ){
       return false;
     }
+
     PInsts.push_back(P);
   }
   return true;
