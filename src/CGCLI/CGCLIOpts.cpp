@@ -425,6 +425,51 @@ bool CGCLIOpts::ParseOpts( int argc, char **argv ){
   return true;
 }
 
+// Utilizes Levenshtein Edit Distance algorithm from:
+// https://en.wikibooks.org/wiki/Algorithm_Implementation/Strings/Levenshtein_distance#C++
+// Based upon the original common Lisp implementation whereby only two of the columns
+// in the matrix are utilized
+unsigned CGCLIOpts::EditDistance( std::string &s1, std::string &s2 ){
+  const std::size_t len1 = s1.size(), len2 = s2.size();
+  std::vector<unsigned int> col(len2+1), prevCol(len2+1);
+
+  for (unsigned int i = 0; i < prevCol.size(); i++){
+    prevCol[i] = i;
+  }
+
+  for (unsigned int i = 0; i < len1; i++) {
+    col[0] = i+1;
+    for (unsigned int j = 0; j < len2; j++){
+      // note that std::min({arg1, arg2, arg3}) works only in C++11,
+      // for C++98 use std::min(std::min(arg1, arg2), arg3)
+      col[j+1] = std::min({ prevCol[1 + j] + 1, col[j] + 1, prevCol[j] + (s1[i]==s2[j] ? 0 : 1) });
+    }
+    col.swap(prevCol);
+  }
+
+  return prevCol[len2];
+}
+
+// Returns the closest string in the known pass list
+std::string CGCLIOpts::GetNearbyString(std::string &Input,
+                                       std::vector<std::string> Passes){
+  std::string RtnStr;
+  unsigned LowVal;
+
+  // walk all the pass values and find their edit distance from the input
+  LowVal = EditDistance(Input,Passes[0]);
+  RtnStr = Passes[0];
+  for( unsigned i=1; i<Passes.size(); i++ ){
+    unsigned tmp = EditDistance(Input,Passes[i]);
+    if( tmp < LowVal ){
+      LowVal = tmp;
+      RtnStr = Passes[i];
+    }
+  }
+
+  return RtnStr;
+}
+
 bool CGCLIOpts::CheckManualPassList(std::vector<std::string> Passes){
 
   bool rtn = true;
@@ -434,7 +479,12 @@ bool CGCLIOpts::CheckManualPassList(std::vector<std::string> Passes){
     std::vector<std::string>::iterator it;
     it = std::find(Passes.begin(),Passes.end(),EnablePass[i]);
     if( it == Passes.end() ){
-      std::cout << "Unknown Enabled Pass: " << EnablePass[i] << std::endl;
+      std::cout << "Unknown Enabled Pass: "
+                << EnablePass[i]
+                << ". Did you mean "
+                << GetNearbyString(EnablePass[i],Passes)
+                << "?"
+                << std::endl;
       rtn = false;
     }
   }
@@ -444,7 +494,12 @@ bool CGCLIOpts::CheckManualPassList(std::vector<std::string> Passes){
     std::vector<std::string>::iterator it;
     it = std::find(Passes.begin(),Passes.end(),DisablePass[i]);
     if( it == Passes.end() ){
-      std::cout << "Unknown Disabled Pass: " << DisablePass[i] << std::endl;
+      std::cout << "Unknown Disabled Pass: "
+                << DisablePass[i]
+                << ". Did you mean "
+                << GetNearbyString(EnablePass[i],Passes)
+                << "?"
+                << std::endl;
       rtn = false;
     }
   }
