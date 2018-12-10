@@ -414,16 +414,10 @@ Caches:
     Sets: 1
     Ways: 1
     SubLevel: TEST35.L2.cache
-  - Cache: TEST35.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST35.core2.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST35.L2.cache
-  - Cache: TEST35.L2.cache
-    Sets: 2
-    Ways: 8
 Cores:
   - Core: TEST35.core1
     Cache: TEST35.core1.L1.cache

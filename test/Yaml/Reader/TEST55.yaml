@@ -2480,30 +2480,18 @@ Caches:
     Sets: 1
     Ways: 1
     SubLevel: TEST53.L2.cache
-  - Cache: TEST53.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST53.core1.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST53.L2.cache
-  - Cache: TEST53.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST53.core2.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST53.L2.cache
-  - Cache: TEST53.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST53.core3.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST53.L2.cache
-  - Cache: TEST53.L2.cache
-    Sets: 2
-    Ways: 8
 MemoryControllers:
   - MemoryController: TEST53.0.mctrl
     Ports: 2

@@ -411,16 +411,10 @@ Caches:
     Sets: 1
     Ways: 1
     SubLevel: TEST32.L2.cache
-  - Cache: TEST32.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST32.core2.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST32.L2.cache
-  - Cache: TEST32.L2.cache
-    Sets: 2
-    Ways: 8
 Cores:
   - Core: TEST32.core1
     Cache: TEST32.core1.L1.cache

@@ -13,6 +13,7 @@
 #include <vector>
 #include <tuple>
 #include <unistd.h>
+#include <algorithm>
 #include "CGCLIConfig.h"
 #include "CoreGen/CoreGenBackend/CoreGenUtil.h"
 
@@ -162,6 +163,16 @@ public:
 
   /// Retrieve whether or not a system pass has arguments
   bool GetSysPassIsArg(unsigned Pass);
+
+  /// Check the list of parsed manually disabled/enabled passes against CoreGen
+  bool CheckManualPassList(std::vector<std::string> Passes);
+
+  /// Retrieve the closest pass name to the errorneous pass name provided
+  std::string GetNearbyString(std::string &Input,
+                              std::vector<std::string> Passes);
+
+  /// Derive the edit distance between two strings
+  unsigned EditDistance( std::string &s1, std::string &s2 );
 
   /// Retrieve the dot file name
   std::string GetDotFile() { return DotFile; }

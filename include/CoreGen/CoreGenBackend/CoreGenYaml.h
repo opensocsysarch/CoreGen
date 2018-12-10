@@ -87,7 +87,8 @@ private:
                               std::string Token );
 
   /// Yaml Printer for Caches
-  void PrintCache( YAML::Emitter *out, CoreGenCache *Cache );
+  void PrintCache( YAML::Emitter *out, CoreGenCache *Cache,
+                   std::vector<std::string> &Printed );
 
   /// Write Yaml: SoC's
   void WriteSocYaml(YAML::Emitter *out, std::vector<CoreGenSoC *> const &Socs );
@@ -241,6 +242,9 @@ private:
                            std::vector<CoreGenVTP *> &VTPs,
                            std::vector<CoreGenExt *>  &Exts,
                            std::vector<CoreGenPlugin *> &Plugins );
+  bool IsDuplicate( const YAML::Node Node,
+                    CoreGenNode *N,
+                    std::vector<CoreGenNode *> V);
 
 public:
   /// Default Constructor
