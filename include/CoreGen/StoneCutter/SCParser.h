@@ -133,8 +133,8 @@ public:
 
   public:
     VariableExprASTContainer(const std::string &Name) : Name(Name) {}
-
     Value *codegen() override;
+    const std::string &getName() const { return Name; }
   };
 
   /// BinaryExprAST - Expression class for a binary operator.
@@ -213,7 +213,7 @@ public:
   static LLVMContext TheContext;
   static IRBuilder<> Builder;
   static std::unique_ptr<Module> TheModule;
-  static std::map<std::string, Value *> NamedValues;
+  static std::map<std::string, AllocaInst*> NamedValues;
   static std::map<std::string, std::unique_ptr<PrototypeASTContainer>> FunctionProtos;
   static std::unique_ptr<legacy::FunctionPassManager> TheFPM;
   static unsigned LabelIncr;

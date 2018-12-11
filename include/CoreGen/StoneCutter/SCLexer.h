@@ -51,13 +51,12 @@ enum SCToken {
 
   // conditionals
   tok_if          = -8,
-  tok_then        = -9,
-  tok_elseif      = -10,
-  tok_else        = -11,
+  tok_elseif      = -9,
+  tok_else        = -10,
 
   // loop control
-  tok_for         = -12,
-  tok_in          = -13
+  tok_for         = -11,
+  tok_in          = -12
 };
 
 class SCLexer{

@@ -54,8 +54,6 @@ int SCLexer::GetTok(){
       return tok_if;
     if( IdentifierStr == "else" )
       return tok_else;
-    if( IdentifierStr == "then" )
-      return tok_then;
     if( IdentifierStr == "elseif" )
       return tok_elseif;
     if( IdentifierStr == "for" )
