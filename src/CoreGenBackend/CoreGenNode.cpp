@@ -61,15 +61,26 @@ CoreGenNode *CoreGenNode::GetChild(unsigned I){
     return CNodes[I];
   }
 
-bool CoreGenNode::InsertChild( CoreGenNode *N ){
-    if( !N ){ return false; }
-    // search for duplicates
-    for( unsigned i=0; i<CNodes.size(); i++ ){
+bool CoreGenNode::IsDuplicateNode( CoreGenNode *N ){
+  if( !N ){ return false; }
+
+  for( unsigned i=0; i<CNodes.size(); i++ ){
       if( (CNodes[i]->GetName() == N->GetName()) &&
           (CNodes[i]->GetType() == N->GetType())){
         // duplicate found
         return true;
       }
+  }
+  return false;
+}
+
+bool CoreGenNode::InsertChild( CoreGenNode *N ){
+    if( !N ){ return false; }
+    // search for duplicates
+    if( IsDuplicateNode(N) ){
+      Errno->SetError(CGERR_WARN, "Duplicate child node found: " +
+                      N->GetName() );
+      return true;
     }
     CNodes.push_back(N);
     return true;

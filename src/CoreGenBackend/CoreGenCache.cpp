@@ -30,8 +30,7 @@ bool CoreGenCache::SetChildCache( CoreGenCache *C ){
   }
   Child = C;
   ParentLevel = true;
-  InsertChild(static_cast<CoreGenNode *>(Child));
-  return true;
+  return InsertChild(static_cast<CoreGenNode *>(Child));
 }
 
 bool CoreGenCache::SetParentCache( CoreGenCache *P ){

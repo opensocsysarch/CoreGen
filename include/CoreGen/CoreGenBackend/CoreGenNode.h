@@ -91,6 +91,9 @@ public:
   /// Set the node name
   bool SetName(std::string N);
 
+  /// Determines whether the requested node is a duplicate of an existing child
+  bool IsDuplicateNode( CoreGenNode *N );
+
   /// Retrieve the number of child nodes
   unsigned GetNumChild();
 
