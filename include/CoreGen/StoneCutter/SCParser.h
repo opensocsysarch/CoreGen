@@ -217,6 +217,7 @@ public:
   static std::map<std::string, std::unique_ptr<PrototypeASTContainer>> FunctionProtos;
   static std::unique_ptr<legacy::FunctionPassManager> TheFPM;
   static unsigned LabelIncr;
+  static bool IsOpt;
 
 private:
 
@@ -228,7 +229,6 @@ private:
 
   // flags
   bool InFunc;                          ///< Determines whether the parser is in a function body
-  bool IsOpt;                           ///< Determines whether to run the optimizer
 
   bool Rtn;                             ///< Return status of the parser
 

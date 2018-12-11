@@ -17,10 +17,11 @@ std::unique_ptr<legacy::FunctionPassManager> SCParser::TheFPM;
 std::map<std::string, std::unique_ptr<PrototypeAST>> SCParser::FunctionProtos;
 std::map<std::string, AllocaInst*> SCParser::NamedValues;
 unsigned SCParser::LabelIncr;
+bool SCParser::IsOpt = false;
 
 SCParser::SCParser(std::string B, std::string F, SCMsg *M)
   : CurTok(-1), InBuf(B), FileName(F), Msgs(M), Lex(new SCLexer(B)),
-    InFunc(false), IsOpt(false), Rtn(true) {
+    InFunc(false), Rtn(true) {
   TheModule = llvm::make_unique<Module>(StringRef(FileName), TheContext);
   InitBinopPrecedence();
   LabelIncr = 0;
@@ -28,7 +29,7 @@ SCParser::SCParser(std::string B, std::string F, SCMsg *M)
 
 SCParser::SCParser(SCMsg *M)
   : CurTok(-1), Msgs(M), Lex(nullptr),
-    InFunc(false), IsOpt(false) {
+    InFunc(false) {
   InitBinopPrecedence();
   LabelIncr = 0;
 }
@@ -104,7 +105,7 @@ void SCParser::InitModuleandPassManager(){
 
 bool SCParser::Optimize(){
   InitModuleandPassManager();
-  IsOpt = true;
+  SCParser::IsOpt = true;
   return true;
 }
 
@@ -975,7 +976,9 @@ Function *FunctionAST::codegen() {
     // Finish off the function
     Builder.CreateRet(RetVal);
     verifyFunction(*TheFunction);
-    SCParser::TheFPM->run(*TheFunction);
+    if( SCParser::IsOpt ){
+      SCParser::TheFPM->run(*TheFunction);
+    }
     return TheFunction;
   }
 
