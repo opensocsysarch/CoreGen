@@ -975,6 +975,7 @@ Function *FunctionAST::codegen() {
     // Finish off the function
     Builder.CreateRet(RetVal);
     verifyFunction(*TheFunction);
+    SCParser::TheFPM->run(*TheFunction);
     return TheFunction;
   }
 
@@ -1026,9 +1027,12 @@ Value *IfExprAST::codegen() {
   TheFunction->getBasicBlockList().push_back(ElseBB);
   Builder.SetInsertPoint(ElseBB);
 
-  Value *ElseV = Else->codegen();
-  if (!ElseV)
-    return nullptr;
+  Value *ElseV;
+  if( Else != nullptr ){
+    ElseV = Else->codegen();
+    if (!ElseV)
+      return nullptr;
+  }
 
   Builder.CreateBr(MergeBB);
   // Codegen of 'Else' can change the current block, update ElseBB for the PHI.
@@ -1041,7 +1045,9 @@ Value *IfExprAST::codegen() {
                                   2, "iftmp."+std::to_string(LocalLabel));
 
   PN->addIncoming(ThenV, ThenBB);
-  PN->addIncoming(ElseV, ElseBB);
+  if( Else != nullptr ){
+    PN->addIncoming(ElseV, ElseBB);
+  }
   return PN;
 }
 
