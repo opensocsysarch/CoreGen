@@ -14,6 +14,7 @@ LLVMContext SCParser::TheContext;
 IRBuilder<> SCParser::Builder(TheContext);
 std::unique_ptr<Module> SCParser::TheModule;
 std::unique_ptr<legacy::FunctionPassManager> SCParser::TheFPM;
+std::map<std::string, std::unique_ptr<PrototypeAST>> SCParser::FunctionProtos;
 std::map<std::string, Value *> SCParser::NamedValues;
 unsigned SCParser::LabelIncr;
 
@@ -304,27 +305,53 @@ std::unique_ptr<ExprAST> SCParser::ParseIdentifierExpr() {
 std::unique_ptr<ExprAST> SCParser::ParseIfExpr() {
   GetNextToken();  // eat the if.
 
+  if( CurTok != '(' )
+    return LogError("expected '(' for conditional statement");
+
+  GetNextToken(); // eat the '('
+
   // condition.
   auto Cond = ParseExpression();
-  if (!Cond)
+  if (!Cond){
     return nullptr;
+  }
 
-  if (CurTok != tok_then)
-    return LogError("expected then");
-  GetNextToken();  // eat the then
+  if( CurTok != ')' )
+    return LogError("expected ')' for conditional statement");
+
+  GetNextToken(); // eat the ')'
+
+  if( CurTok != '{' )
+    return LogError("expected '{' for conditional expression body");
+  GetNextToken(); // eat the '{'
 
   auto Then = ParseExpression();
-  if (!Then)
+  if (!Then){
     return nullptr;
+  }
 
-  if (CurTok != tok_else)
-    return LogError("expected else");
+  if( CurTok != '}' )
+    return LogError("expected '}' for conditional expression body");
+  GetNextToken(); // eat the '}'
 
-  GetNextToken();
-
-  auto Else = ParseExpression();
-  if (!Else)
-    return nullptr;
+  // parse the optional else block
+  std::unique_ptr<ExprAST> Else = nullptr;
+  if( CurTok == tok_else ){
+    // parse else{ <Expression> }
+    GetNextToken(); // eat the else
+    if( CurTok != '{' ){
+      LogError("expected '{' for conditional else statement");
+    }
+    GetNextToken(); // eat the '{'
+    Else = ParseExpression();
+    if( !Else ){
+      return nullptr;
+    }
+    if( CurTok != '}' ){
+      LogError("expected '}' for conditional else statement");
+    }
+    GetNextToken(); // eat the '}'
+  }
 
   return llvm::make_unique<IfExprAST>(std::move(Cond), std::move(Then),
                                       std::move(Else));
@@ -604,6 +631,7 @@ void SCParser::HandleExtern() {
       //fprintf(stderr, "Read extern: ");
       //FnIR->print(errs());
       //fprintf(stderr, "\n");
+      SCParser::FunctionProtos[ProtoAST->getName()] = std::move(ProtoAST);
     }
   } else {
     // Skip token for error recovery.
@@ -653,6 +681,20 @@ void SCParser::HandleFuncClose(){
 //===----------------------------------------------------------------------===//
 // Code Generation
 //===----------------------------------------------------------------------===//
+Function *getFunction(std::string Name ){
+  // see if the function has been added to the current module
+  if( auto *F = SCParser::TheModule->getFunction(Name) )
+    return F;
+
+  // if not, check whether we can emit the declaration
+  auto FI = SCParser::FunctionProtos.find(Name);
+  if( FI != SCParser::FunctionProtos.end() ){
+    return FI->second->codegen();
+  }
+
+  return nullptr;
+}
+
 Value *NumberExprAST::codegen() {
   return ConstantFP::get(SCParser::TheContext, APFloat(Val));
 }
@@ -780,6 +822,10 @@ Value *BinaryExprAST::codegen() {
     L = SCParser::Builder.CreateFCmpULT(L, R, "cmptmp");
     // Convert bool 0/1 to double 0.0 or 1.0
     return SCParser::Builder.CreateUIToFP(L, Type::getDoubleTy(SCParser::TheContext), "booltmp");
+  case '>':
+    L = SCParser::Builder.CreateFCmpUGT(L, R, "cmptmp");
+    // Convert bool 0/1 to double 0.0 or 1.0
+    return SCParser::Builder.CreateUIToFP(L, Type::getDoubleTy(SCParser::TheContext), "booltmp");
   default:
     return LogErrorV("invalid binary operator");
   }
@@ -893,9 +939,12 @@ Function *FunctionAST::codegen() {
 }
 
 Value *IfExprAST::codegen() {
+  std::cout << "generating code for the IfExprAST" << std::endl;
   Value *CondV = Cond->codegen();
-  if (!CondV)
+  if (!CondV){
+    std::cout << "CondV code generation dumped an error" << std::endl;
     return nullptr;
+  }
 
   // Convert condition to a bool by comparing non-equal to 0.0.
   CondV = Builder.CreateFCmpONE(
@@ -915,8 +964,10 @@ Value *IfExprAST::codegen() {
   Builder.SetInsertPoint(ThenBB);
 
   Value *ThenV = Then->codegen();
-  if (!ThenV)
+  if (!ThenV){
+    std::cout << "ThenV code generation dumped an error" << std::endl;
     return nullptr;
+  }
 
   Builder.CreateBr(MergeBB);
   // Codegen of 'Then' can change the current block, update ThenBB for the PHI.
@@ -942,7 +993,6 @@ Value *IfExprAST::codegen() {
   PN->addIncoming(ThenV, ThenBB);
   PN->addIncoming(ElseV, ElseBB);
   return PN;
-  return nullptr;
 }
 
 //===----------------------------------------------------------------------===//
