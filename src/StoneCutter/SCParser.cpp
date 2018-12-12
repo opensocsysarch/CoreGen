@@ -372,6 +372,8 @@ std::unique_ptr<ExprAST> SCParser::ParsePrimary() {
     return ParseIfExpr();
   case tok_for:
     return ParseForExpr();
+  case tok_var:
+    return ParseVarExpr();
   }
 }
 
@@ -408,6 +410,59 @@ std::unique_ptr<ExprAST> SCParser::ParseBinOpRHS(int ExprPrec,
     LHS = llvm::make_unique<BinaryExprAST>(BinOp, std::move(LHS),
                                            std::move(RHS));
   }
+}
+
+// parse the variable definition lists
+// this can be one of the following permutations:
+// - DATATYPE VARNAME
+// - DATATYPE VARNAME = INITIALIZER
+// - DATATYPE VARNAME, VARNAME, VARNAME, VARNAME
+// - DATATYPE VARNAME = INITIALIZER, VARNAME, VARNAME
+std::unique_ptr<ExprAST> SCParser::ParseVarExpr(){
+  GetNextToken(); // eat the datatype
+
+  std::vector<std::pair<std::string,std::unique_ptr<ExprAST>>> VarNames;
+  std::vector<VarAttrs> Attrs;  // variable attributes
+
+  if( CurTok != tok_identifier )
+    return LogError("expected identifier after variable datatype");
+
+  while(true){
+    std::string Name = Lex->GetIdentifierStr();
+    GetNextToken(); // eat identifier.
+
+    // Read the optional initializer.
+    std::unique_ptr<ExprAST> Init = nullptr;
+    if (CurTok == '=') {
+      GetNextToken(); // eat the '='.
+
+      Init = ParseExpression();
+      if (!Init)
+        return nullptr;
+    }
+
+    // add the new variable to our vector
+    VarNames.push_back(std::make_pair(Name, std::move(Init)));
+    Attrs.push_back(std::move(Lex->GetVarAttrs()));
+
+    // check for the end of the variable list
+    if( CurTok != ',' ){
+      break;
+    }
+
+    GetNextToken(); // eat the ','
+
+    if( CurTok != tok_identifier )
+      LogError("expected identifier list in variable definition");
+  }// end parsing the variable list
+
+  auto Body = ParsePrimary();
+  if (!Body)
+    return nullptr;
+
+  return llvm::make_unique<VarExprAST>(std::move(VarNames),
+                                       std::move(Attrs),
+                                       std::move(Body) );
 }
 
 std::unique_ptr<ExprAST> SCParser::ParseForExpr() {
@@ -814,6 +869,59 @@ Value *VariableExprAST::codegen() {
   if (!V)
     return LogErrorV("Unknown variable name: " + Name);
   return SCParser::Builder.CreateLoad(V,Name.c_str());
+}
+
+Value *VarExprAST::codegen() {
+  std::vector<AllocaInst *> OldBindings;
+
+  Function *TheFunction = Builder.GetInsertBlock()->getParent();
+
+  // walk all the variables and their initializers
+  for (unsigned i = 0, e = VarNames.size(); i != e; ++i) {
+    const std::string &VarName = VarNames[i].first;
+    ExprAST *Init = VarNames[i].second.get();
+
+    // Emit the initializer before adding the variable to scope, this prevents
+    // the initializer from referencing the variable itself, and permits
+    // nested sets of variable definitions
+    Value *InitVal;
+    if (Init) {
+      InitVal = Init->codegen();
+      if (!InitVal)
+        return nullptr;
+    } else {
+      // If not specified, use DATATYPE(0)
+      // derive the respective type and init the correct
+      // type with the value
+      if( Attrs[i].defFloat ){
+        InitVal = ConstantFP::get(SCParser::TheContext,
+                                  APFloat(0.0));
+      }else{
+        InitVal = ConstantInt::get(SCParser::TheContext,
+                                   APInt(Attrs[i].width,
+                                         0,
+                                         Attrs[i].defSign));
+      }
+    }
+
+    AllocaInst *Alloca = CreateEntryBlockAlloca(TheFunction, VarName);
+    Builder.CreateStore(InitVal, Alloca);
+
+    OldBindings.push_back(SCParser::NamedValues[VarName]);
+    SCParser::NamedValues[VarName] = Alloca;
+  }
+
+  // Codegen the body, now that all vars are in scope.
+  Value *BodyVal = Body->codegen();
+  if (!BodyVal)
+    return nullptr;
+
+  // Pop all our variables from scope.
+  for (unsigned i = 0, e = VarNames.size(); i != e; ++i)
+    SCParser::NamedValues[VarNames[i].first] = OldBindings[i];
+
+  // Return the body computation.
+  return BodyVal;
 }
 
 Value *BinaryExprAST::codegen() {

@@ -104,6 +104,25 @@ public:
     Value *codegen() override;
   };
 
+  ///VarExprAST - Expression class for variables
+  class VarExprASTContainer : public ExprASTContainer {
+    std::vector<std::pair<std::string,
+                          std::unique_ptr<ExprASTContainer>>> VarNames;
+    std::vector<VarAttrs> Attrs;
+    std::unique_ptr<ExprASTContainer> Body;
+
+    public:
+      VarExprASTContainer(std::vector<std::pair<std::string,
+                                      std::unique_ptr<ExprASTContainer>>> VarNames,
+                          std::vector<VarAttrs> Attrs,
+                          std::unique_ptr<ExprASTContainer> Body)
+        : VarNames(std::move(VarNames)),
+          Attrs(std::move(Attrs)),
+          Body(std::move(Body)) {}
+
+    Value *codegen() override;
+  };
+
   /// IfExprAST - Expression class for conditionals
   class IfExprASTContainer : public ExprASTContainer {
     std::unique_ptr<ExprASTContainer> Cond, Then, Else;
@@ -294,6 +313,9 @@ private:
   /// Parse a for loop
   std::unique_ptr<ExprASTContainer> ParseForExpr();
 
+  /// Parse a variable expression
+  std::unique_ptr<ExprASTContainer> ParseVarExpr();
+
   /// Parse the closing of a function body
   bool ParseCloseBracket();
 
@@ -339,6 +361,7 @@ typedef SCParser::FunctionASTContainer FunctionAST;
 typedef SCParser::RegClassASTContainer RegClassAST;
 typedef SCParser::IfExprASTContainer IfExprAST;
 typedef SCParser::ForExprASTContainer ForExprAST;
+typedef SCParser::VarExprASTContainer VarExprAST;
 
 #endif
 
