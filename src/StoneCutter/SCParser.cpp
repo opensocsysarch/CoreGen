@@ -456,7 +456,7 @@ std::unique_ptr<ExprAST> SCParser::ParseVarExpr(){
       LogError("expected identifier list in variable definition");
   }// end parsing the variable list
 
-  auto Body = ParsePrimary();
+  auto Body = ParseExpression();
   if (!Body)
     return nullptr;
 
@@ -580,7 +580,7 @@ std::unique_ptr<RegClassAST> SCParser::ParseRegClassDef(){
   // try to pull the next identifier
   GetNextToken();
 
-  while (CurTok == tok_identifier){
+  while (CurTok == tok_var){
     std::string Type = Lex->GetIdentifierStr();
     VarAttrs VAttr;
     if( !GetVarAttr( Type, VAttr ) ){
