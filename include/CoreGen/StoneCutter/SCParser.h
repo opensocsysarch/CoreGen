@@ -218,11 +218,11 @@ public:
   /// FunctionAST - This class represents a function definition itself.
   class FunctionASTContainer {
     std::unique_ptr<PrototypeASTContainer> Proto;
-    std::unique_ptr<ExprASTContainer> Body;
+    std::vector<std::unique_ptr<ExprASTContainer>> Body;
 
   public:
     FunctionASTContainer(std::unique_ptr<PrototypeASTContainer> Proto,
-                         std::unique_ptr<ExprASTContainer> Body)
+                         std::vector<std::unique_ptr<ExprASTContainer>> Body)
       : Proto(std::move(Proto)), Body(std::move(Body)) {}
 
     Function *codegen();

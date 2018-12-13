@@ -9,5 +9,5 @@ regclass bar( float f1, double d2, bool b3, u7 i4,
 
 
 def foo(n){
-  n = n+1;
+  n = n+1
 }

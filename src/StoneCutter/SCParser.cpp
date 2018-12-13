@@ -631,10 +631,35 @@ std::unique_ptr<FunctionAST> SCParser::ParseDefinition() {
   GetNextToken(); // eat the '{'
   InFunc = true;
 
-  if (auto E = ParseExpression())
-    return llvm::make_unique<FunctionAST>(std::move(Proto), std::move(E));
+  std::vector<std::unique_ptr<ExprAST>> Exprs;
+  while( CurTok != '}' ){
+    auto Body = ParseExpression();
+    if( !Body )
+      return nullptr;
+    Exprs.push_back(std::move(Body));
+  }
 
-  return nullptr;
+  if( CurTok != '}' )
+    return LogErrorF("Expected '}' to close instruction body");
+
+#if 0
+  auto E = ParseExpression();
+  if( E == nullptr ){
+    LogErrorF("Expected function body");
+  }
+
+  if( CurTok != '}' )
+    return LogErrorF("Expected '}' to close instruction body");
+#endif
+  GetNextToken(); // eat '}'
+  InFunc = false;
+  //return llvm::make_unique<FunctionAST>(std::move(Proto), std::move(E));
+  return llvm::make_unique<FunctionAST>(std::move(Proto), std::move(Exprs));
+
+  //if (auto E = ParseExpression())
+  //  return llvm::make_unique<FunctionAST>(std::move(Proto), std::move(E));
+
+  //return nullptr;
 }
 
 bool SCParser::ParseCloseBracket(){
@@ -657,7 +682,10 @@ std::unique_ptr<FunctionAST> SCParser::ParseTopLevelExpr() {
     // Make an anonymous proto.
     auto Proto = llvm::make_unique<PrototypeAST>("__anon_expr",
                                                  std::vector<std::string>());
-    return llvm::make_unique<FunctionAST>(std::move(Proto), std::move(E));
+    std::vector<std::unique_ptr<ExprAST>> Exprs;
+    Exprs.push_back(std::move(E));
+    //return llvm::make_unique<FunctionAST>(std::move(Proto), std::move(E));
+    return llvm::make_unique<FunctionAST>(std::move(Proto), std::move(Exprs));
   }
   return nullptr;
 }
@@ -1080,7 +1108,16 @@ Function *FunctionAST::codegen() {
     SCParser::NamedValues[Arg.getName()] = Alloca;
   }
 
-  if( Value *RetVal = Body->codegen() ){
+  // codegen all the body elements
+  // save the last element for the return value
+  for( unsigned i=0; i<Body.size()-1; i++ ){
+    Value *BVal = Body[i]->codegen();
+    if( !BVal )
+      return nullptr;
+  }
+
+  //if( Value *RetVal = Body->codegen() ){
+  if( Value *RetVal = Body[Body.size()-1]->codegen() ){
     // Finish off the function
     Builder.CreateRet(RetVal);
     verifyFunction(*TheFunction);

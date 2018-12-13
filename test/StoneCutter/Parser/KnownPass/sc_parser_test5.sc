@@ -5,5 +5,5 @@ regclass foo( float f1, double d2, bool b3, u8 i4,
               s32 i10, s64 i11)
 
 def foo(n){
-  n = n+1;
+  n = n+1
 }

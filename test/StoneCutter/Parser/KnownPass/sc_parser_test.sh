@@ -9,24 +9,24 @@ if [ ! -f $SCCOMP_PATH/sccomp ]; then
 fi
 
 
-$SCCOMP_PATH/sccomp -p $FILE
+$SCCOMP_PATH/sccomp -p -N $FILE
 retVal=$?
-if [ ! $? -eq 0 ]; then
-  echo "$SCCOMP_PATH/sccomp -p $FILE failed with return code = $retVal"
+if [[  "$retVal" -ne 0 ]]; then
+  echo "$SCCOMP_PATH/sccomp -p -N $FILE failed with return code = $retVal"
   exit $retVal
 fi
 
 $SCCOMP_PATH/sccomp -parse $FILE
 retVal=$?
-if [ ! $? -eq 0 ]; then
-  echo "$SCCOMP_PATH/sccomp -parse $FILE failed with return code = $retVal"
+if [[  "$retVal" -ne 0 ]]; then
+  echo "$SCCOMP_PATH/sccomp -parse -no-optimize $FILE failed with return code = $retVal"
   exit $retVal
 fi
 
 $SCCOMP_PATH/sccomp --parse $FILE
 retVal=$?
-if [ ! $? -eq 0 ]; then
-  echo "$SCCOMP_PATH/sccomp --parse $FILE failed with return code = $retVal"
+if [[  "$retVal" -ne 0 ]]; then
+  echo "$SCCOMP_PATH/sccomp --parse --no-optimize $FILE failed with return code = $retVal"
   exit $retVal
 fi
 
