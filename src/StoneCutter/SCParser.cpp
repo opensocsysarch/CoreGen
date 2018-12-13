@@ -1116,7 +1116,6 @@ Function *FunctionAST::codegen() {
       return nullptr;
   }
 
-  //if( Value *RetVal = Body->codegen() ){
   if( Value *RetVal = Body[Body.size()-1]->codegen() ){
     // Finish off the function
     Builder.CreateRet(RetVal);
