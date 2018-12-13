@@ -14,20 +14,23 @@ LLVMContext SCParser::TheContext;
 IRBuilder<> SCParser::Builder(TheContext);
 std::unique_ptr<Module> SCParser::TheModule;
 std::unique_ptr<legacy::FunctionPassManager> SCParser::TheFPM;
-std::map<std::string, Value *> SCParser::NamedValues;
+std::map<std::string, std::unique_ptr<PrototypeAST>> SCParser::FunctionProtos;
+std::map<std::string, AllocaInst*> SCParser::NamedValues;
 unsigned SCParser::LabelIncr;
+bool SCParser::IsOpt = false;
 
 SCParser::SCParser(std::string B, std::string F, SCMsg *M)
   : CurTok(-1), InBuf(B), FileName(F), Msgs(M), Lex(new SCLexer(B)),
-    InFunc(false), IsOpt(false), Rtn(true) {
+    InFunc(false), Rtn(true) {
   TheModule = llvm::make_unique<Module>(StringRef(FileName), TheContext);
   InitBinopPrecedence();
   LabelIncr = 0;
+  InitPassMap();
 }
 
 SCParser::SCParser(SCMsg *M)
   : CurTok(-1), Msgs(M), Lex(nullptr),
-    InFunc(false), IsOpt(false) {
+    InFunc(false) {
   InitBinopPrecedence();
   LabelIncr = 0;
 }
@@ -36,6 +39,22 @@ SCParser::~SCParser(){
   TheModule.reset();
   TheFPM.reset();
   NamedValues.clear();
+}
+
+void SCParser::InitPassMap(){
+  EPasses.insert(std::pair<std::string,bool>("PromoteMemoryToRegisterPass",true));
+  EPasses.insert(std::pair<std::string,bool>("InstructionCombiningPass",true));
+  EPasses.insert(std::pair<std::string,bool>("ReassociatePass",true));
+  EPasses.insert(std::pair<std::string,bool>("GVNPass",true));
+  EPasses.insert(std::pair<std::string,bool>("CFGSimplificationPass",true));
+  EPasses.insert(std::pair<std::string,bool>("ConstantPropagationPass",true));
+  EPasses.insert(std::pair<std::string,bool>("IndVarSimplifyPass",true));
+  EPasses.insert(std::pair<std::string,bool>("LICMPass",true));
+  EPasses.insert(std::pair<std::string,bool>("LoopDeletionPass",true));
+  EPasses.insert(std::pair<std::string,bool>("LoopIdiomPass",true));
+  EPasses.insert(std::pair<std::string,bool>("LoopRerollPass",true));
+  EPasses.insert(std::pair<std::string,bool>("LoopRotatePass",true));
+  EPasses.insert(std::pair<std::string,bool>("LoopUnswitchPass",true));
 }
 
 bool SCParser::SetInputs( std::string B, std::string F ){
@@ -54,48 +73,209 @@ bool SCParser::SetInputs( std::string B, std::string F ){
 // Optimizer
 //===----------------------------------------------------------------------===//
 
+std::vector<std::string> SCParser::GetPassList(){
+  std::vector<std::string> P;
+
+  for( auto it = EPasses.begin(); it != EPasses.end(); ++it ){
+    P.push_back(it->first);
+  }
+
+  return P;
+}
+
+// Utilizes Levenshtein Edit Distance algorithm from:
+// https://en.wikibooks.org/wiki/Algorithm_Implementation/Strings/Levenshtein_distance#C++
+// Based upon the original common Lisp implementation whereby only two of the columns
+// in the matrix are utilized
+unsigned SCParser::EditDistance( std::string &s1, std::string &s2 ){
+  const std::size_t len1 = s1.size(), len2 = s2.size();
+  std::vector<unsigned int> col(len2+1), prevCol(len2+1);
+
+  for (unsigned int i = 0; i < prevCol.size(); i++){
+    prevCol[i] = i;
+  }
+
+  for (unsigned int i = 0; i < len1; i++) {
+    col[0] = i+1;
+    for (unsigned int j = 0; j < len2; j++){
+      // note that std::min({arg1, arg2, arg3}) works only in C++11,
+      // for C++98 use std::min(std::min(arg1, arg2), arg3)
+      col[j+1] = std::min({ prevCol[1 + j] + 1, col[j] + 1, prevCol[j] + (s1[i]==s2[j] ? 0 : 1) });
+    }
+    col.swap(prevCol);
+  }
+
+  return prevCol[len2];
+}
+
+std::string SCParser::GetNearbyString(std::string &Input){
+  // build a vector of the known pass names
+  std::vector<std::string> Passes;
+  for( auto it = EPasses.begin(); it != EPasses.end(); ++it ){
+    Passes.push_back(it->first);
+  }
+
+  // search the vector
+  std::string RtnStr;
+  unsigned LowVal;
+
+  // walk all the pass values and find their edit distance from the input
+  LowVal = EditDistance(Input,Passes[0]);
+  RtnStr = Passes[0];
+  for( unsigned i=1; i<Passes.size(); i++ ){
+    unsigned tmp = EditDistance(Input,Passes[i]);
+    if( tmp < LowVal ){
+      LowVal = tmp;
+      RtnStr = Passes[i];
+    }
+  }
+
+  return RtnStr;
+}
+
+bool SCParser::CheckPassNames(std::vector<std::string> P){
+
+  bool rtn = true;
+
+  for( unsigned i=0; i<P.size(); i++ ){
+    auto Search = EPasses.find(P[i]);
+    if( Search == EPasses.end() ){
+      // misspelled pass name
+      Msgs->PrintMsg( L_ERROR, "Unknown pass name: \"" + P[i]
+                                + "\". Did you mean "
+                                + GetNearbyString(P[i]) + "?");
+      rtn = false;
+    }
+  }
+  return rtn;
+}
+
+bool SCParser::DisablePasses(std::vector<std::string> P){
+  if( !CheckPassNames(P) ){
+    // something is misspelled
+    return false;
+  }
+  // enable everything, just to be pedantic
+  for( auto it=EPasses.begin(); it != EPasses.end(); ++it){
+    it->second = true;
+  }
+
+  // disable individual passes
+  for( unsigned i=0; i<P.size(); i++ ){
+    for( auto it=EPasses.begin(); it != EPasses.end(); ++it){
+      if( it->first == P[i] ){
+        it->second = false;
+      }
+    }
+  }
+  return true;
+}
+
+bool SCParser::EnablePasses(std::vector<std::string> P){
+  if( !CheckPassNames(P) ){
+    // something is misspelled
+    return false;
+  }
+  // disbale everything, just to be pedantic
+  for( auto it=EPasses.begin(); it != EPasses.end(); ++it){
+    it->second = false;
+  }
+
+  // disable individual passes
+  for( unsigned i=0; i<P.size(); i++ ){
+    for( auto it=EPasses.begin(); it != EPasses.end(); ++it){
+      if( it->first == P[i] ){
+        it->second = true;
+      }
+    }
+  }
+  return true;
+}
+
+bool SCParser::IsPassEnabled(std::string P){
+  if( P.length() == 0 ){
+    return false;
+  }
+
+  std::map<std::string,bool>::iterator it;
+
+  for( it = EPasses.begin(); it != EPasses.end(); ++it ){
+    if( it->first == P ){
+      return it->second;
+    }
+  }
+
+  return false;
+}
+
 void SCParser::InitModuleandPassManager(){
   // create a new pass manager
   TheFPM = llvm::make_unique<legacy::FunctionPassManager>(TheModule.get());
 
   // promote allocas to registers
-  TheFPM->add(createPromoteMemoryToRegisterPass());
+  if( IsPassEnabled("PromoteMemoryToRegisterPass") ){
+    TheFPM->add(createPromoteMemoryToRegisterPass());
+  }
 
   // enable simple peephole opts and bit-twiddling opts
-  TheFPM->add(createInstructionCombiningPass());
+  if( IsPassEnabled("InstructionCombiningPass") ){
+    TheFPM->add(createInstructionCombiningPass());
+  }
 
   // enable reassociation of epxressions
-  TheFPM->add(createReassociatePass());
+  if( IsPassEnabled("ReassociatePass") ){
+    TheFPM->add(createReassociatePass());
+  }
 
   // eliminate common subexpressions
-  TheFPM->add(createGVNPass());
+  if( IsPassEnabled("GVNPass" ) ){
+    TheFPM->add(createGVNPass());
+  }
 
   // simplify the control flow graph
-  TheFPM->add(createCFGSimplificationPass());
+  if( IsPassEnabled("CFGSimplificationPass") ){
+    TheFPM->add(createCFGSimplificationPass());
+  }
 
   // constant propogations
-  TheFPM->add(createConstantPropagationPass());
+  if( IsPassEnabled("ConstantPropagationPass") ){
+    TheFPM->add(createConstantPropagationPass());
+  }
 
   // induction variable simplification pass
-  TheFPM->add(createIndVarSimplifyPass());
+  if( IsPassEnabled("IndVarSimplifyPass") ){
+    TheFPM->add(createIndVarSimplifyPass());
+  }
 
   // loop invariant code motion
-  TheFPM->add(createLICMPass());
+  if( IsPassEnabled("LICMPass") ){
+    TheFPM->add(createLICMPass());
+  }
 
   // loop deletion
-  TheFPM->add(createLoopDeletionPass());
+  if( IsPassEnabled( "LoopDeletionPass") ){
+    TheFPM->add(createLoopDeletionPass());
+  }
 
   // loop idiom
-  TheFPM->add(createLoopIdiomPass());
+  if( IsPassEnabled( "LoopIdiomPass") ){
+    TheFPM->add(createLoopIdiomPass());
+  }
 
   // loop re-roller
-  TheFPM->add(createLoopRerollPass());
+  if( IsPassEnabled( "LoopRerollPass") ){
+    TheFPM->add(createLoopRerollPass());
+  }
 
   // loop rotation
-  TheFPM->add(createLoopRotatePass());
+  if( IsPassEnabled( "LoopRotatePass" ) ){
+    TheFPM->add(createLoopRotatePass());
+  }
 
   // loop unswitching
-  TheFPM->add(createLoopUnswitchPass());
+  if( IsPassEnabled( "LoopUnswitchPass" ) ){
+    TheFPM->add(createLoopUnswitchPass());
+  }
 
   // Init it!
   TheFPM->doInitialization();
@@ -103,7 +283,7 @@ void SCParser::InitModuleandPassManager(){
 
 bool SCParser::Optimize(){
   InitModuleandPassManager();
-  IsOpt = true;
+  SCParser::IsOpt = true;
   return true;
 }
 
@@ -304,27 +484,53 @@ std::unique_ptr<ExprAST> SCParser::ParseIdentifierExpr() {
 std::unique_ptr<ExprAST> SCParser::ParseIfExpr() {
   GetNextToken();  // eat the if.
 
+  if( CurTok != '(' )
+    return LogError("expected '(' for conditional statement");
+
+  GetNextToken(); // eat the '('
+
   // condition.
   auto Cond = ParseExpression();
-  if (!Cond)
+  if (!Cond){
     return nullptr;
+  }
 
-  if (CurTok != tok_then)
-    return LogError("expected then");
-  GetNextToken();  // eat the then
+  if( CurTok != ')' )
+    return LogError("expected ')' for conditional statement");
+
+  GetNextToken(); // eat the ')'
+
+  if( CurTok != '{' )
+    return LogError("expected '{' for conditional expression body");
+  GetNextToken(); // eat the '{'
 
   auto Then = ParseExpression();
-  if (!Then)
+  if (!Then){
     return nullptr;
+  }
 
-  if (CurTok != tok_else)
-    return LogError("expected else");
+  if( CurTok != '}' )
+    return LogError("expected '}' for conditional expression body");
+  GetNextToken(); // eat the '}'
 
-  GetNextToken();
-
-  auto Else = ParseExpression();
-  if (!Else)
-    return nullptr;
+  // parse the optional else block
+  std::unique_ptr<ExprAST> Else = nullptr;
+  if( CurTok == tok_else ){
+    // parse else{ <Expression> }
+    GetNextToken(); // eat the else
+    if( CurTok != '{' ){
+      LogError("expected '{' for conditional else statement");
+    }
+    GetNextToken(); // eat the '{'
+    Else = ParseExpression();
+    if( !Else ){
+      return nullptr;
+    }
+    if( CurTok != '}' ){
+      LogError("expected '}' for conditional else statement");
+    }
+    GetNextToken(); // eat the '}'
+  }
 
   return llvm::make_unique<IfExprAST>(std::move(Cond), std::move(Then),
                                       std::move(Else));
@@ -344,6 +550,8 @@ std::unique_ptr<ExprAST> SCParser::ParsePrimary() {
     return ParseIfExpr();
   case tok_for:
     return ParseForExpr();
+  case tok_var:
+    return ParseVarExpr();
   }
 }
 
@@ -380,6 +588,59 @@ std::unique_ptr<ExprAST> SCParser::ParseBinOpRHS(int ExprPrec,
     LHS = llvm::make_unique<BinaryExprAST>(BinOp, std::move(LHS),
                                            std::move(RHS));
   }
+}
+
+// parse the variable definition lists
+// this can be one of the following permutations:
+// - DATATYPE VARNAME
+// - DATATYPE VARNAME = INITIALIZER
+// - DATATYPE VARNAME, VARNAME, VARNAME, VARNAME
+// - DATATYPE VARNAME = INITIALIZER, VARNAME, VARNAME
+std::unique_ptr<ExprAST> SCParser::ParseVarExpr(){
+  GetNextToken(); // eat the datatype
+
+  std::vector<std::pair<std::string,std::unique_ptr<ExprAST>>> VarNames;
+  std::vector<VarAttrs> Attrs;  // variable attributes
+
+  if( CurTok != tok_identifier )
+    return LogError("expected identifier after variable datatype");
+
+  while(true){
+    std::string Name = Lex->GetIdentifierStr();
+    GetNextToken(); // eat identifier.
+
+    // Read the optional initializer.
+    std::unique_ptr<ExprAST> Init = nullptr;
+    if (CurTok == '=') {
+      GetNextToken(); // eat the '='.
+
+      Init = ParseExpression();
+      if (!Init)
+        return nullptr;
+    }
+
+    // add the new variable to our vector
+    VarNames.push_back(std::make_pair(Name, std::move(Init)));
+    Attrs.push_back(std::move(Lex->GetVarAttrs()));
+
+    // check for the end of the variable list
+    if( CurTok != ',' ){
+      break;
+    }
+
+    GetNextToken(); // eat the ','
+
+    if( CurTok != tok_identifier )
+      LogError("expected identifier list in variable definition");
+  }// end parsing the variable list
+
+  auto Body = ParseExpression();
+  if (!Body)
+    return nullptr;
+
+  return llvm::make_unique<VarExprAST>(std::move(VarNames),
+                                       std::move(Attrs),
+                                       std::move(Body) );
 }
 
 std::unique_ptr<ExprAST> SCParser::ParseForExpr() {
@@ -497,7 +758,7 @@ std::unique_ptr<RegClassAST> SCParser::ParseRegClassDef(){
   // try to pull the next identifier
   GetNextToken();
 
-  while (CurTok == tok_identifier){
+  while (CurTok == tok_var){
     std::string Type = Lex->GetIdentifierStr();
     VarAttrs VAttr;
     if( !GetVarAttr( Type, VAttr ) ){
@@ -548,10 +809,35 @@ std::unique_ptr<FunctionAST> SCParser::ParseDefinition() {
   GetNextToken(); // eat the '{'
   InFunc = true;
 
-  if (auto E = ParseExpression())
-    return llvm::make_unique<FunctionAST>(std::move(Proto), std::move(E));
+  std::vector<std::unique_ptr<ExprAST>> Exprs;
+  while( CurTok != '}' ){
+    auto Body = ParseExpression();
+    if( !Body )
+      return nullptr;
+    Exprs.push_back(std::move(Body));
+  }
 
-  return nullptr;
+  if( CurTok != '}' )
+    return LogErrorF("Expected '}' to close instruction body");
+
+#if 0
+  auto E = ParseExpression();
+  if( E == nullptr ){
+    LogErrorF("Expected function body");
+  }
+
+  if( CurTok != '}' )
+    return LogErrorF("Expected '}' to close instruction body");
+#endif
+  GetNextToken(); // eat '}'
+  InFunc = false;
+  //return llvm::make_unique<FunctionAST>(std::move(Proto), std::move(E));
+  return llvm::make_unique<FunctionAST>(std::move(Proto), std::move(Exprs));
+
+  //if (auto E = ParseExpression())
+  //  return llvm::make_unique<FunctionAST>(std::move(Proto), std::move(E));
+
+  //return nullptr;
 }
 
 bool SCParser::ParseCloseBracket(){
@@ -574,7 +860,10 @@ std::unique_ptr<FunctionAST> SCParser::ParseTopLevelExpr() {
     // Make an anonymous proto.
     auto Proto = llvm::make_unique<PrototypeAST>("__anon_expr",
                                                  std::vector<std::string>());
-    return llvm::make_unique<FunctionAST>(std::move(Proto), std::move(E));
+    std::vector<std::unique_ptr<ExprAST>> Exprs;
+    Exprs.push_back(std::move(E));
+    //return llvm::make_unique<FunctionAST>(std::move(Proto), std::move(E));
+    return llvm::make_unique<FunctionAST>(std::move(Proto), std::move(Exprs));
   }
   return nullptr;
 }
@@ -604,6 +893,7 @@ void SCParser::HandleExtern() {
       //fprintf(stderr, "Read extern: ");
       //FnIR->print(errs());
       //fprintf(stderr, "\n");
+      SCParser::FunctionProtos[ProtoAST->getName()] = std::move(ProtoAST);
     }
   } else {
     // Skip token for error recovery.
@@ -642,9 +932,7 @@ void SCParser::HandleTopLevelExpression() {
 }
 
 void SCParser::HandleFuncClose(){
-  if(ParseCloseBracket()){
-    //fprintf(stderr, "Parsed a function body\n");
-  }else{
+  if(!ParseCloseBracket()){
     Rtn = false;
     GetNextToken();
   }
@@ -653,23 +941,59 @@ void SCParser::HandleFuncClose(){
 //===----------------------------------------------------------------------===//
 // Code Generation
 //===----------------------------------------------------------------------===//
+static unsigned GetLocalLabel(){
+  unsigned LocalLabel = SCParser::LabelIncr;
+  SCParser::LabelIncr++;
+  return LocalLabel;
+}
+static AllocaInst *CreateEntryBlockAlloca(Function *TheFunction,
+                                          const std::string &VarName) {
+  IRBuilder<> TmpB(&TheFunction->getEntryBlock(),
+                 TheFunction->getEntryBlock().begin());
+  return TmpB.CreateAlloca(Type::getDoubleTy(SCParser::TheContext), 0,
+                           VarName.c_str());
+}
+
+Function *getFunction(std::string Name ){
+  // see if the function has been added to the current module
+  if( auto *F = SCParser::TheModule->getFunction(Name) )
+    return F;
+
+  // if not, check whether we can emit the declaration
+  auto FI = SCParser::FunctionProtos.find(Name);
+  if( FI != SCParser::FunctionProtos.end() ){
+    return FI->second->codegen();
+  }
+
+  return nullptr;
+}
+
 Value *NumberExprAST::codegen() {
   return ConstantFP::get(SCParser::TheContext, APFloat(Val));
 }
 
 Value *ForExprAST::codegen() {
+
+  // Create an alloca for the variable in the entry block
+  Function *TheFunction = SCParser::Builder.GetInsertBlock()->getParent();
+  AllocaInst *Alloca = CreateEntryBlockAlloca(TheFunction, VarName);
+
   // Emit the start code first, without 'variable' in scope.
   Value *StartVal = Start->codegen();
   if (!StartVal)
     return nullptr;
 
+  // Store the value into an alloca
+  SCParser::Builder.CreateStore(StartVal,Alloca);
+
+  unsigned LocalLabel = GetLocalLabel();
+#if 0
   unsigned LocalLabel = SCParser::LabelIncr;
   SCParser::LabelIncr++;
+#endif
 
   // Make the new basic block for the loop header, inserting after current
   // block.
-  Function *TheFunction = Builder.GetInsertBlock()->getParent();
-  BasicBlock *PreheaderBB = SCParser::Builder.GetInsertBlock();
   BasicBlock *LoopBB = BasicBlock::Create(SCParser::TheContext,
                                           "loop."+std::to_string(LocalLabel),
                                           TheFunction);
@@ -680,24 +1004,14 @@ Value *ForExprAST::codegen() {
   // Start insertion in LoopBB.
   Builder.SetInsertPoint(LoopBB);
 
-  // Start the PHI node with an entry for Start.
-  PHINode *Variable =
-      Builder.CreatePHI(Type::getDoubleTy(SCParser::TheContext), 2, VarName);
-  Variable->addIncoming(StartVal, PreheaderBB);
-
   // Within the loop, the variable is defined equal to the PHI node.  If it
   // shadows an existing variable, we have to restore it, so save it now.
-  Value *OldVal = NamedValues[VarName];
-  NamedValues[VarName] = Variable;
+  AllocaInst *OldVal   = NamedValues[VarName];
+  NamedValues[VarName] = Alloca;
 
   // Emit the body of the loop.  This, like any other expr, can change the
   // current BB.  Note that we ignore the value computed by the body, but don't
   // allow an error.
-#if 0
-  if (!Body->codegen())
-    return nullptr;
-#endif
-
   if( BodyExpr.size() == 0 ) return nullptr;
   for( unsigned i=0; i<BodyExpr.size(); i++ ){
     BodyExpr[i]->codegen();
@@ -714,14 +1028,16 @@ Value *ForExprAST::codegen() {
     StepVal = ConstantFP::get(SCParser::TheContext, APFloat(1.0));
   }
 
-  Value *NextVar = Builder.CreateFAdd(Variable,
-                                      StepVal,
-                                      "nextvar" + std::to_string(LocalLabel));
-
   // Compute the end condition.
   Value *EndCond = End->codegen();
   if (!EndCond)
     return nullptr;
+
+  Value *CurVar  = Builder.CreateLoad(Alloca,VarName.c_str());
+  Value *NextVar = Builder.CreateFAdd(CurVar,
+                                      StepVal,
+                                      "nextvar" + std::to_string(LocalLabel));
+  Builder.CreateStore(NextVar,Alloca);
 
   // Convert condition to a bool by comparing non-equal to 0.0.
   EndCond = Builder.CreateFCmpONE(
@@ -730,7 +1046,6 @@ Value *ForExprAST::codegen() {
                                "loopcond" + std::to_string(LocalLabel));
 
   // Create the "after loop" block and insert it.
-  BasicBlock *LoopEndBB = Builder.GetInsertBlock();
   BasicBlock *AfterBB =
       BasicBlock::Create(SCParser::TheContext,
                          "afterloop." + std::to_string(LocalLabel),
@@ -743,7 +1058,6 @@ Value *ForExprAST::codegen() {
   Builder.SetInsertPoint(AfterBB);
 
   // Add a new entry to the PHI node for the backedge.
-  Variable->addIncoming(NextVar, LoopEndBB);
 
   // Restore the unshadowed variable.
   if (OldVal)
@@ -760,14 +1074,93 @@ Value *VariableExprAST::codegen() {
   Value *V = SCParser::NamedValues[Name];
   if (!V)
     return LogErrorV("Unknown variable name: " + Name);
-  return V;
+  return SCParser::Builder.CreateLoad(V,Name.c_str());
+}
+
+Value *VarExprAST::codegen() {
+  std::vector<AllocaInst *> OldBindings;
+
+  Function *TheFunction = Builder.GetInsertBlock()->getParent();
+
+  // walk all the variables and their initializers
+  for (unsigned i = 0, e = VarNames.size(); i != e; ++i) {
+    const std::string &VarName = VarNames[i].first;
+    ExprAST *Init = VarNames[i].second.get();
+
+    // Emit the initializer before adding the variable to scope, this prevents
+    // the initializer from referencing the variable itself, and permits
+    // nested sets of variable definitions
+    Value *InitVal;
+    if (Init) {
+      InitVal = Init->codegen();
+      if (!InitVal)
+        return nullptr;
+    } else {
+      // If not specified, use DATATYPE(0)
+      // derive the respective type and init the correct
+      // type with the value
+      if( Attrs[i].defFloat ){
+        InitVal = ConstantFP::get(SCParser::TheContext,
+                                  APFloat(0.0));
+      }else{
+        InitVal = ConstantInt::get(SCParser::TheContext,
+                                   APInt(Attrs[i].width,
+                                         0,
+                                         Attrs[i].defSign));
+      }
+    }
+
+    AllocaInst *Alloca = CreateEntryBlockAlloca(TheFunction, VarName);
+    Builder.CreateStore(InitVal, Alloca);
+
+    OldBindings.push_back(SCParser::NamedValues[VarName]);
+    SCParser::NamedValues[VarName] = Alloca;
+  }
+
+  // Codegen the body, now that all vars are in scope.
+  Value *BodyVal = Body->codegen();
+  if (!BodyVal)
+    return nullptr;
+
+  // Pop all our variables from scope.
+  for (unsigned i = 0, e = VarNames.size(); i != e; ++i)
+    SCParser::NamedValues[VarNames[i].first] = OldBindings[i];
+
+  // Return the body computation.
+  return BodyVal;
 }
 
 Value *BinaryExprAST::codegen() {
+
+  // handle the special case of an assignment operator
+  if( Op == '='){
+    // Assignment requires the LHS to be an identifier.
+    // This assume we're building without RTTI because LLVM builds that way by
+    // default.  If you build LLVM with RTTI this can be changed to a
+    // dynamic_cast for automatic error checking.
+    VariableExprAST *LHSE = static_cast<VariableExprAST *>(LHS.get());
+    if (!LHSE)
+      return LogErrorV("destination of '=' must be a variable");
+    // Codegen the RHS.
+    Value *Val = RHS->codegen();
+    if (!Val)
+      return nullptr;
+
+    // Look up the name.
+    Value *Variable = SCParser::NamedValues[LHSE->getName()];
+    if (!Variable)
+      return LogErrorV("Unknown variable name");
+
+    Builder.CreateStore(Val, Variable);
+    return Val;
+  }
+
+  // handle the remainder of the binary operators
   Value *L = LHS->codegen();
   Value *R = RHS->codegen();
-  if (!L || !R)
+  if (!L || !R){
     return nullptr;
+  }
 
   switch (Op) {
   case '+':
@@ -780,9 +1173,16 @@ Value *BinaryExprAST::codegen() {
     L = SCParser::Builder.CreateFCmpULT(L, R, "cmptmp");
     // Convert bool 0/1 to double 0.0 or 1.0
     return SCParser::Builder.CreateUIToFP(L, Type::getDoubleTy(SCParser::TheContext), "booltmp");
+  case '>':
+    L = SCParser::Builder.CreateFCmpUGT(L, R, "cmptmp");
+    // Convert bool 0/1 to double 0.0 or 1.0
+    return SCParser::Builder.CreateUIToFP(L, Type::getDoubleTy(SCParser::TheContext), "booltmp");
   default:
     return LogErrorV("invalid binary operator");
   }
+
+  // we don't currently support user-defined binary operators, so just return here
+  // see chapter 6 in the llvm frontend tutorial
 }
 
 Value *CallExprAST::codegen() {
@@ -823,7 +1223,6 @@ Function *PrototypeAST::codegen() {
 }
 
 Value *RegClassAST::codegen(){
-  //Value *V = NamedValues[Name];
 
   for( unsigned i=0; i<Args.size(); i++ ){
     Type *VType;
@@ -857,57 +1256,83 @@ Value *RegClassAST::codegen(){
 }
 
 Function *FunctionAST::codegen() {
-  // First, check for an existing function from a previous 'extern' declaration.
-  Function *TheFunction = SCParser::TheModule->getFunction(Proto->getName());
-
-  if (!TheFunction)
-    TheFunction = Proto->codegen();
-
-  if (!TheFunction)
+  // Transfer ownership of the prototype to the FunctionsProtos map
+  // keep a reference for use below
+  auto &P = *Proto;
+  SCParser::FunctionProtos[Proto->getName()] = std::move(Proto);
+  Function *TheFunction = getFunction(P.getName());
+  if( !TheFunction )
     return nullptr;
 
-  // Create a new basic block to start insertion into.
+  // We don't currently support emitting user-defined binary operators
+  // This is Chapter6 in the LLVM Frontend tutorial
+
+  // Create a new basic block to start insertion into
   BasicBlock *BB = BasicBlock::Create(SCParser::TheContext,
-                                      "entry." + Proto->getName(),
+                                      "entry."+P.getName(),
                                       TheFunction);
   SCParser::Builder.SetInsertPoint(BB);
 
-  // Record the function arguments in the NamedValues map.
+  // Record the function arguments in the NamedValues map
   SCParser::NamedValues.clear();
-  for (auto &Arg : TheFunction->args())
-    SCParser::NamedValues[Arg.getName()] = &Arg;
+  for( auto &Arg : TheFunction->args()){
+    // create an alloca for this variable
+    AllocaInst *Alloca = CreateEntryBlockAlloca(TheFunction,Arg.getName());
 
-  if (Value *RetVal = Body->codegen()) {
-    // Finish off the function.
-    SCParser::Builder.CreateRet(RetVal);
+    // store the initial value into the alloca
+    Builder.CreateStore(&Arg, Alloca);
 
-    // Validate the generated code, checking for consistency.
+    // add arguments to the variable symbol table
+    SCParser::NamedValues[Arg.getName()] = Alloca;
+  }
+
+  // codegen all the body elements
+  // save the last element for the return value
+  for( unsigned i=0; i<Body.size()-1; i++ ){
+    Value *BVal = Body[i]->codegen();
+    if( !BVal )
+      return nullptr;
+  }
+
+  if( Value *RetVal = Body[Body.size()-1]->codegen() ){
+    // Finish off the function
+    Builder.CreateRet(RetVal);
     verifyFunction(*TheFunction);
-
+    if( SCParser::IsOpt ){
+      SCParser::TheFPM->run(*TheFunction);
+    }
     return TheFunction;
   }
 
-  // Error reading body, remove function.
   TheFunction->eraseFromParent();
   return nullptr;
 }
 
 Value *IfExprAST::codegen() {
   Value *CondV = Cond->codegen();
-  if (!CondV)
+  if (!CondV){
     return nullptr;
+  }
+
+  // Retrieve a unique local label
+  unsigned LocalLabel = GetLocalLabel();
 
   // Convert condition to a bool by comparing non-equal to 0.0.
   CondV = Builder.CreateFCmpONE(
-      CondV, ConstantFP::get(SCParser::TheContext, APFloat(0.0)), "ifcond");
+      CondV, ConstantFP::get(SCParser::TheContext, APFloat(0.0)),
+      "ifcond."+std::to_string(LocalLabel));
 
   Function *TheFunction = Builder.GetInsertBlock()->getParent();
 
   // Create blocks for the then and else cases.  Insert the 'then' block at the
   // end of the function.
-  BasicBlock *ThenBB = BasicBlock::Create(SCParser::TheContext, "then", TheFunction);
-  BasicBlock *ElseBB = BasicBlock::Create(SCParser::TheContext, "else");
-  BasicBlock *MergeBB = BasicBlock::Create(SCParser::TheContext, "ifcont");
+  BasicBlock *ThenBB = BasicBlock::Create(SCParser::TheContext,
+                                          "then."+std::to_string(LocalLabel),
+                                          TheFunction);
+  BasicBlock *ElseBB = BasicBlock::Create(SCParser::TheContext,
+                                          "else."+std::to_string(LocalLabel));
+  BasicBlock *MergeBB = BasicBlock::Create(SCParser::TheContext,
+                                           "ifcont."+std::to_string(LocalLabel));
 
   Builder.CreateCondBr(CondV, ThenBB, ElseBB);
 
@@ -915,8 +1340,9 @@ Value *IfExprAST::codegen() {
   Builder.SetInsertPoint(ThenBB);
 
   Value *ThenV = Then->codegen();
-  if (!ThenV)
+  if (!ThenV){
     return nullptr;
+  }
 
   Builder.CreateBr(MergeBB);
   // Codegen of 'Then' can change the current block, update ThenBB for the PHI.
@@ -926,9 +1352,12 @@ Value *IfExprAST::codegen() {
   TheFunction->getBasicBlockList().push_back(ElseBB);
   Builder.SetInsertPoint(ElseBB);
 
-  Value *ElseV = Else->codegen();
-  if (!ElseV)
-    return nullptr;
+  Value *ElseV;
+  if( Else != nullptr ){
+    ElseV = Else->codegen();
+    if (!ElseV)
+      return nullptr;
+  }
 
   Builder.CreateBr(MergeBB);
   // Codegen of 'Else' can change the current block, update ElseBB for the PHI.
@@ -937,12 +1366,14 @@ Value *IfExprAST::codegen() {
   // Emit merge block.
   TheFunction->getBasicBlockList().push_back(MergeBB);
   Builder.SetInsertPoint(MergeBB);
-  PHINode *PN = Builder.CreatePHI(Type::getDoubleTy(SCParser::TheContext), 2, "iftmp");
+  PHINode *PN = Builder.CreatePHI(Type::getDoubleTy(SCParser::TheContext),
+                                  2, "iftmp."+std::to_string(LocalLabel));
 
   PN->addIncoming(ThenV, ThenBB);
-  PN->addIncoming(ElseV, ElseBB);
+  if( Else != nullptr ){
+    PN->addIncoming(ElseV, ElseBB);
+  }
   return PN;
-  return nullptr;
 }
 
 //===----------------------------------------------------------------------===//

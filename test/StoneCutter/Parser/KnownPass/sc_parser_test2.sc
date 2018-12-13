@@ -3,5 +3,5 @@
 regclass foo( u8 r1 )
 
 def foo(n){
-  n = n+1;
+  n = n+1
 }

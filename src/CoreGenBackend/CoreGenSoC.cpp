@@ -32,9 +32,7 @@ bool CoreGenSoC::InsertCore( CoreGenCore *C ){
 
   // insert it
   Cores.push_back( C );
-  InsertChild(static_cast<CoreGenNode *>(C));
-
-  return true;
+  return InsertChild(static_cast<CoreGenNode *>(C));
 }
 
 CoreGenCore *CoreGenSoC::GetCore( unsigned C ){

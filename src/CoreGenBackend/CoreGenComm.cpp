@@ -35,9 +35,7 @@ bool CoreGenComm::InsertEndpoint( CoreGenNode *N ){
 
   // insert it into the endpoint vector and make it an official child
   EndPoints.push_back( N );
-  this->InsertChild(N);
-
-  return true;
+  return this->InsertChild(N);
 }
 
 bool CoreGenComm::DeleteEndpoint( CoreGenNode *N ){

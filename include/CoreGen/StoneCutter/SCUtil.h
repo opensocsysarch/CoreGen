@@ -36,6 +36,8 @@
 #include "llvm/IR/Verifier.h"
 #include "llvm/IR/GlobalVariable.h"
 
+using namespace llvm;
+
 typedef struct{
   unsigned width;
   unsigned elems;

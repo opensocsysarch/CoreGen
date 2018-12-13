@@ -28,6 +28,44 @@ int SCLexer::GetNext(){
   return TChar;
 }
 
+bool SCLexer::IsVarDef(){
+  int Idx = 0;
+
+  // common types
+  while( VarAttrEntryTable[Idx].Name != "." ){
+    if( IdentifierStr == VarAttrEntryTable[Idx].Name ){
+      Var.width     = VarAttrEntryTable[Idx].width;
+      Var.elems     = VarAttrEntryTable[Idx].elems;
+      Var.defSign   = VarAttrEntryTable[Idx].IsDefSign;
+      Var.defVector = VarAttrEntryTable[Idx].IsDefVector;
+      Var.defFloat  = VarAttrEntryTable[Idx].IsDefFloat;
+      return true;
+    }
+    Idx++;
+  }
+
+  // all other types
+  if( IdentifierStr[0] == 'u' ){
+    // unsigned variable
+    Var.elems     = 1;
+    Var.defSign   = false;
+    Var.defVector = false;
+    Var.defFloat  = false;
+    Var.width     = std::stoi( IdentifierStr.substr(1,IdentifierStr.length()-1) );
+    return true;
+  }else if( IdentifierStr[0] == 's' ){
+    // signed variable
+    Var.elems = 1;
+    Var.defSign   = true;
+    Var.defVector = false;
+    Var.defFloat  = false;
+    Var.width     = std::stoi( IdentifierStr.substr(1,IdentifierStr.length()-1) );
+    return true;
+  }
+
+  return false;
+}
+
 int SCLexer::GetTok(){
   static int LastChar = ' ';
 
@@ -54,14 +92,12 @@ int SCLexer::GetTok(){
       return tok_if;
     if( IdentifierStr == "else" )
       return tok_else;
-    if( IdentifierStr == "then" )
-      return tok_then;
     if( IdentifierStr == "elseif" )
       return tok_elseif;
     if( IdentifierStr == "for" )
       return tok_for;
-    if( IdentifierStr == "in" )
-      return tok_in;
+    if( IsVarDef() )
+      return tok_var;
 
     // the identifier
     return tok_identifier;

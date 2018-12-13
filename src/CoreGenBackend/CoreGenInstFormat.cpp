@@ -65,8 +65,7 @@ bool CoreGenInstFormat::InsertRegFieldMap( std::string Name,
       // found a match
       RegMap.insert( std::pair<std::string,CoreGenRegClass *>(Name,RClass) );
       CoreGenNode *N = static_cast<CoreGenNode *>(RClass);
-      InsertChild(N);
-      return true;
+      return InsertChild(N);
     }
   }
 

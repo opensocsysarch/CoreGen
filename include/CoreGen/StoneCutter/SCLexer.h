@@ -11,6 +11,7 @@
 #ifndef _STONECUTTER_SCLEXER_H_
 #define _STONECUTTER_SCLEXER_H_
 
+// LLVM headers
 #include "llvm/ADT/APFloat.h"
 #include "llvm/ADT/STLExtras.h"
 #include "llvm/IR/BasicBlock.h"
@@ -23,6 +24,10 @@
 #include "llvm/IR/Type.h"
 #include "llvm/IR/Verifier.h"
 
+// StoneCutter headers
+#include "CoreGen/StoneCutter/SCUtil.h"
+
+// Standard headers
 #include <algorithm>
 #include <cctype>
 #include <cstdio>
@@ -51,13 +56,12 @@ enum SCToken {
 
   // conditionals
   tok_if          = -8,
-  tok_then        = -9,
-  tok_elseif      = -10,
-  tok_else        = -11,
+  tok_elseif      = -9,
+  tok_else        = -10,
 
   // loop control
-  tok_for         = -12,
-  tok_in          = -13
+  tok_for         = -11,
+  tok_var         = -12
 };
 
 class SCLexer{
@@ -80,15 +84,22 @@ public:
   /// Retrieve the line number
   unsigned long GetLineNum() { return LineNum; }
 
+  /// Retrieve the most recent variable entry data
+  VarAttrs GetVarAttrs() { return Var; }
+
 private:
   std::string InBuf;                ///< Input buffer
   std::string IdentifierStr;        ///< Utilized for tok_identifier
   double NumVal;                    ///< Utilized for tok_number
   unsigned long LineNum;            ///< Current line number
   int CurChar;                      ///< Current parsed character
+  VarAttrs Var;                     ///< Parameters for most recent variable entry
 
   /// Read the next character from the input string
   int GetNext();
+
+  /// Determine if the current token is a variable definition
+  bool IsVarDef();
 };
 
 #endif

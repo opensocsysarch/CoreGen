@@ -98,9 +98,7 @@ bool CoreGenPseudoInst::SetEncoding( std::string F, uint64_t V ){
   Encodings.push_back(E);
 
   // make it a dependency
-  InsertChild(static_cast<CoreGenNode *>(E));
-
-  return true;
+  return InsertChild(static_cast<CoreGenNode *>(E));
 }
 
 uint64_t CoreGenPseudoInst::GetEncoding( std::string F ){

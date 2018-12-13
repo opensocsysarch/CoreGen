@@ -47,7 +47,6 @@
 
 using namespace llvm;
 
-
 class SCParser{
 public:
 
@@ -68,6 +67,15 @@ public:
 
   /// Execute the optimizer against the IR
   bool Optimize();
+
+  /// Disables individual passes; all others enabled
+  bool DisablePasses(std::vector<std::string> P);
+
+  /// Enables individual passes; all others disabled
+  bool EnablePasses(std::vector<std::string> P);
+
+  /// Retrieve the list of LLVM passes
+  std::vector<std::string> GetPassList();
 
   // AST Classes
 
@@ -104,6 +112,25 @@ public:
     Value *codegen() override;
   };
 
+  ///VarExprAST - Expression class for variables
+  class VarExprASTContainer : public ExprASTContainer {
+    std::vector<std::pair<std::string,
+                          std::unique_ptr<ExprASTContainer>>> VarNames;
+    std::vector<VarAttrs> Attrs;
+    std::unique_ptr<ExprASTContainer> Body;
+
+    public:
+      VarExprASTContainer(std::vector<std::pair<std::string,
+                                      std::unique_ptr<ExprASTContainer>>> VarNames,
+                          std::vector<VarAttrs> Attrs,
+                          std::unique_ptr<ExprASTContainer> Body)
+        : VarNames(std::move(VarNames)),
+          Attrs(std::move(Attrs)),
+          Body(std::move(Body)) {}
+
+    Value *codegen() override;
+  };
+
   /// IfExprAST - Expression class for conditionals
   class IfExprASTContainer : public ExprASTContainer {
     std::unique_ptr<ExprASTContainer> Cond, Then, Else;
@@ -133,8 +160,8 @@ public:
 
   public:
     VariableExprASTContainer(const std::string &Name) : Name(Name) {}
-
     Value *codegen() override;
+    const std::string &getName() const { return Name; }
   };
 
   /// BinaryExprAST - Expression class for a binary operator.
@@ -199,11 +226,11 @@ public:
   /// FunctionAST - This class represents a function definition itself.
   class FunctionASTContainer {
     std::unique_ptr<PrototypeASTContainer> Proto;
-    std::unique_ptr<ExprASTContainer> Body;
+    std::vector<std::unique_ptr<ExprASTContainer>> Body;
 
   public:
     FunctionASTContainer(std::unique_ptr<PrototypeASTContainer> Proto,
-                         std::unique_ptr<ExprASTContainer> Body)
+                         std::vector<std::unique_ptr<ExprASTContainer>> Body)
       : Proto(std::move(Proto)), Body(std::move(Body)) {}
 
     Function *codegen();
@@ -213,9 +240,11 @@ public:
   static LLVMContext TheContext;
   static IRBuilder<> Builder;
   static std::unique_ptr<Module> TheModule;
-  static std::map<std::string, Value *> NamedValues;
+  static std::map<std::string, AllocaInst*> NamedValues;
+  static std::map<std::string, std::unique_ptr<PrototypeASTContainer>> FunctionProtos;
   static std::unique_ptr<legacy::FunctionPassManager> TheFPM;
   static unsigned LabelIncr;
+  static bool IsOpt;
 
 private:
 
@@ -227,13 +256,29 @@ private:
 
   // flags
   bool InFunc;                          ///< Determines whether the parser is in a function body
-  bool IsOpt;                           ///< Determines whether to run the optimizer
 
   bool Rtn;                             ///< Return status of the parser
 
   std::map<char, int> BinopPrecedence;  ///< StoneCutter binary operand precedence
 
+  std::map<std::string,bool> EPasses;   ///< LLVM enabled passes
+
   // private functions
+
+  /// Checks the input vector of pass names against the known passes list
+  bool CheckPassNames(std::vector<std::string> P);
+
+  /// Calculates the edit distance between the two strings
+  unsigned EditDistance(std::string &s1, std::string &s2);
+
+  /// Retrieves the closest string to the input pass name
+  std::string GetNearbyString(std::string &Input);
+
+  /// Initializes the pass map
+  void InitPassMap();
+
+  /// Determines whether the target pass is enabled
+  bool IsPassEnabled(std::string P);
 
   /// Initialize the pass manager
   void InitModuleandPassManager();
@@ -293,6 +338,9 @@ private:
   /// Parse a for loop
   std::unique_ptr<ExprASTContainer> ParseForExpr();
 
+  /// Parse a variable expression
+  std::unique_ptr<ExprASTContainer> ParseVarExpr();
+
   /// Parse the closing of a function body
   bool ParseCloseBracket();
 
@@ -338,6 +386,7 @@ typedef SCParser::FunctionASTContainer FunctionAST;
 typedef SCParser::RegClassASTContainer RegClassAST;
 typedef SCParser::IfExprASTContainer IfExprAST;
 typedef SCParser::ForExprASTContainer ForExprAST;
+typedef SCParser::VarExprASTContainer VarExprAST;
 
 #endif
 

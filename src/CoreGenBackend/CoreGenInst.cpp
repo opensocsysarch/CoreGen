@@ -38,8 +38,7 @@ bool CoreGenInst::SetISA( CoreGenISA *ISA ){
   }
 
   isa = ISA;
-  InsertChild(static_cast<CoreGenNode *>(ISA));
-  return true;
+  return InsertChild(static_cast<CoreGenNode *>(ISA));
 }
 
 bool CoreGenInst::SetFormat( CoreGenInstFormat *Format ){
@@ -58,9 +57,7 @@ bool CoreGenInst::SetFormat( CoreGenInstFormat *Format ){
   // Insert the new one
   format = Format;
   CoreGenNode *Node = static_cast<CoreGenNode *>(Format);
-  InsertChild(Node);
-
-  return true;
+  return InsertChild(Node);
 }
 
 CoreGenEncoding *CoreGenInst::GetEncoding( unsigned I ){
@@ -126,8 +123,7 @@ bool CoreGenInst::SetEncoding( std::string F, uint64_t V ){
   Encodings.push_back(E);
 
   // make it a dependency
-  InsertChild( static_cast<CoreGenNode *>(E) );
-  return true;
+  return InsertChild( static_cast<CoreGenNode *>(E) );
 }
 
 CoreGenInstFormat *CoreGenInst::GetFormat(){

@@ -11,13 +11,14 @@
 #ifndef _STONECUTTER_SCOPTS_H_
 #define _STONECUTTER_SCOPTS_H_
 
+// Standard Headers
 #include <iostream>
 #include <string>
 #include <vector>
 #include <streambuf>
 
+// StoneCutter Headers
 #include "CoreGen/StoneCutter/SCMsg.h"
-
 
 #ifndef SC_MAJOR_VERSION
 #define SC_MAJOR_VERSION 0
@@ -44,10 +45,16 @@ private:
   bool isChisel;    ///< SCOpts: Execute the chisel codegen
   bool isCG;        ///< SCOpts: Execute the object codegen
   bool isVerbose;   ///< SCOpts: Enable verbosity
+  bool isDisable;   ///< SCOpts: Manually disabled passes flag
+  bool isEnable;    ///< SCOpts: Manually disabled passes flag
+  bool isListPass;  ///< SCOpts: User selected pass listing flag
 
   std::string OutFile;  ///< SCOpts: Output file designator
 
   std::vector<std::string> FileList;  ///< SCOpts: List of files to compile
+
+  std::vector<std::string> EnablePass;  ///< SCOpts: List of enabled passes
+  std::vector<std::string> DisablePass; ///< SCOpts: List of disabled passes
 
   SCMsg *Msgs;    ///< SCOpts: Message handlers
 
@@ -57,6 +64,13 @@ private:
 
   /// Print the version information
   void PrintVersion();
+
+  /// Parse the pass options and split them into a vector
+  std::vector<std::string> ParsePasses(std::string P);
+
+  /// Split the options list by commas
+  void Split(const std::string &s, char delim,
+             std::vector<std::string>& v);
 
 public:
   /// SCOpts: Constructor
@@ -83,11 +97,26 @@ public:
   /// SCOpts: Do we execute the parser
   bool IsParse() { return isParse; }
 
+  /// SCOpts: Do we have manually disabled passes
+  bool IsDisablePass() { return isDisable; }
+
+  /// SCOpts: Do we have manually enabled passes
+  bool IsEnablePass() { return isEnable; }
+
+  /// SCOpts: Do we need to list the passes
+  bool IsListPass() { return isListPass; }
+
   /// SCOpts: Do we execute the optimizer
   bool IsOptimize() { return isOptimize; }
 
   /// SCOpts: Is verbosity enabled?
   bool IsVerbose() { return isVerbose; }
+
+  /// SCOpts: Retrieve the list of disabled passes
+  std::vector<std::string> GetDisabledPass() { return DisablePass; }
+
+  /// SCOpts: Rerieve the list of enabled passes
+  std::vector<std::string> GetEnablePass() { return EnablePass; }
 
   /// SCOpts: Retrieve the output file name
   std::string GetOutputFile() { return OutFile; }

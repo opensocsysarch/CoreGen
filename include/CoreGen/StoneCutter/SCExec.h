@@ -58,6 +58,9 @@ private:
   SCMsg *Msgs;        ///< SCExec: Messages object
   SCParser *Parser;   ///< SCExec: Parser object
 
+  // private functions
+  bool PrintPassList();
+
 public:
   /// SCExec: Constructor
   SCExec(SCOpts *, SCMsg *);
