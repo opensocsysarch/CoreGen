@@ -47,7 +47,6 @@
 
 using namespace llvm;
 
-
 class SCParser{
 public:
 
@@ -68,6 +67,15 @@ public:
 
   /// Execute the optimizer against the IR
   bool Optimize();
+
+  /// Disables individual passes; all others enabled
+  bool DisablePasses(std::vector<std::string> P);
+
+  /// Enables individual passes; all others disabled
+  bool EnablePasses(std::vector<std::string> P);
+
+  /// Retrieve the list of LLVM passes
+  std::vector<std::string> GetPassList();
 
   // AST Classes
 
@@ -253,7 +261,24 @@ private:
 
   std::map<char, int> BinopPrecedence;  ///< StoneCutter binary operand precedence
 
+  std::map<std::string,bool> EPasses;   ///< LLVM enabled passes
+
   // private functions
+
+  /// Checks the input vector of pass names against the known passes list
+  bool CheckPassNames(std::vector<std::string> P);
+
+  /// Calculates the edit distance between the two strings
+  unsigned EditDistance(std::string &s1, std::string &s2);
+
+  /// Retrieves the closest string to the input pass name
+  std::string GetNearbyString(std::string &Input);
+
+  /// Initializes the pass map
+  void InitPassMap();
+
+  /// Determines whether the target pass is enabled
+  bool IsPassEnabled(std::string P);
 
   /// Initialize the pass manager
   void InitModuleandPassManager();

@@ -25,6 +25,7 @@ SCParser::SCParser(std::string B, std::string F, SCMsg *M)
   TheModule = llvm::make_unique<Module>(StringRef(FileName), TheContext);
   InitBinopPrecedence();
   LabelIncr = 0;
+  InitPassMap();
 }
 
 SCParser::SCParser(SCMsg *M)
@@ -38,6 +39,22 @@ SCParser::~SCParser(){
   TheModule.reset();
   TheFPM.reset();
   NamedValues.clear();
+}
+
+void SCParser::InitPassMap(){
+  EPasses.insert(std::pair<std::string,bool>("PromoteMemoryToRegisterPass",true));
+  EPasses.insert(std::pair<std::string,bool>("InstructionCombiningPass",true));
+  EPasses.insert(std::pair<std::string,bool>("ReassociatePass",true));
+  EPasses.insert(std::pair<std::string,bool>("GVNPass",true));
+  EPasses.insert(std::pair<std::string,bool>("CFGSimplificationPass",true));
+  EPasses.insert(std::pair<std::string,bool>("ConstantPropagationPass",true));
+  EPasses.insert(std::pair<std::string,bool>("IndVarSimplifyPass",true));
+  EPasses.insert(std::pair<std::string,bool>("LICMPass",true));
+  EPasses.insert(std::pair<std::string,bool>("LoopDeletionPass",true));
+  EPasses.insert(std::pair<std::string,bool>("LoopIdiomPass",true));
+  EPasses.insert(std::pair<std::string,bool>("LoopRerollPass",true));
+  EPasses.insert(std::pair<std::string,bool>("LoopRotatePass",true));
+  EPasses.insert(std::pair<std::string,bool>("LoopUnswitchPass",true));
 }
 
 bool SCParser::SetInputs( std::string B, std::string F ){
@@ -56,48 +73,209 @@ bool SCParser::SetInputs( std::string B, std::string F ){
 // Optimizer
 //===----------------------------------------------------------------------===//
 
+std::vector<std::string> SCParser::GetPassList(){
+  std::vector<std::string> P;
+
+  for( auto it = EPasses.begin(); it != EPasses.end(); ++it ){
+    P.push_back(it->first);
+  }
+
+  return P;
+}
+
+// Utilizes Levenshtein Edit Distance algorithm from:
+// https://en.wikibooks.org/wiki/Algorithm_Implementation/Strings/Levenshtein_distance#C++
+// Based upon the original common Lisp implementation whereby only two of the columns
+// in the matrix are utilized
+unsigned SCParser::EditDistance( std::string &s1, std::string &s2 ){
+  const std::size_t len1 = s1.size(), len2 = s2.size();
+  std::vector<unsigned int> col(len2+1), prevCol(len2+1);
+
+  for (unsigned int i = 0; i < prevCol.size(); i++){
+    prevCol[i] = i;
+  }
+
+  for (unsigned int i = 0; i < len1; i++) {
+    col[0] = i+1;
+    for (unsigned int j = 0; j < len2; j++){
+      // note that std::min({arg1, arg2, arg3}) works only in C++11,
+      // for C++98 use std::min(std::min(arg1, arg2), arg3)
+      col[j+1] = std::min({ prevCol[1 + j] + 1, col[j] + 1, prevCol[j] + (s1[i]==s2[j] ? 0 : 1) });
+    }
+    col.swap(prevCol);
+  }
+
+  return prevCol[len2];
+}
+
+std::string SCParser::GetNearbyString(std::string &Input){
+  // build a vector of the known pass names
+  std::vector<std::string> Passes;
+  for( auto it = EPasses.begin(); it != EPasses.end(); ++it ){
+    Passes.push_back(it->first);
+  }
+
+  // search the vector
+  std::string RtnStr;
+  unsigned LowVal;
+
+  // walk all the pass values and find their edit distance from the input
+  LowVal = EditDistance(Input,Passes[0]);
+  RtnStr = Passes[0];
+  for( unsigned i=1; i<Passes.size(); i++ ){
+    unsigned tmp = EditDistance(Input,Passes[i]);
+    if( tmp < LowVal ){
+      LowVal = tmp;
+      RtnStr = Passes[i];
+    }
+  }
+
+  return RtnStr;
+}
+
+bool SCParser::CheckPassNames(std::vector<std::string> P){
+
+  bool rtn = true;
+
+  for( unsigned i=0; i<P.size(); i++ ){
+    auto Search = EPasses.find(P[i]);
+    if( Search == EPasses.end() ){
+      // misspelled pass name
+      Msgs->PrintMsg( L_ERROR, "Unknown pass name: \"" + P[i]
+                                + "\". Did you mean "
+                                + GetNearbyString(P[i]) + "?");
+      rtn = false;
+    }
+  }
+  return rtn;
+}
+
+bool SCParser::DisablePasses(std::vector<std::string> P){
+  if( !CheckPassNames(P) ){
+    // something is misspelled
+    return false;
+  }
+  // enable everything, just to be pedantic
+  for( auto it=EPasses.begin(); it != EPasses.end(); ++it){
+    it->second = true;
+  }
+
+  // disable individual passes
+  for( unsigned i=0; i<P.size(); i++ ){
+    for( auto it=EPasses.begin(); it != EPasses.end(); ++it){
+      if( it->first == P[i] ){
+        it->second = false;
+      }
+    }
+  }
+  return true;
+}
+
+bool SCParser::EnablePasses(std::vector<std::string> P){
+  if( !CheckPassNames(P) ){
+    // something is misspelled
+    return false;
+  }
+  // disbale everything, just to be pedantic
+  for( auto it=EPasses.begin(); it != EPasses.end(); ++it){
+    it->second = false;
+  }
+
+  // disable individual passes
+  for( unsigned i=0; i<P.size(); i++ ){
+    for( auto it=EPasses.begin(); it != EPasses.end(); ++it){
+      if( it->first == P[i] ){
+        it->second = true;
+      }
+    }
+  }
+  return true;
+}
+
+bool SCParser::IsPassEnabled(std::string P){
+  if( P.length() == 0 ){
+    return false;
+  }
+
+  std::map<std::string,bool>::iterator it;
+
+  for( it = EPasses.begin(); it != EPasses.end(); ++it ){
+    if( it->first == P ){
+      return it->second;
+    }
+  }
+
+  return false;
+}
+
 void SCParser::InitModuleandPassManager(){
   // create a new pass manager
   TheFPM = llvm::make_unique<legacy::FunctionPassManager>(TheModule.get());
 
   // promote allocas to registers
-  TheFPM->add(createPromoteMemoryToRegisterPass());
+  if( IsPassEnabled("PromoteMemoryToRegisterPass") ){
+    TheFPM->add(createPromoteMemoryToRegisterPass());
+  }
 
   // enable simple peephole opts and bit-twiddling opts
-  TheFPM->add(createInstructionCombiningPass());
+  if( IsPassEnabled("InstructionCombiningPass") ){
+    TheFPM->add(createInstructionCombiningPass());
+  }
 
   // enable reassociation of epxressions
-  TheFPM->add(createReassociatePass());
+  if( IsPassEnabled("ReassociatePass") ){
+    TheFPM->add(createReassociatePass());
+  }
 
   // eliminate common subexpressions
-  TheFPM->add(createGVNPass());
+  if( IsPassEnabled("GVNPass" ) ){
+    TheFPM->add(createGVNPass());
+  }
 
   // simplify the control flow graph
-  TheFPM->add(createCFGSimplificationPass());
+  if( IsPassEnabled("CFGSimplificationPass") ){
+    TheFPM->add(createCFGSimplificationPass());
+  }
 
   // constant propogations
-  TheFPM->add(createConstantPropagationPass());
+  if( IsPassEnabled("ConstantPropagationPass") ){
+    TheFPM->add(createConstantPropagationPass());
+  }
 
   // induction variable simplification pass
-  TheFPM->add(createIndVarSimplifyPass());
+  if( IsPassEnabled("IndVarSimplifyPass") ){
+    TheFPM->add(createIndVarSimplifyPass());
+  }
 
   // loop invariant code motion
-  TheFPM->add(createLICMPass());
+  if( IsPassEnabled("LICMPass") ){
+    TheFPM->add(createLICMPass());
+  }
 
   // loop deletion
-  TheFPM->add(createLoopDeletionPass());
+  if( IsPassEnabled( "LoopDeletionPass") ){
+    TheFPM->add(createLoopDeletionPass());
+  }
 
   // loop idiom
-  TheFPM->add(createLoopIdiomPass());
+  if( IsPassEnabled( "LoopIdiomPass") ){
+    TheFPM->add(createLoopIdiomPass());
+  }
 
   // loop re-roller
-  TheFPM->add(createLoopRerollPass());
+  if( IsPassEnabled( "LoopRerollPass") ){
+    TheFPM->add(createLoopRerollPass());
+  }
 
   // loop rotation
-  TheFPM->add(createLoopRotatePass());
+  if( IsPassEnabled( "LoopRotatePass" ) ){
+    TheFPM->add(createLoopRotatePass());
+  }
 
   // loop unswitching
-  TheFPM->add(createLoopUnswitchPass());
+  if( IsPassEnabled( "LoopUnswitchPass" ) ){
+    TheFPM->add(createLoopUnswitchPass());
+  }
 
   // Init it!
   TheFPM->doInitialization();

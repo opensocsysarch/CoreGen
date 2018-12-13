@@ -19,8 +19,37 @@ SCExec::SCExec( SCOpts *O, SCMsg *M )
 SCExec::~SCExec(){}
 
 
+// ------------------------------------------------- PRINTPASSLIST
+bool SCExec::PrintPassList(){
+  std::string TmpFile = ".parsetmp";
+  std::ifstream t(TmpFile);
+  std::string Buf( (std::istreambuf_iterator<char>(t)),
+                   (std::istreambuf_iterator<char>()));
+
+  Parser = new SCParser(Buf,TmpFile,Msgs);
+  if( !Parser ){
+    Msgs->PrintMsg( L_ERROR, "Failed to initiate the StoneCutter parser" );
+    return false;
+  }
+
+  std::vector<std::string> P = Parser->GetPassList();
+  Msgs->PrintRawMsg( " StoneCutter LLVM Optimization Passes" );
+  Msgs->PrintRawMsg( "--------------------------------------------------------------------------------" );
+  for( unsigned i=0; i<P.size(); i++ ){
+    Msgs->PrintRawMsg( " -\t" + P[i] );
+  }
+  Msgs->PrintRawMsg( "--------------------------------------------------------------------------------" );
+  delete Parser;
+  return true;
+}
+
 // ------------------------------------------------- EXEC
 bool SCExec::Exec(){
+
+  // Do we want to list the passes and immediately exit? 
+  if( Opts->IsListPass() ){
+    return PrintPassList();
+  }
 
   // for each file, read it into a buffer and parse it
   // accordingly
@@ -40,6 +69,25 @@ bool SCExec::Exec(){
 
     // Do we execute the inline optimizer?
     if( Opts->IsOptimize() ){
+      // do we need to manually enable passes?
+      if( Opts->IsEnablePass() ){
+        if( !Parser->EnablePasses(Opts->GetEnablePass()) ){
+        Msgs->PrintMsg( L_ERROR, "Failed to manually enable optimization passes" );
+        delete Parser;
+        return false;
+        }
+      }
+
+      // do we need to manually disable passes?
+      if( Opts->IsDisablePass() ){
+        if( !Parser->DisablePasses(Opts->GetDisabledPass()) ){
+        Msgs->PrintMsg( L_ERROR, "Failed to manually disable optimization passes" );
+        delete Parser;
+        return false;
+        }
+      }
+
+      // enable the optimizer
       if( !Parser->Optimize() ){
         Msgs->PrintMsg( L_ERROR, "Failed to initialize the optimizer" );
         delete Parser;
