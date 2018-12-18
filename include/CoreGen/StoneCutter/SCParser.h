@@ -146,10 +146,10 @@ public:
 
   /// NumberExprAST - Expression class for numeric literals like "1.0".
   class NumberExprASTContainer : public ExprASTContainer {
-    double Val;
+    uint64_t Val;
 
   public:
-    NumberExprASTContainer(double Val) : Val(Val) {}
+    NumberExprASTContainer(uint64_t Val) : Val(Val) {}
 
     Value *codegen() override;
   };
