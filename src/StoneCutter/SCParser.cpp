@@ -293,13 +293,27 @@ bool SCParser::Optimize(){
 
 void SCParser::InitBinopPrecedence(){
   BinopPrecedence['='] = 10;
-  BinopPrecedence['<'] = 10;
-  BinopPrecedence['>'] = 10;
+  BinopPrecedence['<'] = 11;
+  BinopPrecedence['>'] = 11;
+  BinopPrecedence['|'] = 15;
+  BinopPrecedence['^'] = 16;
+  BinopPrecedence['&'] = 17;
+  //BinopPrecedence['!'] = 18;
   BinopPrecedence['+'] = 20;
   BinopPrecedence['-'] = 20;
   BinopPrecedence['*'] = 40;
   BinopPrecedence['/'] = 40;
   BinopPrecedence['%'] = 40;
+
+  // dyadic operators
+  BinopPrecedence[dyad_shfl]    = 13;
+  BinopPrecedence[dyad_shfr]    = 13;
+  BinopPrecedence[dyad_shfr]    = 13;
+  BinopPrecedence[dyad_eqeq]    = 12;
+  BinopPrecedence[dyad_noteq]   = 12;
+  BinopPrecedence[dyad_logand]  = 11;
+  BinopPrecedence[dyad_logor]   = 11;
+
 #if 0
   BinopPrecedence["="] = 10;
   BinopPrecedence["+"] = 20;
@@ -416,6 +430,10 @@ int SCParser::GetNextToken(){
 }
 
 int SCParser::GetTokPrecedence(){
+  if( CurTok == tok_dyad ){
+    return BinopPrecedence[StrToDyad()];
+  }
+
   if (!isascii(CurTok))
     return -1;
 
@@ -424,6 +442,25 @@ int SCParser::GetTokPrecedence(){
   if (TokPrec <= 0)
     return -1;
   return TokPrec;
+}
+
+int SCParser::StrToDyad(){
+  std::string TStr = Lex->GetIdentifierStr();
+  if( TStr == "<<" ){
+    return dyad_shfl;
+  }else if( TStr == ">>" ){
+    return dyad_shfr;
+  }else if( TStr == "==" ){
+    return dyad_eqeq;
+  }else if( TStr == "!=" ){
+    return dyad_noteq;
+  }else if( TStr == "&&" ){
+    return dyad_logand;
+  }else if( TStr == "||" ){
+    return dyad_logor;
+  }else{
+    return '.'; // this will induce an error
+  }
 }
 
 std::unique_ptr<ExprAST> SCParser::ParseNumberExpr() {
@@ -539,6 +576,7 @@ std::unique_ptr<ExprAST> SCParser::ParseIfExpr() {
 std::unique_ptr<ExprAST> SCParser::ParsePrimary() {
   switch (CurTok) {
   default:
+    std::cout << "ParsePrimary CurTok = " << CurTok << std::endl;
     return LogError("unknown token when expecting an expression" );
   case tok_identifier:
     return ParseIdentifierExpr();
@@ -568,7 +606,14 @@ std::unique_ptr<ExprAST> SCParser::ParseBinOpRHS(int ExprPrec,
 
     // Okay, we know this is a binop.
     int BinOp = CurTok;
-    GetNextToken(); // eat binop
+
+    // handle dyadic binary operators
+    if( BinOp == tok_dyad ){
+      // convert BinOp to dyadic operator
+      BinOp = StrToDyad();
+    }
+
+    GetNextToken(); // eat binop; must be done after dyadic operator conversion
 
     // Parse the primary expression after the binary operator.
     auto RHS = ParsePrimary();
@@ -1213,6 +1258,20 @@ Value *BinaryExprAST::codegen() {
     return L;
     // Convert bool 0/1 to double 0.0 or 1.0
     //return SCParser::Builder.CreateUIToFP(L, Type::getDoubleTy(SCParser::TheContext), "booltmp");
+  case '%':
+    return SCParser::Builder.CreateURem(L, R, "modtmp");
+  case '/':
+    return SCParser::Builder.CreateUDiv(L, R, "divtmp", true);
+  case '&':
+    return SCParser::Builder.CreateAnd(L, R, "andtmp" );
+  case '|':
+    return SCParser::Builder.CreateOr(L, R, "ortmp" );
+  case '^':
+    return SCParser::Builder.CreateXor(L, R, "xortmp" );
+  case dyad_shfl:
+    return SCParser::Builder.CreateShl(L, R, "shfltmp", false, false );
+  case dyad_shfr:
+    return SCParser::Builder.CreateLShr(L, R, "lshfrtmp", false );
   default:
     return LogErrorV("invalid binary operator");
   }

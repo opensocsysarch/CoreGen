@@ -61,8 +61,12 @@ enum SCToken {
 
   // loop control
   tok_for         = -11,
-  tok_var         = -12
+  tok_var         = -12,
+
+  // dyadic operators
+  tok_dyad        = -20
 };
+
 
 class SCLexer{
 public:
@@ -98,8 +102,14 @@ private:
   /// Read the next character from the input string
   int GetNext();
 
+  /// Peeks at the next character, but does not consume it
+  int PeekNext();
+
   /// Determine if the current token is a variable definition
   bool IsVarDef();
+
+  /// Detrmines in the token is a potential dyadic operator
+  bool IsDyadic(int LC);
 };
 
 #endif

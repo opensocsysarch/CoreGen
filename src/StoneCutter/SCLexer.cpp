@@ -28,6 +28,30 @@ int SCLexer::GetNext(){
   return TChar;
 }
 
+int SCLexer::PeekNext(){
+  if( (unsigned)(CurChar) >= InBuf.size() ){
+    return EOF;
+  }
+  return InBuf[CurChar];
+}
+
+bool SCLexer::IsDyadic(int LC){
+  if( LC == '=' ){
+    return true;
+  }else if( LC == '<' ){
+    return true;
+  }else if( LC == '>' ){
+    return true;
+  }else if( LC == '!' ){
+    return true;
+  }else if( LC == '&' ){
+    return true;
+  }else if( LC == '|' ){
+    return true;
+  }
+  return false;
+}
+
 bool SCLexer::IsVarDef(){
   int Idx = 0;
 
@@ -128,6 +152,22 @@ int SCLexer::GetTok(){
   // Check for end of file.  Don't eat the EOF.
   if (LastChar == EOF)
     return tok_eof;
+
+  // Check for special binary operators [<<,>>,==,!=,&&,||]
+  if( IsDyadic(LastChar) && IsDyadic(PeekNext()) ){
+    // record the dyadic operator in the identifer string
+    // first operator
+    IdentifierStr = LastChar;
+    // second operator
+    LastChar = GetNext();
+    IdentifierStr += LastChar;
+
+    LastChar = GetNext();
+    //LastChar = GetTok();
+
+    // return this as a dyad
+    return tok_dyad;
+  }
 
   // Otherwise, just return the character as its ascii value.
   int ThisChar = LastChar;
