@@ -50,15 +50,10 @@ bool ASPSolverPass::Execute(){
 
   std::ofstream out(ASPDagFile);
 
-  // this string contains the file name of your target
-  // ASP rule set
-  //std::string ASPFile = this->GetInStr();
-
   // return value
   bool rtn = true;
 
   // execute the ASP solver
-  // TODO
 
   //Build DAG in ASP
   for(unsigned i = 0; i < D3->GetDimSize(); i++){
@@ -67,6 +62,10 @@ bool ASPSolverPass::Execute(){
       out << N->GetASP();
     }
   }
+  out << "cacheIsParent(X, true) :- cacheParentOf(X, Y)." << std::endl;
+  out << "cacheIsChild(X, true) :- cacheChildOf(X, Y)." << std::endl;
+  out << "cacheIsParent(X, false) :- not cacheIsParent(X, true), cache(X)." << std::endl;
+  out << "cacheIsChild(X, false) :- not cacheIsChild(X, true), cache(X)." << std::endl;
   out.close();
 
   for(unsigned i = 0; i < Files.size(); i++){
@@ -85,15 +84,7 @@ bool ASPSolverPass::Execute(){
       rtn = false;
     }
   }
-/*
-  std::string cmd = "clingo aspdag.lp " + ASPFile;
-  if (system(cmd.c_str()) == 7680){
-    rtn = true;
-  }
-  else{
-    rtn = false;
-  }
-*/
+
   return rtn;
 }
 
