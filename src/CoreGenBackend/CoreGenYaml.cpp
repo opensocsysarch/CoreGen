@@ -179,6 +179,28 @@ CoreGenNode *CoreGenYaml::NameToNode( std::string Target,
   return nullptr;
 }
 
+bool CoreGenYaml::IsValidName(std::string N){
+  // YAML Node Name Rules:
+  // - must have a length > 0
+  // - must start with an alpha character
+  // - must only contain alphanumeric characters, except '.'
+
+  if( N.length() == 0 ){
+    return false;
+  }
+  if( !std::isalpha(N[0]) ){
+    return false;
+  }
+  for( unsigned i=0; i<N.length(); i++ ){
+    if( N[i] != '.' ){
+      if( !std::isalnum(N[i]) ){
+        return false;
+      }
+    }
+  }
+  return true;
+}
+
 unsigned CoreGenYaml::GetLineNum(const YAML::Node Node){
   return Node.Mark().line;
 }
@@ -1313,6 +1335,10 @@ bool CoreGenYaml::ReadProjYaml(const YAML::Node& ProjNodes ){
     return false;
   }
   std::string ProjectName = Node["ProjectName"].as<std::string>();
+  if( !IsValidName(ProjectName) ){
+    Errno->SetError(CGERR_ERROR, "Invalid IR Node Name: " + ProjectName );
+    return false;
+  }
   Proj->SetProjName(ProjectName);
 
   if( !CheckValidNode(Node,"ProjectRoot") ){
@@ -1369,6 +1395,10 @@ bool CoreGenYaml::ReadRegisterYaml(const YAML::Node& RegNodes,
       return false;
     }
     std::string Name = Node["RegName"].as<std::string>();
+    if( !IsValidName(Name) ){
+      Errno->SetError(CGERR_ERROR, "Invalid IR Node Name: " + Name );
+      return false;
+    }
 
     if( !CheckValidNode(Node,"Width") ){
       PrintParserError(Node,
@@ -1546,6 +1576,10 @@ bool CoreGenYaml::ReadRegisterClassYaml(const YAML::Node& RegClassNodes,
       return false;
     }
     std::string Name = Node["RegisterClassName"].as<std::string>();
+    if( !IsValidName(Name) ){
+      Errno->SetError(CGERR_ERROR, "Invalid IR Node Name: " + Name );
+      return false;
+    }
 #if 0
     // currently unused
     int NumRegs = Node["NumRegisters"].as<int>();
@@ -1614,6 +1648,10 @@ bool CoreGenYaml::ReadISAYaml(const YAML::Node& ISANodes,
       return false;
     }
     std::string ISAName = Node["ISAName"].as<std::string>();
+    if( !IsValidName(ISAName) ){
+      Errno->SetError(CGERR_ERROR, "Invalid IR Node Name: " + ISAName );
+      return false;
+    }
     CoreGenISA *ISA = new CoreGenISA(ISAName, Errno);
 
     if( CheckValidNode(Node,"RTL") ){
@@ -1646,6 +1684,10 @@ bool CoreGenYaml::ReadInstFormatYaml(const YAML::Node& InstFormatNodes,
       return false;
     }
     std::string Name = Node["InstFormatName"].as<std::string>();
+    if( !IsValidName(Name) ){
+      Errno->SetError(CGERR_ERROR, "Invalid IR Node Name: " + Name );
+      return false;
+    }
 
     if( !CheckValidNode(Node,"ISA") ){
       PrintParserError(Node,
@@ -1805,6 +1847,10 @@ bool CoreGenYaml::ReadInstYaml(const YAML::Node& InstNodes,
     const YAML::Node& Node = InstNodes[i];
 
     std::string Name = Node["Inst"].as<std::string>();
+    if( !IsValidName(Name) ){
+      Errno->SetError(CGERR_ERROR, "Invalid IR Node Name: " + Name );
+      return false;
+    }
     std::string ISAName = Node["ISA"].as<std::string>();
     std::string InstFormat = Node["InstFormat"].as<std::string>();
 
@@ -1877,6 +1923,10 @@ bool CoreGenYaml::ReadPseudoInstYaml(const YAML::Node& PInstNodes,
     const YAML::Node& Node = PInstNodes[i];
 
     std::string Name = Node["PseudoInst"].as<std::string>();
+    if( !IsValidName(Name) ){
+      Errno->SetError(CGERR_ERROR, "Invalid IR Node Name: " + Name );
+      return false;
+    }
     std::string ISAName = Node["ISA"].as<std::string>();
     std::string InstName = Node["Inst"].as<std::string>();
 
@@ -1946,6 +1996,10 @@ bool CoreGenYaml::ReadCacheYaml(const YAML::Node& CacheNodes,
     const YAML::Node& Node = CacheNodes[i];
 
     std::string Name = Node["Cache"].as<std::string>();
+    if( !IsValidName(Name) ){
+      Errno->SetError(CGERR_ERROR, "Invalid IR Node Name: " + Name );
+      return false;
+    }
     int Sets = Node["Sets"].as<int>();
     int Ways = Node["Ways"].as<int>();
 
@@ -1999,6 +2053,10 @@ bool CoreGenYaml::ReadCoreYaml(const YAML::Node& CoreNodes,
   for( unsigned i=0; i<CoreNodes.size(); i++ ){
     const YAML::Node& Node = CoreNodes[i];
     std::string Name = Node["Core"].as<std::string>();
+    if( !IsValidName(Name) ){
+      Errno->SetError(CGERR_ERROR, "Invalid IR Node Name: " + Name );
+      return false;
+    }
     std::string Cache;
     if( Node["Cache"] ){
       Cache = Node["Cache"].as<std::string>();
@@ -2093,6 +2151,10 @@ bool CoreGenYaml::ReadSocYaml(const YAML::Node& SocNodes,
   for( unsigned i=0; i<SocNodes.size(); i++ ){
     const YAML::Node& Node = SocNodes[i];
     std::string Name = Node["Soc"].as<std::string>();
+    if( !IsValidName(Name) ){
+      Errno->SetError(CGERR_ERROR, "Invalid IR Node Name: " + Name );
+      return false;
+    }
 
     CoreGenSoC *S = new CoreGenSoC( Name, Errno );
     if( S == nullptr ){
@@ -2140,6 +2202,10 @@ bool CoreGenYaml::ReadSpadYaml(const YAML::Node& SpadNodes,
   for( unsigned i=0; i<SpadNodes.size(); i++ ){
     const YAML::Node& Node = SpadNodes[i];
     std::string Name = Node["Scratchpad"].as<std::string>();
+    if( !IsValidName(Name) ){
+      Errno->SetError(CGERR_ERROR, "Invalid IR Node Name: " + Name );
+      return false;
+    }
 
     unsigned MemSize = 0;
     unsigned RqstPorts = 0;
@@ -2185,6 +2251,10 @@ bool CoreGenYaml::ReadMCtrlYaml(const YAML::Node& MCtrlNodes,
   for( unsigned i=0; i<MCtrlNodes.size(); i++ ){
     const YAML::Node& Node = MCtrlNodes[i];
     std::string Name = Node["MemoryController"].as<std::string>();
+    if( !IsValidName(Name) ){
+      Errno->SetError(CGERR_ERROR, "Invalid IR Node Name: " + Name );
+      return false;
+    }
 
     unsigned Ports = 0;
     if( Node["Ports"] ){
@@ -2215,6 +2285,10 @@ bool CoreGenYaml::ReadVTPYaml( const YAML::Node& VTPNodes,
   for( unsigned i=0; i<VTPNodes.size(); i++ ){
     const YAML::Node& Node = VTPNodes[i];
     std::string Name = Node["VTP"].as<std::string>();
+    if( !IsValidName(Name) ){
+      Errno->SetError(CGERR_ERROR, "Invalid IR Node Name: " + Name );
+      return false;
+    }
 
     CoreGenVTP *V = new CoreGenVTP(Name,Errno);
 
@@ -2239,6 +2313,10 @@ bool CoreGenYaml::ReadPluginYaml(const YAML::Node& PluginNodes,
       return false;
     }
     std::string NodeName = Node["Plugin"].as<std::string>();
+    if( !IsValidName(NodeName) ){
+      Errno->SetError(CGERR_ERROR, "Invalid IR Node Name: " + NodeName );
+      return false;
+    }
 
     if( !CheckValidNode(Node,"PluginName") ){
       PrintParserError(Node,
@@ -2527,6 +2605,10 @@ bool CoreGenYaml::ReadExtYaml(const YAML::Node& ExtNodes,
   for( unsigned i=0; i<ExtNodes.size(); i++ ){
     const YAML::Node& Node = ExtNodes[i];
     std::string Name = Node["Extension"].as<std::string>();
+    if( !IsValidName(Name) ){
+      Errno->SetError(CGERR_ERROR, "Invalid IR Node Name: " + Name );
+      return false;
+    }
 
     std::string Type = Node["Type"].as<std::string>();
     std::transform(Type.begin(),Type.end(),Type.begin(),::tolower);
@@ -2727,6 +2809,10 @@ bool CoreGenYaml::ReadCommYaml( const YAML::Node& CommNodes,
   for( unsigned i=0; i<CommNodes.size(); i++ ){
     const YAML::Node& Node = CommNodes[i];
     std::string Name = Node["Comm"].as<std::string>();
+    if( !IsValidName(Name) ){
+      Errno->SetError(CGERR_ERROR, "Invalid IR Node Name: " + Name );
+      return false;
+    }
 
     // type
     std::string Type = Node["Type"].as<std::string>();
