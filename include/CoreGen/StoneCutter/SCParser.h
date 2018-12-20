@@ -48,14 +48,6 @@
 using namespace llvm;
 
 enum SCDyad {
-#if 0
-  dyad_shfl   = 128,
-  dyad_shfr   = 129,
-  dyad_eqeq   = 130,
-  dyad_noteq  = 131,
-  dyad_logand = 132,
-  dyad_logor  = 133
-#endif
   dyad_shfl   = 10,
   dyad_shfr   = 11,
   dyad_eqeq   = 12,

@@ -1053,10 +1053,6 @@ Value *ForExprAST::codegen() {
   SCParser::Builder.CreateStore(StartVal,Alloca);
 
   unsigned LocalLabel = GetLocalLabel();
-#if 0
-  unsigned LocalLabel = SCParser::LabelIncr;
-  SCParser::LabelIncr++;
-#endif
 
   // Make the new basic block for the loop header, inserting after current
   // block.
@@ -1272,6 +1268,14 @@ Value *BinaryExprAST::codegen() {
     return SCParser::Builder.CreateShl(L, R, "shfltmp", false, false );
   case dyad_shfr:
     return SCParser::Builder.CreateLShr(L, R, "lshfrtmp", false );
+  case dyad_eqeq:
+    return SCParser::Builder.CreateICmpEQ(L, R, "cmpeq" );
+  case dyad_noteq:
+    return SCParser::Builder.CreateICmpNE(L, R, "cmpeq" );
+  case dyad_logand:
+    return SCParser::Builder.CreateAnd(L, R, "andtmp" );
+  case dyad_logor:
+    return SCParser::Builder.CreateOr(L, R, "ortmp" );
   default:
     return LogErrorV("invalid binary operator");
   }
