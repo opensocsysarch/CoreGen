@@ -458,6 +458,10 @@ int SCParser::StrToDyad(){
     return dyad_logand;
   }else if( TStr == "||" ){
     return dyad_logor;
+  }else if( TStr == ">=" ){
+    return dyad_gte;
+  }else if( TStr == "<=" ){
+    return dyad_lte;
   }else{
     return '.'; // this will induce an error
   }
@@ -1276,6 +1280,12 @@ Value *BinaryExprAST::codegen() {
     return SCParser::Builder.CreateAnd(L, R, "andtmp" );
   case dyad_logor:
     return SCParser::Builder.CreateOr(L, R, "ortmp" );
+  case dyad_gte:
+    L = SCParser::Builder.CreateICmpUGE(L, R, "cmptmp");
+    return L;
+  case dyad_lte:
+    L = SCParser::Builder.CreateICmpULE(L, R, "cmptmp");
+    return L;
   default:
     return LogErrorV("invalid binary operator");
   }

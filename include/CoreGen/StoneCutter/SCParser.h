@@ -53,7 +53,9 @@ enum SCDyad {
   dyad_eqeq   = 12,
   dyad_noteq  = 13,
   dyad_logand = 14,
-  dyad_logor  = 15
+  dyad_logor  = 15,
+  dyad_gte    = 16,
+  dyad_lte    = 17
 };
 
 class SCParser{
