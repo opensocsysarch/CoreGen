@@ -106,7 +106,7 @@ steps on vanilla CentOS 7.4 systems.
 
 1.  Install the system dependencies:
 ```
-sudo yum -y install cmake centos-release-scl texlive texlive-*.noarch llvm-static llvm-toolset-7-llvm-devel llvm-toolset-7-build llvm-toolset-7-cmake llvm-toolset-7-lldb-devel llvm-toolset-7-libomp-devel llvm-toolset-7-clang-devel llvm-toolset-7-llvm-static zlib-devel
+sudo yum -y install cmake centos-release-scl texlive texlive-*.noarch llvm-static llvm-toolset-7-llvm-devel llvm-toolset-7-build llvm-toolset-7-cmake llvm-toolset-7-lldb-devel llvm-toolset-7-libomp-devel llvm-toolset-7-clang-devel llvm-toolset-7-llvm-static zlib-devel re2c lua lua-devel
 ```
 1. [Optional] For those wishing to build CentOS7 RPMS, you also need the following packages.
 ```

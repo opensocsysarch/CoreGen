@@ -55,6 +55,9 @@ else()
   set(COREGEN_LINK_LIBS "")
 endif()
 
+# Set the clingo build options
+set(CLINGO_BUILD_STATIC ON)
+
 #------------------------------------------------------------------------
 #-- FIND PACKAGES
 #------------------------------------------------------------------------
