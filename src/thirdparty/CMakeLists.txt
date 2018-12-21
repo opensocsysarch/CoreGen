@@ -8,3 +8,4 @@
 # express permission of Tactical Computing Laboratories, LLC
 #
 add_subdirectory(clingo-5.3.0)
+add_subdirectory(yaml)

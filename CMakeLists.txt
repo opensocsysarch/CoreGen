@@ -107,8 +107,13 @@ if(NOT COREGEN_BUILD_DIR)
 endif()
 
 if(NOT YAML_PATH)
-  set(YAML_PATH "${CMAKE_CURRENT_SOURCE_DIR}/src/yaml/yaml-cpp")
+  set(YAML_PATH "${CMAKE_CURRENT_SOURCE_DIR}/src/thirdparty/yaml/yaml-cpp")
   message(STATUS "YAML_PATH set to ${YAML_PATH}")
+endif()
+
+if(NOT CLINGO_PATH)
+  set(CLINGO_PATH "${CMAKE_CURRENT_SOURCE_DIR}/src/thirdparty/clingo-5.3.0")
+  message(STATUS "CLINGO_PATH set to ${CLINGO_PATH}")
 endif()
 
 #------------------------------------------------------------------------
