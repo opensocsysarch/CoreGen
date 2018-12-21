@@ -44,7 +44,7 @@ sudo apt-get update
 ```
 1.  Install the system dependencies:
 ```
-sudo apt-get install -y libllvm-6.0-ocaml-dev libllvm6.0 llvm-6.0 llvm-6.0-dev llvm-6.0-doc llvm-6.0-examples llvm-6.0-runtime clang-6.0 clang-tools-6.0 clang-6.0-doc libclang-common-6.0-dev libclang-6.0-dev libclang1-6.0 clang-format-6.0 python-clang-6.0
+sudo apt-get install -y libllvm-6.0-ocaml-dev libllvm6.0 llvm-6.0 llvm-6.0-dev llvm-6.0-doc llvm-6.0-examples llvm-6.0-runtime clang-6.0 clang-tools-6.0 clang-6.0-doc libclang-common-6.0-dev libclang-6.0-dev libclang1-6.0 clang-format-6.0 python-clang-6.0 re2c lua5.3 liblua5.3-dev
 ```
 1. Clone the CoreGen repository
 ```
@@ -76,7 +76,7 @@ sudo apt-get update
 ```
 1.  Install the system dependencies:
 ```
-sudo apt-get install -y clang-6.0 lldb-6.0 lld-6.0 libllvm6.0 llvm-6.0 llvm-6.0-dev llvm-6.0-doc llvm-6.0-examples llvm-6.0-runtime
+sudo apt-get install -y clang-6.0 lldb-6.0 lld-6.0 libllvm6.0 llvm-6.0 llvm-6.0-dev llvm-6.0-doc llvm-6.0-examples llvm-6.0-runtime re2c lua5.3 liblua5.3-dev
 ```
 1. Clone the CoreGen repository
 ```
@@ -106,14 +106,14 @@ steps on vanilla CentOS 7.4 systems.
 
 1.  Install the system dependencies:
 ```
-sudo yum -y install cmake centos-release-scl texlive texlive-*.noarch llvm-static llvm-toolset-7-llvm-devel llvm-toolset-7-build llvm-toolset-7-cmake llvm-toolset-7-lldb-devel llvm-toolset-7-libomp-devel llvm-toolset-7-clang-devel llvm-toolset-7-llvm-static zlib-devel re2c lua lua-devel
+sudo yum -y install cmake centos-release-scl texlive texlive-*.noarch llvm-static llvm-toolset-7-llvm-devel llvm-toolset-7-build llvm-toolset-7-cmake llvm-toolset-7-lldb-devel llvm-toolset-7-libomp-devel llvm-toolset-7-clang-devel llvm-toolset-7-llvm-static zlib-devel re2c lua lua-devel devtoolset-7
 ```
 1. [Optional] For those wishing to build CentOS7 RPMS, you also need the following packages.
 ```
 sudo yum install rpm-build rpmdevtools
 ```
 1. Enable the SCL LLVM environment (this will create a fresh bash shell with the correct paths)
-``scl enable llvm-toolset-7 bash``
+``scl enable llvm-toolset-7 devtoolset-7 bash``
 1. Clone the CoreGen repository
 ```
 git clone https://github.com/opensocsysarch/CoreGen.git
