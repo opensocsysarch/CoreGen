@@ -13,7 +13,7 @@ echo "# this is a stonecutter source file" >> $FILE 2>&1
 
 $SCCOMP_PATH/sccomp -k $FILE
 retVal=$?
-if [ ! $? -eq 0 ]; then
+if [[ "$retval" -ne 0 ]]; then
   echo "$SCCOMP_PATH/sccomp -k $FILE failed with return code = $retVal"
   rm -Rf $FILE
   exit $retVal
@@ -21,7 +21,7 @@ fi
 
 $SCCOMP_PATH/sccomp -keep $FILE
 retVal=$?
-if [ ! $? -eq 0 ]; then
+if [[ "$retval" -ne 0 ]]; then
   echo "$SCCOMP_PATH/sccomp -keep $FILE failed with return code = $retVal"
   rm -Rf $FILE
   exit $retVal
@@ -29,12 +29,12 @@ fi
 
 $SCCOMP_PATH/sccomp --keep $FILE
 retVal=$?
-if [ ! $? -eq 0 ]; then
+if [[ "$retval" -ne 0 ]]; then
   echo "$SCCOMP_PATH/sccomp --keep $FILE failed with return code = $retVal"
   rm -Rf $FILE
   exit $retVal
 fi
 
-rm -Rf $FILE
+rm -Rf $FILE *.ll
 
 exit 0

@@ -293,13 +293,27 @@ bool SCParser::Optimize(){
 
 void SCParser::InitBinopPrecedence(){
   BinopPrecedence['='] = 10;
-  BinopPrecedence['<'] = 10;
-  BinopPrecedence['>'] = 10;
+  BinopPrecedence['<'] = 11;
+  BinopPrecedence['>'] = 11;
+  BinopPrecedence['|'] = 15;
+  BinopPrecedence['^'] = 16;
+  BinopPrecedence['&'] = 17;
+  //BinopPrecedence['!'] = 18;
   BinopPrecedence['+'] = 20;
   BinopPrecedence['-'] = 20;
   BinopPrecedence['*'] = 40;
   BinopPrecedence['/'] = 40;
   BinopPrecedence['%'] = 40;
+
+  // dyadic operators
+  BinopPrecedence[dyad_shfl]    = 13;
+  BinopPrecedence[dyad_shfr]    = 13;
+  BinopPrecedence[dyad_shfr]    = 13;
+  BinopPrecedence[dyad_eqeq]    = 12;
+  BinopPrecedence[dyad_noteq]   = 12;
+  BinopPrecedence[dyad_logand]  = 11;
+  BinopPrecedence[dyad_logor]   = 11;
+
 #if 0
   BinopPrecedence["="] = 10;
   BinopPrecedence["+"] = 20;
@@ -416,6 +430,10 @@ int SCParser::GetNextToken(){
 }
 
 int SCParser::GetTokPrecedence(){
+  if( CurTok == tok_dyad ){
+    return BinopPrecedence[StrToDyad()];
+  }
+
   if (!isascii(CurTok))
     return -1;
 
@@ -424,6 +442,29 @@ int SCParser::GetTokPrecedence(){
   if (TokPrec <= 0)
     return -1;
   return TokPrec;
+}
+
+int SCParser::StrToDyad(){
+  std::string TStr = Lex->GetIdentifierStr();
+  if( TStr == "<<" ){
+    return dyad_shfl;
+  }else if( TStr == ">>" ){
+    return dyad_shfr;
+  }else if( TStr == "==" ){
+    return dyad_eqeq;
+  }else if( TStr == "!=" ){
+    return dyad_noteq;
+  }else if( TStr == "&&" ){
+    return dyad_logand;
+  }else if( TStr == "||" ){
+    return dyad_logor;
+  }else if( TStr == ">=" ){
+    return dyad_gte;
+  }else if( TStr == "<=" ){
+    return dyad_lte;
+  }else{
+    return '.'; // this will induce an error
+  }
 }
 
 std::unique_ptr<ExprAST> SCParser::ParseNumberExpr() {
@@ -539,6 +580,7 @@ std::unique_ptr<ExprAST> SCParser::ParseIfExpr() {
 std::unique_ptr<ExprAST> SCParser::ParsePrimary() {
   switch (CurTok) {
   default:
+    std::cout << "ParsePrimary CurTok = " << CurTok << std::endl;
     return LogError("unknown token when expecting an expression" );
   case tok_identifier:
     return ParseIdentifierExpr();
@@ -568,7 +610,14 @@ std::unique_ptr<ExprAST> SCParser::ParseBinOpRHS(int ExprPrec,
 
     // Okay, we know this is a binop.
     int BinOp = CurTok;
-    GetNextToken(); // eat binop
+
+    // handle dyadic binary operators
+    if( BinOp == tok_dyad ){
+      // convert BinOp to dyadic operator
+      BinOp = StrToDyad();
+    }
+
+    GetNextToken(); // eat binop; must be done after dyadic operator conversion
 
     // Parse the primary expression after the binary operator.
     auto RHS = ParsePrimary();
@@ -946,12 +995,32 @@ static unsigned GetLocalLabel(){
   SCParser::LabelIncr++;
   return LocalLabel;
 }
-static AllocaInst *CreateEntryBlockAlloca(Function *TheFunction,
-                                          const std::string &VarName) {
+
+static AllocaInst *CreateEntryBlockAllocaAttr(Function *TheFunction,
+                                              const std::string &VarName,
+                                              VarAttrs Attr) {
   IRBuilder<> TmpB(&TheFunction->getEntryBlock(),
                  TheFunction->getEntryBlock().begin());
-  return TmpB.CreateAlloca(Type::getDoubleTy(SCParser::TheContext), 0,
-                           VarName.c_str());
+
+  if( Attr.defFloat ){
+    return TmpB.CreateAlloca(Type::getDoubleTy(SCParser::TheContext), 0,
+                             VarName.c_str());
+  }else{
+    return TmpB.CreateAlloca(Type::getIntNTy(SCParser::TheContext,Attr.width), 0,
+                             VarName.c_str());
+  }
+}
+
+static AllocaInst *CreateEntryBlockAlloca(Function *TheFunction,
+                                          const std::string &VarName) {
+  // if variable attributes are undefined, define a dummy u64 value
+  VarAttrs A;
+  A.width = 64;
+  A.elems = 1;
+  A.defSign = false;
+  A.defVector = false;
+  A.defFloat = false;
+  return CreateEntryBlockAllocaAttr(TheFunction,VarName,A);
 }
 
 Function *getFunction(std::string Name ){
@@ -969,7 +1038,8 @@ Function *getFunction(std::string Name ){
 }
 
 Value *NumberExprAST::codegen() {
-  return ConstantFP::get(SCParser::TheContext, APFloat(Val));
+  //return ConstantFP::get(SCParser::TheContext, APFloat(Val));
+  return ConstantInt::get(SCParser::TheContext, APInt(64,Val,false));
 }
 
 Value *ForExprAST::codegen() {
@@ -987,10 +1057,6 @@ Value *ForExprAST::codegen() {
   SCParser::Builder.CreateStore(StartVal,Alloca);
 
   unsigned LocalLabel = GetLocalLabel();
-#if 0
-  unsigned LocalLabel = SCParser::LabelIncr;
-  SCParser::LabelIncr++;
-#endif
 
   // Make the new basic block for the loop header, inserting after current
   // block.
@@ -1024,8 +1090,9 @@ Value *ForExprAST::codegen() {
     if (!StepVal)
       return nullptr;
   } else {
-    // If not specified, use 1.0.
-    StepVal = ConstantFP::get(SCParser::TheContext, APFloat(1.0));
+    // If not specified, use u64(0)
+    //StepVal = ConstantFP::get(SCParser::TheContext, APFloat(1.0));
+    StepVal = ConstantInt::get(SCParser::TheContext, APInt(64,0,false));
   }
 
   // Compute the end condition.
@@ -1034,15 +1101,20 @@ Value *ForExprAST::codegen() {
     return nullptr;
 
   Value *CurVar  = Builder.CreateLoad(Alloca,VarName.c_str());
-  Value *NextVar = Builder.CreateFAdd(CurVar,
+  //Value *NextVar = Builder.CreateFAdd(CurVar,
+  Value *NextVar = Builder.CreateAdd(CurVar,
                                       StepVal,
                                       "nextvar" + std::to_string(LocalLabel));
   Builder.CreateStore(NextVar,Alloca);
 
   // Convert condition to a bool by comparing non-equal to 0.0.
-  EndCond = Builder.CreateFCmpONE(
-      EndCond, ConstantFP::get(SCParser::TheContext,
-                               APFloat(0.0)),
+  //EndCond = Builder.CreateFCmpONE(
+  EndCond = Builder.CreateICmpNE(
+      //EndCond, ConstantFP::get(SCParser::TheContext,
+      //                         APFloat(0.0)),
+      //                         "loopcond" + std::to_string(LocalLabel));
+      EndCond, ConstantInt::get(SCParser::TheContext,
+                               APInt(1,0,false)),
                                "loopcond" + std::to_string(LocalLabel));
 
   // Create the "after loop" block and insert it.
@@ -1066,7 +1138,7 @@ Value *ForExprAST::codegen() {
     NamedValues.erase(VarName);
 
   // for expr always returns 0.0.
-  return Constant::getNullValue(Type::getDoubleTy(SCParser::TheContext));
+  return Constant::getNullValue(Type::getIntNTy(SCParser::TheContext,64));
 }
 
 Value *VariableExprAST::codegen() {
@@ -1110,7 +1182,9 @@ Value *VarExprAST::codegen() {
       }
     }
 
-    AllocaInst *Alloca = CreateEntryBlockAlloca(TheFunction, VarName);
+    AllocaInst *Alloca = CreateEntryBlockAllocaAttr(TheFunction,
+                                                    VarName,
+                                                    Attrs[i]);
     Builder.CreateStore(InitVal, Alloca);
 
     OldBindings.push_back(SCParser::NamedValues[VarName]);
@@ -1164,19 +1238,54 @@ Value *BinaryExprAST::codegen() {
 
   switch (Op) {
   case '+':
-    return SCParser::Builder.CreateFAdd(L, R, "addtmp");
+    //return SCParser::Builder.CreateFAdd(L, R, "addtmp");
+    return SCParser::Builder.CreateAdd(L, R, "addtmp");
   case '-':
-    return SCParser::Builder.CreateFSub(L, R, "subtmp");
+    //return SCParser::Builder.CreateFSub(L, R, "subtmp");
+    return SCParser::Builder.CreateSub(L, R, "subtmp");
   case '*':
-    return SCParser::Builder.CreateFMul(L, R, "multmp");
+    //return SCParser::Builder.CreateFMul(L, R, "multmp");
+    return SCParser::Builder.CreateMul(L, R, "multmp");
   case '<':
-    L = SCParser::Builder.CreateFCmpULT(L, R, "cmptmp");
+    //L = SCParser::Builder.CreateFCmpULT(L, R, "cmptmp");
+    L = SCParser::Builder.CreateICmpULT(L, R, "cmptmp");
     // Convert bool 0/1 to double 0.0 or 1.0
-    return SCParser::Builder.CreateUIToFP(L, Type::getDoubleTy(SCParser::TheContext), "booltmp");
+    return L;
+    //return SCParser::Builder.CreateUIToFP(L, Type::getDoubleTy(SCParser::TheContext), "booltmp");
   case '>':
-    L = SCParser::Builder.CreateFCmpUGT(L, R, "cmptmp");
+    //L = SCParser::Builder.CreateFCmpUGT(L, R, "cmptmp");
+    L = SCParser::Builder.CreateICmpUGT(L, R, "cmptmp");
+    return L;
     // Convert bool 0/1 to double 0.0 or 1.0
-    return SCParser::Builder.CreateUIToFP(L, Type::getDoubleTy(SCParser::TheContext), "booltmp");
+    //return SCParser::Builder.CreateUIToFP(L, Type::getDoubleTy(SCParser::TheContext), "booltmp");
+  case '%':
+    return SCParser::Builder.CreateURem(L, R, "modtmp");
+  case '/':
+    return SCParser::Builder.CreateUDiv(L, R, "divtmp", true);
+  case '&':
+    return SCParser::Builder.CreateAnd(L, R, "andtmp" );
+  case '|':
+    return SCParser::Builder.CreateOr(L, R, "ortmp" );
+  case '^':
+    return SCParser::Builder.CreateXor(L, R, "xortmp" );
+  case dyad_shfl:
+    return SCParser::Builder.CreateShl(L, R, "shfltmp", false, false );
+  case dyad_shfr:
+    return SCParser::Builder.CreateLShr(L, R, "lshfrtmp", false );
+  case dyad_eqeq:
+    return SCParser::Builder.CreateICmpEQ(L, R, "cmpeq" );
+  case dyad_noteq:
+    return SCParser::Builder.CreateICmpNE(L, R, "cmpeq" );
+  case dyad_logand:
+    return SCParser::Builder.CreateAnd(L, R, "andtmp" );
+  case dyad_logor:
+    return SCParser::Builder.CreateOr(L, R, "ortmp" );
+  case dyad_gte:
+    L = SCParser::Builder.CreateICmpUGE(L, R, "cmptmp");
+    return L;
+  case dyad_lte:
+    L = SCParser::Builder.CreateICmpULE(L, R, "cmptmp");
+    return L;
   default:
     return LogErrorV("invalid binary operator");
   }
@@ -1207,9 +1316,16 @@ Value *CallExprAST::codegen() {
 
 Function *PrototypeAST::codegen() {
   // Make the function type:  double(double,double) etc.
-  std::vector<Type *> Doubles(Args.size(), Type::getDoubleTy(SCParser::TheContext));
+  // TODO: This eventually needs to look up the variable names
+  // in the register class lists
+  // If they are found, use the datatype from the register value
+  // Otherwise, default to u64
+  //std::vector<Type *> Doubles(Args.size(), Type::getDoubleTy(SCParser::TheContext));
+  std::vector<Type *> Doubles(Args.size(),
+                              Type::getIntNTy(SCParser::TheContext,64));
   FunctionType *FT =
-      FunctionType::get(Type::getDoubleTy(SCParser::TheContext), Doubles, false);
+      FunctionType::get(Type::getIntNTy(SCParser::TheContext,64), Doubles, false);
+      //FunctionType::get(Type::getDoubleTy(SCParser::TheContext), Doubles, false);
 
   Function *F =
       Function::Create(FT, Function::ExternalLinkage, Name, SCParser::TheModule.get());
@@ -1277,6 +1393,8 @@ Function *FunctionAST::codegen() {
   SCParser::NamedValues.clear();
   for( auto &Arg : TheFunction->args()){
     // create an alloca for this variable
+    // TODO: we eventually need to record the function arg types
+    //       such that we can correctly setup the alloca's
     AllocaInst *Alloca = CreateEntryBlockAlloca(TheFunction,Arg.getName());
 
     // store the initial value into the alloca
@@ -1318,8 +1436,11 @@ Value *IfExprAST::codegen() {
   unsigned LocalLabel = GetLocalLabel();
 
   // Convert condition to a bool by comparing non-equal to 0.0.
-  CondV = Builder.CreateFCmpONE(
-      CondV, ConstantFP::get(SCParser::TheContext, APFloat(0.0)),
+  //CondV = Builder.CreateFCmpONE(
+  //    CondV, ConstantFP::get(SCParser::TheContext, APFloat(0.0)),
+  //    "ifcond."+std::to_string(LocalLabel));
+  CondV = Builder.CreateICmpNE(
+      CondV, ConstantInt::get(SCParser::TheContext, APInt(1,0,false)),
       "ifcond."+std::to_string(LocalLabel));
 
   Function *TheFunction = Builder.GetInsertBlock()->getParent();
@@ -1366,7 +1487,9 @@ Value *IfExprAST::codegen() {
   // Emit merge block.
   TheFunction->getBasicBlockList().push_back(MergeBB);
   Builder.SetInsertPoint(MergeBB);
-  PHINode *PN = Builder.CreatePHI(Type::getDoubleTy(SCParser::TheContext),
+  //PHINode *PN = Builder.CreatePHI(Type::getDoubleTy(SCParser::TheContext),
+  //                                2, "iftmp."+std::to_string(LocalLabel));
+  PHINode *PN = Builder.CreatePHI(Type::getIntNTy(SCParser::TheContext,64),
                                   2, "iftmp."+std::to_string(LocalLabel));
 
   PN->addIncoming(ThenV, ThenBB);

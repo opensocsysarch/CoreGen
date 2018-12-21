@@ -47,6 +47,17 @@
 
 using namespace llvm;
 
+enum SCDyad {
+  dyad_shfl   = 10,
+  dyad_shfr   = 11,
+  dyad_eqeq   = 12,
+  dyad_noteq  = 13,
+  dyad_logand = 14,
+  dyad_logor  = 15,
+  dyad_gte    = 16,
+  dyad_lte    = 17
+};
+
 class SCParser{
 public:
 
@@ -146,10 +157,10 @@ public:
 
   /// NumberExprAST - Expression class for numeric literals like "1.0".
   class NumberExprASTContainer : public ExprASTContainer {
-    double Val;
+    uint64_t Val;
 
   public:
-    NumberExprASTContainer(double Val) : Val(Val) {}
+    NumberExprASTContainer(uint64_t Val) : Val(Val) {}
 
     Value *codegen() override;
   };
@@ -291,6 +302,9 @@ private:
 
   /// Get the token precedence
   int GetTokPrecedence();
+
+  /// Convert the identifier string to a dyadic operator value
+  int StrToDyad();
 
   /// Initialize the binary operand precedence
   void InitBinopPrecedence();

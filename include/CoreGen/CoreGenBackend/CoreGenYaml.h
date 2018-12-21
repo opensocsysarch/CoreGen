@@ -66,6 +66,9 @@ private:
 
   std::vector<std::string> CNames; ///< CoreGenYaml: Cache printer storage
 
+  /// Determine if the YAML node name is valid
+  bool IsValidName(std::string Name);
+
   /// Retrieve the line number of the target node
   unsigned GetLineNum(const YAML::Node Node);
 
