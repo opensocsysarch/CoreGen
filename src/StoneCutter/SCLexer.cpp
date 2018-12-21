@@ -35,6 +35,11 @@ int SCLexer::PeekNext(){
   return InBuf[CurChar];
 }
 
+bool SCLexer::IsIntrinsic(){
+  // walk the intrinsic table and determine whether we have any candidates
+  return false;
+}
+
 bool SCLexer::IsDyadic(int LC){
   if( LC == '=' ){
     return true;
@@ -122,6 +127,8 @@ int SCLexer::GetTok(){
       return tok_for;
     if( IsVarDef() )
       return tok_var;
+    if( IsIntrinsic() )
+      return tok_intrin;
 
     // the identifier
     return tok_identifier;
@@ -158,12 +165,12 @@ int SCLexer::GetTok(){
     // record the dyadic operator in the identifer string
     // first operator
     IdentifierStr = LastChar;
+
     // second operator
     LastChar = GetNext();
     IdentifierStr += LastChar;
 
     LastChar = GetNext();
-    //LastChar = GetTok();
 
     // return this as a dyad
     return tok_dyad;

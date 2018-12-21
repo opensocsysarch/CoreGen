@@ -64,7 +64,10 @@ enum SCToken {
   tok_var         = -12,
 
   // dyadic operators
-  tok_dyad        = -20
+  tok_dyad        = -20,
+
+  // intrinsics
+  tok_intrin      = -30
 };
 
 
@@ -104,6 +107,9 @@ private:
 
   /// Peeks at the next character, but does not consume it
   int PeekNext();
+
+  /// Determines whether the current token is an intrinsic
+  bool IsIntrinsic();
 
   /// Determine if the current token is a variable definition
   bool IsVarDef();
