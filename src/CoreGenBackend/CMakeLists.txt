@@ -38,14 +38,13 @@ add_subdirectory(Passes)
 
 include_directories(${COREGEN_INCLUDE_PATH})
 include_directories(${YAML_PATH}/include)
+include_directories(${CLINGO_PATH}/clingo)
+link_directories(${CMAKE_ARCHIVE_OUTPUT_DIRECTORY})
 add_library(CoreGenBackend ${CoreGenSrcs} $<TARGET_OBJECTS:DataPassObjs>
                                           $<TARGET_OBJECTS:AnalysisPassObjs>)
-target_link_libraries(CoreGenBackend CoreGenPluginImpl CoreGenCodegen yaml-cpp ${COREGEN_LINK_LIBS})
+target_link_libraries(CoreGenBackend CoreGenPluginImpl CoreGenCodegen yaml-cpp libclingo libpyclingo libluaclingo ${COREGEN_LINK_LIBS})
 target_compile_options(CoreGenBackend PRIVATE -fPIC)
 
 install(TARGETS CoreGenBackend DESTINATION lib)
-#install(DIRECTORY "."
-#        DESTINATION "include/CoreGenBackend"
-#        FILES_MATCHING
-#        PATTERN "*.h")
+
 #-- EOF
