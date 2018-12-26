@@ -145,6 +145,8 @@ the ``HomeBrew`` package manager in order to fulfill these dependencies.
 brew cask install mactex
 brew install cmake
 brew install llvm@5
+brew install re2c
+brew install lua
 ```
 1. Clone the CoreGen repository
 ```
