@@ -13,7 +13,7 @@
  *
  * \ingroup CoreGen
  *
- * \brief CoreGen Node Deletion Safety Test Pass
+ * \brief CoreGen Integrated ASP Constaint Solver Pass
  *
  */
 
@@ -22,12 +22,25 @@
 
 #include <iostream>
 #include <string>
+#include <cstring>
 #include <vector>
 
 #include "CoreGen/CoreGenBackend/CoreGenPass.h"
 #include "CoreGen/CoreGenBackend/CoreGenDAG.h"
 #include "CoreGen/CoreGenBackend/CoreGenErrno.h"
 #include "CoreGen/CoreGenBackend/CoreGenUtil.h"
+
+// clingo/gringo headers
+#ifdef CLINGO_WITH_PYTHON
+#   include <pyclingo.h>
+#endif
+#ifdef CLINGO_WITH_LUA
+#   include <luaclingo.h>
+#endif
+
+#include <clingo.h>
+
+extern "C" CLINGO_VISIBILITY_DEFAULT int clingo_main_(int argc, char *argv[]);
 
 class ASPSolverPass : public CoreGenPass{
 private:

@@ -38,7 +38,7 @@ add_subdirectory(Passes)
 
 include_directories(${COREGEN_INCLUDE_PATH})
 include_directories(${YAML_PATH}/include)
-include_directories(${CLINGO_PATH}/clingo)
+include_directories(${CLINGO_PATH}/libclingo)
 link_directories(${CMAKE_ARCHIVE_OUTPUT_DIRECTORY})
 add_library(CoreGenBackend ${CoreGenSrcs} $<TARGET_OBJECTS:DataPassObjs>
                                           $<TARGET_OBJECTS:AnalysisPassObjs>)

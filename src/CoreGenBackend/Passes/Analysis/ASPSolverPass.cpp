@@ -55,7 +55,7 @@ bool ASPSolverPass::Execute(){
 
   // execute the ASP solver
 
-  //Build DAG in ASP
+  // Build DAG in ASP
   for(unsigned i = 0; i < D3->GetDimSize(); i++){
     CoreGenNode *N = static_cast<CoreGenNode *>(D3->FindNodeByIndex(i));
     if(N->GetASP().length() > 0){
@@ -68,10 +68,55 @@ bool ASPSolverPass::Execute(){
   out << "cacheIsChild(X, false) :- not cacheIsChild(X, true), cache(X)." << std::endl;
   out.close();
 
+  // initialize clingo/gringo
+#if defined(CLINGO_WITH_PYTHON)
+  if (!clingo_register_python_()) {
+    WriteMsg( std::string(clingo_error_message()) );
+    return false;
+  }
+#elif defined(CLINGO_WITH_LUA)
+  if (!clingo_register_lua_(nullptr)) {
+    WriteMsg( std::string(clingo_error_message()) );
+    return false;
+  }
+#else
+  // no clingo configuration found
+  WriteMsg( "No clingo solver configuration found: exiting" );
+  return false;
+#endif
+
+  // setup the clingo args
+  int argc = 3;
+  char app[] = "clingo";
+  char dot[] = ".";        // this is a temporary placeholder
+  char *argv[] = {app,strdup(ASPDagFile.c_str()),dot};
+
   for(unsigned i = 0; i < Files.size(); i++){
+    // setup the target ASP file
+    std::string TmpStr = ASPPath + "/" + Files[i];
+    argv[2] = strdup(TmpStr.c_str());
+
+    // execute clingo
+    bool isSuccess = true;
     double StartT = CGGetWallTime();
-    std::string cmd = "clingo " + ASPDagFile + " " + ASPPath + "/" + Files[i] + " > /dev/null";
+    if( clingo_main_(argc, argv) != 0 ){
+      isSuccess = false;
+      rtn = false;
+    }
+    //std::string cmd = "clingo " + ASPDagFile + " " + ASPPath + "/" + Files[i] + " > /dev/null";
     double EndT = CGGetWallTime();
+
+    WriteMsg( CGPrintDotStr( Files[i].length(), 30 ) + Files[i] );
+    WriteMsg( CGPrintDotStr( CGDoubleToStr(EndT-StartT).length(), 30 ) +
+              CGDoubleToStr(EndT-StartT) );
+
+    if( isSuccess ){
+      WriteMsg( CGPrintDotStr( 6, 30 ) + "PASSED" );
+    }else{
+      WriteMsg( CGPrintDotStr( 6, 30 ) + "FAILED" );
+    }
+
+#if 0
     std::cout << "  " << Files[i];
     CGPrintDots( Files[i].length() + 2, 30 );
     std::cout << EndT - StartT;
@@ -83,6 +128,7 @@ bool ASPSolverPass::Execute(){
       std::cout << "FAILED" << std::endl;
       rtn = false;
     }
+#endif
   }
 
   return rtn;

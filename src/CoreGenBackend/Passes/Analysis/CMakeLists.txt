@@ -29,6 +29,7 @@ ASPSolverPass.cpp
 )
 
 include_directories(${COREGEN_INCLUDE_PATH})
+include_directories(${CLINGO_PATH}/libclingo)
 add_library(AnalysisPassObjs OBJECT ${AnalysisPassSrcs})
 
 #install(DIRECTORY "."

@@ -11,8 +11,16 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <sys/param.h>
 #include "CGCLIOpts.h"
 #include "CoreGen/CoreGenBackend/CoreGenBackend.h"
+
+std::string get_working_dir(){
+  char buff[MAXPATHLEN];
+  getcwd( buff, MAXPATHLEN);
+  std::string cwd( buff );
+  return cwd;
+}
 
 int ExecuteCoregen( CGCLIOpts *Opts ){
   CoreGenBackend *CG = new CoreGenBackend( Opts->GetProjectName(),
@@ -111,13 +119,30 @@ int ExecuteCoregen( CGCLIOpts *Opts ){
   }// IsPassEnabled
 
   // check for the asp solver
+  std::string ASPPath;
   if( Opts->IsASPEnabled() ){
+
+    // init the pass manager if we haven't already done so
+    if( !CG->IsPassMgr() ){
+      if( !CG->InitPassMgr() ){
+        std::cout << "Error initializing pass manager for ASP: "
+                  << CG->GetErrStr() << std::endl;
+        delete CG;
+        return -1;
+      }
+    }
+
     // get path to asp passes.
-    std::string ASPPath = Opts->GetProjectRoot();
+    if( Opts->GetProjectRoot().length() == 0 ){
+      // set to the cwd
+      ASPPath = get_working_dir();
+    }else{
+      ASPPath = Opts->GetProjectRoot();
+    }
 
     // setup the solver
     if( !CG->SetPassInputStr( "ASPSolverPass", ASPPath ) ){
-      std::cout << "Error setting input for ASPSolver"
+      std::cout << "Error setting input for ASPSolver: "
                 << CG->GetErrStr() << std::endl;
       delete CG;
       return -1;

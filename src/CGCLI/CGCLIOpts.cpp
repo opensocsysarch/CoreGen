@@ -371,6 +371,7 @@ bool CGCLIOpts::ParseOpts( int argc, char **argv ){
         std::cout << "Error : ASP string must be non null" << std::endl;
         return false;
       }
+      Verify    = true;
       ASPSolver = true;
       i++;
     }else if ( s == "--nocleanasp" || s == "-nocleanasp"){
