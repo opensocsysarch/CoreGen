@@ -22,7 +22,8 @@ include(UseLATEX OPTIONAL)
 #------------------------------------------------------------------------
 #-- COMPILER MACROS
 #------------------------------------------------------------------------
-set(COREGEN_COMPILER_MACROS "-DCGIPREFIX=${CMAKE_INSTALL_PREFIX}")
+set(CLINGO_COMPILER_MACROS "-DCLINGO_WITH_LUA")
+set(COREGEN_COMPILER_MACROS "-DCGIPREFIX=${CMAKE_INSTALL_PREFIX} ${CLINGO_COMPILER_MACROS}")
 
 #------------------------------------------------------------------------
 #-- COMPILER OPTIONS
