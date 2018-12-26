@@ -86,7 +86,7 @@ bool ASPSolverPass::Execute(){
 #endif
 
   // setup the clingo args
-  int argc = 5;
+  int argc = 3;
   char app[] = "clingo";
   char dot[] = ".";        // this is a temporary placeholder
   char *argv[] = {app,strdup(ASPDagFile.c_str()),dot};
@@ -103,7 +103,6 @@ bool ASPSolverPass::Execute(){
       isSuccess = false;
       rtn = false;
     }
-    //std::string cmd = "clingo " + ASPDagFile + " " + ASPPath + "/" + Files[i] + " > /dev/null";
     double EndT = CGGetWallTime();
 
     WriteMsg( CGPrintDotStr( Files[i].length(), 30 ) + Files[i] );
@@ -116,19 +115,6 @@ bool ASPSolverPass::Execute(){
       WriteMsg( CGPrintDotStr( 6, 30 ) + "FAILED" );
     }
 
-#if 0
-    std::cout << "  " << Files[i];
-    CGPrintDots( Files[i].length() + 2, 30 );
-    std::cout << EndT - StartT;
-    CGPrintDots( CGDoubleToStr(EndT - StartT).length(), 30 );
-    if (system(cmd.c_str()) == 7680){
-      std::cout << "PASSED" << std::endl;
-    }
-    else{
-      std::cout << "FAILED" << std::endl;
-      rtn = false;
-    }
-#endif
   }
 
   return rtn;
