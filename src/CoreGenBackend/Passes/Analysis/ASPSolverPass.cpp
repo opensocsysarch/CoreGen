@@ -86,7 +86,7 @@ bool ASPSolverPass::Execute(){
 #endif
 
   // setup the clingo args
-  int argc = 3;
+  int argc = 5;
   char app[] = "clingo";
   char dot[] = ".";        // this is a temporary placeholder
   char *argv[] = {app,strdup(ASPDagFile.c_str()),dot};

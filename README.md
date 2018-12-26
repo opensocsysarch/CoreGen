@@ -227,6 +227,11 @@ make
 * -DBUILD\_COREGEN\_YAML\_READER\_TESTING=ON : Enable yaml reader test harness
 * -DBUILD\_COREGEN\_YAML\_READER\_MISSING\_DATA\_TESTING=ON : Enable yaml reader test harness for yaml with known missing data
 * -DBUILD\_COREGEN\_YAML\_WRITER\_TESTING=ON : Enable yaml writer test harness
+* -DBUILD\_COREGEN\_STONECUTTER\_TESTING=ON : Enables the StoneCutter test harness
+* -DBUILD\_COREGEN\_STONECUTTER\_CLI\_TESTING=ON : Enables the StoneCutter CLI test harness
+* -DBUILD\_COREGEN\_STONECUTTER\_PARSER\_TESTING=ON : Enables the StoneCutter parser test harness
+* -DBUILD\_COREGEN\_STONECUTTER\_PARSER\_TESTING=ON : Enables the StoneCutter parser test harness
+* -DBUILD\_COREGEN\_STONECUTTER\_PARSER\_KNOWNFAIL\_TESTING=ON : Enables the StoneCutter parser known fail test harness
 
 ## Contributing
 
