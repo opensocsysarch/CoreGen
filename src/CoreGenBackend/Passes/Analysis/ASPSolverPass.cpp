@@ -105,6 +105,23 @@ bool ASPSolverPass::Execute(){
     }
     double EndT = CGGetWallTime();
 
+
+#if 0
+    if( isSuccess ){
+      WriteMsg( CGPrintDotStr( Files[i].length(), 30 ) +
+                Files[i] +
+                CGPrintDotStr( CGDoubleToStr(EndT-StartT).length(), 30 ) +
+                CGDoubleToStr(EndT-StartT) +
+                CGPrintDotStr( 6, 30 ) + "PASSED" );
+    }else{
+      WriteMsg( CGPrintDotStr( Files[i].length(), 30 ) +
+                Files[i] +
+                CGPrintDotStr( CGDoubleToStr(EndT-StartT).length(), 30 ) +
+                CGDoubleToStr(EndT-StartT) +
+                CGPrintDotStr( 6, 30 ) + "FAILED" );
+    }
+#endif
+
     WriteMsg( CGPrintDotStr( Files[i].length(), 30 ) + Files[i] );
     WriteMsg( CGPrintDotStr( CGDoubleToStr(EndT-StartT).length(), 30 ) +
               CGDoubleToStr(EndT-StartT) );
@@ -114,7 +131,6 @@ bool ASPSolverPass::Execute(){
     }else{
       WriteMsg( CGPrintDotStr( 6, 30 ) + "FAILED" );
     }
-
   }
 
   return rtn;

@@ -17,7 +17,8 @@
 
 std::string get_working_dir(){
   char buff[MAXPATHLEN];
-  getcwd( buff, MAXPATHLEN);
+  char *NStr = nullptr;
+  NStr = getcwd( buff, MAXPATHLEN);
   std::string cwd( buff );
   return cwd;
 }

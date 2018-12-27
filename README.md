@@ -222,6 +222,7 @@ make
 * -DBUILD\_COREGEN\_DAG\_INDIVIDUALPASS\_TESTING=ON : Enable DAG's individual pass test harness
 * -DBUILD\_COREGEN\_DAG\_INDIVIDUALPASS\_KNOWNPASS\_TESTING=ON : Enable DAG's individual pass test harness for known correct tests
 * -DBUILD\_COREGEN\_DAG\_INDIVIDUALPASS\_KNOWNFAIL\_TESTING=ON : Enable DAG's individual pass test harness for known fail tests
+* -DBUILD\_COREGEN\_DAG\_INDIVIDUALPASS\_KNOWNFAIL\_ASP\_TESTING=ON : Enable DAG's individual ASP pass test harness for known fail tests
 * -DBUILD\_COREGEN\_PLUGIN\_TESTING=ON : Enable plugin test harness
 * -DBUILD\_COREGEN\_YAML\_TESTING=ON : Enable yaml test harness
 * -DBUILD\_COREGEN\_YAML\_READER\_TESTING=ON : Enable yaml reader test harness
