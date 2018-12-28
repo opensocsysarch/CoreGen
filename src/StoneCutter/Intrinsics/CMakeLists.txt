@@ -9,6 +9,7 @@
 
 set(IntrinSrcs
 SCMax.cpp
+SCMin.cpp
 )
 
 set(llvm_codegens

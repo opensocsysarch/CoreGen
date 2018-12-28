@@ -15,6 +15,7 @@
 // StoneCutter intrinsics
 
 #include "CoreGen/StoneCutter/Intrinsics/SCMax.h"
+#include "CoreGen/StoneCutter/Intrinsics/SCMin.h"
 
 #endif
 

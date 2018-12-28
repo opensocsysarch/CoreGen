@@ -18,11 +18,13 @@ std::map<std::string, std::unique_ptr<PrototypeAST>> SCParser::FunctionProtos;
 std::map<std::string, AllocaInst*> SCParser::NamedValues;
 unsigned SCParser::LabelIncr;
 bool SCParser::IsOpt = false;
+SCMsg *SCParser::GMsgs = nullptr;
 
 SCParser::SCParser(std::string B, std::string F, SCMsg *M)
-  : CurTok(-1), InBuf(B), FileName(F), Msgs(M), Lex(new SCLexer(B)),
+  : CurTok(-1), InBuf(B), FileName(F), Msgs(M), Lex(new SCLexer()),
     InFunc(false), Rtn(true) {
   TheModule = llvm::make_unique<Module>(StringRef(FileName), TheContext);
+  GMsgs = M;
   InitBinopPrecedence();
   LabelIncr = 0;
   InitPassMap();
@@ -32,6 +34,7 @@ SCParser::SCParser(std::string B, std::string F, SCMsg *M)
 SCParser::SCParser(SCMsg *M)
   : CurTok(-1), Msgs(M), Lex(nullptr),
     InFunc(false) {
+  GMsgs = M;
   InitBinopPrecedence();
   LabelIncr = 0;
   InitIntrinsics();
@@ -45,6 +48,7 @@ SCParser::~SCParser(){
 
 void SCParser::InitIntrinsics(){
   Intrins.push_back(static_cast<SCIntrin *>(new SCMax()));
+  Intrins.push_back(static_cast<SCIntrin *>(new SCMin()));
 }
 
 void SCParser::InitPassMap(){
@@ -69,7 +73,7 @@ bool SCParser::SetInputs( std::string B, std::string F ){
   if( Lex ){
     delete Lex;
   }
-  Lex = new SCLexer(InBuf);
+  Lex = new SCLexer();
   TheModule = llvm::make_unique<Module>(StringRef(FileName), TheContext);
 
   return true;
@@ -297,6 +301,51 @@ bool SCParser::Optimize(){
 // Parser
 //===----------------------------------------------------------------------===//
 
+bool SCParser::CheckIntrinName( std::string Name ){
+  if( Name.length() == 0 ){
+    return false;
+  }
+
+  for( unsigned i=0; i<Intrins.size(); i++ ){
+    if( Name == Intrins[i]->GetKeyword() ){
+      return true;
+    }
+  }
+
+  return false;
+}
+
+unsigned SCParser::GetNumIntrinArgs( std::string Name ){
+  if( Name.length() == 0 ){
+    return 0;
+  }
+
+  for( unsigned i=0; i<Intrins.size(); i++ ){
+    if( Name == Intrins[i]->GetKeyword() ){
+      return Intrins[i]->GetNumInputs();
+    }
+  }
+
+  return 0;
+}
+
+bool SCParser::InsertExternIntrin(){
+  for( unsigned i=0; i<Intrins.size(); i++ ){
+    // insert the intrinsic definition
+    std::string TmpStr = "extern " + Intrins[i]->GetKeyword() + "(";
+    for( unsigned j=0; j<Intrins[i]->GetNumInputs(); j++ ){
+      TmpStr += "a";
+      TmpStr += std::to_string(j);
+      if( j != (Intrins[i]->GetNumInputs()-1) ){
+        TmpStr += " ";
+      }
+    }
+    TmpStr += ");\n";
+    InBuf.insert(0,TmpStr);
+  }
+  return true;
+}
+
 void SCParser::InitBinopPrecedence(){
   BinopPrecedence['='] = 10;
   BinopPrecedence['<'] = 11;
@@ -349,6 +398,30 @@ void SCParser::InitBinopPrecedence(){
 bool SCParser::Parse(){
   if( InBuf.length() == 0 ){
     Msgs->PrintMsg( L_ERROR, "No StoneCutter input defined");
+    return false;
+  }
+
+  // insert all the necessary intrinsic externs
+  if( !InsertExternIntrin() ){
+    Msgs->PrintMsg( L_ERROR,
+                    "Could not adjust input buffer to include intrinsic definitions" );
+    return false;
+  }
+
+#if 0
+  std::cout << "---------------------------- DEBUG" << std::endl;
+  std::cout << InBuf << std::endl;
+  std::cout << "---------------------------- DEBUG" << std::endl;
+#endif
+
+  // set the input buffer for the lexer
+  if( !Lex ){
+    Msgs->PrintMsg( L_ERROR,
+                    "The StoneCutter lexer is not initialized" );
+    return false;
+  }else if( !Lex->SetInput(InBuf) ){
+    Msgs->PrintMsg( L_ERROR,
+                    "Failed to initialize the input buffer for the lexer" );
     return false;
   }
 
@@ -525,7 +598,21 @@ std::unique_ptr<ExprAST> SCParser::ParseIdentifierExpr() {
     GetNextToken(); // eat ';'
   }
 
-  return llvm::make_unique<CallExprAST>(IdName, std::move(Args));
+  // Check to see if the call is an intrinsic
+  bool Intrin = false;
+  if( CheckIntrinName(IdName) ){
+    // we have an intrinsic, check the argument list
+    Intrin = true;
+
+    if( GetNumIntrinArgs(IdName) != Args.size() ){
+      // argument mismatch
+      return LogError( IdName + " intrinsic requires " +
+                       std::to_string(GetNumIntrinArgs(IdName)) +
+                       " arguments." );
+    }
+  }
+
+  return llvm::make_unique<CallExprAST>(IdName, std::move(Args), Intrin);
 }
 
 std::unique_ptr<ExprAST> SCParser::ParseIfExpr() {
@@ -586,7 +673,6 @@ std::unique_ptr<ExprAST> SCParser::ParseIfExpr() {
 std::unique_ptr<ExprAST> SCParser::ParsePrimary() {
   switch (CurTok) {
   default:
-    std::cout << "ParsePrimary CurTok = " << CurTok << std::endl;
     return LogError("unknown token when expecting an expression" );
   case tok_identifier:
     return ParseIdentifierExpr();
@@ -875,24 +961,13 @@ std::unique_ptr<FunctionAST> SCParser::ParseDefinition() {
   if( CurTok != '}' )
     return LogErrorF("Expected '}' to close instruction body");
 
-#if 0
-  auto E = ParseExpression();
-  if( E == nullptr ){
-    LogErrorF("Expected function body");
+  if( Exprs.size() == 0 ){
+    return LogErrorF("Empty instruction definition: " + Proto->getName() );
   }
 
-  if( CurTok != '}' )
-    return LogErrorF("Expected '}' to close instruction body");
-#endif
   GetNextToken(); // eat '}'
   InFunc = false;
-  //return llvm::make_unique<FunctionAST>(std::move(Proto), std::move(E));
   return llvm::make_unique<FunctionAST>(std::move(Proto), std::move(Exprs));
-
-  //if (auto E = ParseExpression())
-  //  return llvm::make_unique<FunctionAST>(std::move(Proto), std::move(E));
-
-  //return nullptr;
 }
 
 bool SCParser::ParseCloseBracket(){
@@ -1044,7 +1119,6 @@ Function *getFunction(std::string Name ){
 }
 
 Value *NumberExprAST::codegen() {
-  //return ConstantFP::get(SCParser::TheContext, APFloat(Val));
   return ConstantInt::get(SCParser::TheContext, APInt(64,Val,false));
 }
 
@@ -1303,8 +1377,9 @@ Value *BinaryExprAST::codegen() {
 Value *CallExprAST::codegen() {
   // Look up the name in the global module table.
   Function *CalleeF = SCParser::TheModule->getFunction(Callee);
-  if (!CalleeF)
-    return LogErrorV("Unknown function referenced");
+  if (!CalleeF){
+    return LogErrorV("Unknown function referenced: " + Callee );
+  }
 
   // If argument mismatch error.
   if (CalleeF->arg_size() != Args.size())
@@ -1530,8 +1605,7 @@ std::unique_ptr<FunctionAST> SCParser::LogErrorF(std::string Str) {
 }
 
 Value *LogErrorV(std::string Str){
-  //LogError(Str);
-  // TODO, fix error handling
+  SCParser::GMsgs->PrintMsg( L_ERROR, Str );
   return nullptr;
 }
 
