@@ -19,6 +19,12 @@ SCPopcount.cpp
 SCReverse.cpp
 SCSext.cpp
 SCZext.cpp
+SCRotateL.cpp
+SCRotateR.cpp
+SCMaj.cpp
+SCDoz.cpp
+SCCompress.cpp
+SCCompressM.cpp
 )
 
 set(llvm_codegens

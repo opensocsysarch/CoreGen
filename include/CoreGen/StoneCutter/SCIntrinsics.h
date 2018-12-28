@@ -25,6 +25,12 @@
 #include "CoreGen/StoneCutter/Intrinsics/SCCtz.h"
 #include "CoreGen/StoneCutter/Intrinsics/SCSext.h"
 #include "CoreGen/StoneCutter/Intrinsics/SCZext.h"
+#include "CoreGen/StoneCutter/Intrinsics/SCRotateL.h"
+#include "CoreGen/StoneCutter/Intrinsics/SCRotateR.h"
+#include "CoreGen/StoneCutter/Intrinsics/SCMaj.h"
+#include "CoreGen/StoneCutter/Intrinsics/SCDoz.h"
+#include "CoreGen/StoneCutter/Intrinsics/SCCompress.h"
+#include "CoreGen/StoneCutter/Intrinsics/SCCompressM.h"
 
 #endif
 
