@@ -10,6 +10,8 @@
 set(IntrinSrcs
 SCMax.cpp
 SCMin.cpp
+SCLoad.cpp
+SCStore.cpp
 )
 
 set(llvm_codegens

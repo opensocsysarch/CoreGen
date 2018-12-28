@@ -49,6 +49,8 @@ SCParser::~SCParser(){
 void SCParser::InitIntrinsics(){
   Intrins.push_back(static_cast<SCIntrin *>(new SCMax()));
   Intrins.push_back(static_cast<SCIntrin *>(new SCMin()));
+  Intrins.push_back(static_cast<SCIntrin *>(new SCLoad()));
+  Intrins.push_back(static_cast<SCIntrin *>(new SCStore()));
 }
 
 void SCParser::InitPassMap(){

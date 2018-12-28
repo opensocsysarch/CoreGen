@@ -16,6 +16,8 @@
 
 #include "CoreGen/StoneCutter/Intrinsics/SCMax.h"
 #include "CoreGen/StoneCutter/Intrinsics/SCMin.h"
+#include "CoreGen/StoneCutter/Intrinsics/SCLoad.h"
+#include "CoreGen/StoneCutter/Intrinsics/SCStore.h"
 
 #endif
 
