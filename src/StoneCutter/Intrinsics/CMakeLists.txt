@@ -12,6 +12,13 @@ SCMax.cpp
 SCMin.cpp
 SCLoad.cpp
 SCStore.cpp
+SCClz.cpp
+SCCtz.cpp
+SCNot.cpp
+SCPopcount.cpp
+SCReverse.cpp
+SCSext.cpp
+SCZext.cpp
 )
 
 set(llvm_codegens

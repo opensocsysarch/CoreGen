@@ -18,6 +18,13 @@
 #include "CoreGen/StoneCutter/Intrinsics/SCMin.h"
 #include "CoreGen/StoneCutter/Intrinsics/SCLoad.h"
 #include "CoreGen/StoneCutter/Intrinsics/SCStore.h"
+#include "CoreGen/StoneCutter/Intrinsics/SCNot.h"
+#include "CoreGen/StoneCutter/Intrinsics/SCReverse.h"
+#include "CoreGen/StoneCutter/Intrinsics/SCPopcount.h"
+#include "CoreGen/StoneCutter/Intrinsics/SCClz.h"
+#include "CoreGen/StoneCutter/Intrinsics/SCCtz.h"
+#include "CoreGen/StoneCutter/Intrinsics/SCSext.h"
+#include "CoreGen/StoneCutter/Intrinsics/SCZext.h"
 
 #endif
 
