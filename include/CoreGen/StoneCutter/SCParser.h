@@ -25,6 +25,7 @@
 #include "CoreGen/StoneCutter/SCLexer.h"
 #include "CoreGen/StoneCutter/SCMsg.h"
 #include "CoreGen/StoneCutter/SCUtil.h"
+#include "CoreGen/StoneCutter/SCIntrinsics.h"
 
 // LLVM headers
 #include "llvm/ADT/APFloat.h"

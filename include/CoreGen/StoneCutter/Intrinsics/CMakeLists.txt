@@ -1,4 +1,4 @@
-# include/CoreGen/StoneCutter CMakeLists.txt
+# include/CoreGen/StoneCutter/Intrinsics CMakeLists.txt
 #
 # Copyright (C) 2017-2018 Tactical Computing Laboratories, LLC
 # All Rights Reserved
@@ -7,9 +7,7 @@
 # See LICENSE in the top level directory for licensing details
 #
 
-add_subdirectory(Intrinsics)
-
 install(DIRECTORY "."
-        DESTINATION "include/StoneCutter"
+        DESTINATION "include/StoneCutter/Intrinsics"
         FILES_MATCHING
         PATTERN "*.h")

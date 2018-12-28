@@ -1,4 +1,4 @@
-# StoneCutter CMakeLists.txt
+# StoneCutter/Intrinsics CMakeLists.txt
 #
 # Copyright (C) 2017-2018 Tactical Computing Laboratories, LLC
 # All Rights Reserved
@@ -7,16 +7,9 @@
 # See LICENSE in the top level directory for licensing details
 #
 
-set(SCCompSrcs
- SCOpts.cpp
- SCExec.cpp
- SCMsg.cpp
- SCLexer.cpp
- SCParser.cpp
- SCLLCodeGen.cpp
+set(IntrinSrcs
+SCMax.cpp
 )
-
-include_directories(${COREGEN_INCLUDE_PATH})
 
 set(llvm_codegens
   x86codegen
@@ -48,12 +41,7 @@ llvm_map_components_to_libnames(llvm_libs
   ${llvm_parsers}
 )
 
-add_subdirectory(Intrinsics)
-
-add_library(SCComp ${SCCompSrcs} $<TARGET_OBJECTS:IntrinObjs>)
-
-target_link_libraries(SCComp ${llvm_libs})
-
-install(TARGETS SCComp DESTINATION lib)
+include_directories(${COREGEN_INCLUDE_PATH})
+add_library(IntrinObjs OBJECT ${IntrinSrcs})
 
 #-- EOF
