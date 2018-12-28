@@ -45,7 +45,7 @@ public:
   SCIntrin( unsigned NI, std::string K ) : NumInputs(NI), Keyword(K) {}
 
   /// Standard destructor
-  ~SCIntrin();
+  ~SCIntrin() {};
 
   /// Retrieve the number of required inputs
   unsigned GetNumInputs() { return NumInputs; }

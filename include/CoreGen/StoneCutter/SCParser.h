@@ -275,6 +275,8 @@ private:
 
   std::map<std::string,bool> EPasses;   ///< LLVM enabled passes
 
+  std::vector<SCIntrin *> Intrins;      ///< StoneCutter Intrinsics
+
   // private functions
 
   /// Checks the input vector of pass names against the known passes list
@@ -288,6 +290,9 @@ private:
 
   /// Initializes the pass map
   void InitPassMap();
+
+  /// Initializes the intrinsic vector
+  void InitIntrinsics();
 
   /// Determines whether the target pass is enabled
   bool IsPassEnabled(std::string P);

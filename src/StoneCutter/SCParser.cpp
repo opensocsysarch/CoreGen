@@ -26,6 +26,7 @@ SCParser::SCParser(std::string B, std::string F, SCMsg *M)
   InitBinopPrecedence();
   LabelIncr = 0;
   InitPassMap();
+  InitIntrinsics();
 }
 
 SCParser::SCParser(SCMsg *M)
@@ -33,12 +34,17 @@ SCParser::SCParser(SCMsg *M)
     InFunc(false) {
   InitBinopPrecedence();
   LabelIncr = 0;
+  InitIntrinsics();
 }
 
 SCParser::~SCParser(){
   TheModule.reset();
   TheFPM.reset();
   NamedValues.clear();
+}
+
+void SCParser::InitIntrinsics(){
+  Intrins.push_back(static_cast<SCIntrin *>(new SCMax()));
 }
 
 void SCParser::InitPassMap(){
