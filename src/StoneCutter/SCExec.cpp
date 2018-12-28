@@ -111,7 +111,7 @@ bool SCExec::Exec(){
       return false;
     }
 
-    SCLLCodeGen *CG;
+    SCLLCodeGen *CG = nullptr;
 
     // Do we execute the LLVM IR codegen?
     if( Opts->IsIR() ){
@@ -128,6 +128,8 @@ bool SCExec::Exec(){
       }
     }
 
+    SCChiselCodeGen *CCG = nullptr;
+
     // Do we generate Chisel?
     if( Opts->IsChisel() ){
       if( !Opts->IsIR() ){
@@ -137,7 +139,19 @@ bool SCExec::Exec(){
         return false;
       }
 
-      // TODO, generate the chisel output
+      // Generate the Chisel output
+      CCG = new SCChiselCodeGen(Parser,Msgs,
+                                Opts->GetInputFile(i) + ".chisel" );
+      if( !CCG->GenerateChisel() ){
+        Msgs->PrintMsg( L_ERROR, "Failed to generate Chisel for " +
+                        Opts->GetInputFile(i) );
+        delete CCG;
+        if( CG ){
+          delete CG;
+        }
+        delete Parser;
+        return false;
+      }
     }
 
     // Do we execute the object codegen
@@ -152,7 +166,12 @@ bool SCExec::Exec(){
       if( !CG->GenerateObjFile() ){
         Msgs->PrintMsg( L_ERROR, "Failed to generate object file for " +
                                   Opts->GetInputFile(i) );
-        delete CG;
+        if( CCG ){
+          delete CCG;
+        }
+        if( CG ){
+          delete CG;
+        }
         delete Parser;
         return false;
       }
@@ -160,6 +179,9 @@ bool SCExec::Exec(){
 
     if( CG ){
       delete CG;
+    }
+    if( CCG ){
+      delete CCG;
     }
     delete Parser;
   }

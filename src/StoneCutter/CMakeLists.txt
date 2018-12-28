@@ -14,6 +14,7 @@ set(SCCompSrcs
  SCLexer.cpp
  SCParser.cpp
  SCLLCodeGen.cpp
+ SCChiselCodeGen.cpp
 )
 
 include_directories(${COREGEN_INCLUDE_PATH})
@@ -35,7 +36,8 @@ set(llvm_parsers
 
 llvm_map_components_to_libnames(llvm_libs
   support
-  core irreader
+  core
+  irreader
   mcjit
   ipo
   executionengine
@@ -44,6 +46,8 @@ llvm_map_components_to_libnames(llvm_libs
   vectorize
   scalaropts
   instcombine
+  bitreader
+  bitwriter
   ${llvm_codegens}
   ${llvm_parsers}
 )

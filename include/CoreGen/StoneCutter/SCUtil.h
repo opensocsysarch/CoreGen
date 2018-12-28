@@ -70,6 +70,13 @@ const VarAttrEntry VarAttrEntryTable[] = {
   { ".",       0, 0, false, false, false }  // disable flag
 };
 
+// CoreGenUtil: Retrieve the current date+time
+inline std::string SCCurrentDateTime(){
+  time_t now = time(0);
+  std::string DT(ctime(&now));
+  return DT;
+}
+
 inline bool SCFileExists(const std::string& name) {
   struct stat buffer;
   return (stat (name.c_str(), &buffer) == 0);
