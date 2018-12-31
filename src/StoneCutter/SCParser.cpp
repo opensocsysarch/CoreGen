@@ -956,6 +956,12 @@ std::unique_ptr<FunctionAST> SCParser::ParseDefinition() {
   if (!Proto)
     return nullptr;
 
+  // check the prototype name against the list of existing intrinics
+  if( CheckIntrinName(Proto->getName()) ){
+    return LogErrorF("Instruction definition collides with existing StoneCutter intrinsic: " +
+              Proto->getName() );
+  }
+
   // check for open instruction body
   if( CurTok != '{' )
     return LogErrorF("Expected '{' to open instruction body");
