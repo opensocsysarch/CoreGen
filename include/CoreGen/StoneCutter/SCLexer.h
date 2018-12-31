@@ -105,6 +105,9 @@ private:
   int CurChar;                      ///< Current parsed character
   VarAttrs Var;                     ///< Parameters for most recent variable entry
 
+  /// Determines whether the next character is valid for a variable or instruction def
+  int IsValidChar(int *LastChar);
+
   /// Read the next character from the input string
   int GetNext();
 
