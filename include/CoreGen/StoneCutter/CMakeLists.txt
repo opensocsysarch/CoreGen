@@ -7,6 +7,8 @@
 # See LICENSE in the top level directory for licensing details
 #
 
+add_subdirectory(Intrinsics)
+
 install(DIRECTORY "."
         DESTINATION "include/StoneCutter"
         FILES_MATCHING

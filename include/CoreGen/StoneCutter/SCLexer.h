@@ -74,7 +74,7 @@ enum SCToken {
 class SCLexer{
 public:
   /// Standard constructor
-  SCLexer(std::string B);
+  SCLexer();
 
   /// Standard destructor
   ~SCLexer();
@@ -93,6 +93,9 @@ public:
 
   /// Retrieve the most recent variable entry data
   VarAttrs GetVarAttrs() { return Var; }
+
+  /// Initializes the input buffer
+  bool SetInput(std::string B);
 
 private:
   std::string InBuf;                ///< Input buffer

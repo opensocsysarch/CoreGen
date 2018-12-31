@@ -25,6 +25,7 @@
 #include "CoreGen/StoneCutter/SCLexer.h"
 #include "CoreGen/StoneCutter/SCMsg.h"
 #include "CoreGen/StoneCutter/SCUtil.h"
+#include "CoreGen/StoneCutter/SCIntrinsics.h"
 
 // LLVM headers
 #include "llvm/ADT/APFloat.h"
@@ -192,11 +193,13 @@ public:
   class CallExprASTContainer : public ExprASTContainer {
     std::string Callee;
     std::vector<std::unique_ptr<ExprASTContainer>> Args;
+    bool Intrin;    // determines whether the call is an intrinsic
 
   public:
     CallExprASTContainer(const std::string &Callee,
-                         std::vector<std::unique_ptr<ExprASTContainer>> Args)
-      : Callee(Callee), Args(std::move(Args)) {}
+                         std::vector<std::unique_ptr<ExprASTContainer>> Args,
+                         bool Intrin)
+      : Callee(Callee), Args(std::move(Args)), Intrin(Intrin) {}
 
     Value *codegen() override;
   };
@@ -256,6 +259,7 @@ public:
   static std::unique_ptr<legacy::FunctionPassManager> TheFPM;
   static unsigned LabelIncr;
   static bool IsOpt;
+  static SCMsg *GMsgs;
 
 private:
 
@@ -274,7 +278,18 @@ private:
 
   std::map<std::string,bool> EPasses;   ///< LLVM enabled passes
 
+  std::vector<SCIntrin *> Intrins;      ///< StoneCutter Intrinsics
+
   // private functions
+
+  /// Inserts all the necessary intrinsic externs into the input stream
+  bool InsertExternIntrin();
+
+  /// Checks the call expression and determines if it is an intrinsci
+  bool CheckIntrinName(std::string Name);
+
+  /// Get the number of required arguments for the target intrinsic
+  unsigned GetNumIntrinArgs(std::string Name);
 
   /// Checks the input vector of pass names against the known passes list
   bool CheckPassNames(std::vector<std::string> P);
@@ -287,6 +302,9 @@ private:
 
   /// Initializes the pass map
   void InitPassMap();
+
+  /// Initializes the intrinsic vector
+  void InitIntrinsics();
 
   /// Determines whether the target pass is enabled
   bool IsPassEnabled(std::string P);

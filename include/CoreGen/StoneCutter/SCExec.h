@@ -34,6 +34,7 @@
 #include "CoreGen/StoneCutter/SCMsg.h"
 #include "CoreGen/StoneCutter/SCParser.h"
 #include "CoreGen/StoneCutter/SCLLCodeGen.h"
+#include "CoreGen/StoneCutter/SCChiselCodeGen.h"
 #include "CoreGen/StoneCutter/SCUtil.h"
 
 // LLVM Headers

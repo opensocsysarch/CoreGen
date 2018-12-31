@@ -31,7 +31,4 @@ ASPSolverPass.cpp
 include_directories(${COREGEN_INCLUDE_PATH})
 add_library(AnalysisPassObjs OBJECT ${AnalysisPassSrcs})
 
-#install(DIRECTORY "."
-#        DESTINATION "include/Passes/Analysis"
-#        FILES_MATCHING
-#        PATTERN "*.h")
+#-- EOF

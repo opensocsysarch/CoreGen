@@ -34,6 +34,8 @@
 #include <string>
 #include <vector>
 
+using namespace llvm;
+
 class SCIntrin{
 public:
   /// Standard constructor
@@ -43,7 +45,7 @@ public:
   SCIntrin( unsigned NI, std::string K ) : NumInputs(NI), Keyword(K) {}
 
   /// Standard destructor
-  ~SCIntrin();
+  ~SCIntrin() {};
 
   /// Retrieve the number of required inputs
   unsigned GetNumInputs() { return NumInputs; }
@@ -53,10 +55,12 @@ public:
 
   // virtual functions
 
+  /// Executes the intrinsic codegenerator
+  virtual Value *codegen() { return nullptr; }
+
 private:
   unsigned NumInputs;               ///< Number of required input arguments
   std::string Keyword;              ///< Intrinsic Keyword
-
 };
 
 #endif

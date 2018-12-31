@@ -10,10 +10,18 @@
 
 #include "CoreGen/StoneCutter/SCLexer.h"
 
-SCLexer::SCLexer(std::string B) : InBuf(B), LineNum(1), CurChar(0) {
+SCLexer::SCLexer() : LineNum(1), CurChar(0) {
 }
 
 SCLexer::~SCLexer(){
+}
+
+bool SCLexer::SetInput(std::string B){
+  if( B.length() == 0 ){
+    return false;
+  }
+  InBuf = B;
+  return true;
 }
 
 int SCLexer::GetNext(){
