@@ -1459,7 +1459,8 @@ Value *RegClassAST::codegen(){
       return LogErrorV( "Failed to lower register class to global: regclass = "+
                         Name + " register=" + Args[i]);
     }
-
+    // insert a special attribute to track the register to register class relationship
+    val->addAttribute("register",Args[i]);
     // insert a special attribute to track the parent register class
     val->addAttribute("regclass", Name);
   }
