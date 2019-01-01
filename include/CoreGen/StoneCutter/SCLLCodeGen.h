@@ -8,6 +8,15 @@
 // See LICENSE in the top level directory for licensing details
 //
 
+/**
+ * \class SCLLCodeGen
+ *
+ * \ingroup StoneCutter
+ *
+ * \brief StoneCutter LLVM IR and BC code generation class
+ *
+ */
+
 #ifndef _STONECUTTER_SCLLCODEGEN_H_
 #define _STONECUTTER_SCLLCODEGEN_H_
 

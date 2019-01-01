@@ -8,6 +8,15 @@
 // See LICENSE in the top level directory for licensing details
 //
 
+/**
+ * \class SCZext
+ *
+ * \ingroup StoneCutter
+ *
+ * \brief StoneCutter Intrinsic: Zero Extension
+ *
+ */
+
 #ifndef _STONECUTTER_SCINTRIN_SCZEXT_H_
 #define _STONECUTTER_SCINTRIN_SCZEXT_H_
 

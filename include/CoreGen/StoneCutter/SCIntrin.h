@@ -8,6 +8,15 @@
 // See LICENSE in the top level directory for licensing details
 //
 
+/**
+ * \class SCIntrin
+ *
+ * \ingroup StoneCutter
+ *
+ * \brief StoneCutter intrinsic base class
+ *
+ */
+
 #ifndef _STONECUTTER_SCINTRIN_H_
 #define _STONECUTTER_SCINTRIN_H_
 

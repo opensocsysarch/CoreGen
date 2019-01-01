@@ -8,6 +8,15 @@
 // See LICENSE in the top level directory for licensing details
 //
 
+/**
+ * \class SCCompress
+ *
+ * \ingroup StoneCutter
+ *
+ * \brief StoneCutter Intrinsic: Bit Compression
+ *
+ */
+
 #ifndef _STONECUTTER_SCINTRIN_SCCOMPRESS_H_
 #define _STONECUTTER_SCINTRIN_SCCOMPRESS_H_
 

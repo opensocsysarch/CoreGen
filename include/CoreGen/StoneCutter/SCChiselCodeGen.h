@@ -8,6 +8,15 @@
 // See LICENSE in the top level directory for licensing details
 //
 
+/**
+ * \class SCChiselCodeGen
+ *
+ * \ingroup StoneCutter
+ *
+ * \brief StoneCutter Chisel code generation class
+ *
+ */
+
 #ifndef _STONECUTTER_SCCHISELCODEGEN_H_
 #define _STONECUTTER_SCCHISELCODEGEN_H_
 

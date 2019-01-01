@@ -8,6 +8,15 @@
 // See LICENSE in the top level directory for licensing details
 //
 
+/**
+ * \class SCLoad
+ *
+ * \ingroup StoneCutter
+ *
+ * \brief StoneCutter Intrinsic: Laod a Value From Memory
+ *
+ */
+
 #ifndef _STONECUTTER_SCINTRIN_SCLOAD_H_
 #define _STONECUTTER_SCINTRIN_SCLOAD_H_
 

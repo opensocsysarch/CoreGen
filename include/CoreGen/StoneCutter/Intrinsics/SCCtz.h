@@ -8,6 +8,15 @@
 // See LICENSE in the top level directory for licensing details
 //
 
+/**
+ * \class SCCtz
+ *
+ * \ingroup StoneCutter
+ *
+ * \brief StoneCutter Intrinsic: Count Trailing Zeros
+ *
+ */
+
 #ifndef _STONECUTTER_SCINTRIN_SCCTZ_H_
 #define _STONECUTTER_SCINTRIN_SCCTZ_H_
 

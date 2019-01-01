@@ -8,6 +8,13 @@
 // See LICENSE in the top level directory for licensing details
 //
 
+/** \defgroup StoneCutter StoneCutter Language and Compiler
+ *
+ * \brief The StoneCutter library provides the ability to injest and compile
+ *        high level language and produce a Chisel HDL representation of a single
+ *        instruction.
+ */
+
 #ifndef _STONECUTTER_H_
 #define _STONECUTTER_H_
 

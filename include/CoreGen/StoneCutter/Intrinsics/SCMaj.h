@@ -8,6 +8,15 @@
 // See LICENSE in the top level directory for licensing details
 //
 
+/**
+ * \class SCMaj
+ *
+ * \ingroup StoneCutter
+ *
+ * \brief StoneCutter Intrinsic: Three Input Majority Vote
+ *
+ */
+
 #ifndef _STONECUTTER_SCINTRIN_SCMAJ_H_
 #define _STONECUTTER_SCINTRIN_SCMAJ_H_
 

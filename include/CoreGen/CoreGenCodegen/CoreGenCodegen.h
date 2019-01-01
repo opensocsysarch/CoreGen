@@ -28,12 +28,13 @@
 
 #include "CoreGen/CoreGenBackend/CoreGenErrno.h"
 #include "CoreGen/CoreGenBackend/CoreGenNodes.h"
+#include "CoreGen/CoreGenBackend/CoreGenUtil.h"
 
 class CoreGenCodegen
 {
 private:
-  std::string BaseDir;
-  CoreGenErrno *Errno;
+  std::string BaseDir;        ///< Base directory to generate all output files
+  CoreGenErrno *Errno;        ///< CoreGen Errno Structure
 
 public:
   /// Default constructor

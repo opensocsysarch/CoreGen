@@ -8,6 +8,15 @@
 // See LICENSE in the top level directory for licensing details
 //
 
+/**
+ * \class SCDoz
+ *
+ * \ingroup StoneCutter
+ *
+ * \brief StoneCutter Intrinsic: Difference or Zero
+ *
+ */
+
 #ifndef _STONECUTTER_SCINTRIN_SCDOZ_H_
 #define _STONECUTTER_SCINTRIN_SCDOZ_H_
 

@@ -8,6 +8,15 @@
 // See LICENSE in the top level directory for licensing details
 //
 
+/**
+ * \class SCOpts
+ *
+ * \ingroup StoneCutter
+ *
+ * \brief StoneCutter compiler options class
+ *
+ */
+
 #ifndef _STONECUTTER_SCOPTS_H_
 #define _STONECUTTER_SCOPTS_H_
 

@@ -8,6 +8,15 @@
 // See LICENSE in the top level directory for licensing details
 //
 
+/**
+ * \class SCLexer
+ *
+ * \ingroup StoneCutter
+ *
+ * \brief StoneCutter lexing class
+ *
+ */
+
 #ifndef _STONECUTTER_SCLEXER_H_
 #define _STONECUTTER_SCLEXER_H_
 
