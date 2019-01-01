@@ -27,6 +27,28 @@ void SCChiselCodeGen::WriteChiselHeader(){
   OutFile << "\\\\" << std::endl << std::endl;
 }
 
+bool SCChiselCodeGen::ExecuteCodegen(){
+  // walk all the functions in the module
+  for( auto curFref = SCParser::TheModule->begin(),
+            endFref = SCParser::TheModule->end();
+            curFref != endFref; ++curFref ){
+    //std::cout << "Found function: " << curFref->getName().str() << std::endl;
+    // walk all the basic blocks
+    for( auto curBB = curFref->begin(),
+              endBB = curFref->end();
+              curBB != endBB; ++curBB ){
+      // walk all the instructions
+      for( auto curInst = curBB->begin(),
+                endInst = curBB->end();
+                curInst != endInst; ++curInst ){
+        //std::cout << "\t\tFound instruction: " << curInst->getOpcodeName() << std::endl;
+      }
+    }
+  }
+
+  return true;
+}
+
 bool SCChiselCodeGen::GenerateChisel(){
 
   if( !Parser ){
@@ -48,6 +70,13 @@ bool SCChiselCodeGen::GenerateChisel(){
 
   // write the chisel header
   WriteChiselHeader();
+
+  // Execute the codegen
+  if( !ExecuteCodegen() ){
+    Msgs->PrintMsg( L_ERROR, "Failed to generate chisel output" );
+    OutFile.close();
+    return false;
+  }
 
   // close the output file
   OutFile.close();

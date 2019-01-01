@@ -63,6 +63,7 @@ private:
 
   // private functions
   void WriteChiselHeader();                   ///< Writes a header to the chisel output file
+  bool ExecuteCodegen();                      ///< Generates chisel from the LLVM IR
 
 public:
 

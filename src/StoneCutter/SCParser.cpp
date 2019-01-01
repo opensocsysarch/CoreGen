@@ -1417,7 +1417,6 @@ Value *CallExprAST::codegen() {
 }
 
 Function *PrototypeAST::codegen() {
-  // Make the function type:  double(double,double) etc.
   // TODO: This eventually needs to look up the variable names
   // in the register class lists
   // If they are found, use the datatype from the register value
