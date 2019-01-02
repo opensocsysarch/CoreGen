@@ -28,12 +28,21 @@ bool CoreGenCodegen::BuildChiselDir(){
     Errno->SetError(CGERR_ERROR, "Cannot derive Chisel directory; Project is null" );
     return false;
   }
+
   std::string FullDir = Proj->GetProjRoot() + "/RTL/chisel/src/main/scala";
   if( !CGMkDir(FullDir) ){
     Errno->SetError(CGERR_ERROR, "Could not construct chisel source tree: "
                     + FullDir );
     return false;
   }
+
+  FullDir = Proj->GetProjRoot() + "/RTL/chisel/project";
+  if( !CGMkDir(FullDir) ){
+    Errno->SetError(CGERR_ERROR, "Could not construct chisel project tree: "
+                    + FullDir );
+    return false;
+  }
+
   return true;
 }
 
@@ -84,6 +93,7 @@ bool CoreGenCodegen::BuildChiselSBT(){
   unsigned Minor = 0;
   if( !Proj->GetChiselVersion(&Major,&Minor) ){
     Errno->SetError(CGERR_ERROR, "Could not retrieve Chisel version" );
+    SOutFile.close();
     return false;
   }
   SOutFile << "version := \""
@@ -113,6 +123,36 @@ bool CoreGenCodegen::BuildChiselSBT(){
   SOutFile << "javacOptions ++= javacOptionsVersion(scalaVersion.value)" << std::endl << std::endl;
 
   SOutFile.close();
+  return true;
+}
+
+bool CoreGenCodegen::BuildChiselProject(){
+  if( !Proj ){
+    Errno->SetError(CGERR_ERROR, "Cannot derive Chisel directory; Project is null" );
+    return false;
+  }
+
+  // build.properties
+  std::string PFile = Proj->GetProjRoot() + "/RTL/chisel/project/build.properties";
+  std::ofstream POutFile;
+  POutFile.open(PFile,std::ios::trunc);
+  if( !POutFile.is_open() ){
+    Errno->SetError(CGERR_ERROR, "Could not open chisel project file: " + PFile );
+    return false;
+  }
+  POutFile << "sbt.version = 1.1.1";
+  POutFile.close();
+
+  // plugins.sbt
+  PFile = Proj->GetProjRoot() + "/RTL/chisel/project/plugins.sbt";
+  POutFile.open(PFile,std::ios::trunc);
+  if( !POutFile.is_open() ){
+    Errno->SetError(CGERR_ERROR, "Could not open chisel project file: " + PFile );
+    return false;
+  }
+  POutFile << "logLevel := Level.Warn";
+  POutFile.close();
+
   return true;
 }
 
@@ -161,6 +201,11 @@ bool CoreGenCodegen::ExecuteChiselCodegen(){
 
   // Stage 4: Build the Chisel SBT file
   if( !BuildChiselSBT() ){
+    return false;
+  }
+
+  // Stage 5: Build the supplementary project files
+  if( !BuildChiselProject() ){
     return false;
   }
 

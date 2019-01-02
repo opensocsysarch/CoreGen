@@ -48,6 +48,9 @@ private:
   /// Builds the Chisel SBT file
   bool BuildChiselSBT();
 
+  /// Builds the Chisel project files
+  bool BuildChiselProject();
+
 public:
   /// Default constructor
   CoreGenCodegen(CoreGenNode *T, CoreGenProj *P, CoreGenErrno *E);
