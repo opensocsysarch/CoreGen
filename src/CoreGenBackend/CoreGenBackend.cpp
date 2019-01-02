@@ -113,7 +113,7 @@ CoreGenBackend::~CoreGenBackend(){
 bool CoreGenBackend::ExecuteCodegen(){
   // Create the codegen object
   CoreGenCodegen *CG = new CoreGenCodegen(Top,
-                                          Proj->GetProjRoot() + "/RTL",
+                                          Proj,
                                           Errno);
 
   if( CG == nullptr ){

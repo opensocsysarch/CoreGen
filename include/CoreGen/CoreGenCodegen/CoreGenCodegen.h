@@ -36,20 +36,21 @@ class CoreGenCodegen
 {
 private:
   CoreGenNode *Top;           ///< Top-level coregen node
-  std::string BaseDir;        ///< Base directory to generate all output files
+  CoreGenProj *Proj;          ///< CoreGen Project Info
   CoreGenErrno *Errno;        ///< CoreGen Errno Structure
-
-  std::string FullDir;        ///< Fully qualified directory structure
 
   /// Builds the chisel directory structure
   bool BuildChiselDir();      ///< Constructs the Chisel directory structure
 
-  /// Builds the chisel makefile
+  /// Builds the Chisel makefile
   bool BuildChiselMakefile();
+
+  /// Builds the Chisel SBT file
+  bool BuildChiselSBT();
 
 public:
   /// Default constructor
-  CoreGenCodegen(CoreGenNode *T, std::string Base, CoreGenErrno *E);
+  CoreGenCodegen(CoreGenNode *T, CoreGenProj *P, CoreGenErrno *E);
 
   /// Default destructor
   ~CoreGenCodegen();
@@ -60,7 +61,7 @@ public:
   /// Execute the Chisel codegen
   bool ExecuteChiselCodegen();
 
-  /// Execute all the codegens
+  /// Execute the Chisel and LLVM codegens
   bool Execute();
 };
 

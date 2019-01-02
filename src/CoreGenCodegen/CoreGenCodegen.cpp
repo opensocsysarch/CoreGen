@@ -11,9 +11,9 @@
 #include "CoreGen/CoreGenCodegen/CoreGenCodegen.h"
 
 CoreGenCodegen::CoreGenCodegen(CoreGenNode *T,
-                               std::string BD,
+                               CoreGenProj *P,
                                CoreGenErrno *E)
-  : Top(T), BaseDir(BD), Errno(E) {
+  : Top(T), Proj(P), Errno(E) {
 }
 
 CoreGenCodegen::~CoreGenCodegen(){
@@ -24,11 +24,11 @@ bool CoreGenCodegen::ExecuteLLVMCodegen(){
 }
 
 bool CoreGenCodegen::BuildChiselDir(){
-  if( BaseDir.length() == 0 ){
-    Errno->SetError(CGERR_ERROR, "Base directory cannot be null" );
+  if( !Proj ){
+    Errno->SetError(CGERR_ERROR, "Cannot derive Chisel directory; Project is null" );
     return false;
   }
-  FullDir = BaseDir + "/chisel/src/main/scala";
+  std::string FullDir = Proj->GetProjRoot() + "/RTL/chisel/src/main/scala";
   if( !CGMkDir(FullDir) ){
     Errno->SetError(CGERR_ERROR, "Could not construct chisel source tree: "
                     + FullDir );
@@ -37,13 +37,92 @@ bool CoreGenCodegen::BuildChiselDir(){
   return true;
 }
 
-bool CoreGenCodegen::BuildChiselMakefile(){
-  if( BaseDir.length() == 0 ){
-    Errno->SetError(CGERR_ERROR, "Base directory cannot be null to generate makefile" );
+// Constructs the Chisel `build.sbt` file
+// Derived from the FreeChipsProject chisel-template build.sbt
+// Automatically injects project-specific information
+// https://github.com/freechipsproject/chisel-template/blob/release/build.sbt
+bool CoreGenCodegen::BuildChiselSBT(){
+  if( !Proj ){
+    Errno->SetError(CGERR_ERROR, "Cannot derive Chisel directory; Project is null" );
     return false;
   }
 
-  std::string MFile = BaseDir + "/chisel/Makefile";
+  std::string SBTFile = Proj->GetProjRoot() + "/RTL/chisel/build.sbt";
+  std::ofstream SOutFile;
+  SOutFile.open(SBTFile,std::ios::trunc);
+  if( !SOutFile.is_open() ){
+    Errno->SetError(CGERR_ERROR, "Could not open chisel sbt file: " + SBTFile );
+    return false;
+  }
+
+  // def scalacOptionsVerion
+  SOutFile << "def scalacOptionsVersion(scalaVersion: String): Seq[String] = {" << std::endl;
+  SOutFile << "\tSeq() ++ {" << std::endl;
+  SOutFile << "\t\tCrossVersion.partialVersion(scalaVersion) match {" << std::endl;
+  SOutFile << "\t\t\tcase Some((2, scalaMajor: Long)) if scalaMajor < 12 => Seq()" << std::endl;
+  SOutFile << "\t\t\tcase _ => Seq(\"-Xsource:2.11\")" << std::endl;
+  SOutFile << "\t\t}" << std::endl;
+  SOutFile << "\t}" << std::endl;
+  SOutFile << "}" << std::endl << std::endl;
+
+  // def javacOptionsVersion
+  SOutFile << "def javacOptionsVersion(scalaVersion: String): Seq[String] = {" << std::endl;
+  SOutFile << "\tSeq() ++ {" << std::endl;
+  SOutFile << "\t\tCrossVersion.partialVersion(scalaVersion) match {" << std::endl;
+  SOutFile << "\t\t\tcase Some((2, scalaMajor: Long)) if scalaMajor < 12 =>" << std::endl;
+  SOutFile << "\t\t\t\tSeq(\"-source\", \"1.7\", \"-target\", \"1.7\")" << std::endl;
+  SOutFile << "\t\t\tcase _ =>" << std::endl;
+  SOutFile << "\t\t\t\tSeq(\"-source\", \"1.8\", \"-target\", \"1.8\")" << std::endl;
+  SOutFile << "\t\t}" << std::endl;
+  SOutFile << "\t}" << std::endl;
+  SOutFile << "}" << std::endl << std::endl;
+
+  // everything else
+  SOutFile << "name := \"" << Proj->GetProjName() << "\"" << std::endl << std::endl;
+
+  unsigned Major = 0;
+  unsigned Minor = 0;
+  if( !Proj->GetChiselVersion(&Major,&Minor) ){
+    Errno->SetError(CGERR_ERROR, "Could not retrieve Chisel version" );
+    return false;
+  }
+  SOutFile << "version := \""
+           << std::to_string(Major) << "."
+           << std::to_string(Minor) << "\"" << std::endl << std::endl;
+
+  SOutFile << "scalaVersion := \"2.11.12\"" << std::endl << std::endl;
+
+  SOutFile << "crossScalaVersions := \"Seq(\"2.11.12\",\"2.12.4\")" << std::endl << std::endl;
+
+  SOutFile << "resolvers ++= Seq(" << std::endl;
+  SOutFile << "\tResolver.sonatypeRepo(\"snapshots\")," << std::endl;
+  SOutFile << "\tResolver.sonatypeRepo(\"releases\")" << std::endl;
+  SOutFile << ")" << std::endl << std::endl;
+
+  SOutFile << "defaultVersions = Map(" << std::endl;
+  SOutFile << "\t\"chisel3\" -> \"3.1.+\"," << std::endl;
+  SOutFile << "\t\"chisel-iotesters\" -> \"[1.2.4,1.3.0[\"" << std::endl;
+  SOutFile << "\t)" << std::endl << std::endl;
+
+  SOutFile << "libraryDependencies ++= Seq(\"chisel3\",\"chisel-iotesters\").map {" << std::endl;
+  SOutFile << "\tdep: String => \"edu.berkeley.cs\" \%\% dep \% sys.props.getOrElse(dep + \"Version\", defaultVersions(dep)) }"
+           << std::endl << std::endl;
+
+  SOutFile << "scalacOptions ++= scalacOptionsVersion(scalaVersion.value)" << std::endl << std::endl;
+
+  SOutFile << "javacOptions ++= javacOptionsVersion(scalaVersion.value)" << std::endl << std::endl;
+
+  SOutFile.close();
+  return true;
+}
+
+bool CoreGenCodegen::BuildChiselMakefile(){
+  if( !Proj ){
+    Errno->SetError(CGERR_ERROR, "Cannot derive Chisel directory; Project is null" );
+    return false;
+  }
+
+  std::string MFile = Proj->GetProjRoot() + "/RTL/chisel/Makefile";
   std::ofstream MOutFile;
   MOutFile.open(MFile,std::ios::trunc);
   if( !MOutFile.is_open() ){
@@ -77,6 +156,11 @@ bool CoreGenCodegen::ExecuteChiselCodegen(){
 
   // Stage 3: Build the Chisel makefile
   if( !BuildChiselMakefile() ){
+    return false;
+  }
+
+  // Stage 4: Build the Chisel SBT file
+  if( !BuildChiselSBT() ){
     return false;
   }
 
