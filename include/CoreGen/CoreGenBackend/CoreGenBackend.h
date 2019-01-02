@@ -242,6 +242,12 @@ public:
   /// Execute the codegen
   bool ExecuteCodegen();
 
+  /// Execute the LLVM codegen
+  bool ExecuteLLVMCodegen();
+
+  /// Execute the Chisel codegen
+  bool ExecuteChiselCodegen();
+
   /// Retrieve the build date
   std::string CoreGenBuildDate() { return CGBuildDate(); }
 

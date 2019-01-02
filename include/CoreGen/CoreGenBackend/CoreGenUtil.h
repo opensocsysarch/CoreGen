@@ -13,6 +13,7 @@
 
 #include <sys/stat.h>
 #include <sys/time.h>
+#include <cerrno>
 #include <time.h>
 #include <unistd.h>
 #include <stdio.h>
@@ -21,6 +22,8 @@
 #include <fstream>
 #include <sstream>
 #include <ctime>
+#include <vector>
+#include <sstream>
 
 #define STRINGIZE_INSTALL_PREFIX(CGIPREFIX) #CGIPREFIX
 #define _COREGEN_INSTALL_PREFIX_ STRINGIZE_INSTALL_PREFIX(CGIPREFIX)
@@ -52,11 +55,49 @@ inline bool CGMkDir(const std::string& dir){
   }
   return true;
 #else
-  if( mkdir(dir.c_str(), 0777) != 0 ){
+  if( mkdir(dir.c_str(), 0777) == -1 ){
     return false;
   }
   return true;
 #endif
+}
+
+/// CoreGenUtil: Check to see if a directory exists
+inline bool CGDirExists(const char *path){
+  struct stat info;
+
+  if(stat( path, &info ) != 0)
+    return false;
+  else if(info.st_mode & S_IFDIR)
+    return true;
+  else
+    return false;
+}
+
+/// CoreGenUtil: Recursively create directories
+inline bool CGMkDirP(const std::string& dir){
+  // build up a vector of directory names
+  std::vector<std::string> tokens;
+  std::string token;
+  std::istringstream tokenStream(dir);
+  char delim = '/';
+  while (std::getline(tokenStream, token, delim)){
+    tokens.push_back(token);
+  }
+
+  // iteratively build the directory structure
+  std::string newDir;
+  for( unsigned i=0; i<tokens.size(); i++ ){
+    newDir += (tokens[i] + "/");
+    if( !CGDirExists(newDir.c_str()) ){
+      // make a new directory
+      if( !CGMkDir(newDir) ){
+        return false;
+      }
+    }
+  }
+
+  return true;
 }
 
 /// CoreGenUtil: Check to see if the file exists

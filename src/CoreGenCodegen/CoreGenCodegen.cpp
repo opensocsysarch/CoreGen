@@ -29,15 +29,26 @@ bool CoreGenCodegen::BuildChiselDir(){
     return false;
   }
 
-  std::string FullDir = Proj->GetProjRoot() + "/RTL/chisel/src/main/scala";
-  if( !CGMkDir(FullDir) ){
-    Errno->SetError(CGERR_ERROR, "Could not construct chisel source tree: "
+  std::string FullDir;
+  std::string ProjRoot = Proj->GetProjRoot();
+  if( ProjRoot[ProjRoot.length()-1] == '/' ){
+    FullDir = Proj->GetProjRoot() + "RTL/chisel/src/main/scala";
+  }else{
+    FullDir = Proj->GetProjRoot() + "/RTL/chisel/src/main/scala";
+  }
+
+  if( !CGMkDirP(FullDir) ){
+    Errno->SetError(CGERR_ERROR, "Could not construct the chisel source tree: "
                     + FullDir );
     return false;
   }
 
-  FullDir = Proj->GetProjRoot() + "/RTL/chisel/project";
-  if( !CGMkDir(FullDir) ){
+  if( ProjRoot[ProjRoot.length()-1] == '/' ){
+    FullDir = Proj->GetProjRoot() + "RTL/chisel/project";
+  }else{
+    FullDir = Proj->GetProjRoot() + "/RTL/chisel/project";
+  }
+  if( !CGMkDirP(FullDir) ){
     Errno->SetError(CGERR_ERROR, "Could not construct chisel project tree: "
                     + FullDir );
     return false;
@@ -66,24 +77,24 @@ bool CoreGenCodegen::BuildChiselSBT(){
 
   // def scalacOptionsVerion
   SOutFile << "def scalacOptionsVersion(scalaVersion: String): Seq[String] = {" << std::endl;
-  SOutFile << "\tSeq() ++ {" << std::endl;
-  SOutFile << "\t\tCrossVersion.partialVersion(scalaVersion) match {" << std::endl;
-  SOutFile << "\t\t\tcase Some((2, scalaMajor: Long)) if scalaMajor < 12 => Seq()" << std::endl;
-  SOutFile << "\t\t\tcase _ => Seq(\"-Xsource:2.11\")" << std::endl;
-  SOutFile << "\t\t}" << std::endl;
-  SOutFile << "\t}" << std::endl;
+  SOutFile << "  Seq() ++ {" << std::endl;
+  SOutFile << "    CrossVersion.partialVersion(scalaVersion) match {" << std::endl;
+  SOutFile << "      case Some((2, scalaMajor: Long)) if scalaMajor < 12 => Seq()" << std::endl;
+  SOutFile << "      case _ => Seq(\"-Xsource:2.11\")" << std::endl;
+  SOutFile << "    }" << std::endl;
+  SOutFile << "  }" << std::endl;
   SOutFile << "}" << std::endl << std::endl;
 
   // def javacOptionsVersion
   SOutFile << "def javacOptionsVersion(scalaVersion: String): Seq[String] = {" << std::endl;
-  SOutFile << "\tSeq() ++ {" << std::endl;
-  SOutFile << "\t\tCrossVersion.partialVersion(scalaVersion) match {" << std::endl;
-  SOutFile << "\t\t\tcase Some((2, scalaMajor: Long)) if scalaMajor < 12 =>" << std::endl;
-  SOutFile << "\t\t\t\tSeq(\"-source\", \"1.7\", \"-target\", \"1.7\")" << std::endl;
-  SOutFile << "\t\t\tcase _ =>" << std::endl;
-  SOutFile << "\t\t\t\tSeq(\"-source\", \"1.8\", \"-target\", \"1.8\")" << std::endl;
-  SOutFile << "\t\t}" << std::endl;
-  SOutFile << "\t}" << std::endl;
+  SOutFile << "  Seq() ++ {" << std::endl;
+  SOutFile << "    CrossVersion.partialVersion(scalaVersion) match {" << std::endl;
+  SOutFile << "      case Some((2, scalaMajor: Long)) if scalaMajor < 12 =>" << std::endl;
+  SOutFile << "        Seq(\"-source\", \"1.7\", \"-target\", \"1.7\")" << std::endl;
+  SOutFile << "      case _ =>" << std::endl;
+  SOutFile << "        Seq(\"-source\", \"1.8\", \"-target\", \"1.8\")" << std::endl;
+  SOutFile << "    }" << std::endl;
+  SOutFile << "  }" << std::endl;
   SOutFile << "}" << std::endl << std::endl;
 
   // everything else
@@ -102,20 +113,20 @@ bool CoreGenCodegen::BuildChiselSBT(){
 
   SOutFile << "scalaVersion := \"2.11.12\"" << std::endl << std::endl;
 
-  SOutFile << "crossScalaVersions := \"Seq(\"2.11.12\",\"2.12.4\")" << std::endl << std::endl;
+  SOutFile << "crossScalaVersions := Seq(\"2.11.12\",\"2.12.4\")" << std::endl << std::endl;
 
   SOutFile << "resolvers ++= Seq(" << std::endl;
-  SOutFile << "\tResolver.sonatypeRepo(\"snapshots\")," << std::endl;
-  SOutFile << "\tResolver.sonatypeRepo(\"releases\")" << std::endl;
+  SOutFile << "  Resolver.sonatypeRepo(\"snapshots\")," << std::endl;
+  SOutFile << "  Resolver.sonatypeRepo(\"releases\")" << std::endl;
   SOutFile << ")" << std::endl << std::endl;
 
   SOutFile << "defaultVersions = Map(" << std::endl;
-  SOutFile << "\t\"chisel3\" -> \"3.1.+\"," << std::endl;
-  SOutFile << "\t\"chisel-iotesters\" -> \"[1.2.4,1.3.0[\"" << std::endl;
-  SOutFile << "\t)" << std::endl << std::endl;
+  SOutFile << "  \"chisel3\" -> \"3.1.+\"," << std::endl;
+  SOutFile << "  \"chisel-iotesters\" -> \"[1.2.4,1.3.0[\"" << std::endl;
+  SOutFile << "  )" << std::endl << std::endl;
 
   SOutFile << "libraryDependencies ++= Seq(\"chisel3\",\"chisel-iotesters\").map {" << std::endl;
-  SOutFile << "\tdep: String => \"edu.berkeley.cs\" \%\% dep \% sys.props.getOrElse(dep + \"Version\", defaultVersions(dep)) }"
+  SOutFile << "  dep: String => \"edu.berkeley.cs\" \%\% dep \% sys.props.getOrElse(dep + \"Version\", defaultVersions(dep)) }"
            << std::endl << std::endl;
 
   SOutFile << "scalacOptions ++= scalacOptionsVersion(scalaVersion.value)" << std::endl << std::endl;
