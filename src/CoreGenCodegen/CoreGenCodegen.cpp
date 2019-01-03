@@ -19,7 +19,137 @@ CoreGenCodegen::CoreGenCodegen(CoreGenNode *T,
 CoreGenCodegen::~CoreGenCodegen(){
 }
 
+bool CoreGenCodegen::BuildProjMakefile(){
+  if( !Proj ){
+    Errno->SetError(CGERR_ERROR, "Cannot derive Chisel directory; Project is null" );
+    return false;
+  }
+
+  std::string MFile;
+  std::string ProjRoot = Proj->GetProjRoot();
+  if( ProjRoot[ProjRoot.length()-1] == '/' ){
+    MFile = ProjRoot + "Makefile";
+  }else{
+    MFile = ProjRoot + "/Makefile";
+  }
+
+  std::ofstream MOutFile;
+  MOutFile.open(MFile,std::ios::trunc);
+  if( !MOutFile.is_open() ){
+    Errno->SetError(CGERR_ERROR, "Could not open top-level makefile: " + MFile );
+    return false;
+  }
+
+  // header
+  MOutFile << "#!/bin/sh" << std::endl;
+  MOutFile << "#" << std::endl;
+  MOutFile << "# System Architect top-level project makefile" << std::endl;
+  MOutFile << "#" << std::endl << std::endl;
+
+  // top-level variables
+  MOutFile << "CGCLI_BIN = `which cgcli`" << std::endl;
+  MOutFile << "IRFILES := $(shell find . -maxdepth 1 -type f -name '*.yaml')" << std::endl;
+  MOutFile << "SCFILES := $(shell find . -maxdepth 1 -type f -name '*.sc')" << std::endl;
+
+
+  // PHONY
+  MOutFile << std::endl;
+  MOutFile << ".PHONY: clean logo help project" << std::endl << std::endl;
+
+  // top-level all
+  MOutFile << "all: help" << std::endl << std::endl;
+
+  // banner section
+  MOutFile << "logo:" << std::endl;
+  MOutFile << "\t@echo \" _____                  _____             ___           _     \"" << std::endl;
+  MOutFile << "\t@echo \"|  _  |                /  ___|           / _ \\         | |    \"" << std::endl;
+  MOutFile << "\t@echo \"| | | |_ __   ___ _ __ \\ \\--. _   _ ___ / /_\\ \\_ __ ___| |__  \"" << std::endl;
+  MOutFile << "\t@echo \"| | | | '_ \\ / _ \\ '_ \\ \\--. \\ | | / __||  _  | '__/ __| '_ \\ \"" << std::endl;
+  MOutFile << "\t@echo \"\\ \\_/ / |_) |  __/ | | /\\__/ / |_| \\__ \\| | | | | | (__| | | |\"" << std::endl;
+  MOutFile << "\t@echo \" \\___/| .__/ \\___|_| |_\\____/ \\__, |___/\\_| |_/_|  \\___|_| |_|\"" << std::endl;
+  MOutFile << "\t@echo \"      | |                      __/ |                          \"" << std::endl;
+  MOutFile << "\t@echo \"      |_|                     |___/                           \"" << std::endl;
+
+  // help menu
+  MOutFile << "help: logo" << std::endl;
+  MOutFile << "\t@echo \"-----------------------------------------------------------------\"" << std::endl;
+  MOutFile << "\t@echo \"help:      Print this help menu\"" << std::endl;
+  MOutFile << "\t@echo \"project:   Verifies the design, creates Chisel and LLVM compiler\"" << std::endl;
+  MOutFile << "\t@echo \"compiler:  Builds the LLVM compiler\"" << std::endl;
+  MOutFile << "\t@echo \"chisel:    Builds the Chisel HDL\"" << std::endl;
+  MOutFile << "\t@echo \"simulaotr: Builds the cycle-accurate simulator\"" << std::endl;
+  MOutFile << "\t@echo \"coregen:   Executes coregen to verify the design\"" << std::endl;
+  MOutFile << "\t@echo \"-----------------------------------------------------------------\"" << std::endl;
+
+  // clean
+  MOutFile << "clean:" << std::endl;
+
+  // project
+  MOutFile << "project: logo coregen chisel compiler" << std::endl;
+
+  // compiler
+  MOutFile << "compiler: logo" << std::endl;
+
+  // chisel
+  MOutFile << "chisel: logo" << std::endl;
+
+  // simulator
+  MOutFile << "simulator: logo" << std::endl;
+
+  // coregen
+  MOutFile << "coregen: logo coregen-test %.yaml" << std::endl;
+  MOutFile << "\t$(CGCLI_BIN) --verify --pass --ir $<" << std::endl;
+
+  // coregen-test
+  MOutFile << "coregen-test:" << std::endl;
+  MOutFile << "\ttest !-e $(CGCLI_BIN) && @echo \"cgcli command not in the current path\" && exit 1" << std::endl;
+
+  MOutFile.close();
+  return true;
+}
+
+bool CoreGenCodegen::BuildLLVMDir(){
+  if( !Proj ){
+    Errno->SetError(CGERR_ERROR, "Cannot derive LLVM directory; Project is null" );
+    return false;
+  }
+
+  std::string FullDir;
+  std::string ProjRoot = Proj->GetProjRoot();
+  if( ProjRoot[ProjRoot.length()-1] == '/' ){
+    FullDir = ProjRoot + "compiler/LLVM";
+  }else{
+    FullDir = ProjRoot + "/compiler/LLVM";
+  }
+
+  if( !CGMkDirP(FullDir) ){
+    Errno->SetError(CGERR_ERROR, "Could not construct the LLVM source tree: "
+                    + FullDir );
+    return false;
+  }
+
+  return true;
+}
+
 bool CoreGenCodegen::ExecuteLLVMCodegen(){
+
+  // Stage 1: Build the top-level makefile
+  if( !isTopMakefile ){
+    if( !BuildProjMakefile() ){
+      return false;
+    }
+    isTopMakefile = true;
+  }
+
+  // Stage 2: Build the Chisel directory structure
+  if( !BuildLLVMDir() ){
+    return false;
+  }
+
+  // Stage 3: Copy the source tree over from the archive
+
+  // Stage 4: Execute the codegen
+
   return true;
 }
 
@@ -32,9 +162,9 @@ bool CoreGenCodegen::BuildChiselDir(){
   std::string FullDir;
   std::string ProjRoot = Proj->GetProjRoot();
   if( ProjRoot[ProjRoot.length()-1] == '/' ){
-    FullDir = Proj->GetProjRoot() + "RTL/chisel/src/main/scala";
+    FullDir = ProjRoot + "RTL/chisel/src/main/scala";
   }else{
-    FullDir = Proj->GetProjRoot() + "/RTL/chisel/src/main/scala";
+    FullDir = ProjRoot + "/RTL/chisel/src/main/scala";
   }
 
   if( !CGMkDirP(FullDir) ){
@@ -44,9 +174,9 @@ bool CoreGenCodegen::BuildChiselDir(){
   }
 
   if( ProjRoot[ProjRoot.length()-1] == '/' ){
-    FullDir = Proj->GetProjRoot() + "RTL/chisel/project";
+    FullDir = ProjRoot + "RTL/chisel/project";
   }else{
-    FullDir = Proj->GetProjRoot() + "/RTL/chisel/project";
+    FullDir = ProjRoot + "/RTL/chisel/project";
   }
   if( !CGMkDirP(FullDir) ){
     Errno->SetError(CGERR_ERROR, "Could not construct chisel project tree: "
@@ -67,7 +197,13 @@ bool CoreGenCodegen::BuildChiselSBT(){
     return false;
   }
 
-  std::string SBTFile = Proj->GetProjRoot() + "/RTL/chisel/build.sbt";
+  std::string SBTFile;
+  std::string ProjRoot = Proj->GetProjRoot();
+  if( ProjRoot[ProjRoot.length()-1] == '/' ){
+    SBTFile = ProjRoot + "RTL/chisel/build.sbt";
+  }else{
+    SBTFile = ProjRoot + "/RTL/chisel/build.sbt";
+  }
   std::ofstream SOutFile;
   SOutFile.open(SBTFile,std::ios::trunc);
   if( !SOutFile.is_open() ){
@@ -144,7 +280,13 @@ bool CoreGenCodegen::BuildChiselProject(){
   }
 
   // build.properties
-  std::string PFile = Proj->GetProjRoot() + "/RTL/chisel/project/build.properties";
+  std::string PFile;
+  std::string ProjRoot = Proj->GetProjRoot();
+  if( ProjRoot[ProjRoot.length()-1] == '/' ){
+    PFile = ProjRoot + "RTL/chisel/project/build.properties";
+  }else{
+    PFile = ProjRoot + "/RTL/chisel/project/build.properties";
+  }
   std::ofstream POutFile;
   POutFile.open(PFile,std::ios::trunc);
   if( !POutFile.is_open() ){
@@ -155,7 +297,11 @@ bool CoreGenCodegen::BuildChiselProject(){
   POutFile.close();
 
   // plugins.sbt
-  PFile = Proj->GetProjRoot() + "/RTL/chisel/project/plugins.sbt";
+  if( ProjRoot[ProjRoot.length()-1] == '/' ){
+    PFile = ProjRoot + "RTL/chisel/project/plugins.sbt";
+  }else{
+    PFile = ProjRoot + "/RTL/chisel/project/plugins.sbt";
+  }
   POutFile.open(PFile,std::ios::trunc);
   if( !POutFile.is_open() ){
     Errno->SetError(CGERR_ERROR, "Could not open chisel project file: " + PFile );
@@ -173,7 +319,14 @@ bool CoreGenCodegen::BuildChiselMakefile(){
     return false;
   }
 
-  std::string MFile = Proj->GetProjRoot() + "/RTL/chisel/Makefile";
+  std::string MFile;
+  std::string ProjRoot = Proj->GetProjRoot();
+  if( ProjRoot[ProjRoot.length()-1] == '/' ){
+    MFile = ProjRoot + "RTL/chisel/Makefile";
+  }else{
+    MFile = ProjRoot + "/RTL/chisel/Makefile";
+  }
+
   std::ofstream MOutFile;
   MOutFile.open(MFile,std::ios::trunc);
   if( !MOutFile.is_open() ){
@@ -187,6 +340,7 @@ bool CoreGenCodegen::BuildChiselMakefile(){
 
   // output build directives
   // TODO
+  MOutFile << ".PHONY: clean" << std::endl;
 
   // output clean directive
   MOutFile << "clean:" << std::endl;
@@ -198,24 +352,32 @@ bool CoreGenCodegen::BuildChiselMakefile(){
 
 bool CoreGenCodegen::ExecuteChiselCodegen(){
 
-  // Stage 1: Build the Chisel directory structure
+  // Stage 1: Build the top-level makefile
+  if( !isTopMakefile ){
+    if( !BuildProjMakefile() ){
+      return false;
+    }
+    isTopMakefile = true;
+  }
+
+  // Stage 2: Build the Chisel directory structure
   if( !BuildChiselDir() ){
     return false;
   }
 
-  // Stage 2: Walk the top-level modules and generate chisel
+  // Stage 3: Walk the top-level modules and generate chisel
 
-  // Stage 3: Build the Chisel makefile
+  // Stage 4: Build the Chisel makefile
   if( !BuildChiselMakefile() ){
     return false;
   }
 
-  // Stage 4: Build the Chisel SBT file
+  // Stage 5: Build the Chisel SBT file
   if( !BuildChiselSBT() ){
     return false;
   }
 
-  // Stage 5: Build the supplementary project files
+  // Stage 6: Build the supplementary project files
   if( !BuildChiselProject() ){
     return false;
   }
@@ -224,6 +386,12 @@ bool CoreGenCodegen::ExecuteChiselCodegen(){
 }
 
 bool CoreGenCodegen::Execute(){
+  if( !isTopMakefile ){
+    if( !BuildProjMakefile() ){
+      return false;
+    }
+    isTopMakefile = true;
+  }
   if( !ExecuteChiselCodegen() ){
     return false;
   }

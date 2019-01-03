@@ -403,11 +403,9 @@ bool CGCLIOpts::ParseOpts( int argc, char **argv ){
     }else if( s == "--chisel" ){
       CGChisel = true;
       Verify = true;
-      ExecPass = true;
     }else if( s == "--compiler" ){
       CGComp = true;
       Verify = true;
-      ExecPass = true;
     }else{
       // parsing error
       std::cout << "Error : unknown option : " << s << std::endl;

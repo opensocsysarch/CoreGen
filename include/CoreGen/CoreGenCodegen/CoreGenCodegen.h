@@ -39,8 +39,13 @@ private:
   CoreGenProj *Proj;          ///< CoreGen Project Info
   CoreGenErrno *Errno;        ///< CoreGen Errno Structure
 
+  bool isTopMakefile;         ///< Has the top-level makefile been constructed?
+
+  /// Builds the top-level project makefile
+  bool BuildProjMakefile();
+
   /// Builds the chisel directory structure
-  bool BuildChiselDir();      ///< Constructs the Chisel directory structure
+  bool BuildChiselDir();
 
   /// Builds the Chisel makefile
   bool BuildChiselMakefile();
@@ -50,6 +55,9 @@ private:
 
   /// Builds the Chisel project files
   bool BuildChiselProject();
+
+  /// Builds the compiler directory structure
+  bool BuildLLVMDir();
 
 public:
   /// Default constructor
