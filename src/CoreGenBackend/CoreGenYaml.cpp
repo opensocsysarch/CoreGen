@@ -2067,7 +2067,8 @@ bool CoreGenYaml::ReadCoreYaml(const YAML::Node& CoreNodes,
                                std::vector<CoreGenCore *> &Cores,
                                std::vector<CoreGenCache *> &Caches,
                                std::vector<CoreGenISA *> &ISAs,
-                               std::vector<CoreGenRegClass *> &RegClasses){
+                               std::vector<CoreGenRegClass *> &RegClasses,
+                               std::vector<CoreGenExt *> &Exts){
   for( unsigned i=0; i<CoreNodes.size(); i++ ){
     const YAML::Node& Node = CoreNodes[i];
     if( !CheckValidNode(Node,"Core") ){
@@ -2146,9 +2147,31 @@ bool CoreGenYaml::ReadCoreYaml(const YAML::Node& CoreNodes,
           }
         }
         if( RC == nullptr ){
+          Errno->SetError(CGERR_ERROR, "Invalid RegisterClass for Core: "
+                          + RegClassName + ":" + C->GetName() );
           return false;
         }
         C->InsertRegClass(RC);
+      }
+    }
+
+    const YAML::Node& ENode = Node["Extensions"];
+    if( ENode ){
+      for( unsigned k=0; k<ENode.size(); k++ ){
+        const YAML::Node& LENode = ENode[k];
+        std::string ExtName = LENode["Extension"].as<std::string>();
+        CoreGenExt *EC = nullptr;
+        for( unsigned a=0; a<Exts.size(); a++ ){
+          if( Exts[a]->GetName() == ExtName ){
+            EC = Exts[a];
+          }
+        }
+        if( EC == nullptr ){
+          Errno->SetError(CGERR_ERROR, "Invalid Extension for Core: "
+                          + ExtName + ":" + C->GetName() );
+          return false;
+        }
+        C->InsertExt( EC );
       }
     }
 
@@ -2577,7 +2600,8 @@ bool CoreGenYaml::ReadPluginYaml(const YAML::Node& PluginNodes,
                       NewPlugin->GetCoreVect(),
                       NewPlugin->GetCacheVect(),
                       NewPlugin->GetISAVect(),
-                      NewPlugin->GetRegClassVect()) ){
+                      NewPlugin->GetRegClassVect(),
+                      NewPlugin->GetExtVect()) ){
         return false;
       }
     }
@@ -2765,7 +2789,8 @@ bool CoreGenYaml::ReadExtYaml(const YAML::Node& ExtNodes,
                       E->GetCoreVect(),
                       E->GetCacheVect(),
                       E->GetISAVect(),
-                      E->GetRegClassVect()) ){
+                      E->GetRegClassVect(),
+                      E->GetExtVect()) ){
         return false;
       }
     }
@@ -3040,9 +3065,15 @@ bool CoreGenYaml::ReadYaml(  std::vector<CoreGenSoC *>  &Socs,
     return false;
   }
 
+  //-- Exts
+  const YAML::Node& ExtNodes = IR["Extensions"];
+  if( !ReadExtYaml(ExtNodes,Exts) ){
+    return false;
+  }
+
   //-- Cores
   const YAML::Node& CoreNodes = IR["Cores"];
-  if( !ReadCoreYaml(CoreNodes,Cores,Caches,ISAs,RegClasses) ){
+  if( !ReadCoreYaml(CoreNodes,Cores,Caches,ISAs,RegClasses,Exts) ){
     return false;
   }
 
@@ -3067,12 +3098,6 @@ bool CoreGenYaml::ReadYaml(  std::vector<CoreGenSoC *>  &Socs,
   // -- Virtual to Physical Units
   const YAML::Node& VTPNodes = IR["VTPControllers"];
   if( !ReadVTPYaml(VTPNodes,VTPs) ){
-    return false;
-  }
-
-  //-- Exts
-  const YAML::Node& ExtNodes = IR["Extensions"];
-  if( !ReadExtYaml(ExtNodes,Exts) ){
     return false;
   }
 

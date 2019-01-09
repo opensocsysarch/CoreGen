@@ -181,7 +181,8 @@ private:
                     std::vector<CoreGenCore *> &Cores,
                     std::vector<CoreGenCache *> &Caches,
                     std::vector<CoreGenISA *> &ISAs,
-                    std::vector<CoreGenRegClass *> &RegClasses);
+                    std::vector<CoreGenRegClass *> &RegClasses,
+                    std::vector<CoreGenExt *> &Exts);
 
   /// Read Yaml: Socs
   bool ReadSocYaml(const YAML::Node& SocNodes,
