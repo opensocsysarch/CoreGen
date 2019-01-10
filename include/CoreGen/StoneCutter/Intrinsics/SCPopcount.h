@@ -8,6 +8,15 @@
 // See LICENSE in the top level directory for licensing details
 //
 
+/**
+ * \class SCPopcount
+ *
+ * \ingroup StoneCutter
+ *
+ * \brief StoneCutter Intrinsic: Hamming Code (Popcount)
+ *
+ */
+
 #ifndef _STONECUTTER_SCINTRIN_SCPOPCOUNT_H_
 #define _STONECUTTER_SCINTRIN_SCPOPCOUNT_H_
 

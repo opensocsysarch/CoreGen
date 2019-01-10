@@ -184,12 +184,31 @@ int ExecuteCoregen( CGCLIOpts *Opts ){
     }
   }
 
-  // run the chisel codegen
-  if( Opts->IsChiselEnabled() ){
-  }
-
-  // run the compiler codegen
-  if( Opts->IsCompilerEnabled() ){
+  // execute the codegen(s)
+  if( Opts->IsChiselEnabled() && Opts->IsCompilerEnabled() ){
+    // run both codegens (more efficient memory use)
+    if( !CG->ExecuteCodegen() ){
+      std::cout << "Error executing the codegens: "
+                << CG->GetErrStr() << std::endl;
+      delete CG;
+      return -1;
+    }
+  }else if( Opts->IsChiselEnabled() ){
+    // run the chisel codegen
+    if( !CG->ExecuteChiselCodegen() ){
+      std::cout << "Error executing the Chisel codegen: "
+                << CG->GetErrStr() << std::endl;
+      delete CG;
+      return -1;
+    }
+  }else if( Opts->IsCompilerEnabled() ){
+    // run the compiler codegen
+    if( !CG->ExecuteLLVMCodegen() ){
+      std::cout << "Error executing the LLVM codegen: "
+                << CG->GetErrStr() << std::endl;
+      delete CG;
+      return -1;
+    }
   }
 
   delete CG;

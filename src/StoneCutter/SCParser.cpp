@@ -64,6 +64,11 @@ void SCParser::InitIntrinsics(){
   Intrins.push_back(static_cast<SCIntrin *>(new SCDoz()));
   Intrins.push_back(static_cast<SCIntrin *>(new SCCompress()));
   Intrins.push_back(static_cast<SCIntrin *>(new SCCompressM()));
+  Intrins.push_back(static_cast<SCIntrin *>(new SCInsertS()));
+  Intrins.push_back(static_cast<SCIntrin *>(new SCInsertZ()));
+  Intrins.push_back(static_cast<SCIntrin *>(new SCExtractS()));
+  Intrins.push_back(static_cast<SCIntrin *>(new SCExtractZ()));
+  Intrins.push_back(static_cast<SCIntrin *>(new SCMerge()));
 }
 
 void SCParser::InitPassMap(){
@@ -908,8 +913,11 @@ std::unique_ptr<RegClassAST> SCParser::ParseRegClassDef(){
   if (CurTok != '(')
     return LogErrorR("Expected '(' in regclass prototype");
 
-  std::vector<std::string> ArgNames;
-  std::vector<VarAttrs> ArgAttrs;
+  std::vector<std::string> ArgNames;          // vector of register names
+  std::vector<VarAttrs> ArgAttrs;             // vector of register attributes
+  std::vector<std::tuple<std::string,
+                         std::string,
+                         VarAttrs>> SubRegs;  // vector of subregister tuples
 
   // try to pull the next identifier
   GetNextToken();
@@ -922,18 +930,67 @@ std::unique_ptr<RegClassAST> SCParser::ParseRegClassDef(){
     }
 
     if( GetNextToken() != tok_identifier ){
-      return LogErrorR("Expected variable name");
+      return LogErrorR("Expected register name");
     }
+
+    std::string RegName = Lex->GetIdentifierStr();
 
     // add them to our vector
     ArgAttrs.push_back(VAttr);
-    ArgNames.push_back(Lex->GetIdentifierStr());
+    ArgNames.push_back(RegName);
 
-    // Look for the comma
+    // Look for the comma or subregister
     GetNextToken();
     if( CurTok == ',' ){
       // eat the comma
       GetNextToken();
+    }else if( CurTok == '(' ){
+      // attempt to parse the sub registers
+
+      // eat the (
+      GetNextToken();
+
+      // walk all the subregisters
+      while( CurTok == tok_var ){
+        std::string SType = Lex->GetIdentifierStr();
+        VarAttrs SAttr;
+        if( !GetVarAttr( SType, SAttr ) ){
+          return LogErrorR("Unknown subregister type: " + SType );
+        }
+
+        if( GetNextToken() != tok_identifier ){
+          return LogErrorR("Expected subregister name" );
+        }
+
+        std::string SubReg = Lex->GetIdentifierStr();
+
+        // insert into the vector
+        SubRegs.push_back(std::tuple<std::string,std::string,VarAttrs>
+                         (RegName,SubReg,SAttr));
+
+        // eat the identifier
+        GetNextToken();
+
+        if( CurTok == ')' ){
+          // eat the )
+          GetNextToken();
+          break;
+        }else if( CurTok == ',' ){
+          // eat the comma but continue reading sub registers
+          GetNextToken();
+        }else{
+          // flag an error
+          return LogErrorR("Expected ',' or ')' in subregister list");
+        }
+      }
+
+      // handle the next comma or ending paren
+      if( CurTok == ',' ){
+        // eat the comma
+        GetNextToken();
+      }else{
+        break;
+      }
     }else{
       break;
     }
@@ -947,7 +1004,8 @@ std::unique_ptr<RegClassAST> SCParser::ParseRegClassDef(){
 
   return llvm::make_unique<RegClassAST>(RName,
                                         std::move(ArgNames),
-                                        std::move(ArgAttrs));
+                                        std::move(ArgAttrs),
+                                        std::move(SubRegs));
 }
 
 std::unique_ptr<FunctionAST> SCParser::ParseDefinition() {
@@ -955,6 +1013,12 @@ std::unique_ptr<FunctionAST> SCParser::ParseDefinition() {
   auto Proto = ParsePrototype();
   if (!Proto)
     return nullptr;
+
+  // check the prototype name against the list of existing intrinics
+  if( CheckIntrinName(Proto->getName()) ){
+    return LogErrorF("Instruction definition collides with existing StoneCutter intrinsic: " +
+              Proto->getName() );
+  }
 
   // check for open instruction body
   if( CurTok != '{' )
@@ -1411,7 +1475,6 @@ Value *CallExprAST::codegen() {
 }
 
 Function *PrototypeAST::codegen() {
-  // Make the function type:  double(double,double) etc.
   // TODO: This eventually needs to look up the variable names
   // in the register class lists
   // If they are found, use the datatype from the register value
@@ -1436,6 +1499,7 @@ Function *PrototypeAST::codegen() {
 
 Value *RegClassAST::codegen(){
 
+  // registers
   for( unsigned i=0; i<Args.size(); i++ ){
     Type *VType;
     if( (Attrs[i].defFloat) && (Attrs[i].width==32) ){
@@ -1459,9 +1523,43 @@ Value *RegClassAST::codegen(){
       return LogErrorV( "Failed to lower register class to global: regclass = "+
                         Name + " register=" + Args[i]);
     }
-
+    // insert a special attribute to track the register
+    val->addAttribute("register",Args[i]);
     // insert a special attribute to track the parent register class
     val->addAttribute("regclass", Name);
+  }
+
+  // subregisters
+  std::vector<std::tuple<std::string,std::string,VarAttrs>>::iterator it;
+  for( it=SubRegs.begin(); it != SubRegs.end(); ++it ){
+    Type *SType;
+    if( (std::get<2>(*it).defFloat) && (std::get<2>(*it).width==32) ){
+      SType = Type::getFloatTy(SCParser::TheContext);
+    }else if( (std::get<2>(*it).defFloat) && (std::get<2>(*it).width==64) ){
+      SType = Type::getDoubleTy(SCParser::TheContext);
+    }else{
+      SType = Type::getIntNTy(SCParser::TheContext,std::get<2>(*it).width);
+    }
+
+    GlobalVariable *val = new GlobalVariable(*SCParser::TheModule,
+                                             SType,
+                                             false,
+                                             GlobalValue::ExternalLinkage,
+                                             nullptr,
+                                             Twine(std::get<1>(*it)),
+                                             nullptr,
+                                             GlobalVariable::NotThreadLocal,
+                                             0 );
+
+    if( !val ){
+      return LogErrorV( "Failed to lower subregister to global: subreg = " +
+                        std::get<1>(*it) + " register=" + std::get<0>(*it) );
+    }
+
+    // insert a special attribute to track the subregister
+    val->addAttribute("subregister",std::get<1>(*it));
+    // insert a special attribute to track the subregister to register mapping
+    val->addAttribute("register",std::get<0>(*it));
   }
 
   return nullptr;

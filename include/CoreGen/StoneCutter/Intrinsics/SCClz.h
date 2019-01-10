@@ -8,6 +8,15 @@
 // See LICENSE in the top level directory for licensing details
 //
 
+/**
+ * \class SCClz
+ *
+ * \ingroup StoneCutter
+ *
+ * \brief StoneCutter Intrinsic: Count Leading Zeros
+ *
+ */
+
 #ifndef _STONECUTTER_SCINTRIN_SCCLZ_H_
 #define _STONECUTTER_SCINTRIN_SCCLZ_H_
 

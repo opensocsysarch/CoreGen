@@ -8,6 +8,15 @@
 // See LICENSE in the top level directory for licensing details
 //
 
+/**
+ * \class SCNot
+ *
+ * \ingroup StoneCutter
+ *
+ * \brief StoneCutter Intrinsic: Bitwise Complement
+ *
+ */
+
 #ifndef _STONECUTTER_SCINTRIN_SCNOT_H_
 #define _STONECUTTER_SCINTRIN_SCNOT_H_
 

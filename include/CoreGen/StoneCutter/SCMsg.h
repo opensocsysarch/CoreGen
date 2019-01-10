@@ -8,6 +8,15 @@
 // See LICENSE in the top level directory for licensing details
 //
 
+/**
+ * \class SCMsg
+ *
+ * \ingroup StoneCutter
+ *
+ * \brief StonCutter message printing class
+ *
+ */
+
 #ifndef _STONECUTTER_SCMSG_H_
 #define _STONECUTTER_SCMSG_H_
 

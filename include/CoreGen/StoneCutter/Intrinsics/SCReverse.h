@@ -8,6 +8,15 @@
 // See LICENSE in the top level directory for licensing details
 //
 
+/**
+ * \class SCReverse
+ *
+ * \ingroup StoneCutter
+ *
+ * \brief StoneCutter Intrinsic: Bit Reversal
+ *
+ */
+
 #ifndef _STONECUTTER_SCINTRIN_SCREVERSE_H_
 #define _STONECUTTER_SCINTRIN_SCREVERSE_H_
 

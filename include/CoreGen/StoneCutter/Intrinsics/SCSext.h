@@ -8,6 +8,15 @@
 // See LICENSE in the top level directory for licensing details
 //
 
+/**
+ * \class SCSext
+ *
+ * \ingroup StoneCutter
+ *
+ * \brief StoneCutter Intrinsic: Sign Extension
+ *
+ */
+
 #ifndef _STONECUTTER_SCINTRIN_SCSEXT_H_
 #define _STONECUTTER_SCINTRIN_SCSEXT_H_
 

@@ -8,6 +8,15 @@
 // See LICENSE in the top level directory for licensing details
 //
 
+/**
+ * \class SCLexer
+ *
+ * \ingroup StoneCutter
+ *
+ * \brief StoneCutter lexing class
+ *
+ */
+
 #ifndef _STONECUTTER_SCLEXER_H_
 #define _STONECUTTER_SCLEXER_H_
 
@@ -104,6 +113,9 @@ private:
   unsigned long LineNum;            ///< Current line number
   int CurChar;                      ///< Current parsed character
   VarAttrs Var;                     ///< Parameters for most recent variable entry
+
+  /// Determines whether the next character is valid for a variable or instruction def
+  int IsValidChar(int *LastChar);
 
   /// Read the next character from the input string
   int GetNext();

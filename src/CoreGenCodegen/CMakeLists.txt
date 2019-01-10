@@ -11,11 +11,12 @@ set(CodegenSrcs
 CoreGenCodegen.cpp
 )
 
-include_directories(${COREGEN_INCLUDE_PATH})
 include_directories(${YAML_PATH}/include)
+include_directories(${COREGEN_INCLUDE_PATH})
 
 add_library(CoreGenCodegen ${CodegenSrcs})
 
-target_link_libraries(CoreGenCodegen CoreGenBackend)
+target_link_libraries(CoreGenCodegen CoreGenBackend CoreGenPluginImpl)
 
+install(TARGETS CoreGenCodegen DESTINATION lib)
 # EOF

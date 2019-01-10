@@ -7,3 +7,7 @@
 # See LICENSE in the top level directory for licensing details
 #
 
+install(DIRECTORY "."
+        DESTINATION "include/CoreGenPlugin"
+        FILES_MATCHING
+        PATTERN "*.h")

@@ -8,6 +8,15 @@
 // See LICENSE in the top level directory for licensing details
 //
 
+/**
+ * \class SCParser
+ *
+ * \ingroup StoneCutter
+ *
+ * \brief StoneCutter language parsing class
+ *
+ */
+
 #ifndef _STONECUTTER_SCParser_H_
 #define _STONECUTTER_SCParser_H_
 
@@ -17,6 +26,8 @@
 #include <cstdio>
 #include <cstdlib>
 #include <map>
+#include <utility>
+#include <tuple>
 #include <memory>
 #include <string>
 #include <vector>
@@ -206,16 +217,20 @@ public:
 
   /// RegClassAST - This class represents a register class definition
   /// which captures the name and the associated registers
+
   class RegClassASTContainer {
     std::string Name;
     std::vector<std::string> Args;
     std::vector<VarAttrs> Attrs;
+    std::vector<std::tuple<std::string,std::string,VarAttrs>> SubRegs;
 
   public:
     RegClassASTContainer(const std::string &Name,
                          std::vector<std::string> Args,
-                         std::vector<VarAttrs> Attrs)
-      : Name(Name), Args(std::move(Args)), Attrs(std::move(Attrs)) {}
+                         std::vector<VarAttrs> Attrs,
+                         std::vector<std::tuple<std::string,std::string,VarAttrs>> SubRegs)
+      : Name(Name), Args(std::move(Args)),
+        Attrs(std::move(Attrs)),SubRegs(std::move(SubRegs)) {}
 
     const std::string &getName() const { return Name; }
     Value *codegen();

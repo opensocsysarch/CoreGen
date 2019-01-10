@@ -103,6 +103,19 @@ bool SCLexer::IsVarDef(){
   return false;
 }
 
+int SCLexer::IsValidChar(int *LastChar){
+  int TmpChar = GetNext();
+  *LastChar = TmpChar;
+  if( isalnum(TmpChar) ){
+    return 1;
+  }else if( TmpChar == '_' ){
+    return 1;
+  }else if( TmpChar == '.' ){
+    return 1;
+  }
+  return 0;
+}
+
 int SCLexer::GetTok(){
   static int LastChar = ' ';
 
@@ -112,7 +125,8 @@ int SCLexer::GetTok(){
 
   if (isalpha(LastChar)) { // identifier: [a-zA-Z][a-zA-Z0-9]*
     IdentifierStr = LastChar;
-    while (isalnum((LastChar = GetNext()))){
+    //while (isalnum((LastChar = GetNext()))){
+    while (IsValidChar(&LastChar)){
       IdentifierStr += LastChar;
     }
 

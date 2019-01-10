@@ -25,6 +25,11 @@ SCMaj.cpp
 SCDoz.cpp
 SCCompress.cpp
 SCCompressM.cpp
+SCInsertS.cpp
+SCInsertZ.cpp
+SCExtractS.cpp
+SCExtractZ.cpp
+SCMerge.cpp
 )
 
 set(llvm_codegens

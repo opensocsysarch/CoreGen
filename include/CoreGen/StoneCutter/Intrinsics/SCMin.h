@@ -8,6 +8,15 @@
 // See LICENSE in the top level directory for licensing details
 //
 
+/**
+ * \class SCMin
+ *
+ * \ingroup StoneCutter
+ *
+ * \brief StoneCutter Intrinsic: Two Input Minimum
+ *
+ */
+
 #ifndef _STONECUTTER_SCINTRIN_SCMIN_H_
 #define _STONECUTTER_SCINTRIN_SCMIN_H_
 

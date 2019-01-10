@@ -110,9 +110,48 @@ CoreGenBackend::~CoreGenBackend(){
   delete Errno;
 }
 
+bool CoreGenBackend::ExecuteLLVMCodegen(){
+  // Create the codegen object
+  CoreGenCodegen *CG = new CoreGenCodegen(Top,
+                                          Proj,
+                                          Errno);
+
+  if( CG == nullptr ){
+    Errno->SetError(CGERR_ERROR, "Could not create codegen object");
+    return false;
+  }
+
+  // Execute it
+  bool rtn = CG->ExecuteLLVMCodegen();
+
+  // delete and clean everything up
+  delete CG;
+  return rtn;
+}
+
+bool CoreGenBackend::ExecuteChiselCodegen(){
+  // Create the codegen object
+  CoreGenCodegen *CG = new CoreGenCodegen(Top,
+                                          Proj,
+                                          Errno);
+
+  if( CG == nullptr ){
+    Errno->SetError(CGERR_ERROR, "Could not create codegen object");
+    return false;
+  }
+
+  // Execute it
+  bool rtn = CG->ExecuteChiselCodegen();
+
+  // delete and clean everything up
+  delete CG;
+  return rtn;
+}
+
 bool CoreGenBackend::ExecuteCodegen(){
   // Create the codegen object
-  CoreGenCodegen *CG = new CoreGenCodegen(Proj->GetProjRoot() + "/RTL",
+  CoreGenCodegen *CG = new CoreGenCodegen(Top,
+                                          Proj,
                                           Errno);
 
   if( CG == nullptr ){

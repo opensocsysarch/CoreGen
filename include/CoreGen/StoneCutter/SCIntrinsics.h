@@ -31,6 +31,11 @@
 #include "CoreGen/StoneCutter/Intrinsics/SCDoz.h"
 #include "CoreGen/StoneCutter/Intrinsics/SCCompress.h"
 #include "CoreGen/StoneCutter/Intrinsics/SCCompressM.h"
+#include "CoreGen/StoneCutter/Intrinsics/SCInsertS.h"
+#include "CoreGen/StoneCutter/Intrinsics/SCInsertZ.h"
+#include "CoreGen/StoneCutter/Intrinsics/SCExtractS.h"
+#include "CoreGen/StoneCutter/Intrinsics/SCExtractZ.h"
+#include "CoreGen/StoneCutter/Intrinsics/SCMerge.h"
 
 #endif
 

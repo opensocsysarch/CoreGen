@@ -69,6 +69,17 @@ void CGCLIOpts::PrintOptions(){
   std::cout << std::endl;
 }
 
+bool CGCLIOpts::FileExists(std::string F){
+  if (FILE *file = fopen(F.c_str(), "r")) {
+    fclose(file);
+    return true;
+  } else {
+    return false;
+  }
+
+  return false;
+}
+
 void CGCLIOpts::Split(const std::string& s, char delim,
                       std::vector<std::string>& v) {
   auto i = 0;
@@ -243,6 +254,10 @@ bool CGCLIOpts::ParseOpts( int argc, char **argv ){
       }
       std::string P(argv[i+1]);
       IRFile = P;
+      if( !FileExists(IRFile) ){
+        std::cout << "Error : IR file " << IRFile << " cannot be read" << std::endl;
+        return false;
+      }
       if( OutFile.length() == 0 ){
         // set the output = input
         OutFile = IRFile;
@@ -403,11 +418,9 @@ bool CGCLIOpts::ParseOpts( int argc, char **argv ){
     }else if( s == "--chisel" ){
       CGChisel = true;
       Verify = true;
-      ExecPass = true;
     }else if( s == "--compiler" ){
       CGComp = true;
       Verify = true;
-      ExecPass = true;
     }else{
       // parsing error
       std::cout << "Error : unknown option : " << s << std::endl;

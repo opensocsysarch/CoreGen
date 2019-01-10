@@ -8,6 +8,15 @@
 // See LICENSE in the top level directory for licensing details
 //
 
+/**
+ * \class SCRotateR
+ *
+ * \ingroup StoneCutter
+ *
+ * \brief StoneCutter Intrinsic: Bitwise Rotate Right
+ *
+ */
+
 #ifndef _STONECUTTER_SCINTRIN_SCROTATER_H_
 #define _STONECUTTER_SCINTRIN_SCROTATER_H_
 

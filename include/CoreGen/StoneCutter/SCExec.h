@@ -8,6 +8,15 @@
 // See LICENSE in the top level directory for licensing details
 //
 
+/**
+ * \class SCExec
+ *
+ * \ingroup StoneCutter
+ *
+ * \brief StoneCutter top-level execution class
+ *
+ */
+
 #ifndef _STONECUTTER_SCEXEC_H_
 #define _STONECUTTER_SCEXEC_H_
 

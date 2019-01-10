@@ -8,6 +8,15 @@
 // See LICENSE in the top level directory for licensing details
 //
 
+/**
+ * \class SCMax
+ *
+ * \ingroup StoneCutter
+ *
+ * \brief StoneCutter Intrinsic: Two Input Maximum
+ *
+ */
+
 #ifndef _STONECUTTER_SCINTRIN_SCMAX_H_
 #define _STONECUTTER_SCINTRIN_SCMAX_H_
 
