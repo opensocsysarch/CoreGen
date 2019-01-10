@@ -64,6 +64,11 @@ void SCParser::InitIntrinsics(){
   Intrins.push_back(static_cast<SCIntrin *>(new SCDoz()));
   Intrins.push_back(static_cast<SCIntrin *>(new SCCompress()));
   Intrins.push_back(static_cast<SCIntrin *>(new SCCompressM()));
+  Intrins.push_back(static_cast<SCIntrin *>(new SCInsertS()));
+  Intrins.push_back(static_cast<SCIntrin *>(new SCInsertZ()));
+  Intrins.push_back(static_cast<SCIntrin *>(new SCExtractS()));
+  Intrins.push_back(static_cast<SCIntrin *>(new SCExtractZ()));
+  Intrins.push_back(static_cast<SCIntrin *>(new SCMerge()));
 }
 
 void SCParser::InitPassMap(){
