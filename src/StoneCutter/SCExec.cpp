@@ -46,7 +46,7 @@ bool SCExec::PrintPassList(){
 // ------------------------------------------------- EXEC
 bool SCExec::Exec(){
 
-  // Do we want to list the passes and immediately exit? 
+  // Do we want to list the passes and immediately exit?
   if( Opts->IsListPass() ){
     return PrintPassList();
   }

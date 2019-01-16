@@ -10,12 +10,39 @@
 
 #include "CoreGen/StoneCutter/SCChiselCodeGen.h"
 
-SCChiselCodeGen::SCChiselCodeGen( SCParser *P, SCMsg *M,
-                          std::string COF )
+SCChiselCodeGen::SCChiselCodeGen( SCParser *P,
+                                  SCMsg *M,
+                                  std::string COF )
   : Parser(P), Msgs(M), ChiselFile(COF) {
+  InitIntrinsics();
 }
 
 SCChiselCodeGen::~SCChiselCodeGen(){
+}
+
+void SCChiselCodeGen::InitIntrinsics(){
+  Intrins.push_back(static_cast<SCIntrin *>(new SCMax()));
+  Intrins.push_back(static_cast<SCIntrin *>(new SCMin()));
+  Intrins.push_back(static_cast<SCIntrin *>(new SCLoad()));
+  Intrins.push_back(static_cast<SCIntrin *>(new SCStore()));
+  Intrins.push_back(static_cast<SCIntrin *>(new SCNot()));
+  Intrins.push_back(static_cast<SCIntrin *>(new SCReverse()));
+  Intrins.push_back(static_cast<SCIntrin *>(new SCPopcount()));
+  Intrins.push_back(static_cast<SCIntrin *>(new SCClz()));
+  Intrins.push_back(static_cast<SCIntrin *>(new SCCtz()));
+  Intrins.push_back(static_cast<SCIntrin *>(new SCSext()));
+  Intrins.push_back(static_cast<SCIntrin *>(new SCZext()));
+  Intrins.push_back(static_cast<SCIntrin *>(new SCRotateL()));
+  Intrins.push_back(static_cast<SCIntrin *>(new SCRotateR()));
+  Intrins.push_back(static_cast<SCIntrin *>(new SCMaj()));
+  Intrins.push_back(static_cast<SCIntrin *>(new SCDoz()));
+  Intrins.push_back(static_cast<SCIntrin *>(new SCCompress()));
+  Intrins.push_back(static_cast<SCIntrin *>(new SCCompressM()));
+  Intrins.push_back(static_cast<SCIntrin *>(new SCInsertS()));
+  Intrins.push_back(static_cast<SCIntrin *>(new SCInsertZ()));
+  Intrins.push_back(static_cast<SCIntrin *>(new SCExtractS()));
+  Intrins.push_back(static_cast<SCIntrin *>(new SCExtractZ()));
+  Intrins.push_back(static_cast<SCIntrin *>(new SCMerge()));
 }
 
 void SCChiselCodeGen::WriteChiselHeader(){

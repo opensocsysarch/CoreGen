@@ -59,6 +59,9 @@ private:
   /// Builds the compiler directory structure
   bool BuildLLVMDir();
 
+  /// Init the internal StoneCutter intrinsics
+  void InitIntrinsics();
+
 public:
   /// Default constructor
   CoreGenCodegen(CoreGenNode *T, CoreGenProj *P, CoreGenErrno *E);

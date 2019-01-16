@@ -9,6 +9,8 @@
 
 set(CodegenSrcs
 CoreGenCodegen.cpp
+CoreGenChiselCodegen.cpp
+CoreGenLLVMCodegen.cpp
 )
 
 include_directories(${YAML_PATH}/include)
