@@ -51,165 +51,220 @@ bool SCExec::Exec(){
     return PrintPassList();
   }
 
-  // for each file, read it into a buffer and parse it
-  // accordingly
-  // we utilize a common output file
-  for( unsigned i=0; i<Opts->GetNumInputFiles(); i++ ){
+  std::string LTmpFile; //tmp input
+  std::string OTmpFile; //tmp output
+  if( Opts->GetNumInputFiles() > 1 ){
+    // retrieve all the files and consolidate them into a single input file
+    char *tmpname = strdup("/tmp/SCCTmpFileXXXXXX");
+    mkstemp(tmpname);
+    std::ofstream of(tmpname);
+    for( unsigned i=0; i<Opts->GetNumInputFiles(); i++ ){
+      std::ifstream infile( Opts->GetInputFile(i) );
+      of << infile.rdbuf();
+      infile.close();
+    }
+    of.close();
+    LTmpFile = std::string(tmpname);
+    OTmpFile = Opts->GetOutputFile();
+    if( OTmpFile.length() == 0 ){
+      OTmpFile = "scc.out";
+    }
+  }else{
+    // single file
+    LTmpFile = Opts->GetInputFile(0);
+    OTmpFile = LTmpFile;
+  }
 
-    // Read the file into a buffer
-    std::ifstream t(Opts->GetInputFile(i));
-    std::string Buf( (std::istreambuf_iterator<char>(t)),
+  // Read the file into a buffer
+  std::ifstream t(LTmpFile);
+  std::string Buf( (std::istreambuf_iterator<char>(t)),
                      (std::istreambuf_iterator<char>()));
 
-    Parser = new SCParser(Buf,Opts->GetInputFile(i),Msgs);
-    if( !Parser ){
-      Msgs->PrintMsg( L_ERROR, "Failed to initiate the StoneCutter parser" );
-      return false;
-    }
+  Parser = new SCParser(Buf,LTmpFile,Msgs);
+  if( !Parser ){
+    Msgs->PrintMsg( L_ERROR, "Failed to initiate the StoneCutter parser" );
+    SCDeleteFile(LTmpFile);
+    return false;
+  }
 
-    // Do we execute the inline optimizer?
-    if( Opts->IsOptimize() ){
-      // do we need to manually enable passes?
-      if( Opts->IsEnablePass() ){
-        if( !Parser->EnablePasses(Opts->GetEnablePass()) ){
+  // Do we execute the inline optimizer?
+  if( Opts->IsOptimize() ){
+    // do we need to manually enable passes?
+    if( Opts->IsEnablePass() ){
+      if( !Parser->EnablePasses(Opts->GetEnablePass()) ){
         Msgs->PrintMsg( L_ERROR, "Failed to manually enable optimization passes" );
         delete Parser;
-        return false;
+        if( Opts->GetNumInputFiles() > 1 ){
+          SCDeleteFile(LTmpFile);
         }
-      }
-
-      // do we need to manually disable passes?
-      if( Opts->IsDisablePass() ){
-        if( !Parser->DisablePasses(Opts->GetDisabledPass()) ){
-        Msgs->PrintMsg( L_ERROR, "Failed to manually disable optimization passes" );
-        delete Parser;
-        return false;
-        }
-      }
-
-      // enable the optimizer
-      if( !Parser->Optimize() ){
-        Msgs->PrintMsg( L_ERROR, "Failed to initialize the optimizer" );
-        delete Parser;
         return false;
       }
     }
 
-    // We always want to execute the parser, if not, we fail
-    // this may change in the future where we can read in
-    // IR for code generation
-    if( Opts->IsParse() ){
-      // execute the parser
-      if( !Parser->Parse() ){
-        Msgs->PrintMsg( L_ERROR, "Failed to parse " + Opts->GetInputFile(i) );
+    // do we need to manually disable passes?
+    if( Opts->IsDisablePass() ){
+      if( !Parser->DisablePasses(Opts->GetDisabledPass()) ){
+        Msgs->PrintMsg( L_ERROR, "Failed to manually disable optimization passes" );
         delete Parser;
+        if( Opts->GetNumInputFiles() > 1 ){
+          SCDeleteFile(LTmpFile);
+        }
         return false;
       }
-    }else{
-      // we have failed
+    }
+
+    // enable the optimizer
+    if( !Parser->Optimize() ){
+      Msgs->PrintMsg( L_ERROR, "Failed to initialize the optimizer" );
       delete Parser;
+      if( Opts->GetNumInputFiles() > 1 ){
+        SCDeleteFile(LTmpFile);
+      }
+      return false;
+    }
+  }
+
+  // We always want to execute the parser, if not, we fail
+  // this may change in the future where we can read in
+  // IR for code generation
+  if( Opts->IsParse() ){
+    // execute the parser
+    if( !Parser->Parse() ){
+      Msgs->PrintMsg( L_ERROR, "Failed to parse " + LTmpFile );
+      delete Parser;
+      if( Opts->GetNumInputFiles() > 1 ){
+        SCDeleteFile(LTmpFile);
+      }
+      return false;
+    }
+  }else{
+    // we have failed
+    delete Parser;
+    if( Opts->GetNumInputFiles() > 1 ){
+      SCDeleteFile(LTmpFile);
+    }
+    return false;
+  }
+
+  SCLLCodeGen *CG = nullptr;
+
+  // Do we execute the LLVM IR codegen?
+  if( Opts->IsIR() ){
+    // prep a new output file name; append '.ll'
+    CG = new SCLLCodeGen(Parser,Msgs,
+                         OTmpFile + ".ll",
+                         OTmpFile + ".o");
+    if( !CG->GenerateLL() ){
+      Msgs->PrintMsg( L_ERROR, "Failed to generate IR for " +
+                      LTmpFile );
+      delete CG;
+      delete Parser;
+      if( Opts->GetNumInputFiles() > 1 ){
+        SCDeleteFile(LTmpFile);
+      }
+      return false;
+    }
+  }
+
+  SCChiselCodeGen *CCG = nullptr;
+
+  // Do we generate Chisel?
+  if( Opts->IsChisel() ){
+    if( !Opts->IsIR() ){
+      Msgs->PrintMsg( L_ERROR, "LLVM IR is required for Chisel output" );
+      delete CG;
+      delete Parser;
+      if( Opts->GetNumInputFiles() > 1 ){
+        SCDeleteFile(LTmpFile);
+      }
       return false;
     }
 
-    SCLLCodeGen *CG = nullptr;
-
-    // Do we execute the LLVM IR codegen?
-    if( Opts->IsIR() ){
-      // prep a new output file name; append '.ll'
-      CG = new SCLLCodeGen(Parser,Msgs,
-                           Opts->GetInputFile(i) + ".ll",
-                           Opts->GetInputFile(i) + ".o");
-      if( !CG->GenerateLL() ){
-        Msgs->PrintMsg( L_ERROR, "Failed to generate IR for " +
-                        Opts->GetInputFile(i) );
+    // Generate the Chisel output
+    CCG = new SCChiselCodeGen(Parser,Msgs,
+                              OTmpFile + ".chisel" );
+    if( !CCG->GenerateChisel() ){
+      Msgs->PrintMsg( L_ERROR, "Failed to generate Chisel for " +
+                      LTmpFile );
+      delete CCG;
+      if( CG ){
         delete CG;
-        delete Parser;
-        return false;
       }
+      delete Parser;
+      if( Opts->GetNumInputFiles() > 1 ){
+        SCDeleteFile(LTmpFile);
+      }
+      return false;
     }
-
-    SCChiselCodeGen *CCG = nullptr;
-
-    // Do we generate Chisel?
-    if( Opts->IsChisel() ){
-      if( !Opts->IsIR() ){
-        Msgs->PrintMsg( L_ERROR, "LLVM IR is required for Chisel output" );
-        delete CG;
-        delete Parser;
-        return false;
-      }
-
-      // Generate the Chisel output
-      CCG = new SCChiselCodeGen(Parser,Msgs,
-                                Opts->GetInputFile(i) + ".chisel" );
-      if( !CCG->GenerateChisel() ){
-        Msgs->PrintMsg( L_ERROR, "Failed to generate Chisel for " +
-                        Opts->GetInputFile(i) );
-        delete CCG;
-        if( CG ){
-          delete CG;
-        }
-        delete Parser;
-        return false;
-      }
-    }
+  }
 
     // Do we execute the object codegen
-    if( Opts->IsCG() ){
-      if( !Opts->IsIR() ){
-        Msgs->PrintMsg( L_ERROR, "LLVM IR is required for object files" );
-        delete CG;
-        delete Parser;
-        return false;
-      }
-
-      if( !CG->GenerateObjFile() ){
-        Msgs->PrintMsg( L_ERROR, "Failed to generate object file for " +
-                                  Opts->GetInputFile(i) );
-        if( CCG ){
-          delete CCG;
-        }
-        if( CG ){
-          delete CG;
-        }
-        delete Parser;
-        return false;
-      }
-    }
-
-    if( CG ){
+  if( Opts->IsCG() ){
+    if( !Opts->IsIR() ){
+      Msgs->PrintMsg( L_ERROR, "LLVM IR is required for object files" );
       delete CG;
+      delete Parser;
+      if( Opts->GetNumInputFiles() > 1 ){
+        SCDeleteFile(LTmpFile);
+      }
+      return false;
     }
-    if( CCG ){
-      delete CCG;
+
+    if( !CG->GenerateObjFile() ){
+      Msgs->PrintMsg( L_ERROR, "Failed to generate object file for " +
+                      LTmpFile );
+      if( CCG ){
+        delete CCG;
+      }
+      if( CG ){
+        delete CG;
+      }
+      delete Parser;
+      if( Opts->GetNumInputFiles() > 1 ){
+        SCDeleteFile(LTmpFile);
+      }
+      return false;
     }
-    delete Parser;
   }
+
+  if( CG ){
+    delete CG;
+  }
+  if( CCG ){
+    delete CCG;
+  }
+  delete Parser;
+
 
   // Do we toss the intermediate files?
   if( !Opts->IsKeep() ){
     // remove all the LL files
     if( Opts->IsIR() ){
-      for( unsigned i=0; i<Opts->GetNumInputFiles(); i++ ){
-        if( !SCDeleteFile(Opts->GetInputFile(i)+".ll") ){
-          Msgs->PrintMsg( L_ERROR, "Failed to delete LLVM IR file " +
-                        Opts->GetInputFile(i) + ".ll" );
-          return false;
+      if( !SCDeleteFile(OTmpFile+".ll") ){
+        Msgs->PrintMsg( L_ERROR, "Failed to delete LLVM IR file " +
+                        OTmpFile + ".ll" );
+        if( Opts->GetNumInputFiles() > 1 ){
+          SCDeleteFile(LTmpFile);
         }
+        return false;
       }
     }
     // remove all the object files
     if( Opts->IsCG() ){
-      for( unsigned i=0; i<Opts->GetNumInputFiles(); i++ ){
-        if( !SCDeleteFile(Opts->GetInputFile(i)+".o") ){
-          Msgs->PrintMsg( L_ERROR, "Failed to delete LLVM object file " +
-                          Opts->GetInputFile(i) + ".o" );
-          return false;
+      if( !SCDeleteFile(OTmpFile+".o") ){
+        Msgs->PrintMsg( L_ERROR, "Failed to delete LLVM object file " +
+                        OTmpFile + ".o" );
+        if( Opts->GetNumInputFiles() > 1 ){
+          SCDeleteFile(LTmpFile);
         }
+        return false;
       }
     }
   }
 
+  if( Opts->GetNumInputFiles() > 1 ){
+    SCDeleteFile(LTmpFile);
+  }
   return true;
 }
 
