@@ -89,50 +89,40 @@ bool ASPSolverPass::Execute(){
   int argc = 3;
   char app[] = "clingo";
   char dot[] = ".";        // this is a temporary placeholder
-  char *argv[] = {app,strdup(ASPDagFile.c_str()),dot};
+  char *argv[] = {app,strdup(ASPDagFile.c_str()),dot,NULL};
+  char *tmpname = strdup("/tmp/ASPTmpFileXXXXXX");
+  mkstemp(tmpname);
+  std::ofstream of(tmpname);
+  for( unsigned i=0; i < Files.size(); i++ ){
+    std::ifstream infile( Files[i] );
+    of << infile.rdbuf();
+    infile.close();
+  }
+  of.close();
+  std::string LTmpFile(tmpname);
 
-  for(unsigned i = 0; i < Files.size(); i++){
-    // setup the target ASP file
-    std::string TmpStr = ASPPath + "/" + Files[i];
-    argv[2] = strdup(TmpStr.c_str());
+  argv[2] = strdup(LTmpFile.c_str());
 
-    // execute clingo
-    bool isSuccess = true;
-    double StartT = CGGetWallTime();
-    if( clingo_main_(argc, argv) != 0 ){
-      isSuccess = false;
-      rtn = false;
-    }
-    double EndT = CGGetWallTime();
+  // execute clingo
+  bool isSuccess = true;
+  double StartT = CGGetWallTime();
+  if( clingo_main_(argc, argv) != 0 ){
+    isSuccess = false;
+    rtn = false;
+  }
+  double EndT = CGGetWallTime();
 
+  WriteMsg( CGPrintDotStr( LTmpFile.length(), 30 ) + LTmpFile );
+  WriteMsg( CGPrintDotStr( CGDoubleToStr(EndT-StartT).length(), 30 ) +
+            CGDoubleToStr(EndT-StartT) );
 
-#if 0
-    if( isSuccess ){
-      WriteMsg( CGPrintDotStr( Files[i].length(), 30 ) +
-                Files[i] +
-                CGPrintDotStr( CGDoubleToStr(EndT-StartT).length(), 30 ) +
-                CGDoubleToStr(EndT-StartT) +
-                CGPrintDotStr( 6, 30 ) + "PASSED" );
-    }else{
-      WriteMsg( CGPrintDotStr( Files[i].length(), 30 ) +
-                Files[i] +
-                CGPrintDotStr( CGDoubleToStr(EndT-StartT).length(), 30 ) +
-                CGDoubleToStr(EndT-StartT) +
-                CGPrintDotStr( 6, 30 ) + "FAILED" );
-    }
-#endif
-
-    WriteMsg( CGPrintDotStr( Files[i].length(), 30 ) + Files[i] );
-    WriteMsg( CGPrintDotStr( CGDoubleToStr(EndT-StartT).length(), 30 ) +
-              CGDoubleToStr(EndT-StartT) );
-
-    if( isSuccess ){
-      WriteMsg( CGPrintDotStr( 6, 30 ) + "PASSED" );
-    }else{
-      WriteMsg( CGPrintDotStr( 6, 30 ) + "FAILED" );
-    }
+  if( isSuccess ){
+    WriteMsg( CGPrintDotStr( 6, 30 ) + "PASSED" );
+  }else{
+    WriteMsg( CGPrintDotStr( 6, 30 ) + "FAILED" );
   }
 
+  CGDeleteFile(LTmpFile);
   return rtn;
 }
 
