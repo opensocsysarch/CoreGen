@@ -184,8 +184,8 @@ void SCOpts::PrintHelp(){
   Msgs->PrintRawMsg(" ");
   Msgs->PrintRawMsg("Optimization Pass Options:");
   Msgs->PrintRawMsg("     --list-passes                       : Lists all the LLVM passes");
-  Msgs->PrintRawMsg("     --enable-pass \"PASS1,PASS2\"     : Enables individual passes");
-  Msgs->PrintRawMsg("     --disable-pass \"PASS1,PASS2\"     : Disables individual passes");
+  Msgs->PrintRawMsg("     --enable-pass \"PASS1,PASS2\"         : Enables individual passes");
+  Msgs->PrintRawMsg("     --disable-pass \"PASS1,PASS2\"        : Disables individual passes");
 }
 
 // EOF
