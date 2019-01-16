@@ -83,6 +83,14 @@ bool SCOpts::ParseOpts(bool *isHelp){
       isChisel = true;
     }else if( (s=="-o") || (s=="-object") || (s=="--object") ){
       isCG = true;
+    }else if( (s=="-f") || (s=="-outfile") || (s=="--outfile") ){
+      if( i+1 > (argc-1) ){
+        Msgs->PrintMsg(L_ERROR, "--outfile requires an argument");
+        return false;
+      }
+      std::string F(argv[i+1]);
+      OutFile = F;
+      i++;
     }else if( (s=="-k") || (s=="-keep") || (s=="--keep") ){
       isKeep = true;
     }else if( (s=="-D") || (s=="-disable-chisel") || (s=="--disable-chisel") ){
@@ -173,6 +181,7 @@ void SCOpts::PrintHelp(){
   Msgs->PrintRawMsg("     -k|-keep|--keep                     : Keep intermediate files");
   Msgs->PrintRawMsg("     -c|-chisel|--chisel                 : Generate Chisel output (default=on");
   Msgs->PrintRawMsg("     -p|-parse|--parse                   : Parse but do not compile");
+  Msgs->PrintRawMsg("     -f|-outfile|--outfile /path/to/out  : Set the output file name");
   Msgs->PrintRawMsg("     -o|-object|--object                 : Generate target object file [*.o]");
   Msgs->PrintRawMsg("     -V|-version|--version               : Print the version info");
   Msgs->PrintRawMsg(" ");
