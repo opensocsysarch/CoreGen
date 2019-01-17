@@ -59,6 +59,7 @@
 #include "CoreGen/StoneCutter/SCParser.h"
 #include "CoreGen/StoneCutter/SCMsg.h"
 #include "CoreGen/StoneCutter/SCUtil.h"
+#include "CoreGen/StoneCutter/SCIntrinsics.h"
 
 using namespace llvm;
 
@@ -70,9 +71,12 @@ private:
 
   std::ofstream OutFile;                      ///< Output file stream
 
+  std::vector<SCIntrin *> Intrins;            ///< StoneCutter Intrinsics
+
   // private functions
   void WriteChiselHeader();                   ///< Writes a header to the chisel output file
   bool ExecuteCodegen();                      ///< Generates chisel from the LLVM IR
+  void InitIntrinsics();                      ///< Init the intrinsics vector
 
 public:
 

@@ -366,6 +366,7 @@ bool CoreGenCodegen::ExecuteChiselCodegen(){
   }
 
   // Stage 3: Walk the top-level modules and generate chisel
+  //          This is the bulk of the code generation logic
 
   // Stage 4: Build the Chisel makefile
   if( !BuildChiselMakefile() ){
