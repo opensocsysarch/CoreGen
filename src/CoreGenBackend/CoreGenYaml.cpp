@@ -179,6 +179,32 @@ CoreGenNode *CoreGenYaml::NameToNode( std::string Target,
   return nullptr;
 }
 
+CGRTLType CoreGenYaml::StrToCGRTL(std::string I){
+  if( (I=="Unknown") || (I=="unknown") ){
+    return RTLUnk;
+  }else if( (I=="Chisel") || (I=="chisel") ){
+    return RTLChisel;
+  }else if( (I=="Verilog") || (I=="verilog") ){
+    return RTLVerilog;
+  }
+  return RTLUnk;
+}
+
+std::string CoreGenYaml::CGRTLToStr(CGRTLType T){
+  switch( T ){
+  case RTLChisel:
+    return "Chisel";
+    break;
+  case RTLVerilog:
+    return "Verilog";
+    break;
+  case RTLUnk:
+  default:
+    return "Unknown";
+    break;
+  }
+}
+
 bool CoreGenYaml::IsValidName(std::string N){
   // YAML Node Name Rules:
   // - must have a length > 0
@@ -313,11 +339,15 @@ void CoreGenYaml::WriteCoreYaml( YAML::Emitter *out,
     if( Cores[i]->IsRTL() ){
       *out << YAML::Key << "RTL";
       *out << YAML::Value << Cores[i]->GetRTL();
+      *out << YAML::Key << "RTLType";
+      *out << YAML::Value << CGRTLToStr(Cores[i]->GetRTLType());
     }
 
     if( Cores[i]->IsRTLFile() ){
       *out << YAML::Key << "RTLFile";
       *out << YAML::Value << Cores[i]->GetRTLFile();
+      *out << YAML::Key << "RTLType";
+      *out << YAML::Value << CGRTLToStr(Cores[i]->GetRTLType());
     }
 
     *out << YAML::EndMap;
@@ -352,11 +382,15 @@ void CoreGenYaml::WriteSocYaml( YAML::Emitter *out,
     if( Socs[i]->IsRTL() ){
       *out << YAML::Key << "RTL";
       *out << YAML::Value << Socs[i]->GetRTL();
+      *out << YAML::Key << "RTLType";
+      *out << YAML::Value << CGRTLToStr(Socs[i]->GetRTLType());
     }
 
     if( Socs[i]->IsRTLFile() ){
       *out << YAML::Key << "RTLFile";
       *out << YAML::Value << Socs[i]->GetRTLFile();
+      *out << YAML::Key << "RTLType";
+      *out << YAML::Value << CGRTLToStr(Socs[i]->GetRTLType());
     }
 
     *out << YAML::EndMap;
@@ -403,10 +437,14 @@ void CoreGenYaml::PrintCache( YAML::Emitter *out,
   if( Cache->IsRTL() ){
     *out << YAML::Key << "RTL";
     *out << YAML::Value << Cache->GetRTL();
+    *out << YAML::Key << "RTLType";
+    *out << YAML::Value << CGRTLToStr(Cache->GetRTLType());
   }
   if( Cache->IsRTLFile() ){
     *out << YAML::Key << "RTLFile";
     *out << YAML::Value << Cache->GetRTLFile();
+    *out << YAML::Key << "RTLType";
+    *out << YAML::Value << CGRTLToStr(Cache->GetRTLType());
   }
 
   *out << YAML::EndMap;
@@ -438,10 +476,14 @@ void CoreGenYaml::WriteISAYaml(YAML::Emitter *out,
     if( ISAs[i]->IsRTL() ){
       *out << YAML::Key << "RTL";
       *out << YAML::Value << ISAs[i]->GetRTL();
+      *out << YAML::Key << "RTLType";
+      *out << YAML::Value << CGRTLToStr(ISAs[i]->GetRTLType());
     }
     if( ISAs[i]->IsRTLFile() ){
       *out << YAML::Key << "RTLFile";
       *out << YAML::Value << ISAs[i]->GetRTLFile();
+      *out << YAML::Key << "RTLType";
+      *out << YAML::Value << CGRTLToStr(ISAs[i]->GetRTLType());
     }
     *out << YAML::EndMap;
   }
@@ -503,10 +545,14 @@ void CoreGenYaml::WriteInstFormatYaml(YAML::Emitter *out,
     if( Formats[i]->IsRTL() ){
       *out << YAML::Key << "RTL";
       *out << YAML::Value << Formats[i]->GetRTL();
+      *out << YAML::Key << "RTLType";
+      *out << YAML::Value << CGRTLToStr(Formats[i]->GetRTLType());
     }
     if( Formats[i]->IsRTLFile() ){
       *out << YAML::Key << "RTLFile";
       *out << YAML::Value << Formats[i]->GetRTLFile();
+      *out << YAML::Key << "RTLType";
+      *out << YAML::Value << CGRTLToStr(Formats[i]->GetRTLType());
     }
 
     *out << YAML::EndMap; // End InstFormat->GetName()
@@ -553,10 +599,14 @@ void CoreGenYaml::WriteInstYaml(YAML::Emitter *out,
     if( Insts[i]->IsRTL() ){
       *out << YAML::Key << "RTL";
       *out << YAML::Value << Insts[i]->GetRTL();
+      *out << YAML::Key << "RTLType";
+      *out << YAML::Value << CGRTLToStr(Insts[i]->GetRTLType());
     }
     if( Insts[i]->IsRTLFile() ){
       *out << YAML::Key << "RTLFile";
       *out << YAML::Value << Insts[i]->GetRTLFile();
+      *out << YAML::Key << "RTLType";
+      *out << YAML::Value << CGRTLToStr(Insts[i]->GetRTLType());
     }
 
     *out << YAML::EndMap; // individual instruction
@@ -595,6 +645,9 @@ void CoreGenYaml::WritePseudoInstYaml(YAML::Emitter *out,
     }
     *out << YAML::EndSeq;
 
+#if 0
+    // this probably needs to be removed
+    // no reason to have RTL for pseudoinstruction encodings
     if( PInsts[i]->IsRTL() ){
       *out << YAML::Key << "RTL";
       *out << YAML::Value << PInsts[i]->GetRTL();
@@ -603,6 +656,7 @@ void CoreGenYaml::WritePseudoInstYaml(YAML::Emitter *out,
       *out << YAML::Key << "RTLFile";
       *out << YAML::Value << PInsts[i]->GetRTLFile();
     }
+#endif
 
     *out << YAML::EndMap;
   }
@@ -628,10 +682,14 @@ void CoreGenYaml::WriteRegClassYaml(YAML::Emitter *out,
     if( RegClasses[i]->IsRTL() ){
       *out << YAML::Key << "RTL";
       *out << YAML::Value << RegClasses[i]->GetRTL();
+      *out << YAML::Key << "RTLType";
+      *out << YAML::Value << CGRTLToStr(RegClasses[i]->GetRTLType());
     }
     if( RegClasses[i]->IsRTLFile() ){
       *out << YAML::Key << "RTLFile";
       *out << YAML::Value << RegClasses[i]->GetRTLFile();
+      *out << YAML::Key << "RTLType";
+      *out << YAML::Value << CGRTLToStr(RegClasses[i]->GetRTLType());
     }
 
     *out << YAML::EndMap;
@@ -751,10 +809,14 @@ void CoreGenYaml::WriteRegYaml(YAML::Emitter *out,
     if( Regs[i]->IsRTL() ){
       *out << YAML::Key << "RTL";
       *out << YAML::Value << Regs[i]->GetRTL();
+      *out << YAML::Key << "RTLType";
+      *out << YAML::Value << CGRTLToStr(Regs[i]->GetRTLType());
     }
     if( Regs[i]->IsRTLFile() ){
       *out << YAML::Key << "RTLFile";
       *out << YAML::Value << Regs[i]->GetRTLFile();
+      *out << YAML::Key << "RTLType";
+      *out << YAML::Value << CGRTLToStr(Regs[i]->GetRTLType());
     }
 
     *out << YAML::EndMap;
@@ -802,10 +864,14 @@ void CoreGenYaml::WriteCommYaml( YAML::Emitter *out,
     if( Comms[i]->IsRTL() ){
       *out << YAML::Key << "RTL";
       *out << YAML::Value << Comms[i]->GetRTL();
+      *out << YAML::Key << "RTLType";
+      *out << YAML::Value << CGRTLToStr(Comms[i]->GetRTLType());
     }
     if( Comms[i]->IsRTLFile() ){
       *out << YAML::Key << "RTLFile";
       *out << YAML::Value << Comms[i]->GetRTLFile();
+      *out << YAML::Key << "RTLType";
+      *out << YAML::Value << CGRTLToStr(Comms[i]->GetRTLType());
     }
 
     *out << YAML::EndMap;
@@ -833,10 +899,14 @@ void CoreGenYaml::WriteSpadYaml( YAML::Emitter *out,
     if( Spads[i]->IsRTL() ){
       *out << YAML::Key << "RTL";
       *out << YAML::Value << Spads[i]->GetRTL();
+      *out << YAML::Key << "RTLType";
+      *out << YAML::Value << CGRTLToStr(Spads[i]->GetRTLType());
     }
     if( Spads[i]->IsRTLFile() ){
       *out << YAML::Key << "RTLFile";
       *out << YAML::Value << Spads[i]->GetRTLFile();
+      *out << YAML::Key << "RTLType";
+      *out << YAML::Value << CGRTLToStr(Spads[i]->GetRTLType());
     }
 
     *out << YAML::EndMap;
@@ -858,10 +928,14 @@ void CoreGenYaml::WriteMCtrlYaml( YAML::Emitter *out,
     if( MCtrls[i]->IsRTL() ){
       *out << YAML::Key << "RTL";
       *out << YAML::Value << MCtrls[i]->GetRTL();
+      *out << YAML::Key << "RTLType";
+      *out << YAML::Value << CGRTLToStr(MCtrls[i]->GetRTLType());
     }
     if( MCtrls[i]->IsRTLFile() ){
       *out << YAML::Key << "RTLFile";
       *out << YAML::Value << MCtrls[i]->GetRTLFile();
+      *out << YAML::Key << "RTLType";
+      *out << YAML::Value << CGRTLToStr(MCtrls[i]->GetRTLType());
     }
 
     *out << YAML::EndMap;
@@ -962,10 +1036,14 @@ void CoreGenYaml::WriteExtYaml( YAML::Emitter *out,
     if( Exts[i]->IsRTL() ){
       *out << YAML::Key << "RTL";
       *out << YAML::Value << Exts[i]->GetRTL();
+      *out << YAML::Key << "RTLType";
+      *out << YAML::Value << CGRTLToStr(Exts[i]->GetRTLType());
     }
     if( Exts[i]->IsRTLFile() ){
       *out << YAML::Key << "RTLFile";
       *out << YAML::Value << Exts[i]->GetRTLFile();
+      *out << YAML::Key << "RTLType";
+      *out << YAML::Value << CGRTLToStr(Exts[i]->GetRTLType());
     }
 
     *out << YAML::EndMap;
@@ -1551,6 +1629,9 @@ bool CoreGenYaml::ReadRegisterYaml(const YAML::Node& RegNodes,
     if( CheckValidNode(Node,"RTLFile") ){
       R->SetRTLFile( Node["RTLFile"].as<std::string>());
     }
+    if( CheckValidNode(Node,"RTLType") ){
+      R->SetRTLType( StrToCGRTL(Node["RTLType"].as<std::string>()) );
+    }
 
     if( IsDuplicate(Node,
                     static_cast<CoreGenNode *>(R),
@@ -1626,6 +1707,9 @@ bool CoreGenYaml::ReadRegisterClassYaml(const YAML::Node& RegClassNodes,
     if( CheckValidNode(Node,"RTLFile") ){
       RC->SetRTLFile( Node["RTLFile"].as<std::string>());
     }
+    if( CheckValidNode(Node,"RTLType") ){
+      RC->SetRTLType( StrToCGRTL(Node["RTLType"].as<std::string>()) );
+    }
 
     if( IsDuplicate(Node,
                     static_cast<CoreGenNode *>(RC),
@@ -1659,6 +1743,9 @@ bool CoreGenYaml::ReadISAYaml(const YAML::Node& ISANodes,
     }
     if( CheckValidNode(Node,"RTLFile") ){
       ISA->SetRTLFile( Node["RTLFile"].as<std::string>());
+    }
+    if( CheckValidNode(Node,"RTLType") ){
+      ISA->SetRTLType( StrToCGRTL(Node["RTLType"].as<std::string>()) );
     }
 
     if( IsDuplicate(Node,
@@ -1828,6 +1915,9 @@ bool CoreGenYaml::ReadInstFormatYaml(const YAML::Node& InstFormatNodes,
     if( CheckValidNode(Node,"RTLFile") ){
       IF->SetRTLFile( Node["RTLFile"].as<std::string>());
     }
+    if( CheckValidNode(Node,"RTLType") ){
+      IF->SetRTLType( StrToCGRTL(Node["RTLType"].as<std::string>()) );
+    }
 
     if( IsDuplicate(Node,
                     static_cast<CoreGenNode *>(IF),
@@ -1910,6 +2000,9 @@ bool CoreGenYaml::ReadInstYaml(const YAML::Node& InstNodes,
     if( Node["RTLFile"] ){
       Inst->SetRTLFile( Node["RTLFile"].as<std::string>());
     }
+    if( CheckValidNode(Node,"RTLType") ){
+      Inst->SetRTLType( StrToCGRTL(Node["RTLType"].as<std::string>()) );
+    }
 
     if( IsDuplicate(Node,
                     static_cast<CoreGenNode *>(Inst),
@@ -1985,12 +2078,15 @@ bool CoreGenYaml::ReadPseudoInstYaml(const YAML::Node& PInstNodes,
       }
     }
 
+#if 0
+    // this should not be required
     if( Node["RTL"] ){
       P->SetRTL( Node["RTL"].as<std::string>());
     }
     if( Node["RTLFile"] ){
       P->SetRTLFile( Node["RTLFile"].as<std::string>());
     }
+#endif
 
     if( IsDuplicate(Node,
                     static_cast<CoreGenNode *>(P),
@@ -2051,6 +2147,9 @@ bool CoreGenYaml::ReadCacheYaml(const YAML::Node& CacheNodes,
     }
     if( Node["RTLFile"] ){
       C->SetRTLFile( Node["RTLFile"].as<std::string>());
+    }
+    if( CheckValidNode(Node,"RTLType") ){
+      C->SetRTLType( StrToCGRTL(Node["RTLType"].as<std::string>()) );
     }
 
     if( IsDuplicate(Node,
@@ -2181,6 +2280,9 @@ bool CoreGenYaml::ReadCoreYaml(const YAML::Node& CoreNodes,
     if( Node["RTLFile"] ){
       C->SetRTLFile( Node["RTLFile"].as<std::string>());
     }
+    if( CheckValidNode(Node,"RTLType") ){
+      C->SetRTLType( StrToCGRTL(Node["RTLType"].as<std::string>()) );
+    }
 
     if( IsDuplicate(Node,
                     static_cast<CoreGenNode *>(C),
@@ -2239,6 +2341,9 @@ bool CoreGenYaml::ReadSocYaml(const YAML::Node& SocNodes,
     if( Node["RTLFile"] ){
       S->SetRTLFile( Node["RTLFile"].as<std::string>());
     }
+    if( CheckValidNode(Node,"RTLType") ){
+      S->SetRTLType( StrToCGRTL(Node["RTLType"].as<std::string>()) );
+    }
 
     if( IsDuplicate(Node,
                     static_cast<CoreGenNode *>(S),
@@ -2292,6 +2397,9 @@ bool CoreGenYaml::ReadSpadYaml(const YAML::Node& SpadNodes,
     if( Node["RTLFile"] ){
       S->SetRTLFile( Node["RTLFile"].as<std::string>());
     }
+    if( CheckValidNode(Node,"RTLType") ){
+      S->SetRTLType( StrToCGRTL(Node["RTLType"].as<std::string>()) );
+    }
 
     S->SetStartAddr( StartAddr );
 
@@ -2333,6 +2441,9 @@ bool CoreGenYaml::ReadMCtrlYaml(const YAML::Node& MCtrlNodes,
     }
     if( Node["RTLFile"] ){
       M->SetRTLFile( Node["RTLFile"].as<std::string>());
+    }
+    if( CheckValidNode(Node,"RTLType") ){
+      M->SetRTLType( StrToCGRTL(Node["RTLType"].as<std::string>()) );
     }
 
     if( IsDuplicate(Node,
@@ -2854,6 +2965,9 @@ bool CoreGenYaml::ReadExtYaml(const YAML::Node& ExtNodes,
     }
     if( Node["RTLFile"] ){
       E->SetRTLFile( Node["RTLFile"].as<std::string>());
+    }
+    if( CheckValidNode(Node,"RTLType") ){
+      E->SetRTLType( StrToCGRTL(Node["RTLType"].as<std::string>()) );
     }
 
     if( IsDuplicate(Node,

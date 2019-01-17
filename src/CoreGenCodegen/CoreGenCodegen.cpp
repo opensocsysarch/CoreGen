@@ -118,8 +118,10 @@ bool CoreGenCodegen::BuildLLVMDir(){
   std::string ProjRoot = Proj->GetProjRoot();
   if( ProjRoot[ProjRoot.length()-1] == '/' ){
     FullDir = ProjRoot + "compiler/LLVM";
+    LLVMDir = FullDir;
   }else{
     FullDir = ProjRoot + "/compiler/LLVM";
+    LLVMDir = FullDir;
   }
 
   if( !CGMkDirP(FullDir) ){
@@ -153,6 +155,31 @@ bool CoreGenCodegen::ExecuteLLVMCodegen(){
   return true;
 }
 
+bool CoreGenCodegen::BuildStoneCutterDir(){
+  if( !Proj ){
+    Errno->SetError(CGERR_ERROR, "Cannot derive StoneCutter directory; Project is null" );
+    return false;
+  }
+
+  std::string FullDir;
+  std::string ProjRoot = Proj->GetProjRoot();
+  if( ProjRoot[ProjRoot.length()-1] == '/' ){
+    FullDir = ProjRoot + "RTL/stonecutter";
+    SCDir = FullDir;
+  }else{
+    FullDir = ProjRoot + "/RTL/stonecutter";
+    SCDir = FullDir;
+  }
+
+  if( !CGMkDirP(FullDir) ){
+    Errno->SetError(CGERR_ERROR, "Could not construct the stonecutter source tree: "
+                    + FullDir );
+    return false;
+  }
+
+  return true;
+}
+
 bool CoreGenCodegen::BuildChiselDir(){
   if( !Proj ){
     Errno->SetError(CGERR_ERROR, "Cannot derive Chisel directory; Project is null" );
@@ -163,8 +190,10 @@ bool CoreGenCodegen::BuildChiselDir(){
   std::string ProjRoot = Proj->GetProjRoot();
   if( ProjRoot[ProjRoot.length()-1] == '/' ){
     FullDir = ProjRoot + "RTL/chisel/src/main/scala";
+    ChiselDir = ProjRoot + "RTL/chisel";
   }else{
     FullDir = ProjRoot + "/RTL/chisel/src/main/scala";
+    ChiselDir = ProjRoot + "/RTL/chisel";
   }
 
   if( !CGMkDirP(FullDir) ){
@@ -365,20 +394,27 @@ bool CoreGenCodegen::ExecuteChiselCodegen(){
     return false;
   }
 
-  // Stage 3: Walk the top-level modules and generate chisel
+  // Stage 3: Build the StoneCutter directory structure
+  if( !BuildStoneCutterDir() ){
+    return false;
+  }
+
+  // Stage 4: Walk the ISA graphs and build StoneCutter source using inline RTL
+
+  // Stage 6: Walk the top-level modules and generate chisel
   //          This is the bulk of the code generation logic
 
-  // Stage 4: Build the Chisel makefile
+  // Stage 7: Build the Chisel makefile
   if( !BuildChiselMakefile() ){
     return false;
   }
 
-  // Stage 5: Build the Chisel SBT file
+  // Stage 8: Build the Chisel SBT file
   if( !BuildChiselSBT() ){
     return false;
   }
 
-  // Stage 6: Build the supplementary project files
+  // Stage 9: Build the supplementary project files
   if( !BuildChiselProject() ){
     return false;
   }

@@ -69,6 +69,12 @@ private:
   /// Determine if the YAML node name is valid
   bool IsValidName(std::string Name);
 
+  /// Convert string input to RTL type
+  CGRTLType StrToCGRTL(std::string I);
+
+  /// Convert RTL Type to String
+  std::string CGRTLToStr(CGRTLType T);
+
   /// Retrieve the line number of the target node
   unsigned GetLineNum(const YAML::Node Node);
 

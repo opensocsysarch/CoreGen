@@ -39,6 +39,10 @@ private:
   CoreGenProj *Proj;          ///< CoreGen Project Info
   CoreGenErrno *Errno;        ///< CoreGen Errno Structure
 
+  std::string ChiselDir;      ///< CoreGen Chisel output directory
+  std::string LLVMDir;        ///< CoreGen LLVM output directory
+  std::string SCDir;          ///< CoreGen StoneCutter output directory
+
   bool isTopMakefile;         ///< Has the top-level makefile been constructed?
 
   /// Builds the top-level project makefile
@@ -59,6 +63,9 @@ private:
   /// Builds the compiler directory structure
   bool BuildLLVMDir();
 
+  /// Builds the stonecutter dierctory structure
+  bool BuildStoneCutterDir();
+
   /// Init the internal StoneCutter intrinsics
   void InitIntrinsics();
 
@@ -77,6 +84,15 @@ public:
 
   /// Execute the Chisel and LLVM codegens
   bool Execute();
+
+  /// Retrieve the chisel output directory
+  std::string GetChiselDir() { return ChiselDir; }
+
+  /// Retrieve the LLVM output directory
+  std::string GetLLVMDir() { return LLVMDir; }
+
+  /// Retrieve the StoneCutter output directory
+  std::string GetStoneCutterDir() { return SCDir; }
 };
 
 #endif
