@@ -66,6 +66,13 @@ private:
   /// Builds the stonecutter dierctory structure
   bool BuildStoneCutterDir();
 
+  /// Constructs full StoneCutter files for each ISA
+  bool BuildStoneCutterFiles();
+
+  /// Constructs an individual ISA Chisel File
+  bool BuildISAChisel(CoreGenISA *ISA,
+                      std::vector<CoreGenInst *> Insts);
+
   /// Init the internal StoneCutter intrinsics
   void InitIntrinsics();
 
