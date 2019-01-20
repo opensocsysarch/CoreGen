@@ -1994,6 +1994,9 @@ bool CoreGenYaml::ReadInstYaml(const YAML::Node& InstNodes,
       }
     }
 
+    if( Node["Impl"] ){
+      Inst->SetImpl( Node["Impl"].as<std::string>() );
+    }
     if( Node["RTL"] ){
       Inst->SetRTL( Node["RTL"].as<std::string>());
     }
