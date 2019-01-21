@@ -27,6 +27,13 @@ bool CoreGenCodegen::BuildProjMakefile(){
 
   std::string MFile;
   std::string ProjRoot = Proj->GetProjRoot();
+
+  if( !CGMkDirP(ProjRoot) ){
+    Errno->SetError(CGERR_ERROR, "Could not construct top-level project directory: "
+                    + ProjRoot );
+    return false;
+  }
+
   if( ProjRoot[ProjRoot.length()-1] == '/' ){
     MFile = ProjRoot + "Makefile";
   }else{
@@ -393,15 +400,21 @@ bool CoreGenCodegen::BuildISAChisel( CoreGenISA *ISA,
   for( unsigned i=0; i<IF.size(); i++ ){
     for( unsigned j=0; j<IF[j]->GetNumFields(); j++ ){
       // for each field, interrogate it to determine whether it is a register class
-      if( IF[j]->GetFieldType(IF[j]->GetFieldName(j)) == CoreGenInstFormat::CGInstReg ){
-        RC.push_back(static_cast<CoreGenRegClass *>(
-            IF[j]->GetFieldRegClass(IF[j]->GetFieldName(j))));
-      }
-    }
-  }
+      if( IF[j]->GetFieldType(IF[j]->GetFieldName(j)) ==
+          CoreGenInstFormat::CGInstReg ){
+
+        // make sure we don't insert any redundants
+        CoreGenRegClass *TmpRC = static_cast<CoreGenRegClass *>(
+            IF[j]->GetFieldRegClass(IF[j]->GetFieldName(j)));
+        if( std::find(RC.begin(), RC.end(), TmpRC) == RC.end() ){
+          RC.push_back(TmpRC);
+        }
+      } // end GetFieldType
+    }// end GetNumFields
+  }// end IF.size
 
   // stage 3: generate the output chisel file
-  std::string OutFile = ChiselDir + "/" + ISA->GetName();
+  std::string OutFile = SCDir + "/" + ISA->GetName() + ".sc";
   std::ofstream MOutFile;
   MOutFile.open(OutFile,std::ios::trunc);
   if( !MOutFile.is_open() ){
@@ -461,25 +474,19 @@ bool CoreGenCodegen::BuildISAChisel( CoreGenISA *ISA,
   // stage 6: write out the instructions
   for( unsigned i=0; i<Insts.size(); i++ ){
     MOutFile << "# " << Insts[i]->GetName() << std::endl;
-    MOutFile << "def " << Insts[i]->GetName() << "(";
+    MOutFile << "def " << Insts[i]->GetName() << "( ";
 
     // retrieve the instruction format and print out all the field
     // names and immediate values
-    bool isPrinted = false;
     CoreGenInstFormat *LIF = Insts[i]->GetFormat();
     for( unsigned j=0; j<LIF->GetNumFields(); j++ ){
       if( (LIF->GetFieldType(LIF->GetFieldName(j)) == CoreGenInstFormat::CGInstReg) || 
           (LIF->GetFieldType(LIF->GetFieldName(j)) == CoreGenInstFormat::CGInstImm) ){
-        if( isPrinted ){
-          MOutFile << ", ";
-        }
-        MOutFile << LIF->GetFieldName(j);
-        isPrinted = true;
+        MOutFile << LIF->GetFieldName(j) << " ";
       }
     }
-
-    MOutFile << Insts[i]->GetImpl() << std::endl;
-    MOutFile << ")" << std::endl << std::endl;
+    MOutFile << ")" << std::endl;
+    MOutFile << "{" << std::endl << Insts[i]->GetImpl() << std::endl << "}" << std::endl << std::endl;
   }
 
   // stage 7: close the file
@@ -501,7 +508,7 @@ bool CoreGenCodegen::BuildStoneCutterFiles(){
       // build a vector of instructions that have inline stonecutter RTL
       std::vector<CoreGenInst *> Insts;
       for( unsigned j=0; j<Top->GetNumChild(); j++ ){
-        if( Top->GetChild(j)->GetType() == CGPInst ){
+        if( Top->GetChild(j)->GetType() == CGInst ){
           CoreGenInst *INST = static_cast<CoreGenInst *>(Top->GetChild(j));
           if( (INST->GetISA() == ISA) && (INST->IsImpl()) ){
             Insts.push_back(INST);
