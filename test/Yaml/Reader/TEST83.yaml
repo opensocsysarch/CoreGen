@@ -1932,7 +1932,7 @@ Insts:
         EncodingWidth: 8
         EncodingValue: 1
     Impl: RT = RA + RB
-    Syntax: TEST74.inst0 %RT, %RA, %RB
+    Syntax: TEST74.inst0 %RT %RA %RB
   - Inst: TEST74.inst1
     ISA: TEST74.isa
     InstFormat: TEST74.if

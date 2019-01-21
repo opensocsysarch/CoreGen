@@ -596,6 +596,11 @@ void CoreGenYaml::WriteInstYaml(YAML::Emitter *out,
       *out << YAML::Value << Insts[i]->GetImpl();
     }
 
+    if( Insts[i]->IsSyntax() ){
+      *out << YAML::Key << "Syntax";
+      *out << YAML::Value << Insts[i]->GetSyntax();
+    }
+
     if( Insts[i]->IsRTL() ){
       *out << YAML::Key << "RTL";
       *out << YAML::Value << Insts[i]->GetRTL();
@@ -1982,10 +1987,6 @@ bool CoreGenYaml::ReadInstYaml(const YAML::Node& InstNodes,
       for( unsigned k=0; k<FNode.size(); k++ ){
         const YAML::Node& LFNode = FNode[k];
         std::string FieldName = LFNode["EncodingField"].as<std::string>();
-#if 0
-        // currently unused
-        int FieldWidth = LFNode["EncodingWidth"].as<int>();
-#endif
         int Value = LFNode["EncodingValue"].as<int>();
 
         if( !Inst->SetEncoding(FieldName,Value) ){
@@ -1995,7 +1996,14 @@ bool CoreGenYaml::ReadInstYaml(const YAML::Node& InstNodes,
     }
 
     if( Node["Impl"] ){
-      Inst->SetImpl( Node["Impl"].as<std::string>() );
+      if( !Inst->SetImpl( Node["Impl"].as<std::string>() ) ){
+        return false;
+      }
+    }
+    if( Node["Syntax"] ){
+      if( !Inst->SetSyntax( Node["Syntax"].as<std::string>() ) ){
+        return false;
+      }
     }
     if( Node["RTL"] ){
       Inst->SetRTL( Node["RTL"].as<std::string>());
@@ -2583,7 +2591,6 @@ bool CoreGenYaml::ReadPluginYaml(const YAML::Node& PluginNodes,
 
         // feature type and feature value
         if( FNodeJ["FeatureType"] ){
-          CGFeatureType FType;
           CGFeatureVal FVal;
           std::string FTypeStr = FNodeJ["FeatureType"].as<std::string>();
           if( !CheckValidNode(FNodeJ,"FeatureValue") ){
@@ -2597,43 +2604,35 @@ bool CoreGenYaml::ReadPluginYaml(const YAML::Node& PluginNodes,
 
           // convert o CGFeatureType and CGFeatureVal
           if( FTypeStr == "Unsigned" ){
-            FType = CGFUnsigned;
             FVal.UnsignedData = (unsigned)(std::stoi(FTypeStr,&sz));
           }
           if( FTypeStr == "Uint32t" ){
-            FType = CGFUin32t;
             FVal.Uint32tData = (uint32_t)(std::stoi(FTypeStr,&sz));
           }
           if( FTypeStr == "Int32t" ){
-            FType = CGFint32t;
             FVal.Int32tData = (int32_t)(std::stoi(FTypeStr,&sz));
           }
           if( FTypeStr == "Uint64t" ){
-            FType = CGFUint64t;
             FVal.Uint64tData = (uint64_t)(std::stoul(FTypeStr,nullptr,0));
           }
           if( FTypeStr == "Int64t" ){
-            FType = CGFInt64t;
             FVal.Uint64tData = (int64_t)(std::stol(FTypeStr,nullptr,0));
           }
           if( FTypeStr == "Float" ){
-            FType = CGFFloat;
             FVal.FloatData = (float)(std::stof(FTypeStr,&sz));
           }
           if( FTypeStr == "Double" ){
-            FType = CGFDouble;
             FVal.DoubleData = (float)(std::stof(FTypeStr,&sz));
           }
           if( FTypeStr == "String" ){
-            FType = CGFString;
             FVal.StringData = FTypeStr;
           }
           if( FTypeStr == "Bool" ){
-            FType = CGFBool;
             FVal.BoolData = std::stoi(FTypeStr,&sz);
           }
           if( FTypeStr == "Unknown" ){
-            FType = CGFUnknown;
+            // default to unsigned integer
+            FVal.UnsignedData = (unsigned)(std::stoi(FTypeStr,&sz));
           }
           NewPlugin->SetFeatureValue(FeatureName, FVal);
         }
