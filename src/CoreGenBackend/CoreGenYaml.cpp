@@ -1635,7 +1635,9 @@ bool CoreGenYaml::ReadRegisterYaml(const YAML::Node& RegNodes,
       R->SetRTLFile( Node["RTLFile"].as<std::string>());
     }
     if( CheckValidNode(Node,"RTLType") ){
-      R->SetRTLType( StrToCGRTL(Node["RTLType"].as<std::string>()) );
+      if( !R->SetRTLType( StrToCGRTL(Node["RTLType"].as<std::string>()) ) ){
+        return false;
+      }
     }
 
     if( IsDuplicate(Node,
@@ -1713,7 +1715,9 @@ bool CoreGenYaml::ReadRegisterClassYaml(const YAML::Node& RegClassNodes,
       RC->SetRTLFile( Node["RTLFile"].as<std::string>());
     }
     if( CheckValidNode(Node,"RTLType") ){
-      RC->SetRTLType( StrToCGRTL(Node["RTLType"].as<std::string>()) );
+      if( !RC->SetRTLType( StrToCGRTL(Node["RTLType"].as<std::string>()) ) ){
+        return false;
+      }
     }
 
     if( IsDuplicate(Node,
@@ -1750,7 +1754,9 @@ bool CoreGenYaml::ReadISAYaml(const YAML::Node& ISANodes,
       ISA->SetRTLFile( Node["RTLFile"].as<std::string>());
     }
     if( CheckValidNode(Node,"RTLType") ){
-      ISA->SetRTLType( StrToCGRTL(Node["RTLType"].as<std::string>()) );
+      if( !ISA->SetRTLType( StrToCGRTL(Node["RTLType"].as<std::string>()) ) ){
+        return false;
+      }
     }
 
     if( IsDuplicate(Node,
@@ -1921,7 +1927,9 @@ bool CoreGenYaml::ReadInstFormatYaml(const YAML::Node& InstFormatNodes,
       IF->SetRTLFile( Node["RTLFile"].as<std::string>());
     }
     if( CheckValidNode(Node,"RTLType") ){
-      IF->SetRTLType( StrToCGRTL(Node["RTLType"].as<std::string>()) );
+      if( !IF->SetRTLType( StrToCGRTL(Node["RTLType"].as<std::string>()) ) ){
+        return false;
+      }
     }
 
     if( IsDuplicate(Node,
@@ -2012,7 +2020,9 @@ bool CoreGenYaml::ReadInstYaml(const YAML::Node& InstNodes,
       Inst->SetRTLFile( Node["RTLFile"].as<std::string>());
     }
     if( CheckValidNode(Node,"RTLType") ){
-      Inst->SetRTLType( StrToCGRTL(Node["RTLType"].as<std::string>()) );
+      if( !Inst->SetRTLType( StrToCGRTL(Node["RTLType"].as<std::string>()) ) ){
+        return false;
+      }
     }
 
     if( IsDuplicate(Node,
@@ -2160,7 +2170,9 @@ bool CoreGenYaml::ReadCacheYaml(const YAML::Node& CacheNodes,
       C->SetRTLFile( Node["RTLFile"].as<std::string>());
     }
     if( CheckValidNode(Node,"RTLType") ){
-      C->SetRTLType( StrToCGRTL(Node["RTLType"].as<std::string>()) );
+      if( !C->SetRTLType( StrToCGRTL(Node["RTLType"].as<std::string>()) ) ){
+        return false;
+      }
     }
 
     if( IsDuplicate(Node,
@@ -2292,7 +2304,9 @@ bool CoreGenYaml::ReadCoreYaml(const YAML::Node& CoreNodes,
       C->SetRTLFile( Node["RTLFile"].as<std::string>());
     }
     if( CheckValidNode(Node,"RTLType") ){
-      C->SetRTLType( StrToCGRTL(Node["RTLType"].as<std::string>()) );
+      if( !C->SetRTLType( StrToCGRTL(Node["RTLType"].as<std::string>()) ) ){
+        return false;
+      }
     }
 
     if( IsDuplicate(Node,
@@ -2353,7 +2367,9 @@ bool CoreGenYaml::ReadSocYaml(const YAML::Node& SocNodes,
       S->SetRTLFile( Node["RTLFile"].as<std::string>());
     }
     if( CheckValidNode(Node,"RTLType") ){
-      S->SetRTLType( StrToCGRTL(Node["RTLType"].as<std::string>()) );
+      if( !S->SetRTLType( StrToCGRTL(Node["RTLType"].as<std::string>()) ) ){
+        return false;
+      }
     }
 
     if( IsDuplicate(Node,
@@ -2409,7 +2425,9 @@ bool CoreGenYaml::ReadSpadYaml(const YAML::Node& SpadNodes,
       S->SetRTLFile( Node["RTLFile"].as<std::string>());
     }
     if( CheckValidNode(Node,"RTLType") ){
-      S->SetRTLType( StrToCGRTL(Node["RTLType"].as<std::string>()) );
+      if( !S->SetRTLType( StrToCGRTL(Node["RTLType"].as<std::string>()) ) ){
+        return false;
+      }
     }
 
     S->SetStartAddr( StartAddr );
@@ -2454,7 +2472,9 @@ bool CoreGenYaml::ReadMCtrlYaml(const YAML::Node& MCtrlNodes,
       M->SetRTLFile( Node["RTLFile"].as<std::string>());
     }
     if( CheckValidNode(Node,"RTLType") ){
-      M->SetRTLType( StrToCGRTL(Node["RTLType"].as<std::string>()) );
+      if( !M->SetRTLType( StrToCGRTL(Node["RTLType"].as<std::string>()) ) ){
+        return false;
+      }
     }
 
     if( IsDuplicate(Node,
@@ -2969,7 +2989,9 @@ bool CoreGenYaml::ReadExtYaml(const YAML::Node& ExtNodes,
       E->SetRTLFile( Node["RTLFile"].as<std::string>());
     }
     if( CheckValidNode(Node,"RTLType") ){
-      E->SetRTLType( StrToCGRTL(Node["RTLType"].as<std::string>()) );
+      if( !E->SetRTLType( StrToCGRTL(Node["RTLType"].as<std::string>()) ) ){
+        return false;
+      }
     }
 
     if( IsDuplicate(Node,
