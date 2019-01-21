@@ -27,7 +27,7 @@ foreach(testSrc ${TEST_SRCS})
   # Add the tests for execution
   add_test(NAME ${testName}
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-    COMMAND ${BASH_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/codegen_impl_test.sh ${COREGEN_BUILD_DIR}/src/CGCLI ${testSrc})
+    COMMAND ${BASH_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/codegen_impl_test.sh ${COREGEN_BUILD_DIR}/src/CGCLI ${COREGEN_BUILD_DIR}/src/SCComp ${testSrc})
   set_tests_properties( ${testName} PROPERTIES PASS_REGULAR_EXPRESSION "")
 endforeach(testSrc)
 endif()
