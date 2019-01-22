@@ -16,7 +16,7 @@ CoreGenErrno::~CoreGenErrno() {}
 
 bool CoreGenErrno::SetError( CGERR Code, std::string Str ){
   ErrCode = Code;
-  ErrStr = Str;
+  ErrStr = "\033[1;31m" + Str + "\033[0m";
   return true;
 }
 
