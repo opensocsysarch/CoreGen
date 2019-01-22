@@ -49,12 +49,19 @@ typedef enum{
   CGTop   = 100                         ///< CGNodeType: Top-Level Node
 }CGNodeType;                            ///< CoreGenNode: CoreGen Node Types
 
+typedef enum{
+  RTLUnk     = 0,                       ///< CGRTLType: Unknown RTL Type
+  RTLChisel  = 1,                       ///< CGRTLType: Chisel RTL
+  RTLVerilog = 2                        ///< CGRTLType: Verilog RTL
+}CGRTLType;                             ///< CoreGenNode: Inline RTL Type
+
 class CoreGenNode{
 private:
   std::string Name;                     ///< CoreGenNode: Name of the CoreGen node
   std::string RTL;                      ///< CoreGenNode: User-directed, inline RTL
   std::string RTLFile;                  ///< CoreGenNode: User-directed external RTL file
   CGNodeType Type;                      ///< CoreGenNode: Type of CoreGen node
+  CGRTLType RTLType;                    ///< CoreGenNode: Type of RTL
   std::vector<CoreGenNode *> CNodes;    ///< CoreGenNode: Child DAG nodes
 
   CoreGenNode *PluginNode;              ///< CoreGenNode: Overridden Plugin Node
@@ -81,6 +88,9 @@ public:
 
   /// Set the CoreGen node type
   bool SetType(CGNodeType T);
+
+  /// Set the RTL Type
+  bool SetRTLType(CGRTLType T);
 
   /// Set the CoreGen errno handler
   bool SetErrno(CoreGenErrno *E);
@@ -114,6 +124,9 @@ public:
 
   /// Determine whether there is inline RTL
   bool IsRTL();
+
+  /// Retrieve the type of RTL
+  CGRTLType GetRTLType();
 
   /// Retrieve inline RTL
   std::string GetRTL();

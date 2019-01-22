@@ -27,6 +27,13 @@ bool CoreGenCodegen::BuildProjMakefile(){
 
   std::string MFile;
   std::string ProjRoot = Proj->GetProjRoot();
+
+  if( !CGMkDirP(ProjRoot) ){
+    Errno->SetError(CGERR_ERROR, "Could not construct top-level project directory: "
+                    + ProjRoot );
+    return false;
+  }
+
   if( ProjRoot[ProjRoot.length()-1] == '/' ){
     MFile = ProjRoot + "Makefile";
   }else{
@@ -118,8 +125,10 @@ bool CoreGenCodegen::BuildLLVMDir(){
   std::string ProjRoot = Proj->GetProjRoot();
   if( ProjRoot[ProjRoot.length()-1] == '/' ){
     FullDir = ProjRoot + "compiler/LLVM";
+    LLVMDir = FullDir;
   }else{
     FullDir = ProjRoot + "/compiler/LLVM";
+    LLVMDir = FullDir;
   }
 
   if( !CGMkDirP(FullDir) ){
@@ -153,6 +162,31 @@ bool CoreGenCodegen::ExecuteLLVMCodegen(){
   return true;
 }
 
+bool CoreGenCodegen::BuildStoneCutterDir(){
+  if( !Proj ){
+    Errno->SetError(CGERR_ERROR, "Cannot derive StoneCutter directory; Project is null" );
+    return false;
+  }
+
+  std::string FullDir;
+  std::string ProjRoot = Proj->GetProjRoot();
+  if( ProjRoot[ProjRoot.length()-1] == '/' ){
+    FullDir = ProjRoot + "RTL/stonecutter";
+    SCDir = FullDir;
+  }else{
+    FullDir = ProjRoot + "/RTL/stonecutter";
+    SCDir = FullDir;
+  }
+
+  if( !CGMkDirP(FullDir) ){
+    Errno->SetError(CGERR_ERROR, "Could not construct the stonecutter source tree: "
+                    + FullDir );
+    return false;
+  }
+
+  return true;
+}
+
 bool CoreGenCodegen::BuildChiselDir(){
   if( !Proj ){
     Errno->SetError(CGERR_ERROR, "Cannot derive Chisel directory; Project is null" );
@@ -163,8 +197,10 @@ bool CoreGenCodegen::BuildChiselDir(){
   std::string ProjRoot = Proj->GetProjRoot();
   if( ProjRoot[ProjRoot.length()-1] == '/' ){
     FullDir = ProjRoot + "RTL/chisel/src/main/scala";
+    ChiselDir = ProjRoot + "RTL/chisel";
   }else{
     FullDir = ProjRoot + "/RTL/chisel/src/main/scala";
+    ChiselDir = ProjRoot + "/RTL/chisel";
   }
 
   if( !CGMkDirP(FullDir) ){
@@ -350,6 +386,149 @@ bool CoreGenCodegen::BuildChiselMakefile(){
   return true;
 }
 
+bool CoreGenCodegen::BuildISAChisel( CoreGenISA *ISA,
+                                     std::vector<CoreGenInst *> Insts ){
+  std::vector<CoreGenInstFormat *> IF;
+  std::vector<CoreGenRegClass *> RC;
+
+  // stage 1: gather a list of all the instruction formats
+  for( unsigned i=0; i<Insts.size(); i++ ){
+    IF.push_back(static_cast<CoreGenInstFormat *>(Insts[i]->GetFormat()));
+  }
+
+  // stage 2: gather a list of all the register classes
+  for( unsigned i=0; i<IF.size(); i++ ){
+    for( unsigned j=0; j<IF[j]->GetNumFields(); j++ ){
+      // for each field, interrogate it to determine whether it is a register class
+      if( IF[j]->GetFieldType(IF[j]->GetFieldName(j)) ==
+          CoreGenInstFormat::CGInstReg ){
+
+        // make sure we don't insert any redundants
+        CoreGenRegClass *TmpRC = static_cast<CoreGenRegClass *>(
+            IF[j]->GetFieldRegClass(IF[j]->GetFieldName(j)));
+        if( std::find(RC.begin(), RC.end(), TmpRC) == RC.end() ){
+          RC.push_back(TmpRC);
+        }
+      } // end GetFieldType
+    }// end GetNumFields
+  }// end IF.size
+
+  // stage 3: generate the output chisel file
+  std::string OutFile = SCDir + "/" + ISA->GetName() + ".sc";
+  std::ofstream MOutFile;
+  MOutFile.open(OutFile,std::ios::trunc);
+  if( !MOutFile.is_open() ){
+    Errno->SetError(CGERR_ERROR, "Could not open StoneCutter output file" + OutFile );
+    return false;
+  }
+
+  // stage 4: write the header
+  MOutFile << "#-- StoneCutter source file for ISA=" << ISA->GetName() << std::endl;
+  MOutFile << std::endl << std::endl;
+
+  // stage 5: write out the register classes
+  MOutFile << "# Register Class Definitions" << std::endl;
+  for( unsigned i=0; i<RC.size(); i++ ){
+    MOutFile << "regclass " << RC[i]->GetName() << "(";
+
+    // write out all the registers
+    for( unsigned j=0; j<RC[i]->GetNumReg(); j++ ){
+
+      CoreGenReg *REG = static_cast<CoreGenReg *>(RC[i]->GetReg(j));
+
+      if( REG->GetNumSubRegs() > 0 ){
+        // write out the register with the subregs
+        MOutFile << " u" << REG->GetWidth() << " " << REG->GetName() << "(";
+        for( unsigned k=0; k<REG->GetNumSubRegs(); k++ ){
+          std::string Name;
+          unsigned Start;
+          unsigned End;
+          if( !REG->GetSubReg(k,Name,Start,End) ){
+            Errno->SetError(CGERR_ERROR, "Could not retrieve subreg from register=" + REG->GetName() );
+            MOutFile.close();
+            return false;
+          }
+          MOutFile << " u" << ((End-Start)+1) << " " << Name;
+          if( k != (REG->GetNumSubRegs()-1) ){
+            MOutFile << ",";
+          }
+        } // end subregs
+        MOutFile << ")";
+      }else{
+        // write out the register with no subregs
+        MOutFile << " u" << REG->GetWidth() << " " << REG->GetName();
+      }
+
+      // print a comma between registers
+      if( j != (RC[i]->GetNumReg()-1) ){
+        MOutFile << ",";
+      }
+    }// end writing out the registers
+
+    MOutFile << " )" << std::endl;
+  }// end writing register classes
+
+  MOutFile << std::endl << std::endl;
+  MOutFile << "# Instruction Definitions" << std::endl;
+
+  // stage 6: write out the instructions
+  for( unsigned i=0; i<Insts.size(); i++ ){
+    MOutFile << "# " << Insts[i]->GetName() << std::endl;
+    MOutFile << "def " << Insts[i]->GetName() << "( ";
+
+    // retrieve the instruction format and print out all the field
+    // names and immediate values
+    CoreGenInstFormat *LIF = Insts[i]->GetFormat();
+    for( unsigned j=0; j<LIF->GetNumFields(); j++ ){
+      if( (LIF->GetFieldType(LIF->GetFieldName(j)) == CoreGenInstFormat::CGInstReg) || 
+          (LIF->GetFieldType(LIF->GetFieldName(j)) == CoreGenInstFormat::CGInstImm) ){
+        MOutFile << LIF->GetFieldName(j) << " ";
+      }
+    }
+    MOutFile << ")" << std::endl;
+    MOutFile << "{" << std::endl << Insts[i]->GetImpl() << std::endl << "}" << std::endl << std::endl;
+  }
+
+  // stage 7: close the file
+  MOutFile.close();
+
+  return true;
+}
+
+bool CoreGenCodegen::BuildStoneCutterFiles(){
+
+  // for each ISA we have defined, build a vector
+  // of instructions that have inline stonecutter
+  // create a single stonecutter file each ISA
+  for( unsigned i=0; i<Top->GetNumChild(); i++ ){
+    if( Top->GetChild(i)->GetType() == CGISA ){
+      // grab the ISA object
+      CoreGenISA *ISA = static_cast<CoreGenISA *>(Top->GetChild(i));
+
+      // build a vector of instructions that have inline stonecutter RTL
+      std::vector<CoreGenInst *> Insts;
+      for( unsigned j=0; j<Top->GetNumChild(); j++ ){
+        if( Top->GetChild(j)->GetType() == CGInst ){
+          CoreGenInst *INST = static_cast<CoreGenInst *>(Top->GetChild(j));
+          if( (INST->GetISA() == ISA) && (INST->IsImpl()) ){
+            Insts.push_back(INST);
+          }
+        }
+      }
+
+      // our vector is constructed, now build the output chisel
+      if( Insts.size() > 0 ){
+        if( !BuildISAChisel(ISA,Insts) ){
+          return false;
+        }
+      }
+
+    }// end if
+  }// end for
+
+  return true;
+}
+
 bool CoreGenCodegen::ExecuteChiselCodegen(){
 
   // Stage 1: Build the top-level makefile
@@ -365,20 +544,30 @@ bool CoreGenCodegen::ExecuteChiselCodegen(){
     return false;
   }
 
-  // Stage 3: Walk the top-level modules and generate chisel
+  // Stage 3: Build the StoneCutter directory structure
+  if( !BuildStoneCutterDir() ){
+    return false;
+  }
+
+  // Stage 4: Walk the ISA graphs and build StoneCutter source using inline RTL
+  if( !BuildStoneCutterFiles() ){
+    return false;
+  }
+
+  // Stage 6: Walk the top-level modules and generate chisel
   //          This is the bulk of the code generation logic
 
-  // Stage 4: Build the Chisel makefile
+  // Stage 7: Build the Chisel makefile
   if( !BuildChiselMakefile() ){
     return false;
   }
 
-  // Stage 5: Build the Chisel SBT file
+  // Stage 8: Build the Chisel SBT file
   if( !BuildChiselSBT() ){
     return false;
   }
 
-  // Stage 6: Build the supplementary project files
+  // Stage 9: Build the supplementary project files
   if( !BuildChiselProject() ){
     return false;
   }
