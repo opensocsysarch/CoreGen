@@ -270,6 +270,7 @@ public:
   static IRBuilder<> Builder;
   static std::unique_ptr<Module> TheModule;
   static std::map<std::string, AllocaInst*> NamedValues;
+  static std::map<std::string, GlobalVariable*> GlobalNamedValues;
   static std::map<std::string, std::unique_ptr<PrototypeASTContainer>> FunctionProtos;
   static std::unique_ptr<legacy::FunctionPassManager> TheFPM;
   static unsigned LabelIncr;
