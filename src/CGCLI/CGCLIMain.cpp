@@ -133,7 +133,7 @@ int ExecuteCoregen( CGCLIOpts *Opts ){
     }
 
     // delete the tmp file
-    if( !remove(ASPPath.c_str()) != 0 ){
+    if( remove(ASPPath.c_str()) != 0 ){
       std::cout << "Error deleting ASP Solver tmp file : "
                 << ASPPath << std::endl;
       delete CG;

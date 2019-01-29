@@ -60,6 +60,8 @@
 #include "CoreGen/StoneCutter/SCMsg.h"
 #include "CoreGen/StoneCutter/SCUtil.h"
 #include "CoreGen/StoneCutter/SCIntrinsics.h"
+#include "CoreGen/StoneCutter/SCPass.h"
+#include "CoreGen/StoneCutter/SCPasses.h"
 
 using namespace llvm;
 
@@ -72,11 +74,14 @@ private:
   std::ofstream OutFile;                      ///< Output file stream
 
   std::vector<SCIntrin *> Intrins;            ///< StoneCutter Intrinsics
+  std::vector<SCPass *> Passes;               ///< StoneCutter CodeGen passes
 
   // private functions
   void WriteChiselHeader();                   ///< Writes a header to the chisel output file
   bool ExecuteCodegen();                      ///< Generates chisel from the LLVM IR
   void InitIntrinsics();                      ///< Init the intrinsics vector
+  void InitPasses();                          ///< Init the pass vector
+  bool ExecutePasses();                       ///< Executes all the code generation passes
 
 public:
 
