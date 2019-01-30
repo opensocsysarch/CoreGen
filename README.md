@@ -198,7 +198,7 @@ make
 * -DLLVM\_DIR=/path/to/llvm/cmake/scripts : Sets the path for the LLVM cmake scripts.  This must be set for the build to be successful.  This is generally difficult to derive automatically.
 
 ### Documentation Options
-* -DBUILD\_DOCUMENTATION=ON  : Enables Doxygenized documentaition.  ``make docs`` will build the documentation (requires Doxygen to be installed)
+* -DBUILD\_DOCUMENTATION=ON  : Enables Doxygenized documentaition.  ``make doc`` will build the documentation (requires Doxygen to be installed)
 
 ### Developer Build Options
 * -DYAML\_PATH=/path/to/alternate/yaml-cpp : Set an alternate yaml-cpp library path

@@ -11,7 +11,7 @@
 /**
  * \class CoreGenChiselCodegen
  *
- * \ingroup Coregen
+ * \ingroup CoreGenCodegen
  *
  * \brief The CoreGen Chisel code generation class
  *

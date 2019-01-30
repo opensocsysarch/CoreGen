@@ -8,10 +8,10 @@
 // See LICENSE in the top level directory for licensing details
 //
 
-/** \defgroup CoreGen CoreGen High Level SoC Design Framework
+/** \defgroup CoreGen CoreGen High Level System on Chip (SoC) Design Framework
  *
  * \brief The CoreGen library provides a high-level design and dependence
- *        analysis framework for homogeneous and heterogenous SoC's.
+ *        analysis framework for homogeneous and heterogenous system on chips.
  */
 
 

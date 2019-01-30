@@ -8,10 +8,17 @@
 // See LICENSE in the top level directory for licensing details
 //
 
+/** \defgroup CoreGenCodegen CoreGen High Level System on Chip (SoC) Design Framework Code Generator
+ *
+ * \brief The CoreGenCodegen library provides code generation facilities for the CoreGen infrastructure
+ *
+ */
+
+
 /**
  * \class CoreGenCodegen
  *
- * \ingroup Coregen
+ * \ingroup CoreGenCodegen
  *
  * \brief The CoreGen code generation base class
  *

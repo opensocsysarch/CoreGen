@@ -11,7 +11,7 @@
 /**
  * \class CoreGenLLVMCodegen
  *
- * \ingroup Coregen
+ * \ingroup CoreGenCodegen
  *
  * \brief The CoreGen LLVM code generation class
  *
