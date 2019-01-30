@@ -392,6 +392,9 @@ private:
   /// Parse the closing of a function body
   bool ParseCloseBracket();
 
+  /// Retrieves the largest VarAttr from a VarAttr vector
+  VarAttrs GetMaxVarAttr(std::vector<VarAttrs> ArgAttrs);
+
   /// Handles definition parsing
   void HandleDefinition();
 

@@ -21,11 +21,13 @@
 #define _STONECUTTER_SCPASS_SCINSTARG_H_
 
 #include <map>
+#include <vector>
 #include "CoreGen/StoneCutter/SCPass.h"
 
 class SCInstArg : public SCPass {
 private:
   std::map<std::string,std::string> RegClassMap;  ///< Map of registers to register classes
+  std::vector<std::string> RegFileVect;           ///< Vecotr register files
 
   /// Retrieves a map of the registers to register classes from the global variable list
   bool GetRegClassMap();

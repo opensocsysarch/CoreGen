@@ -25,7 +25,11 @@ bool SCInstArg::GetRegClassMap(){
   for(auto &Global : TheModule->getGlobalList() ){
     AttributeSet AttrSet = Global.getAttributes();
     // check for the proper attributes
-    if( !AttrSet.hasAttribute("subregister") ){
+    if( AttrSet.hasAttribute("regfile") ){
+      // this is a register file definition
+      RegFileVect.push_back(
+        AttrSet.getAttribute("regfile").getValueAsString().str());
+    }else if( !AttrSet.hasAttribute("subregister") ){
       // normal register
       if( !AttrSet.hasAttribute("regclass") ){
         this->PrintMsg( L_ERROR,
@@ -111,11 +115,15 @@ bool SCInstArg::CheckInstArgs(){
     if( Func.begin() != Func.end() ){
       // walk all the arguments
       for( auto FuncArg = Func.arg_begin(); FuncArg != Func.arg_end(); ++FuncArg ){
+        // registers and subregisters
         std::map<std::string,std::string>::iterator pos =
           RegClassMap.find(FuncArg->getName().str());
-        if( pos == RegClassMap.end() ){
+        // register files
+        std::vector<std::string>::iterator it =
+          find(RegFileVect.begin(), RegFileVect.end(), FuncArg->getName().str());
+        if( (pos == RegClassMap.end()) && (it == RegFileVect.end()) ){
           this->PrintMsg( L_ERROR,
-                        "Instruction definition contains an argument with no backing register : Instruction="
+                        "Instruction definition contains an argument with no backing register  or register file : Instruction="
                         + Func.getName().str() + "; Argument=" + FuncArg->getName().str() );
           rtn = false;
         }

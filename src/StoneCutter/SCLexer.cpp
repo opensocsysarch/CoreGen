@@ -76,6 +76,7 @@ bool SCLexer::IsVarDef(){
       Var.defSign   = VarAttrEntryTable[Idx].IsDefSign;
       Var.defVector = VarAttrEntryTable[Idx].IsDefVector;
       Var.defFloat  = VarAttrEntryTable[Idx].IsDefFloat;
+      Var.defRegClass = false;
       return true;
     }
     Idx++;
@@ -88,6 +89,7 @@ bool SCLexer::IsVarDef(){
     Var.defSign   = false;
     Var.defVector = false;
     Var.defFloat  = false;
+    Var.defRegClass = false;
     Var.width     = std::stoi( IdentifierStr.substr(1,IdentifierStr.length()-1) );
     return true;
   }else if( IdentifierStr[0] == 's' ){
@@ -96,6 +98,7 @@ bool SCLexer::IsVarDef(){
     Var.defSign   = true;
     Var.defVector = false;
     Var.defFloat  = false;
+    Var.defRegClass = false;
     Var.width     = std::stoi( IdentifierStr.substr(1,IdentifierStr.length()-1) );
     return true;
   }

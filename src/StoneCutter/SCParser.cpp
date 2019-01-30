@@ -471,6 +471,7 @@ bool SCParser::GetVarAttr( std::string Str, VarAttrs &V ){
       V.defSign   = VarAttrEntryTable[Idx].IsDefSign;
       V.defVector = VarAttrEntryTable[Idx].IsDefVector;
       V.defFloat  = VarAttrEntryTable[Idx].IsDefFloat;
+      V.defRegClass = false;
       return true;
     }
     Idx++;
@@ -482,6 +483,7 @@ bool SCParser::GetVarAttr( std::string Str, VarAttrs &V ){
     V.defSign   = false;
     V.defVector = false;
     V.defFloat  = false;
+    V.defRegClass = false;
     V.width     = std::stoi( Str.substr(1,Str.length()-1) );
     return true;
   }else if( Str[0] == 's' ){
@@ -490,6 +492,7 @@ bool SCParser::GetVarAttr( std::string Str, VarAttrs &V ){
     V.defSign   = true;
     V.defVector = false;
     V.defFloat  = false;
+    V.defRegClass = false;
     V.width     = std::stoi( Str.substr(1,Str.length()-1) );
     return true;
   }
@@ -880,6 +883,25 @@ std::unique_ptr<PrototypeAST> SCParser::ParsePrototype() {
   return llvm::make_unique<PrototypeAST>(FnName, std::move(ArgNames));
 }
 
+VarAttrs SCParser::GetMaxVarAttr(std::vector<VarAttrs> ArgAttrs){
+  VarAttrs Attr;
+  Attr.elems = 1;
+  Attr.defSign = false;
+  Attr.defVector = false;
+  Attr.defFloat = false;
+
+  unsigned Max = 0;
+  for( unsigned i=0; i<ArgAttrs.size(); i++ ){
+    if( ArgAttrs[i].width > Max ){
+      Max = ArgAttrs[i].width;
+    }
+  }
+
+  Attr.width = Max;
+
+  return Attr;
+}
+
 std::unique_ptr<RegClassAST> SCParser::ParseRegClassDef(){
   if (CurTok != tok_identifier)
     return LogErrorR("Expected regclass name in prototype");
@@ -978,6 +1000,13 @@ std::unique_ptr<RegClassAST> SCParser::ParseRegClassDef(){
 
   // success.
   GetNextToken(); // eat ')'.
+
+  // push back the register class name as a unique global
+  // this will allow us to use this variable in the function prototype
+  VarAttrs RVAttr = GetMaxVarAttr(ArgAttrs);
+  RVAttr.defRegClass = true;
+  ArgAttrs.push_back(RVAttr);
+  ArgNames.push_back(RName);
 
   return llvm::make_unique<RegClassAST>(RName,
                                         std::move(ArgNames),
@@ -1513,10 +1542,17 @@ Value *RegClassAST::codegen(){
 
     GlobalNamedValues[Args[i]] = val;
 
-    // insert a special attribute to track the register
-    val->addAttribute("register",Args[i]);
-    // insert a special attribute to track the parent register class
-    val->addAttribute("regclass", Name);
+    if( !Attrs[i].defRegClass ){
+      // this is a normal register
+      // insert a special attribute to track the register
+      val->addAttribute("register",Args[i]);
+      // insert a special attribute to track the parent register class
+      val->addAttribute("regclass", Name);
+    }else{
+      // this is a register class
+      // add a special attribute token
+      val->addAttribute("regfile", Args[i] );
+    }
   }
 
   // subregisters
