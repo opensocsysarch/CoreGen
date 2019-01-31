@@ -16,6 +16,7 @@ std::unique_ptr<Module> SCParser::TheModule;
 std::unique_ptr<legacy::FunctionPassManager> SCParser::TheFPM;
 std::map<std::string, std::unique_ptr<PrototypeAST>> SCParser::FunctionProtos;
 std::map<std::string, AllocaInst*> SCParser::NamedValues;
+std::map<std::string, GlobalVariable*> SCParser::GlobalNamedValues;
 unsigned SCParser::LabelIncr;
 bool SCParser::IsOpt = false;
 SCMsg *SCParser::GMsgs = nullptr;
@@ -389,30 +390,6 @@ void SCParser::InitBinopPrecedence(){
   BinopPrecedence[dyad_logand]  = 11;
   BinopPrecedence[dyad_logor]   = 11;
 
-#if 0
-  BinopPrecedence["="] = 10;
-  BinopPrecedence["+"] = 20;
-  BinopPrecedence["-"] = 20;
-  BinopPrecedence["*"] = 40;
-  BinopPrecedence["/"] = 40;
-  BinopPrecedence["%"] = 40;
-  BinopPrecedence["|"] = 20;
-  BinopPrecedence["&"] = 20;
-  BinopPrecedence["^"] = 20;
-  BinopPrecedence["~"] = 20;
-  BinopPrecedence["!"] = 50;
-  BinopPrecedence["<"] = 10;
-  BinopPrecedence[">"] = 10;
-
-  BinopPrecedence["!="] = 10;
-  BinopPrecedence["<<"] = 10;
-  BinopPrecedence[">>"] = 10;
-  BinopPrecedence["||"] = 10;
-  BinopPrecedence["&&"] = 10;
-  BinopPrecedence[">="] = 10;
-  BinopPrecedence["<="] = 10;
-  BinopPrecedence["=="] = 10;
-#endif
 }
 
 bool SCParser::Parse(){
@@ -494,6 +471,7 @@ bool SCParser::GetVarAttr( std::string Str, VarAttrs &V ){
       V.defSign   = VarAttrEntryTable[Idx].IsDefSign;
       V.defVector = VarAttrEntryTable[Idx].IsDefVector;
       V.defFloat  = VarAttrEntryTable[Idx].IsDefFloat;
+      V.defRegClass = false;
       return true;
     }
     Idx++;
@@ -505,6 +483,7 @@ bool SCParser::GetVarAttr( std::string Str, VarAttrs &V ){
     V.defSign   = false;
     V.defVector = false;
     V.defFloat  = false;
+    V.defRegClass = false;
     V.width     = std::stoi( Str.substr(1,Str.length()-1) );
     return true;
   }else if( Str[0] == 's' ){
@@ -513,6 +492,7 @@ bool SCParser::GetVarAttr( std::string Str, VarAttrs &V ){
     V.defSign   = true;
     V.defVector = false;
     V.defFloat  = false;
+    V.defRegClass = false;
     V.width     = std::stoi( Str.substr(1,Str.length()-1) );
     return true;
   }
@@ -903,6 +883,25 @@ std::unique_ptr<PrototypeAST> SCParser::ParsePrototype() {
   return llvm::make_unique<PrototypeAST>(FnName, std::move(ArgNames));
 }
 
+VarAttrs SCParser::GetMaxVarAttr(std::vector<VarAttrs> ArgAttrs){
+  VarAttrs Attr;
+  Attr.elems = 1;
+  Attr.defSign = false;
+  Attr.defVector = false;
+  Attr.defFloat = false;
+
+  unsigned Max = 0;
+  for( unsigned i=0; i<ArgAttrs.size(); i++ ){
+    if( ArgAttrs[i].width > Max ){
+      Max = ArgAttrs[i].width;
+    }
+  }
+
+  Attr.width = Max;
+
+  return Attr;
+}
+
 std::unique_ptr<RegClassAST> SCParser::ParseRegClassDef(){
   if (CurTok != tok_identifier)
     return LogErrorR("Expected regclass name in prototype");
@@ -1001,6 +1000,13 @@ std::unique_ptr<RegClassAST> SCParser::ParseRegClassDef(){
 
   // success.
   GetNextToken(); // eat ')'.
+
+  // push back the register class name as a unique global
+  // this will allow us to use this variable in the function prototype
+  VarAttrs RVAttr = GetMaxVarAttr(ArgAttrs);
+  RVAttr.defRegClass = true;
+  ArgAttrs.push_back(RVAttr);
+  ArgNames.push_back(RName);
 
   return llvm::make_unique<RegClassAST>(RName,
                                         std::move(ArgNames),
@@ -1303,8 +1309,14 @@ Value *ForExprAST::codegen() {
 Value *VariableExprAST::codegen() {
   // Look this variable up in the function.
   Value *V = SCParser::NamedValues[Name];
-  if (!V)
-    return LogErrorV("Unknown variable name: " + Name);
+  if (!V){
+    // variable wasn't in the function scope, check the globals
+    V = SCParser::GlobalNamedValues[Name];
+    if( !V ){
+      return LogErrorV("Unknown variable name: " + Name );
+    }
+  }
+
   return SCParser::Builder.CreateLoad(V,Name.c_str());
 }
 
@@ -1379,10 +1391,14 @@ Value *BinaryExprAST::codegen() {
     if (!Val)
       return nullptr;
 
-    // Look up the name.
+    // Look up the name in the local and global symbol tables
     Value *Variable = SCParser::NamedValues[LHSE->getName()];
-    if (!Variable)
-      return LogErrorV("Unknown variable name");
+    if (!Variable){
+      Variable = SCParser::GlobalNamedValues[LHSE->getName()];
+      if( !Variable ){
+        return LogErrorV("Unknown variable name: " + LHSE->getName());
+      }
+    }
 
     Builder.CreateStore(Val, Variable);
     return Val;
@@ -1523,10 +1539,20 @@ Value *RegClassAST::codegen(){
       return LogErrorV( "Failed to lower register class to global: regclass = "+
                         Name + " register=" + Args[i]);
     }
-    // insert a special attribute to track the register
-    val->addAttribute("register",Args[i]);
-    // insert a special attribute to track the parent register class
-    val->addAttribute("regclass", Name);
+
+    GlobalNamedValues[Args[i]] = val;
+
+    if( !Attrs[i].defRegClass ){
+      // this is a normal register
+      // insert a special attribute to track the register
+      val->addAttribute("register",Args[i]);
+      // insert a special attribute to track the parent register class
+      val->addAttribute("regclass", Name);
+    }else{
+      // this is a register class
+      // add a special attribute token
+      val->addAttribute("regfile", Args[i] );
+    }
   }
 
   // subregisters
@@ -1555,6 +1581,9 @@ Value *RegClassAST::codegen(){
       return LogErrorV( "Failed to lower subregister to global: subreg = " +
                         std::get<1>(*it) + " register=" + std::get<0>(*it) );
     }
+
+    //GlobalNamedValues[std::get<1>(*it)] = GlobalNamedValues[std::get<0>(*it)];
+    GlobalNamedValues[std::get<1>(*it)] = val;
 
     // insert a special attribute to track the subregister
     val->addAttribute("subregister",std::get<1>(*it));

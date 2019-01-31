@@ -8,6 +8,7 @@
 #
 
 add_subdirectory(Intrinsics)
+add_subdirectory(Passes)
 
 install(DIRECTORY "."
         DESTINATION "include/StoneCutter"

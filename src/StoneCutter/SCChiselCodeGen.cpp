@@ -15,6 +15,7 @@ SCChiselCodeGen::SCChiselCodeGen( SCParser *P,
                                   std::string COF )
   : Parser(P), Msgs(M), ChiselFile(COF) {
   InitIntrinsics();
+  InitPasses();
 }
 
 SCChiselCodeGen::~SCChiselCodeGen(){
@@ -45,6 +46,11 @@ void SCChiselCodeGen::InitIntrinsics(){
   Intrins.push_back(static_cast<SCIntrin *>(new SCMerge()));
 }
 
+void SCChiselCodeGen::InitPasses(){
+  Passes.push_back(static_cast<SCPass *>(new SCInstArg(SCParser::TheModule.get(),
+                                                       Msgs)));
+}
+
 void SCChiselCodeGen::WriteChiselHeader(){
   OutFile << "\\\\" << std::endl;
   OutFile << "\\\\ " << ChiselFile << std::endl;
@@ -54,7 +60,27 @@ void SCChiselCodeGen::WriteChiselHeader(){
   OutFile << "\\\\" << std::endl << std::endl;
 }
 
+bool SCChiselCodeGen::ExecutePasses(){
+  bool rtn = true;
+
+  std::vector<SCPass *>::iterator it;
+  for( it=Passes.begin(); it != Passes.end(); ++it ){
+    SCPass *P = (*it);
+    if( !P->Execute() ){
+      rtn = false;
+    }
+  }
+
+  return rtn;
+}
+
 bool SCChiselCodeGen::ExecuteCodegen(){
+
+  // Execute all the necessary passes
+  if( !ExecutePasses() ){
+    return false;
+  }
+
   // walk all the functions in the module
   for( auto curFref = SCParser::TheModule->begin(),
             endFref = SCParser::TheModule->end();
@@ -91,7 +117,7 @@ bool SCChiselCodeGen::GenerateChisel(){
   // open the output file
   OutFile.open(ChiselFile, std::ios::trunc);
   if( !OutFile.is_open() ){
-    Msgs->PrintMsg( L_ERROR, "Failed to open chisel output file" );
+    Msgs->PrintMsg( L_ERROR, "Failed to open Chisel output file" );
     return false;
   }
 
@@ -100,7 +126,7 @@ bool SCChiselCodeGen::GenerateChisel(){
 
   // Execute the codegen
   if( !ExecuteCodegen() ){
-    Msgs->PrintMsg( L_ERROR, "Failed to generate chisel output" );
+    Msgs->PrintMsg( L_ERROR, "Failed to generate Chisel output" );
     OutFile.close();
     return false;
   }

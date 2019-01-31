@@ -15,6 +15,7 @@ set(SCCompSrcs
  SCParser.cpp
  SCLLCodeGen.cpp
  SCChiselCodeGen.cpp
+ SCPass.cpp
 )
 
 include_directories(${COREGEN_INCLUDE_PATH})
@@ -53,8 +54,9 @@ llvm_map_components_to_libnames(llvm_libs
 )
 
 add_subdirectory(Intrinsics)
+add_subdirectory(Passes)
 
-add_library(SCComp ${SCCompSrcs} $<TARGET_OBJECTS:IntrinObjs>)
+add_library(SCComp ${SCCompSrcs} $<TARGET_OBJECTS:IntrinObjs> $<TARGET_OBJECTS:PassObjs>)
 
 target_link_libraries(SCComp ${llvm_libs})
 

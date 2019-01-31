@@ -44,6 +44,7 @@ typedef struct{
   bool defSign;
   bool defVector;
   bool defFloat;
+  bool defRegClass;
 }VarAttrs;
 
 typedef struct{

@@ -10,7 +10,7 @@ fi
 
 $SCCOMP_PATH/sccomp -p -N $FILE
 retVal=$?
-if [ $retVal -eq 0 ]; then
+if [[  "$retVal" -eq 0 ]]; then
   echo "$SCCOMP_PATH/sccomp -p -N $FILE failed with return code = $retVal"
   exit -1
 fi

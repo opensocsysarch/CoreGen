@@ -198,7 +198,7 @@ make
 * -DLLVM\_DIR=/path/to/llvm/cmake/scripts : Sets the path for the LLVM cmake scripts.  This must be set for the build to be successful.  This is generally difficult to derive automatically.
 
 ### Documentation Options
-* -DBUILD\_DOCUMENTATION=ON  : Enables Doxygenized documentaition.  ``make docs`` will build the documentation (requires Doxygen to be installed)
+* -DBUILD\_DOCUMENTATION=ON  : Enables Doxygenized documentaition.  ``make doc`` will build the documentation (requires Doxygen to be installed)
 
 ### Developer Build Options
 * -DYAML\_PATH=/path/to/alternate/yaml-cpp : Set an alternate yaml-cpp library path
@@ -228,9 +228,11 @@ make
 * -DBUILD\_COREGEN\_STONECUTTER\_TESTING=ON : Enables the StoneCutter test harness
 * -DBUILD\_COREGEN\_STONECUTTER\_CLI\_TESTING=ON : Enables the StoneCutter CLI test harness
 * -DBUILD\_COREGEN\_STONECUTTER\_PARSER\_TESTING=ON : Enables the StoneCutter parser test harness
-* -DBUILD\_COREGEN\_STONECUTTER\_PARSER\_TESTING=ON : Enables the StoneCutter parser test harness
 * -DBUILD\_COREGEN\_STONECUTTER\_PARSER\_KNOWNFAIL\_TESTING=ON : Enables the StoneCutter parser known fail test harness
 * -DBUILD\_COREGEN\_STONECUTTER\_PARSER\_KNOWNPASS\_MULTIFILE\_TESTING=ON : Enables the StoneCutter parser multi-file test harness
+* -DBUILD\_COREGEN\_STONECUTTER\_CODEGEN\_TESTING=ON : Enables the StoneCutter codegen test harness
+* -DBUILD\_COREGEN\_STONECUTTER\_CODEGEN\_KNOWNPASS\_TESTING=ON : Enables the StoneCutter codegen knownpass test harness
+* -DBUILD\_COREGEN\_STONECUTTER\_CODEGEN\_KNOWNFAIL\_TESTING=ON : Enables the StoneCutter codegen knownfail test harness
 * -DBUILD\_COREGEN\_CODEGEN\_TESTING=ON : Enables the CodeGen test harness
 * -DBUILD\_COREGEN\_CODEGEN\_STONECUTTERIMPL\_TESTING=ON : Enables the CodeGen StoneCutter implementation test harness
 
