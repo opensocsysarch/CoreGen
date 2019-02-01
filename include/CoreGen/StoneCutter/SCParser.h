@@ -59,15 +59,16 @@
 
 using namespace llvm;
 
+/** SCDyad: enumerated types to describe dyadic operators */
 enum SCDyad {
-  dyad_shfl   = 10,
-  dyad_shfr   = 11,
-  dyad_eqeq   = 12,
-  dyad_noteq  = 13,
-  dyad_logand = 14,
-  dyad_logor  = 15,
-  dyad_gte    = 16,
-  dyad_lte    = 17
+  dyad_shfl   = 10,   ///< SCDyad: Shift left '<<'
+  dyad_shfr   = 11,   ///< SCDyad: Shift right '>>'
+  dyad_eqeq   = 12,   ///< SCDyad: Boolean equal '=='
+  dyad_noteq  = 13,   ///< SCDyad: Boolean not equal '!='
+  dyad_logand = 14,   ///< SCDyad: Boolean and '&&'
+  dyad_logor  = 15,   ///< SCDyad: Boolean or '||'
+  dyad_gte    = 16,   ///< SCDyad: Greater than or equal to '>='
+  dyad_lte    = 17    ///< SCDyad: Less than or equal to '>='
 };
 
 class SCParser{
@@ -105,18 +106,24 @@ public:
   /// ExprAST - Base class for all expression nodes.
   class ExprASTContainer {
     public:
+      /// Virtualized base expression container function
       virtual ~ExprASTContainer() = default;
 
+      /// Virtualized base expression code generation function
       virtual Value *codegen() = 0;
   };
 
   /// ForExprAST - Expression class for for/in.
   class ForExprASTContainer : public ExprASTContainer {
-    std::string VarName;
-    std::unique_ptr<ExprASTContainer> Start, End, Step, Body;
-    std::vector<std::unique_ptr<ExprASTContainer>> BodyExpr;
+    std::string VarName;                            ///< Variable name
+    std::unique_ptr<ExprASTContainer> Start;        ///< Start of an expression body
+    std::unique_ptr<ExprASTContainer> End;          ///< End of an expression body
+    std::unique_ptr<ExprASTContainer> Step;         ///< Step function for an expression body
+    std::unique_ptr<ExprASTContainer> Body;         ///< Expression body
+    std::vector<std::unique_ptr<ExprASTContainer>> BodyExpr;  ///< Vector of body expressions
 
   public:
+    /// ForExprASTContainer default constructor
     ForExprASTContainer(const std::string &VarName,
                         std::unique_ptr<ExprASTContainer> Start,
                         std::unique_ptr<ExprASTContainer> End,
@@ -124,6 +131,8 @@ public:
                         std::unique_ptr<ExprASTContainer> Body)
       : VarName(VarName), Start(std::move(Start)), End(std::move(End)),
       Step(std::move(Step)), Body(std::move(Body)) {}
+
+    /// ForExprASTContainer overloaded constructor
     ForExprASTContainer(const std::string &VarName,
                         std::unique_ptr<ExprASTContainer> Start,
                         std::unique_ptr<ExprASTContainer> End,
@@ -132,18 +141,19 @@ public:
       : VarName(VarName), Start(std::move(Start)), End(std::move(End)),
       Step(std::move(Step)), BodyExpr(std::move(BodyExpr)) {}
 
+    /// ForExprASTContainer code generation driver
     Value *codegen() override;
   };
 
   ///VarExprAST - Expression class for variables
   class VarExprASTContainer : public ExprASTContainer {
     std::vector<std::pair<std::string,
-                          std::unique_ptr<ExprASTContainer>>> VarNames;
-    std::vector<VarAttrs> Attrs;
-    std::unique_ptr<ExprASTContainer> Body;
-
-    public:
-      VarExprASTContainer(std::vector<std::pair<std::string,
+                          std::unique_ptr<ExprASTContainer>>> VarNames; ///< Vector of variable names
+    std::vector<VarAttrs> Attrs;    ///< Vector of variable attributes
+    std::unique_ptr<ExprASTContainer> Body;   ///< Expression container body
+  public:
+    /// VarExprASTContainer default constructor
+    VarExprASTContainer(std::vector<std::pair<std::string,
                                       std::unique_ptr<ExprASTContainer>>> VarNames,
                           std::vector<VarAttrs> Attrs,
                           std::unique_ptr<ExprASTContainer> Body)
@@ -151,80 +161,96 @@ public:
           Attrs(std::move(Attrs)),
           Body(std::move(Body)) {}
 
+    /// VarExprASTContainer code generation driver
     Value *codegen() override;
   };
 
   /// IfExprAST - Expression class for conditionals
   class IfExprASTContainer : public ExprASTContainer {
-    std::unique_ptr<ExprASTContainer> Cond, Then, Else;
-
-    public:
-      IfExprASTContainer(std::unique_ptr<ExprASTContainer> Cond,
+    std::unique_ptr<ExprASTContainer> Cond;   ///< Conditional expression container
+    std::unique_ptr<ExprASTContainer> Then;   ///< Then expression container
+    std::unique_ptr<ExprASTContainer> Else;   ///< Else expression container
+  public:
+    /// IfExprASTContainer default constructor
+    IfExprASTContainer(std::unique_ptr<ExprASTContainer> Cond,
                          std::unique_ptr<ExprASTContainer> Then,
                          std::unique_ptr<ExprASTContainer> Else)
         : Cond(std::move(Cond)), Then(std::move(Then)), Else(std::move(Else)) {}
 
-      Value *codegen() override;
+    /// IfExprASTContainer code generation driver
+    Value *codegen() override;
   };
 
   /// NumberExprAST - Expression class for numeric literals like "1.0".
   class NumberExprASTContainer : public ExprASTContainer {
-    uint64_t Val;
+    uint64_t Val;     ///< Value of the immediate
 
   public:
+    /// NumberExprASTContainer default constructor
     NumberExprASTContainer(uint64_t Val) : Val(Val) {}
 
+    /// NumberExprASTContainer code generation driver
     Value *codegen() override;
   };
 
   /// VariableExprAST - Expression class for referencing a variable, like "a".
   class VariableExprASTContainer : public ExprASTContainer {
-    std::string Name;
+    std::string Name;   ///< Variable name
 
   public:
+    /// VariableExprASTContainer default constructor
     VariableExprASTContainer(const std::string &Name) : Name(Name) {}
+
+    /// VariableExprASTContainer code generation driver
     Value *codegen() override;
+
+    /// VariableExprASTContainer: retrieve the name of the variable
     const std::string &getName() const { return Name; }
   };
 
   /// BinaryExprAST - Expression class for a binary operator.
   class BinaryExprASTContainer : public ExprASTContainer {
-    char Op;
-    std::unique_ptr<ExprASTContainer> LHS, RHS;
+    char Op;    ///< Binary operator
+    std::unique_ptr<ExprASTContainer> LHS;    ///< Left hand side of the expression
+    std::unique_ptr<ExprASTContainer> RHS;    ///< Right hand side of the expression
 
   public:
+    /// BinaryExprASTContainer default constructor
     BinaryExprASTContainer(char Op, std::unique_ptr<ExprASTContainer> LHS,
                            std::unique_ptr<ExprASTContainer> RHS)
       : Op(Op), LHS(std::move(LHS)), RHS(std::move(RHS)) {}
 
+    /// BinaryExprASTContainer code generation driver
     Value *codegen() override;
   };
 
   /// CallExprAST - Expression class for function calls.
   class CallExprASTContainer : public ExprASTContainer {
-    std::string Callee;
-    std::vector<std::unique_ptr<ExprASTContainer>> Args;
-    bool Intrin;    // determines whether the call is an intrinsic
+    std::string Callee;   ///< Callee of the function
+    std::vector<std::unique_ptr<ExprASTContainer>> Args; ///< Arguments to the function
+    bool Intrin;    ///<  determines whether the call is an intrinsic
 
   public:
+    /// CallExprASTContainer default constructor
     CallExprASTContainer(const std::string &Callee,
                          std::vector<std::unique_ptr<ExprASTContainer>> Args,
                          bool Intrin)
       : Callee(Callee), Args(std::move(Args)), Intrin(Intrin) {}
 
+    /// CallExprASTContainer code generation driver
     Value *codegen() override;
   };
 
   /// RegClassAST - This class represents a register class definition
-  /// which captures the name and the associated registers
-
+  ///               which captures the name and the associated registers
   class RegClassASTContainer {
-    std::string Name;
-    std::vector<std::string> Args;
-    std::vector<VarAttrs> Attrs;
-    std::vector<std::tuple<std::string,std::string,VarAttrs>> SubRegs;
+    std::string Name;     ///< Name of the register class
+    std::vector<std::string> Args;  ///< Register vector
+    std::vector<VarAttrs> Attrs;    ///< Register attribute vector
+    std::vector<std::tuple<std::string,std::string,VarAttrs>> SubRegs;  ///< Subregister vector
 
   public:
+    /// RegClassASTContainer default constructor
     RegClassASTContainer(const std::string &Name,
                          std::vector<std::string> Args,
                          std::vector<VarAttrs> Attrs,
@@ -232,7 +258,10 @@ public:
       : Name(Name), Args(std::move(Args)),
         Attrs(std::move(Attrs)),SubRegs(std::move(SubRegs)) {}
 
+    /// RegClassASTContainer: Retrieve the  name of the register class
     const std::string &getName() const { return Name; }
+
+    /// RegClassASTContainer code generation driver
     Value *codegen();
   };
 
@@ -241,41 +270,47 @@ public:
   /// which captures its name, and its argument names (thus implicitly the number
   /// of arguments the function takes).
   class PrototypeASTContainer {
-    std::string Name;
-    std::vector<std::string> Args;
+    std::string Name;               ///< Name of the instruction protoype
+    std::vector<std::string> Args;  ///< Argument vector of the prototype
 
   public:
+    /// PrototypeASTContainer default constructor
     PrototypeASTContainer(const std::string &Name, std::vector<std::string> Args)
         : Name(Name), Args(std::move(Args)) {}
 
+    /// PrototypeASTContainer code generation driver
     Function *codegen();
+
+    /// PrototypeASTContainer: retrieve the name of the instruction definition
     const std::string &getName() const { return Name; }
   };
 
   /// FunctionAST - This class represents a function definition itself.
   class FunctionASTContainer {
-    std::unique_ptr<PrototypeASTContainer> Proto;
-    std::vector<std::unique_ptr<ExprASTContainer>> Body;
+    std::unique_ptr<PrototypeASTContainer> Proto;       ///< Prototype for this function
+    std::vector<std::unique_ptr<ExprASTContainer>> Body;///< Vector of body expressions
 
   public:
+    /// FunctionASTContainer default constructor
     FunctionASTContainer(std::unique_ptr<PrototypeASTContainer> Proto,
                          std::vector<std::unique_ptr<ExprASTContainer>> Body)
       : Proto(std::move(Proto)), Body(std::move(Body)) {}
 
+    /// FunctionASTContainer code generation driver
     Function *codegen();
   };
 
   // LLVM CodeGen Variables
-  static LLVMContext TheContext;
-  static IRBuilder<> Builder;
-  static std::unique_ptr<Module> TheModule;
-  static std::map<std::string, AllocaInst*> NamedValues;
-  static std::map<std::string, GlobalVariable*> GlobalNamedValues;
-  static std::map<std::string, std::unique_ptr<PrototypeASTContainer>> FunctionProtos;
-  static std::unique_ptr<legacy::FunctionPassManager> TheFPM;
-  static unsigned LabelIncr;
-  static bool IsOpt;
-  static SCMsg *GMsgs;
+  static LLVMContext TheContext;        ///< LLVM context
+  static IRBuilder<> Builder;           ///< LLVM IR Builder
+  static std::unique_ptr<Module> TheModule; ///< LLVM top-level Module
+  static std::map<std::string, AllocaInst*> NamedValues;  ///< Map of named values in scope
+  static std::map<std::string, GlobalVariable*> GlobalNamedValues;  ///< map of global values always in scope
+  static std::map<std::string, std::unique_ptr<PrototypeASTContainer>> FunctionProtos;  ///< map of function prototypes
+  static std::unique_ptr<legacy::FunctionPassManager> TheFPM; ///< LLVM function pass manager
+  static unsigned LabelIncr;  ///< Label incrementer
+  static bool IsOpt;          ///< Are optimizations enabled?
+  static SCMsg *GMsgs;        ///< Global message handler
 
 private:
 
@@ -427,16 +462,27 @@ private:
 
 Value *LogErrorV(std::string Str);  // FIX THIS
 
+/** Typedef for ExprASTContainer */
 typedef SCParser::ExprASTContainer ExprAST;
+/** Typedef for NumerExprASTContainer */
 typedef SCParser::NumberExprASTContainer NumberExprAST;
+/** Typedef for VariableExprASTContainer */
 typedef SCParser::VariableExprASTContainer VariableExprAST;
+/** Typedef for BinaryExprASTContainer */
 typedef SCParser::BinaryExprASTContainer BinaryExprAST;
+/** Typedef for CallExprASTContainer */
 typedef SCParser::CallExprASTContainer CallExprAST;
+/** Typedef for PrototypeASTContainer */
 typedef SCParser::PrototypeASTContainer PrototypeAST;
+/** Typedef for FunctionASTContainer */
 typedef SCParser::FunctionASTContainer FunctionAST;
+/** Typedef for RegClassASTContainer */
 typedef SCParser::RegClassASTContainer RegClassAST;
+/** Typedef for IfExprASTContainer */
 typedef SCParser::IfExprASTContainer IfExprAST;
+/** Typedef for ForExprASTContainer */
 typedef SCParser::ForExprASTContainer ForExprAST;
+/** Typedef for VarExprASTContainer */
 typedef SCParser::VarExprASTContainer VarExprAST;
 
 #endif

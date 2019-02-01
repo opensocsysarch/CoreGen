@@ -38,24 +38,27 @@
 
 using namespace llvm;
 
+/** VarAttrs struct: contains the potential parameters for variable attributes */
 typedef struct{
-  unsigned width;
-  unsigned elems;
-  bool defSign;
-  bool defVector;
-  bool defFloat;
-  bool defRegClass;
+  unsigned width;   ///< VarAttrs: width of the variable or register
+  unsigned elems;   ///< VarAttrs: number of elements in the variable
+  bool defSign;     ///< VarAtrrs: is the variable a signed integer
+  bool defVector;   ///< VarAttrs: is the variable a vector (elems > 1)
+  bool defFloat;    ///< VarAttrs: is the variable a floating point variable
+  bool defRegClass; ///< VarAttrs: does the variable represent a register class
 }VarAttrs;
 
+/** VarAttrEntry struct: contains a single element for the VarAttrEntryTable */
 typedef struct{
-  std::string Name;
-  unsigned width;
-  unsigned elems;
-  bool IsDefSign;
-  bool IsDefVector;
-  bool IsDefFloat;
+  std::string Name;   ///< VarAttrEntry: base name of the datatype
+  unsigned width;     ///< VarAttrEntry: width of the type in bits
+  unsigned elems;     ///< VarAttrEntry: number of elements in the type
+  bool IsDefSign;     ///< VarAttrEntry: is the type a signed integer
+  bool IsDefVector;   ///< VarAttrEntry: is the type a vector (elems > 1)
+  bool IsDefFloat;    ///< VarAttrEntry: is the type a floating point
 }VarAttrEntry;
 
+/** Contains a list of commonly found datatypes in StoneCutter */
 const VarAttrEntry VarAttrEntryTable[] = {
   { "float",  32, 1, false, false, true },
   { "double", 64, 1, false, false, true },
@@ -71,18 +74,20 @@ const VarAttrEntry VarAttrEntryTable[] = {
   { ".",       0, 0, false, false, false }  // disable flag
 };
 
-// CoreGenUtil: Retrieve the current date+time
+// SCUtil: Retrieve the current date+time
 inline std::string SCCurrentDateTime(){
   time_t now = time(0);
   std::string DT(ctime(&now));
   return DT;
 }
 
+// SCUtil: Does the target file already exist
 inline bool SCFileExists(const std::string& name) {
   struct stat buffer;
   return (stat (name.c_str(), &buffer) == 0);
 }
 
+// SCUtil: Delete the target file
 inline bool SCDeleteFile(const std::string& name){
   if( remove(name.c_str()) != 0 ){
     return false;
@@ -91,6 +96,7 @@ inline bool SCDeleteFile(const std::string& name){
   }
 }
 
+// SCUtil: Retrieve the LLVM variable type
 inline Type *GetLLVarType( VarAttrs VA, LLVMContext TC ){
   if( (VA.defFloat) && (VA.width==32) ){
     return Type::getFloatTy(TC);

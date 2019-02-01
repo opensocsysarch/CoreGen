@@ -66,7 +66,7 @@ private:
   /// Generate the LaTeX table headers for inst formats
   std::string GenerateInstFormatHeader(CoreGenInstFormat *IF);
 
-  /// Fix names containing underscores with \string
+  /// Fix names containing underscores with backslash string
   std::string FixUnderscore(std::string Str);
 
   /// Fix names containing underscores with escapes '\\'
