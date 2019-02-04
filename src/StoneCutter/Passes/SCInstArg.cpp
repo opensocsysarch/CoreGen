@@ -25,7 +25,9 @@ bool SCInstArg::GetRegClassMap(){
   for(auto &Global : TheModule->getGlobalList() ){
     AttributeSet AttrSet = Global.getAttributes();
     // check for the proper attributes
-    if( AttrSet.hasAttribute("regfile") ){
+    if( AttrSet.hasAttribute("fieldtype") ){
+      // do nothing, this is an instruction field
+    }else if( AttrSet.hasAttribute("regfile") ){
       // this is a register file definition
       RegFileVect.push_back(
         AttrSet.getAttribute("regfile").getValueAsString().str());
