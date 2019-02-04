@@ -1659,7 +1659,7 @@ Value *InstFormatAST::codegen(){
       GlobalNamedValues[FName] = val;
 
       // add an attribute to track the value to the instruction format
-      val->addAttribute("instformat",FName);
+      val->addAttribute("instformat",Name);
 
       // add attributes for the field type
       switch( FT ){
