@@ -52,6 +52,8 @@ void SCParser::InitIntrinsics(){
   Intrins.push_back(static_cast<SCIntrin *>(new SCMin()));
   Intrins.push_back(static_cast<SCIntrin *>(new SCLoad()));
   Intrins.push_back(static_cast<SCIntrin *>(new SCStore()));
+  Intrins.push_back(static_cast<SCIntrin *>(new SCLoadElem()));
+  Intrins.push_back(static_cast<SCIntrin *>(new SCStoreElem()));
   Intrins.push_back(static_cast<SCIntrin *>(new SCNot()));
   Intrins.push_back(static_cast<SCIntrin *>(new SCReverse()));
   Intrins.push_back(static_cast<SCIntrin *>(new SCPopcount()));

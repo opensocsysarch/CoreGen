@@ -12,6 +12,8 @@ SCMax.cpp
 SCMin.cpp
 SCLoad.cpp
 SCStore.cpp
+SCLoadElem.cpp
+SCStoreElem.cpp
 SCClz.cpp
 SCCtz.cpp
 SCNot.cpp
