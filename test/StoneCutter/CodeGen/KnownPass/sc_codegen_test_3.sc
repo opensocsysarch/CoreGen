@@ -1,4 +1,6 @@
-#-- sc_codegen_test_1.sc
+#-- sc_codegen_test_3.sc
+
+instformat FORMAT1( enc opcode, enc func, imm imm1, reg[foo] RT )
 
 regclass foo( float f1_foo(u8 f1.a,u8 f1.b), double d2.bar, bool b3, u7 i4,
               u14 i5, u12 i6, u67 i7, s1024 i8, s3 i9,
