@@ -71,6 +71,14 @@ enum SCDyad {
   dyad_lte    = 17    ///< SCDyad: Less than or equal to '>='
 };
 
+/** SCInstField: enumerated types to describe instruction fields */
+typedef enum {
+  field_enc = 100,    ///< SCInstField: Encoding field
+  field_reg = 101,    ///< SCInstField: Register field
+  field_imm = 102,    ///< SCInstField: Immediate field
+  field_unk = 200     ///< SCInstField: Unknown field type
+}SCInstField;
+
 class SCParser{
 public:
 
@@ -241,6 +249,29 @@ public:
     Value *codegen() override;
   };
 
+  /// InstFormatAST - This class represents an instruction format definition
+  ///                 which captures the fields of an instruction format
+  class InstFormatASTContainer {
+    std::string Name;   ///< Name of the instruction format
+    std::vector<std::tuple<std::string,
+                           SCInstField,
+                           std::string>> Fields; ///< Field vector
+
+  public:
+    /// InstFormatASTContainer default constructor
+    InstFormatASTContainer(const std::string &Name,
+                           std::vector<std::tuple<std::string,
+                                                  SCInstField,
+                                                  std::string>> Fields)
+      : Name(Name), Fields(std::move(Fields)) {}
+
+    /// InstFormatASTContainer: Retrieve the name of an instruction format
+    const std::string &getName() const { return Name; }
+
+    /// InstFormatASTContainer code generation driver
+    Value *codegen();
+  };
+
   /// RegClassAST - This class represents a register class definition
   ///               which captures the name and the associated registers
   class RegClassASTContainer {
@@ -369,6 +400,9 @@ private:
   /// Parse the variable definition and return the complementary VarAttr
   bool GetVarAttr( std::string Str, VarAttrs &V );
 
+  /// Parse the register field type and return the complementary SCInstField
+  bool GetFieldAttr( std::string Str, SCInstField &F );
+
   /// Get the token precedence
   int GetTokPrecedence();
 
@@ -406,11 +440,17 @@ private:
   /// Parse register class definitions
   std::unique_ptr<RegClassASTContainer> ParseRegClassDef();
 
+  /// Parse instructon field definitions
+  std::unique_ptr<InstFormatASTContainer> ParseInstFormatDef();
+
   /// Parse definitions
   std::unique_ptr<FunctionASTContainer> ParseDefinition();
 
   /// Parse register classes
   std::unique_ptr<RegClassASTContainer> ParseRegClass();
+
+  /// Parse instruction format
+  std::unique_ptr<InstFormatASTContainer> ParseInstFormat();
 
   /// Parse top-level expression
   std::unique_ptr<FunctionASTContainer> ParseTopLevelExpr();
@@ -439,6 +479,9 @@ private:
   /// Handles register class definitions
   void HandleRegClass();
 
+  /// Handles instruction field definitions
+  void HandleInstFormat();
+
   /// Handles top-level expressions
   void HandleTopLevelExpression();
 
@@ -453,6 +496,9 @@ private:
 
   /// Logs a register class error
   std::unique_ptr<RegClassASTContainer> LogErrorR(std::string Str);
+
+  /// Logs an instruction format error
+  std::unique_ptr<InstFormatASTContainer> LogErrorIF(std::string Str);
 
   /// Logs a function error
   std::unique_ptr<FunctionASTContainer> LogErrorF(std::string Str);
@@ -478,6 +524,8 @@ typedef SCParser::PrototypeASTContainer PrototypeAST;
 typedef SCParser::FunctionASTContainer FunctionAST;
 /** Typedef for RegClassASTContainer */
 typedef SCParser::RegClassASTContainer RegClassAST;
+/** Typedef for InstFormatASTContainer */
+typedef SCParser::InstFormatASTContainer InstFormatAST;
 /** Typedef for IfExprASTContainer */
 typedef SCParser::IfExprASTContainer IfExprAST;
 /** Typedef for ForExprASTContainer */
