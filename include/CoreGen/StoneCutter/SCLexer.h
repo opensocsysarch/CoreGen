@@ -58,19 +58,20 @@ enum SCToken {
   tok_inst      = -3,
   tok_extern    = -4,
   tok_regclass  = -5,
+  tok_instf     = -6,
 
   // primary
-  tok_identifier = -6,
-  tok_number     = -7,
+  tok_identifier = -7,
+  tok_number     = -8,
 
   // conditionals
-  tok_if          = -8,
-  tok_elseif      = -9,
-  tok_else        = -10,
+  tok_if          = -9,
+  tok_elseif      = -10,
+  tok_else        = -11,
 
   // loop control
-  tok_for         = -11,
-  tok_var         = -12,
+  tok_for         = -12,
+  tok_var         = -13,
 
   // dyadic operators
   tok_dyad        = -20,

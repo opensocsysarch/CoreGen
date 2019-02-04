@@ -447,6 +447,9 @@ bool SCParser::Parse(){
     case tok_regclass:
       HandleRegClass();
       break;
+    case tok_instf:
+      HandleInstFormat();
+      break;
     case '}':
       HandleFuncClose();
       break;
@@ -457,6 +460,24 @@ bool SCParser::Parse(){
   }
 
   return Rtn;
+}
+
+bool SCParser::GetFieldAttr( std::string Str, SCInstField &F ){
+  // parse the incoming string and determine if it matches
+  // an existing instruction format field type
+  if( (Str == "enc") || (Str == "ENC") ){
+    F = field_enc;
+    return true;
+  }else if( (Str == "reg") || (Str == "REG") ){
+    F = field_reg;
+    return true;
+  }else if( (Str == "imm") || (Str == "IMM") ){
+    F = field_imm;
+    return true;
+  }
+
+  F = field_unk;
+  return false;
 }
 
 bool SCParser::GetVarAttr( std::string Str, VarAttrs &V ){
@@ -904,6 +925,78 @@ VarAttrs SCParser::GetMaxVarAttr(std::vector<VarAttrs> ArgAttrs){
   return Attr;
 }
 
+std::unique_ptr<InstFormatAST> SCParser::ParseInstFormatDef(){
+
+  if(CurTok != tok_identifier)
+    return LogErrorIF("Expected instruction format name in prototype");
+
+  std::string FName = Lex->GetIdentifierStr();
+  GetNextToken();
+
+  if(CurTok != '(' )
+    return LogErrorIF("Expected '(' in instruction format prototype");
+
+  std::vector<std::tuple<std::string,
+                           SCInstField,
+                           std::string>> Fields; // vector of field tuples
+
+  // try to pull the next identifier
+  GetNextToken();
+
+  // parse all the field names
+  while( CurTok == tok_identifier ){
+    std::string TypeStr = Lex->GetIdentifierStr();
+    SCInstField FieldType = field_unk;
+    if( !GetFieldAttr( TypeStr, FieldType) ){
+      return LogErrorIF("Unknown field type: " + TypeStr );
+    }
+
+    // if the field type is a register, read the register class type
+    std::string RegType = ".";
+    if( FieldType == field_reg ){
+      GetNextToken();
+      if( CurTok != '[' )
+        return LogErrorIF("Expected '[' in register field definition: " + FName );
+
+      GetNextToken();
+      if( CurTok != tok_identifier )
+        return LogErrorIF("Expected register class type in register field definition: instruction format=" + FName );
+      RegType = Lex->GetIdentifierStr();
+
+      GetNextToken();
+      if( CurTok != ']' )
+        return LogErrorIF("Expected ']' in register field definition: " + FName );
+    }
+
+    // eat the previous token
+    GetNextToken();
+    if( CurTok != tok_identifier )
+      return LogErrorIF("Expected field name in field definition: " + FName );
+
+    std::string FieldName = Lex->GetIdentifierStr();
+
+    // add it to the vector
+    Fields.push_back(std::tuple<std::string,SCInstField,std::string>
+                     (FieldName,FieldType,RegType));
+
+    // look for commas and the end of the definition
+    GetNextToken();
+    if( CurTok == ',' ){
+      // eat the comma
+      GetNextToken();
+    }
+  }
+
+  if (CurTok != ')')
+    return LogErrorIF("Expected ')' in instruction format");
+
+  // success
+  GetNextToken(); // eat ')'.
+
+  return llvm::make_unique<InstFormatAST>(FName,
+                                          std::move(Fields));
+}
+
 std::unique_ptr<RegClassAST> SCParser::ParseRegClassDef(){
   if (CurTok != tok_identifier)
     return LogErrorR("Expected regclass name in prototype");
@@ -1072,6 +1165,11 @@ std::unique_ptr<RegClassAST> SCParser::ParseRegClass(){
   return ParseRegClassDef();
 }
 
+std::unique_ptr<InstFormatAST> SCParser::ParseInstFormat(){
+  GetNextToken(); //eat instformat
+  return ParseInstFormatDef();
+}
+
 std::unique_ptr<FunctionAST> SCParser::ParseTopLevelExpr() {
   if (auto E = ParseExpression()) {
     // Make an anonymous proto.
@@ -1126,6 +1224,17 @@ void SCParser::HandleRegClass() {
       //fprintf(stderr, "Read register class definition");
       //FnIR->print(errs());
       //fprintf(stderr, "\n");
+    }
+  }else{
+    Rtn = false;
+    GetNextToken();
+  }
+}
+
+void SCParser::HandleInstFormat() {
+  // evaluate an instruction definition
+  if(auto InstFormatAST = ParseInstFormat()){
+    if( auto *FnIR = InstFormatAST->codegen()){
     }
   }else{
     Rtn = false;
@@ -1515,6 +1624,65 @@ Function *PrototypeAST::codegen() {
   return F;
 }
 
+Value *InstFormatAST::codegen(){
+  // instruction fields
+  Type *VType = Type::getIntNTy(SCParser::TheContext,64); // create a generic uint64_t
+  std::vector<std::tuple<std::string,SCInstField,std::string>>::iterator it;
+
+  for( it=Fields.begin(); it != Fields.end(); ++it ){
+    std::string FName = std::get<0>(*it);
+    SCInstField FT = std::get<1>(*it);
+    std::string RClass = std::get<2>(*it);
+
+    // search the GlobalNamedValues map for the target variable name
+    // if its not found, then create an entry
+    std::map<std::string, GlobalVariable*>::iterator GVit;
+    GVit = GlobalNamedValues.find(FName);
+
+    if( GVit == GlobalNamedValues.end() ){
+      // variable is not in the global list, create a new one
+      GlobalVariable *val = new GlobalVariable(*SCParser::TheModule,
+                                              VType,
+                                              false,
+                                              GlobalValue::ExternalLinkage,
+                                              nullptr,
+                                              Twine(FName),
+                                              nullptr,
+                                              GlobalVariable::NotThreadLocal,
+                                              0);
+      if( !val ){
+        return LogErrorV( "Failed to lower instruction format field to global: instformat = " + 
+                          Name + " field=" + FName);
+      }
+
+      // add the global to the top-level names list
+      GlobalNamedValues[FName] = val;
+
+      // add an attribute to track the value to the instruction format
+      val->addAttribute("instformat",FName);
+
+      // add attributes for the field type
+      switch( FT ){
+      case field_enc:
+        val->addAttribute("fieldtype","encoding");
+        break;
+      case field_reg:
+        val->addAttribute("fieldtype","register");
+        val->addAttribute("regclasscontainer",RClass);
+        break;
+      case field_imm:
+        val->addAttribute("fieldtype","immediate");
+        break;
+      default:
+        return LogErrorV( "Failed to lower instruction format field to global: instformat = " + 
+                          Name + " field=" + FName);
+        break;
+      }
+    }
+  }
+  return nullptr;
+}
+
 Value *RegClassAST::codegen(){
 
   // registers
@@ -1739,6 +1907,11 @@ std::unique_ptr<PrototypeAST> SCParser::LogErrorP(std::string Str) {
 }
 
 std::unique_ptr<RegClassAST> SCParser::LogErrorR(std::string Str) {
+  LogError(Str);
+  return nullptr;
+}
+
+std::unique_ptr<InstFormatAST> SCParser::LogErrorIF(std::string Str) {
   LogError(Str);
   return nullptr;
 }
