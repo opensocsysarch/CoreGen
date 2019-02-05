@@ -398,14 +398,14 @@ bool CoreGenCodegen::BuildISAChisel( CoreGenISA *ISA,
 
   // stage 2: gather a list of all the register classes
   for( unsigned i=0; i<IF.size(); i++ ){
-    for( unsigned j=0; j<IF[j]->GetNumFields(); j++ ){
+    for( unsigned j=0; j<IF[i]->GetNumFields(); j++ ){
       // for each field, interrogate it to determine whether it is a register class
-      if( IF[j]->GetFieldType(IF[j]->GetFieldName(j)) ==
+      if( IF[i]->GetFieldType(IF[i]->GetFieldName(j)) ==
           CoreGenInstFormat::CGInstReg ){
 
         // make sure we don't insert any redundants
         CoreGenRegClass *TmpRC = static_cast<CoreGenRegClass *>(
-            IF[j]->GetFieldRegClass(IF[j]->GetFieldName(j)));
+            IF[i]->GetFieldRegClass(IF[i]->GetFieldName(j)));
         if( std::find(RC.begin(), RC.end(), TmpRC) == RC.end() ){
           RC.push_back(TmpRC);
         }
@@ -426,7 +426,52 @@ bool CoreGenCodegen::BuildISAChisel( CoreGenISA *ISA,
   MOutFile << "#-- StoneCutter source file for ISA=" << ISA->GetName() << std::endl;
   MOutFile << std::endl << std::endl;
 
-  // stage 5: write out the register classes
+  // stage 5: write out the instruction formats
+  MOutFile << "# Instruction Formats" << std::endl;
+  for( unsigned i=0; i<IF.size(); i++ ){
+    // protect against duplicates across instructions
+    if( std::find(InstFormatsVect.begin(),
+                  InstFormatsVect.end(),
+                  IF[i]->GetName()) == InstFormatsVect.end() ){
+      // inst format not found
+      // record it to the top-level instformats vector
+      // and write it to the file
+      InstFormatsVect.push_back(IF[i]->GetName());
+
+      MOutFile << "instformat " << IF[i]->GetName() << "(";
+      for( unsigned j=0; j<IF[i]->GetNumFields(); j++ ){
+        switch( IF[i]->GetFieldType(IF[i]->GetFieldName(j)) ){
+        case CoreGenInstFormat::CGInstReg:
+          MOutFile << "reg["
+                   << IF[i]->GetFieldRegClass(IF[i]->GetFieldName(j))->GetName()
+                   << "] "
+                   << IF[i]->GetFieldName(j);
+          break;
+        case CoreGenInstFormat::CGInstCode:
+          MOutFile << "enc " << IF[i]->GetFieldName(j);
+          break;
+        case CoreGenInstFormat::CGInstImm:
+          MOutFile << "imm " << IF[i]->GetFieldName(j);
+          break;
+        default:
+          Errno->SetError(CGERR_ERROR,
+                          "No valid field type for instruction format=" +
+                          IF[i]->GetName() + "; field=" + IF[i]->GetFieldName(j) );
+          return false;
+          break;
+        }
+        // print a comma if necessary
+        if( j!=(IF[i]->GetNumFields()-1) ){
+          MOutFile << ",";
+        }
+      }
+      MOutFile << ")" << std::endl;
+    }// end if ( std::find )
+  }// end IF.size()
+
+  MOutFile << std::endl;
+
+  // stage 6: write out the register classes
   MOutFile << "# Register Class Definitions" << std::endl;
   for( unsigned i=0; i<RC.size(); i++ ){
     MOutFile << "regclass " << RC[i]->GetName() << "(";
@@ -471,7 +516,7 @@ bool CoreGenCodegen::BuildISAChisel( CoreGenISA *ISA,
   MOutFile << std::endl << std::endl;
   MOutFile << "# Instruction Definitions" << std::endl;
 
-  // stage 6: write out the instructions
+  // stage 7: write out the instructions
   for( unsigned i=0; i<Insts.size(); i++ ){
     MOutFile << "# " << Insts[i]->GetName() << std::endl;
     MOutFile << "def " << Insts[i]->GetName() << "( ";
@@ -489,7 +534,7 @@ bool CoreGenCodegen::BuildISAChisel( CoreGenISA *ISA,
     MOutFile << "{" << std::endl << Insts[i]->GetImpl() << std::endl << "}" << std::endl << std::endl;
   }
 
-  // stage 7: close the file
+  // stage 8: close the file
   MOutFile.close();
 
   return true;
