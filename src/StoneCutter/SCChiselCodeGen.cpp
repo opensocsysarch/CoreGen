@@ -19,6 +19,8 @@ SCChiselCodeGen::SCChiselCodeGen( SCParser *P,
 }
 
 SCChiselCodeGen::~SCChiselCodeGen(){
+  Intrins.clear();
+  Passes.clear();
 }
 
 void SCChiselCodeGen::InitIntrinsics(){

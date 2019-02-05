@@ -247,6 +247,9 @@ public:
 
     /// CallExprASTContainer code generation driver
     Value *codegen() override;
+
+    /// CallExprASTContainer: determines whether the call is a StoneCutter intrinsic
+    bool isIntrin() { return Intrin; }
   };
 
   /// InstFormatAST - This class represents an instruction format definition

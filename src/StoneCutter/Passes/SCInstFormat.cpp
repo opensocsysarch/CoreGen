@@ -16,6 +16,7 @@ SCInstFormat::SCInstFormat(Module *TM,
 }
 
 SCInstFormat::~SCInstFormat(){
+  RegFileVect.clear();
 }
 
 bool SCInstFormat::CheckInstFormat(){

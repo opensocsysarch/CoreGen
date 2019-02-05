@@ -45,6 +45,7 @@ SCParser::~SCParser(){
   TheModule.reset();
   TheFPM.reset();
   NamedValues.clear();
+  Intrins.clear();
 }
 
 void SCParser::InitIntrinsics(){
@@ -785,7 +786,7 @@ std::unique_ptr<ExprAST> SCParser::ParseVarExpr(){
 
     // add the new variable to our vector
     VarNames.push_back(std::make_pair(Name, std::move(Init)));
-    Attrs.push_back(std::move(Lex->GetVarAttrs()));
+    Attrs.push_back(Lex->GetVarAttrs());
 
     // check for the end of the variable list
     if( CurTok != ',' ){
