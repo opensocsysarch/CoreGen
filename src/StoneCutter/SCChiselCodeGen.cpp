@@ -51,6 +51,8 @@ void SCChiselCodeGen::InitIntrinsics(){
 void SCChiselCodeGen::InitPasses(){
   Passes.push_back(static_cast<SCPass *>(new SCInstArg(SCParser::TheModule.get(),
                                                        Msgs)));
+  Passes.push_back(static_cast<SCPass *>(new SCInstFormat(SCParser::TheModule.get(),
+                                                       Msgs)));
 }
 
 void SCChiselCodeGen::WriteChiselHeader(){
