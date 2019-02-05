@@ -34,6 +34,7 @@
 #include <sys/stat.h>
 #include <cerrno>
 #include <cstdlib>
+#include <vector>
 
 // CoreGen Headers
 #include "CoreGen/CoreGenBackend/CoreGenBackend.h"
@@ -49,6 +50,8 @@ private:
   std::string ChiselDir;      ///< CoreGen Chisel output directory
   std::string LLVMDir;        ///< CoreGen LLVM output directory
   std::string SCDir;          ///< CoreGen StoneCutter output directory
+
+  std::vector<std::string> InstFormatsVect; ///< CoreGen instruction format vector across insts
 
   bool isTopMakefile;         ///< Has the top-level makefile been constructed?
 
