@@ -9,6 +9,7 @@
 
 set(PassSrcs
 SCInstArg.cpp
+SCInstFormat.cpp
 )
 
 set(llvm_codegens

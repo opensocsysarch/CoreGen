@@ -27,7 +27,7 @@
 class SCInstArg : public SCPass {
 private:
   std::map<std::string,std::string> RegClassMap;  ///< Map of registers to register classes
-  std::vector<std::string> RegFileVect;           ///< Vecotr register files
+  std::vector<std::string> RegFileVect;           ///< Vector register files
 
   /// Retrieves a map of the registers to register classes from the global variable list
   bool GetRegClassMap();
