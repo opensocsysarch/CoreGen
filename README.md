@@ -28,6 +28,16 @@ Generally speaking, CoreGen is built using the following steps:
 1. Execute the build
 
 
+### Building with Clang/LLVM
+
+Building CoreGen with Clang/LLVM can be done by setting the CC and CXX environment variables.
+
+1. Override default compiler
+```
+export CC=clang
+export CXX=clang++
+```
+
 ### Ubuntu
 
 We currently support building and installing on LTS versions of Ubuntu.  While it 
