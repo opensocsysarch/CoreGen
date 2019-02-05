@@ -16,6 +16,7 @@ SCInstArg::SCInstArg(Module *TM,
 }
 
 SCInstArg::~SCInstArg(){
+  RegFileVect.clear();
 }
 
 bool SCInstArg::GetRegClassMap(){
