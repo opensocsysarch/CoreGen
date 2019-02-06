@@ -708,6 +708,8 @@ std::unique_ptr<ExprAST> SCParser::ParsePrimary() {
     return ParseIfExpr();
   case tok_for:
     return ParseForExpr();
+  case tok_while:
+    return ParseWhileExpr();
   case tok_var:
     return ParseVarExpr();
   }
@@ -808,6 +810,48 @@ std::unique_ptr<ExprAST> SCParser::ParseVarExpr(){
                                        std::move(Body) );
 }
 
+std::unique_ptr<ExprAST> SCParser::ParseWhileExpr(){
+
+  GetNextToken(); // eat the while
+
+  if (CurTok != '(' )
+    return LogError("expected '(' for while loop control statement");
+
+  GetNextToken(); // eat the '('
+
+  // parse the while conditional expression
+  auto Cond = ParseExpression();
+  if (!Cond)
+    return nullptr;
+
+  if (CurTok != ')')
+    return LogError("expected ')' for while loop control statement");
+
+  GetNextToken(); // eat ')'
+
+  // check for open bracket
+  if (CurTok != '{'){
+    return LogError("expected '{' for while loop control body");
+  }
+  GetNextToken(); // eat '{'
+
+  std::vector<std::unique_ptr<ExprAST>> BodyExpr;
+  while( CurTok != '}' ){
+    auto Body = ParseExpression();
+    if( !Body )
+      return nullptr;
+    BodyExpr.push_back(std::move(Body));
+  }
+
+  // handle close bracket
+  if( CurTok != '}' ){
+    return LogError("expected '}' for while loop control body");
+  }
+  GetNextToken(); // eat the '}'
+
+  return llvm::make_unique<WhileExprAST>(std::move(Cond),std::move(BodyExpr));
+}
+
 std::unique_ptr<ExprAST> SCParser::ParseForExpr() {
   GetNextToken();  // eat the for.
 
@@ -854,7 +898,7 @@ std::unique_ptr<ExprAST> SCParser::ParseForExpr() {
 
   // check for open bracket
   if (CurTok != '{'){
-    return LogError("expected '}' for loop control body");
+    return LogError("expected '{' for loop control body");
   }
   GetNextToken(); // eat '{'
 
@@ -1319,6 +1363,60 @@ Value *NumberExprAST::codegen() {
   return ConstantInt::get(SCParser::TheContext, APInt(64,Val,false));
 }
 
+Value *WhileExprAST::codegen() {
+
+  // Retrieve the function parent
+  Function *TheFunction = SCParser::Builder.GetInsertBlock()->getParent();
+
+  // Retrieve a unique local label
+  unsigned LocalLabel = GetLocalLabel();
+
+  // Make the new basic block for the loop header, inserting after current
+  // block.
+  BasicBlock *LoopBB = BasicBlock::Create(SCParser::TheContext,
+                                          "entrywhile."+std::to_string(LocalLabel),
+                                          TheFunction);
+
+  BasicBlock *EntryBB = BasicBlock::Create(SCParser::TheContext,
+                                          "while."+std::to_string(LocalLabel),
+                                          TheFunction);
+
+  // Create the "after loop" block and insert it.
+  BasicBlock *AfterBB =
+      BasicBlock::Create(SCParser::TheContext,
+                         "afterwhileloop." + std::to_string(LocalLabel),
+                         TheFunction);
+
+  // Start insertion in LoopBB.
+  Builder.SetInsertPoint(LoopBB);
+
+  // Emit the initial conditional block
+  Value *CondV = Cond->codegen();
+  if (!CondV){
+    return nullptr;
+  }
+
+  // Insert the conditional branch for the initial state
+  Builder.CreateCondBr(CondV,EntryBB,AfterBB);
+
+  // Start insertion in EntryBB
+  Builder.SetInsertPoint(EntryBB);
+
+  // Emit the body of the loop.  This, like any other expr, can change the
+  // current BB.  Note that we ignore the value computed by the body, but don't
+  // allow an error.
+  if( BodyExpr.size() == 0 ) return nullptr;
+  for( unsigned i=0; i<BodyExpr.size(); i++ ){
+    BodyExpr[i]->codegen();
+  }
+
+  // Insert an explicit branch back
+  Builder.CreateBr(LoopBB);
+
+  // while expr always returns 0
+  return Constant::getNullValue(Type::getIntNTy(SCParser::TheContext,64));
+}
+
 Value *ForExprAST::codegen() {
 
   // Create an alloca for the variable in the entry block
@@ -1414,7 +1512,7 @@ Value *ForExprAST::codegen() {
   else
     NamedValues.erase(VarName);
 
-  // for expr always returns 0.0.
+  // for expr always returns 0
   return Constant::getNullValue(Type::getIntNTy(SCParser::TheContext,64));
 }
 

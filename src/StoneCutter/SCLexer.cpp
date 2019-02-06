@@ -152,6 +152,10 @@ int SCLexer::GetTok(){
       return tok_elseif;
     if( IdentifierStr == "for" )
       return tok_for;
+    if( IdentifierStr == "while" )
+      return tok_while;
+    if( IdentifierStr == "do" )
+      return tok_do;
     if( IsVarDef() )
       return tok_var;
     if( IsIntrinsic() )
