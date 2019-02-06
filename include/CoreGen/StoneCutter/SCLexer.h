@@ -72,6 +72,8 @@ enum SCToken {
   // loop control
   tok_for         = -12,
   tok_var         = -13,
+  tok_while       = -14,
+  tok_do          = -15,
 
   // dyadic operators
   tok_dyad        = -20,

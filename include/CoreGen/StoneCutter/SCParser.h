@@ -121,7 +121,22 @@ public:
       virtual Value *codegen() = 0;
   };
 
-  /// ForExprAST - Expression class for for/in.
+  /// WhileExprAST - Expression class for while loops
+  class WhileExprASTContainer : public ExprASTContainer {
+    std::unique_ptr<ExprASTContainer> Cond;         ///< Conditional expression body
+    std::vector<std::unique_ptr<ExprASTContainer>> BodyExpr;  ///< Vector of body expressions
+
+  public:
+    /// WhileExprASTContainer default contstructor
+    WhileExprASTContainer(std::unique_ptr<ExprASTContainer> Cond,
+                          std::vector<std::unique_ptr<ExprASTContainer>> BodyExpr)
+      : Cond(std::move(Cond)), BodyExpr(std::move(BodyExpr)) {}
+
+    /// WhileExprASTContainer code generation driver
+    Value *codegen() override;
+  };
+
+  /// ForExprAST - Expression class for for loops
   class ForExprASTContainer : public ExprASTContainer {
     std::string VarName;                            ///< Variable name
     std::unique_ptr<ExprASTContainer> Start;        ///< Start of an expression body
@@ -464,6 +479,9 @@ private:
   /// Parse a for loop
   std::unique_ptr<ExprASTContainer> ParseForExpr();
 
+  /// Parse a while loop
+  std::unique_ptr<ExprASTContainer> ParseWhileExpr();
+
   /// Parse a variable expression
   std::unique_ptr<ExprASTContainer> ParseVarExpr();
 
@@ -531,6 +549,8 @@ typedef SCParser::RegClassASTContainer RegClassAST;
 typedef SCParser::InstFormatASTContainer InstFormatAST;
 /** Typedef for IfExprASTContainer */
 typedef SCParser::IfExprASTContainer IfExprAST;
+/** Typedef for WhileExprASTContainer */
+typedef SCParser::WhileExprASTContainer WhileExprAST;
 /** Typedef for ForExprASTContainer */
 typedef SCParser::ForExprASTContainer ForExprAST;
 /** Typedef for VarExprASTContainer */
