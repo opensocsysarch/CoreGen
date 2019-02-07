@@ -710,6 +710,8 @@ std::unique_ptr<ExprAST> SCParser::ParsePrimary() {
     return ParseForExpr();
   case tok_while:
     return ParseWhileExpr();
+  case tok_do:
+    return ParseDoWhileExpr();
   case tok_var:
     return ParseVarExpr();
   }
@@ -808,6 +810,52 @@ std::unique_ptr<ExprAST> SCParser::ParseVarExpr(){
   return llvm::make_unique<VarExprAST>(std::move(VarNames),
                                        std::move(Attrs),
                                        std::move(Body) );
+}
+
+std::unique_ptr<ExprAST> SCParser::ParseDoWhileExpr(){
+
+  GetNextToken(); // eat the do
+
+  if (CurTok != '{')
+    return LogError("expected '{' for do while loop control statement");
+
+  GetNextToken(); // eat the '{'
+
+  std::vector<std::unique_ptr<ExprAST>> BodyExpr;
+  while( CurTok != '}' ){
+    auto Body = ParseExpression();
+    if( !Body )
+      return nullptr;
+    BodyExpr.push_back(std::move(Body));
+  }
+
+  // handle close bracket
+  if( CurTok != '}' )
+    return LogError("expected '}' for do while loop control body");
+
+  GetNextToken(); // eat the '}'
+
+  if( CurTok != tok_while )
+    return LogError("expected 'while' for do while loop control");
+
+  GetNextToken(); // eat the 'do'
+
+  if( CurTok != '(' )
+    return LogError("expected '(' after 'do' token in do while loop control");
+
+  GetNextToken(); // eat the '('
+
+  // parse the while conditional expression
+  auto Cond = ParseExpression();
+  if (!Cond)
+    return nullptr;
+
+  if (CurTok != ')')
+    return LogError("expected ')' for do while loop control statement");
+
+  GetNextToken(); // eat the ')'
+
+  return llvm::make_unique<DoWhileExprAST>(std::move(Cond),std::move(BodyExpr));
 }
 
 std::unique_ptr<ExprAST> SCParser::ParseWhileExpr(){
@@ -1361,6 +1409,56 @@ Function *getFunction(std::string Name ){
 
 Value *NumberExprAST::codegen() {
   return ConstantInt::get(SCParser::TheContext, APInt(64,Val,false));
+}
+
+Value *DoWhileExprAST::codegen() {
+  // Retrieve the function parent
+  Function *TheFunction = SCParser::Builder.GetInsertBlock()->getParent();
+
+  // Retrieve a unique local label
+  unsigned LocalLabel = GetLocalLabel();
+
+  // Make the new basic block for the loop header, inserting after current
+  // block.
+  // loop entry block
+  BasicBlock *LoopBB = BasicBlock::Create(SCParser::TheContext,
+                                          "entrydowhile."+std::to_string(LocalLabel),
+                                          TheFunction);
+
+  // Start insertion in LoopBB.
+  Builder.SetInsertPoint(LoopBB);
+
+  // Emit the body of the loop.  This, like any other expr, can change the
+  // current BB.  Note that we ignore the value computed by the body, but don't
+  // allow an error.
+  if( BodyExpr.size() == 0 ) return nullptr;
+  for( unsigned i=0; i<BodyExpr.size(); i++ ){
+    BodyExpr[i]->codegen();
+  }
+
+  // Emit the initial conditional block
+  Value *CondV = Cond->codegen();
+  if (!CondV){
+    return nullptr;
+  }
+
+  // loop exit block
+  BasicBlock *AfterBB =
+      BasicBlock::Create(SCParser::TheContext,
+                         "afterdowhileloop." + std::to_string(LocalLabel),
+                         TheFunction);
+
+  // Start insertion in LoopBB.
+  Builder.SetInsertPoint(LoopBB);
+
+  // Insert the conditional branch for the initial state
+  Builder.CreateCondBr(CondV,LoopBB,AfterBB);
+
+  // Anything new is inserted after the while exit
+  Builder.SetInsertPoint(AfterBB);
+
+  // while expr always returns 0
+  return Constant::getNullValue(Type::getIntNTy(SCParser::TheContext,64));
 }
 
 Value *WhileExprAST::codegen() {
