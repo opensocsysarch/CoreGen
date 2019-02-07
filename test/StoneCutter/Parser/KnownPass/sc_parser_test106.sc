@@ -1,4 +1,4 @@
-#-- sc_parser_test93.sc
+#-- sc_parser_test106.sc
 
 instformat F1( enc field1, imm field2, reg[foo] field3, reg[bar] field4 )
 
@@ -11,6 +11,11 @@ regclass bar( float f1, double d2, bool b3, u7 i4,
 
 
 def foo(a b c){
-  LOADELEM(a,b)
-  c = LOADELEM(a,b)
+  while( a != b ){
+    if( a < 10 ){
+      a = a + 1
+    }else{
+      a = a + 2
+    }
+  }
 }
