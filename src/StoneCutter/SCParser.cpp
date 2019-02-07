@@ -662,9 +662,19 @@ std::unique_ptr<ExprAST> SCParser::ParseIfExpr() {
     return LogError("expected '{' for conditional expression body");
   GetNextToken(); // eat the '{'
 
+#if 0
   auto Then = ParseExpression();
   if (!Then){
     return nullptr;
+  }
+#endif
+
+  std::vector<std::unique_ptr<ExprAST>> ThenExpr;
+  while( CurTok != '}' ){
+    auto Body = ParseExpression();
+    if( !Body )
+      return nullptr;
+    ThenExpr.push_back(std::move(Body));
   }
 
   if( CurTok != '}' )
@@ -673,6 +683,7 @@ std::unique_ptr<ExprAST> SCParser::ParseIfExpr() {
 
   // parse the optional else block
   std::unique_ptr<ExprAST> Else = nullptr;
+  std::vector<std::unique_ptr<ExprAST>> ElseExpr;
   if( CurTok == tok_else ){
     // parse else{ <Expression> }
     GetNextToken(); // eat the else
@@ -680,9 +691,17 @@ std::unique_ptr<ExprAST> SCParser::ParseIfExpr() {
       LogError("expected '{' for conditional else statement");
     }
     GetNextToken(); // eat the '{'
+#if 0
     Else = ParseExpression();
     if( !Else ){
       return nullptr;
+    }
+#endif
+    while( CurTok != '}' ){
+      auto Body = ParseExpression();
+      if( !Body )
+        return nullptr;
+      ElseExpr.push_back(std::move(Body));
     }
     if( CurTok != '}' ){
       LogError("expected '}' for conditional else statement");
@@ -690,8 +709,13 @@ std::unique_ptr<ExprAST> SCParser::ParseIfExpr() {
     GetNextToken(); // eat the '}'
   }
 
+  return llvm::make_unique<IfExprAST>(std::move(Cond),
+                                      std::move(ThenExpr),
+                                      std::move(ElseExpr));
+#if 0
   return llvm::make_unique<IfExprAST>(std::move(Cond), std::move(Then),
                                       std::move(Else));
+#endif
 }
 
 std::unique_ptr<ExprAST> SCParser::ParsePrimary() {
@@ -2094,25 +2118,6 @@ Value *IfExprAST::codegen() {
     CondV = Builder.CreateICmpNE(
         CondV, ConstantInt::get(SCParser::TheContext, APInt(1,0,false)),
         "ifcond."+std::to_string(LocalLabel));
-#if 0
-  if( CondV->getType()->isFloatingPointTy() ){
-    std::cout << "here" << std::endl;
-    CondV = Builder.CreateFCmpONE(
-        CondV, ConstantFP::get(SCParser::TheContext, APFloat(0.0)),
-        "ifcond."+std::to_string(LocalLabel));
-  }else{
-    CondV = Builder.CreateICmpNE(
-        CondV, ConstantInt::get(SCParser::TheContext, APInt(1,0,false)),
-        "ifcond."+std::to_string(LocalLabel));
-  }
-#endif
-
-  // Convert condition to a bool by comparing non-equal to 0.0.
-#if 0
-  CondV = Builder.CreateICmpNE(
-      CondV, ConstantInt::get(SCParser::TheContext, APInt(1,0,false)),
-      "ifcond."+std::to_string(LocalLabel));
-#endif
 
   Function *TheFunction = Builder.GetInsertBlock()->getParent();
 
@@ -2131,10 +2136,22 @@ Value *IfExprAST::codegen() {
   // Emit then value.
   Builder.SetInsertPoint(ThenBB);
 
+
+  // Emit all the Then body values
+  Value *TV = nullptr;
+  for( unsigned i=0; i<ThenV.size(); i++ ){
+    TV = ThenV[i]->codegen();
+    if( !TV )
+      return nullptr;
+  }
+
+
+#if 0
   Value *ThenV = Then->codegen();
   if (!ThenV){
     return nullptr;
   }
+#endif
 
   Builder.CreateBr(MergeBB);
   // Codegen of 'Then' can change the current block, update ThenBB for the PHI.
@@ -2144,12 +2161,21 @@ Value *IfExprAST::codegen() {
   TheFunction->getBasicBlockList().push_back(ElseBB);
   Builder.SetInsertPoint(ElseBB);
 
+
+  Value *EV = nullptr;
+  for( unsigned i=0; i<ElseV.size(); i++ ){
+    EV = ElseV[i]->codegen();
+    if( !EV )
+      return nullptr;
+  }
+#if 0
   Value *ElseV;
   if( Else != nullptr ){
     ElseV = Else->codegen();
     if (!ElseV)
       return nullptr;
   }
+#endif
 
   Builder.CreateBr(MergeBB);
   // Codegen of 'Else' can change the current block, update ElseBB for the PHI.
@@ -2160,17 +2186,22 @@ Value *IfExprAST::codegen() {
   Builder.SetInsertPoint(MergeBB);
 
   PHINode *PN = nullptr;
-  if( ThenV->getType()->isFloatingPointTy() ){
-    PN = Builder.CreatePHI(ThenV->getType(),
+  //if( ThenV->getType()->isFloatingPointTy() ){
+  if( TV->getType()->isFloatingPointTy() ){
+    //PN = Builder.CreatePHI(ThenV->getType(),
+    PN = Builder.CreatePHI(TV->getType(),
                                     2, "iftmp."+std::to_string(LocalLabel));
   }else{
-    PN = Builder.CreatePHI(ThenV->getType(),
+    //PN = Builder.CreatePHI(ThenV->getType(),
+    PN = Builder.CreatePHI(TV->getType(),
                                     2, "iftmp."+std::to_string(LocalLabel));
   }
 
-  PN->addIncoming(ThenV, ThenBB);
+  //PN->addIncoming(ThenV, ThenBB);
+  PN->addIncoming(TV, ThenBB);
   if( Else != nullptr ){
-    PN->addIncoming(ElseV, ElseBB);
+    //PN->addIncoming(ElseV, ElseBB);
+    PN->addIncoming(EV, ElseBB);
   }
   return PN;
 }
