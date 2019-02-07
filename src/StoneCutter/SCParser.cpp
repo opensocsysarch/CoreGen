@@ -1652,11 +1652,13 @@ Value *BinaryExprAST::codegen() {
     case '*':
       return SCParser::Builder.CreateFMul(L, R, "multmp");
     case '<':
-      L = SCParser::Builder.CreateFCmpULT(L, R, "cmptmp");
-      return SCParser::Builder.CreateUIToFP(L, R->getType(), "booltmp");
+      //L = SCParser::Builder.CreateFCmpULT(L, R, "cmptmp");
+      //return SCParser::Builder.CreateUIToFP(L, R->getType(), "booltmp");
+      return SCParser::Builder.CreateFCmpULT(L, R, "cmptmp");
     case '>':
-      L = SCParser::Builder.CreateFCmpUGT(L, R, "cmptmp");
-      return SCParser::Builder.CreateUIToFP(L, R->getType(), "booltmp");
+      //L = SCParser::Builder.CreateFCmpUGT(L, R, "cmptmp");
+      //return SCParser::Builder.CreateUIToFP(L, R->getType(), "booltmp");
+      return SCParser::Builder.CreateFCmpUGT(L, R, "cmptmp");
     case '%':
       return SCParser::Builder.CreateFRem(L, R, "modtmp");
     case '/':
@@ -1673,21 +1675,25 @@ Value *BinaryExprAST::codegen() {
     case dyad_shfr:
       return SCParser::Builder.CreateLShr(L, R, "lshfrtmp", false );
     case dyad_eqeq:
-      L = SCParser::Builder.CreateFCmpUEQ(L, R, "cmpeq" );
-      return SCParser::Builder.CreateUIToFP(L, R->getType(), "booltmp");
+      //L = SCParser::Builder.CreateFCmpUEQ(L, R, "cmpeq" );
+      //return SCParser::Builder.CreateUIToFP(L, R->getType(), "booltmp");
+      return SCParser::Builder.CreateFCmpUEQ(L, R, "cmpeq" );
     case dyad_noteq:
-      L = SCParser::Builder.CreateFCmpUNE(L, R, "cmpeq" );
-      return SCParser::Builder.CreateUIToFP(L, R->getType(), "booltmp");
+      //L = SCParser::Builder.CreateFCmpUNE(L, R, "cmpeq" );
+      //return SCParser::Builder.CreateUIToFP(L, R->getType(), "booltmp");
+      return SCParser::Builder.CreateFCmpUNE(L, R, "cmpeq" );
     case dyad_logand:
       return SCParser::Builder.CreateAnd(L, R, "andtmp" );
     case dyad_logor:
       return SCParser::Builder.CreateOr(L, R, "ortmp" );
     case dyad_gte:
-      L = SCParser::Builder.CreateFCmpUGE(L, R, "cmptmp");
-      return SCParser::Builder.CreateUIToFP(L, R->getType(), "booltmp");
+      //L = SCParser::Builder.CreateFCmpUGE(L, R, "cmptmp");
+      //return SCParser::Builder.CreateUIToFP(L, R->getType(), "booltmp");
+      return SCParser::Builder.CreateFCmpUGE(L, R, "cmptmp");
     case dyad_lte:
-      L = SCParser::Builder.CreateFCmpULE(L, R, "cmptmp");
-      return SCParser::Builder.CreateUIToFP(L, R->getType(), "booltmp");
+      //L = SCParser::Builder.CreateFCmpULE(L, R, "cmptmp");
+      //return SCParser::Builder.CreateUIToFP(L, R->getType(), "booltmp");
+      return SCParser::Builder.CreateFCmpULE(L, R, "cmptmp");
     default:
       return LogErrorV("invalid binary operator");
     }
@@ -1987,13 +1993,28 @@ Value *IfExprAST::codegen() {
   // Retrieve a unique local label
   unsigned LocalLabel = GetLocalLabel();
 
+    CondV = Builder.CreateICmpNE(
+        CondV, ConstantInt::get(SCParser::TheContext, APInt(1,0,false)),
+        "ifcond."+std::to_string(LocalLabel));
+#if 0
+  if( CondV->getType()->isFloatingPointTy() ){
+    std::cout << "here" << std::endl;
+    CondV = Builder.CreateFCmpONE(
+        CondV, ConstantFP::get(SCParser::TheContext, APFloat(0.0)),
+        "ifcond."+std::to_string(LocalLabel));
+  }else{
+    CondV = Builder.CreateICmpNE(
+        CondV, ConstantInt::get(SCParser::TheContext, APInt(1,0,false)),
+        "ifcond."+std::to_string(LocalLabel));
+  }
+#endif
+
   // Convert condition to a bool by comparing non-equal to 0.0.
-  //CondV = Builder.CreateFCmpONE(
-  //    CondV, ConstantFP::get(SCParser::TheContext, APFloat(0.0)),
-  //    "ifcond."+std::to_string(LocalLabel));
+#if 0
   CondV = Builder.CreateICmpNE(
       CondV, ConstantInt::get(SCParser::TheContext, APInt(1,0,false)),
       "ifcond."+std::to_string(LocalLabel));
+#endif
 
   Function *TheFunction = Builder.GetInsertBlock()->getParent();
 
@@ -2039,10 +2060,15 @@ Value *IfExprAST::codegen() {
   // Emit merge block.
   TheFunction->getBasicBlockList().push_back(MergeBB);
   Builder.SetInsertPoint(MergeBB);
-  //PHINode *PN = Builder.CreatePHI(Type::getDoubleTy(SCParser::TheContext),
-  //                                2, "iftmp."+std::to_string(LocalLabel));
-  PHINode *PN = Builder.CreatePHI(Type::getIntNTy(SCParser::TheContext,64),
-                                  2, "iftmp."+std::to_string(LocalLabel));
+
+  PHINode *PN = nullptr;
+  if( ThenV->getType()->isFloatingPointTy() ){
+    PN = Builder.CreatePHI(ThenV->getType(),
+                                    2, "iftmp."+std::to_string(LocalLabel));
+  }else{
+    PN = Builder.CreatePHI(ThenV->getType(),
+                                    2, "iftmp."+std::to_string(LocalLabel));
+  }
 
   PN->addIncoming(ThenV, ThenBB);
   if( Else != nullptr ){
