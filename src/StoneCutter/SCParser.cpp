@@ -662,13 +662,6 @@ std::unique_ptr<ExprAST> SCParser::ParseIfExpr() {
     return LogError("expected '{' for conditional expression body");
   GetNextToken(); // eat the '{'
 
-#if 0
-  auto Then = ParseExpression();
-  if (!Then){
-    return nullptr;
-  }
-#endif
-
   std::vector<std::unique_ptr<ExprAST>> ThenExpr;
   while( CurTok != '}' ){
     auto Body = ParseExpression();
@@ -691,12 +684,7 @@ std::unique_ptr<ExprAST> SCParser::ParseIfExpr() {
       LogError("expected '{' for conditional else statement");
     }
     GetNextToken(); // eat the '{'
-#if 0
-    Else = ParseExpression();
-    if( !Else ){
-      return nullptr;
-    }
-#endif
+
     while( CurTok != '}' ){
       auto Body = ParseExpression();
       if( !Body )
@@ -712,10 +700,6 @@ std::unique_ptr<ExprAST> SCParser::ParseIfExpr() {
   return llvm::make_unique<IfExprAST>(std::move(Cond),
                                       std::move(ThenExpr),
                                       std::move(ElseExpr));
-#if 0
-  return llvm::make_unique<IfExprAST>(std::move(Cond), std::move(Then),
-                                      std::move(Else));
-#endif
 }
 
 std::unique_ptr<ExprAST> SCParser::ParsePrimary() {
@@ -1774,12 +1758,8 @@ Value *BinaryExprAST::codegen() {
     case '*':
       return SCParser::Builder.CreateFMul(L, R, "multmp");
     case '<':
-      //L = SCParser::Builder.CreateFCmpULT(L, R, "cmptmp");
-      //return SCParser::Builder.CreateUIToFP(L, R->getType(), "booltmp");
       return SCParser::Builder.CreateFCmpULT(L, R, "cmptmp");
     case '>':
-      //L = SCParser::Builder.CreateFCmpUGT(L, R, "cmptmp");
-      //return SCParser::Builder.CreateUIToFP(L, R->getType(), "booltmp");
       return SCParser::Builder.CreateFCmpUGT(L, R, "cmptmp");
     case '%':
       return SCParser::Builder.CreateFRem(L, R, "modtmp");
@@ -1797,24 +1777,16 @@ Value *BinaryExprAST::codegen() {
     case dyad_shfr:
       return SCParser::Builder.CreateLShr(L, R, "lshfrtmp", false );
     case dyad_eqeq:
-      //L = SCParser::Builder.CreateFCmpUEQ(L, R, "cmpeq" );
-      //return SCParser::Builder.CreateUIToFP(L, R->getType(), "booltmp");
       return SCParser::Builder.CreateFCmpUEQ(L, R, "cmpeq" );
     case dyad_noteq:
-      //L = SCParser::Builder.CreateFCmpUNE(L, R, "cmpeq" );
-      //return SCParser::Builder.CreateUIToFP(L, R->getType(), "booltmp");
       return SCParser::Builder.CreateFCmpUNE(L, R, "cmpeq" );
     case dyad_logand:
       return SCParser::Builder.CreateAnd(L, R, "andtmp" );
     case dyad_logor:
       return SCParser::Builder.CreateOr(L, R, "ortmp" );
     case dyad_gte:
-      //L = SCParser::Builder.CreateFCmpUGE(L, R, "cmptmp");
-      //return SCParser::Builder.CreateUIToFP(L, R->getType(), "booltmp");
       return SCParser::Builder.CreateFCmpUGE(L, R, "cmptmp");
     case dyad_lte:
-      //L = SCParser::Builder.CreateFCmpULE(L, R, "cmptmp");
-      //return SCParser::Builder.CreateUIToFP(L, R->getType(), "booltmp");
       return SCParser::Builder.CreateFCmpULE(L, R, "cmptmp");
     default:
       return LogErrorV("invalid binary operator");
@@ -2145,14 +2117,6 @@ Value *IfExprAST::codegen() {
       return nullptr;
   }
 
-
-#if 0
-  Value *ThenV = Then->codegen();
-  if (!ThenV){
-    return nullptr;
-  }
-#endif
-
   Builder.CreateBr(MergeBB);
   // Codegen of 'Then' can change the current block, update ThenBB for the PHI.
   ThenBB = Builder.GetInsertBlock();
@@ -2168,14 +2132,6 @@ Value *IfExprAST::codegen() {
     if( !EV )
       return nullptr;
   }
-#if 0
-  Value *ElseV;
-  if( Else != nullptr ){
-    ElseV = Else->codegen();
-    if (!ElseV)
-      return nullptr;
-  }
-#endif
 
   Builder.CreateBr(MergeBB);
   // Codegen of 'Else' can change the current block, update ElseBB for the PHI.
@@ -2186,21 +2142,16 @@ Value *IfExprAST::codegen() {
   Builder.SetInsertPoint(MergeBB);
 
   PHINode *PN = nullptr;
-  //if( ThenV->getType()->isFloatingPointTy() ){
   if( TV->getType()->isFloatingPointTy() ){
-    //PN = Builder.CreatePHI(ThenV->getType(),
     PN = Builder.CreatePHI(TV->getType(),
                                     2, "iftmp."+std::to_string(LocalLabel));
   }else{
-    //PN = Builder.CreatePHI(ThenV->getType(),
     PN = Builder.CreatePHI(TV->getType(),
                                     2, "iftmp."+std::to_string(LocalLabel));
   }
 
-  //PN->addIncoming(ThenV, ThenBB);
   PN->addIncoming(TV, ThenBB);
-  if( Else != nullptr ){
-    //PN->addIncoming(ElseV, ElseBB);
+  if( EV != nullptr ){
     PN->addIncoming(EV, ElseBB);
   }
   return PN;
