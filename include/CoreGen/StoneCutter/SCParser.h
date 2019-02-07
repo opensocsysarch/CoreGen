@@ -157,20 +157,10 @@ public:
     std::unique_ptr<ExprASTContainer> Start;        ///< Start of an expression body
     std::unique_ptr<ExprASTContainer> End;          ///< End of an expression body
     std::unique_ptr<ExprASTContainer> Step;         ///< Step function for an expression body
-    std::unique_ptr<ExprASTContainer> Body;         ///< Expression body
     std::vector<std::unique_ptr<ExprASTContainer>> BodyExpr;  ///< Vector of body expressions
 
   public:
     /// ForExprASTContainer default constructor
-    ForExprASTContainer(const std::string &VarName,
-                        std::unique_ptr<ExprASTContainer> Start,
-                        std::unique_ptr<ExprASTContainer> End,
-                        std::unique_ptr<ExprASTContainer> Step,
-                        std::unique_ptr<ExprASTContainer> Body)
-      : VarName(VarName), Start(std::move(Start)), End(std::move(End)),
-      Step(std::move(Step)), Body(std::move(Body)) {}
-
-    /// ForExprASTContainer overloaded constructor
     ForExprASTContainer(const std::string &VarName,
                         std::unique_ptr<ExprASTContainer> Start,
                         std::unique_ptr<ExprASTContainer> End,
@@ -183,7 +173,7 @@ public:
     Value *codegen() override;
   };
 
-  ///VarExprAST - Expression class for variables
+  /// VarExprAST - Expression class for variables
   class VarExprASTContainer : public ExprASTContainer {
     std::vector<std::pair<std::string,
                           std::unique_ptr<ExprASTContainer>>> VarNames; ///< Vector of variable names
@@ -206,19 +196,11 @@ public:
   /// IfExprAST - Expression class for conditionals
   class IfExprASTContainer : public ExprASTContainer {
     std::unique_ptr<ExprASTContainer> Cond;   ///< Conditional expression container
-    std::unique_ptr<ExprASTContainer> Then;   ///< Then expression container
-    std::unique_ptr<ExprASTContainer> Else;   ///< Else expression container
     std::vector<std::unique_ptr<ExprASTContainer>> ThenV;  ///< Vector of then body expressions
     std::vector<std::unique_ptr<ExprASTContainer>> ElseV;  ///< Vector of else body expressions
 
   public:
     /// IfExprASTContainer default constructor
-    IfExprASTContainer(std::unique_ptr<ExprASTContainer> Cond,
-                         std::unique_ptr<ExprASTContainer> Then,
-                         std::unique_ptr<ExprASTContainer> Else)
-        : Cond(std::move(Cond)), Then(std::move(Then)), Else(std::move(Else)) {}
-
-    /// IfExprASTContainer overloaded constructor
     IfExprASTContainer(std::unique_ptr<ExprASTContainer> Cond,
                        std::vector<std::unique_ptr<ExprASTContainer>> ThenExpr,
                        std::vector<std::unique_ptr<ExprASTContainer>> ElseExpr)
