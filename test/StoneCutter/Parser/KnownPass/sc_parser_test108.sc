@@ -1,4 +1,4 @@
-#-- sc_parser_test107.sc
+#-- sc_parser_test108.sc
 
 instformat F1( enc field1, imm field2, reg[foo] field3, reg[bar] field4 )
 
@@ -12,8 +12,10 @@ regclass bar( float f1, double d2, bool b3, u7 i4,
 
 def foo(a b c){
   while( a != b ){
-    for ( i = 1; i < c; b ){
-      a = a +1
+    if(  f1 < 10 ){
+      f1 = f1 + 1
+    }else{
+      f1 = f1 + 2
     }
   }
 }
