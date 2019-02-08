@@ -8,6 +8,15 @@
 // See LICENSE in the top level directory for licensing details
 //
 
+/**
+ * \class SCStore
+ *
+ * \ingroup StoneCutter
+ *
+ * \brief StoneCutter Intrinsic: Store a Value To Memory
+ *
+ */
+
 #ifndef _STONECUTTER_SCINTRIN_SCSTORE_H_
 #define _STONECUTTER_SCINTRIN_SCSTORE_H_
 

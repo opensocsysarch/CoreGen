@@ -19,6 +19,8 @@ SCChiselCodeGen::SCChiselCodeGen( SCParser *P,
 }
 
 SCChiselCodeGen::~SCChiselCodeGen(){
+  Intrins.clear();
+  Passes.clear();
 }
 
 void SCChiselCodeGen::InitIntrinsics(){
@@ -26,6 +28,8 @@ void SCChiselCodeGen::InitIntrinsics(){
   Intrins.push_back(static_cast<SCIntrin *>(new SCMin()));
   Intrins.push_back(static_cast<SCIntrin *>(new SCLoad()));
   Intrins.push_back(static_cast<SCIntrin *>(new SCStore()));
+  Intrins.push_back(static_cast<SCIntrin *>(new SCLoadElem()));
+  Intrins.push_back(static_cast<SCIntrin *>(new SCStoreElem()));
   Intrins.push_back(static_cast<SCIntrin *>(new SCNot()));
   Intrins.push_back(static_cast<SCIntrin *>(new SCReverse()));
   Intrins.push_back(static_cast<SCIntrin *>(new SCPopcount()));
@@ -48,6 +52,8 @@ void SCChiselCodeGen::InitIntrinsics(){
 
 void SCChiselCodeGen::InitPasses(){
   Passes.push_back(static_cast<SCPass *>(new SCInstArg(SCParser::TheModule.get(),
+                                                       Msgs)));
+  Passes.push_back(static_cast<SCPass *>(new SCInstFormat(SCParser::TheModule.get(),
                                                        Msgs)));
 }
 

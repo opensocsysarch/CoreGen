@@ -12,7 +12,10 @@ $SCCOMP_PATH/sccomp -c $FILE
 retVal=$?
 if [[  "$retVal" -ne 0 ]]; then
   echo "$SCCOMP_PATH/sccomp -c $FILE was successful; should have failed return code = $retVal"
+  rm -Rf $FILE.chisel
   exit -1
 fi
+
+rm -Rf $FILE.chisel
 
 exit 0
