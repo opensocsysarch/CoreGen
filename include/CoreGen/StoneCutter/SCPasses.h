@@ -14,6 +14,7 @@
 // stonecutter passes
 #include "CoreGen/StoneCutter/Passes/SCInstArg.h"
 #include "CoreGen/StoneCutter/Passes/SCInstFormat.h"
+#include "CoreGen/StoneCutter/Passes/SCPipeBuilder.h"
 
 #endif
 

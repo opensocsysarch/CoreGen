@@ -10,6 +10,7 @@
 set(PassSrcs
 SCInstArg.cpp
 SCInstFormat.cpp
+SCPipeBuilder.cpp
 )
 
 set(llvm_codegens
