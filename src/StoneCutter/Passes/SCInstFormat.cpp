@@ -11,8 +11,9 @@
 #include "CoreGen/StoneCutter/Passes/SCInstFormat.h"
 
 SCInstFormat::SCInstFormat(Module *TM,
-                     SCMsg *M)
-  : SCPass("InstFormat",TM,M) {
+                           SCOpts *O,
+                           SCMsg *M)
+  : SCPass("InstFormat",TM,O,M) {
 }
 
 SCInstFormat::~SCInstFormat(){

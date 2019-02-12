@@ -35,7 +35,7 @@ private:
 
 public:
   /// Default cosntructor
-  SCPipeBuilder(Module *TM, SCMsg *M);
+  SCPipeBuilder(Module *TM, SCOpts *O, SCMsg *M);
 
   /// Default destructor
   ~SCPipeBuilder();

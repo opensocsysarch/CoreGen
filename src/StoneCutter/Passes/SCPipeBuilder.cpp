@@ -11,8 +11,9 @@
 #include "CoreGen/StoneCutter/Passes/SCPipeBuilder.h"
 
 SCPipeBuilder::SCPipeBuilder(Module *TM,
+                             SCOpts *O,
                              SCMsg *M)
-  : SCPass("PipeBuilder",TM,M) {
+  : SCPass("PipeBuilder",TM,O,M) {
 }
 
 SCPipeBuilder::~SCPipeBuilder(){

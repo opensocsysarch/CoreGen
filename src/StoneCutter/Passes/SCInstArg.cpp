@@ -11,8 +11,9 @@
 #include "CoreGen/StoneCutter/Passes/SCInstArg.h"
 
 SCInstArg::SCInstArg(Module *TM,
+                     SCOpts *O,
                      SCMsg *M)
-  : SCPass("InstArg",TM,M) {
+  : SCPass("InstArg",TM,O,M) {
 }
 
 SCInstArg::~SCInstArg(){

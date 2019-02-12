@@ -36,7 +36,7 @@ private:
 
 public:
   /// Default cosntructor
-  SCInstFormat(Module *TM, SCMsg *M);
+  SCInstFormat(Module *TM, SCOpts *O, SCMsg *M);
 
   /// Default destructor
   ~SCInstFormat();

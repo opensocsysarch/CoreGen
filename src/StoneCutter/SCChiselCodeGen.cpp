@@ -11,9 +11,10 @@
 #include "CoreGen/StoneCutter/SCChiselCodeGen.h"
 
 SCChiselCodeGen::SCChiselCodeGen( SCParser *P,
+                                  SCOpts *O,
                                   SCMsg *M,
                                   std::string COF )
-  : Parser(P), Msgs(M), ChiselFile(COF) {
+  : Parser(P), Opts(O), Msgs(M), ChiselFile(COF) {
   InitIntrinsics();
   InitPasses();
 }
@@ -52,10 +53,13 @@ void SCChiselCodeGen::InitIntrinsics(){
 
 void SCChiselCodeGen::InitPasses(){
   Passes.push_back(static_cast<SCPass *>(new SCInstArg(SCParser::TheModule.get(),
+                                                       Opts,
                                                        Msgs)));
   Passes.push_back(static_cast<SCPass *>(new SCInstFormat(SCParser::TheModule.get(),
+                                                       Opts,
                                                        Msgs)));
   Passes.push_back(static_cast<SCPass *>(new SCPipeBuilder(SCParser::TheModule.get(),
+                                                       Opts,
                                                        Msgs)));
 }
 

@@ -57,6 +57,7 @@
 
 // coregen headers
 #include "CoreGen/StoneCutter/SCParser.h"
+#include "CoreGen/StoneCutter/SCOpts.h"
 #include "CoreGen/StoneCutter/SCMsg.h"
 #include "CoreGen/StoneCutter/SCUtil.h"
 #include "CoreGen/StoneCutter/SCIntrinsics.h"
@@ -68,6 +69,7 @@ using namespace llvm;
 class SCChiselCodeGen{
 private:
   SCParser *Parser;                           ///< SC Parser object
+  SCOpts *Opts;                               ///< SC Options object
   SCMsg *Msgs;                                ///< SC Messages object
   std::string ChiselFile;                     ///< Output file
 
@@ -86,7 +88,7 @@ private:
 public:
 
   /// Default constructor
-  SCChiselCodeGen(SCParser *, SCMsg *, std::string);
+  SCChiselCodeGen(SCParser *, SCOpts *, SCMsg *, std::string);
 
   /// Default desctrutor
   ~SCChiselCodeGen();
