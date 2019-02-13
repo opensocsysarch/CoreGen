@@ -82,6 +82,15 @@ public:
   /// Prints a raw message to the message stream
   void PrintRawMsg( const std::string M );
 
+  /// Determines if the target variable is a global variable
+  bool IsGlobal( std::string Var );
+
+  /// Determines if the target variable has the target attribute
+  bool HasGlobalAttribute(std::string Var, std::string Attribute );
+
+  /// Retrieves the target attribute from the target global variable
+  std::string GetGlobalAttribute(std::string Var, std::string Attribute);
+
   /// Executes the target code generation pass
   virtual bool Execute() = 0;
 

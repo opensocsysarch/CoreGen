@@ -30,4 +30,38 @@ void SCPass::PrintRawMsg( const std::string M ){
   Msgs->PrintRawMsg( this->GetName() + " : " + M );
 }
 
+bool SCPass::IsGlobal( std::string Var ){
+  for( auto &Global : TheModule->getGlobalList() ){
+    if( Global.getName().str() == Var ){
+      return true;
+    }
+  }
+  return false;
+}
+
+bool SCPass::HasGlobalAttribute( std::string Var, std::string Attribute ){
+  for( auto &Global : TheModule->getGlobalList() ){
+    if( Global.getName().str() == Var ){
+      AttributeSet AttrSet = Global.getAttributes();
+      if( AttrSet.hasAttribute(Attribute) )
+        return true;
+    }
+  }
+  return false;
+}
+
+std::string SCPass::GetGlobalAttribute( std::string Var,
+                                        std::string Attribute ){
+  for( auto &Global : TheModule->getGlobalList() ){
+    if( Global.getName().str() == Var ){
+      AttributeSet AttrSet = Global.getAttributes();
+      if( AttrSet.hasAttribute(Attribute) )
+        return AttrSet.getAttribute(Attribute).getValueAsString().str();
+    }
+  }
+  std::string Attr = "";
+  return Attr;
+}
+
+
 // EOF
