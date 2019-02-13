@@ -36,6 +36,20 @@ int SCLexer::GetNext(){
   return TChar;
 }
 
+int SCLexer::PeekPrev(){
+  if( (unsigned)(CurChar) <= 1 ){
+    return EOF;
+  }
+  unsigned LChar = CurChar-2;
+  while(isspace(InBuf[LChar])){
+    if( LChar == 0 ){
+      return EOF;
+    }
+    LChar = LChar-1;
+  }
+  return InBuf[LChar];
+}
+
 int SCLexer::PeekNext(){
   if( (unsigned)(CurChar) >= InBuf.size() ){
     return EOF;
@@ -45,6 +59,33 @@ int SCLexer::PeekNext(){
 
 bool SCLexer::IsIntrinsic(){
   // walk the intrinsic table and determine whether we have any candidates
+  return false;
+}
+
+bool SCLexer::IsOperator(int LC){
+  if( LC == '=' ){
+    return true;
+  }else if( LC == '+' ){
+    return true;
+  }else if( LC == '-' ){
+    return true;
+  }else if( LC == '*' ){
+    return true;
+  }else if( LC == 92 ){ // divide
+    return true;
+  }else if( LC == '%' ){
+    return true;
+  }else if( LC == '|' ){
+    return true;
+  }else if( LC == '&' ){
+    return true;
+  }else if( LC == '^' ){
+    return true;
+  }else if( LC == '>' ){
+    return true;
+  }else if( LC == '<' ){
+    return true;
+  }
   return false;
 }
 
@@ -173,6 +214,19 @@ int SCLexer::GetTok(){
     } while (isdigit(LastChar) || LastChar == '.');
 
     NumVal = strtod(NumStr.c_str(), nullptr);
+    return tok_number;
+  }
+
+  // negative numbers
+  if ( (LastChar == '-') && IsOperator(PeekPrev()) && (isdigit(PeekNext()) || PeekNext() == '.') ){
+    std::string NumStr;
+    LastChar = GetNext(); // eat the '-'
+    do {
+      NumStr += LastChar;
+      LastChar = GetNext();
+    }while(isdigit(LastChar) || LastChar == '.');
+
+    NumVal = (strtod(NumStr.c_str(), nullptr)*-1);
     return tok_number;
   }
 

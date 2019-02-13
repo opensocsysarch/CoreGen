@@ -25,6 +25,7 @@
 #include <vector>
 
 // stonecutter headers
+#include "CoreGen/StoneCutter/SCOpts.h"
 #include "CoreGen/StoneCutter/SCMsg.h"
 
 // llvm headers
@@ -58,6 +59,7 @@ private:
   SCMsg *Msgs;                        ///< StoneCutter messages output
 
 protected:
+  SCOpts *Opts;                       ///< StoneCutter options
   Module *TheModule;                  ///< LLVM IR Module
 
 public:
@@ -65,6 +67,7 @@ public:
   /// Default constructor
   SCPass(std::string N,
          Module *TM,
+         SCOpts *O,
          SCMsg *M);
 
   /// Default destructor

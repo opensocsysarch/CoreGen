@@ -181,7 +181,7 @@ bool SCExec::Exec(){
     }
 
     // Generate the Chisel output
-    CCG = new SCChiselCodeGen(Parser,Msgs,
+    CCG = new SCChiselCodeGen(Parser,Opts,Msgs,
                               OTmpFile + ".chisel" );
     if( !CCG->GenerateChisel() ){
       Msgs->PrintMsg( L_ERROR, "Failed to generate Chisel for " +

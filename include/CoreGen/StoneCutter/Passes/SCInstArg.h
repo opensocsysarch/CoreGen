@@ -37,7 +37,7 @@ private:
 
 public:
   /// Default cosntructor
-  SCInstArg(Module *TM, SCMsg *M);
+  SCInstArg(Module *TM, SCOpts *O, SCMsg *M);
 
   /// Default destructor
   ~SCInstArg();
