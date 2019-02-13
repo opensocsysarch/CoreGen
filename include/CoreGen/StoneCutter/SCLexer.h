@@ -123,6 +123,9 @@ private:
   /// Read the next character from the input string
   int GetNext();
 
+  /// Peeks at the previous character, but does not consume it
+  int PeekPrev();
+
   /// Peeks at the next character, but does not consume it
   int PeekNext();
 
@@ -134,6 +137,9 @@ private:
 
   /// Detrmines in the token is a potential dyadic operator
   bool IsDyadic(int LC);
+
+  /// Examines the target character and returns true if it is an operator
+  bool IsOperator(int LC);
 };
 
 #endif
