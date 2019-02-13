@@ -176,6 +176,22 @@ int SCLexer::GetTok(){
     return tok_number;
   }
 
+  // negative numbers
+#if 0
+  if ( (LastChar == '-') && (isdigit(PeekNext()) || PeekNext() == '.') ){
+    std::cout << "parsing negative number" << std::endl;
+    std::string NumStr;
+    LastChar = GetNext(); // eat the '-'
+    do {
+      NumStr += LastChar;
+      LastChar = GetNext();
+    }while(isdigit(LastChar) || LastChar == '.');
+
+    NumVal = (strtod(NumStr.c_str(), nullptr)*-1);
+    return tok_number;
+  }
+#endif
+
   if (LastChar == '#') {
     // Comment until end of line.
     do{

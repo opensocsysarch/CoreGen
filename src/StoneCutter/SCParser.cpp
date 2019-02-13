@@ -1685,8 +1685,10 @@ Value *VarExprAST::codegen() {
     return nullptr;
 
   // Pop all our variables from scope.
+#if 0
   for (unsigned i = 0, e = VarNames.size(); i != e; ++i)
     SCParser::NamedValues[VarNames[i].first] = OldBindings[i];
+#endif
 
   // Return the body computation.
   return BodyVal;
