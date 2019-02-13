@@ -28,7 +28,8 @@ bool SCInstArg::GetRegClassMap(){
     AttributeSet AttrSet = Global.getAttributes();
     // check for the proper attributes
     if( AttrSet.hasAttribute("fieldtype") ){
-      // do nothing, this is an instruction field
+      // record all the instruction format fields
+      RegFileVect.push_back(Global.getName().str());
     }else if( AttrSet.hasAttribute("regfile") ){
       // this is a register file definition
       RegFileVect.push_back(
@@ -127,7 +128,7 @@ bool SCInstArg::CheckInstArgs(){
           find(RegFileVect.begin(), RegFileVect.end(), FuncArg->getName().str());
         if( (pos == RegClassMap.end()) && (it == RegFileVect.end()) ){
           this->PrintMsg( L_ERROR,
-                        "Instruction definition contains an argument with no backing register  or register file : Instruction="
+                        "Instruction definition contains an argument with no backing register or register file : Instruction="
                         + Func.getName().str() + "; Argument=" + FuncArg->getName().str() );
           rtn = false;
         }

@@ -1,4 +1,4 @@
-#-- sc_parser_test116.sc
+#-- sc_parser_test117.sc
 
 instformat F1( enc field1, imm field2, reg[foo] field3, reg[bar] field4 )
 
@@ -10,7 +10,7 @@ regclass bar( float f1, double d2, bool b3, u7 i4,
               s21 i10, s19 i11)
 
 
-def foo(a b c){
+def foo(a b c field3){
   u64 newreg
   while( a != b ){
     if( a < 10 ){
