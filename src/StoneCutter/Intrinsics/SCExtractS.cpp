@@ -10,7 +10,7 @@
 
 #include "CoreGen/StoneCutter/Intrinsics/SCExtractS.h"
 
-SCExtractS::SCExtractS() : SCIntrin(2,"EXTRACTS") {
+SCExtractS::SCExtractS() : SCIntrin(3,"EXTRACTS") {
 }
 
 SCExtractS::SCExtractS(unsigned NI, std::string K) : SCIntrin(NI,K) {

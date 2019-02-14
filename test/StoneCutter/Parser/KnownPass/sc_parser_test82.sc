@@ -9,6 +9,6 @@ regclass bar( float f1, double d2, bool b3, u7 i4,
 
 
 def foo(a_reg b_reg c_reg x_reg){
-  EXTRACTZ(a_reg,b_reg);
-  c_reg = EXTRACTZ(a_reg,b_reg);
+  EXTRACTZ(a_reg,b_reg,c_reg);
+  c_reg = EXTRACTZ(a_reg,b_reg,c_reg);
 }

@@ -11,6 +11,6 @@ regclass bar( float f1, double d2, bool b3, u7 i4a,
 
 
 def foo(RT){
-  EXTRACTS(i4,i5);
-  i7 = EXTRACTS(i4,i5);
+  EXTRACTS(i4,i5,i6);
+  i7 = EXTRACTS(i4,i5,i6);
 }
