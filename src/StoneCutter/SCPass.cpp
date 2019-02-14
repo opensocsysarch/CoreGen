@@ -39,6 +39,15 @@ bool SCPass::IsGlobal( std::string Var ){
   return false;
 }
 
+bool SCPass::IsLocal( std::string Var ){
+  for( auto &Global : TheModule->getGlobalList() ){
+    if( Global.getName().str() == Var ){
+      return false;
+    }
+  }
+  return true;
+}
+
 bool SCPass::HasGlobalAttribute( std::string Var, std::string Attribute ){
   for( auto &Global : TheModule->getGlobalList() ){
     if( Global.getName().str() == Var ){

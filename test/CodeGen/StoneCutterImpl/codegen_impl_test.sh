@@ -28,7 +28,7 @@ ISAs=`grep "ISAName" $FILE | awk '{print $3}' | uniq`
 
 #-- walk through all the stonecutter files and attempt to compile them
 for ISA in $ISAs; do
-  if [ -f $DIR/RTL/stonecutter/$ISA.sc]; then
+  if [ -f $DIR/RTL/stonecutter/$ISA.sc ]; then
     $SCCOMP_PATH/sccomp -p $DIR/RTL/stonecutter/$ISA.sc
     retValSc=$?
     if [[  "$retValY" -ne 0 ]]; then

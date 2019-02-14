@@ -85,6 +85,9 @@ public:
   /// Determines if the target variable is a global variable
   bool IsGlobal( std::string Var );
 
+  /// Determines if the target variable is a local variable
+  bool IsLocal( std::string Var );
+
   /// Determines if the target variable has the target attribute
   bool HasGlobalAttribute(std::string Var, std::string Attribute );
 
