@@ -2089,7 +2089,7 @@ Value *IfExprAST::codegen() {
   // Retrieve a unique local label
   unsigned LocalLabel = GetLocalLabel();
 
-    CondV = Builder.CreateICmpNE(
+  CondV = Builder.CreateICmpNE(
         CondV, ConstantInt::get(SCParser::TheContext, APInt(1,0,false)),
         "ifcond."+std::to_string(LocalLabel));
 
@@ -2154,6 +2154,11 @@ Value *IfExprAST::codegen() {
 
   PN->addIncoming(TV, ThenBB);
   if( EV != nullptr ){
+    // check to see if we need to adjust the size of the types
+    if( TV->getType()->getPrimitiveSizeInBits() !=
+        EV->getType()->getPrimitiveSizeInBits() ){
+      EV->mutateType(TV->getType());
+    }
     PN->addIncoming(EV, ElseBB);
   }
   return PN;
