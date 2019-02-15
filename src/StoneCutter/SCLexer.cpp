@@ -123,6 +123,10 @@ bool SCLexer::IsVarDef(){
     Idx++;
   }
 
+  // make sure this is actually a var def
+  if( !isdigit(IdentifierStr[1]) )
+    return false;
+
   // all other types
   if( IdentifierStr[0] == 'u' ){
     // unsigned variable
