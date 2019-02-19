@@ -54,6 +54,11 @@ void SCIOWarn::CheckPrototypeIO( Function &F, Instruction &I ){
       }
     }
 
+    // Argument doesn't appear in the prototype list, look up the instruction
+    // format and ensure that the arg appears in the instformat utilizes the
+    // appropriate regclass
+    // TODO
+
     this->PrintMsg( L_WARN, "Detected rogue I/O operation to register file for variable=" +
                             ArgName + " in instruction=" + F.getName().str() );
   }

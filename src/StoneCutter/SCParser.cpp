@@ -1948,24 +1948,24 @@ Value *InstFormatAST::codegen(){
       switch( FT ){
       case field_enc:
         if( FType != "encoding" ){
-          return LogErrorV( "FieldType for field=" + FName + " in instformat=" +
+          return LogWarnV( "FieldType for field=" + FName + " in instformat=" +
                             Name + " does not match existing field type from adjacent format");
         }
         break;
       case field_reg:
         if( FType != "register"){
-          return LogErrorV( "FieldType for field=" + FName + " in instformat=" +
+          return LogWarnV( "FieldType for field=" + FName + " in instformat=" +
                             Name + " does not match existing field type from adjacent format");
         }
         break;
       case field_imm:
         if( FType != "immediate" ){
-          return LogErrorV( "FieldType for field=" + FName + " in instformat=" +
+          return LogWarnV( "FieldType for field=" + FName + " in instformat=" +
                             Name + " does not match existing field type from adjacent format");
         }
         break;
       default:
-        return LogErrorV( "Failed to lower instruction format field to global: instformat = " + 
+        return LogWarnV( "Failed to lower instruction format field to global: instformat = " + 
                           Name + " field=" + FName + "; Does not match existing fieldtype");
         break;
       }
@@ -2234,6 +2234,11 @@ std::unique_ptr<InstFormatAST> SCParser::LogErrorIF(std::string Str) {
 
 std::unique_ptr<FunctionAST> SCParser::LogErrorF(std::string Str) {
   LogError(Str);
+  return nullptr;
+}
+
+Value *LogWarnV(std::string Str){
+  SCParser::GMsgs->PrintMsg( L_WARN, Str );
   return nullptr;
 }
 

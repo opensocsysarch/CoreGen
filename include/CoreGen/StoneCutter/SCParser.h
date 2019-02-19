@@ -536,7 +536,8 @@ private:
   /// Logs a value error
 };
 
-Value *LogErrorV(std::string Str);  // FIX THIS
+Value *LogErrorV(std::string Str);  // TODO: FIX THIS
+Value *LogWarnV(std::string Str);  // TODO: FIX THIS
 
 /** Typedef for ExprASTContainer */
 typedef SCParser::ExprASTContainer ExprAST;
