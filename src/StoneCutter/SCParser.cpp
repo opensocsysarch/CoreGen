@@ -1920,7 +1920,7 @@ Value *InstFormatAST::codegen(){
       GlobalNamedValues[FName] = val;
 
       // add an attribute to track the value to the instruction format
-      val->addAttribute("instformat",Name);
+      val->addAttribute("instformat0",Name);
 
       // add attributes for the field type
       switch( FT ){
@@ -1929,7 +1929,7 @@ Value *InstFormatAST::codegen(){
         break;
       case field_reg:
         val->addAttribute("fieldtype","register");
-        val->addAttribute("regclasscontainer",RClass);
+        val->addAttribute("regclasscontainer0",RClass);
         break;
       case field_imm:
         val->addAttribute("fieldtype","immediate");
@@ -1938,6 +1938,51 @@ Value *InstFormatAST::codegen(){
         return LogErrorV( "Failed to lower instruction format field to global: instformat = " + 
                           Name + " field=" + FName);
         break;
+      }
+    }else{
+      std::cout << "registering instformat = " << Name << std::endl;
+      // variable is in the global list, add to existing entry
+      AttributeSet AttrSet = GVit->second->getAttributes();
+
+      // ensure that the instruction fieldtype is the same
+      std::string FType = AttrSet.getAttribute("fieldtype").getValueAsString().str();
+      switch( FT ){
+      case field_enc:
+        if( FType != "encoding" ){
+          return LogErrorV( "FieldType for field=" + FName + " in instformat=" +
+                            Name + " does not match existing field type from adjacent format");
+        }
+        break;
+      case field_reg:
+        if( FType != "register"){
+          return LogErrorV( "FieldType for field=" + FName + " in instformat=" +
+                            Name + " does not match existing field type from adjacent format");
+        }
+        break;
+      case field_imm:
+        if( FType != "immediate" ){
+          return LogErrorV( "FieldType for field=" + FName + " in instformat=" +
+                            Name + " does not match existing field type from adjacent format");
+        }
+        break;
+      default:
+        return LogErrorV( "Failed to lower instruction format field to global: instformat = " + 
+                          Name + " field=" + FName + "; Does not match existing fieldtype");
+        break;
+      }
+
+      // derive the number of instruction formats
+      unsigned NextIF = 0;
+      while( AttrSet.hasAttribute("instformat"+std::to_string(NextIF)) ){
+        NextIF = NextIF+1;
+      }
+
+      // insert the new instruction format
+      GVit->second->addAttribute("instformat"+std::to_string(NextIF),Name);
+
+      // insert a new register class type if required
+      if( FT == field_reg ){
+        GVit->second->addAttribute("regclasscontainer"+std::to_string(NextIF),RClass);
       }
     }
   }
