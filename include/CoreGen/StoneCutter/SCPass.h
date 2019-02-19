@@ -94,6 +94,12 @@ public:
   /// Retrieves the target attribute from the target global variable
   std::string GetGlobalAttribute(std::string Var, std::string Attribute);
 
+  /// Retrieves the number of instruction formats that include the target variable
+  unsigned GetNumInstFormats(std::string Var);
+
+  /// Retrieves the number of instruction format register class attributes that include the target variable
+  unsigned GetNumRegClasses(std::string Var);
+
   /// Executes the target code generation pass
   virtual bool Execute() = 0;
 

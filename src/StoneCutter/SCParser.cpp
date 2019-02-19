@@ -1940,7 +1940,6 @@ Value *InstFormatAST::codegen(){
         break;
       }
     }else{
-      std::cout << "registering instformat = " << Name << std::endl;
       // variable is in the global list, add to existing entry
       AttributeSet AttrSet = GVit->second->getAttributes();
 

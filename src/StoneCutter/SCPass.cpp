@@ -72,5 +72,44 @@ std::string SCPass::GetGlobalAttribute( std::string Var,
   return Attr;
 }
 
+unsigned SCPass::GetNumInstFormats( std::string Var ){
+  for( auto &Global : TheModule->getGlobalList() ){
+    if( Global.getName().str() == Var ){
+      AttributeSet AttrSet = Global.getAttributes();
+      if( AttrSet.hasAttribute("fieldtype") ){
+        // this is a global with the same name and exists as
+        // as a field in an instruction format
+        unsigned NumIF = 0;
+        while( AttrSet.hasAttribute("instformat"+std::to_string(NumIF)) ){
+          NumIF = NumIF + 1;
+        }
+        return NumIF;
+      }
+    }
+  }
+
+  return 0;
+}
+
+unsigned SCPass::GetNumRegClasses( std::string Var ){
+  for( auto &Global : TheModule->getGlobalList() ){
+    if( Global.getName().str() == Var ){
+      AttributeSet AttrSet = Global.getAttributes();
+      if( AttrSet.hasAttribute("fieldtype") ){
+        if( AttrSet.getAttribute("fieldtype").getValueAsString().str() == "register" ){
+          // this is a global with the correct variable name and
+          // is a register field
+          unsigned NumIF = 0;
+          while( AttrSet.hasAttribute("regclasscontainer"+std::to_string(NumIF)) ){
+            NumIF = NumIF + 1;
+          }
+          return NumIF;
+        }
+      }
+    }// end if Global.getName
+  }// end for
+
+  return 0;
+}
 
 // EOF
