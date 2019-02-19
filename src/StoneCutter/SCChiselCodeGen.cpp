@@ -61,6 +61,9 @@ void SCChiselCodeGen::InitPasses(){
   Passes.push_back(static_cast<SCPass *>(new SCPipeBuilder(SCParser::TheModule.get(),
                                                        Opts,
                                                        Msgs)));
+  Passes.push_back(static_cast<SCPass *>(new SCIOWarn(SCParser::TheModule.get(),
+                                                      Opts,
+                                                      Msgs)));
 }
 
 void SCChiselCodeGen::WriteChiselHeader(){

@@ -10,6 +10,7 @@
 set(PassSrcs
 SCInstArg.cpp
 SCInstFormat.cpp
+SCIOWarn.cpp
 SCPipeBuilder.cpp
 )
 
