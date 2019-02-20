@@ -52,12 +52,24 @@ void SCIOWarn::CheckPrototypeIO( Function &F, Instruction &I ){
           return ;
         }
       }
-    }
 
-    // Argument doesn't appear in the prototype list, look up the instruction
-    // format and ensure that the arg appears in the instformat utilizes the
-    // appropriate regclass
-    // TODO
+      // Arg doesn't appear in the prototype list, look up the instruction
+      // format and make sure that the arg appears in one of the instformat
+      // registerclasses
+      if( F.hasFnAttribute("instformat") ){
+        // function attribute exists
+        std::string InstFormat =
+          F.getFnAttribute("instformat").getValueAsString().str();
+
+        // get a list of regclass types the  for the target instruction format
+        std::vector<std::string> Fields = this->GetRegClassInstTypes(InstFormat);
+
+        for( unsigned i=0; i<Fields.size(); i++ ){
+          if( Fields[i] == RegClass )
+            return ;
+        }
+      }
+    }
 
     this->PrintMsg( L_WARN, "Detected rogue I/O operation to register file for variable=" +
                             ArgName + " in instruction=" + F.getName().str() );

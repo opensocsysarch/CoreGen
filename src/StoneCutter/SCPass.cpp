@@ -59,6 +59,135 @@ bool SCPass::HasGlobalAttribute( std::string Var, std::string Attribute ){
   return false;
 }
 
+std::vector<std::string> SCPass::GetInstFormats(){
+  std::vector<std::string> IF;
+  for( auto &Global : TheModule->getGlobalList() ){
+    AttributeSet AttrSet = Global.getAttributes();
+    if( AttrSet.hasAttribute("fieldtype") ){
+      unsigned Idx = 0;
+      while( AttrSet.hasAttribute("instformat"+std::to_string(Idx)) ){
+        IF.push_back(
+          AttrSet.getAttribute("instformat"+std::to_string(Idx)).getValueAsString().str() );
+        Idx++;
+      }
+    }
+  }
+  std::sort(IF.begin(),IF.end());
+  IF.erase( std::unique(IF.begin(),IF.end()), IF.end() );
+  return IF;
+}
+
+std::vector<std::string> SCPass::GetInstFields(std::string InstFormat){
+  std::vector<std::string> Fields;
+
+  for( auto &Global : TheModule->getGlobalList() ){
+    AttributeSet AttrSet = Global.getAttributes();
+    if( AttrSet.hasAttribute("fieldtype") ){
+      unsigned Idx = 0;
+      while( AttrSet.hasAttribute("instformat"+std::to_string(Idx)) ){
+        if( AttrSet.getAttribute("Instformat"+std::to_string(Idx)).getValueAsString().str() ==
+            InstFormat )
+          Fields.push_back( Global.getName().str() );
+        Idx++;
+      }
+    }
+  }
+  std::sort( Fields.begin(),Fields.end());
+  Fields.erase( std::unique(Fields.begin(),Fields.end()), Fields.end() );
+  return Fields;
+}
+
+std::vector<std::string> SCPass::GetRegClassInstFields(std::string InstFormat){
+  std::vector<std::string> Fields;
+
+  for( auto &Global : TheModule->getGlobalList() ){
+    AttributeSet AttrSet = Global.getAttributes();
+    if( AttrSet.hasAttribute("fieldtype") ){
+      if( AttrSet.getAttribute("fieldtype").getValueAsString().str() == "register" ){
+        unsigned Idx = 0;
+        while( AttrSet.hasAttribute("instformat"+std::to_string(Idx)) ){
+          if( AttrSet.getAttribute("Instformat"+std::to_string(Idx)).getValueAsString().str() ==
+              InstFormat )
+            Fields.push_back( Global.getName().str() );
+          Idx++;
+        }
+      }
+    }
+  }
+  std::sort( Fields.begin(),Fields.end());
+  Fields.erase( std::unique(Fields.begin(),Fields.end()), Fields.end() );
+  return Fields;
+}
+
+std::vector<std::string> SCPass::GetEncodingInstFields(std::string InstFormat){
+  std::vector<std::string> Fields;
+
+  for( auto &Global : TheModule->getGlobalList() ){
+    AttributeSet AttrSet = Global.getAttributes();
+    if( AttrSet.hasAttribute("fieldtype") ){
+      if( AttrSet.getAttribute("fieldtype").getValueAsString().str() == "encoding" ){
+        unsigned Idx = 0;
+        while( AttrSet.hasAttribute("instformat"+std::to_string(Idx)) ){
+          if( AttrSet.getAttribute("Instformat"+std::to_string(Idx)).getValueAsString().str() ==
+              InstFormat )
+            Fields.push_back( Global.getName().str() );
+          Idx++;
+        }
+      }
+    }
+  }
+  std::sort( Fields.begin(),Fields.end());
+  Fields.erase( std::unique(Fields.begin(),Fields.end()), Fields.end() );
+  return Fields;
+}
+
+std::vector<std::string> SCPass::GetImmInstFields(std::string InstFormat){
+  std::vector<std::string> Fields;
+
+  for( auto &Global : TheModule->getGlobalList() ){
+    AttributeSet AttrSet = Global.getAttributes();
+    if( AttrSet.hasAttribute("fieldtype") ){
+      if( AttrSet.getAttribute("fieldtype").getValueAsString().str() == "immediate" ){
+        unsigned Idx = 0;
+        while( AttrSet.hasAttribute("instformat"+std::to_string(Idx)) ){
+          if( AttrSet.getAttribute("Instformat"+std::to_string(Idx)).getValueAsString().str() ==
+              InstFormat )
+            Fields.push_back( Global.getName().str() );
+          Idx++;
+        }
+      }
+    }
+  }
+  std::sort( Fields.begin(),Fields.end());
+  Fields.erase( std::unique(Fields.begin(),Fields.end()), Fields.end() );
+  return Fields;
+}
+
+std::vector<std::string> SCPass::GetRegClassInstTypes(std::string InstFormat){
+  std::vector<std::string> Fields;
+
+  for( auto &Global : TheModule->getGlobalList() ){
+    AttributeSet AttrSet = Global.getAttributes();
+    if( AttrSet.hasAttribute("fieldtype") ){
+      if( AttrSet.getAttribute("fieldtype").getValueAsString().str() == "register" ){
+        unsigned Idx = 0;
+        while( AttrSet.hasAttribute("instformat"+std::to_string(Idx)) ){
+          if( AttrSet.getAttribute("Instformat"+std::to_string(Idx)).getValueAsString().str() ==
+              InstFormat )
+            Fields.push_back(
+              AttrSet.getAttribute("regclasscontainer"+std::to_string(Idx)).getValueAsString().str() );
+          Idx++;
+        }
+      }
+    }
+  }
+  std::sort( Fields.begin(),Fields.end());
+  Fields.erase( std::unique(Fields.begin(),Fields.end()), Fields.end() );
+  return Fields;
+}
+
+
+
 std::string SCPass::GetGlobalAttribute( std::string Var,
                                         std::string Attribute ){
   for( auto &Global : TheModule->getGlobalList() ){

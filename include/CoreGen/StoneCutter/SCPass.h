@@ -100,6 +100,24 @@ public:
   /// Retrieves the number of instruction format register class attributes that include the target variable
   unsigned GetNumRegClasses(std::string Var);
 
+  /// Retrieves a list of unique instruction formats
+  std::vector<std::string> GetInstFormats();
+
+  /// Retrieves a list of the fields found in an instruction format
+  std::vector<std::string> GetInstFields(std::string InstFormat);
+
+  /// Retrieves a list of register class fields found in an instruction format
+  std::vector<std::string> GetRegClassInstFields(std::string InstFormat);
+
+  /// Retrieves a list of encoding fields found in an instruction format
+  std::vector<std::string> GetEncodingInstFields(std::string InstFormat);
+
+  /// Retrieves a list of the immediate fields found in an instruction format
+  std::vector<std::string> GetImmInstFields(std::string InstFormat);
+
+  /// Retrieves the set of register classes for fields that match the instruction format
+  std::vector<std::string> GetRegClassInstTypes(std::string InstFormat);
+
   /// Executes the target code generation pass
   virtual bool Execute() = 0;
 
