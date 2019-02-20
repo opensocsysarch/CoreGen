@@ -992,6 +992,16 @@ std::unique_ptr<PrototypeAST> SCParser::ParsePrototype() {
   std::string FnName = Lex->GetIdentifierStr();
   GetNextToken();
 
+  // parse the optional inst format
+  std::string InstFormat;
+  if(CurTok == ':'){
+    GetNextToken();
+    if( CurTok != tok_identifier )
+      return LogErrorP("Expected identifier in instruction prototype instruction format: 'name:format'");
+    InstFormat = Lex->GetIdentifierStr();
+    GetNextToken(); // eat the identifier
+  }
+
   if (CurTok != '(')
     return LogErrorP("Expected '(' in prototype");
 
@@ -1004,7 +1014,7 @@ std::unique_ptr<PrototypeAST> SCParser::ParsePrototype() {
   // success.
   GetNextToken(); // eat ')'.
 
-  return llvm::make_unique<PrototypeAST>(FnName, std::move(ArgNames));
+  return llvm::make_unique<PrototypeAST>(FnName, InstFormat, std::move(ArgNames));
 }
 
 VarAttrs SCParser::GetMaxVarAttr(std::vector<VarAttrs> ArgAttrs){
@@ -1275,6 +1285,7 @@ std::unique_ptr<FunctionAST> SCParser::ParseTopLevelExpr() {
   if (auto E = ParseExpression()) {
     // Make an anonymous proto.
     auto Proto = llvm::make_unique<PrototypeAST>("__anon_expr",
+                                                 "",
                                                  std::vector<std::string>());
     std::vector<std::unique_ptr<ExprAST>> Exprs;
     Exprs.push_back(std::move(E));
@@ -1876,6 +1887,10 @@ Function *PrototypeAST::codegen() {
 
   Function *F =
       Function::Create(FT, Function::ExternalLinkage, Name, SCParser::TheModule.get());
+
+  if( InstFormat.length() > 0 ){
+    F->addFnAttr("instformat",InstFormat);
+  }
 
   // Set names for all arguments.
   unsigned Idx = 0;
