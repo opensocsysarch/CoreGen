@@ -35,6 +35,7 @@
 // CoreGen headers
 #include "CoreGen/StoneCutter/SCLexer.h"
 #include "CoreGen/StoneCutter/SCMsg.h"
+#include "CoreGen/StoneCutter/SCOpts.h"
 #include "CoreGen/StoneCutter/SCUtil.h"
 #include "CoreGen/StoneCutter/SCIntrinsics.h"
 
@@ -83,7 +84,7 @@ class SCParser{
 public:
 
   /// Default constructor
-  SCParser(std::string, std::string, SCMsg *);
+  SCParser(std::string, std::string, SCOpts *, SCMsg *);
 
   /// Overloaded constructor
   SCParser(SCMsg *);
@@ -99,6 +100,9 @@ public:
 
   /// Execute the optimizer against the IR
   bool Optimize();
+
+  /// Enables all LLVM passes
+  void EnableAllPasses();
 
   /// Disables individual passes; all others enabled
   bool DisablePasses(std::vector<std::string> P);
@@ -378,6 +382,7 @@ private:
   int CurTok;                           ///< StoneCutter current token
   std::string InBuf;                    ///< StoneCutter input buffer
   std::string FileName;                 ///< StoneCutter file name
+  SCOpts *Opts;                         ///< Stonecutter options
   SCMsg *Msgs;                          ///< StoneCutter message handler
   SCLexer *Lex;                         ///< StoneCutter Lexer
 

@@ -21,8 +21,8 @@ unsigned SCParser::LabelIncr;
 bool SCParser::IsOpt = false;
 SCMsg *SCParser::GMsgs = nullptr;
 
-SCParser::SCParser(std::string B, std::string F, SCMsg *M)
-  : CurTok(-1), InBuf(B), FileName(F), Msgs(M), Lex(new SCLexer()),
+SCParser::SCParser(std::string B, std::string F, SCOpts *O, SCMsg *M)
+  : CurTok(-1), InBuf(B), FileName(F), Opts(O), Msgs(M), Lex(new SCLexer()),
     InFunc(false), Rtn(true) {
   TheModule = llvm::make_unique<Module>(StringRef(FileName), TheContext);
   GMsgs = M;
@@ -205,12 +205,18 @@ bool SCParser::DisablePasses(std::vector<std::string> P){
   return true;
 }
 
+void SCParser::EnableAllPasses(){
+  for( auto it=EPasses.begin(); it != EPasses.end(); ++it){
+    it->second = true;
+  }
+}
+
 bool SCParser::EnablePasses(std::vector<std::string> P){
   if( !CheckPassNames(P) ){
     // something is misspelled
     return false;
   }
-  // disbale everything, just to be pedantic
+  // disable everything, just to be pedantic
   for( auto it=EPasses.begin(); it != EPasses.end(); ++it){
     it->second = false;
   }
@@ -248,66 +254,92 @@ void SCParser::InitModuleandPassManager(){
 
   // promote allocas to registers
   if( IsPassEnabled("PromoteMemoryToRegisterPass") ){
+    if( Opts->IsVerbose() )
+      Msgs->PrintRawMsg( "Executing LLVM Pass: PromoteMemoryToRegisterPass");
     TheFPM->add(createPromoteMemoryToRegisterPass());
   }
 
   // enable simple peephole opts and bit-twiddling opts
   if( IsPassEnabled("InstructionCombiningPass") ){
+    if( Opts->IsVerbose() )
+      Msgs->PrintRawMsg( "Executing LLVM Pass: InstructionCombiningPass");
     TheFPM->add(createInstructionCombiningPass());
   }
 
   // enable reassociation of epxressions
   if( IsPassEnabled("ReassociatePass") ){
+    if( Opts->IsVerbose() )
+      Msgs->PrintRawMsg( "Executing LLVM Pass: ReassociatePass");
     TheFPM->add(createReassociatePass());
   }
 
   // eliminate common subexpressions
   if( IsPassEnabled("GVNPass" ) ){
+    if( Opts->IsVerbose() )
+      Msgs->PrintRawMsg( "Executing LLVM Pass: GVNPass");
     TheFPM->add(createGVNPass());
   }
 
   // simplify the control flow graph
   if( IsPassEnabled("CFGSimplificationPass") ){
+    if( Opts->IsVerbose() )
+      Msgs->PrintRawMsg( "Executing LLVM Pass: CFGSimplificationPass");
     TheFPM->add(createCFGSimplificationPass());
   }
 
   // constant propogations
   if( IsPassEnabled("ConstantPropagationPass") ){
+    if( Opts->IsVerbose() )
+      Msgs->PrintRawMsg( "Executing LLVM Pass: ConstantPropagationPass");
     TheFPM->add(createConstantPropagationPass());
   }
 
   // induction variable simplification pass
   if( IsPassEnabled("IndVarSimplifyPass") ){
+    if( Opts->IsVerbose() )
+      Msgs->PrintRawMsg( "Executing LLVM Pass: IndVarSimplifyPass");
     TheFPM->add(createIndVarSimplifyPass());
   }
 
   // loop invariant code motion
   if( IsPassEnabled("LICMPass") ){
+    if( Opts->IsVerbose() )
+      Msgs->PrintRawMsg( "Executing LLVM Pass: LICMPass");
     TheFPM->add(createLICMPass());
   }
 
   // loop deletion
   if( IsPassEnabled( "LoopDeletionPass") ){
+    if( Opts->IsVerbose() )
+      Msgs->PrintRawMsg( "Executing LLVM Pass: LoopDeletionPass");
     TheFPM->add(createLoopDeletionPass());
   }
 
   // loop idiom
   if( IsPassEnabled( "LoopIdiomPass") ){
+    if( Opts->IsVerbose() )
+      Msgs->PrintRawMsg( "Executing LLVM Pass: LoopIdiomPass");
     TheFPM->add(createLoopIdiomPass());
   }
 
   // loop re-roller
   if( IsPassEnabled( "LoopRerollPass") ){
+    if( Opts->IsVerbose() )
+      Msgs->PrintRawMsg( "Executing LLVM Pass: LoopRerollPass");
     TheFPM->add(createLoopRerollPass());
   }
 
   // loop rotation
   if( IsPassEnabled( "LoopRotatePass" ) ){
+    if( Opts->IsVerbose() )
+      Msgs->PrintRawMsg( "Executing LLVM Pass: LoopRotatePass");
     TheFPM->add(createLoopRotatePass());
   }
 
   // loop unswitching
   if( IsPassEnabled( "LoopUnswitchPass" ) ){
+    if( Opts->IsVerbose() )
+      Msgs->PrintRawMsg( "Executing LLVM Pass: LoopUnswitchPass");
     TheFPM->add(createLoopUnswitchPass());
   }
 
@@ -1444,6 +1476,9 @@ Value *DoWhileExprAST::codegen() {
                                           "entrydowhile."+std::to_string(LocalLabel),
                                           TheFunction);
 
+  // Insert an explicit fall through from the current block to the LoopBB.
+  Builder.CreateBr(LoopBB);
+
   // Start insertion in LoopBB.
   Builder.SetInsertPoint(LoopBB);
 
@@ -1493,6 +1528,10 @@ Value *WhileExprAST::codegen() {
   BasicBlock *LoopBB = BasicBlock::Create(SCParser::TheContext,
                                           "entrywhile."+std::to_string(LocalLabel),
                                           TheFunction);
+
+  // Insert an explicit fall through from the current block to the LoopBB.
+  Builder.CreateBr(LoopBB);
+
   // loop body block
   BasicBlock *EntryBB = BasicBlock::Create(SCParser::TheContext,
                                           "while."+std::to_string(LocalLabel),
