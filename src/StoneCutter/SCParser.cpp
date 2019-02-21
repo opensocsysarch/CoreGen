@@ -1496,7 +1496,7 @@ Value *DoWhileExprAST::codegen() {
     BodyExpr[i]->codegen();
   }
 
-  // Emit the initial conditional block
+  // Emit the while conditional block
   Value *CondV = Cond->codegen();
   if (!CondV){
     return nullptr;
@@ -1507,9 +1507,6 @@ Value *DoWhileExprAST::codegen() {
       BasicBlock::Create(SCParser::TheContext,
                          "afterdowhileloop." + std::to_string(LocalLabel),
                          TheFunction);
-
-  // Start insertion in LoopBB.
-  Builder.SetInsertPoint(LoopBB);
 
   // Insert the conditional branch for the initial state
   Builder.CreateCondBr(CondV,LoopBB,AfterBB);
