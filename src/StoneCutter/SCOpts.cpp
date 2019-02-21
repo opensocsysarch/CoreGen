@@ -129,7 +129,7 @@ bool SCOpts::ParseOpts(bool *isHelp){
       }
       std::string P(argv[i+1]);
       std::vector<std::string> tmpV2 = ParsePasses(P);
-      EnablePass.insert(EnablePass.end(),tmpV2.begin(),tmpV2.end());
+      DisablePass.insert(DisablePass.end(),tmpV2.begin(),tmpV2.end());
       if( tmpV2.size() > 0 ){
         isEnable = false;
         isDisable = true;

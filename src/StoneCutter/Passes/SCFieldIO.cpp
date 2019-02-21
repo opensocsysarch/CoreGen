@@ -17,6 +17,7 @@ SCFieldIO::SCFieldIO(Module *TM,
 }
 
 SCFieldIO::~SCFieldIO(){
+  Fields.clear();
 }
 
 bool SCFieldIO::RetrieveFields(){
@@ -42,17 +43,27 @@ bool SCFieldIO::RetrieveFields(){
 
 bool SCFieldIO::CheckInstArgs( Function &F, Instruction &I ){
 
+  bool Rtn = true;
+
   if( I.getOpcode() == Instruction::Store ){
-    std::cout << "THIS IS A STORE OPERATION" << std::endl;
-    // this is binary operation
-    std::cout << "INSTRUCTION NAME = " << I.getName().str() << std::endl;
-    for( unsigned i=0; i<I.getNumOperands(); i++ ){
-      std::cout << "Operand " << i << " = " <<
-        I.getOperand(i)->getName().str() << std::endl;
+    for( auto U : I.getOperand(1)->users() ){
+      if( auto Inst = dyn_cast<Instruction>(U) ){
+        for( unsigned i=0; i<Inst->getNumOperands(); i++ ){
+          // check to see if the i'th operand is in our field list
+          std::vector<std::string>::iterator it = std::find(Fields.begin(),
+                                                            Fields.end(),
+                                                            Inst->getOperand(i)->getName().str() );
+          if( it != Fields.end() ){
+            // print an error
+            this->PrintMsg( L_ERROR, "Cannot write to read-only field: " + *it );
+            Rtn = false;
+          }
+        }
+      }
     }
   }
 
-  return true;
+  return Rtn;
 }
 
 bool SCFieldIO::ExamineFieldIO(){

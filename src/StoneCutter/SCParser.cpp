@@ -76,9 +76,11 @@ void SCParser::InitIntrinsics(){
 }
 
 void SCParser::InitPassMap(){
+#if 0
   EPasses.insert(std::pair<std::string,bool>("PromoteMemoryToRegisterPass",true));
   EPasses.insert(std::pair<std::string,bool>("InstructionCombiningPass",true));
   EPasses.insert(std::pair<std::string,bool>("ReassociatePass",true));
+#endif
   EPasses.insert(std::pair<std::string,bool>("GVNPass",true));
   EPasses.insert(std::pair<std::string,bool>("CFGSimplificationPass",true));
   EPasses.insert(std::pair<std::string,bool>("ConstantPropagationPass",true));
@@ -198,6 +200,8 @@ bool SCParser::DisablePasses(std::vector<std::string> P){
   for( unsigned i=0; i<P.size(); i++ ){
     for( auto it=EPasses.begin(); it != EPasses.end(); ++it){
       if( it->first == P[i] ){
+        if( Opts->IsVerbose() )
+          Msgs->PrintRawMsg( "Disabling LLVM Pass: " + it->first );
         it->second = false;
       }
     }
@@ -225,6 +229,8 @@ bool SCParser::EnablePasses(std::vector<std::string> P){
   for( unsigned i=0; i<P.size(); i++ ){
     for( auto it=EPasses.begin(); it != EPasses.end(); ++it){
       if( it->first == P[i] ){
+        if( Opts->IsVerbose() )
+          Msgs->PrintRawMsg( "Enabling LLVM Pass: " + it->first );
         it->second = true;
       }
     }
