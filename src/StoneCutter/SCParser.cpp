@@ -1803,7 +1803,8 @@ Value *BinaryExprAST::codegen() {
   }else if( LT->getIntegerBitWidth() != RT->getIntegerBitWidth() ){
     // integer type mismatch, mutate the size of the RHS
     // TODO: print a warning message
-    R->mutateType(LT);
+    //R->mutateType(LT);
+    R = SCParser::Builder.CreateIntCast(R,LT,true);
   }
 
   if( LT->isFloatingPointTy() ){
