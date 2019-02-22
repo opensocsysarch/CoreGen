@@ -35,6 +35,7 @@
 // CoreGen headers
 #include "CoreGen/StoneCutter/SCLexer.h"
 #include "CoreGen/StoneCutter/SCMsg.h"
+#include "CoreGen/StoneCutter/SCOpts.h"
 #include "CoreGen/StoneCutter/SCUtil.h"
 #include "CoreGen/StoneCutter/SCIntrinsics.h"
 
@@ -83,7 +84,7 @@ class SCParser{
 public:
 
   /// Default constructor
-  SCParser(std::string, std::string, SCMsg *);
+  SCParser(std::string, std::string, SCOpts *, SCMsg *);
 
   /// Overloaded constructor
   SCParser(SCMsg *);
@@ -99,6 +100,9 @@ public:
 
   /// Execute the optimizer against the IR
   bool Optimize();
+
+  /// Enables all LLVM passes
+  void EnableAllPasses();
 
   /// Disables individual passes; all others enabled
   bool DisablePasses(std::vector<std::string> P);
@@ -326,18 +330,24 @@ public:
   /// of arguments the function takes).
   class PrototypeASTContainer {
     std::string Name;               ///< Name of the instruction protoype
+    std::string InstFormat;         ///< Name of the instruction format
     std::vector<std::string> Args;  ///< Argument vector of the prototype
 
   public:
     /// PrototypeASTContainer default constructor
-    PrototypeASTContainer(const std::string &Name, std::vector<std::string> Args)
-        : Name(Name), Args(std::move(Args)) {}
+    PrototypeASTContainer(const std::string &Name,
+                          const std::string &IName,
+                          std::vector<std::string> Args)
+        : Name(Name), InstFormat(IName), Args(std::move(Args)) {}
 
     /// PrototypeASTContainer code generation driver
     Function *codegen();
 
     /// PrototypeASTContainer: retrieve the name of the instruction definition
     const std::string &getName() const { return Name; }
+
+    /// PrototypeASTContainer: retrieve the instruction format
+    const std::string &getInstFormat() const { return InstFormat; }
   };
 
   /// FunctionAST - This class represents a function definition itself.
@@ -372,6 +382,7 @@ private:
   int CurTok;                           ///< StoneCutter current token
   std::string InBuf;                    ///< StoneCutter input buffer
   std::string FileName;                 ///< StoneCutter file name
+  SCOpts *Opts;                         ///< Stonecutter options
   SCMsg *Msgs;                          ///< StoneCutter message handler
   SCLexer *Lex;                         ///< StoneCutter Lexer
 
@@ -536,7 +547,8 @@ private:
   /// Logs a value error
 };
 
-Value *LogErrorV(std::string Str);  // FIX THIS
+Value *LogErrorV(std::string Str);  // TODO: FIX THIS
+Value *LogWarnV(std::string Str);  // TODO: FIX THIS
 
 /** Typedef for ExprASTContainer */
 typedef SCParser::ExprASTContainer ExprAST;

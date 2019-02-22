@@ -15,7 +15,7 @@ SCOpts::SCOpts(SCMsg *M, int A, char **C)
   : argc(A), argv(C),
   isKeep(false), isParse(true), isIR(true),
   isOptimize(true), isChisel(true), isCG(false), isVerbose(false),
-  isDisable(false), isEnable(true), isListPass(false),
+  isDisable(false), isEnable(false), isListPass(false),
   Msgs(M) {}
 
 // ------------------------------------------------- DESTRUCTOR
@@ -129,7 +129,7 @@ bool SCOpts::ParseOpts(bool *isHelp){
       }
       std::string P(argv[i+1]);
       std::vector<std::string> tmpV2 = ParsePasses(P);
-      EnablePass.insert(EnablePass.end(),tmpV2.begin(),tmpV2.end());
+      DisablePass.insert(DisablePass.end(),tmpV2.begin(),tmpV2.end());
       if( tmpV2.size() > 0 ){
         isEnable = false;
         isDisable = true;

@@ -10,7 +10,7 @@
 
 #include "CoreGen/StoneCutter/Intrinsics/SCMerge.h"
 
-SCMerge::SCMerge() : SCIntrin(2,"MERGE") {
+SCMerge::SCMerge() : SCIntrin(3,"MERGE") {
 }
 
 SCMerge::SCMerge(unsigned NI, std::string K) : SCIntrin(NI,K) {

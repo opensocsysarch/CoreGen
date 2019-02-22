@@ -16,14 +16,14 @@ if [[  "$retVal" -ne 0 ]]; then
   exit $retVal
 fi
 
-$SCCOMP_PATH/sccomp -parse $FILE
+$SCCOMP_PATH/sccomp -parse -no-optimize $FILE
 retVal=$?
 if [[  "$retVal" -ne 0 ]]; then
   echo "$SCCOMP_PATH/sccomp -parse -no-optimize $FILE failed with return code = $retVal"
   exit $retVal
 fi
 
-$SCCOMP_PATH/sccomp --parse $FILE
+$SCCOMP_PATH/sccomp --parse --no-optimize $FILE
 retVal=$?
 if [[  "$retVal" -ne 0 ]]; then
   echo "$SCCOMP_PATH/sccomp --parse --no-optimize $FILE failed with return code = $retVal"

@@ -123,6 +123,10 @@ bool SCLexer::IsVarDef(){
     Idx++;
   }
 
+  // make sure this is actually a var def
+  if( !isdigit(IdentifierStr[1]) )
+    return false;
+
   // all other types
   if( IdentifierStr[0] == 'u' ){
     // unsigned variable
@@ -169,7 +173,6 @@ int SCLexer::GetTok(){
 
   if (isalpha(LastChar)) { // identifier: [a-zA-Z][a-zA-Z0-9]*
     IdentifierStr = LastChar;
-    //while (isalnum((LastChar = GetNext()))){
     while (IsValidChar(&LastChar)){
       IdentifierStr += LastChar;
     }

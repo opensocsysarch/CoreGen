@@ -31,30 +31,38 @@ bool SCInstFormat::CheckInstFormat(){
     if( AttrSet.hasAttribute("fieldtype") ){
       if( AttrSet.getAttribute("fieldtype").getValueAsString().str() ==
           "register" ){
-        // found a register type
-        std::string InstF;
-        if( !AttrSet.hasAttribute("instformat") ){
+
+        // make sure it has instformats
+        if( this->GetNumInstFormats(Global.getName().str()) == 0 ){
           rtn = false;
           this->PrintMsg( L_ERROR, "Instruction field=" +
                           Global.getName().str() + " has no 'instformat' attribute" );
         }
-        InstF = AttrSet.getAttribute("instformat").getValueAsString().str();
-        if( !AttrSet.hasAttribute("regclasscontainer") ){
-          rtn = false;
-          this->PrintMsg( L_ERROR, "Instruction field=" +
-                          Global.getName().str() + " in instruction format=" +
-                          InstF + " has no 'regclasscontainer' attribute" );
-        }
-        std::string Container =
-          AttrSet.getAttribute("regclasscontainer").getValueAsString().str();
 
-        if( std::find(RegFileVect.begin(),RegFileVect.end(),Container) ==
-            RegFileVect.end() ){
-          rtn = false;
-          this->PrintMsg( L_ERROR, "Instruction field=" +
-                          Global.getName().str() + " in instruction format=" +
-                          InstF + " is not a member of a known register class; regclass=" +
-                          Container );
+        // make sure all the instformats have register class containersa
+        for( unsigned i=0; i<this->GetNumInstFormats(Global.getName().str()); i++ ){
+          // test entry 'i'
+          std::string InstF = this->GetGlobalAttribute(Global.getName().str(),
+                                                       "instformat"+std::to_string(i));
+          if( !this->HasGlobalAttribute(Global.getName().str(),
+                                        "regclasscontainer"+std::to_string(i)) ){
+            rtn = false;
+            this->PrintMsg( L_ERROR, "Instruction field=" +
+                            Global.getName().str() + " in instruction format=" +
+                            InstF + " has no matching 'regclasscontainer' attribute" );
+          }
+
+          std::string Container = this->GetGlobalAttribute(Global.getName().str(),
+                                                           "regclasscontainer"+std::to_string(i));
+
+          if( std::find(RegFileVect.begin(),RegFileVect.end(),Container) ==
+              RegFileVect.end() ){
+            rtn = false;
+            this->PrintMsg( L_ERROR, "Instruction field=" +
+                            Global.getName().str() + " in instruction format=" +
+                            InstF + " is not a member of a known register class; regclass=" +
+                            Container );
+          }
         }
       }
     }

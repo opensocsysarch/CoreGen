@@ -519,7 +519,8 @@ bool CoreGenCodegen::BuildISAChisel( CoreGenISA *ISA,
   // stage 7: write out the instructions
   for( unsigned i=0; i<Insts.size(); i++ ){
     MOutFile << "# " << Insts[i]->GetName() << std::endl;
-    MOutFile << "def " << Insts[i]->GetName() << "( ";
+    MOutFile << "def " << Insts[i]->GetName()
+              << ":" << Insts[i]->GetFormat()->GetName() << "( ";
 
     // retrieve the instruction format and print out all the field
     // names and immediate values

@@ -26,7 +26,7 @@ bool SCExec::PrintPassList(){
   std::string Buf( (std::istreambuf_iterator<char>(t)),
                    (std::istreambuf_iterator<char>()));
 
-  Parser = new SCParser(Buf,TmpFile,Msgs);
+  Parser = new SCParser(Buf,TmpFile,Opts,Msgs);
   if( !Parser ){
     Msgs->PrintMsg( L_ERROR, "Failed to initiate the StoneCutter parser" );
     return false;
@@ -80,7 +80,7 @@ bool SCExec::Exec(){
   std::string Buf( (std::istreambuf_iterator<char>(t)),
                      (std::istreambuf_iterator<char>()));
 
-  Parser = new SCParser(Buf,LTmpFile,Msgs);
+  Parser = new SCParser(Buf,LTmpFile,Opts,Msgs);
   if( !Parser ){
     Msgs->PrintMsg( L_ERROR, "Failed to initiate the StoneCutter parser" );
     SCDeleteFile(LTmpFile);
@@ -89,6 +89,9 @@ bool SCExec::Exec(){
 
   // Do we execute the inline optimizer?
   if( Opts->IsOptimize() ){
+    // first enable all the passes
+    Parser->EnableAllPasses();
+
     // do we need to manually enable passes?
     if( Opts->IsEnablePass() ){
       if( !Parser->EnablePasses(Opts->GetEnablePass()) ){

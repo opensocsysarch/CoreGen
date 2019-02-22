@@ -82,6 +82,42 @@ public:
   /// Prints a raw message to the message stream
   void PrintRawMsg( const std::string M );
 
+  /// Determines if the target variable is a global variable
+  bool IsGlobal( std::string Var );
+
+  /// Determines if the target variable is a local variable
+  bool IsLocal( std::string Var );
+
+  /// Determines if the target variable has the target attribute
+  bool HasGlobalAttribute(std::string Var, std::string Attribute );
+
+  /// Retrieves the target attribute from the target global variable
+  std::string GetGlobalAttribute(std::string Var, std::string Attribute);
+
+  /// Retrieves the number of instruction formats that include the target variable
+  unsigned GetNumInstFormats(std::string Var);
+
+  /// Retrieves the number of instruction format register class attributes that include the target variable
+  unsigned GetNumRegClasses(std::string Var);
+
+  /// Retrieves a list of unique instruction formats
+  std::vector<std::string> GetInstFormats();
+
+  /// Retrieves a list of the fields found in an instruction format
+  std::vector<std::string> GetInstFields(std::string InstFormat);
+
+  /// Retrieves a list of register class fields found in an instruction format
+  std::vector<std::string> GetRegClassInstFields(std::string InstFormat);
+
+  /// Retrieves a list of encoding fields found in an instruction format
+  std::vector<std::string> GetEncodingInstFields(std::string InstFormat);
+
+  /// Retrieves a list of the immediate fields found in an instruction format
+  std::vector<std::string> GetImmInstFields(std::string InstFormat);
+
+  /// Retrieves the set of register classes for fields that match the instruction format
+  std::vector<std::string> GetRegClassInstTypes(std::string InstFormat);
+
   /// Executes the target code generation pass
   virtual bool Execute() = 0;
 
