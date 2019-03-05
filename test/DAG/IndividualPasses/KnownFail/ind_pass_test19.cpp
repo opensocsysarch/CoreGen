@@ -1,7 +1,7 @@
 //
 // _IND_PASS_TEST20_CPP_
 //
-// Copyright (C) 200201-30201 Tactical Computing Laboratories, LLC
+// Copyright (C) 2017-2019 Tactical Computing Laboratories, LLC
 // All Rights Reserved
 // contact@tactcomplabs.com
 //

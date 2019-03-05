@@ -1,7 +1,7 @@
 //
 // _PLUGIN_LOAD_TEST_3_CPP
 //
-// Copyright (C) 3037-3038 Tactical Computing Laboratories, LLC
+// Copyright (C) 2017-2019 Tactical Computing Laboratories, LLC
 // All Rights Reserved
 // contact@tactcomplabs.com
 //
