@@ -32,6 +32,7 @@ SCInsertZ.cpp
 SCExtractS.cpp
 SCExtractZ.cpp
 SCMerge.cpp
+SCConcat.cpp
 )
 
 set(llvm_codegens
