@@ -144,4 +144,20 @@ std::string CoreGenNode::GetRTLFile(){
   return RTLFile;
 }
 
+bool CoreGenNode::SetAttr( CGAttr A ){
+  Attrs.push_back( A );
+  std::sort( Attrs.begin(), Attrs.end() );
+  Attrs.erase( std::unique( Attrs.begin(), Attrs.end() ), Attrs.end() );
+  return true;
+}
+
+bool CoreGenNode::HasAttr(CGAttr A){
+  for( unsigned i=0; i<Attrs.size(); i++ ){
+    if( Attrs[i] == A ){
+      return true;
+    }
+  }
+  return false;
+}
+
 // EOF
