@@ -40,6 +40,7 @@
 #include "CoreGen/StoneCutter/Intrinsics/SCMerge.h"
 #include "CoreGen/StoneCutter/Intrinsics/SCConcat.h"
 #include "CoreGen/StoneCutter/Intrinsics/SCLss.h"
+#include "CoreGen/StoneCutter/Intrinsics/SCFence.h"
 
 #endif
 
