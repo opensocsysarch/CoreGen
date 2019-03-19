@@ -6,14 +6,11 @@
 # See LICENSE in the top level directory for licensing details
 #
 
-#set(OptPassSrcs
-#)
+set(OptPassSrcs
+RegClassOpt.cpp
+)
 
-#include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../)
-#include_directories(${COREGEN_PLUGIN_PATH})
-#add_library(OptPassObjs OBJECT ${OptPassSrcs})
+include_directories(${COREGEN_INCLUDE_PATH})
+add_library(OptPassObjs OBJECT ${OptPassSrcs})
 
-#install(DIRECTORY "."
-#        DESTINATION "include/Passes/Opt"
-#        FILES_MATCHING
-#        PATTERN "*.h")
+#-- EOF

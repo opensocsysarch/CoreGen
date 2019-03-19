@@ -108,6 +108,9 @@ private:
   friend class InstTable;
   friend class SpecDoc;
 
+  // -- Optimization passes
+  friend class RegClassOpt;
+
 protected:
   unsigned **AdjMat;                        ///< Adjacency matrix for the DAG
 

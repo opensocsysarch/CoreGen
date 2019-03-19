@@ -39,13 +39,11 @@ add_subdirectory(Passes)
 include_directories(${COREGEN_INCLUDE_PATH})
 include_directories(${YAML_PATH}/include)
 add_library(CoreGenBackend ${CoreGenSrcs} $<TARGET_OBJECTS:DataPassObjs>
-                                          $<TARGET_OBJECTS:AnalysisPassObjs>)
+                                          $<TARGET_OBJECTS:AnalysisPassObjs>
+                                          $<TARGET_OBJECTS:OptPassObjs>)
 target_link_libraries(CoreGenBackend CoreGenPluginImpl CoreGenCodegen yaml-cpp ${COREGEN_LINK_LIBS})
 target_compile_options(CoreGenBackend PRIVATE -fPIC)
 
 install(TARGETS CoreGenBackend DESTINATION lib)
-#install(DIRECTORY "."
-#        DESTINATION "include/CoreGenBackend"
-#        FILES_MATCHING
-#        PATTERN "*.h")
+
 #-- EOF

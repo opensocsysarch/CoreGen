@@ -155,7 +155,7 @@ public:
     *OutStream << this->GetName();
     CGPrintSpace( this->GetName().length(), 30 );
     *OutStream << this->TypeToStr();
-    CGPrintSpace( this->TypeToStr().length(), 10 );
+    CGPrintSpace( this->TypeToStr().length(), 15 );
     *OutStream << Desc << std::endl;
   }
 };
