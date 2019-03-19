@@ -40,6 +40,10 @@
 #include "CoreGen/CoreGenBackend/CoreGenBackend.h"
 #include "CoreGen/CoreGenBackend/CoreGenUtil.h"
 
+// Codegen Headers
+#include "CoreGen/CoreGenCodegen/CoreGenChiselCodegen.h"
+
+
 class CoreGenCodegen
 {
 private:
@@ -69,6 +73,9 @@ private:
 
   /// Builds the Chisel project files
   bool BuildChiselProject();
+
+  /// Builds the Chisel src output
+  bool BuildChisel();
 
   /// Builds the compiler directory structure
   bool BuildLLVMDir();

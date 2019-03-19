@@ -1,5 +1,5 @@
 //
-// _CoreGenChiselCodegen_h_
+// _CoreGenNodeCodegen_h_
 //
 // Copyright (C) 2017-2019 Tactical Computing Laboratories, LLC
 // All Rights Reserved
@@ -9,16 +9,16 @@
 //
 
 /**
- * \class CoreGenChiselCodegen
+ * \class CoreGenNodeCodegen
  *
  * \ingroup CoreGenCodegen
  *
- * \brief The CoreGen Chisel code generation class
+ * \brief CoreGenCodegen base class for node code generation facilities
  *
  */
 
-#ifndef _COREGENCHISELCODEGEN_H_
-#define _COREGENCHISELCODEGEN_H_
+#ifndef _COREGENNODECODEGEN_H_
+#define _COREGENNODECODEGEN_H_
 
 // Standard Headers
 #include <iostream>
@@ -32,31 +32,25 @@
 #include "CoreGen/CoreGenBackend/CoreGenBackend.h"
 #include "CoreGen/CoreGenBackend/CoreGenUtil.h"
 
-// Codegen Headers
-#include "CoreGen/CoreGenCodegen/CoreGenNodeCodegens.h"
-
-class CoreGenChiselCodegen
-{
-private:
-  CoreGenNode *Top;                 ///< Top-level coregen node
+class CoreGenNodeCodegen{
+protected:
+  CoreGenNode *Node;                ///< Raw node object
   CoreGenProj *Proj;                ///< CoreGen Project Info
-  std::string ChiselRoot;           ///< Root directory for chisel output
+  std::string Path;                 ///< Target output file
   CoreGenErrno *Errno;              ///< CoreGen Errno Structure
-
 
 public:
   /// Default constructor
-  CoreGenChiselCodegen(CoreGenNode *T,
-                       CoreGenProj *P,
-                       std::string R,
-                       CoreGenErrno *E);
+  CoreGenNodeCodegen( CoreGenNode *N,
+                      CoreGenProj *P,
+                      std::string Pa,
+                      CoreGenErrno *E ) : Node(N), Proj(P), Path(Pa), Errno(E){}
 
   /// Default destructor
-  ~CoreGenChiselCodegen();
+  ~CoreGenNodeCodegen() {}
 
-  /// Execute the Chisel codegen
-  bool Execute();
-
+  /// Executes the node-specific code generator
+  virtual bool Execute() { return false; }
 };
 
 #endif
