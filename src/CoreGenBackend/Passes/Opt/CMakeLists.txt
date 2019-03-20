@@ -8,6 +8,7 @@
 
 set(OptPassSrcs
 RegClassOpt.cpp
+CacheLevelOpt.cpp
 )
 
 include_directories(${COREGEN_INCLUDE_PATH})

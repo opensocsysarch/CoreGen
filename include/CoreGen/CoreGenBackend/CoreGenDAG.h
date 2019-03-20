@@ -110,6 +110,7 @@ private:
 
   // -- Optimization passes
   friend class RegClassOpt;
+  friend class CacheLevelOpt;
 
 protected:
   unsigned **AdjMat;                        ///< Adjacency matrix for the DAG

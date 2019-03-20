@@ -63,6 +63,7 @@ void CoreGenPassMgr::InitSoCPasses(std::ostream *O){
 
   // Optimization Passes
   Passes.push_back(static_cast<CoreGenPass *>(new RegClassOpt(O,DAG,Errno)));
+  Passes.push_back(static_cast<CoreGenPass *>(new CacheLevelOpt(O,DAG,Errno)));
 }
 
 void CoreGenPassMgr::InitModPasses(std::ostream *O){
@@ -88,6 +89,7 @@ void CoreGenPassMgr::InitModPasses(std::ostream *O){
 
   // Optimization Passes
   Passes.push_back(static_cast<CoreGenPass *>(new RegClassOpt(O,DAG,Errno)));
+  Passes.push_back(static_cast<CoreGenPass *>(new CacheLevelOpt(O,DAG,Errno)));
 }
 
 void CoreGenPassMgr::InitExtPasses(std::ostream *O){
@@ -112,6 +114,7 @@ void CoreGenPassMgr::InitExtPasses(std::ostream *O){
 
   // Optimization Passes
   Passes.push_back(static_cast<CoreGenPass *>(new RegClassOpt(O,DAG,Errno)));
+  Passes.push_back(static_cast<CoreGenPass *>(new CacheLevelOpt(O,DAG,Errno)));
 }
 
 void CoreGenPassMgr::InitSysPasses(std::ostream *O){
