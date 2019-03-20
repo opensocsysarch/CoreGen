@@ -32,6 +32,9 @@
 
 class RegClassOpt : public CoreGenPass{
 private:
+  /// Walks each register class and examines candidate registers
+  void WalkRegClass(CoreGenRegClass *RC);
+
 public:
   /// Default constructor
   RegClassOpt(std::ostream *O, CoreGenDAG *D, CoreGenErrno *E);
