@@ -59,7 +59,8 @@ typedef enum{
   AttrSharedReg = 0,                    ///< CGAttr: Shared register file attribute
   AttrPrivReg = 1,                      ///< CGAttr: Private register file attribute
   AttrTUSReg = 2,                       ///< CGAttr: Thread unit shared registers
-  AttrSharedCache = 3                   ///< CGAttr: Shared cache level attribute
+  AttrISAReg = 3,                       ///< CGAttr: Multi-ISA shared registers
+  AttrSharedCache = 4                   ///< CGAttr: Shared cache level attribute
 }CGAttr;                                ///< CoreGenNode: CoreGen Node Attributes
 
 class CoreGenNode{

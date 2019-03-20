@@ -33,7 +33,14 @@
 class RegClassOpt : public CoreGenPass{
 private:
   /// Walks each register class and examines candidate registers
-  void WalkRegClass(CoreGenRegClass *RC);
+  void WalkRegClass(CoreGenRegClass *RC,
+                    CoreGenDAG *D1,
+                    unsigned idx);
+
+  /// Determine if a register class is shared across ISAs
+  void WalkISA(CoreGenRegClass *RC,
+               CoreGenDAG *D1,
+               unsigned idx);
 
 public:
   /// Default constructor
