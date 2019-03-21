@@ -24,10 +24,14 @@
 
 class RegClassCG : public CoreGenNodeCodegen {
 private:
+  /// Writes the register class block to the output stream
+  bool WriteRegClass( std::ofstream &O );
+
 public:
   /// Default constructor
   RegClassCG(CoreGenNode *N,
              CoreGenProj *P,
+             std::string Package,
              std::string Path,
              CoreGenErrno *E );
 

@@ -36,6 +36,7 @@ class CoreGenNodeCodegen{
 protected:
   CoreGenNode *Node;                ///< Raw node object
   CoreGenProj *Proj;                ///< CoreGen Project Info
+  std::string Package;              ///< Chisel package name for this target
   std::string Path;                 ///< Target output file
   CoreGenErrno *Errno;              ///< CoreGen Errno Structure
 
@@ -43,14 +44,37 @@ public:
   /// Default constructor
   CoreGenNodeCodegen( CoreGenNode *N,
                       CoreGenProj *P,
+                      std::string Pac,
                       std::string Pa,
-                      CoreGenErrno *E ) : Node(N), Proj(P), Path(Pa), Errno(E){}
+                      CoreGenErrno *E ) : Node(N), Proj(P), Package(Pac),
+                                          Path(Pa), Errno(E){}
 
   /// Default destructor
   virtual ~CoreGenNodeCodegen() {}
 
   /// Executes the node-specific code generator
   virtual bool Execute() { return false; }
+
+  /// Writes the top-level Chisel package info
+  bool WritePackageInfo(std::ofstream &O){
+    if( !O.is_open() )
+      return false;
+    O << "// -- Chisel package info" << std::endl;
+    O << "package " << Package << std::endl;
+    return true;
+  }
+
+  /// Writes the standard Chisel imports out to the target output stream
+  bool WriteStdChiselImport(std::ofstream &O){
+    if( !O.is_open() )
+      return false;
+    O << "// -- Import standard Chisel and Scala packages" << std::endl;
+    O << "import Chisel._" << std::endl;
+    O << "import Chisel.ImplicitConversions._" << std::endl;
+    O << "import scala.collection.immutable.ListMap" << std::endl;
+    O << "import scala.collection.mutable.ArrayBuffer" << std::endl;
+    return true;
+  }
 };
 
 #endif
