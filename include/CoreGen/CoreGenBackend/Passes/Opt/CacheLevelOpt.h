@@ -19,7 +19,7 @@
 
 
 #ifndef _CACHELEVELOPT_H_
-#define _CACHELEGELOPT_H_
+#define _CACHELEVELOPT_H_
 
 #include <iostream>
 #include <string>
