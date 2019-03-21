@@ -25,6 +25,27 @@ bool RegClassCG::WriteRegClass(std::ofstream &O ){
   O << "class " << CGRemoveDot(Node->GetName())
     << "(n: Int, w: Int, zero: Boolean = false) {" << std::endl;
   O << "\tval rf = Mem(n, UInt(width = w))" << std::endl;
+  O << "\tprivate def access(addr: UInt) = rf(~addr(log2Up(n)-1,0))" << std::endl;
+  O << "\tprivate val reads = ArrayBuffer[(UInt,UInt)]()" << std::endl;
+  O << "\tprivate var canRead = true" << std::endl;
+  O << std::endl;
+  O << "\t//-- register read interface" << std::endl;
+  O << "\tdef read(addr: Uint) = {" << std::endl;
+  O << "\t\trequire(canRead)" << std::endl;
+  O << "\t\treads += addr -> Wire(UInt())" << std::endl;
+  O << "\t\treads.last._2 := Mux(Bool(zero) && addr === UInt(0), UInt(0), access(addr))" << std::endl;
+  O << "\t\treads.last._2" << std::endl;
+  O << "\t}" << std::endl;
+  O << std::endl;
+  O << "\t//-- register write interface" << std::endl;
+  O << "\tdef write(addr: UInt, data:UInt) = {" << std::endl;
+  O << "\t\tcanRead = false" << std::endl;
+  O << "\t\twhen (addr =/= UInt(0)) {" << std::endl;
+  O << "\t\t\taccess(addr) := data" << std::endl;
+  O << "\t\t\tfor ((raddr, rdata) <- reads)"<< std::endl;
+  O << "\t\t\t\twhen (addr === raddr) { rdata := data }" << std::endl;
+  O << "\t\t}" << std::endl;
+  O << "\t}" << std::endl;
   O << "}" << std::endl;
   return true;
 }
