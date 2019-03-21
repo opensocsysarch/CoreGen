@@ -44,9 +44,11 @@ bool CoreGenChiselCodegen::ExecRegClassCodegen(CoreGenNode *N){
   // examine the attributes and determine how/where to
   // place the chisel output
   std::string FullPath = ChiselRoot;
+  std::string Package;
   if( N->HasAttr(AttrISAReg) ){
     // shared across cores, put it in the util's
-    FullPath += "/util/" + N->GetName() + ".chisel";
+    FullPath += "/util/" + CGRemoveDot(N->GetName()) + ".chisel";
+    Package = "opensocsysarch."+Proj->GetProjName()+".util";
   }else{
     // remains within a ISA, put it in the ISA-specific dir
     CoreGenNode *IN = GetRegClassISANode(N);
@@ -56,6 +58,10 @@ bool CoreGenChiselCodegen::ExecRegClassCodegen(CoreGenNode *N){
       return false;
     }
 
+    Package = "opensocsysarch."+
+              Proj->GetProjName()+"."+
+              IN->GetName()+"."+
+              N->GetName();
     FullPath += ("/" + IN->GetName());
 
     if( !CGMkDirP(FullPath) ){
@@ -64,10 +70,10 @@ bool CoreGenChiselCodegen::ExecRegClassCodegen(CoreGenNode *N){
       return false;
     }
 
-    FullPath += ("/" + N->GetName() + ".chisel");
+    FullPath += ("/" + CGRemoveDot(N->GetName()) + ".chisel");
   }
 
-  RegClassCG *CG = new RegClassCG(N,Proj,FullPath,Errno);
+  RegClassCG *CG = new RegClassCG(N,Proj,Package,FullPath,Errno);
   bool rtn = true;
   if( !CG->Execute() ){
     rtn = false;

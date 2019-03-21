@@ -24,6 +24,7 @@
 #include <ctime>
 #include <vector>
 #include <sstream>
+#include <algorithm>
 
 #define STRINGIZE_INSTALL_PREFIX(CGIPREFIX) #CGIPREFIX
 #define _COREGEN_INSTALL_PREFIX_ STRINGIZE_INSTALL_PREFIX(CGIPREFIX)
@@ -171,6 +172,13 @@ inline std::string CGDoubleToStr( double d ){
   std::stringstream s;
   s << d;
   return s.str();
+}
+
+/// CoreGenUtil: Remove any dots (.) in the input string
+inline std::string CGRemoveDot( std::string in ){
+  std::string out = in;
+  out.erase(std::remove(out.begin(),out.end(),'.'),out.end());
+  return out;
 }
 
 /// CoreGenUtil: Return the default installation location
