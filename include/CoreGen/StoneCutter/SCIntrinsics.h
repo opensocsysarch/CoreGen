@@ -38,6 +38,9 @@
 #include "CoreGen/StoneCutter/Intrinsics/SCExtractS.h"
 #include "CoreGen/StoneCutter/Intrinsics/SCExtractZ.h"
 #include "CoreGen/StoneCutter/Intrinsics/SCMerge.h"
+#include "CoreGen/StoneCutter/Intrinsics/SCConcat.h"
+#include "CoreGen/StoneCutter/Intrinsics/SCLss.h"
+#include "CoreGen/StoneCutter/Intrinsics/SCFence.h"
 
 #endif
 

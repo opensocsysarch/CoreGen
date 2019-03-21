@@ -24,7 +24,7 @@ int ExecuteCoregen( CGCLIOpts *Opts ){
     int major = -1;
     int minor = -1;
     CG->CoreGenVersion( &major, &minor );
-    std::cout << "Copyright (C) 2017-2018 Tactical Computing Laboratories, LLC" << std::endl;
+    std::cout << "Copyright (C) 2017-2019 Tactical Computing Laboratories, LLC" << std::endl;
     std::cout << "CoreGen Version: " << major << "." << minor << std::endl;
     std::cout << "CoreGen Build Date: " << CG->CoreGenBuildDate()
       << " " << CG->CoreGenBuildTime() << std::endl;

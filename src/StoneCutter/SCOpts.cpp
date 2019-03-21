@@ -167,7 +167,7 @@ std::string SCOpts::GetInputFile( unsigned F ){
 
 // ------------------------------------------------- PRINTVERSION
 void SCOpts::PrintVersion(){
-  Msgs->PrintRawMsg("Copyright (C) 2017-2018 Tactical Computing Laboratories, LLC");
+  Msgs->PrintRawMsg("Copyright (C) 2017-2019 Tactical Computing Laboratories, LLC");
   Msgs->PrintRawMsg("SCCOMP Version " + std::to_string(SC_MAJOR_VERSION)
                     + "." + std::to_string(SC_MINOR_VERSION)
                     + "." + std::to_string(SC_PATCH_VERSION));

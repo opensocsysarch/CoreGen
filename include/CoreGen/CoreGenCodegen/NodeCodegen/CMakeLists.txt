@@ -1,4 +1,4 @@
-# include/CoreGen/CoreGenCodegen CMakeLists.txt
+# include/CoreGen/CoreGenCodegen/NodeCodegen CMakeLists.txt
 #
 # Copyright (C) 2017-2019 Tactical Computing Laboratories, LLC
 # All Rights Reserved
@@ -7,9 +7,8 @@
 # See LICENSE in the top level directory for licensing details
 #
 
-add_subdirectory(NodeCodegen)
 
 install(DIRECTORY "."
-        DESTINATION "include/CoreGenCodegen"
+        DESTINATION "include/CoreGenCodegen/NodeCodegen"
         FILES_MATCHING
         PATTERN "*.h")

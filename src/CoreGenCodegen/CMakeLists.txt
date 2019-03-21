@@ -13,10 +13,12 @@ CoreGenChiselCodegen.cpp
 CoreGenLLVMCodegen.cpp
 )
 
+add_subdirectory(NodeCodegen)
+
 include_directories(${YAML_PATH}/include)
 include_directories(${COREGEN_INCLUDE_PATH})
 
-add_library(CoreGenCodegen ${CodegenSrcs})
+add_library(CoreGenCodegen ${CodegenSrcs} $<TARGET_OBJECTS:NodeCodegenObjs>)
 
 target_link_libraries(CoreGenCodegen CoreGenBackend CoreGenPluginImpl)
 

@@ -8,10 +8,8 @@
 
 add_subdirectory(Data)
 add_subdirectory(Analysis)
+add_subdirectory(Opt)
 
 include_directories(${COREGEN_INCLUDE_PATH})
 
-#install(DIRECTORY "."
-#        DESTINATION "include/CoreGenBackend/Passes"
-#        FILES_MATCHING
-#        PATTERN "*.h")
+# EOF

@@ -209,6 +209,12 @@ bool CoreGenCodegen::BuildChiselDir(){
     return false;
   }
 
+  if( !CGMkDirP(FullDir+"/util") ){
+    Errno->SetError(CGERR_ERROR, "Could not construct the chisel source tree: "
+                    + FullDir );
+    return false;
+  }
+
   if( ProjRoot[ProjRoot.length()-1] == '/' ){
     FullDir = ProjRoot + "RTL/chisel/project";
   }else{
@@ -347,6 +353,29 @@ bool CoreGenCodegen::BuildChiselProject(){
   POutFile.close();
 
   return true;
+}
+
+bool CoreGenCodegen::BuildChisel(){
+  if( !Proj ){
+    Errno->SetError(CGERR_ERROR, "Cannot derive Chisel directory; Project is null" );
+    return false;
+  }
+
+  std::string FullDir;
+  std::string ProjRoot = Proj->GetProjRoot();
+  if( ProjRoot[ProjRoot.length()-1] == '/' ){
+    FullDir = ProjRoot + "RTL/chisel/src/main/scala";
+  }else{
+    FullDir = ProjRoot + "/RTL/chisel/src/main/scala";
+  }
+
+  CoreGenChiselCodegen *CG = new CoreGenChiselCodegen(Top,
+                                                      Proj,
+                                                      FullDir,
+                                                      Errno);
+  bool rtn = CG->Execute();
+  delete CG;
+  return rtn;
 }
 
 bool CoreGenCodegen::BuildChiselMakefile(){
@@ -602,6 +631,9 @@ bool CoreGenCodegen::ExecuteChiselCodegen(){
 
   // Stage 6: Walk the top-level modules and generate chisel
   //          This is the bulk of the code generation logic
+  if( !BuildChisel() ){
+    return false;
+  }
 
   // Stage 7: Build the Chisel makefile
   if( !BuildChiselMakefile() ){

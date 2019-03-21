@@ -47,6 +47,8 @@
 #include "CoreGen/CoreGenBackend/Passes/Analysis/ASPSolverPass.h"
 
 // CoreGen Optimization Passes
+#include "CoreGen/CoreGenBackend/Passes/Opt/RegClassOpt.h"
+#include "CoreGen/CoreGenBackend/Passes/Opt/CacheLevelOpt.h"
 
 #endif
 

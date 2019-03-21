@@ -55,6 +55,14 @@ typedef enum{
   RTLVerilog = 2                        ///< CGRTLType: Verilog RTL
 }CGRTLType;                             ///< CoreGenNode: Inline RTL Type
 
+typedef enum{
+  AttrSharedReg = 0,                    ///< CGAttr: Shared register file attribute
+  AttrPrivReg = 1,                      ///< CGAttr: Private register file attribute
+  AttrTUSReg = 2,                       ///< CGAttr: Thread unit shared registers
+  AttrISAReg = 3,                       ///< CGAttr: Multi-ISA shared registers
+  AttrSharedCache = 4                   ///< CGAttr: Shared cache level attribute
+}CGAttr;                                ///< CoreGenNode: CoreGen Node Attributes
+
 class CoreGenNode{
 private:
   std::string Name;                     ///< CoreGenNode: Name of the CoreGen node
@@ -62,6 +70,7 @@ private:
   std::string RTLFile;                  ///< CoreGenNode: User-directed external RTL file
   CGNodeType Type;                      ///< CoreGenNode: Type of CoreGen node
   CGRTLType RTLType;                    ///< CoreGenNode: Type of RTL
+  std::vector<CGAttr> Attrs;            ///< CoreGenNode: Node attributes
   std::vector<CoreGenNode *> CNodes;    ///< CoreGenNode: Child DAG nodes
 
   CoreGenNode *PluginNode;              ///< CoreGenNode: Overridden Plugin Node
@@ -85,6 +94,12 @@ public:
 
   /// Retrieve the CoreGen node type
   CGNodeType GetType();
+
+  /// Insert an attribute for this node
+  bool SetAttr(CGAttr A);
+
+  /// Determine if the target attribute is set
+  bool HasAttr(CGAttr A);
 
   /// Set the CoreGen node type
   bool SetType(CGNodeType T);
