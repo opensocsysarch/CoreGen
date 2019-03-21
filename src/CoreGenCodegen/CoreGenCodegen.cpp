@@ -209,6 +209,12 @@ bool CoreGenCodegen::BuildChiselDir(){
     return false;
   }
 
+  if( !CGMkDirP(FullDir+"/util") ){
+    Errno->SetError(CGERR_ERROR, "Could not construct the chisel source tree: "
+                    + FullDir );
+    return false;
+  }
+
   if( ProjRoot[ProjRoot.length()-1] == '/' ){
     FullDir = ProjRoot + "RTL/chisel/project";
   }else{

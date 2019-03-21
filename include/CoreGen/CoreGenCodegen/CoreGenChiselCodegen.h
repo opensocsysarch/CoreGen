@@ -43,6 +43,11 @@ private:
   std::string ChiselRoot;           ///< Root directory for chisel output
   CoreGenErrno *Errno;              ///< CoreGen Errno Structure
 
+  /// Execute the register class code generator
+  bool ExecRegClassCodegen(CoreGenNode *N);
+
+  /// Retrieve the appropriate ISA node from the register class
+  CoreGenNode *GetRegClassISANode(CoreGenNode *N);
 
 public:
   /// Default constructor

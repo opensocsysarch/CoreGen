@@ -47,7 +47,7 @@ public:
                       CoreGenErrno *E ) : Node(N), Proj(P), Path(Pa), Errno(E){}
 
   /// Default destructor
-  ~CoreGenNodeCodegen() {}
+  virtual ~CoreGenNodeCodegen() {}
 
   /// Executes the node-specific code generator
   virtual bool Execute() { return false; }

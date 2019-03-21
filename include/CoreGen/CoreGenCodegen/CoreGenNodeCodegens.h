@@ -13,7 +13,7 @@
 
 // This header only includes all the derived headers for the respective
 // CoreGenNodeCodegen code generators
-
+#include "CoreGen/CoreGenCodegen/NodeCodegen/RegClassCG.h"
 
 #endif
 
