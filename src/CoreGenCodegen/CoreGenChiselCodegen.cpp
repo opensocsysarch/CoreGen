@@ -107,9 +107,70 @@ bool CoreGenChiselCodegen::ExecRegClassCodegen(CoreGenNode *N){
   return rtn;
 }
 
+bool CoreGenChiselCodegen::WriteRegClassConfig(std::ofstream &O){
+  if( !O.is_open() ){
+    Errno->SetError(CGERR_ERROR, "Could not write register class config info" );
+    return false;
+  }
+
+  std::vector<CoreGenNode *> RCNodes;
+
+  // walk all the top-level nodes and find all the register classes
+  for( unsigned i=0; i<Top->GetNumChild(); i++ ){
+    if( Top->GetType() == CGRegC )
+      RCNodes.push_back(Top->GetChild(i));
+  }
+
+  // made the vector unique
+  std::sort(RCNodes.begin(),RCNodes.end());
+  RCNodes.erase(std::unique(RCNodes.begin(),RCNodes.end()),RCNodes.end());
+
+  // for each register class node, output the relevant configuration data
+  for( unsigned i=0; i<RCNodes.size(); i++ ){
+    CoreGenRegClass *RC = static_cast<CoreGenRegClass *>(RCNodes[i]);
+    O << "val " << CGRemoveDot(RC->GetName()) << "_numregs = " << RC->GetNumReg() << std::endl;
+    O << "val " << CGRemoveDot(RC->GetName()) << "_maxwidth = " << RC->GetMaxWidth() << std::endl;
+  }
+
+  return true;
+}
+
+bool CoreGenChiselCodegen::GenerateConfig(){
+  std::string ConfigFile = ChiselRoot + "/common/configurations.scala";
+  std::ofstream MOutFile;
+  MOutFile.open(ConfigFile,std::ios::trunc);
+  if( !MOutFile.is_open() ){
+    Errno->SetError(CGERR_ERROR, "Could not open common configuration file: " + ConfigFile );
+  }
+
+  MOutFile << "//-- common/configurations.scala" << std::endl << std::endl;
+  MOutFile << "package Common" << std::endl
+           << "{" << std::endl
+           << "import chisel3._" << std::endl
+           << "import chisel3.util._" << std::endl << std::endl
+           << "case class " << CGRemoveDot(Proj->GetProjName()) << "Configuration()" << std::endl
+           << "{" << std::endl;
+
+  // write out the config parameters
+  if( !WriteRegClassConfig(MOutFile) ){
+    MOutFile.close();
+    return false;
+  }
+
+  MOutFile << "}" << std::endl
+           << "}" << std::endl;
+
+  MOutFile.close();
+  return true;
+}
+
 bool CoreGenChiselCodegen::Execute(){
   // walk all the nodes and codegen each node individually
   bool rtn = true;
+
+  if( !GenerateConfig() ){
+    return false;
+  }
 
   for( unsigned i=0; i<Top->GetNumChild(); i++ ){
     // codegen the i'th node

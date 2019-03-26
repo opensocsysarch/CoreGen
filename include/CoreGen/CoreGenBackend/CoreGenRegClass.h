@@ -40,6 +40,9 @@ public:
   /// Retrieve the number of child registers
   unsigned GetNumReg() { return GetNumChild(); }
 
+  /// Retrieve the maximum width of all the child registers
+  unsigned GetMaxWidth();
+
   /// Add a register to the register class
   bool InsertReg( CoreGenReg *R );
 

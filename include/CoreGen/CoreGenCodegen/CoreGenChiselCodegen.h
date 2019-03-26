@@ -27,6 +27,7 @@
 #include <sys/stat.h>
 #include <cerrno>
 #include <cstdlib>
+#include <vector>
 
 // CoreGen Headers
 #include "CoreGen/CoreGenBackend/CoreGenBackend.h"
@@ -43,6 +44,12 @@ private:
   CoreGenProj *Proj;                ///< CoreGen Project Info
   std::string ChiselRoot;           ///< Root directory for chisel output
   CoreGenErrno *Errno;              ///< CoreGen Errno Structure
+
+  /// Generates the top level configuration scala file
+  bool GenerateConfig();
+
+  /// Writes the register class configuration data
+  bool WriteRegClassConfig(std::ofstream &O);
 
   /// Execute the register class code generator
   bool ExecRegClassCodegen(CoreGenNode *N);
