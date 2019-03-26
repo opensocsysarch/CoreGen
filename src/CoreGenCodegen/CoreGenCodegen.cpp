@@ -392,6 +392,7 @@ bool CoreGenCodegen::BuildChiselCommonPackage(){
     FullDir = ProjRoot + "/RTL/chisel/src/main/scala";
   }
 
+  //  write out the package.scala file
   std::string CommonFile = FullDir + "/package.scala";
 
   std::ofstream MOutFile;
@@ -407,6 +408,26 @@ bool CoreGenCodegen::BuildChiselCommonPackage(){
   MOutFile << "import chisel3._" << std::endl;
   MOutFile << "import chisel3.util_ " << std::endl;
   MOutFile << "import scala.math._" << std::endl;
+
+  MOutFile.close();
+
+  // write out the configurations.scala file
+  std::string ConfigFile = FullDir + "/configurations.scala";
+  MOutFile.open(ConfigFile,std::ios::trunc);
+  if( !MOutFile.is_open() ){
+    Errno->SetError(CGERR_ERROR, "Could not open common configurations.scala : " + CommonFile );
+    return false;
+  }
+
+  MOutFile << "//-- common/configurations.scala" << std::endl << std::endl;
+  MOutFile << "package Common" << std::endl
+           << "{" << std::endl
+           << "import chisel3._" << std::endl
+           << "import chisel3.util._" << std::endl << std::endl
+           << "case class " << CGRemoveDot(Proj->GetProjName()) << "Configuration()" << std::endl
+           << "{" << std::endl
+           << "}" << std::endl
+           << "}" << std::endl;
 
   MOutFile.close();
 
