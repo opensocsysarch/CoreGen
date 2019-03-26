@@ -10,6 +10,7 @@
 set(NodeCodegenSrcs
 RegClassCG.cpp
 SpadCG.cpp
+SocCG.cpp
 )
 
 include_directories(${YAML_PATH}/include)
