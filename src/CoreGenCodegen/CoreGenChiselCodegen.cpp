@@ -39,16 +39,36 @@ CoreGenNode *CoreGenChiselCodegen::GetRegClassISANode(CoreGenNode *N){
   return nullptr;
 }
 
+bool CoreGenChiselCodegen::ExecSpadCodegen(CoreGenNode *N){
+  std::string FullPath = ChiselRoot + "/common/" +
+                         CGRemoveDot(N->GetName()) + ".chisel";
+  std::string Package = "Common";
+  bool Common = true;
+
+  SpadCG *CG = new SpadCG(N,Proj,Package,FullPath,Common,Errno);
+  bool rtn = true;
+  if( !CG->Execute() ){
+    rtn = false;
+  }
+
+  delete CG;
+
+  return rtn;
+}
+
 bool CoreGenChiselCodegen::ExecRegClassCodegen(CoreGenNode *N){
 
   // examine the attributes and determine how/where to
   // place the chisel output
   std::string FullPath = ChiselRoot;
   std::string Package;
+  bool Common = false;
   if( N->HasAttr(AttrISAReg) ){
-    // shared across cores, put it in the util's
-    FullPath += "/util/" + CGRemoveDot(N->GetName()) + ".chisel";
-    Package = "opensocsysarch."+Proj->GetProjName()+".util";
+    // shared across cores, put it in the common directory
+    FullPath += "/common/" + CGRemoveDot(N->GetName()) + ".chisel";
+    //Package = "opensocsysarch."+Proj->GetProjName()+".util";
+    Package = "Common";
+    Common = true;
   }else{
     // remains within a ISA, put it in the ISA-specific dir
     CoreGenNode *IN = GetRegClassISANode(N);
@@ -58,10 +78,13 @@ bool CoreGenChiselCodegen::ExecRegClassCodegen(CoreGenNode *N){
       return false;
     }
 
+    Package = Proj->GetProjName();
+#if 0
     Package = "opensocsysarch."+
               Proj->GetProjName()+"."+
               IN->GetName()+"."+
               N->GetName();
+#endif
     FullPath += ("/" + IN->GetName());
 
     if( !CGMkDirP(FullPath) ){
@@ -73,7 +96,7 @@ bool CoreGenChiselCodegen::ExecRegClassCodegen(CoreGenNode *N){
     FullPath += ("/" + CGRemoveDot(N->GetName()) + ".chisel");
   }
 
-  RegClassCG *CG = new RegClassCG(N,Proj,Package,FullPath,Errno);
+  RegClassCG *CG = new RegClassCG(N,Proj,Package,FullPath,Common,Errno);
   bool rtn = true;
   if( !CG->Execute() ){
     rtn = false;
@@ -119,6 +142,9 @@ bool CoreGenChiselCodegen::Execute(){
     case CGComm:
       break;
     case CGSpad:
+      if( !ExecSpadCodegen(Top->GetChild(i)) ){
+        rtn = false;
+      }
       break;
     case CGMCtrl:
       break;

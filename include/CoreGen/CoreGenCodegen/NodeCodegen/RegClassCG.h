@@ -9,7 +9,7 @@
 //
 
 /**
- * \class RegClassCodegen
+ * \class RegClassCG
  *
  * \ingroup CoreGenCodegen
  *
@@ -22,7 +22,7 @@
 
 #include "CoreGen/CoreGenCodegen/CoreGenNodeCodegen.h"
 
-class RegClassCG : public CoreGenNodeCodegen {
+class RegClassCG : public CoreGenNodeCodegen{
 private:
   /// Writes the register class block to the output stream
   bool WriteRegClass( std::ofstream &O );
@@ -33,6 +33,7 @@ public:
              CoreGenProj *P,
              std::string Package,
              std::string Path,
+             bool Common,
              CoreGenErrno *E );
 
   /// Default destructor

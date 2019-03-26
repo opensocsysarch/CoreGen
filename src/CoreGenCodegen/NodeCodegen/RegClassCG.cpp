@@ -12,8 +12,8 @@
 
 RegClassCG::RegClassCG( CoreGenNode *N, CoreGenProj *P,
                         std::string Pack, std::string Path,
-                        CoreGenErrno *E )
-  : CoreGenNodeCodegen(N,P,Pack,Path,E) {
+                        bool Comm, CoreGenErrno *E )
+  : CoreGenNodeCodegen(N,P,Pack,Path,Comm,E) {
 }
 
 RegClassCG::~RegClassCG(){
@@ -22,6 +22,7 @@ RegClassCG::~RegClassCG(){
 bool RegClassCG::WriteRegClass(std::ofstream &O ){
   // write the comment
   O << "//-- " << Node->GetName() << " Register Class " << std::endl;
+
   O << "class " << CGRemoveDot(Node->GetName())
     << "(n: Int, w: Int, zero: Boolean = false) {" << std::endl;
   O << "\tval rf = Mem(n, UInt(width = w))" << std::endl;
@@ -78,8 +79,8 @@ bool RegClassCG::Execute(){
   }
 
   // import the chisel imports
-  if( !WriteStdChiselImport(OutFile) ){
-    Errno->SetError(CGERR_ERROR, "Could not write standard package imports to file : " + 
+  if( !WriteChiselImports(OutFile) ){
+    Errno->SetError(CGERR_ERROR, "Could not write standard Chisel header to file : " + 
                     Path );
     OutFile.close();
     return false;
@@ -88,6 +89,13 @@ bool RegClassCG::Execute(){
   // write out the package block
   if( !WriteRegClass(OutFile) ){
     Errno->SetError(CGERR_ERROR, "Could not write register class block to file : " +
+                    Path );
+    OutFile.close();
+    return false;
+  }
+
+  if( !WriteStdFooter(OutFile) ){
+    Errno->SetError(CGERR_ERROR, "Could not write standard Chisel footer to file : " + 
                     Path );
     OutFile.close();
     return false;

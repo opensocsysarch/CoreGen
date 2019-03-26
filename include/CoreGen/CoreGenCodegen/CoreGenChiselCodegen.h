@@ -33,6 +33,7 @@
 #include "CoreGen/CoreGenBackend/CoreGenUtil.h"
 
 // Codegen Headers
+#include "CoreGen/CoreGenCodegen/CoreGenNodeCodegen.h"
 #include "CoreGen/CoreGenCodegen/CoreGenNodeCodegens.h"
 
 class CoreGenChiselCodegen
@@ -45,6 +46,9 @@ private:
 
   /// Execute the register class code generator
   bool ExecRegClassCodegen(CoreGenNode *N);
+
+  /// Execute the scratchpad code generator
+  bool ExecSpadCodegen(CoreGenNode *N);
 
   /// Retrieve the appropriate ISA node from the register class
   CoreGenNode *GetRegClassISANode(CoreGenNode *N);

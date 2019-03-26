@@ -11,6 +11,7 @@ set(CodegenSrcs
 CoreGenCodegen.cpp
 CoreGenChiselCodegen.cpp
 CoreGenLLVMCodegen.cpp
+CoreGenNodeCodegen.cpp
 )
 
 add_subdirectory(NodeCodegen)

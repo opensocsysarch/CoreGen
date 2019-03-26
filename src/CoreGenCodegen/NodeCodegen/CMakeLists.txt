@@ -9,6 +9,7 @@
 
 set(NodeCodegenSrcs
 RegClassCG.cpp
+SpadCG.cpp
 )
 
 include_directories(${YAML_PATH}/include)
