@@ -71,6 +71,54 @@ bool CoreGenChiselCodegen::ExecSpadCodegen(CoreGenNode *N){
   return rtn;
 }
 
+bool CoreGenChiselCodegen::ExecISACodegen(CoreGenNode *N){
+  // build a vector of all the instructions contained within the ISA
+  std::vector<CoreGenInst *> Insts;
+  for( unsigned i=0; i<Top->GetNumChild(); i++ ){
+    if( Top->GetChild(i)->GetType() == CGInst ){
+      CoreGenInst *Inst = static_cast<CoreGenInst *>(Top->GetChild(i));
+      if( Inst->GetISA()->GetName() == N->GetName() ){
+        Insts.push_back(Inst);
+      }
+    }
+  }
+
+  // now that we have the full set of instructions associated with this
+  // ISA, we need to figure out how many unique instruction formats
+  // there are and initiate code generation for each format individually
+  std::vector<CoreGenInstFormat *> IF;
+  for( unsigned i=0; i<Insts.size(); i++ ){
+    IF.push_back( Insts[i]->GetFormat() );
+  }
+
+  // filter out the unique instruction formats
+  std::sort(IF.begin(),IF.end());
+  IF.erase(std::unique(IF.begin(),IF.end()),IF.end());
+
+  std::string Package = Proj->GetProjName();
+  std::string FullPath = ChiselRoot;
+
+  FullPath += ("/" + N->GetName());
+
+  if( !CGMkDirP(FullPath) ){
+    Errno->SetError(CGERR_ERROR, "Could not construct ISA directory: "
+                      + FullPath );
+    return false;
+  }
+
+  FullPath += "/instructions.chisel";
+
+  ISACG *CG = new ISACG(N,Proj,Package,FullPath,false,Errno);
+  bool rtn = true;
+  if( !CG->Execute(Insts,IF) ){
+    rtn = false;
+  }
+
+  delete CG;
+
+  return rtn;
+}
+
 bool CoreGenChiselCodegen::ExecRegClassCodegen(CoreGenNode *N){
 
   // examine the attributes and determine how/where to
@@ -81,7 +129,6 @@ bool CoreGenChiselCodegen::ExecRegClassCodegen(CoreGenNode *N){
   if( N->HasAttr(AttrISAReg) ){
     // shared across cores, put it in the common directory
     FullPath += "/common/" + CGRemoveDot(N->GetName()) + ".chisel";
-    //Package = "opensocsysarch."+Proj->GetProjName()+".util";
     Package = "Common";
     Common = true;
   }else{
@@ -258,6 +305,9 @@ bool CoreGenChiselCodegen::Execute(){
       break;
 #endif
     case CGISA:
+      if( !ExecISACodegen(Top->GetChild(i)) ){
+        rtn = false;
+      }
       break;
     case CGCache:
       break;
