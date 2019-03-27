@@ -63,6 +63,9 @@ private:
   /// Execute the scratchpad code generator
   bool ExecSpadCodegen(CoreGenNode *N);
 
+  /// Execute the ISA code generator
+  bool ExecISACodegen(CoreGenNode *N);
+
   /// Retrieve the appropriate ISA node from the register class
   CoreGenNode *GetRegClassISANode(CoreGenNode *N);
 
