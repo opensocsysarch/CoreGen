@@ -209,9 +209,15 @@ bool CoreGenCodegen::BuildChiselDir(){
     return false;
   }
 
-  if( !CGMkDirP(FullDir+"/util") ){
+  if( !CGMkDirP(FullDir+"/common") ){
     Errno->SetError(CGERR_ERROR, "Could not construct the chisel source tree: "
-                    + FullDir );
+                    + FullDir + "/common" );
+    return false;
+  }
+
+  if( !CGMkDirP(FullDir+"/top") ){
+    Errno->SetError(CGERR_ERROR, "Could not construct the chisel source tree: "
+                    + FullDir + "/top" );
     return false;
   }
 
@@ -376,6 +382,42 @@ bool CoreGenCodegen::BuildChisel(){
   bool rtn = CG->Execute();
   delete CG;
   return rtn;
+}
+
+bool CoreGenCodegen::BuildChiselCommonPackage(){
+  if( !Proj ){
+    Errno->SetError(CGERR_ERROR, "Cannot derive Chisel directory; Project is null" );
+    return false;
+  }
+
+  std::string FullDir;
+  std::string ProjRoot = Proj->GetProjRoot();
+  if( ProjRoot[ProjRoot.length()-1] == '/' ){
+    FullDir = ProjRoot + "RTL/chisel/src/main/scala";
+  }else{
+    FullDir = ProjRoot + "/RTL/chisel/src/main/scala";
+  }
+
+  //  write out the package.scala file
+  std::string CommonFile = FullDir + "/package.scala";
+
+  std::ofstream MOutFile;
+  MOutFile.open(CommonFile,std::ios::trunc);
+  if( !MOutFile.is_open() ){
+    Errno->SetError(CGERR_ERROR, "Could not open common package.scala : " + CommonFile );
+    return false;
+  }
+
+  MOutFile << "//-- common/package.scala" << std::endl << std::endl;
+  MOutFile << "package Common" << std::endl << std::endl;
+
+  MOutFile << "import chisel3._" << std::endl;
+  MOutFile << "import chisel3.util_ " << std::endl;
+  MOutFile << "import scala.math._" << std::endl;
+
+  MOutFile.close();
+
+  return true;
 }
 
 bool CoreGenCodegen::BuildChiselMakefile(){
@@ -647,6 +689,11 @@ bool CoreGenCodegen::ExecuteChiselCodegen(){
 
   // Stage 9: Build the supplementary project files
   if( !BuildChiselProject() ){
+    return false;
+  }
+
+  // Stage 10: Build the common package definition
+  if( !BuildChiselCommonPackage() ){
     return false;
   }
 

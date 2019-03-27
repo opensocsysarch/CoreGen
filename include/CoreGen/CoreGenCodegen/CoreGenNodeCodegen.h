@@ -29,7 +29,8 @@
 #include <cstdlib>
 
 // CoreGen Headers
-#include "CoreGen/CoreGenBackend/CoreGenBackend.h"
+#include "CoreGen/CoreGenBackend/CoreGenNodes.h"
+#include "CoreGen/CoreGenBackend/CoreGenErrno.h"
 #include "CoreGen/CoreGenBackend/CoreGenUtil.h"
 
 class CoreGenNodeCodegen{
@@ -38,6 +39,7 @@ protected:
   CoreGenProj *Proj;                ///< CoreGen Project Info
   std::string Package;              ///< Chisel package name for this target
   std::string Path;                 ///< Target output file
+  bool Common;                      ///< Is this a common package?
   CoreGenErrno *Errno;              ///< CoreGen Errno Structure
 
 public:
@@ -46,8 +48,9 @@ public:
                       CoreGenProj *P,
                       std::string Pac,
                       std::string Pa,
+                      bool Comm,
                       CoreGenErrno *E ) : Node(N), Proj(P), Package(Pac),
-                                          Path(Pa), Errno(E){}
+                                          Path(Pa), Common(Comm), Errno(E){}
 
   /// Default destructor
   virtual ~CoreGenNodeCodegen() {}
@@ -56,25 +59,13 @@ public:
   virtual bool Execute() { return false; }
 
   /// Writes the top-level Chisel package info
-  bool WritePackageInfo(std::ofstream &O){
-    if( !O.is_open() )
-      return false;
-    O << "// -- Chisel package info" << std::endl;
-    O << "package " << Package << std::endl;
-    return true;
-  }
+  bool WritePackageInfo(std::ofstream &O);
 
   /// Writes the standard Chisel imports out to the target output stream
-  bool WriteStdChiselImport(std::ofstream &O){
-    if( !O.is_open() )
-      return false;
-    O << "// -- Import standard Chisel and Scala packages" << std::endl;
-    O << "import Chisel._" << std::endl;
-    O << "import Chisel.ImplicitConversions._" << std::endl;
-    O << "import scala.collection.immutable.ListMap" << std::endl;
-    O << "import scala.collection.mutable.ArrayBuffer" << std::endl;
-    return true;
-  }
+  bool WriteChiselImports(std::ofstream &O);
+
+  /// Writes the standard Chisel footer
+  bool WriteStdFooter(std::ofstream &O);
 };
 
 #endif

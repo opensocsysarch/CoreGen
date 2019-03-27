@@ -90,6 +90,9 @@ private:
   bool BuildISAChisel(CoreGenISA *ISA,
                       std::vector<CoreGenInst *> Insts);
 
+  /// Constructs the common package block
+  bool BuildChiselCommonPackage();
+
   /// Init the internal StoneCutter intrinsics
   void InitIntrinsics();
 

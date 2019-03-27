@@ -12,8 +12,8 @@
 
 RegClassCG::RegClassCG( CoreGenNode *N, CoreGenProj *P,
                         std::string Pack, std::string Path,
-                        CoreGenErrno *E )
-  : CoreGenNodeCodegen(N,P,Pack,Path,E) {
+                        bool Comm, CoreGenErrno *E )
+  : CoreGenNodeCodegen(N,P,Pack,Path,Comm,E) {
 }
 
 RegClassCG::~RegClassCG(){
@@ -22,31 +22,40 @@ RegClassCG::~RegClassCG(){
 bool RegClassCG::WriteRegClass(std::ofstream &O ){
   // write the comment
   O << "//-- " << Node->GetName() << " Register Class " << std::endl;
-  O << "class " << CGRemoveDot(Node->GetName())
-    << "(n: Int, w: Int, zero: Boolean = false) {" << std::endl;
-  O << "\tval rf = Mem(n, UInt(width = w))" << std::endl;
-  O << "\tprivate def access(addr: UInt) = rf(~addr(log2Up(n)-1,0))" << std::endl;
-  O << "\tprivate val reads = ArrayBuffer[(UInt,UInt)]()" << std::endl;
-  O << "\tprivate var canRead = true" << std::endl;
-  O << std::endl;
-  O << "\t//-- register read interface" << std::endl;
-  O << "\tdef read(addr: Uint) = {" << std::endl;
-  O << "\t\trequire(canRead)" << std::endl;
-  O << "\t\treads += addr -> Wire(UInt())" << std::endl;
-  O << "\t\treads.last._2 := Mux(Bool(zero) && addr === UInt(0), UInt(0), access(addr))" << std::endl;
-  O << "\t\treads.last._2" << std::endl;
-  O << "\t}" << std::endl;
-  O << std::endl;
-  O << "\t//-- register write interface" << std::endl;
-  O << "\tdef write(addr: UInt, data:UInt) = {" << std::endl;
-  O << "\t\tcanRead = false" << std::endl;
-  O << "\t\twhen (addr =/= UInt(0)) {" << std::endl;
-  O << "\t\t\taccess(addr) := data" << std::endl;
-  O << "\t\t\tfor ((raddr, rdata) <- reads)"<< std::endl;
-  O << "\t\t\t\twhen (addr === raddr) { rdata := data }" << std::endl;
-  O << "\t\t}" << std::endl;
-  O << "\t}" << std::endl;
-  O << "}" << std::endl;
+  O << "class " << CGRemoveDot(Node->GetName()) << "RFileIO(implicit val conf: "
+    << CGRemoveDot(Proj->GetProjName()) << "Configuration) extends Bundle()" << std::endl
+    << "{" << std::endl
+    << "\tval rs1_addr = Input(UInt(5.W))" << std::endl
+    << "\tval rs1_data = Output(UInt(conf.max_width.W))" << std::endl
+    << "\tval rs2_addr = Input(UInt(5.W))" << std::endl
+    << "\tval rs2_data = Output(UInt(conf.max_width.W))" << std::endl
+    << "\tval dm_addr = Input(UInt(5.W))" << std::endl
+    << "\tval dm_rdata = Output(UInt(conf.max_width.W))" << std::endl
+    << "\tval dm_wdata = Input(UInt(conf.max_width.W))" << std::endl
+    << "\tval dm_en = Input(Bool())" << std::endl
+    << "\tval waddr    = Input(UInt(5.W))" << std::endl
+    << "\tval wdata    = Input(UInt(conf.max_width.W))" << std::endl
+    << "\tval wen      = Input(Bool())" << std::endl
+    << "}" << std::endl << std::endl;
+
+  O << "class " << CGRemoveDot(Node->GetName()) << "(implicit val conf: "
+    << CGRemoveDot(Proj->GetProjName()) << "Configuration) extends Module" << std::endl
+    << "{" << std::endl
+    << "\tval io = IO(new " << CGRemoveDot(Node->GetName()) << "RFileIO())" << std::endl
+    << "\tval regfile = Mem( UInt(conf." << CGRemoveDot(Node->GetName())
+    << "_numregs.W), UInt(conf." << CGRemoveDot(Node->GetName()) << "_maxwidth.W))" << std::endl
+    << "\twhen (io.wen && (io.waddr =/= 0.U))" << std::endl
+    << "\t{" << std::endl
+    << "\t\tregfile(io.waddr) := io.wdata" << std::endl
+    << "\t}" << std::endl << std::endl
+    << "\twhen (io.dm_en && (io.dm_addr =/= 0.U))" << std::endl
+    << "\t{" << std::endl
+    << "\t\tregfile(io.dm_addr) := io.dm_wdata" << std::endl
+    << "\t}" << std::endl << std::endl
+    << "\tio.rs1_data := Mux((io.rs1_addr =/= 0.U), regfile(io.rs1_addr), 0.U)" << std::endl
+    << "\tio.rs2_data := Mux((io.rs2_addr =/= 0.U), regfile(io.rs2_addr), 0.U)" << std::endl
+    << "\tio.dm_rdata := Mux((io.dm_addr =/= 0.U), regfile(io.dm_addr), 0.U)" << std::endl
+    << "}" << std::endl << std::endl;
   return true;
 }
 
@@ -78,8 +87,8 @@ bool RegClassCG::Execute(){
   }
 
   // import the chisel imports
-  if( !WriteStdChiselImport(OutFile) ){
-    Errno->SetError(CGERR_ERROR, "Could not write standard package imports to file : " + 
+  if( !WriteChiselImports(OutFile) ){
+    Errno->SetError(CGERR_ERROR, "Could not write standard Chisel header to file : " + 
                     Path );
     OutFile.close();
     return false;
@@ -88,6 +97,13 @@ bool RegClassCG::Execute(){
   // write out the package block
   if( !WriteRegClass(OutFile) ){
     Errno->SetError(CGERR_ERROR, "Could not write register class block to file : " +
+                    Path );
+    OutFile.close();
+    return false;
+  }
+
+  if( !WriteStdFooter(OutFile) ){
+    Errno->SetError(CGERR_ERROR, "Could not write standard Chisel footer to file : " + 
                     Path );
     OutFile.close();
     return false;

@@ -27,12 +27,14 @@
 #include <sys/stat.h>
 #include <cerrno>
 #include <cstdlib>
+#include <vector>
 
 // CoreGen Headers
 #include "CoreGen/CoreGenBackend/CoreGenBackend.h"
 #include "CoreGen/CoreGenBackend/CoreGenUtil.h"
 
 // Codegen Headers
+#include "CoreGen/CoreGenCodegen/CoreGenNodeCodegen.h"
 #include "CoreGen/CoreGenCodegen/CoreGenNodeCodegens.h"
 
 class CoreGenChiselCodegen
@@ -43,8 +45,23 @@ private:
   std::string ChiselRoot;           ///< Root directory for chisel output
   CoreGenErrno *Errno;              ///< CoreGen Errno Structure
 
+  /// Generates the top level configuration scala file
+  bool GenerateConfig();
+
+  /// Generates the top level scala driver for the project
+  bool GenerateDriver(CoreGenNode *SocNode);
+
+  /// Writes the register class configuration data
+  bool WriteRegClassConfig(std::ofstream &O);
+
+  ///Execute the SoC code generator
+  bool ExecSocCodegen(CoreGenNode *N);
+
   /// Execute the register class code generator
   bool ExecRegClassCodegen(CoreGenNode *N);
+
+  /// Execute the scratchpad code generator
+  bool ExecSpadCodegen(CoreGenNode *N);
 
   /// Retrieve the appropriate ISA node from the register class
   CoreGenNode *GetRegClassISANode(CoreGenNode *N);
