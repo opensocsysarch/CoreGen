@@ -26,15 +26,15 @@ bool RegClassCG::WriteRegClass(std::ofstream &O ){
     << CGRemoveDot(Proj->GetProjName()) << "Configuration) extends Bundle()" << std::endl
     << "{" << std::endl
     << "\tval rs1_addr = Input(UInt(5.W))" << std::endl
-    << "\tval rs1_data = Output(UInt(conf.xprlen.W))" << std::endl
+    << "\tval rs1_data = Output(UInt(conf.max_width.W))" << std::endl
     << "\tval rs2_addr = Input(UInt(5.W))" << std::endl
-    << "\tval rs2_data = Output(UInt(conf.xprlen.W))" << std::endl
+    << "\tval rs2_data = Output(UInt(conf.max_width.W))" << std::endl
     << "\tval dm_addr = Input(UInt(5.W))" << std::endl
-    << "\tval dm_rdata = Output(UInt(conf.xprlen.W))" << std::endl
-    << "\tval dm_wdata = Input(UInt(conf.xprlen.W))" << std::endl
+    << "\tval dm_rdata = Output(UInt(conf.max_width.W))" << std::endl
+    << "\tval dm_wdata = Input(UInt(conf.max_width.W))" << std::endl
     << "\tval dm_en = Input(Bool())" << std::endl
     << "\tval waddr    = Input(UInt(5.W))" << std::endl
-    << "\tval wdata    = Input(UInt(conf.xprlen.W))" << std::endl
+    << "\tval wdata    = Input(UInt(conf.max_width.W))" << std::endl
     << "\tval wen      = Input(Bool())" << std::endl
     << "}" << std::endl << std::endl;
 
