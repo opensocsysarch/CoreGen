@@ -211,7 +211,13 @@ bool CoreGenCodegen::BuildChiselDir(){
 
   if( !CGMkDirP(FullDir+"/common") ){
     Errno->SetError(CGERR_ERROR, "Could not construct the chisel source tree: "
-                    + FullDir );
+                    + FullDir + "/common" );
+    return false;
+  }
+
+  if( !CGMkDirP(FullDir+"/top") ){
+    Errno->SetError(CGERR_ERROR, "Could not construct the chisel source tree: "
+                    + FullDir + "/top" );
     return false;
   }
 

@@ -48,8 +48,14 @@ private:
   /// Generates the top level configuration scala file
   bool GenerateConfig();
 
+  /// Generates the top level scala driver for the project
+  bool GenerateDriver(CoreGenNode *SocNode);
+
   /// Writes the register class configuration data
   bool WriteRegClassConfig(std::ofstream &O);
+
+  ///Execute the SoC code generator
+  bool ExecSocCodegen(CoreGenNode *N);
 
   /// Execute the register class code generator
   bool ExecRegClassCodegen(CoreGenNode *N);

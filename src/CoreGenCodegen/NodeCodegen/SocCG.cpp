@@ -20,14 +20,35 @@ SocCG::~SocCG(){
 }
 
 bool SocCG::WriteSoc(std::ofstream &O){
+  CoreGenSoC *SOC = static_cast<CoreGenSoC *>(Node);
+
+  // output a top-level SoC module and instantiate all the cores
+  O << "class " << CGRemoveDot(SOC->GetName()) << "((implicit val conf: "
+    << CGRemoveDot(Proj->GetProjName()) << "Configuration) extends Module" << std::endl
+    << "{" << std::endl
+    << "\tval io = IO(new Bundle {" << std::endl
+    << "\t\tval dmi = Flipped(new DMIIO())" << std::endl
+    << "\t})" << std::endl;
+
+  // TODO: instantiate the debug module
+
+  // instantiate all the cores
+  for( unsigned i=0; i<SOC->GetNumCores(); i++ ){
+    // instantiate the core
+    O << "\tval core" << i << " = Module(new "
+      << CGRemoveDot(SOC->GetCore(i)->GetName()) << "())" << std::endl;
+    O << "\tcore" << i << ".io := DontCare" << std::endl;
+
+    // TODO: hook up all the NoC ports
+
+    // hook up the reset
+    O << "\tcore" << i << ".reset := debug.io.resetcore | reset.toBool" << std::endl;
+  }
+
   return true;
 }
 
 bool SocCG::Execute(){
-
-  // already generated this register file type
-  if( CGFileExists(Path) )
-    return true;
 
   // open the output file
   std::ofstream OutFile;
@@ -57,6 +78,8 @@ bool SocCG::Execute(){
     OutFile.close();
     return false;
   }
+
+  // TODO: extend the chisel imports with all the target cores/ISAs
 
   // write out the package block
   if( !WriteSoc(OutFile) ){
