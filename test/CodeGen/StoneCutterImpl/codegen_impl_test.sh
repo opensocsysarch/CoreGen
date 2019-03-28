@@ -31,7 +31,7 @@ for ISA in $ISAs; do
   if [ -f $DIR/RTL/stonecutter/$ISA.sc ]; then
     $SCCOMP_PATH/sccomp -p $DIR/RTL/stonecutter/$ISA.sc
     retValSc=$?
-    if [[  "$retValY" -ne 0 ]]; then
+    if [[  "$retValSc" -ne 0 ]]; then
       echo "$SCCOMP_PATH/sccomp -p $DIR/RTL/stonecutter/$ISA.sc failed with return code = $retValSc"
       exit $retValSc
     fi

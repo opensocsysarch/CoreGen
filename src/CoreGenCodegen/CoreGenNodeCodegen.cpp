@@ -31,7 +31,7 @@ bool CoreGenNodeCodegen::WriteChiselImports(std::ofstream &O){
   O << "import chisel3._" << std::endl;
   O << "import chisel3.util_" << std::endl;
   O << "import chisel3.experimental._" << std::endl;
-  O << "import Common._" << std::endl;
+  O << "import Common._" << std::endl << std::endl;
 
   return true;
 }

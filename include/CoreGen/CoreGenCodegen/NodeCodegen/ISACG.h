@@ -20,6 +20,7 @@
 #ifndef _ISACG_H_
 #define _ISACG_H_
 
+#include <bitset>
 #include "CoreGen/CoreGenCodegen/CoreGenNodeCodegen.h"
 
 class ISACG : public CoreGenNodeCodegen {
@@ -30,7 +31,12 @@ private:
                 std::vector<CoreGenInstFormat *> InstFormats);
 
   /// Returns a Chisel tabular bit pattern for the target instruction
-  std::string GetInstBitPat(CoreGenInstFormat *Format, CoreGenInst *Inst);
+  std::string GetInstBitPat(CoreGenInstFormat *Format,
+                            CoreGenInst *Inst,
+                            bool *Success);
+
+  /// Converts an unsigned 64bit integer to a string of binary digits of length 'len'
+  std::string U8ToBinary(uint64_t n, size_t len);
 
 public:
   /// Default constructor
