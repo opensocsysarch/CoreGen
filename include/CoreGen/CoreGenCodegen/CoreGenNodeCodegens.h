@@ -17,6 +17,7 @@
 #include "CoreGen/CoreGenCodegen/NodeCodegen/RegClassCG.h"
 #include "CoreGen/CoreGenCodegen/NodeCodegen/SpadCG.h"
 #include "CoreGen/CoreGenCodegen/NodeCodegen/SocCG.h"
+#include "CoreGen/CoreGenCodegen/NodeCodegen/ISACG.h"
 
 #endif
 
