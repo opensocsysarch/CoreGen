@@ -2111,7 +2111,7 @@ Insts:
       - EncodingField: opcode
         EncodingWidth: 8
         EncodingValue: 21
-    Impl: RT = MERGE(RA,RB)
+    Impl: RT = MERGE(RA,RB,RT)
     Syntax: TEST74.inst20 %RT, %RA, %RB
   - Inst: TEST74.inst21
     ISA: TEST74.isa
@@ -2192,7 +2192,7 @@ Insts:
       - EncodingField: opcode
         EncodingWidth: 8
         EncodingValue: 30
-    Impl: RT = ZET(RA)
+    Impl: RT = ZEXT(RA)
     Syntax: TEST74.inst29 %RT, %RA, %RB
   - Inst: TEST74.inst30
     ISA: TEST74.isa
