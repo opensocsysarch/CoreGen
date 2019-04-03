@@ -171,6 +171,7 @@ public:
   /// Append to the ASP String
   void AppendASP( std::string ASPString) { ASP += ASPString; }
 
+  /// Retrieve the ASP for the target node
   std::string GetASP() { return ASP; }
 };
 
