@@ -1,0 +1,50 @@
+ISAs:
+  - ISAName: TEST8.0.isa
+  - ISAName: TEST8.1.isa
+  - ISAName: TEST8.2.isa
+  - ISAName: TEST8.3.isa
+  - ISAName: TEST8.4.isa
+  - ISAName: TEST8.5.isa
+  - ISAName: TEST8.6.isa
+  - ISAName: TEST8.7.isa
+  - ISAName: TEST8.8.isa
+  - ISAName: TEST8.9.isa
+  - ISAName: TEST8.10.isa
+  - ISAName: TEST8.11.isa
+  - ISAName: TEST8.12.isa
+  - ISAName: TEST8.13.isa
+  - ISAName: TEST8.14.isa
+  - ISAName: TEST8.15.isa
+Cores:
+  - Core: TEST8.0.core
+    ISA: TEST8.0.isa
+  - Core: TEST8.1.core
+    ISA: TEST8.1.isa
+  - Core: TEST8.2.core
+    ISA: TEST8.2.isa
+  - Core: TEST8.3.core
+    ISA: TEST8.3.isa
+  - Core: TEST8.4.core
+    ISA: TEST8.4.isa
+  - Core: TEST8.5.core
+    ISA: TEST8.5.isa
+  - Core: TEST8.6.core
+    ISA: TEST8.6.isa
+  - Core: TEST8.7.core
+    ISA: TEST8.7.isa
+  - Core: TEST8.8.core
+    ISA: TEST8.8.isa
+  - Core: TEST8.9.core
+    ISA: TEST8.9.isa
+  - Core: TEST8.10.core
+    ISA: TEST8.10.isa
+  - Core: TEST8.11.core
+    ISA: TEST8.11.isa
+  - Core: TEST8.12.core
+    ISA: TEST8.12.isa
+  - Core: TEST8.13.core
+    ISA: TEST8.13.isa
+  - Core: TEST8.14.core
+    ISA: TEST8.14.isa
+  - Core: TEST8.15.core
+    ISA: TEST8.15.isa

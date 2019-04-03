@@ -1,0 +1,192 @@
+Registers:
+  - RegName: TEST18.0.reg
+    Width: 64
+    Index: 0
+    PseudoName: pseudoreg.0
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: true
+    CSRReg: false
+    AMSReg: false
+  - RegName: TEST18.1.reg
+    Width: 64
+    Index: 1
+    PseudoName: pseudoreg.1
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: true
+    CSRReg: false
+    AMSReg: false
+  - RegName: TEST18.2.reg
+    Width: 64
+    Index: 2
+    PseudoName: pseudoreg.2
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: true
+    CSRReg: false
+    AMSReg: false
+  - RegName: TEST18.3.reg
+    Width: 64
+    Index: 3
+    PseudoName: pseudoreg.3
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: true
+    CSRReg: false
+    AMSReg: false
+  - RegName: TEST18.4.reg
+    Width: 64
+    Index: 4
+    PseudoName: pseudoreg.4
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: true
+    CSRReg: false
+    AMSReg: false
+  - RegName: TEST18.5.reg
+    Width: 64
+    Index: 5
+    PseudoName: pseudoreg.5
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: true
+    CSRReg: false
+    AMSReg: false
+  - RegName: TEST18.6.reg
+    Width: 64
+    Index: 6
+    PseudoName: pseudoreg.6
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: true
+    CSRReg: false
+    AMSReg: false
+  - RegName: TEST18.7.reg
+    Width: 64
+    Index: 7
+    PseudoName: pseudoreg.7
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: true
+    CSRReg: false
+    AMSReg: false
+  - RegName: TEST18.8.reg
+    Width: 64
+    Index: 8
+    PseudoName: pseudoreg.8
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: true
+    CSRReg: false
+    AMSReg: false
+  - RegName: TEST18.9.reg
+    Width: 64
+    Index: 9
+    PseudoName: pseudoreg.9
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: true
+    CSRReg: false
+    AMSReg: false
+  - RegName: TEST18.10.reg
+    Width: 64
+    Index: 10
+    PseudoName: pseudoreg.10
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: true
+    CSRReg: false
+    AMSReg: false
+  - RegName: TEST18.11.reg
+    Width: 64
+    Index: 11
+    PseudoName: pseudoreg.11
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: true
+    CSRReg: false
+    AMSReg: false
+  - RegName: TEST18.12.reg
+    Width: 64
+    Index: 12
+    PseudoName: pseudoreg.12
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: true
+    CSRReg: false
+    AMSReg: false
+  - RegName: TEST18.13.reg
+    Width: 64
+    Index: 13
+    PseudoName: pseudoreg.13
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: true
+    CSRReg: false
+    AMSReg: false
+  - RegName: TEST18.14.reg
+    Width: 64
+    Index: 14
+    PseudoName: pseudoreg.14
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: true
+    CSRReg: false
+    AMSReg: false
+  - RegName: TEST18.15.reg
+    Width: 64
+    Index: 15
+    PseudoName: pseudoreg.15
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: true
+    CSRReg: false
+    AMSReg: false
+RegClasses:
+  - RegisterClassName: TEST18.regclass
+    NumRegisters: 16
+    Registers:
+      - TEST18.0.reg
+      - TEST18.1.reg
+      - TEST18.2.reg
+      - TEST18.3.reg
+      - TEST18.4.reg
+      - TEST18.5.reg
+      - TEST18.6.reg
+      - TEST18.7.reg
+      - TEST18.8.reg
+      - TEST18.9.reg
+      - TEST18.10.reg
+      - TEST18.11.reg
+      - TEST18.12.reg
+      - TEST18.13.reg
+      - TEST18.14.reg
+      - TEST18.15.reg
+ISAs:
+  - ISAName: TEST18.isa
+Cores:
+  - Core: TEST18.core
+    ISA: TEST18.isa
+    RegisterClasses:
+      - RegClass: TEST18.regclass
+Socs:
+  - Soc: TEST18.soc
+    Cores:
+      - Core: TEST18.core

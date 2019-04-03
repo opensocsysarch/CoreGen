@@ -237,6 +237,8 @@ make
 * -DBUILD\_COREGEN\_DAG\_INDIVIDUALPASS\_KNOWNPASS\_DANGLINGNODEPASS\_TESTING=ON : Enable DAG's individual pass test harness for the DanglingNodePass
 * -DBUILD\_COREGEN\_DAG\_INDIVIDUALPASS\_KNOWNPASS\_ENCODINGCOLLISIONPASS\_TESTING=ON : Enable DAG's individual pass test harness for the EncodingCollisionPass
 * -DBUILD\_COREGEN\_DAG\_INDIVIDUALPASS\_KNOWNPASS\_REGIDXPASS\_TESTING=ON : Enable DAG's individual pass test harness for the RegIdxPass
+* -DBUILD\_COREGEN\_DAG\_INDIVIDUALPASS\_KNOWNPASS\_CACHELEVELPASS\_TESTING=ON : Enable DAG's individual pass test harness for the CacheLevelPass
+* -DBUILD\_COREGEN\_DAG\_INDIVIDUALPASS\_KNOWNPASS\_REGSAFETYPASS\_TESTING=ON : Enable DAG's individual pass test harness for the RegSafetyPass
 * -DBUILD\_COREGEN\_DAG\_INDIVIDUALPASS\_KNOWNFAIL\_TESTING=ON : Enable DAG's individual pass test harness for known fail tests
 * -DBUILD\_COREGEN\_DAG\_INDIVIDUALPASS\_KNOWNFAIL\_ASP\_TESTING=ON : Enable DAG's individual ASP pass test harness for known fail tests
 * -DBUILD\_COREGEN\_PLUGIN\_TESTING=ON : Enable plugin test harness
