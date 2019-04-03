@@ -23,6 +23,9 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <fstream>
+#include <stdio.h>
+#include <cstdlib>
 
 #include "CoreGen/CoreGenBackend/CoreGenPass.h"
 #include "CoreGen/CoreGenBackend/CoreGenDAG.h"

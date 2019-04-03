@@ -339,11 +339,21 @@ bool CoreGenBackend::PrintSysPassInfo(){
   return PassMgr->PrintSysPassInfo();
 }
 
+bool CoreGenBackend::IsPassMgr(){
+  if( PassMgr != nullptr ){
+    return true;
+  }else{
+    return false;
+  }
+}
+
 bool CoreGenBackend::InitPassMgr(std::ostream *O){
   if( DAG == nullptr ){
+    Errno->SetError( CGERR_ERROR, "IR DAG has not been constructed" );
     return false;
   }
   if( Proj == nullptr ){
+    Errno->SetError( CGERR_ERROR, "The project info is missing" );
     return false;
   }
   if( PassMgr ){
@@ -358,9 +368,11 @@ bool CoreGenBackend::InitPassMgr(std::ostream *O){
 
 bool CoreGenBackend::InitPassMgr(){
   if( DAG == nullptr ){
+    Errno->SetError( CGERR_ERROR, "IR DAG has not been constructed" );
     return false;
   }
   if( Proj == nullptr ){
+    Errno->SetError( CGERR_ERROR, "The project info is missing" );
     return false;
   }
   std::ostream *o = &std::cout;
@@ -568,6 +580,10 @@ CoreGenPlugin *CoreGenBackend::GetPlugin( std::string Plugin ){
     return nullptr;
   }
   return PluginMgr->GetPlugin(Plugin);
+}
+
+void CoreGenBackend::SetASPFiles(std::vector<std::string> Files){
+  PassMgr->SetASPFiles(Files);
 }
 
 // EOF

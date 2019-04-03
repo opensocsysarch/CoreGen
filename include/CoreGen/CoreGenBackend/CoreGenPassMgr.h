@@ -95,6 +95,8 @@ public:
 
   /// Sets the intput string for the target system pass
   bool SetPassInputStr( std::string Pass, std::string Str );
+
+  void SetASPFiles(std::vector<std::string>);
 };
 
 #endif

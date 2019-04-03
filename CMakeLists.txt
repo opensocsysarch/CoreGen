@@ -30,13 +30,14 @@ execute_process(COMMAND lsb_release -cs
 #------------------------------------------------------------------------
 #-- COMPILER MACROS
 #------------------------------------------------------------------------
-set(COREGEN_COMPILER_MACROS "-DCGIPREFIX=${CMAKE_INSTALL_PREFIX}")
+set(CLINGO_COMPILER_MACROS "-DCLINGO_WITH_LUA")
+set(COREGEN_COMPILER_MACROS "-DCGIPREFIX=${CMAKE_INSTALL_PREFIX} ${CLINGO_COMPILER_MACROS}")
 
 #------------------------------------------------------------------------
 #-- COMPILER OPTIONS
 #------------------------------------------------------------------------
 # Require C++11
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -std=c++11 -Wall ${COREGEN_COMPILER_MACROS}")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -std=c++14 -Wall ${COREGEN_COMPILER_MACROS}")
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -O0 -Wall ${COREGEN_COMPILER_MACROS}")
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3 -Wall ${COREGEN_COMPILER_MACROS}")
 
@@ -62,6 +63,9 @@ if( (${CMAKE_SYSTEM_NAME} EQUAL "Darwin") OR (${CMAKE_SYSTEM_NAME} EQUAL "Linux"
 else()
   set(COREGEN_LINK_LIBS "")
 endif()
+
+# Set the clingo build options
+set(CLINGO_BUILD_STATIC ON)
 
 #------------------------------------------------------------------------
 #-- FIND PACKAGES
@@ -112,8 +116,13 @@ if(NOT COREGEN_BUILD_DIR)
 endif()
 
 if(NOT YAML_PATH)
-  set(YAML_PATH "${CMAKE_CURRENT_SOURCE_DIR}/src/yaml/yaml-cpp")
+  set(YAML_PATH "${CMAKE_CURRENT_SOURCE_DIR}/src/thirdparty/yaml/yaml-cpp")
   message(STATUS "YAML_PATH set to ${YAML_PATH}")
+endif()
+
+if(NOT CLINGO_PATH)
+  set(CLINGO_PATH "${CMAKE_CURRENT_SOURCE_DIR}/src/thirdparty/clingo-5.3.0")
+  message(STATUS "CLINGO_PATH set to ${CLINGO_PATH}")
 endif()
 
 #------------------------------------------------------------------------

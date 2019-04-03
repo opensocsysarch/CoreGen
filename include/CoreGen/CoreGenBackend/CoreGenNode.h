@@ -72,6 +72,7 @@ private:
   CGRTLType RTLType;                    ///< CoreGenNode: Type of RTL
   std::vector<CGAttr> Attrs;            ///< CoreGenNode: Node attributes
   std::vector<CoreGenNode *> CNodes;    ///< CoreGenNode: Child DAG nodes
+  std::string ASP;                      ///< CoreGenNode: ASP representation of the node
 
   CoreGenNode *PluginNode;              ///< CoreGenNode: Overridden Plugin Node
 
@@ -166,6 +167,11 @@ public:
 
   /// Set the overridden plugin node
   bool SetOverriddenNode( CoreGenNode *Node );
+
+  /// Append to the ASP String
+  void AppendASP( std::string ASPString) { ASP += ASPString; }
+
+  std::string GetASP() { return ASP; }
 };
 
 #endif

@@ -32,6 +32,11 @@ include_directories("${PROJECT_BINARY_DIR}")
 #include_directories(${COREGEN_PLUGIN_PATH})
 #include_directories(${STONECUTTER_PATH})
 include_directories(${YAML_PATH}/include)
+
+include_directories(${CLINGO_PATH}/libclingo)
+include_directories(${CLINGO_PATH}/libgringo)
+include_directories(${CLINGO_PATH}/libluaclingo)
+
 target_link_libraries(cgcli SCComp CoreGenBackend yaml-cpp
                       ${COREGEN_LINK_LIBS})
 install(TARGETS cgcli DESTINATION bin)
