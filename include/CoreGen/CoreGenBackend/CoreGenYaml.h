@@ -1,7 +1,7 @@
 //
 // _CoreGenYaml_h_
 //
-// Copyright (C) 2017-2018 Tactical Computing Laboratories, LLC
+// Copyright (C) 2017-2019 Tactical Computing Laboratories, LLC
 // All Rights Reserved
 // contact@tactcomplabs.com
 //
@@ -66,6 +66,15 @@ private:
   CoreGenProj *Proj;              ///< CoreGenBackend: CoreGen project info
 
   std::vector<std::string> CNames; ///< CoreGenYaml: Cache printer storage
+
+  /// Determine if the YAML node name is valid
+  bool IsValidName(std::string Name);
+
+  /// Convert string input to RTL type
+  CGRTLType StrToCGRTL(std::string I);
+
+  /// Convert RTL Type to String
+  std::string CGRTLToStr(CGRTLType T);
 
   /// Retrieve the line number of the target node
   unsigned GetLineNum(const YAML::Node Node);
@@ -182,7 +191,8 @@ private:
                     std::vector<CoreGenCore *> &Cores,
                     std::vector<CoreGenCache *> &Caches,
                     std::vector<CoreGenISA *> &ISAs,
-                    std::vector<CoreGenRegClass *> &RegClasses);
+                    std::vector<CoreGenRegClass *> &RegClasses,
+                    std::vector<CoreGenExt *> &Exts);
 
   /// Read Yaml: Socs
   bool ReadSocYaml(const YAML::Node& SocNodes,

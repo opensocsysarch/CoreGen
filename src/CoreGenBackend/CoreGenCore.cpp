@@ -1,7 +1,7 @@
 //
 // _CoreGenCore_cpp_
 //
-// Copyright (C) 2017-2018 Tactical Computing Laboratories, LLC
+// Copyright (C) 2017-2019 Tactical Computing Laboratories, LLC
 // All Rights Reserved
 // contact@tactcomplabs.com
 //
@@ -23,8 +23,7 @@ bool CoreGenCore::SetISA( CoreGenISA *I ){
     DeleteChild(static_cast<CoreGenNode *>(ISA));
   }
   ISA = I;
-  InsertChild(static_cast<CoreGenNode *>(ISA));
-  return true;
+  return InsertChild(static_cast<CoreGenNode *>(ISA));
 }
 
 bool CoreGenCore::InsertCache( CoreGenCache *C ){
@@ -32,8 +31,7 @@ bool CoreGenCore::InsertCache( CoreGenCache *C ){
     DeleteChild(static_cast<CoreGenNode *>(Cache));
   }
   Cache = C;
-  InsertChild(static_cast<CoreGenNode *>(Cache));
-  return true;
+  return InsertChild(static_cast<CoreGenNode *>(Cache));
 }
 
 bool CoreGenCore::InsertRegClass( CoreGenRegClass *RegClass ){
@@ -47,9 +45,7 @@ bool CoreGenCore::InsertRegClass( CoreGenRegClass *RegClass ){
 
   // insert it
   Regs.push_back(RegClass);
-  InsertChild(static_cast<CoreGenNode *>(RegClass));
-
-  return true;
+  return InsertChild(static_cast<CoreGenNode *>(RegClass));
 }
 
 bool CoreGenCore::InsertExt( CoreGenNode *E ){
@@ -63,9 +59,7 @@ bool CoreGenCore::InsertExt( CoreGenNode *E ){
 
   // insert it
   Exts.push_back(E);
-  InsertChild(static_cast<CoreGenNode *>(E));
-
-  return true;
+  return InsertChild(static_cast<CoreGenNode *>(E));
 }
 
 CoreGenRegClass *CoreGenCore::GetRegClass( unsigned C ){

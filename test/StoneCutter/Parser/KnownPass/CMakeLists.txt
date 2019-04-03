@@ -1,5 +1,5 @@
 # CoreGen test/StoneCutter/Parser/KnownPass CMakeLists.txt
-# Copyright (C) 2017-2018 Tactical Computing Laboratories, LLC
+# Copyright (C) 2017-2019 Tactical Computing Laboratories, LLC
 # All Rights Reserved
 # contact@tactcomplabs.com
 #
@@ -20,6 +20,7 @@ endif ()
 file(GLOB TEST_SRCS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} *.sc)
 
 if(BUILD_COREGEN_STONECUTTER_PARSER_KNOWNPASS_TESTING)
+set(BUILD_COREGEN_STONECUTTER_PARSER_KNOWNPASS_MULTIFILE_TESTING "ON")
 foreach(testSrc ${TEST_SRCS})
   # Extract the file name
   get_filename_component(testName ${testSrc} NAME_WE)
@@ -31,4 +32,6 @@ foreach(testSrc ${TEST_SRCS})
   set_tests_properties( ${testName} PROPERTIES PASS_REGULAR_EXPRESSION "")
 endforeach(testSrc)
 endif()
+
+add_subdirectory(MultiFile)
 

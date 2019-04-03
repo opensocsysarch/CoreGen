@@ -1,5 +1,11 @@
+ProjectInfo:
+  - ProjectName: TEST70
+    ProjectRoot: ./
+    ProjectType: unknown
+    ChiselMajorVersion: 3
+    ChiselMinorVersion: 0
 Registers:
-  - RegName: TEST39.0.reg
+  - RegName: TEST70.0.reg
     Width: 64
     Index: 0
     PseudoName: pseudoreg.0
@@ -9,7 +15,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
-  - RegName: TEST39.1.reg
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.1.reg
     Width: 64
     Index: 1
     PseudoName: pseudoreg.1
@@ -19,7 +27,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
-  - RegName: TEST39.2.reg
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.2.reg
     Width: 64
     Index: 2
     PseudoName: pseudoreg.2
@@ -29,7 +39,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
-  - RegName: TEST39.3.reg
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.3.reg
     Width: 64
     Index: 3
     PseudoName: pseudoreg.3
@@ -39,7 +51,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
-  - RegName: TEST39.4.reg
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.4.reg
     Width: 64
     Index: 4
     PseudoName: pseudoreg.4
@@ -49,7 +63,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
-  - RegName: TEST39.5.reg
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.5.reg
     Width: 64
     Index: 5
     PseudoName: pseudoreg.5
@@ -59,7 +75,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
-  - RegName: TEST39.6.reg
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.6.reg
     Width: 64
     Index: 6
     PseudoName: pseudoreg.6
@@ -69,7 +87,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
-  - RegName: TEST39.7.reg
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.7.reg
     Width: 64
     Index: 7
     PseudoName: pseudoreg.7
@@ -79,7 +99,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
-  - RegName: TEST39.8.reg
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.8.reg
     Width: 64
     Index: 8
     PseudoName: pseudoreg.8
@@ -89,7 +111,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
-  - RegName: TEST39.9.reg
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.9.reg
     Width: 64
     Index: 9
     PseudoName: pseudoreg.9
@@ -99,7 +123,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
-  - RegName: TEST39.10.reg
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.10.reg
     Width: 64
     Index: 10
     PseudoName: pseudoreg.10
@@ -109,7 +135,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
-  - RegName: TEST39.11.reg
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.11.reg
     Width: 64
     Index: 11
     PseudoName: pseudoreg.11
@@ -119,7 +147,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
-  - RegName: TEST39.12.reg
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.12.reg
     Width: 64
     Index: 12
     PseudoName: pseudoreg.12
@@ -129,7 +159,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
-  - RegName: TEST39.13.reg
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.13.reg
     Width: 64
     Index: 13
     PseudoName: pseudoreg.13
@@ -139,7 +171,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
-  - RegName: TEST39.14.reg
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.14.reg
     Width: 64
     Index: 14
     PseudoName: pseudoreg.14
@@ -149,7 +183,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
-  - RegName: TEST39.15.reg
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.15.reg
     Width: 64
     Index: 15
     PseudoName: pseudoreg.15
@@ -159,7 +195,657 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
-  - RegName: TEST39.0.csr
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.16.reg
+    Width: 64
+    Index: 16
+    PseudoName: pseudoreg.16
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.17.reg
+    Width: 64
+    Index: 17
+    PseudoName: pseudoreg.17
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.18.reg
+    Width: 64
+    Index: 18
+    PseudoName: pseudoreg.18
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.19.reg
+    Width: 64
+    Index: 19
+    PseudoName: pseudoreg.19
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.20.reg
+    Width: 64
+    Index: 20
+    PseudoName: pseudoreg.20
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.21.reg
+    Width: 64
+    Index: 21
+    PseudoName: pseudoreg.21
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.22.reg
+    Width: 64
+    Index: 22
+    PseudoName: pseudoreg.22
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.23.reg
+    Width: 64
+    Index: 23
+    PseudoName: pseudoreg.23
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.24.reg
+    Width: 64
+    Index: 24
+    PseudoName: pseudoreg.24
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.25.reg
+    Width: 64
+    Index: 25
+    PseudoName: pseudoreg.25
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.26.reg
+    Width: 64
+    Index: 26
+    PseudoName: pseudoreg.26
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.27.reg
+    Width: 64
+    Index: 27
+    PseudoName: pseudoreg.27
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.28.reg
+    Width: 64
+    Index: 28
+    PseudoName: pseudoreg.28
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.29.reg
+    Width: 64
+    Index: 29
+    PseudoName: pseudoreg.29
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.30.reg
+    Width: 64
+    Index: 30
+    PseudoName: pseudoreg.30
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.31.reg
+    Width: 64
+    Index: 31
+    PseudoName: pseudoreg.31
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.32.reg
+    Width: 64
+    Index: 32
+    PseudoName: pseudoreg.32
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.33.reg
+    Width: 64
+    Index: 33
+    PseudoName: pseudoreg.33
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.34.reg
+    Width: 64
+    Index: 34
+    PseudoName: pseudoreg.34
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.35.reg
+    Width: 64
+    Index: 35
+    PseudoName: pseudoreg.35
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.36.reg
+    Width: 64
+    Index: 36
+    PseudoName: pseudoreg.36
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.37.reg
+    Width: 64
+    Index: 37
+    PseudoName: pseudoreg.37
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.38.reg
+    Width: 64
+    Index: 38
+    PseudoName: pseudoreg.38
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.39.reg
+    Width: 64
+    Index: 39
+    PseudoName: pseudoreg.39
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.40.reg
+    Width: 64
+    Index: 40
+    PseudoName: pseudoreg.40
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.41.reg
+    Width: 64
+    Index: 41
+    PseudoName: pseudoreg.41
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.42.reg
+    Width: 64
+    Index: 42
+    PseudoName: pseudoreg.42
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.43.reg
+    Width: 64
+    Index: 43
+    PseudoName: pseudoreg.43
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.44.reg
+    Width: 64
+    Index: 44
+    PseudoName: pseudoreg.44
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.45.reg
+    Width: 64
+    Index: 45
+    PseudoName: pseudoreg.45
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.46.reg
+    Width: 64
+    Index: 46
+    PseudoName: pseudoreg.46
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.47.reg
+    Width: 64
+    Index: 47
+    PseudoName: pseudoreg.47
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.48.reg
+    Width: 64
+    Index: 48
+    PseudoName: pseudoreg.48
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.49.reg
+    Width: 64
+    Index: 49
+    PseudoName: pseudoreg.49
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.50.reg
+    Width: 64
+    Index: 50
+    PseudoName: pseudoreg.50
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.51.reg
+    Width: 64
+    Index: 51
+    PseudoName: pseudoreg.51
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.52.reg
+    Width: 64
+    Index: 52
+    PseudoName: pseudoreg.52
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.53.reg
+    Width: 64
+    Index: 53
+    PseudoName: pseudoreg.53
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.54.reg
+    Width: 64
+    Index: 54
+    PseudoName: pseudoreg.54
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.55.reg
+    Width: 64
+    Index: 55
+    PseudoName: pseudoreg.55
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.56.reg
+    Width: 64
+    Index: 56
+    PseudoName: pseudoreg.56
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.57.reg
+    Width: 64
+    Index: 57
+    PseudoName: pseudoreg.57
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.58.reg
+    Width: 64
+    Index: 58
+    PseudoName: pseudoreg.58
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.59.reg
+    Width: 64
+    Index: 59
+    PseudoName: pseudoreg.59
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.60.reg
+    Width: 64
+    Index: 60
+    PseudoName: pseudoreg.60
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.61.reg
+    Width: 64
+    Index: 61
+    PseudoName: pseudoreg.61
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.62.reg
+    Width: 64
+    Index: 62
+    PseudoName: pseudoreg.62
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.63.reg
+    Width: 64
+    Index: 63
+    PseudoName: pseudoreg.63
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.64.reg
+    Width: 64
+    Index: 64
+    PseudoName: pseudoreg.64
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.65.reg
+    Width: 64
+    Index: 65
+    PseudoName: pseudoreg.65
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.66.reg
+    Width: 64
+    Index: 66
+    PseudoName: pseudoreg.66
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.67.reg
+    Width: 64
+    Index: 67
+    PseudoName: pseudoreg.67
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.68.reg
+    Width: 64
+    Index: 68
+    PseudoName: pseudoreg.68
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.69.reg
+    Width: 64
+    Index: 69
+    PseudoName: pseudoreg.69
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.0.csr
     Width: 64
     Index: 0
     PseudoName: csr.0
@@ -169,7 +855,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
-  - RegName: TEST39.1.csr
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.1.csr
     Width: 64
     Index: 1
     PseudoName: csr.1
@@ -179,7 +867,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
-  - RegName: TEST39.2.csr
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.2.csr
     Width: 64
     Index: 2
     PseudoName: csr.2
@@ -189,7 +879,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
-  - RegName: TEST39.3.csr
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.3.csr
     Width: 64
     Index: 3
     PseudoName: csr.3
@@ -199,7 +891,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
-  - RegName: TEST39.4.csr
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.4.csr
     Width: 64
     Index: 4
     PseudoName: csr.4
@@ -209,7 +903,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
-  - RegName: TEST39.5.csr
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.5.csr
     Width: 64
     Index: 5
     PseudoName: csr.5
@@ -219,7 +915,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
-  - RegName: TEST39.6.csr
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.6.csr
     Width: 64
     Index: 6
     PseudoName: csr.6
@@ -229,7 +927,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
-  - RegName: TEST39.7.csr
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.7.csr
     Width: 64
     Index: 7
     PseudoName: csr.7
@@ -239,7 +939,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
-  - RegName: TEST39.8.csr
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.8.csr
     Width: 64
     Index: 8
     PseudoName: csr.8
@@ -249,7 +951,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
-  - RegName: TEST39.9.csr
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.9.csr
     Width: 64
     Index: 9
     PseudoName: csr.9
@@ -259,7 +963,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
-  - RegName: TEST39.10.csr
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.10.csr
     Width: 64
     Index: 10
     PseudoName: csr.10
@@ -269,7 +975,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
-  - RegName: TEST39.11.csr
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.11.csr
     Width: 64
     Index: 11
     PseudoName: csr.11
@@ -279,7 +987,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
-  - RegName: TEST39.12.csr
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.12.csr
     Width: 64
     Index: 12
     PseudoName: csr.12
@@ -289,7 +999,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
-  - RegName: TEST39.13.csr
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.13.csr
     Width: 64
     Index: 13
     PseudoName: csr.13
@@ -299,7 +1011,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
-  - RegName: TEST39.14.csr
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.14.csr
     Width: 64
     Index: 14
     PseudoName: csr.14
@@ -309,7 +1023,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
-  - RegName: TEST39.15.csr
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.15.csr
     Width: 64
     Index: 15
     PseudoName: csr.15
@@ -319,50 +1035,806 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.16.csr
+    Width: 64
+    Index: 16
+    PseudoName: csr.16
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.17.csr
+    Width: 64
+    Index: 17
+    PseudoName: csr.17
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.18.csr
+    Width: 64
+    Index: 18
+    PseudoName: csr.18
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.19.csr
+    Width: 64
+    Index: 19
+    PseudoName: csr.19
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.20.csr
+    Width: 64
+    Index: 20
+    PseudoName: csr.20
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.21.csr
+    Width: 64
+    Index: 21
+    PseudoName: csr.21
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.22.csr
+    Width: 64
+    Index: 22
+    PseudoName: csr.22
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.23.csr
+    Width: 64
+    Index: 23
+    PseudoName: csr.23
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.24.csr
+    Width: 64
+    Index: 24
+    PseudoName: csr.24
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.25.csr
+    Width: 64
+    Index: 25
+    PseudoName: csr.25
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.26.csr
+    Width: 64
+    Index: 26
+    PseudoName: csr.26
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.27.csr
+    Width: 64
+    Index: 27
+    PseudoName: csr.27
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.28.csr
+    Width: 64
+    Index: 28
+    PseudoName: csr.28
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.29.csr
+    Width: 64
+    Index: 29
+    PseudoName: csr.29
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.30.csr
+    Width: 64
+    Index: 30
+    PseudoName: csr.30
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.31.csr
+    Width: 64
+    Index: 31
+    PseudoName: csr.31
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.32.csr
+    Width: 64
+    Index: 32
+    PseudoName: csr.32
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.33.csr
+    Width: 64
+    Index: 33
+    PseudoName: csr.33
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.34.csr
+    Width: 64
+    Index: 34
+    PseudoName: csr.34
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.35.csr
+    Width: 64
+    Index: 35
+    PseudoName: csr.35
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.36.csr
+    Width: 64
+    Index: 36
+    PseudoName: csr.36
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.37.csr
+    Width: 64
+    Index: 37
+    PseudoName: csr.37
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.38.csr
+    Width: 64
+    Index: 38
+    PseudoName: csr.38
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.39.csr
+    Width: 64
+    Index: 39
+    PseudoName: csr.39
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.40.csr
+    Width: 64
+    Index: 40
+    PseudoName: csr.40
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.41.csr
+    Width: 64
+    Index: 41
+    PseudoName: csr.41
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.42.csr
+    Width: 64
+    Index: 42
+    PseudoName: csr.42
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.43.csr
+    Width: 64
+    Index: 43
+    PseudoName: csr.43
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.44.csr
+    Width: 64
+    Index: 44
+    PseudoName: csr.44
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.45.csr
+    Width: 64
+    Index: 45
+    PseudoName: csr.45
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.46.csr
+    Width: 64
+    Index: 46
+    PseudoName: csr.46
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.47.csr
+    Width: 64
+    Index: 47
+    PseudoName: csr.47
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.48.csr
+    Width: 64
+    Index: 48
+    PseudoName: csr.48
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.49.csr
+    Width: 64
+    Index: 49
+    PseudoName: csr.49
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.50.csr
+    Width: 64
+    Index: 50
+    PseudoName: csr.50
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.51.csr
+    Width: 64
+    Index: 51
+    PseudoName: csr.51
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.52.csr
+    Width: 64
+    Index: 52
+    PseudoName: csr.52
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.53.csr
+    Width: 64
+    Index: 53
+    PseudoName: csr.53
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.54.csr
+    Width: 64
+    Index: 54
+    PseudoName: csr.54
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.55.csr
+    Width: 64
+    Index: 55
+    PseudoName: csr.55
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.56.csr
+    Width: 64
+    Index: 56
+    PseudoName: csr.56
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.57.csr
+    Width: 64
+    Index: 57
+    PseudoName: csr.57
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.58.csr
+    Width: 64
+    Index: 58
+    PseudoName: csr.58
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.59.csr
+    Width: 64
+    Index: 59
+    PseudoName: csr.59
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.60.csr
+    Width: 64
+    Index: 60
+    PseudoName: csr.60
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.61.csr
+    Width: 64
+    Index: 61
+    PseudoName: csr.61
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.62.csr
+    Width: 64
+    Index: 62
+    PseudoName: csr.62
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.63.csr
+    Width: 64
+    Index: 63
+    PseudoName: csr.63
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.64.csr
+    Width: 64
+    Index: 64
+    PseudoName: csr.64
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.65.csr
+    Width: 64
+    Index: 65
+    PseudoName: csr.65
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.66.csr
+    Width: 64
+    Index: 66
+    PseudoName: csr.66
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.67.csr
+    Width: 64
+    Index: 67
+    PseudoName: csr.67
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.68.csr
+    Width: 64
+    Index: 68
+    PseudoName: csr.68
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST70.69.csr
+    Width: 64
+    Index: 69
+    PseudoName: csr.69
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
 RegClasses:
-  - RegisterClassName: TEST39.regclass
-    NumRegisters: 16
+  - RegisterClassName: TEST70.regclass
     Registers:
-      - TEST39.0.reg
-      - TEST39.1.reg
-      - TEST39.2.reg
-      - TEST39.3.reg
-      - TEST39.4.reg
-      - TEST39.5.reg
-      - TEST39.6.reg
-      - TEST39.7.reg
-      - TEST39.8.reg
-      - TEST39.9.reg
-      - TEST39.10.reg
-      - TEST39.11.reg
-      - TEST39.12.reg
-      - TEST39.13.reg
-      - TEST39.14.reg
-      - TEST39.15.reg
-  - RegisterClassName: TEST39.csrregclass
-    NumRegisters: 16
+      - TEST70.0.reg
+      - TEST70.1.reg
+      - TEST70.2.reg
+      - TEST70.3.reg
+      - TEST70.4.reg
+      - TEST70.5.reg
+      - TEST70.6.reg
+      - TEST70.7.reg
+      - TEST70.8.reg
+      - TEST70.9.reg
+      - TEST70.10.reg
+      - TEST70.11.reg
+      - TEST70.12.reg
+      - TEST70.13.reg
+      - TEST70.14.reg
+      - TEST70.15.reg
+      - TEST70.16.reg
+      - TEST70.17.reg
+      - TEST70.18.reg
+      - TEST70.19.reg
+      - TEST70.20.reg
+      - TEST70.21.reg
+      - TEST70.22.reg
+      - TEST70.23.reg
+      - TEST70.24.reg
+      - TEST70.25.reg
+      - TEST70.26.reg
+      - TEST70.27.reg
+      - TEST70.28.reg
+      - TEST70.29.reg
+      - TEST70.30.reg
+      - TEST70.31.reg
+      - TEST70.32.reg
+      - TEST70.33.reg
+      - TEST70.34.reg
+      - TEST70.35.reg
+      - TEST70.36.reg
+      - TEST70.37.reg
+      - TEST70.38.reg
+      - TEST70.39.reg
+      - TEST70.40.reg
+      - TEST70.41.reg
+      - TEST70.42.reg
+      - TEST70.43.reg
+      - TEST70.44.reg
+      - TEST70.45.reg
+      - TEST70.46.reg
+      - TEST70.47.reg
+      - TEST70.48.reg
+      - TEST70.49.reg
+      - TEST70.50.reg
+      - TEST70.51.reg
+      - TEST70.52.reg
+      - TEST70.53.reg
+      - TEST70.54.reg
+      - TEST70.55.reg
+      - TEST70.56.reg
+      - TEST70.57.reg
+      - TEST70.58.reg
+      - TEST70.59.reg
+      - TEST70.60.reg
+      - TEST70.61.reg
+      - TEST70.62.reg
+      - TEST70.63.reg
+      - TEST70.64.reg
+      - TEST70.65.reg
+      - TEST70.66.reg
+      - TEST70.67.reg
+      - TEST70.68.reg
+      - TEST70.69.reg
+  - RegisterClassName: TEST70.csrregclass
     Registers:
-      - TEST39.0.csr
-      - TEST39.1.csr
-      - TEST39.2.csr
-      - TEST39.3.csr
-      - TEST39.4.csr
-      - TEST39.5.csr
-      - TEST39.6.csr
-      - TEST39.7.csr
-      - TEST39.8.csr
-      - TEST39.9.csr
-      - TEST39.10.csr
-      - TEST39.11.csr
-      - TEST39.12.csr
-      - TEST39.13.csr
-      - TEST39.14.csr
-      - TEST39.15.csr
+      - TEST70.0.csr
+      - TEST70.1.csr
+      - TEST70.2.csr
+      - TEST70.3.csr
+      - TEST70.4.csr
+      - TEST70.5.csr
+      - TEST70.6.csr
+      - TEST70.7.csr
+      - TEST70.8.csr
+      - TEST70.9.csr
+      - TEST70.10.csr
+      - TEST70.11.csr
+      - TEST70.12.csr
+      - TEST70.13.csr
+      - TEST70.14.csr
+      - TEST70.15.csr
+      - TEST70.16.csr
+      - TEST70.17.csr
+      - TEST70.18.csr
+      - TEST70.19.csr
+      - TEST70.20.csr
+      - TEST70.21.csr
+      - TEST70.22.csr
+      - TEST70.23.csr
+      - TEST70.24.csr
+      - TEST70.25.csr
+      - TEST70.26.csr
+      - TEST70.27.csr
+      - TEST70.28.csr
+      - TEST70.29.csr
+      - TEST70.30.csr
+      - TEST70.31.csr
+      - TEST70.32.csr
+      - TEST70.33.csr
+      - TEST70.34.csr
+      - TEST70.35.csr
+      - TEST70.36.csr
+      - TEST70.37.csr
+      - TEST70.38.csr
+      - TEST70.39.csr
+      - TEST70.40.csr
+      - TEST70.41.csr
+      - TEST70.42.csr
+      - TEST70.43.csr
+      - TEST70.44.csr
+      - TEST70.45.csr
+      - TEST70.46.csr
+      - TEST70.47.csr
+      - TEST70.48.csr
+      - TEST70.49.csr
+      - TEST70.50.csr
+      - TEST70.51.csr
+      - TEST70.52.csr
+      - TEST70.53.csr
+      - TEST70.54.csr
+      - TEST70.55.csr
+      - TEST70.56.csr
+      - TEST70.57.csr
+      - TEST70.58.csr
+      - TEST70.59.csr
+      - TEST70.60.csr
+      - TEST70.61.csr
+      - TEST70.62.csr
+      - TEST70.63.csr
+      - TEST70.64.csr
+      - TEST70.65.csr
+      - TEST70.66.csr
+      - TEST70.67.csr
+      - TEST70.68.csr
+      - TEST70.69.csr
 ISAs:
-  - ISAName: TEST39.isa
+  - ISAName: TEST70.isa
 InstFormats:
-  - InstFormatName: TEST39.if
-    ISA: TEST39.isa
+  - InstFormatName: TEST70.if
+    ISA: TEST70.isa
     FormatWidth: 32
     Fields:
       - FieldName: opcode
@@ -377,1148 +1849,1196 @@ InstFormats:
         StartBit: 8
         EndBit: 15
         MandatoryField: false
-        RegClass: TEST39.regclass
+        RegClass: TEST70.regclass
       - FieldName: RA
         FieldType: CGInstReg
         FieldWidth: 8
         StartBit: 16
         EndBit: 23
         MandatoryField: false
-        RegClass: TEST39.regclass
+        RegClass: TEST70.regclass
       - FieldName: RT
         FieldType: CGInstReg
         FieldWidth: 8
         StartBit: 24
         EndBit: 31
         MandatoryField: false
-        RegClass: TEST39.csrregclass
+        RegClass: TEST70.csrregclass
 Insts:
-  - Inst: TEST39.inst0
-    ISA: TEST39.isa
-    InstFormat: TEST39.if
+  - Inst: TEST70.inst0
+    ISA: TEST70.isa
+    InstFormat: TEST70.if
     Encodings:
       - EncodingField: opcode
         EncodingWidth: 8
         EncodingValue: 1
-  - Inst: TEST39.inst1
-    ISA: TEST39.isa
-    InstFormat: TEST39.if
+  - Inst: TEST70.inst1
+    ISA: TEST70.isa
+    InstFormat: TEST70.if
     Encodings:
       - EncodingField: opcode
         EncodingWidth: 8
         EncodingValue: 2
-  - Inst: TEST39.inst2
-    ISA: TEST39.isa
-    InstFormat: TEST39.if
+  - Inst: TEST70.inst2
+    ISA: TEST70.isa
+    InstFormat: TEST70.if
     Encodings:
       - EncodingField: opcode
         EncodingWidth: 8
         EncodingValue: 3
-  - Inst: TEST39.inst3
-    ISA: TEST39.isa
-    InstFormat: TEST39.if
+  - Inst: TEST70.inst3
+    ISA: TEST70.isa
+    InstFormat: TEST70.if
     Encodings:
       - EncodingField: opcode
         EncodingWidth: 8
         EncodingValue: 4
-  - Inst: TEST39.inst4
-    ISA: TEST39.isa
-    InstFormat: TEST39.if
+  - Inst: TEST70.inst4
+    ISA: TEST70.isa
+    InstFormat: TEST70.if
     Encodings:
       - EncodingField: opcode
         EncodingWidth: 8
         EncodingValue: 5
-  - Inst: TEST39.inst5
-    ISA: TEST39.isa
-    InstFormat: TEST39.if
+  - Inst: TEST70.inst5
+    ISA: TEST70.isa
+    InstFormat: TEST70.if
     Encodings:
       - EncodingField: opcode
         EncodingWidth: 8
         EncodingValue: 6
-  - Inst: TEST39.inst6
-    ISA: TEST39.isa
-    InstFormat: TEST39.if
+  - Inst: TEST70.inst6
+    ISA: TEST70.isa
+    InstFormat: TEST70.if
     Encodings:
       - EncodingField: opcode
         EncodingWidth: 8
         EncodingValue: 7
-  - Inst: TEST39.inst7
-    ISA: TEST39.isa
-    InstFormat: TEST39.if
+  - Inst: TEST70.inst7
+    ISA: TEST70.isa
+    InstFormat: TEST70.if
     Encodings:
       - EncodingField: opcode
         EncodingWidth: 8
         EncodingValue: 8
-  - Inst: TEST39.inst8
-    ISA: TEST39.isa
-    InstFormat: TEST39.if
+  - Inst: TEST70.inst8
+    ISA: TEST70.isa
+    InstFormat: TEST70.if
     Encodings:
       - EncodingField: opcode
         EncodingWidth: 8
         EncodingValue: 9
-  - Inst: TEST39.inst9
-    ISA: TEST39.isa
-    InstFormat: TEST39.if
+  - Inst: TEST70.inst9
+    ISA: TEST70.isa
+    InstFormat: TEST70.if
     Encodings:
       - EncodingField: opcode
         EncodingWidth: 8
         EncodingValue: 10
-  - Inst: TEST39.inst10
-    ISA: TEST39.isa
-    InstFormat: TEST39.if
+  - Inst: TEST70.inst10
+    ISA: TEST70.isa
+    InstFormat: TEST70.if
     Encodings:
       - EncodingField: opcode
         EncodingWidth: 8
         EncodingValue: 11
-  - Inst: TEST39.inst11
-    ISA: TEST39.isa
-    InstFormat: TEST39.if
+  - Inst: TEST70.inst11
+    ISA: TEST70.isa
+    InstFormat: TEST70.if
     Encodings:
       - EncodingField: opcode
         EncodingWidth: 8
         EncodingValue: 12
-  - Inst: TEST39.inst12
-    ISA: TEST39.isa
-    InstFormat: TEST39.if
+  - Inst: TEST70.inst12
+    ISA: TEST70.isa
+    InstFormat: TEST70.if
     Encodings:
       - EncodingField: opcode
         EncodingWidth: 8
         EncodingValue: 13
-  - Inst: TEST39.inst13
-    ISA: TEST39.isa
-    InstFormat: TEST39.if
+  - Inst: TEST70.inst13
+    ISA: TEST70.isa
+    InstFormat: TEST70.if
     Encodings:
       - EncodingField: opcode
         EncodingWidth: 8
         EncodingValue: 14
-  - Inst: TEST39.inst14
-    ISA: TEST39.isa
-    InstFormat: TEST39.if
+  - Inst: TEST70.inst14
+    ISA: TEST70.isa
+    InstFormat: TEST70.if
     Encodings:
       - EncodingField: opcode
         EncodingWidth: 8
         EncodingValue: 15
-  - Inst: TEST39.inst15
-    ISA: TEST39.isa
-    InstFormat: TEST39.if
+  - Inst: TEST70.inst15
+    ISA: TEST70.isa
+    InstFormat: TEST70.if
     Encodings:
       - EncodingField: opcode
         EncodingWidth: 8
         EncodingValue: 16
+  - Inst: TEST70.inst16
+    ISA: TEST70.isa
+    InstFormat: TEST70.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 17
+  - Inst: TEST70.inst17
+    ISA: TEST70.isa
+    InstFormat: TEST70.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 18
+  - Inst: TEST70.inst18
+    ISA: TEST70.isa
+    InstFormat: TEST70.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 19
+  - Inst: TEST70.inst19
+    ISA: TEST70.isa
+    InstFormat: TEST70.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 20
+  - Inst: TEST70.inst20
+    ISA: TEST70.isa
+    InstFormat: TEST70.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 21
+  - Inst: TEST70.inst21
+    ISA: TEST70.isa
+    InstFormat: TEST70.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 22
+  - Inst: TEST70.inst22
+    ISA: TEST70.isa
+    InstFormat: TEST70.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 23
+  - Inst: TEST70.inst23
+    ISA: TEST70.isa
+    InstFormat: TEST70.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 24
+  - Inst: TEST70.inst24
+    ISA: TEST70.isa
+    InstFormat: TEST70.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 25
+  - Inst: TEST70.inst25
+    ISA: TEST70.isa
+    InstFormat: TEST70.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 26
+  - Inst: TEST70.inst26
+    ISA: TEST70.isa
+    InstFormat: TEST70.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 27
+  - Inst: TEST70.inst27
+    ISA: TEST70.isa
+    InstFormat: TEST70.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 28
+  - Inst: TEST70.inst28
+    ISA: TEST70.isa
+    InstFormat: TEST70.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 29
+  - Inst: TEST70.inst29
+    ISA: TEST70.isa
+    InstFormat: TEST70.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 30
+  - Inst: TEST70.inst30
+    ISA: TEST70.isa
+    InstFormat: TEST70.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 31
+  - Inst: TEST70.inst31
+    ISA: TEST70.isa
+    InstFormat: TEST70.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 32
+  - Inst: TEST70.inst32
+    ISA: TEST70.isa
+    InstFormat: TEST70.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 33
+  - Inst: TEST70.inst33
+    ISA: TEST70.isa
+    InstFormat: TEST70.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 34
+  - Inst: TEST70.inst34
+    ISA: TEST70.isa
+    InstFormat: TEST70.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 35
+  - Inst: TEST70.inst35
+    ISA: TEST70.isa
+    InstFormat: TEST70.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 36
+  - Inst: TEST70.inst36
+    ISA: TEST70.isa
+    InstFormat: TEST70.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 37
+  - Inst: TEST70.inst37
+    ISA: TEST70.isa
+    InstFormat: TEST70.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 38
+  - Inst: TEST70.inst38
+    ISA: TEST70.isa
+    InstFormat: TEST70.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 39
+  - Inst: TEST70.inst39
+    ISA: TEST70.isa
+    InstFormat: TEST70.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 40
+  - Inst: TEST70.inst40
+    ISA: TEST70.isa
+    InstFormat: TEST70.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 41
+  - Inst: TEST70.inst41
+    ISA: TEST70.isa
+    InstFormat: TEST70.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 42
+  - Inst: TEST70.inst42
+    ISA: TEST70.isa
+    InstFormat: TEST70.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 43
+  - Inst: TEST70.inst43
+    ISA: TEST70.isa
+    InstFormat: TEST70.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 44
+  - Inst: TEST70.inst44
+    ISA: TEST70.isa
+    InstFormat: TEST70.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 45
+  - Inst: TEST70.inst45
+    ISA: TEST70.isa
+    InstFormat: TEST70.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 46
+  - Inst: TEST70.inst46
+    ISA: TEST70.isa
+    InstFormat: TEST70.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 47
+  - Inst: TEST70.inst47
+    ISA: TEST70.isa
+    InstFormat: TEST70.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 48
+  - Inst: TEST70.inst48
+    ISA: TEST70.isa
+    InstFormat: TEST70.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 49
+  - Inst: TEST70.inst49
+    ISA: TEST70.isa
+    InstFormat: TEST70.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 50
+  - Inst: TEST70.inst50
+    ISA: TEST70.isa
+    InstFormat: TEST70.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 51
+  - Inst: TEST70.inst51
+    ISA: TEST70.isa
+    InstFormat: TEST70.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 52
+  - Inst: TEST70.inst52
+    ISA: TEST70.isa
+    InstFormat: TEST70.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 53
+  - Inst: TEST70.inst53
+    ISA: TEST70.isa
+    InstFormat: TEST70.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 54
+  - Inst: TEST70.inst54
+    ISA: TEST70.isa
+    InstFormat: TEST70.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 55
+  - Inst: TEST70.inst55
+    ISA: TEST70.isa
+    InstFormat: TEST70.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 56
+  - Inst: TEST70.inst56
+    ISA: TEST70.isa
+    InstFormat: TEST70.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 57
+  - Inst: TEST70.inst57
+    ISA: TEST70.isa
+    InstFormat: TEST70.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 58
+  - Inst: TEST70.inst58
+    ISA: TEST70.isa
+    InstFormat: TEST70.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 59
+  - Inst: TEST70.inst59
+    ISA: TEST70.isa
+    InstFormat: TEST70.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 60
+  - Inst: TEST70.inst60
+    ISA: TEST70.isa
+    InstFormat: TEST70.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 61
+  - Inst: TEST70.inst61
+    ISA: TEST70.isa
+    InstFormat: TEST70.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 62
+  - Inst: TEST70.inst62
+    ISA: TEST70.isa
+    InstFormat: TEST70.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 63
+  - Inst: TEST70.inst63
+    ISA: TEST70.isa
+    InstFormat: TEST70.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 64
+  - Inst: TEST70.inst64
+    ISA: TEST70.isa
+    InstFormat: TEST70.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 65
+  - Inst: TEST70.inst65
+    ISA: TEST70.isa
+    InstFormat: TEST70.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 66
+  - Inst: TEST70.inst66
+    ISA: TEST70.isa
+    InstFormat: TEST70.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 67
+  - Inst: TEST70.inst67
+    ISA: TEST70.isa
+    InstFormat: TEST70.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 68
+  - Inst: TEST70.inst68
+    ISA: TEST70.isa
+    InstFormat: TEST70.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 69
+  - Inst: TEST70.inst69
+    ISA: TEST70.isa
+    InstFormat: TEST70.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 70
 PseudoInsts:
-  - PseudoInst: TEST39.pinst0
-    ISA: TEST39.isa
-    Inst: TEST39.inst0
+  - PseudoInst: TEST70.pinst0
+    ISA: TEST70.isa
+    Inst: TEST70.inst0
     Encodings:
       - EncodingField: RA
         EncodingWidth: 8
         EncodingValue: 0
-  - PseudoInst: TEST39.pinst1
-    ISA: TEST39.isa
-    Inst: TEST39.inst1
+  - PseudoInst: TEST70.pinst1
+    ISA: TEST70.isa
+    Inst: TEST70.inst1
     Encodings:
       - EncodingField: RA
         EncodingWidth: 8
         EncodingValue: 1
-  - PseudoInst: TEST39.pinst2
-    ISA: TEST39.isa
-    Inst: TEST39.inst2
+  - PseudoInst: TEST70.pinst2
+    ISA: TEST70.isa
+    Inst: TEST70.inst2
     Encodings:
       - EncodingField: RA
         EncodingWidth: 8
         EncodingValue: 2
-  - PseudoInst: TEST39.pinst3
-    ISA: TEST39.isa
-    Inst: TEST39.inst3
+  - PseudoInst: TEST70.pinst3
+    ISA: TEST70.isa
+    Inst: TEST70.inst3
     Encodings:
       - EncodingField: RA
         EncodingWidth: 8
         EncodingValue: 3
-  - PseudoInst: TEST39.pinst4
-    ISA: TEST39.isa
-    Inst: TEST39.inst4
+  - PseudoInst: TEST70.pinst4
+    ISA: TEST70.isa
+    Inst: TEST70.inst4
     Encodings:
       - EncodingField: RA
         EncodingWidth: 8
         EncodingValue: 4
-  - PseudoInst: TEST39.pinst5
-    ISA: TEST39.isa
-    Inst: TEST39.inst5
+  - PseudoInst: TEST70.pinst5
+    ISA: TEST70.isa
+    Inst: TEST70.inst5
     Encodings:
       - EncodingField: RA
         EncodingWidth: 8
         EncodingValue: 5
-  - PseudoInst: TEST39.pinst6
-    ISA: TEST39.isa
-    Inst: TEST39.inst6
+  - PseudoInst: TEST70.pinst6
+    ISA: TEST70.isa
+    Inst: TEST70.inst6
     Encodings:
       - EncodingField: RA
         EncodingWidth: 8
         EncodingValue: 6
-  - PseudoInst: TEST39.pinst7
-    ISA: TEST39.isa
-    Inst: TEST39.inst7
+  - PseudoInst: TEST70.pinst7
+    ISA: TEST70.isa
+    Inst: TEST70.inst7
     Encodings:
       - EncodingField: RA
         EncodingWidth: 8
         EncodingValue: 7
-  - PseudoInst: TEST39.pinst8
-    ISA: TEST39.isa
-    Inst: TEST39.inst8
+  - PseudoInst: TEST70.pinst8
+    ISA: TEST70.isa
+    Inst: TEST70.inst8
     Encodings:
       - EncodingField: RA
         EncodingWidth: 8
         EncodingValue: 8
-  - PseudoInst: TEST39.pinst9
-    ISA: TEST39.isa
-    Inst: TEST39.inst9
+  - PseudoInst: TEST70.pinst9
+    ISA: TEST70.isa
+    Inst: TEST70.inst9
     Encodings:
       - EncodingField: RA
         EncodingWidth: 8
         EncodingValue: 9
-  - PseudoInst: TEST39.pinst10
-    ISA: TEST39.isa
-    Inst: TEST39.inst10
+  - PseudoInst: TEST70.pinst10
+    ISA: TEST70.isa
+    Inst: TEST70.inst10
     Encodings:
       - EncodingField: RA
         EncodingWidth: 8
         EncodingValue: 10
-  - PseudoInst: TEST39.pinst11
-    ISA: TEST39.isa
-    Inst: TEST39.inst11
+  - PseudoInst: TEST70.pinst11
+    ISA: TEST70.isa
+    Inst: TEST70.inst11
     Encodings:
       - EncodingField: RA
         EncodingWidth: 8
         EncodingValue: 11
-  - PseudoInst: TEST39.pinst12
-    ISA: TEST39.isa
-    Inst: TEST39.inst12
+  - PseudoInst: TEST70.pinst12
+    ISA: TEST70.isa
+    Inst: TEST70.inst12
     Encodings:
       - EncodingField: RA
         EncodingWidth: 8
         EncodingValue: 12
-  - PseudoInst: TEST39.pinst13
-    ISA: TEST39.isa
-    Inst: TEST39.inst13
+  - PseudoInst: TEST70.pinst13
+    ISA: TEST70.isa
+    Inst: TEST70.inst13
     Encodings:
       - EncodingField: RA
         EncodingWidth: 8
         EncodingValue: 13
-  - PseudoInst: TEST39.pinst14
-    ISA: TEST39.isa
-    Inst: TEST39.inst14
+  - PseudoInst: TEST70.pinst14
+    ISA: TEST70.isa
+    Inst: TEST70.inst14
     Encodings:
       - EncodingField: RA
         EncodingWidth: 8
         EncodingValue: 14
-  - PseudoInst: TEST39.pinst15
-    ISA: TEST39.isa
-    Inst: TEST39.inst15
+  - PseudoInst: TEST70.pinst15
+    ISA: TEST70.isa
+    Inst: TEST70.inst15
     Encodings:
       - EncodingField: RA
         EncodingWidth: 8
         EncodingValue: 15
+  - PseudoInst: TEST70.pinst16
+    ISA: TEST70.isa
+    Inst: TEST70.inst16
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 16
+  - PseudoInst: TEST70.pinst17
+    ISA: TEST70.isa
+    Inst: TEST70.inst17
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 17
+  - PseudoInst: TEST70.pinst18
+    ISA: TEST70.isa
+    Inst: TEST70.inst18
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 18
+  - PseudoInst: TEST70.pinst19
+    ISA: TEST70.isa
+    Inst: TEST70.inst19
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 19
+  - PseudoInst: TEST70.pinst20
+    ISA: TEST70.isa
+    Inst: TEST70.inst20
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 20
+  - PseudoInst: TEST70.pinst21
+    ISA: TEST70.isa
+    Inst: TEST70.inst21
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 21
+  - PseudoInst: TEST70.pinst22
+    ISA: TEST70.isa
+    Inst: TEST70.inst22
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 22
+  - PseudoInst: TEST70.pinst23
+    ISA: TEST70.isa
+    Inst: TEST70.inst23
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 23
+  - PseudoInst: TEST70.pinst24
+    ISA: TEST70.isa
+    Inst: TEST70.inst24
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 24
+  - PseudoInst: TEST70.pinst25
+    ISA: TEST70.isa
+    Inst: TEST70.inst25
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 25
+  - PseudoInst: TEST70.pinst26
+    ISA: TEST70.isa
+    Inst: TEST70.inst26
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 26
+  - PseudoInst: TEST70.pinst27
+    ISA: TEST70.isa
+    Inst: TEST70.inst27
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 27
+  - PseudoInst: TEST70.pinst28
+    ISA: TEST70.isa
+    Inst: TEST70.inst28
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 28
+  - PseudoInst: TEST70.pinst29
+    ISA: TEST70.isa
+    Inst: TEST70.inst29
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 29
+  - PseudoInst: TEST70.pinst30
+    ISA: TEST70.isa
+    Inst: TEST70.inst30
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 30
+  - PseudoInst: TEST70.pinst31
+    ISA: TEST70.isa
+    Inst: TEST70.inst31
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 31
+  - PseudoInst: TEST70.pinst32
+    ISA: TEST70.isa
+    Inst: TEST70.inst32
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 32
+  - PseudoInst: TEST70.pinst33
+    ISA: TEST70.isa
+    Inst: TEST70.inst33
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 33
+  - PseudoInst: TEST70.pinst34
+    ISA: TEST70.isa
+    Inst: TEST70.inst34
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 34
+  - PseudoInst: TEST70.pinst35
+    ISA: TEST70.isa
+    Inst: TEST70.inst35
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 35
+  - PseudoInst: TEST70.pinst36
+    ISA: TEST70.isa
+    Inst: TEST70.inst36
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 36
+  - PseudoInst: TEST70.pinst37
+    ISA: TEST70.isa
+    Inst: TEST70.inst37
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 37
+  - PseudoInst: TEST70.pinst38
+    ISA: TEST70.isa
+    Inst: TEST70.inst38
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 38
+  - PseudoInst: TEST70.pinst39
+    ISA: TEST70.isa
+    Inst: TEST70.inst39
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 39
+  - PseudoInst: TEST70.pinst40
+    ISA: TEST70.isa
+    Inst: TEST70.inst40
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 40
+  - PseudoInst: TEST70.pinst41
+    ISA: TEST70.isa
+    Inst: TEST70.inst41
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 41
+  - PseudoInst: TEST70.pinst42
+    ISA: TEST70.isa
+    Inst: TEST70.inst42
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 42
+  - PseudoInst: TEST70.pinst43
+    ISA: TEST70.isa
+    Inst: TEST70.inst43
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 43
+  - PseudoInst: TEST70.pinst44
+    ISA: TEST70.isa
+    Inst: TEST70.inst44
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 44
+  - PseudoInst: TEST70.pinst45
+    ISA: TEST70.isa
+    Inst: TEST70.inst45
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 45
+  - PseudoInst: TEST70.pinst46
+    ISA: TEST70.isa
+    Inst: TEST70.inst46
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 46
+  - PseudoInst: TEST70.pinst47
+    ISA: TEST70.isa
+    Inst: TEST70.inst47
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 47
+  - PseudoInst: TEST70.pinst48
+    ISA: TEST70.isa
+    Inst: TEST70.inst48
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 48
+  - PseudoInst: TEST70.pinst49
+    ISA: TEST70.isa
+    Inst: TEST70.inst49
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 49
+  - PseudoInst: TEST70.pinst50
+    ISA: TEST70.isa
+    Inst: TEST70.inst50
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 50
+  - PseudoInst: TEST70.pinst51
+    ISA: TEST70.isa
+    Inst: TEST70.inst51
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 51
+  - PseudoInst: TEST70.pinst52
+    ISA: TEST70.isa
+    Inst: TEST70.inst52
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 52
+  - PseudoInst: TEST70.pinst53
+    ISA: TEST70.isa
+    Inst: TEST70.inst53
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 53
+  - PseudoInst: TEST70.pinst54
+    ISA: TEST70.isa
+    Inst: TEST70.inst54
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 54
+  - PseudoInst: TEST70.pinst55
+    ISA: TEST70.isa
+    Inst: TEST70.inst55
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 55
+  - PseudoInst: TEST70.pinst56
+    ISA: TEST70.isa
+    Inst: TEST70.inst56
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 56
+  - PseudoInst: TEST70.pinst57
+    ISA: TEST70.isa
+    Inst: TEST70.inst57
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 57
+  - PseudoInst: TEST70.pinst58
+    ISA: TEST70.isa
+    Inst: TEST70.inst58
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 58
+  - PseudoInst: TEST70.pinst59
+    ISA: TEST70.isa
+    Inst: TEST70.inst59
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 59
+  - PseudoInst: TEST70.pinst60
+    ISA: TEST70.isa
+    Inst: TEST70.inst60
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 60
+  - PseudoInst: TEST70.pinst61
+    ISA: TEST70.isa
+    Inst: TEST70.inst61
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 61
+  - PseudoInst: TEST70.pinst62
+    ISA: TEST70.isa
+    Inst: TEST70.inst62
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 62
+  - PseudoInst: TEST70.pinst63
+    ISA: TEST70.isa
+    Inst: TEST70.inst63
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 63
+  - PseudoInst: TEST70.pinst64
+    ISA: TEST70.isa
+    Inst: TEST70.inst64
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 64
+  - PseudoInst: TEST70.pinst65
+    ISA: TEST70.isa
+    Inst: TEST70.inst65
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 65
+  - PseudoInst: TEST70.pinst66
+    ISA: TEST70.isa
+    Inst: TEST70.inst66
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 66
+  - PseudoInst: TEST70.pinst67
+    ISA: TEST70.isa
+    Inst: TEST70.inst67
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 67
+  - PseudoInst: TEST70.pinst68
+    ISA: TEST70.isa
+    Inst: TEST70.inst68
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 68
+  - PseudoInst: TEST70.pinst69
+    ISA: TEST70.isa
+    Inst: TEST70.inst69
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 69
 Caches:
-  - Cache: TEST39.L2.cache
-    Sets: 2
-    Ways: 8
-  - Cache: TEST39.core0.L1.cache
-    Sets: 1
-    Ways: 1
-    SubLevel: TEST39.L2.cache
-  - Cache: TEST39.L2.cache
-    Sets: 2
-    Ways: 8
-  - Cache: TEST39.core1.L1.cache
-    Sets: 1
-    Ways: 1
-    SubLevel: TEST39.L2.cache
-  - Cache: TEST39.L2.cache
-    Sets: 2
-    Ways: 8
-  - Cache: TEST39.core2.L1.cache
-    Sets: 1
-    Ways: 1
-    SubLevel: TEST39.L2.cache
-  - Cache: TEST39.L2.cache
-    Sets: 2
-    Ways: 8
-  - Cache: TEST39.core3.L1.cache
-    Sets: 1
-    Ways: 1
-    SubLevel: TEST39.L2.cache
-  - Cache: TEST39.L2.cache
-    Sets: 2
-    Ways: 8
-  - Cache: TEST39.core4.L1.cache
-    Sets: 1
-    Ways: 1
-    SubLevel: TEST39.L2.cache
-  - Cache: TEST39.L2.cache
-    Sets: 2
-    Ways: 8
-  - Cache: TEST39.core5.L1.cache
-    Sets: 1
-    Ways: 1
-    SubLevel: TEST39.L2.cache
-  - Cache: TEST39.L2.cache
-    Sets: 2
-    Ways: 8
-  - Cache: TEST39.core6.L1.cache
-    Sets: 1
-    Ways: 1
-    SubLevel: TEST39.L2.cache
-  - Cache: TEST39.L2.cache
-    Sets: 2
-    Ways: 8
-  - Cache: TEST39.core7.L1.cache
-    Sets: 1
-    Ways: 1
-    SubLevel: TEST39.L2.cache
-  - Cache: TEST39.L2.cache
-    Sets: 2
-    Ways: 8
-  - Cache: TEST39.core8.L1.cache
-    Sets: 1
-    Ways: 1
-    SubLevel: TEST39.L2.cache
-  - Cache: TEST39.L2.cache
-    Sets: 2
-    Ways: 8
-  - Cache: TEST39.core9.L1.cache
-    Sets: 1
-    Ways: 1
-    SubLevel: TEST39.L2.cache
-  - Cache: TEST39.L2.cache
-    Sets: 2
-    Ways: 8
-  - Cache: TEST39.core10.L1.cache
-    Sets: 1
-    Ways: 1
-    SubLevel: TEST39.L2.cache
-  - Cache: TEST39.L2.cache
-    Sets: 2
-    Ways: 8
-  - Cache: TEST39.core11.L1.cache
-    Sets: 1
-    Ways: 1
-    SubLevel: TEST39.L2.cache
-  - Cache: TEST39.L2.cache
-    Sets: 2
-    Ways: 8
-  - Cache: TEST39.core12.L1.cache
-    Sets: 1
-    Ways: 1
-    SubLevel: TEST39.L2.cache
-  - Cache: TEST39.L2.cache
-    Sets: 2
-    Ways: 8
-  - Cache: TEST39.core13.L1.cache
-    Sets: 1
-    Ways: 1
-    SubLevel: TEST39.L2.cache
-  - Cache: TEST39.L2.cache
-    Sets: 2
-    Ways: 8
-  - Cache: TEST39.core14.L1.cache
-    Sets: 1
-    Ways: 1
-    SubLevel: TEST39.L2.cache
-  - Cache: TEST39.L2.cache
-    Sets: 2
-    Ways: 8
-  - Cache: TEST39.core15.L1.cache
-    Sets: 1
-    Ways: 1
-    SubLevel: TEST39.L2.cache
-  - Cache: TEST39.L2.cache
-    Sets: 2
-    Ways: 8
-  - Cache: TEST39.core16.L1.cache
-    Sets: 1
-    Ways: 1
-    SubLevel: TEST39.L2.cache
-  - Cache: TEST39.L2.cache
-    Sets: 2
-    Ways: 8
-  - Cache: TEST39.core17.L1.cache
-    Sets: 1
-    Ways: 1
-    SubLevel: TEST39.L2.cache
-  - Cache: TEST39.L2.cache
-    Sets: 2
-    Ways: 8
-  - Cache: TEST39.core18.L1.cache
-    Sets: 1
-    Ways: 1
-    SubLevel: TEST39.L2.cache
-  - Cache: TEST39.L2.cache
-    Sets: 2
-    Ways: 8
-  - Cache: TEST39.core19.L1.cache
-    Sets: 1
-    Ways: 1
-    SubLevel: TEST39.L2.cache
-  - Cache: TEST39.L2.cache
-    Sets: 2
-    Ways: 8
-  - Cache: TEST39.core20.L1.cache
-    Sets: 1
-    Ways: 1
-    SubLevel: TEST39.L2.cache
-  - Cache: TEST39.L2.cache
-    Sets: 2
-    Ways: 8
-  - Cache: TEST39.core21.L1.cache
-    Sets: 1
-    Ways: 1
-    SubLevel: TEST39.L2.cache
-  - Cache: TEST39.L2.cache
-    Sets: 2
-    Ways: 8
-  - Cache: TEST39.core22.L1.cache
-    Sets: 1
-    Ways: 1
-    SubLevel: TEST39.L2.cache
-  - Cache: TEST39.L2.cache
-    Sets: 2
-    Ways: 8
-  - Cache: TEST39.core23.L1.cache
-    Sets: 1
-    Ways: 1
-    SubLevel: TEST39.L2.cache
-  - Cache: TEST39.L2.cache
-    Sets: 2
-    Ways: 8
-  - Cache: TEST39.core24.L1.cache
-    Sets: 1
-    Ways: 1
-    SubLevel: TEST39.L2.cache
-  - Cache: TEST39.L2.cache
-    Sets: 2
-    Ways: 8
-  - Cache: TEST39.core25.L1.cache
-    Sets: 1
-    Ways: 1
-    SubLevel: TEST39.L2.cache
-  - Cache: TEST39.L2.cache
-    Sets: 2
-    Ways: 8
-  - Cache: TEST39.core26.L1.cache
-    Sets: 1
-    Ways: 1
-    SubLevel: TEST39.L2.cache
-  - Cache: TEST39.L2.cache
-    Sets: 2
-    Ways: 8
-  - Cache: TEST39.core27.L1.cache
-    Sets: 1
-    Ways: 1
-    SubLevel: TEST39.L2.cache
-  - Cache: TEST39.L2.cache
-    Sets: 2
-    Ways: 8
-  - Cache: TEST39.core28.L1.cache
-    Sets: 1
-    Ways: 1
-    SubLevel: TEST39.L2.cache
-  - Cache: TEST39.L2.cache
-    Sets: 2
-    Ways: 8
-  - Cache: TEST39.core29.L1.cache
-    Sets: 1
-    Ways: 1
-    SubLevel: TEST39.L2.cache
-  - Cache: TEST39.L2.cache
-    Sets: 2
-    Ways: 8
-  - Cache: TEST39.core30.L1.cache
-    Sets: 1
-    Ways: 1
-    SubLevel: TEST39.L2.cache
-  - Cache: TEST39.L2.cache
-    Sets: 2
-    Ways: 8
-  - Cache: TEST39.core31.L1.cache
-    Sets: 1
-    Ways: 1
-    SubLevel: TEST39.L2.cache
-  - Cache: TEST39.L2.cache
-    Sets: 2
-    Ways: 8
-  - Cache: TEST39.core32.L1.cache
-    Sets: 1
-    Ways: 1
-    SubLevel: TEST39.L2.cache
-  - Cache: TEST39.L2.cache
-    Sets: 2
-    Ways: 8
-  - Cache: TEST39.core33.L1.cache
-    Sets: 1
-    Ways: 1
-    SubLevel: TEST39.L2.cache
-  - Cache: TEST39.L2.cache
-    Sets: 2
-    Ways: 8
-  - Cache: TEST39.core34.L1.cache
-    Sets: 1
-    Ways: 1
-    SubLevel: TEST39.L2.cache
-  - Cache: TEST39.L2.cache
-    Sets: 2
-    Ways: 8
-  - Cache: TEST39.core35.L1.cache
-    Sets: 1
-    Ways: 1
-    SubLevel: TEST39.L2.cache
-  - Cache: TEST39.L2.cache
-    Sets: 2
-    Ways: 8
-  - Cache: TEST39.core36.L1.cache
-    Sets: 1
-    Ways: 1
-    SubLevel: TEST39.L2.cache
-  - Cache: TEST39.L2.cache
-    Sets: 2
-    Ways: 8
-  - Cache: TEST39.core37.L1.cache
-    Sets: 1
-    Ways: 1
-    SubLevel: TEST39.L2.cache
-  - Cache: TEST39.L2.cache
-    Sets: 2
-    Ways: 8
-  - Cache: TEST39.core38.L1.cache
-    Sets: 1
-    Ways: 1
-    SubLevel: TEST39.L2.cache
-  - Cache: TEST39.L2.cache
-    Sets: 2
-    Ways: 8
-  - Cache: TEST39.core39.L1.cache
-    Sets: 1
-    Ways: 1
-    SubLevel: TEST39.L2.cache
-  - Cache: TEST39.L2.cache
-    Sets: 2
-    Ways: 8
-  - Cache: TEST39.core40.L1.cache
-    Sets: 1
-    Ways: 1
-    SubLevel: TEST39.L2.cache
-  - Cache: TEST39.L2.cache
-    Sets: 2
-    Ways: 8
-  - Cache: TEST39.core41.L1.cache
-    Sets: 1
-    Ways: 1
-    SubLevel: TEST39.L2.cache
-  - Cache: TEST39.L2.cache
-    Sets: 2
-    Ways: 8
-  - Cache: TEST39.core42.L1.cache
-    Sets: 1
-    Ways: 1
-    SubLevel: TEST39.L2.cache
-  - Cache: TEST39.L2.cache
-    Sets: 2
-    Ways: 8
-  - Cache: TEST39.core43.L1.cache
-    Sets: 1
-    Ways: 1
-    SubLevel: TEST39.L2.cache
-  - Cache: TEST39.L2.cache
-    Sets: 2
-    Ways: 8
-  - Cache: TEST39.core44.L1.cache
-    Sets: 1
-    Ways: 1
-    SubLevel: TEST39.L2.cache
-  - Cache: TEST39.L2.cache
-    Sets: 2
-    Ways: 8
-  - Cache: TEST39.core45.L1.cache
-    Sets: 1
-    Ways: 1
-    SubLevel: TEST39.L2.cache
-  - Cache: TEST39.L2.cache
-    Sets: 2
-    Ways: 8
-  - Cache: TEST39.core46.L1.cache
-    Sets: 1
-    Ways: 1
-    SubLevel: TEST39.L2.cache
-  - Cache: TEST39.L2.cache
-    Sets: 2
-    Ways: 8
-  - Cache: TEST39.core47.L1.cache
-    Sets: 1
-    Ways: 1
-    SubLevel: TEST39.L2.cache
-  - Cache: TEST39.L2.cache
-    Sets: 2
-    Ways: 8
-  - Cache: TEST39.core48.L1.cache
-    Sets: 1
-    Ways: 1
-    SubLevel: TEST39.L2.cache
-  - Cache: TEST39.L2.cache
-    Sets: 2
-    Ways: 8
-  - Cache: TEST39.core49.L1.cache
-    Sets: 1
-    Ways: 1
-    SubLevel: TEST39.L2.cache
-  - Cache: TEST39.L2.cache
-    Sets: 2
-    Ways: 8
-  - Cache: TEST39.core50.L1.cache
-    Sets: 1
-    Ways: 1
-    SubLevel: TEST39.L2.cache
-  - Cache: TEST39.L2.cache
-    Sets: 2
-    Ways: 8
-  - Cache: TEST39.core51.L1.cache
-    Sets: 1
-    Ways: 1
-    SubLevel: TEST39.L2.cache
-  - Cache: TEST39.L2.cache
-    Sets: 2
-    Ways: 8
-  - Cache: TEST39.core52.L1.cache
-    Sets: 1
-    Ways: 1
-    SubLevel: TEST39.L2.cache
-  - Cache: TEST39.L2.cache
-    Sets: 2
-    Ways: 8
-  - Cache: TEST39.core53.L1.cache
-    Sets: 1
-    Ways: 1
-    SubLevel: TEST39.L2.cache
-  - Cache: TEST39.L2.cache
-    Sets: 2
-    Ways: 8
-  - Cache: TEST39.core54.L1.cache
-    Sets: 1
-    Ways: 1
-    SubLevel: TEST39.L2.cache
-  - Cache: TEST39.L2.cache
-    Sets: 2
-    Ways: 8
-  - Cache: TEST39.core55.L1.cache
-    Sets: 1
-    Ways: 1
-    SubLevel: TEST39.L2.cache
-  - Cache: TEST39.L2.cache
-    Sets: 2
-    Ways: 8
-  - Cache: TEST39.core56.L1.cache
-    Sets: 1
-    Ways: 1
-    SubLevel: TEST39.L2.cache
-  - Cache: TEST39.L2.cache
-    Sets: 2
-    Ways: 8
-  - Cache: TEST39.core57.L1.cache
-    Sets: 1
-    Ways: 1
-    SubLevel: TEST39.L2.cache
-  - Cache: TEST39.L2.cache
-    Sets: 2
-    Ways: 8
-  - Cache: TEST39.core58.L1.cache
-    Sets: 1
-    Ways: 1
-    SubLevel: TEST39.L2.cache
-  - Cache: TEST39.L2.cache
-    Sets: 2
-    Ways: 8
-  - Cache: TEST39.core59.L1.cache
-    Sets: 1
-    Ways: 1
-    SubLevel: TEST39.L2.cache
-  - Cache: TEST39.L2.cache
-    Sets: 2
-    Ways: 8
-  - Cache: TEST39.core60.L1.cache
-    Sets: 1
-    Ways: 1
-    SubLevel: TEST39.L2.cache
-  - Cache: TEST39.L2.cache
-    Sets: 2
-    Ways: 8
-  - Cache: TEST39.core61.L1.cache
-    Sets: 1
-    Ways: 1
-    SubLevel: TEST39.L2.cache
-  - Cache: TEST39.L2.cache
-    Sets: 2
-    Ways: 8
-  - Cache: TEST39.core62.L1.cache
-    Sets: 1
-    Ways: 1
-    SubLevel: TEST39.L2.cache
-  - Cache: TEST39.L2.cache
-    Sets: 2
-    Ways: 8
-  - Cache: TEST39.core63.L1.cache
-    Sets: 1
-    Ways: 1
-    SubLevel: TEST39.L2.cache
-  - Cache: TEST39.L2.cache
-    Sets: 2
-    Ways: 8
+  - Cache: TEST70.L2.cache
+    Sets: 2
+    Ways: 8
+  - Cache: TEST70.core0.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST70.L2.cache
+  - Cache: TEST70.core1.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST70.L2.cache
+  - Cache: TEST70.core2.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST70.L2.cache
+  - Cache: TEST70.core3.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST70.L2.cache
+Comms:
+  - Comm: TEST70.comm
+    Type: NOC
+    Width: 64
+    Endpoints:
+      - TEST70.core0
+      - TEST70.core1
+      - TEST70.core2
+      - TEST70.core3
+      - TEST70.L2.cache
+      - TEST70.vtp
+      - TEST70.0.mctrl
+      - TEST70.1.mctrl
+      - TEST70.2.mctrl
+      - TEST70.3.mctrl
+Scratchpads:
+  - Scratchpad: TEST70.0.spad
+    MemSize: 1024
+    RqstPorts: 1
+    RspPorts: 1
+    StartAddr: 34359739392
+  - Scratchpad: TEST70.1.spad
+    MemSize: 2048
+    RqstPorts: 1
+    RspPorts: 1
+    StartAddr: 34359740416
+  - Scratchpad: TEST70.2.spad
+    MemSize: 3072
+    RqstPorts: 1
+    RspPorts: 1
+    StartAddr: 34359741440
+  - Scratchpad: TEST70.3.spad
+    MemSize: 4096
+    RqstPorts: 1
+    RspPorts: 1
+    StartAddr: 34359742464
+MemoryControllers:
+  - MemoryController: TEST70.0.mctrl
+    Ports: 2
+  - MemoryController: TEST70.1.mctrl
+    Ports: 2
+  - MemoryController: TEST70.2.mctrl
+    Ports: 2
+  - MemoryController: TEST70.3.mctrl
+    Ports: 2
+VTPControllers:
+  - VTP: TEST70.vtp
+Extensions:
+  - Extension: TEST70.ext0
+    Type: unknown
+    Registers:
+      - RegName: TEST70.ext0.reg
+        Width: 64
+        Index: 0
+        IsFixedValue: false
+        IsSIMD: false
+        RWReg: false
+        ROReg: false
+        CSRReg: true
+        AMSReg: false
+        TUSReg: false
+        Shared: false
+    RegClasses:
+      - RegisterClassName: TEST70.ext0.regclass
+        Registers:
+          - TEST70.ext0.reg
+    ISAs:
+      - ISAName: TEST70.ext0.isa
+    RTLFile: TEST70.ext0.v
+  - Extension: TEST70.ext1
+    Type: unknown
+    Registers:
+      - RegName: TEST70.ext1.reg
+        Width: 64
+        Index: 0
+        IsFixedValue: false
+        IsSIMD: false
+        RWReg: false
+        ROReg: false
+        CSRReg: true
+        AMSReg: false
+        TUSReg: false
+        Shared: false
+    RegClasses:
+      - RegisterClassName: TEST70.ext1.regclass
+        Registers:
+          - TEST70.ext1.reg
+    ISAs:
+      - ISAName: TEST70.ext1.isa
+    RTLFile: TEST70.ext1.v
+  - Extension: TEST70.ext2
+    Type: unknown
+    Registers:
+      - RegName: TEST70.ext2.reg
+        Width: 64
+        Index: 0
+        IsFixedValue: false
+        IsSIMD: false
+        RWReg: false
+        ROReg: false
+        CSRReg: true
+        AMSReg: false
+        TUSReg: false
+        Shared: false
+    RegClasses:
+      - RegisterClassName: TEST70.ext2.regclass
+        Registers:
+          - TEST70.ext2.reg
+    ISAs:
+      - ISAName: TEST70.ext2.isa
+    RTLFile: TEST70.ext2.v
+  - Extension: TEST70.ext3
+    Type: unknown
+    Registers:
+      - RegName: TEST70.ext3.reg
+        Width: 64
+        Index: 0
+        IsFixedValue: false
+        IsSIMD: false
+        RWReg: false
+        ROReg: false
+        CSRReg: true
+        AMSReg: false
+        TUSReg: false
+        Shared: false
+    RegClasses:
+      - RegisterClassName: TEST70.ext3.regclass
+        Registers:
+          - TEST70.ext3.reg
+    ISAs:
+      - ISAName: TEST70.ext3.isa
+    RTLFile: TEST70.ext3.v
 Cores:
-  - Core: TEST39.core0
-    Cache: TEST39.core0.L1.cache
-    ISA: TEST39.isa
-    RegisterClasses:
-      - RegClass: TEST39.regclass
-      - RegClass: TEST39.csrregclass
-  - Core: TEST39.core1
-    Cache: TEST39.core1.L1.cache
-    ISA: TEST39.isa
-    RegisterClasses:
-      - RegClass: TEST39.regclass
-      - RegClass: TEST39.csrregclass
-  - Core: TEST39.core2
-    Cache: TEST39.core2.L1.cache
-    ISA: TEST39.isa
-    RegisterClasses:
-      - RegClass: TEST39.regclass
-      - RegClass: TEST39.csrregclass
-  - Core: TEST39.core3
-    Cache: TEST39.core3.L1.cache
-    ISA: TEST39.isa
-    RegisterClasses:
-      - RegClass: TEST39.regclass
-      - RegClass: TEST39.csrregclass
-  - Core: TEST39.core4
-    Cache: TEST39.core4.L1.cache
-    ISA: TEST39.isa
-    RegisterClasses:
-      - RegClass: TEST39.regclass
-      - RegClass: TEST39.csrregclass
-  - Core: TEST39.core5
-    Cache: TEST39.core5.L1.cache
-    ISA: TEST39.isa
-    RegisterClasses:
-      - RegClass: TEST39.regclass
-      - RegClass: TEST39.csrregclass
-  - Core: TEST39.core6
-    Cache: TEST39.core6.L1.cache
-    ISA: TEST39.isa
-    RegisterClasses:
-      - RegClass: TEST39.regclass
-      - RegClass: TEST39.csrregclass
-  - Core: TEST39.core7
-    Cache: TEST39.core7.L1.cache
-    ISA: TEST39.isa
-    RegisterClasses:
-      - RegClass: TEST39.regclass
-      - RegClass: TEST39.csrregclass
-  - Core: TEST39.core8
-    Cache: TEST39.core8.L1.cache
-    ISA: TEST39.isa
-    RegisterClasses:
-      - RegClass: TEST39.regclass
-      - RegClass: TEST39.csrregclass
-  - Core: TEST39.core9
-    Cache: TEST39.core9.L1.cache
-    ISA: TEST39.isa
-    RegisterClasses:
-      - RegClass: TEST39.regclass
-      - RegClass: TEST39.csrregclass
-  - Core: TEST39.core10
-    Cache: TEST39.core10.L1.cache
-    ISA: TEST39.isa
-    RegisterClasses:
-      - RegClass: TEST39.regclass
-      - RegClass: TEST39.csrregclass
-  - Core: TEST39.core11
-    Cache: TEST39.core11.L1.cache
-    ISA: TEST39.isa
-    RegisterClasses:
-      - RegClass: TEST39.regclass
-      - RegClass: TEST39.csrregclass
-  - Core: TEST39.core12
-    Cache: TEST39.core12.L1.cache
-    ISA: TEST39.isa
-    RegisterClasses:
-      - RegClass: TEST39.regclass
-      - RegClass: TEST39.csrregclass
-  - Core: TEST39.core13
-    Cache: TEST39.core13.L1.cache
-    ISA: TEST39.isa
-    RegisterClasses:
-      - RegClass: TEST39.regclass
-      - RegClass: TEST39.csrregclass
-  - Core: TEST39.core14
-    Cache: TEST39.core14.L1.cache
-    ISA: TEST39.isa
-    RegisterClasses:
-      - RegClass: TEST39.regclass
-      - RegClass: TEST39.csrregclass
-  - Core: TEST39.core15
-    Cache: TEST39.core15.L1.cache
-    ISA: TEST39.isa
-    RegisterClasses:
-      - RegClass: TEST39.regclass
-      - RegClass: TEST39.csrregclass
-  - Core: TEST39.core16
-    Cache: TEST39.core16.L1.cache
-    ISA: TEST39.isa
-    RegisterClasses:
-      - RegClass: TEST39.regclass
-      - RegClass: TEST39.csrregclass
-  - Core: TEST39.core17
-    Cache: TEST39.core17.L1.cache
-    ISA: TEST39.isa
-    RegisterClasses:
-      - RegClass: TEST39.regclass
-      - RegClass: TEST39.csrregclass
-  - Core: TEST39.core18
-    Cache: TEST39.core18.L1.cache
-    ISA: TEST39.isa
-    RegisterClasses:
-      - RegClass: TEST39.regclass
-      - RegClass: TEST39.csrregclass
-  - Core: TEST39.core19
-    Cache: TEST39.core19.L1.cache
-    ISA: TEST39.isa
-    RegisterClasses:
-      - RegClass: TEST39.regclass
-      - RegClass: TEST39.csrregclass
-  - Core: TEST39.core20
-    Cache: TEST39.core20.L1.cache
-    ISA: TEST39.isa
-    RegisterClasses:
-      - RegClass: TEST39.regclass
-      - RegClass: TEST39.csrregclass
-  - Core: TEST39.core21
-    Cache: TEST39.core21.L1.cache
-    ISA: TEST39.isa
-    RegisterClasses:
-      - RegClass: TEST39.regclass
-      - RegClass: TEST39.csrregclass
-  - Core: TEST39.core22
-    Cache: TEST39.core22.L1.cache
-    ISA: TEST39.isa
-    RegisterClasses:
-      - RegClass: TEST39.regclass
-      - RegClass: TEST39.csrregclass
-  - Core: TEST39.core23
-    Cache: TEST39.core23.L1.cache
-    ISA: TEST39.isa
-    RegisterClasses:
-      - RegClass: TEST39.regclass
-      - RegClass: TEST39.csrregclass
-  - Core: TEST39.core24
-    Cache: TEST39.core24.L1.cache
-    ISA: TEST39.isa
-    RegisterClasses:
-      - RegClass: TEST39.regclass
-      - RegClass: TEST39.csrregclass
-  - Core: TEST39.core25
-    Cache: TEST39.core25.L1.cache
-    ISA: TEST39.isa
-    RegisterClasses:
-      - RegClass: TEST39.regclass
-      - RegClass: TEST39.csrregclass
-  - Core: TEST39.core26
-    Cache: TEST39.core26.L1.cache
-    ISA: TEST39.isa
-    RegisterClasses:
-      - RegClass: TEST39.regclass
-      - RegClass: TEST39.csrregclass
-  - Core: TEST39.core27
-    Cache: TEST39.core27.L1.cache
-    ISA: TEST39.isa
-    RegisterClasses:
-      - RegClass: TEST39.regclass
-      - RegClass: TEST39.csrregclass
-  - Core: TEST39.core28
-    Cache: TEST39.core28.L1.cache
-    ISA: TEST39.isa
-    RegisterClasses:
-      - RegClass: TEST39.regclass
-      - RegClass: TEST39.csrregclass
-  - Core: TEST39.core29
-    Cache: TEST39.core29.L1.cache
-    ISA: TEST39.isa
-    RegisterClasses:
-      - RegClass: TEST39.regclass
-      - RegClass: TEST39.csrregclass
-  - Core: TEST39.core30
-    Cache: TEST39.core30.L1.cache
-    ISA: TEST39.isa
-    RegisterClasses:
-      - RegClass: TEST39.regclass
-      - RegClass: TEST39.csrregclass
-  - Core: TEST39.core31
-    Cache: TEST39.core31.L1.cache
-    ISA: TEST39.isa
-    RegisterClasses:
-      - RegClass: TEST39.regclass
-      - RegClass: TEST39.csrregclass
-  - Core: TEST39.core32
-    Cache: TEST39.core32.L1.cache
-    ISA: TEST39.isa
-    RegisterClasses:
-      - RegClass: TEST39.regclass
-      - RegClass: TEST39.csrregclass
-  - Core: TEST39.core33
-    Cache: TEST39.core33.L1.cache
-    ISA: TEST39.isa
-    RegisterClasses:
-      - RegClass: TEST39.regclass
-      - RegClass: TEST39.csrregclass
-  - Core: TEST39.core34
-    Cache: TEST39.core34.L1.cache
-    ISA: TEST39.isa
-    RegisterClasses:
-      - RegClass: TEST39.regclass
-      - RegClass: TEST39.csrregclass
-  - Core: TEST39.core35
-    Cache: TEST39.core35.L1.cache
-    ISA: TEST39.isa
-    RegisterClasses:
-      - RegClass: TEST39.regclass
-      - RegClass: TEST39.csrregclass
-  - Core: TEST39.core36
-    Cache: TEST39.core36.L1.cache
-    ISA: TEST39.isa
-    RegisterClasses:
-      - RegClass: TEST39.regclass
-      - RegClass: TEST39.csrregclass
-  - Core: TEST39.core37
-    Cache: TEST39.core37.L1.cache
-    ISA: TEST39.isa
-    RegisterClasses:
-      - RegClass: TEST39.regclass
-      - RegClass: TEST39.csrregclass
-  - Core: TEST39.core38
-    Cache: TEST39.core38.L1.cache
-    ISA: TEST39.isa
-    RegisterClasses:
-      - RegClass: TEST39.regclass
-      - RegClass: TEST39.csrregclass
-  - Core: TEST39.core39
-    Cache: TEST39.core39.L1.cache
-    ISA: TEST39.isa
-    RegisterClasses:
-      - RegClass: TEST39.regclass
-      - RegClass: TEST39.csrregclass
-  - Core: TEST39.core40
-    Cache: TEST39.core40.L1.cache
-    ISA: TEST39.isa
-    RegisterClasses:
-      - RegClass: TEST39.regclass
-      - RegClass: TEST39.csrregclass
-  - Core: TEST39.core41
-    Cache: TEST39.core41.L1.cache
-    ISA: TEST39.isa
-    RegisterClasses:
-      - RegClass: TEST39.regclass
-      - RegClass: TEST39.csrregclass
-  - Core: TEST39.core42
-    Cache: TEST39.core42.L1.cache
-    ISA: TEST39.isa
-    RegisterClasses:
-      - RegClass: TEST39.regclass
-      - RegClass: TEST39.csrregclass
-  - Core: TEST39.core43
-    Cache: TEST39.core43.L1.cache
-    ISA: TEST39.isa
-    RegisterClasses:
-      - RegClass: TEST39.regclass
-      - RegClass: TEST39.csrregclass
-  - Core: TEST39.core44
-    Cache: TEST39.core44.L1.cache
-    ISA: TEST39.isa
-    RegisterClasses:
-      - RegClass: TEST39.regclass
-      - RegClass: TEST39.csrregclass
-  - Core: TEST39.core45
-    Cache: TEST39.core45.L1.cache
-    ISA: TEST39.isa
-    RegisterClasses:
-      - RegClass: TEST39.regclass
-      - RegClass: TEST39.csrregclass
-  - Core: TEST39.core46
-    Cache: TEST39.core46.L1.cache
-    ISA: TEST39.isa
-    RegisterClasses:
-      - RegClass: TEST39.regclass
-      - RegClass: TEST39.csrregclass
-  - Core: TEST39.core47
-    Cache: TEST39.core47.L1.cache
-    ISA: TEST39.isa
-    RegisterClasses:
-      - RegClass: TEST39.regclass
-      - RegClass: TEST39.csrregclass
-  - Core: TEST39.core48
-    Cache: TEST39.core48.L1.cache
-    ISA: TEST39.isa
-    RegisterClasses:
-      - RegClass: TEST39.regclass
-      - RegClass: TEST39.csrregclass
-  - Core: TEST39.core49
-    Cache: TEST39.core49.L1.cache
-    ISA: TEST39.isa
-    RegisterClasses:
-      - RegClass: TEST39.regclass
-      - RegClass: TEST39.csrregclass
-  - Core: TEST39.core50
-    Cache: TEST39.core50.L1.cache
-    ISA: TEST39.isa
-    RegisterClasses:
-      - RegClass: TEST39.regclass
-      - RegClass: TEST39.csrregclass
-  - Core: TEST39.core51
-    Cache: TEST39.core51.L1.cache
-    ISA: TEST39.isa
-    RegisterClasses:
-      - RegClass: TEST39.regclass
-      - RegClass: TEST39.csrregclass
-  - Core: TEST39.core52
-    Cache: TEST39.core52.L1.cache
-    ISA: TEST39.isa
-    RegisterClasses:
-      - RegClass: TEST39.regclass
-      - RegClass: TEST39.csrregclass
-  - Core: TEST39.core53
-    Cache: TEST39.core53.L1.cache
-    ISA: TEST39.isa
-    RegisterClasses:
-      - RegClass: TEST39.regclass
-      - RegClass: TEST39.csrregclass
-  - Core: TEST39.core54
-    Cache: TEST39.core54.L1.cache
-    ISA: TEST39.isa
-    RegisterClasses:
-      - RegClass: TEST39.regclass
-      - RegClass: TEST39.csrregclass
-  - Core: TEST39.core55
-    Cache: TEST39.core55.L1.cache
-    ISA: TEST39.isa
-    RegisterClasses:
-      - RegClass: TEST39.regclass
-      - RegClass: TEST39.csrregclass
-  - Core: TEST39.core56
-    Cache: TEST39.core56.L1.cache
-    ISA: TEST39.isa
-    RegisterClasses:
-      - RegClass: TEST39.regclass
-      - RegClass: TEST39.csrregclass
-  - Core: TEST39.core57
-    Cache: TEST39.core57.L1.cache
-    ISA: TEST39.isa
-    RegisterClasses:
-      - RegClass: TEST39.regclass
-      - RegClass: TEST39.csrregclass
-  - Core: TEST39.core58
-    Cache: TEST39.core58.L1.cache
-    ISA: TEST39.isa
-    RegisterClasses:
-      - RegClass: TEST39.regclass
-      - RegClass: TEST39.csrregclass
-  - Core: TEST39.core59
-    Cache: TEST39.core59.L1.cache
-    ISA: TEST39.isa
-    RegisterClasses:
-      - RegClass: TEST39.regclass
-      - RegClass: TEST39.csrregclass
-  - Core: TEST39.core60
-    Cache: TEST39.core60.L1.cache
-    ISA: TEST39.isa
-    RegisterClasses:
-      - RegClass: TEST39.regclass
-      - RegClass: TEST39.csrregclass
-  - Core: TEST39.core61
-    Cache: TEST39.core61.L1.cache
-    ISA: TEST39.isa
-    RegisterClasses:
-      - RegClass: TEST39.regclass
-      - RegClass: TEST39.csrregclass
-  - Core: TEST39.core62
-    Cache: TEST39.core62.L1.cache
-    ISA: TEST39.isa
-    RegisterClasses:
-      - RegClass: TEST39.regclass
-      - RegClass: TEST39.csrregclass
-  - Core: TEST39.core63
-    Cache: TEST39.core63.L1.cache
-    ISA: TEST39.isa
-    RegisterClasses:
-      - RegClass: TEST39.regclass
-      - RegClass: TEST39.csrregclass
+  - Core: TEST70.core0
+    ThreadUnits: 1
+    Cache: TEST70.core0.L1.cache
+    ISA: TEST70.isa
+    RegisterClasses:
+      - RegClass: TEST70.regclass
+      - RegClass: TEST70.csrregclass
+    Extensions:
+      - Extension: TEST70.ext0
+  - Core: TEST70.core1
+    ThreadUnits: 2
+    Cache: TEST70.core1.L1.cache
+    ISA: TEST70.isa
+    RegisterClasses:
+      - RegClass: TEST70.regclass
+      - RegClass: TEST70.csrregclass
+    Extensions:
+      - Extension: TEST70.ext1
+  - Core: TEST70.core2
+    ThreadUnits: 3
+    Cache: TEST70.core2.L1.cache
+    ISA: TEST70.isa
+    RegisterClasses:
+      - RegClass: TEST70.regclass
+      - RegClass: TEST70.csrregclass
+    Extensions:
+      - Extension: TEST70.ext2
+  - Core: TEST70.core3
+    ThreadUnits: 4
+    Cache: TEST70.core3.L1.cache
+    ISA: TEST70.isa
+    RegisterClasses:
+      - RegClass: TEST70.regclass
+      - RegClass: TEST70.csrregclass
+    Extensions:
+      - Extension: TEST70.ext3
 Socs:
-  - Soc: TEST39.soc
+  - Soc: TEST70.soc
     Cores:
-      - Core: TEST39.core0
-      - Core: TEST39.core1
-      - Core: TEST39.core2
-      - Core: TEST39.core3
-      - Core: TEST39.core4
-      - Core: TEST39.core5
-      - Core: TEST39.core6
-      - Core: TEST39.core7
-      - Core: TEST39.core8
-      - Core: TEST39.core9
-      - Core: TEST39.core10
-      - Core: TEST39.core11
-      - Core: TEST39.core12
-      - Core: TEST39.core13
-      - Core: TEST39.core14
-      - Core: TEST39.core15
-      - Core: TEST39.core16
-      - Core: TEST39.core17
-      - Core: TEST39.core18
-      - Core: TEST39.core19
-      - Core: TEST39.core20
-      - Core: TEST39.core21
-      - Core: TEST39.core22
-      - Core: TEST39.core23
-      - Core: TEST39.core24
-      - Core: TEST39.core25
-      - Core: TEST39.core26
-      - Core: TEST39.core27
-      - Core: TEST39.core28
-      - Core: TEST39.core29
-      - Core: TEST39.core30
-      - Core: TEST39.core31
-      - Core: TEST39.core32
-      - Core: TEST39.core33
-      - Core: TEST39.core34
-      - Core: TEST39.core35
-      - Core: TEST39.core36
-      - Core: TEST39.core37
-      - Core: TEST39.core38
-      - Core: TEST39.core39
-      - Core: TEST39.core40
-      - Core: TEST39.core41
-      - Core: TEST39.core42
-      - Core: TEST39.core43
-      - Core: TEST39.core44
-      - Core: TEST39.core45
-      - Core: TEST39.core46
-      - Core: TEST39.core47
-      - Core: TEST39.core48
-      - Core: TEST39.core49
-      - Core: TEST39.core50
-      - Core: TEST39.core51
-      - Core: TEST39.core52
-      - Core: TEST39.core53
-      - Core: TEST39.core54
-      - Core: TEST39.core55
-      - Core: TEST39.core56
-      - Core: TEST39.core57
-      - Core: TEST39.core58
-      - Core: TEST39.core59
-      - Core: TEST39.core60
-      - Core: TEST39.core61
-      - Core: TEST39.core62
-      - Core: TEST39.core63
+      - Core: TEST70.core0
+      - Core: TEST70.core1
+      - Core: TEST70.core2
+      - Core: TEST70.core3

@@ -1,7 +1,7 @@
 //
 // _CoreGenNode_h_
 //
-// Copyright (C) 2017-2018 Tactical Computing Laboratories, LLC
+// Copyright (C) 2017-2019 Tactical Computing Laboratories, LLC
 // All Rights Reserved
 // contact@tactcomplabs.com
 //
@@ -49,12 +49,28 @@ typedef enum{
   CGTop   = 100                         ///< CGNodeType: Top-Level Node
 }CGNodeType;                            ///< CoreGenNode: CoreGen Node Types
 
+typedef enum{
+  RTLUnk     = 0,                       ///< CGRTLType: Unknown RTL Type
+  RTLChisel  = 1,                       ///< CGRTLType: Chisel RTL
+  RTLVerilog = 2                        ///< CGRTLType: Verilog RTL
+}CGRTLType;                             ///< CoreGenNode: Inline RTL Type
+
+typedef enum{
+  AttrSharedReg = 0,                    ///< CGAttr: Shared register file attribute
+  AttrPrivReg = 1,                      ///< CGAttr: Private register file attribute
+  AttrTUSReg = 2,                       ///< CGAttr: Thread unit shared registers
+  AttrISAReg = 3,                       ///< CGAttr: Multi-ISA shared registers
+  AttrSharedCache = 4                   ///< CGAttr: Shared cache level attribute
+}CGAttr;                                ///< CoreGenNode: CoreGen Node Attributes
+
 class CoreGenNode{
 private:
   std::string Name;                     ///< CoreGenNode: Name of the CoreGen node
   std::string RTL;                      ///< CoreGenNode: User-directed, inline RTL
   std::string RTLFile;                  ///< CoreGenNode: User-directed external RTL file
   CGNodeType Type;                      ///< CoreGenNode: Type of CoreGen node
+  CGRTLType RTLType;                    ///< CoreGenNode: Type of RTL
+  std::vector<CGAttr> Attrs;            ///< CoreGenNode: Node attributes
   std::vector<CoreGenNode *> CNodes;    ///< CoreGenNode: Child DAG nodes
   std::string ASP;                      ///< CoreGenNode: ASP representation of the node
 
@@ -80,8 +96,17 @@ public:
   /// Retrieve the CoreGen node type
   CGNodeType GetType();
 
+  /// Insert an attribute for this node
+  bool SetAttr(CGAttr A);
+
+  /// Determine if the target attribute is set
+  bool HasAttr(CGAttr A);
+
   /// Set the CoreGen node type
   bool SetType(CGNodeType T);
+
+  /// Set the RTL Type
+  bool SetRTLType(CGRTLType T);
 
   /// Set the CoreGen errno handler
   bool SetErrno(CoreGenErrno *E);
@@ -91,6 +116,9 @@ public:
 
   /// Set the node name
   bool SetName(std::string N);
+
+  /// Determines whether the requested node is a duplicate of an existing child
+  bool IsDuplicateNode( CoreGenNode *N );
 
   /// Retrieve the number of child nodes
   unsigned GetNumChild();
@@ -112,6 +140,9 @@ public:
 
   /// Determine whether there is inline RTL
   bool IsRTL();
+
+  /// Retrieve the type of RTL
+  CGRTLType GetRTLType();
 
   /// Retrieve inline RTL
   std::string GetRTL();

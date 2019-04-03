@@ -1,7 +1,7 @@
 //
 // _CGCLIOpts_h_
 //
-// Copyright (C) 2017-2018 Tactical Computing Laboratories, LLC
+// Copyright (C) 2017-2019 Tactical Computing Laboratories, LLC
 // All Rights Reserved
 // contact@tactcomplabs.com
 //
@@ -75,6 +75,9 @@ private:
 
   /// Set the default paths
   void SetDefaultPaths();
+
+  /// Tests whether the input file exists
+  bool FileExists(std::string F);
 
 public:
   /// Default constructor

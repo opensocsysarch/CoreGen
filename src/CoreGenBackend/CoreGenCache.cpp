@@ -1,7 +1,7 @@
 //
 // _CoreGenCache_cpp_
 //
-// Copyright (C) 2017-2018 Tactical Computing Laboratories, LLC
+// Copyright (C) 2017-2019 Tactical Computing Laboratories, LLC
 // All Rights Reserved
 // contact@tactcomplabs.com
 //
@@ -30,8 +30,7 @@ bool CoreGenCache::SetChildCache( CoreGenCache *C ){
   }
   Child = C;
   ParentLevel = true;
-  InsertChild(static_cast<CoreGenNode *>(Child));
-  return true;
+  return InsertChild(static_cast<CoreGenNode *>(Child));
 }
 
 bool CoreGenCache::SetParentCache( CoreGenCache *P ){

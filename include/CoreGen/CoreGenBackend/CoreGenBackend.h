@@ -1,17 +1,17 @@
 //
 // _CoreGenBackend_h_
 //
-// Copyright (C) 2017-2018 Tactical Computing Laboratories, LLC
+// Copyright (C) 2017-2019 Tactical Computing Laboratories, LLC
 // All Rights Reserved
 // contact@tactcomplabs.com
 //
 // See LICENSE in the top level directory for licensing details
 //
 
-/** \defgroup CoreGen CoreGen High Level SoC Design Framework
+/** \defgroup CoreGen CoreGen High Level System on Chip (SoC) Design Framework
  *
  * \brief The CoreGen library provides a high-level design and dependence
- *        analysis framework for homogeneous and heterogenous SoC's.
+ *        analysis framework for homogeneous and heterogenous system on chips.
  */
 
 
@@ -244,6 +244,12 @@ public:
 
   /// Execute the codegen
   bool ExecuteCodegen();
+
+  /// Execute the LLVM codegen
+  bool ExecuteLLVMCodegen();
+
+  /// Execute the Chisel codegen
+  bool ExecuteChiselCodegen();
 
   /// Retrieve the build date
   std::string CoreGenBuildDate() { return CGBuildDate(); }

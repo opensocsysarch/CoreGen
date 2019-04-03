@@ -1,7 +1,7 @@
 //
 // _SCLexer_cpp_
 //
-// Copyright (C) 2017-2018 Tactical Computing Laboratories, LLC
+// Copyright (C) 2017-2019 Tactical Computing Laboratories, LLC
 // All Rights Reserved
 // contact@tactcomplabs.com
 //
@@ -10,10 +10,18 @@
 
 #include "CoreGen/StoneCutter/SCLexer.h"
 
-SCLexer::SCLexer(std::string B) : InBuf(B), LineNum(1), CurChar(0) {
+SCLexer::SCLexer() : LineNum(1), CurChar(0) {
 }
 
 SCLexer::~SCLexer(){
+}
+
+bool SCLexer::SetInput(std::string B){
+  if( B.length() == 0 ){
+    return false;
+  }
+  InBuf = B;
+  return true;
 }
 
 int SCLexer::GetNext(){
@@ -28,6 +36,134 @@ int SCLexer::GetNext(){
   return TChar;
 }
 
+int SCLexer::PeekPrev(){
+  if( (unsigned)(CurChar) <= 1 ){
+    return EOF;
+  }
+  unsigned LChar = CurChar-2;
+  while(isspace(InBuf[LChar])){
+    if( LChar == 0 ){
+      return EOF;
+    }
+    LChar = LChar-1;
+  }
+  return InBuf[LChar];
+}
+
+int SCLexer::PeekNext(){
+  if( (unsigned)(CurChar) >= InBuf.size() ){
+    return EOF;
+  }
+  return InBuf[CurChar];
+}
+
+bool SCLexer::IsIntrinsic(){
+  // walk the intrinsic table and determine whether we have any candidates
+  return false;
+}
+
+bool SCLexer::IsOperator(int LC){
+  if( LC == '=' ){
+    return true;
+  }else if( LC == '+' ){
+    return true;
+  }else if( LC == '-' ){
+    return true;
+  }else if( LC == '*' ){
+    return true;
+  }else if( LC == 92 ){ // divide
+    return true;
+  }else if( LC == '%' ){
+    return true;
+  }else if( LC == '|' ){
+    return true;
+  }else if( LC == '&' ){
+    return true;
+  }else if( LC == '^' ){
+    return true;
+  }else if( LC == '>' ){
+    return true;
+  }else if( LC == '<' ){
+    return true;
+  }
+  return false;
+}
+
+bool SCLexer::IsDyadic(int LC){
+  if( LC == '=' ){
+    return true;
+  }else if( LC == '<' ){
+    return true;
+  }else if( LC == '>' ){
+    return true;
+  }else if( LC == '!' ){
+    return true;
+  }else if( LC == '&' ){
+    return true;
+  }else if( LC == '|' ){
+    return true;
+  }
+  return false;
+}
+
+bool SCLexer::IsVarDef(){
+  int Idx = 0;
+
+  // common types
+  while( VarAttrEntryTable[Idx].Name != "." ){
+    if( IdentifierStr == VarAttrEntryTable[Idx].Name ){
+      Var.width     = VarAttrEntryTable[Idx].width;
+      Var.elems     = VarAttrEntryTable[Idx].elems;
+      Var.defSign   = VarAttrEntryTable[Idx].IsDefSign;
+      Var.defVector = VarAttrEntryTable[Idx].IsDefVector;
+      Var.defFloat  = VarAttrEntryTable[Idx].IsDefFloat;
+      Var.defRegClass = false;
+      return true;
+    }
+    Idx++;
+  }
+
+  // make sure this is actually a var def
+  if( !isdigit(IdentifierStr[1]) )
+    return false;
+
+  // all other types
+  if( IdentifierStr[0] == 'u' ){
+    // unsigned variable
+    Var.elems     = 1;
+    Var.defSign   = false;
+    Var.defVector = false;
+    Var.defFloat  = false;
+    Var.defRegClass = false;
+    Var.width     = std::stoi( IdentifierStr.substr(1,IdentifierStr.length()-1) );
+    return true;
+  }else if( IdentifierStr[0] == 's' ){
+    // signed variable
+    Var.elems = 1;
+    Var.defSign   = true;
+    Var.defVector = false;
+    Var.defFloat  = false;
+    Var.defRegClass = false;
+    Var.width     = std::stoi( IdentifierStr.substr(1,IdentifierStr.length()-1) );
+    return true;
+  }
+
+  return false;
+}
+
+int SCLexer::IsValidChar(int *LastChar){
+  int TmpChar = GetNext();
+  *LastChar = TmpChar;
+  if( isalnum(TmpChar) ){
+    return 1;
+  }else if( TmpChar == '_' ){
+    return 1;
+  }else if( TmpChar == '.' ){
+    return 1;
+  }
+  return 0;
+}
+
 int SCLexer::GetTok(){
   static int LastChar = ' ';
 
@@ -37,7 +173,7 @@ int SCLexer::GetTok(){
 
   if (isalpha(LastChar)) { // identifier: [a-zA-Z][a-zA-Z0-9]*
     IdentifierStr = LastChar;
-    while (isalnum((LastChar = GetNext()))){
+    while (IsValidChar(&LastChar)){
       IdentifierStr += LastChar;
     }
 
@@ -50,18 +186,24 @@ int SCLexer::GetTok(){
       return tok_extern;
     if (IdentifierStr == "regclass")
       return tok_regclass;
+    if (IdentifierStr == "instformat")
+      return tok_instf;
     if( IdentifierStr == "if" )
       return tok_if;
     if( IdentifierStr == "else" )
       return tok_else;
-    if( IdentifierStr == "then" )
-      return tok_then;
     if( IdentifierStr == "elseif" )
       return tok_elseif;
     if( IdentifierStr == "for" )
       return tok_for;
-    if( IdentifierStr == "in" )
-      return tok_in;
+    if( IdentifierStr == "while" )
+      return tok_while;
+    if( IdentifierStr == "do" )
+      return tok_do;
+    if( IsVarDef() )
+      return tok_var;
+    if( IsIntrinsic() )
+      return tok_intrin;
 
     // the identifier
     return tok_identifier;
@@ -75,6 +217,19 @@ int SCLexer::GetTok(){
     } while (isdigit(LastChar) || LastChar == '.');
 
     NumVal = strtod(NumStr.c_str(), nullptr);
+    return tok_number;
+  }
+
+  // negative numbers
+  if ( (LastChar == '-') && IsOperator(PeekPrev()) && (isdigit(PeekNext()) || PeekNext() == '.') ){
+    std::string NumStr;
+    LastChar = GetNext(); // eat the '-'
+    do {
+      NumStr += LastChar;
+      LastChar = GetNext();
+    }while(isdigit(LastChar) || LastChar == '.');
+
+    NumVal = (strtod(NumStr.c_str(), nullptr)*-1);
     return tok_number;
   }
 
@@ -92,6 +247,22 @@ int SCLexer::GetTok(){
   // Check for end of file.  Don't eat the EOF.
   if (LastChar == EOF)
     return tok_eof;
+
+  // Check for special binary operators [<<,>>,==,!=,&&,||]
+  if( IsDyadic(LastChar) && IsDyadic(PeekNext()) ){
+    // record the dyadic operator in the identifer string
+    // first operator
+    IdentifierStr = LastChar;
+
+    // second operator
+    LastChar = GetNext();
+    IdentifierStr += LastChar;
+
+    LastChar = GetNext();
+
+    // return this as a dyad
+    return tok_dyad;
+  }
 
   // Otherwise, just return the character as its ascii value.
   int ThisChar = LastChar;

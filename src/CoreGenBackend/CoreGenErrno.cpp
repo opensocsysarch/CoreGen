@@ -1,7 +1,7 @@
 //
 // _CoreGenErrno_cpp_
 //
-// Copyright (C) 2017-2018 Tactical Computing Laboratories, LLC
+// Copyright (C) 2017-2019 Tactical Computing Laboratories, LLC
 // All Rights Reserved
 // contact@tactcomplabs.com
 //
@@ -16,7 +16,7 @@ CoreGenErrno::~CoreGenErrno() {}
 
 bool CoreGenErrno::SetError( CGERR Code, std::string Str ){
   ErrCode = Code;
-  ErrStr = Str;
+  ErrStr = "\033[1;31m" + Str + "\033[0m";
   return true;
 }
 

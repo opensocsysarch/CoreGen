@@ -1,6 +1,6 @@
 # CoreGen Tools Top-Level CMake
 #
-# Copyright (C) 2017-2018 Tactical Computing Laboratories, LLC
+# Copyright (C) 2017-2019 Tactical Computing Laboratories, LLC
 # All Rights Reserved
 # contact@tactcomplabs.com
 #
@@ -18,6 +18,14 @@ set(CMAKE_MODULE_PATH
   ${CMAKE_MODULE_PATH}
 )
 include(UseLATEX OPTIONAL)
+
+#------------------------------------------------------------------------
+#-- DERIVE THE RELEASE CODENAME
+#------------------------------------------------------------------------
+execute_process(COMMAND lsb_release -cs
+    OUTPUT_VARIABLE COREGEN_RELEASE_CODENAME
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+)
 
 #------------------------------------------------------------------------
 #-- COMPILER MACROS
@@ -171,6 +179,19 @@ if(COREGEN_BUILD_DEB)
   set(CPACK_PACKAGE_RELEASE 1)
   set(CPACK_PACKAGE_CONTACT "John Leidel")
   set(CPACK_PACKAGE_VENDOR "Tactical Computing Laboratories, LLC")
+
+  #-- setup package deps
+  if( "${COREGEN_RELEASE_CODENAME}" STREQUAL "bionic" )
+    message(STATUS "Setting package dependencies for Ubuntu 18.04 (bionic)")
+    set(CPACK_DEBIAN_PACKAGE_DEPENDS "clang-6.0 lldb-6.0 lld-6.0 libllvm6.0 llvm-6.0 llvm-6.0-dev llvm-6.0-doc llvm-6.0-examples llvm-6.0-runtime")
+  elseif( "${COREGEN_RELEASE_CODENAME}" STREQUAL "xenial" )
+    message(STATUS "Setting package dependencies for Ubuntu 16.04 (xenial)")
+    set(CPACK_DEBIAN_PACKAGE_DEPENDS "libllvm-6.0-ocaml-dev libllvm6.0 llvm-6.0 llvm-6.0-dev llvm-6.0-doc llvm-6.0-examples llvm-6.0-runtime clang-6.0 clang-tools-6.0 clang-6.0-doc libclang-common-6.0-dev libclang-6.0-dev libclang1-6.0 clang-format-6.0 python-clang-6.0")
+  else()
+    message(STATUS "Unknown debian version: ${COREGEN_RELEASE_CODENAME}")
+    message(STATUS "No debian package dependencies are set!!!")
+  endif()
+
   set(CPACK_PACKAGING_INSTALL_PREFIX ${CMAKE_INSTALL_PREFIX})
   set(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION}-${CPACK_PACKAGE_RELEASE}.${CMAKE_SYSTEM_PROCESSOR}")
   include(CPack)

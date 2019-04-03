@@ -1,7 +1,7 @@
 //
 // _CoreGenComm_cpp_
 //
-// Copyright (C) 2017-2018 Tactical Computing Laboratories, LLC
+// Copyright (C) 2017-2019 Tactical Computing Laboratories, LLC
 // All Rights Reserved
 // contact@tactcomplabs.com
 //
@@ -35,9 +35,7 @@ bool CoreGenComm::InsertEndpoint( CoreGenNode *N ){
 
   // insert it into the endpoint vector and make it an official child
   EndPoints.push_back( N );
-  this->InsertChild(N);
-
-  return true;
+  return this->InsertChild(N);
 }
 
 bool CoreGenComm::DeleteEndpoint( CoreGenNode *N ){

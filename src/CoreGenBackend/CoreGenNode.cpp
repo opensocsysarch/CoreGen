@@ -1,7 +1,7 @@
 //
 // _CoreGenNode_cpp_
 //
-// Copyright (C) 2017-2018 Tactical Computing Laboratories, LLC
+// Copyright (C) 2017-2019 Tactical Computing Laboratories, LLC
 // All Rights Reserved
 // contact@tactcomplabs.com
 //
@@ -11,19 +11,21 @@
 
 #include "CoreGen/CoreGenBackend/CoreGenNode.h"
 
-CoreGenNode::CoreGenNode() : PluginNode(NULL), Errno(NULL), ASP(""){}
+CoreGenNode::CoreGenNode() : RTLType(RTLUnk), PluginNode(NULL), Errno(NULL), ASP("") {}
 
 CoreGenNode::CoreGenNode(CGNodeType T, CoreGenErrno *E)
-  : Type(T), PluginNode(NULL), Errno(E), ASP("") {}
+  : Type(T), RTLType(RTLUnk), PluginNode(NULL), Errno(E), ASP("") {}
 
 CoreGenNode::CoreGenNode(CGNodeType T, std::string N, CoreGenErrno *E)
-    : Name(N), Type(T), PluginNode(NULL), Errno(E), ASP("") {}
+    : Name(N), Type(T), RTLType(RTLUnk), PluginNode(NULL), Errno(E), ASP("") {}
 
 CoreGenNode::~CoreGenNode() {}
 
 CGNodeType CoreGenNode::GetType() { return Type; }
 
 bool CoreGenNode::SetType(CGNodeType T) { Type = T; return true; }
+
+bool CoreGenNode::SetRTLType(CGRTLType T) { RTLType = T; return true; }
 
 bool CoreGenNode::SetErrno(CoreGenErrno *E) { Errno = E; return true; }
 
@@ -61,15 +63,26 @@ CoreGenNode *CoreGenNode::GetChild(unsigned I){
     return CNodes[I];
   }
 
-bool CoreGenNode::InsertChild( CoreGenNode *N ){
-    if( !N ){ return false; }
-    // search for duplicates
-    for( unsigned i=0; i<CNodes.size(); i++ ){
+bool CoreGenNode::IsDuplicateNode( CoreGenNode *N ){
+  if( !N ){ return false; }
+
+  for( unsigned i=0; i<CNodes.size(); i++ ){
       if( (CNodes[i]->GetName() == N->GetName()) &&
           (CNodes[i]->GetType() == N->GetType())){
         // duplicate found
         return true;
       }
+  }
+  return false;
+}
+
+bool CoreGenNode::InsertChild( CoreGenNode *N ){
+    if( !N ){ return false; }
+    // search for duplicates
+    if( IsDuplicateNode(N) ){
+      Errno->SetError(CGERR_WARN, "Duplicate child node found: " +
+                      N->GetName() );
+      return true;
     }
     CNodes.push_back(N);
     return true;
@@ -108,6 +121,10 @@ std::string CoreGenNode::GetRTL(){
   return RTL;
 }
 
+CGRTLType CoreGenNode::GetRTLType(){
+  return RTLType;
+}
+
 bool CoreGenNode::SetRTLFile( std::string RTLF ){
   if( RTLF.length() > 0 ){
     RTLFile = RTLF;
@@ -125,6 +142,22 @@ bool CoreGenNode::IsRTLFile(){
 
 std::string CoreGenNode::GetRTLFile(){
   return RTLFile;
+}
+
+bool CoreGenNode::SetAttr( CGAttr A ){
+  Attrs.push_back( A );
+  std::sort( Attrs.begin(), Attrs.end() );
+  Attrs.erase( std::unique( Attrs.begin(), Attrs.end() ), Attrs.end() );
+  return true;
+}
+
+bool CoreGenNode::HasAttr(CGAttr A){
+  for( unsigned i=0; i<Attrs.size(); i++ ){
+    if( Attrs[i] == A ){
+      return true;
+    }
+  }
+  return false;
 }
 
 // EOF

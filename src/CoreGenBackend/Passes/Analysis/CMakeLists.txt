@@ -1,5 +1,5 @@
 # CoreGen Analysis Passes CMakeLists.txt
-# Copyright (C) 2017-2018 Tactical Computing Laboratories, LLC
+# Copyright (C) 2017-2019 Tactical Computing Laboratories, LLC
 # All Rights Reserved
 # contact@tactcomplabs.com
 #
@@ -35,3 +35,4 @@ include_directories(${CLINGO_PATH}/libgringo)
 include_directories(${CLINGO_PATH}/libluaclingo)
 add_library(AnalysisPassObjs OBJECT ${AnalysisPassSrcs})
 
+#-- EOF

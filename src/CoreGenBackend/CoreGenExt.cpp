@@ -1,7 +1,7 @@
 //
 // _CoreGenExt_cpp_
 //
-// Copyright (C) 2017-2018 Tactical Computing Laboratories, LLC
+// Copyright (C) 2017-2019 Tactical Computing Laboratories, LLC
 // All Rights Reserved
 // contact@tactcomplabs.com
 //
@@ -62,7 +62,9 @@ CoreGenCache *CoreGenExt::InsertCache(std::string Name,
   CoreGenCache *C = new CoreGenCache(Name,Sets,Ways,Errno);
   Caches.push_back(C);
   CoreGenNode *N = static_cast<CoreGenNode *>(C);
-  this->InsertChild(N);
+  if( !this->InsertChild(N) ){
+    return nullptr;
+  }
   return C;
 }
 
@@ -71,7 +73,9 @@ CoreGenCore *CoreGenExt::InsertCore( std::string Name,
   CoreGenCore *C = new CoreGenCore(Name, ISA, Errno);
   Cores.push_back(C);
   CoreGenNode *N = static_cast<CoreGenNode *>(C);
-  this->InsertChild(N);
+  if( !this->InsertChild(N) ){
+    return nullptr;
+  }
   return C;
 }
 
@@ -79,7 +83,9 @@ CoreGenComm *CoreGenExt::InsertComm( std::string Name ){
   CoreGenComm *C = new CoreGenComm(Name,Errno);
   Comms.push_back(C);
   CoreGenNode *N = static_cast<CoreGenNode *>(C);
-  this->InsertChild(N);
+  if( !this->InsertChild(N) ){
+    return nullptr;
+  }
   return C;
 }
 
@@ -89,7 +95,9 @@ CoreGenInst *CoreGenExt::InsertInst( std::string Name,
   CoreGenInst *I = new CoreGenInst(Name,ISA,Format,Errno);
   Insts.push_back(I);
   CoreGenNode *N = static_cast<CoreGenNode *>(I);
-  this->InsertChild(N);
+  if( !this->InsertChild(N) ){
+    return nullptr;
+  }
   return I;
 }
 
@@ -98,7 +106,9 @@ CoreGenPseudoInst *CoreGenExt::InsertPseudoInst( std::string Name,
   CoreGenPseudoInst *P = new CoreGenPseudoInst(Name,Inst,Errno);
   PInsts.push_back(P);
   CoreGenNode *N = static_cast<CoreGenNode *>(P);
-  this->InsertChild(N);
+  if( !this->InsertChild(N) ){
+    return nullptr;
+  }
   return P;
 }
 
@@ -117,7 +127,9 @@ CoreGenReg *CoreGenExt::InsertReg( std::string Name,
   CoreGenReg *R = new CoreGenReg(Name,RegIndex,RegWidth,Errno);
   Regs.push_back(R);
   CoreGenNode *N = static_cast<CoreGenNode *>(R);
-  this->InsertChild(N);
+  if( !this->InsertChild(N) ){
+    return nullptr;
+  }
   return R;
 }
 
@@ -125,7 +137,9 @@ CoreGenRegClass *CoreGenExt::InsertRegClass( std::string Name ){
   CoreGenRegClass *RC = new CoreGenRegClass(Name,Errno);
   RegClasses.push_back(RC);
   CoreGenNode *N = static_cast<CoreGenNode *>(RC);
-  this->InsertChild(N);
+  if( !this->InsertChild(N) ){
+    return nullptr;
+  }
   return RC;
 }
 
@@ -133,7 +147,9 @@ CoreGenISA *CoreGenExt::InsertISA( std::string Name ){
   CoreGenISA *I = new CoreGenISA(Name,Errno);
   ISAs.push_back(I);
   CoreGenNode *N = static_cast<CoreGenNode *>(I);
-  this->InsertChild(N);
+  if( !this->InsertChild(N) ){
+    return nullptr;
+  }
   return I;
 }
 
@@ -143,8 +159,7 @@ bool CoreGenExt::InsertRegClass( CoreGenRegClass *R ){
   }
   RegClasses.push_back(R);
   CoreGenNode *N = static_cast<CoreGenNode *>(R);
-  this->InsertChild(N);
-  return true;
+  return this->InsertChild(N);
 }
 
 bool CoreGenExt::InsertReg( CoreGenReg *R ){
@@ -153,8 +168,7 @@ bool CoreGenExt::InsertReg( CoreGenReg *R ){
   }
   Regs.push_back(R);
   CoreGenNode *N = static_cast<CoreGenNode *>(R);
-  this->InsertChild(N);
-  return true;
+  return this->InsertChild(N);
 }
 
 bool CoreGenExt::InsertISA( CoreGenISA *I ){
@@ -163,8 +177,7 @@ bool CoreGenExt::InsertISA( CoreGenISA *I ){
   }
   ISAs.push_back(I);
   CoreGenNode *N = static_cast<CoreGenNode *>(I);
-  this->InsertChild(N);
-  return true;
+  return this->InsertChild(N);
 }
 
 bool CoreGenExt::InsertInstFormat( CoreGenInstFormat *I ){
@@ -173,8 +186,7 @@ bool CoreGenExt::InsertInstFormat( CoreGenInstFormat *I ){
   }
   Formats.push_back(I);
   CoreGenNode *N = static_cast<CoreGenNode *>(I);
-  this->InsertChild(N);
-  return true;
+  return this->InsertChild(N);
 }
 
 bool CoreGenExt::InsertInst( CoreGenInst *I ){
@@ -183,8 +195,7 @@ bool CoreGenExt::InsertInst( CoreGenInst *I ){
   }
   Insts.push_back(I);
   CoreGenNode *N = static_cast<CoreGenNode *>(I);
-  this->InsertChild(N);
-  return true;
+  return this->InsertChild(N);
 }
 
 bool CoreGenExt::InsertPseudoInst( CoreGenPseudoInst *I ){
@@ -193,8 +204,7 @@ bool CoreGenExt::InsertPseudoInst( CoreGenPseudoInst *I ){
   }
   PInsts.push_back(I);
   CoreGenNode *N = static_cast<CoreGenNode *>(I);
-  this->InsertChild(N);
-  return true;
+  return this->InsertChild(N);
 }
 
 bool CoreGenExt::InsertCache( CoreGenCache *C ){
@@ -203,8 +213,7 @@ bool CoreGenExt::InsertCache( CoreGenCache *C ){
   }
   Caches.push_back(C);
   CoreGenNode *N = static_cast<CoreGenNode *>(C);
-  this->InsertChild(N);
-  return true;
+  return this->InsertChild(N);
 }
 
 bool CoreGenExt::InsertCore( CoreGenCore *C ){
@@ -213,8 +222,7 @@ bool CoreGenExt::InsertCore( CoreGenCore *C ){
   }
   Cores.push_back(C);
   CoreGenNode *N = static_cast<CoreGenNode *>(C);
-  this->InsertChild(N);
-  return true;
+  return this->InsertChild(N);
 }
 
 bool CoreGenExt::InsertComm( CoreGenComm *C ){
@@ -223,8 +231,7 @@ bool CoreGenExt::InsertComm( CoreGenComm *C ){
   }
   Comms.push_back(C);
   CoreGenNode *N = static_cast<CoreGenNode *>(C);
-  this->InsertChild(N);
-  return true;
+  return this->InsertChild(N);
 }
 
 bool CoreGenExt::InsertExt( CoreGenExt *E ){
@@ -233,8 +240,7 @@ bool CoreGenExt::InsertExt( CoreGenExt *E ){
   }
   Exts.push_back(E);
   CoreGenNode *N = static_cast<CoreGenNode *>(E);
-  this->InsertChild(N);
-  return true;
+  return this->InsertChild(N);
 }
 
 // EOF

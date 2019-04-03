@@ -1,6 +1,6 @@
 # StoneCutter CMakeLists.txt
 #
-# Copyright (C) 2017-2018 Tactical Computing Laboratories, LLC
+# Copyright (C) 2017-2019 Tactical Computing Laboratories, LLC
 # All Rights Reserved
 # contact@tactcomplabs.com
 #
@@ -14,6 +14,8 @@ set(SCCompSrcs
  SCLexer.cpp
  SCParser.cpp
  SCLLCodeGen.cpp
+ SCChiselCodeGen.cpp
+ SCPass.cpp
 )
 
 include_directories(${COREGEN_INCLUDE_PATH})
@@ -35,7 +37,8 @@ set(llvm_parsers
 
 llvm_map_components_to_libnames(llvm_libs
   support
-  core irreader
+  core
+  irreader
   mcjit
   ipo
   executionengine
@@ -44,11 +47,16 @@ llvm_map_components_to_libnames(llvm_libs
   vectorize
   scalaropts
   instcombine
+  bitreader
+  bitwriter
   ${llvm_codegens}
   ${llvm_parsers}
 )
 
-add_library(SCComp ${SCCompSrcs})
+add_subdirectory(Intrinsics)
+add_subdirectory(Passes)
+
+add_library(SCComp ${SCCompSrcs} $<TARGET_OBJECTS:IntrinObjs> $<TARGET_OBJECTS:PassObjs>)
 
 target_link_libraries(SCComp ${llvm_libs})
 

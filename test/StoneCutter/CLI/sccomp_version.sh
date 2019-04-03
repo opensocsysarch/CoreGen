@@ -9,21 +9,21 @@ fi
 
 $SCCOMP_PATH/sccomp -v
 retVal=$?
-if [ ! $? -eq 0 ]; then
+if [[ "$retval" -ne 0 ]]; then
   echo "$SCCOMP_PATH/sccomp -v failed with return code = $retVal"
   exit $retVal
 fi
 
 $SCCOMP_PATH/sccomp -verbose
 retVal=$?
-if [ ! $? -eq 0 ]; then
+if [[ "$retval" -ne 0 ]]; then
   echo "$SCCOMP_PATH/sccomp -verbose failed with return code = $retVal"
   exit $retVal
 fi
 
 $SCCOMP_PATH/sccomp --verbose
 retVal=$?
-if [ ! $? -eq 0 ]; then
+if [[ "$retval" -ne 0 ]]; then
   echo "$SCCOMP_PATH/sccomp --verbose failed with return code = $retVal"
   exit $retVal
 fi

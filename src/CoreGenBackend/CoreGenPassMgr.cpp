@@ -1,7 +1,7 @@
 //
 // _CoreGenPassMgr_cpp_
 //
-// Copyright (C) 2017-2018 Tactical Computing Laboratories, LLC
+// Copyright (C) 2017-2019 Tactical Computing Laboratories, LLC
 // All Rights Reserved
 // contact@tactcomplabs.com
 //
@@ -41,6 +41,7 @@ CoreGenPassMgr::~CoreGenPassMgr(){
 }
 
 void CoreGenPassMgr::InitSoCPasses(std::ostream *O){
+  // Analysis Passes
   Passes.push_back(static_cast<CoreGenPass *>(new StatsPass(O,DAG,Errno)));
   Passes.push_back(static_cast<CoreGenPass *>(new MultSoCPass(O,DAG,Errno)));
   Passes.push_back(static_cast<CoreGenPass *>(new ICacheCheckerPass(O,DAG,Errno)));
@@ -59,9 +60,14 @@ void CoreGenPassMgr::InitSoCPasses(std::ostream *O){
   Passes.push_back(static_cast<CoreGenPass *>(new EncodingGapPass(O,DAG,Errno)));
   Passes.push_back(static_cast<CoreGenPass *>(new PInstSafetyPass(O,DAG,Errno)));
   Passes.push_back(static_cast<CoreGenPass *>(new CommSafetyPass(O,DAG,Errno)));
+
+  // Optimization Passes
+  Passes.push_back(static_cast<CoreGenPass *>(new RegClassOpt(O,DAG,Errno)));
+  Passes.push_back(static_cast<CoreGenPass *>(new CacheLevelOpt(O,DAG,Errno)));
 }
 
 void CoreGenPassMgr::InitModPasses(std::ostream *O){
+  // Analysis Passes
   Passes.push_back(static_cast<CoreGenPass *>(new StatsPass(O,DAG,Errno)));
   Passes.push_back(static_cast<CoreGenPass *>(new MultSoCPass(O,DAG,Errno)));
   Passes.push_back(static_cast<CoreGenPass *>(new ICacheCheckerPass(O,DAG,Errno)));
@@ -80,9 +86,14 @@ void CoreGenPassMgr::InitModPasses(std::ostream *O){
   Passes.push_back(static_cast<CoreGenPass *>(new EncodingGapPass(O,DAG,Errno)));
   Passes.push_back(static_cast<CoreGenPass *>(new PInstSafetyPass(O,DAG,Errno)));
   Passes.push_back(static_cast<CoreGenPass *>(new CommSafetyPass(O,DAG,Errno)));
+
+  // Optimization Passes
+  Passes.push_back(static_cast<CoreGenPass *>(new RegClassOpt(O,DAG,Errno)));
+  Passes.push_back(static_cast<CoreGenPass *>(new CacheLevelOpt(O,DAG,Errno)));
 }
 
 void CoreGenPassMgr::InitExtPasses(std::ostream *O){
+  // Analysis Passes
   Passes.push_back(static_cast<CoreGenPass *>(new StatsPass(O,DAG,Errno)));
   Passes.push_back(static_cast<CoreGenPass *>(new ICacheCheckerPass(O,DAG,Errno)));
   Passes.push_back(static_cast<CoreGenPass *>(new L1SharedPass(O,DAG,Errno)));
@@ -100,6 +111,10 @@ void CoreGenPassMgr::InitExtPasses(std::ostream *O){
   Passes.push_back(static_cast<CoreGenPass *>(new EncodingGapPass(O,DAG,Errno)));
   Passes.push_back(static_cast<CoreGenPass *>(new PInstSafetyPass(O,DAG,Errno)));
   Passes.push_back(static_cast<CoreGenPass *>(new CommSafetyPass(O,DAG,Errno)));
+
+  // Optimization Passes
+  Passes.push_back(static_cast<CoreGenPass *>(new RegClassOpt(O,DAG,Errno)));
+  Passes.push_back(static_cast<CoreGenPass *>(new CacheLevelOpt(O,DAG,Errno)));
 }
 
 void CoreGenPassMgr::InitSysPasses(std::ostream *O){

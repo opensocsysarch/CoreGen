@@ -1,17 +1,24 @@
 //
 // _CoreGenPluginImpl_h_
 //
-// Copyright (C) 2017-2018 Tactical Computing Laboratories, LLC
+// Copyright (C) 2017-2019 Tactical Computing Laboratories, LLC
 // All Rights Reserved
 // contact@tactcomplabs.com
 //
 // See LICENSE in the top level directory for licensing details
 //
 
+/** \defgroup CoreGenPlugin CoreGen High Level System on Chip (SoC) Design Framework Plugin Infrastructure
+ *
+ * \brief The CoreGenPlugin library provides an infrastructure to construct CoreGen 
+ *        plugin shared libraries for user-specific and language-specific functionality
+ *
+ */
+
 /**
  * \class CoreGenPluginImpl
  *
- * \ingroup CoreGen
+ * \ingroup CoreGenPlugin
  *
  * \brief CoreGen Plugin Implementation Base Class
  *

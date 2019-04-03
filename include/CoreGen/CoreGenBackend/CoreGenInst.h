@@ -1,7 +1,7 @@
 //
 // _CoreGenInst_h_
 //
-// Copyright (C) 2017-2018 Tactical Computing Laboratories, LLC
+// Copyright (C) 2017-2019 Tactical Computing Laboratories, LLC
 // All Rights Reserved
 // contact@tactcomplabs.com
 //
@@ -21,8 +21,10 @@
 #define _COREGENINST_H_
 
 #include <iostream>
+#include <sstream>
 #include <string>
 #include <map>
+#include <algorithm>
 
 #include "CoreGen/CoreGenBackend/CoreGenErrno.h"
 #include "CoreGen/CoreGenBackend/CoreGenNode.h"
@@ -35,7 +37,10 @@ private:
   CoreGenISA *isa;                          ///< CoreGenInst: Instruction Set Bundle
   CoreGenInstFormat *format;                ///< CoreGenInst: Instruction format container
   std::string Impl;                         ///< CoreGenInst: StoneCutter Instruction Implementation
+  std::string Syntax;                       ///< CoreGenInst: Instruction printing syntax
   std::vector<CoreGenEncoding *> Encodings; ///< CoreGenInst: Instruction encodings
+
+  bool ValidateSyntax(std::string S);       ///< CoreGenInst: Validates the syntax string
 
 public:
   /// Default Constructor
@@ -56,6 +61,9 @@ public:
 
   /// Set the ISA bundle type
   bool SetISA( CoreGenISA *ISA );
+
+  /// Set the instruction printing syntax
+  bool SetSyntax( std::string S );
 
   /// Retrieve the encoding for the target field
   uint64_t GetEncoding( std::string F, bool *Success );
@@ -78,8 +86,14 @@ public:
   /// Get the StoneCutter implementation logic
   std::string GetImpl() { return Impl; }
 
+  /// Get the instruction syntax
+  std::string GetSyntax() { return Syntax; }
+
   /// Determine if StoneCutter logic is utilized
   bool IsImpl() { if( Impl.length() > 0 ){ return true; }else{ return false;} }
+
+  /// Determine if the Syntax has been set
+  bool IsSyntax() { if( Syntax.length() > 0 ){ return true; }else{ return false;} }
 };
 
 #endif

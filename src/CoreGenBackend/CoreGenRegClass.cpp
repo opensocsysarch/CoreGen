@@ -1,7 +1,7 @@
 //
 // _CoreGenRegClass_cpp_
 //
-// Copyright (C) 2017-2018 Tactical Computing Laboratories, LLC
+// Copyright (C) 2017-2019 Tactical Computing Laboratories, LLC
 // All Rights Reserved
 // contact@tactcomplabs.com
 //
@@ -27,6 +27,16 @@ CoreGenReg *CoreGenRegClass::GetReg( unsigned R ){
     return nullptr;
   }
   return static_cast<CoreGenReg *>(GetChild(R));
+}
+
+unsigned CoreGenRegClass::GetMaxWidth(){
+  unsigned max = 0;
+  for( unsigned i=0; i<this->GetNumReg(); i++ ){
+    CoreGenReg *R = static_cast<CoreGenReg *>(this->GetReg(i));
+    if( (unsigned)(R->GetWidth()) > max )
+      max = R->GetWidth();
+  }
+  return max;
 }
 
 bool CoreGenRegClass::InsertReg( CoreGenReg *R ){

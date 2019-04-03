@@ -1,7 +1,7 @@
 //
 // _CoreGenPseudoInst_cpp_
 //
-// Copyright (C) 2017-2018 Tactical Computing Laboratories, LLC
+// Copyright (C) 2017-2019 Tactical Computing Laboratories, LLC
 // All Rights Reserved
 // contact@tactcomplabs.com
 //
@@ -98,9 +98,7 @@ bool CoreGenPseudoInst::SetEncoding( std::string F, uint64_t V ){
   Encodings.push_back(E);
 
   // make it a dependency
-  InsertChild(static_cast<CoreGenNode *>(E));
-
-  return true;
+  return InsertChild(static_cast<CoreGenNode *>(E));
 }
 
 uint64_t CoreGenPseudoInst::GetEncoding( std::string F ){

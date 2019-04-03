@@ -1,7 +1,7 @@
 //
 // _CoreGenSoC_cpp_
 //
-// Copyright (C) 2017-2018 Tactical Computing Laboratories, LLC
+// Copyright (C) 2017-2019 Tactical Computing Laboratories, LLC
 // All Rights Reserved
 // contact@tactcomplabs.com
 //
@@ -32,9 +32,7 @@ bool CoreGenSoC::InsertCore( CoreGenCore *C ){
 
   // insert it
   Cores.push_back( C );
-  InsertChild(static_cast<CoreGenNode *>(C));
-
-  return true;
+  return InsertChild(static_cast<CoreGenNode *>(C));
 }
 
 CoreGenCore *CoreGenSoC::GetCore( unsigned C ){

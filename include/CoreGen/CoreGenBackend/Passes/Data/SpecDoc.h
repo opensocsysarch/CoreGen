@@ -1,7 +1,7 @@
 //
 // _SpecDoc_h_
 //
-// Copyright (C) 2017-2018 Tactical Computing Laboratories, LLC
+// Copyright (C) 2017-2019 Tactical Computing Laboratories, LLC
 // All Rights Reserved
 // contact@tactcomplabs.com
 //
@@ -66,7 +66,7 @@ private:
   /// Generate the LaTeX table headers for inst formats
   std::string GenerateInstFormatHeader(CoreGenInstFormat *IF);
 
-  /// Fix names containing underscores with \string
+  /// Fix names containing underscores with backslash string
   std::string FixUnderscore(std::string Str);
 
   /// Fix names containing underscores with escapes '\\'

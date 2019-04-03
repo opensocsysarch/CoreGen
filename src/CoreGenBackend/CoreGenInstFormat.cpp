@@ -1,7 +1,7 @@
 //
 // _CoreGenInstFormat_cpp_
 //
-// Copyright (C) 2017-2018 Tactical Computing Laboratories, LLC
+// Copyright (C) 2017-2019 Tactical Computing Laboratories, LLC
 // All Rights Reserved
 // contact@tactcomplabs.com
 //
@@ -66,8 +66,7 @@ bool CoreGenInstFormat::InsertRegFieldMap( std::string Name,
       // found a match
       RegMap.insert( std::pair<std::string,CoreGenRegClass *>(Name,RClass) );
       CoreGenNode *N = static_cast<CoreGenNode *>(RClass);
-      InsertChild(N);
-      return true;
+      return InsertChild(N);
     }
   }
 

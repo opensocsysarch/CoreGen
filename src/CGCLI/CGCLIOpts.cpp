@@ -1,7 +1,7 @@
 //
 // _CGCLIOpts_cpp_
 //
-// Copyright (C) 2017-2018 Tactical Computing Laboratories, LLC
+// Copyright (C) 2017-2019 Tactical Computing Laboratories, LLC
 // All Rights Reserved
 // contact@tactcomplabs.com
 //
@@ -68,6 +68,17 @@ void CGCLIOpts::PrintOptions(){
   std::cout << "\t--asp \"PROG1,PROG2,...\"               : Execute ASP solver with input" << std::endl;
   std::cout << "\t--nocleanasp                          : Clean up the ASP DAG file" << std::endl;
   std::cout << std::endl;
+}
+
+bool CGCLIOpts::FileExists(std::string F){
+  if (FILE *file = fopen(F.c_str(), "r")) {
+    fclose(file);
+    return true;
+  } else {
+    return false;
+  }
+
+  return false;
 }
 
 void CGCLIOpts::Split(const std::string& s, char delim,
@@ -244,6 +255,10 @@ bool CGCLIOpts::ParseOpts( int argc, char **argv ){
       }
       std::string P(argv[i+1]);
       IRFile = P;
+      if( !FileExists(IRFile) ){
+        std::cout << "Error : IR file " << IRFile << " cannot be read" << std::endl;
+        return false;
+      }
       if( OutFile.length() == 0 ){
         // set the output = input
         OutFile = IRFile;
@@ -408,11 +423,9 @@ bool CGCLIOpts::ParseOpts( int argc, char **argv ){
     }else if( s == "--chisel" ){
       CGChisel = true;
       Verify = true;
-      ExecPass = true;
     }else if( s == "--compiler" ){
       CGComp = true;
       Verify = true;
-      ExecPass = true;
     }else{
       // parsing error
       std::cout << "Error : unknown option : " << s << std::endl;

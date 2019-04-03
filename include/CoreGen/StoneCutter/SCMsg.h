@@ -1,12 +1,21 @@
 //
 // _SCMsg_h_
 //
-// Copyright (C) 2017-2018 Tactical Computing Laboratories, LLC
+// Copyright (C) 2017-2019 Tactical Computing Laboratories, LLC
 // All Rights Reserved
 // contact@tactcomplabs.com
 //
 // See LICENSE in the top level directory for licensing details
 //
+
+/**
+ * \class SCMsg
+ *
+ * \ingroup StoneCutter
+ *
+ * \brief StonCutter message printing class
+ *
+ */
 
 #ifndef _STONECUTTER_SCMSG_H_
 #define _STONECUTTER_SCMSG_H_
@@ -34,21 +43,22 @@ private:
   void doExit();    /*! SCMsg: Abort */
 
 public:
-  /*! SCMsg: Constructor */
+  /// SCMsg: Constructor
   SCMsg();
 
-  /*! SCMsg: Destructor */
+  /// SCMsg: Destructor
   ~SCMsg();
 
-  /*! SCMsg: Set the stream handler */
+  /// SCMsg: Set the stream handler
   bool SetStream( std::streambuf* sb );
 
+  /// SCMsg: Print a raw message to the output stream
   void PrintRawMsg( const std::string S );
 
-  /*! SCMsg: Print a message */
+  /// SCMsg: Print a message
   void PrintMsg( MSG_LEVEL L, const std::string M );
 
-  /*! SCMsg: Print a debug message */
+  /// SCMsg: Print a debug message
   void PrintDebugMsg( const char *F,
                       int Line,
                       const std::string M );

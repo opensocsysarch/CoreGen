@@ -1,12 +1,21 @@
 //
 // _SCExec_h_
 //
-// Copyright (C) 2017-2018 Tactical Computing Laboratories, LLC
+// Copyright (C) 2017-2019 Tactical Computing Laboratories, LLC
 // All Rights Reserved
 // contact@tactcomplabs.com
 //
 // See LICENSE in the top level directory for licensing details
 //
+
+/**
+ * \class SCExec
+ *
+ * \ingroup StoneCutter
+ *
+ * \brief StoneCutter top-level execution class
+ *
+ */
 
 #ifndef _STONECUTTER_SCEXEC_H_
 #define _STONECUTTER_SCEXEC_H_
@@ -34,6 +43,7 @@
 #include "CoreGen/StoneCutter/SCMsg.h"
 #include "CoreGen/StoneCutter/SCParser.h"
 #include "CoreGen/StoneCutter/SCLLCodeGen.h"
+#include "CoreGen/StoneCutter/SCChiselCodeGen.h"
 #include "CoreGen/StoneCutter/SCUtil.h"
 
 // LLVM Headers
@@ -57,6 +67,9 @@ private:
   SCOpts *Opts;       ///< SCExec: Options object
   SCMsg *Msgs;        ///< SCExec: Messages object
   SCParser *Parser;   ///< SCExec: Parser object
+
+  // private functions
+  bool PrintPassList();
 
 public:
   /// SCExec: Constructor

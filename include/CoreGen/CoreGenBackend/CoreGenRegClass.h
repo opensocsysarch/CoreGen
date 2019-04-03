@@ -1,7 +1,7 @@
 //
 // _CoreGenRegClass_h_
 //
-// Copyright (C) 2017-2018 Tactical Computing Laboratories, LLC
+// Copyright (C) 2017-2019 Tactical Computing Laboratories, LLC
 // All Rights Reserved
 // contact@tactcomplabs.com
 //
@@ -39,6 +39,9 @@ public:
 
   /// Retrieve the number of child registers
   unsigned GetNumReg() { return GetNumChild(); }
+
+  /// Retrieve the maximum width of all the child registers
+  unsigned GetMaxWidth();
 
   /// Add a register to the register class
   bool InsertReg( CoreGenReg *R );

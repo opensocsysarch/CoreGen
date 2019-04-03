@@ -1,7 +1,7 @@
 //
 // _CGCLIMain_cpp_
 //
-// Copyright (C) 2017-2018 Tactical Computing Laboratories, LLC
+// Copyright (C) 2017-2019 Tactical Computing Laboratories, LLC
 // All Rights Reserved
 // contact@tactcomplabs.com
 //
@@ -33,7 +33,7 @@ int ExecuteCoregen( CGCLIOpts *Opts ){
     int major = -1;
     int minor = -1;
     CG->CoreGenVersion( &major, &minor );
-    std::cout << "Copyright (C) 2017-2018 Tactical Computing Laboratories, LLC" << std::endl;
+    std::cout << "Copyright (C) 2017-2019 Tactical Computing Laboratories, LLC" << std::endl;
     std::cout << "CoreGen Version: " << major << "." << minor << std::endl;
     std::cout << "CoreGen Build Date: " << CG->CoreGenBuildDate()
       << " " << CG->CoreGenBuildTime() << std::endl;
@@ -148,7 +148,9 @@ int ExecuteCoregen( CGCLIOpts *Opts ){
       delete CG;
       return -1;
     }
+
     CG->SetASPFiles(Opts->GetASPFiles());
+
     if( !CG->ExecuteSysPass("ASPSolverPass") ){
       std::cout << "Error executing ASPSolver"
                 << CG->GetErrStr() << std::endl;
@@ -166,6 +168,15 @@ int ExecuteCoregen( CGCLIOpts *Opts ){
         return -1;
       }
     }
+#if 0
+    // delete the tmp file
+    if( remove(ASPPath.c_str()) != 0 ){
+      std::cout << "Error deleting ASP Solver tmp file : "
+                << ASPPath << std::endl;
+      delete CG;
+      return -1;
+    }
+#endif
   }
 
   // check for system passes
@@ -211,12 +222,31 @@ int ExecuteCoregen( CGCLIOpts *Opts ){
     }
   }
 
-  // run the chisel codegen
-  if( Opts->IsChiselEnabled() ){
-  }
-
-  // run the compiler codegen
-  if( Opts->IsCompilerEnabled() ){
+  // execute the codegen(s)
+  if( Opts->IsChiselEnabled() && Opts->IsCompilerEnabled() ){
+    // run both codegens (more efficient memory use)
+    if( !CG->ExecuteCodegen() ){
+      std::cout << "Error executing the codegens: "
+                << CG->GetErrStr() << std::endl;
+      delete CG;
+      return -1;
+    }
+  }else if( Opts->IsChiselEnabled() ){
+    // run the chisel codegen
+    if( !CG->ExecuteChiselCodegen() ){
+      std::cout << "Error executing the Chisel codegen: "
+                << CG->GetErrStr() << std::endl;
+      delete CG;
+      return -1;
+    }
+  }else if( Opts->IsCompilerEnabled() ){
+    // run the compiler codegen
+    if( !CG->ExecuteLLVMCodegen() ){
+      std::cout << "Error executing the LLVM codegen: "
+                << CG->GetErrStr() << std::endl;
+      delete CG;
+      return -1;
+    }
   }
 
   delete CG;

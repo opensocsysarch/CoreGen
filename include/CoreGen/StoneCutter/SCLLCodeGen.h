@@ -1,12 +1,21 @@
 //
 // _SCLLCodeGen_h_
 //
-// Copyright (C) 2017-2018 Tactical Computing Laboratories, LLC
+// Copyright (C) 2017-2019 Tactical Computing Laboratories, LLC
 // All Rights Reserved
 // contact@tactcomplabs.com
 //
 // See LICENSE in the top level directory for licensing details
 //
+
+/**
+ * \class SCLLCodeGen
+ *
+ * \ingroup StoneCutter
+ *
+ * \brief StoneCutter LLVM IR and BC code generation class
+ *
+ */
 
 #ifndef _STONECUTTER_SCLLCODEGEN_H_
 #define _STONECUTTER_SCLLCODEGEN_H_

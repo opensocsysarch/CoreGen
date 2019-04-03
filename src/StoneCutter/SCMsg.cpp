@@ -1,7 +1,7 @@
 //
 // _SCMsg_cpp_
 //
-// Copyright (C) 2017-2018 Tactical Computing Laboratories, LLC
+// Copyright (C) 2017-2019 Tactical Computing Laboratories, LLC
 // All Rights Reserved
 // contact@tactcomplabs.com
 //
@@ -75,23 +75,23 @@ void SCMsg::PrintDebugMsg( const char *F,
 void SCMsg::PrintMsg( MSG_LEVEL L, const std::string M ){
   switch( L ){
   case L_FATAL:
-    *mStream << "FATAL ERROR : " << M << std::endl;
+    *mStream << "\033[1;31mFATAL ERROR : \033[0m" << M << std::endl;
     doExit();
     break;
   case L_WARN:
-    *mStream << "WARNING : " << M << std::endl;
+    *mStream << "\033[1;31mWARNING : \033[0m" << M << std::endl;
     break;
   case L_ERROR:
-    *mStream << "ERROR : " << M << std::endl;
+    *mStream << "\033[1;31mERROR : \033[0m" << M << std::endl;
     break;
   case L_DEBUG:
-    *mStream << "DEBUG  : " << M << std::endl;
+    *mStream << "\033[1;31mDEBUG  : \033[0m" << M << std::endl;
     break;
   case L_MSG:
     *mStream << M << std::endl;
     break;
   default:
-    *mStream << "UNKNOWN : " << M << std::endl;
+    *mStream << "\033[1;31mUNKNOWN : \033[0m" << M << std::endl;
     break;
   }
 }

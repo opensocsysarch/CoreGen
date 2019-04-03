@@ -1,7 +1,7 @@
 //
 // _CoreGenPass_h_
 //
-// Copyright (C) 2017-2018 Tactical Computing Laboratories, LLC
+// Copyright (C) 2017-2019 Tactical Computing Laboratories, LLC
 // All Rights Reserved
 // contact@tactcomplabs.com
 //
@@ -155,7 +155,7 @@ public:
     *OutStream << this->GetName();
     CGPrintSpace( this->GetName().length(), 30 );
     *OutStream << this->TypeToStr();
-    CGPrintSpace( this->TypeToStr().length(), 10 );
+    CGPrintSpace( this->TypeToStr().length(), 15 );
     *OutStream << Desc << std::endl;
   }
 };

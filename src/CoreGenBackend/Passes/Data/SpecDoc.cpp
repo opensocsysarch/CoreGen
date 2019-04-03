@@ -1,7 +1,7 @@
 //
 // _SpecDoc_cpp_
 //
-// Copyright (C) 2017-2018 Tactical Computing Laboratories, LLC
+// Copyright (C) 2017-2019 Tactical Computing Laboratories, LLC
 // All Rights Reserved
 // contact@tactcomplabs.com
 //
@@ -454,6 +454,14 @@ bool SpecDoc::WriteInstTex(CoreGenDAG *DAG, std::ofstream &ofs ){
       ofs << "The " << EscapeUnderscore(INST->GetName()) << " instruction belongs to the "
           << EscapeUnderscore(INST->GetISA()->GetName()) << " instruction set.  It has the following features:"
           << std::endl;
+
+      // print instruction mnemonic
+      if( INST->IsSyntax() ){
+        std::string Syntax = INST->GetSyntax();
+        Syntax.erase(std::remove(Syntax.begin(), Syntax.end(), '%'), Syntax.end());
+        Syntax.erase(std::remove(Syntax.begin(), Syntax.end(), '$'), Syntax.end());
+        ofs << "\\textbf{Assembly Mnemonic} : " << EscapeUnderscore(Syntax) << std::endl;
+      }
 
       // print an instruction table
       ofs << "\\begin{longtable}[h]" << std::endl;

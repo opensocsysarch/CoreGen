@@ -1,7 +1,7 @@
 //
 // _CoreGenPasses_h_
 //
-// Copyright (C) 2017-2018 Tactical Computing Laboratories, LLC
+// Copyright (C) 2017-2019 Tactical Computing Laboratories, LLC
 // All Rights Reserved
 // contact@tactcomplabs.com
 //
@@ -47,6 +47,8 @@
 #include "CoreGen/CoreGenBackend/Passes/Analysis/ASPSolverPass.h"
 
 // CoreGen Optimization Passes
+#include "CoreGen/CoreGenBackend/Passes/Opt/RegClassOpt.h"
+#include "CoreGen/CoreGenBackend/Passes/Opt/CacheLevelOpt.h"
 
 #endif
 

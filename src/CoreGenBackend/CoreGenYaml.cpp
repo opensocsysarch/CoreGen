@@ -1,7 +1,7 @@
 //
 // _CoreGenYaml_cpp_
 //
-// Copyright (C) 2017-2018 Tactical Computing Laboratories, LLC
+// Copyright (C) 2017-2019 Tactical Computing Laboratories, LLC
 // All Rights Reserved
 // contact@tactcomplabs.com
 //
@@ -180,6 +180,54 @@ CoreGenNode *CoreGenYaml::NameToNode( std::string Target,
   return nullptr;
 }
 
+CGRTLType CoreGenYaml::StrToCGRTL(std::string I){
+  if( (I=="Unknown") || (I=="unknown") ){
+    return RTLUnk;
+  }else if( (I=="Chisel") || (I=="chisel") ){
+    return RTLChisel;
+  }else if( (I=="Verilog") || (I=="verilog") ){
+    return RTLVerilog;
+  }
+  return RTLUnk;
+}
+
+std::string CoreGenYaml::CGRTLToStr(CGRTLType T){
+  switch( T ){
+  case RTLChisel:
+    return "Chisel";
+    break;
+  case RTLVerilog:
+    return "Verilog";
+    break;
+  case RTLUnk:
+  default:
+    return "Unknown";
+    break;
+  }
+}
+
+bool CoreGenYaml::IsValidName(std::string N){
+  // YAML Node Name Rules:
+  // - must have a length > 0
+  // - must start with an alpha character
+  // - must only contain alphanumeric characters, except '.'
+
+  if( N.length() == 0 ){
+    return false;
+  }
+  if( !std::isalpha(N[0]) ){
+    return false;
+  }
+  for( unsigned i=0; i<N.length(); i++ ){
+    if( N[i] != '.' ){
+      if( !std::isalnum(N[i]) ){
+        return false;
+      }
+    }
+  }
+  return true;
+}
+
 unsigned CoreGenYaml::GetLineNum(const YAML::Node Node){
   return Node.Mark().line;
 }
@@ -292,11 +340,15 @@ void CoreGenYaml::WriteCoreYaml( YAML::Emitter *out,
     if( Cores[i]->IsRTL() ){
       *out << YAML::Key << "RTL";
       *out << YAML::Value << Cores[i]->GetRTL();
+      *out << YAML::Key << "RTLType";
+      *out << YAML::Value << CGRTLToStr(Cores[i]->GetRTLType());
     }
 
     if( Cores[i]->IsRTLFile() ){
       *out << YAML::Key << "RTLFile";
       *out << YAML::Value << Cores[i]->GetRTLFile();
+      *out << YAML::Key << "RTLType";
+      *out << YAML::Value << CGRTLToStr(Cores[i]->GetRTLType());
     }
 
     *out << YAML::EndMap;
@@ -331,11 +383,15 @@ void CoreGenYaml::WriteSocYaml( YAML::Emitter *out,
     if( Socs[i]->IsRTL() ){
       *out << YAML::Key << "RTL";
       *out << YAML::Value << Socs[i]->GetRTL();
+      *out << YAML::Key << "RTLType";
+      *out << YAML::Value << CGRTLToStr(Socs[i]->GetRTLType());
     }
 
     if( Socs[i]->IsRTLFile() ){
       *out << YAML::Key << "RTLFile";
       *out << YAML::Value << Socs[i]->GetRTLFile();
+      *out << YAML::Key << "RTLType";
+      *out << YAML::Value << CGRTLToStr(Socs[i]->GetRTLType());
     }
 
     *out << YAML::EndMap;
@@ -382,10 +438,14 @@ void CoreGenYaml::PrintCache( YAML::Emitter *out,
   if( Cache->IsRTL() ){
     *out << YAML::Key << "RTL";
     *out << YAML::Value << Cache->GetRTL();
+    *out << YAML::Key << "RTLType";
+    *out << YAML::Value << CGRTLToStr(Cache->GetRTLType());
   }
   if( Cache->IsRTLFile() ){
     *out << YAML::Key << "RTLFile";
     *out << YAML::Value << Cache->GetRTLFile();
+    *out << YAML::Key << "RTLType";
+    *out << YAML::Value << CGRTLToStr(Cache->GetRTLType());
   }
 
   *out << YAML::EndMap;
@@ -417,10 +477,14 @@ void CoreGenYaml::WriteISAYaml(YAML::Emitter *out,
     if( ISAs[i]->IsRTL() ){
       *out << YAML::Key << "RTL";
       *out << YAML::Value << ISAs[i]->GetRTL();
+      *out << YAML::Key << "RTLType";
+      *out << YAML::Value << CGRTLToStr(ISAs[i]->GetRTLType());
     }
     if( ISAs[i]->IsRTLFile() ){
       *out << YAML::Key << "RTLFile";
       *out << YAML::Value << ISAs[i]->GetRTLFile();
+      *out << YAML::Key << "RTLType";
+      *out << YAML::Value << CGRTLToStr(ISAs[i]->GetRTLType());
     }
     *out << YAML::EndMap;
   }
@@ -482,10 +546,14 @@ void CoreGenYaml::WriteInstFormatYaml(YAML::Emitter *out,
     if( Formats[i]->IsRTL() ){
       *out << YAML::Key << "RTL";
       *out << YAML::Value << Formats[i]->GetRTL();
+      *out << YAML::Key << "RTLType";
+      *out << YAML::Value << CGRTLToStr(Formats[i]->GetRTLType());
     }
     if( Formats[i]->IsRTLFile() ){
       *out << YAML::Key << "RTLFile";
       *out << YAML::Value << Formats[i]->GetRTLFile();
+      *out << YAML::Key << "RTLType";
+      *out << YAML::Value << CGRTLToStr(Formats[i]->GetRTLType());
     }
 
     *out << YAML::EndMap; // End InstFormat->GetName()
@@ -529,13 +597,22 @@ void CoreGenYaml::WriteInstYaml(YAML::Emitter *out,
       *out << YAML::Value << Insts[i]->GetImpl();
     }
 
+    if( Insts[i]->IsSyntax() ){
+      *out << YAML::Key << "Syntax";
+      *out << YAML::Value << Insts[i]->GetSyntax();
+    }
+
     if( Insts[i]->IsRTL() ){
       *out << YAML::Key << "RTL";
       *out << YAML::Value << Insts[i]->GetRTL();
+      *out << YAML::Key << "RTLType";
+      *out << YAML::Value << CGRTLToStr(Insts[i]->GetRTLType());
     }
     if( Insts[i]->IsRTLFile() ){
       *out << YAML::Key << "RTLFile";
       *out << YAML::Value << Insts[i]->GetRTLFile();
+      *out << YAML::Key << "RTLType";
+      *out << YAML::Value << CGRTLToStr(Insts[i]->GetRTLType());
     }
 
     *out << YAML::EndMap; // individual instruction
@@ -574,6 +651,9 @@ void CoreGenYaml::WritePseudoInstYaml(YAML::Emitter *out,
     }
     *out << YAML::EndSeq;
 
+#if 0
+    // this probably needs to be removed
+    // no reason to have RTL for pseudoinstruction encodings
     if( PInsts[i]->IsRTL() ){
       *out << YAML::Key << "RTL";
       *out << YAML::Value << PInsts[i]->GetRTL();
@@ -582,6 +662,7 @@ void CoreGenYaml::WritePseudoInstYaml(YAML::Emitter *out,
       *out << YAML::Key << "RTLFile";
       *out << YAML::Value << PInsts[i]->GetRTLFile();
     }
+#endif
 
     *out << YAML::EndMap;
   }
@@ -607,10 +688,14 @@ void CoreGenYaml::WriteRegClassYaml(YAML::Emitter *out,
     if( RegClasses[i]->IsRTL() ){
       *out << YAML::Key << "RTL";
       *out << YAML::Value << RegClasses[i]->GetRTL();
+      *out << YAML::Key << "RTLType";
+      *out << YAML::Value << CGRTLToStr(RegClasses[i]->GetRTLType());
     }
     if( RegClasses[i]->IsRTLFile() ){
       *out << YAML::Key << "RTLFile";
       *out << YAML::Value << RegClasses[i]->GetRTLFile();
+      *out << YAML::Key << "RTLType";
+      *out << YAML::Value << CGRTLToStr(RegClasses[i]->GetRTLType());
     }
 
     *out << YAML::EndMap;
@@ -730,10 +815,14 @@ void CoreGenYaml::WriteRegYaml(YAML::Emitter *out,
     if( Regs[i]->IsRTL() ){
       *out << YAML::Key << "RTL";
       *out << YAML::Value << Regs[i]->GetRTL();
+      *out << YAML::Key << "RTLType";
+      *out << YAML::Value << CGRTLToStr(Regs[i]->GetRTLType());
     }
     if( Regs[i]->IsRTLFile() ){
       *out << YAML::Key << "RTLFile";
       *out << YAML::Value << Regs[i]->GetRTLFile();
+      *out << YAML::Key << "RTLType";
+      *out << YAML::Value << CGRTLToStr(Regs[i]->GetRTLType());
     }
 
     *out << YAML::EndMap;
@@ -781,10 +870,14 @@ void CoreGenYaml::WriteCommYaml( YAML::Emitter *out,
     if( Comms[i]->IsRTL() ){
       *out << YAML::Key << "RTL";
       *out << YAML::Value << Comms[i]->GetRTL();
+      *out << YAML::Key << "RTLType";
+      *out << YAML::Value << CGRTLToStr(Comms[i]->GetRTLType());
     }
     if( Comms[i]->IsRTLFile() ){
       *out << YAML::Key << "RTLFile";
       *out << YAML::Value << Comms[i]->GetRTLFile();
+      *out << YAML::Key << "RTLType";
+      *out << YAML::Value << CGRTLToStr(Comms[i]->GetRTLType());
     }
 
     *out << YAML::EndMap;
@@ -812,10 +905,14 @@ void CoreGenYaml::WriteSpadYaml( YAML::Emitter *out,
     if( Spads[i]->IsRTL() ){
       *out << YAML::Key << "RTL";
       *out << YAML::Value << Spads[i]->GetRTL();
+      *out << YAML::Key << "RTLType";
+      *out << YAML::Value << CGRTLToStr(Spads[i]->GetRTLType());
     }
     if( Spads[i]->IsRTLFile() ){
       *out << YAML::Key << "RTLFile";
       *out << YAML::Value << Spads[i]->GetRTLFile();
+      *out << YAML::Key << "RTLType";
+      *out << YAML::Value << CGRTLToStr(Spads[i]->GetRTLType());
     }
 
     *out << YAML::EndMap;
@@ -837,10 +934,14 @@ void CoreGenYaml::WriteMCtrlYaml( YAML::Emitter *out,
     if( MCtrls[i]->IsRTL() ){
       *out << YAML::Key << "RTL";
       *out << YAML::Value << MCtrls[i]->GetRTL();
+      *out << YAML::Key << "RTLType";
+      *out << YAML::Value << CGRTLToStr(MCtrls[i]->GetRTLType());
     }
     if( MCtrls[i]->IsRTLFile() ){
       *out << YAML::Key << "RTLFile";
       *out << YAML::Value << MCtrls[i]->GetRTLFile();
+      *out << YAML::Key << "RTLType";
+      *out << YAML::Value << CGRTLToStr(MCtrls[i]->GetRTLType());
     }
 
     *out << YAML::EndMap;
@@ -941,10 +1042,14 @@ void CoreGenYaml::WriteExtYaml( YAML::Emitter *out,
     if( Exts[i]->IsRTL() ){
       *out << YAML::Key << "RTL";
       *out << YAML::Value << Exts[i]->GetRTL();
+      *out << YAML::Key << "RTLType";
+      *out << YAML::Value << CGRTLToStr(Exts[i]->GetRTLType());
     }
     if( Exts[i]->IsRTLFile() ){
       *out << YAML::Key << "RTLFile";
       *out << YAML::Value << Exts[i]->GetRTLFile();
+      *out << YAML::Key << "RTLType";
+      *out << YAML::Value << CGRTLToStr(Exts[i]->GetRTLType());
     }
 
     *out << YAML::EndMap;
@@ -1314,6 +1419,10 @@ bool CoreGenYaml::ReadProjYaml(const YAML::Node& ProjNodes ){
     return false;
   }
   std::string ProjectName = Node["ProjectName"].as<std::string>();
+  if( !IsValidName(ProjectName) ){
+    Errno->SetError(CGERR_ERROR, "Invalid IR Node Name: " + ProjectName );
+    return false;
+  }
   Proj->SetProjName(ProjectName);
 
   if( !CheckValidNode(Node,"ProjectRoot") ){
@@ -1385,10 +1494,16 @@ bool CoreGenYaml::ReadRegisterYaml(const YAML::Node& RegNodes,
       return false;
     }
     std::string Name = Node["RegName"].as<std::string>();
+
     std::string ASPName = PrepForASP(Name);
     std::string ASP = "";
 
     ASP += "reg(" + ASPName + ").\n";
+
+    if( !IsValidName(Name) ){
+      Errno->SetError(CGERR_ERROR, "Invalid IR Node Name: " + Name );
+      return false;
+    }
 
     if( !CheckValidNode(Node,"Width") ){
       PrintParserError(Node,
@@ -1605,6 +1720,11 @@ bool CoreGenYaml::ReadRegisterYaml(const YAML::Node& RegNodes,
     if( CheckValidNode(Node,"RTLFile") ){
       R->SetRTLFile( Node["RTLFile"].as<std::string>());
     }
+    if( CheckValidNode(Node,"RTLType") ){
+      if( !R->SetRTLType( StrToCGRTL(Node["RTLType"].as<std::string>()) ) ){
+        return false;
+      }
+    }
 
     R->AppendASP(ASP);
 
@@ -1631,10 +1751,17 @@ bool CoreGenYaml::ReadRegisterClassYaml(const YAML::Node& RegClassNodes,
       return false;
     }
     std::string Name = Node["RegisterClassName"].as<std::string>();
+
     std::string ASPName = PrepForASP(Name);
     std::string ASP = "";
 
     ASP += "regClass(" + ASPName + ").\n";
+
+    if( !IsValidName(Name) ){
+      Errno->SetError(CGERR_ERROR, "Invalid IR Node Name: " + Name );
+      return false;
+    }
+
 #if 0
     // currently unused
     int NumRegs = Node["NumRegisters"].as<int>();
@@ -1683,6 +1810,11 @@ bool CoreGenYaml::ReadRegisterClassYaml(const YAML::Node& RegClassNodes,
     if( CheckValidNode(Node,"RTLFile") ){
       RC->SetRTLFile( Node["RTLFile"].as<std::string>());
     }
+    if( CheckValidNode(Node,"RTLType") ){
+      if( !RC->SetRTLType( StrToCGRTL(Node["RTLType"].as<std::string>()) ) ){
+        return false;
+      }
+    }
 
     RC->AppendASP(ASP);
 
@@ -1709,8 +1841,15 @@ bool CoreGenYaml::ReadISAYaml(const YAML::Node& ISANodes,
       return false;
     }
     std::string ISAName = Node["ISAName"].as<std::string>();
+
     std::string ASPName = PrepForASP(ISAName);
     std::string ASP = "";
+
+    if( !IsValidName(ISAName) ){
+      Errno->SetError(CGERR_ERROR, "Invalid IR Node Name: " + ISAName );
+      return false;
+    }
+
     CoreGenISA *ISA = new CoreGenISA(ISAName, Errno);
 
     ASP += "isa(" + ASPName + ").\n";
@@ -1720,6 +1859,11 @@ bool CoreGenYaml::ReadISAYaml(const YAML::Node& ISANodes,
     }
     if( CheckValidNode(Node,"RTLFile") ){
       ISA->SetRTLFile( Node["RTLFile"].as<std::string>());
+    }
+    if( CheckValidNode(Node,"RTLType") ){
+      if( !ISA->SetRTLType( StrToCGRTL(Node["RTLType"].as<std::string>()) ) ){
+        return false;
+      }
     }
 
     ISA->AppendASP(ASP);
@@ -1748,10 +1892,16 @@ bool CoreGenYaml::ReadInstFormatYaml(const YAML::Node& InstFormatNodes,
       return false;
     }
     std::string Name = Node["InstFormatName"].as<std::string>();
+
     std::string ASPName = PrepForASP(Name);
     std::string ASP = "";
 
     ASP += "instFormat(" + ASPName + ").\n";
+
+    if( !IsValidName(Name) ){
+      Errno->SetError(CGERR_ERROR, "Invalid IR Node Name: " + Name );
+      return false;
+    }
 
     if( !CheckValidNode(Node,"ISA") ){
       PrintParserError(Node,
@@ -1922,6 +2072,11 @@ bool CoreGenYaml::ReadInstFormatYaml(const YAML::Node& InstFormatNodes,
     if( CheckValidNode(Node,"RTLFile") ){
       IF->SetRTLFile( Node["RTLFile"].as<std::string>());
     }
+    if( CheckValidNode(Node,"RTLType") ){
+      if( !IF->SetRTLType( StrToCGRTL(Node["RTLType"].as<std::string>()) ) ){
+        return false;
+      }
+    }
 
     IF->AppendASP(ASP);
 
@@ -1943,7 +2098,17 @@ bool CoreGenYaml::ReadInstYaml(const YAML::Node& InstNodes,
   for( unsigned i=0; i<InstNodes.size(); i++ ){
     const YAML::Node& Node = InstNodes[i];
 
+    if( !CheckValidNode(Node,"Inst") ){
+      PrintParserError(InstNodes,
+                       "Inst",
+                       "Insts");
+      return false;
+    }
     std::string Name = Node["Inst"].as<std::string>();
+    if( !IsValidName(Name) ){
+      Errno->SetError(CGERR_ERROR, "Invalid IR Node Name: " + Name );
+      return false;
+    }
     std::string ISAName = Node["ISA"].as<std::string>();
     std::string InstFormat = Node["InstFormat"].as<std::string>();
     std::string ASPName = PrepForASP(Name);
@@ -1987,6 +2152,7 @@ bool CoreGenYaml::ReadInstYaml(const YAML::Node& InstNodes,
       for( unsigned k=0; k<FNode.size(); k++ ){
         const YAML::Node& LFNode = FNode[k];
         std::string FieldName = LFNode["EncodingField"].as<std::string>();
+
         std::string ASPFieldName = PrepForASP(FieldName);
         ASP += "encField(" + ASPFieldName + ").\n";
 #if 0
@@ -2003,11 +2169,26 @@ bool CoreGenYaml::ReadInstYaml(const YAML::Node& InstNodes,
       }
     }
 
+    if( Node["Impl"] ){
+      if( !Inst->SetImpl( Node["Impl"].as<std::string>() ) ){
+        return false;
+      }
+    }
+    if( Node["Syntax"] ){
+      if( !Inst->SetSyntax( Node["Syntax"].as<std::string>() ) ){
+        return false;
+      }
+    }
     if( Node["RTL"] ){
       Inst->SetRTL( Node["RTL"].as<std::string>());
     }
     if( Node["RTLFile"] ){
       Inst->SetRTLFile( Node["RTLFile"].as<std::string>());
+    }
+    if( CheckValidNode(Node,"RTLType") ){
+      if( !Inst->SetRTLType( StrToCGRTL(Node["RTLType"].as<std::string>()) ) ){
+        return false;
+      }
     }
 
     Inst->AppendASP(ASP);
@@ -2028,8 +2209,18 @@ bool CoreGenYaml::ReadPseudoInstYaml(const YAML::Node& PInstNodes,
                                     std::vector<CoreGenISA *> &ISAs){
   for( unsigned i=0; i<PInstNodes.size(); i++ ){
     const YAML::Node& Node = PInstNodes[i];
+    if( !CheckValidNode(Node,"PseudoInst") ){
+      PrintParserError(PInstNodes,
+                       "PseudoInst",
+                       "PseudoInsts");
+      return false;
+    }
 
     std::string Name = Node["PseudoInst"].as<std::string>();
+    if( !IsValidName(Name) ){
+      Errno->SetError(CGERR_ERROR, "Invalid IR Node Name: " + Name );
+      return false;
+    }
     std::string ISAName = Node["ISA"].as<std::string>();
     std::string InstName = Node["Inst"].as<std::string>();
     std::string ASPName = PrepForASP(Name);
@@ -2088,12 +2279,15 @@ bool CoreGenYaml::ReadPseudoInstYaml(const YAML::Node& PInstNodes,
       }
     }
 
+#if 0
+    // this should not be required
     if( Node["RTL"] ){
       P->SetRTL( Node["RTL"].as<std::string>());
     }
     if( Node["RTLFile"] ){
       P->SetRTLFile( Node["RTLFile"].as<std::string>());
     }
+#endif
 
     P->AppendASP(ASP);
 
@@ -2112,10 +2306,23 @@ bool CoreGenYaml::ReadCacheYaml(const YAML::Node& CacheNodes,
                                 std::vector<CoreGenCache *> &Caches){
   for( unsigned i=0; i<CacheNodes.size(); i++ ){
     const YAML::Node& Node = CacheNodes[i];
+    if( !CheckValidNode(Node,"Cache") ){
+      PrintParserError(CacheNodes,
+                       "Cache",
+                       "Caches");
+      return false;
+    }
 
     std::string Name = Node["Cache"].as<std::string>();
+
     std::string ASPName = PrepForASP(Name);
     std::string ASP = "";
+
+    if( !IsValidName(Name) ){
+      Errno->SetError(CGERR_ERROR, "Invalid IR Node Name: " + Name );
+      return false;
+    }
+
     int Sets = Node["Sets"].as<int>();
     int Ways = Node["Ways"].as<int>();
 
@@ -2159,6 +2366,11 @@ bool CoreGenYaml::ReadCacheYaml(const YAML::Node& CacheNodes,
     if( Node["RTLFile"] ){
       C->SetRTLFile( Node["RTLFile"].as<std::string>());
     }
+    if( CheckValidNode(Node,"RTLType") ){
+      if( !C->SetRTLType( StrToCGRTL(Node["RTLType"].as<std::string>()) ) ){
+        return false;
+      }
+    }
 
     C->AppendASP(ASP);
 
@@ -2177,10 +2389,21 @@ bool CoreGenYaml::ReadCoreYaml(const YAML::Node& CoreNodes,
                                std::vector<CoreGenCore *> &Cores,
                                std::vector<CoreGenCache *> &Caches,
                                std::vector<CoreGenISA *> &ISAs,
-                               std::vector<CoreGenRegClass *> &RegClasses){
+                               std::vector<CoreGenRegClass *> &RegClasses,
+                               std::vector<CoreGenExt *> &Exts){
   for( unsigned i=0; i<CoreNodes.size(); i++ ){
     const YAML::Node& Node = CoreNodes[i];
+    if( !CheckValidNode(Node,"Core") ){
+      PrintParserError(CoreNodes,
+                       "Core",
+                       "Cores");
+      return false;
+    }
     std::string Name = Node["Core"].as<std::string>();
+    if( !IsValidName(Name) ){
+      Errno->SetError(CGERR_ERROR, "Invalid IR Node Name: " + Name );
+      return false;
+    }
     std::string Cache;
     if( Node["Cache"] ){
       Cache = Node["Cache"].as<std::string>();
@@ -2261,9 +2484,31 @@ bool CoreGenYaml::ReadCoreYaml(const YAML::Node& CoreNodes,
           }
         }
         if( RC == nullptr ){
+          Errno->SetError(CGERR_ERROR, "Invalid RegisterClass for Core: "
+                          + RegClassName + ":" + C->GetName() );
           return false;
         }
         C->InsertRegClass(RC);
+      }
+    }
+
+    const YAML::Node& ENode = Node["Extensions"];
+    if( ENode ){
+      for( unsigned k=0; k<ENode.size(); k++ ){
+        const YAML::Node& LENode = ENode[k];
+        std::string ExtName = LENode["Extension"].as<std::string>();
+        CoreGenExt *EC = nullptr;
+        for( unsigned a=0; a<Exts.size(); a++ ){
+          if( Exts[a]->GetName() == ExtName ){
+            EC = Exts[a];
+          }
+        }
+        if( EC == nullptr ){
+          Errno->SetError(CGERR_ERROR, "Invalid Extension for Core: "
+                          + ExtName + ":" + C->GetName() );
+          return false;
+        }
+        C->InsertExt( EC );
       }
     }
 
@@ -2272,6 +2517,11 @@ bool CoreGenYaml::ReadCoreYaml(const YAML::Node& CoreNodes,
     }
     if( Node["RTLFile"] ){
       C->SetRTLFile( Node["RTLFile"].as<std::string>());
+    }
+    if( CheckValidNode(Node,"RTLType") ){
+      if( !C->SetRTLType( StrToCGRTL(Node["RTLType"].as<std::string>()) ) ){
+        return false;
+      }
     }
 
     C->AppendASP(ASP);
@@ -2291,11 +2541,23 @@ bool CoreGenYaml::ReadSocYaml(const YAML::Node& SocNodes,
                               std::vector<CoreGenCore *> &Cores){
   for( unsigned i=0; i<SocNodes.size(); i++ ){
     const YAML::Node& Node = SocNodes[i];
+    if( !CheckValidNode(Node,"Soc") ){
+      PrintParserError(SocNodes,
+                       "Soc",
+                       "Socs");
+      return false;
+    }
     std::string Name = Node["Soc"].as<std::string>();
+
     std::string ASPName = PrepForASP(Name);
     std::string ASP = "";
 
     ASP += "soc(" + ASPName + ").\n";
+
+    if( !IsValidName(Name) ){
+      Errno->SetError(CGERR_ERROR, "Invalid IR Node Name: " + Name );
+      return false;
+    }
 
     CoreGenSoC *S = new CoreGenSoC( Name, Errno );
     if( S == nullptr ){
@@ -2329,6 +2591,11 @@ bool CoreGenYaml::ReadSocYaml(const YAML::Node& SocNodes,
     if( Node["RTLFile"] ){
       S->SetRTLFile( Node["RTLFile"].as<std::string>());
     }
+    if( CheckValidNode(Node,"RTLType") ){
+      if( !S->SetRTLType( StrToCGRTL(Node["RTLType"].as<std::string>()) ) ){
+        return false;
+      }
+    }
 
     S->AppendASP(ASP);
 
@@ -2346,11 +2613,23 @@ bool CoreGenYaml::ReadSpadYaml(const YAML::Node& SpadNodes,
                                std::vector<CoreGenSpad *> &Spads){
   for( unsigned i=0; i<SpadNodes.size(); i++ ){
     const YAML::Node& Node = SpadNodes[i];
+    if( !CheckValidNode(Node,"Scratchpad") ){
+      PrintParserError(SpadNodes,
+                       "Scratchpad",
+                       "Scratchpads");
+      return false;
+    }
     std::string Name = Node["Scratchpad"].as<std::string>();
+
     std::string ASPName = PrepForASP(Name);
     std::string ASP = "";
 
     ASP += "spad(" + ASPName + ").\n";
+
+    if( !IsValidName(Name) ){
+      Errno->SetError(CGERR_ERROR, "Invalid IR Node Name: " + Name );
+      return false;
+    }
 
     unsigned MemSize = 0;
     unsigned RqstPorts = 0;
@@ -2386,6 +2665,11 @@ bool CoreGenYaml::ReadSpadYaml(const YAML::Node& SpadNodes,
     if( Node["RTLFile"] ){
       S->SetRTLFile( Node["RTLFile"].as<std::string>());
     }
+    if( CheckValidNode(Node,"RTLType") ){
+      if( !S->SetRTLType( StrToCGRTL(Node["RTLType"].as<std::string>()) ) ){
+        return false;
+      }
+    }
 
     S->SetStartAddr( StartAddr );
     S->AppendASP(ASP);
@@ -2404,18 +2688,30 @@ bool CoreGenYaml::ReadMCtrlYaml(const YAML::Node& MCtrlNodes,
                                 std::vector<CoreGenMCtrl *> &MCtrls){
   for( unsigned i=0; i<MCtrlNodes.size(); i++ ){
     const YAML::Node& Node = MCtrlNodes[i];
+    if( !CheckValidNode(Node,"MemoryController") ){
+      PrintParserError(MCtrlNodes,
+                       "MemoryController",
+                       "MemoryControllers");
+      return false;
+    }
     std::string Name = Node["MemoryController"].as<std::string>();
+
     std::string ASPName = PrepForASP(Name);
     std::string ASP = "";
 
     ASP += "memCtrl(" + ASPName + ").\n";
+
+    if( !IsValidName(Name) ){
+      Errno->SetError(CGERR_ERROR, "Invalid IR Node Name: " + Name );
+      return false;
+    }
 
     unsigned Ports = 0;
     if( Node["Ports"] ){
       Ports = Node["Ports"].as<unsigned>();
     }
 
-    ASP += "memCtrlPorts" + ASPName + ", " + std::to_string(Ports) + ").\n";
+    ASP += "memCtrlPorts(" + ASPName + ", " + std::to_string(Ports) + ").\n";
     CoreGenMCtrl *M = new CoreGenMCtrl(Name,Errno,Ports);
 
     if( Node["RTL"] ){
@@ -2423,6 +2719,11 @@ bool CoreGenYaml::ReadMCtrlYaml(const YAML::Node& MCtrlNodes,
     }
     if( Node["RTLFile"] ){
       M->SetRTLFile( Node["RTLFile"].as<std::string>());
+    }
+    if( CheckValidNode(Node,"RTLType") ){
+      if( !M->SetRTLType( StrToCGRTL(Node["RTLType"].as<std::string>()) ) ){
+        return false;
+      }
     }
 
     M->AppendASP(ASP);
@@ -2441,9 +2742,22 @@ bool CoreGenYaml::ReadVTPYaml( const YAML::Node& VTPNodes,
                                std::vector<CoreGenVTP *> &VTPs){
   for( unsigned i=0; i<VTPNodes.size(); i++ ){
     const YAML::Node& Node = VTPNodes[i];
+    if( !CheckValidNode(Node,"VTP") ){
+      PrintParserError(VTPNodes,
+                       "VTP",
+                       "VTPControllers");
+      return false;
+    }
     std::string Name = Node["VTP"].as<std::string>();
+
     std::string ASPName = PrepForASP(Name);
     std::string ASP = "vtp(" + ASPName + ").\n";
+
+    if( !IsValidName(Name) ){
+      Errno->SetError(CGERR_ERROR, "Invalid IR Node Name: " + Name );
+      return false;
+    }
+
     CoreGenVTP *V = new CoreGenVTP(Name,Errno);
     V->AppendASP(ASP);
     if( IsDuplicate(Node,
@@ -2467,6 +2781,10 @@ bool CoreGenYaml::ReadPluginYaml(const YAML::Node& PluginNodes,
       return false;
     }
     std::string NodeName = Node["Plugin"].as<std::string>();
+    if( !IsValidName(NodeName) ){
+      Errno->SetError(CGERR_ERROR, "Invalid IR Node Name: " + NodeName );
+      return false;
+    }
 
     if( !CheckValidNode(Node,"PluginName") ){
       PrintParserError(Node,
@@ -2558,7 +2876,6 @@ bool CoreGenYaml::ReadPluginYaml(const YAML::Node& PluginNodes,
 
         // feature type and feature value
         if( FNodeJ["FeatureType"] ){
-          CGFeatureType FType;
           CGFeatureVal FVal;
           std::string FTypeStr = FNodeJ["FeatureType"].as<std::string>();
           std::string ASPFType = PrepForASP(FTypeStr);
@@ -2577,43 +2894,35 @@ bool CoreGenYaml::ReadPluginYaml(const YAML::Node& PluginNodes,
 
           // convert o CGFeatureType and CGFeatureVal
           if( FTypeStr == "Unsigned" ){
-            FType = CGFUnsigned;
             FVal.UnsignedData = (unsigned)(std::stoi(FTypeStr,&sz));
           }
           if( FTypeStr == "Uint32t" ){
-            FType = CGFUin32t;
             FVal.Uint32tData = (uint32_t)(std::stoi(FTypeStr,&sz));
           }
           if( FTypeStr == "Int32t" ){
-            FType = CGFint32t;
             FVal.Int32tData = (int32_t)(std::stoi(FTypeStr,&sz));
           }
           if( FTypeStr == "Uint64t" ){
-            FType = CGFUint64t;
             FVal.Uint64tData = (uint64_t)(std::stoul(FTypeStr,nullptr,0));
           }
           if( FTypeStr == "Int64t" ){
-            FType = CGFInt64t;
             FVal.Uint64tData = (int64_t)(std::stol(FTypeStr,nullptr,0));
           }
           if( FTypeStr == "Float" ){
-            FType = CGFFloat;
             FVal.FloatData = (float)(std::stof(FTypeStr,&sz));
           }
           if( FTypeStr == "Double" ){
-            FType = CGFDouble;
             FVal.DoubleData = (float)(std::stof(FTypeStr,&sz));
           }
           if( FTypeStr == "String" ){
-            FType = CGFString;
             FVal.StringData = FTypeStr;
           }
           if( FTypeStr == "Bool" ){
-            FType = CGFBool;
             FVal.BoolData = std::stoi(FTypeStr,&sz);
           }
           if( FTypeStr == "Unknown" ){
-            FType = CGFUnknown;
+            // default to unsigned integer
+            FVal.UnsignedData = (unsigned)(std::stoi(FTypeStr,&sz));
           }
           NewPlugin->SetFeatureValue(FeatureName, FVal);
         }
@@ -2722,7 +3031,8 @@ bool CoreGenYaml::ReadPluginYaml(const YAML::Node& PluginNodes,
                       NewPlugin->GetCoreVect(),
                       NewPlugin->GetCacheVect(),
                       NewPlugin->GetISAVect(),
-                      NewPlugin->GetRegClassVect()) ){
+                      NewPlugin->GetRegClassVect(),
+                      NewPlugin->GetExtVect()) ){
         return false;
       }
       for(unsigned i = 0; i < CoreNodes.size(); i++){
@@ -2827,11 +3137,23 @@ bool CoreGenYaml::ReadExtYaml(const YAML::Node& ExtNodes,
                               std::vector<CoreGenExt *> &Exts){
   for( unsigned i=0; i<ExtNodes.size(); i++ ){
     const YAML::Node& Node = ExtNodes[i];
+    if( !CheckValidNode(Node,"Extension") ){
+      PrintParserError(ExtNodes,
+                       "Extension",
+                       "Extensions");
+      return false;
+    }
     std::string Name = Node["Extension"].as<std::string>();
+
     std::string ASPName = PrepForASP(Name);
     std::string ASP = "";
 
     ASP += "extension(" + ASPName + ").\n";
+
+    if( !IsValidName(Name) ){
+      Errno->SetError(CGERR_ERROR, "Invalid IR Node Name: " + Name );
+      return false;
+    }
 
     std::string Type = Node["Type"].as<std::string>();
     std::string ASPType = PrepForASP(Type);
@@ -2964,7 +3286,8 @@ bool CoreGenYaml::ReadExtYaml(const YAML::Node& ExtNodes,
                       E->GetCoreVect(),
                       E->GetCacheVect(),
                       E->GetISAVect(),
-                      E->GetRegClassVect()) ){
+                      E->GetRegClassVect(),
+                      E->GetExtVect()) ){
         return false;
       }
       for(unsigned i = 0; i < CoreNodes.size(); i++){
@@ -3051,6 +3374,11 @@ bool CoreGenYaml::ReadExtYaml(const YAML::Node& ExtNodes,
     if( Node["RTLFile"] ){
       E->SetRTLFile( Node["RTLFile"].as<std::string>());
     }
+    if( CheckValidNode(Node,"RTLType") ){
+      if( !E->SetRTLType( StrToCGRTL(Node["RTLType"].as<std::string>()) ) ){
+        return false;
+      }
+    }
 
     if( IsDuplicate(Node,
                     static_cast<CoreGenNode *>(E),
@@ -3083,11 +3411,23 @@ bool CoreGenYaml::ReadCommYaml( const YAML::Node& CommNodes,
 
   for( unsigned i=0; i<CommNodes.size(); i++ ){
     const YAML::Node& Node = CommNodes[i];
+    if( !CheckValidNode(Node,"Comm") ){
+      PrintParserError(CommNodes,
+                       "Comm",
+                       "Comms");
+      return false;
+    }
     std::string Name = Node["Comm"].as<std::string>();
+
     std::string ASPName = PrepForASP(Name);
     std::string ASP = "";
 
     ASP += "comm(" + ASPName + ").\n";
+
+    if( !IsValidName(Name) ){
+      Errno->SetError(CGERR_ERROR, "Invalid IR Node Name: " + Name );
+      return false;
+    }
 
     // type
     std::string Type = Node["Type"].as<std::string>();
@@ -3263,9 +3603,15 @@ bool CoreGenYaml::ReadYaml(  std::vector<CoreGenSoC *>  &Socs,
     return false;
   }
 
+  //-- Exts
+  const YAML::Node& ExtNodes = IR["Extensions"];
+  if( !ReadExtYaml(ExtNodes,Exts) ){
+    return false;
+  }
+
   //-- Cores
   const YAML::Node& CoreNodes = IR["Cores"];
-  if( !ReadCoreYaml(CoreNodes,Cores,Caches,ISAs,RegClasses) ){
+  if( !ReadCoreYaml(CoreNodes,Cores,Caches,ISAs,RegClasses,Exts) ){
     return false;
   }
 
@@ -3290,12 +3636,6 @@ bool CoreGenYaml::ReadYaml(  std::vector<CoreGenSoC *>  &Socs,
   // -- Virtual to Physical Units
   const YAML::Node& VTPNodes = IR["VTPControllers"];
   if( !ReadVTPYaml(VTPNodes,VTPs) ){
-    return false;
-  }
-
-  //-- Exts
-  const YAML::Node& ExtNodes = IR["Extensions"];
-  if( !ReadExtYaml(ExtNodes,Exts) ){
     return false;
   }
 
