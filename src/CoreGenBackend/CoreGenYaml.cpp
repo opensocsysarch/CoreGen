@@ -1397,6 +1397,7 @@ bool CoreGenYaml::ReadRegisterYaml(const YAML::Node& RegNodes,
       return false;
     }
     int Width = Node["Width"].as<int>();
+    //TODO: add width pred
     ASP += "regWidth(" + ASPName + ", " + std::to_string(Width) + ").\n";
 
     if( !CheckValidNode(Node,"Index") ){
@@ -1406,7 +1407,7 @@ bool CoreGenYaml::ReadRegisterYaml(const YAML::Node& RegNodes,
       return false;
     }
     int Index = Node["Index"].as<int>();
-
+    //TODO: add index pred
     ASP += "regIndex(" + ASPName + ", " + std::to_string(Index) + ").\n";
 
     if( !CheckValidNode(Node,"IsFixedValue") ){
@@ -1416,6 +1417,7 @@ bool CoreGenYaml::ReadRegisterYaml(const YAML::Node& RegNodes,
       return false;
     }
     bool IFV = Node["IsFixedValue"].as<bool>();
+    //TODO: add bool pred
     if (IFV){
       ASP += "regIsFixed(" + ASPName + ", true).\n";
     }
@@ -1431,6 +1433,7 @@ bool CoreGenYaml::ReadRegisterYaml(const YAML::Node& RegNodes,
                          "FixedValue");
         return false;
       }
+      //TODO:: add val pred
       FixedVals.push_back( Node["FixedValue"].as<uint64_t>() );
       ASP += "regFixedVal(" + ASPName + ", " + Node["FixedValue"].as<std::string>() + ").\n";
     }
@@ -1501,6 +1504,7 @@ bool CoreGenYaml::ReadRegisterYaml(const YAML::Node& RegNodes,
       return false;
     }
 
+    //TODO: add name pred
     if( CheckValidNode(Node,"PseudoName") ){
       R->SetPseudoName(Node["PseudoName"].as<std::string>());
       std::string ASPPseudoName = PrepForASP(Node["PseudoName"].as<std::string>());
@@ -2194,7 +2198,6 @@ bool CoreGenYaml::ReadCoreYaml(const YAML::Node& CoreNodes,
     //QUESTION: Can a core have more than one cache?
     //NOTE: Just one for now
     ASP += "core(" + ASPName + ").\n";
-    ASP += "coreCache(" + ASPName + ", " + ASPCache + ").\n";
     ASP += "coreISA(" + ASPName + ", " + ASPISAName + ").\n";
 
     // handle the isa
@@ -2239,6 +2242,7 @@ bool CoreGenYaml::ReadCoreYaml(const YAML::Node& CoreNodes,
       if( CA == nullptr ){
         return false;
       }
+      ASP += "coreCache(" + ASPName + ", " + ASPCache + ").\n";
       C->InsertCache( CA );
     }
 
