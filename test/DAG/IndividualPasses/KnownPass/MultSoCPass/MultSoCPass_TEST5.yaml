@@ -1,0 +1,35 @@
+ISAs:
+  - ISAName: TEST5.isa
+Cores:
+  - Core: TEST5.0.core
+    ISA: TEST5.isa
+  - Core: TEST5.1.core
+    ISA: TEST5.isa
+  - Core: TEST5.2.core
+    ISA: TEST5.isa
+  - Core: TEST5.3.core
+    ISA: TEST5.isa
+  - Core: TEST5.4.core
+    ISA: TEST5.isa
+  - Core: TEST5.5.core
+    ISA: TEST5.isa
+  - Core: TEST5.6.core
+    ISA: TEST5.isa
+  - Core: TEST5.7.core
+    ISA: TEST5.isa
+  - Core: TEST5.8.core
+    ISA: TEST5.isa
+  - Core: TEST5.9.core
+    ISA: TEST5.isa
+  - Core: TEST5.10.core
+    ISA: TEST5.isa
+  - Core: TEST5.11.core
+    ISA: TEST5.isa
+  - Core: TEST5.12.core
+    ISA: TEST5.isa
+  - Core: TEST5.13.core
+    ISA: TEST5.isa
+  - Core: TEST5.14.core
+    ISA: TEST5.isa
+  - Core: TEST5.15.core
+    ISA: TEST5.isa

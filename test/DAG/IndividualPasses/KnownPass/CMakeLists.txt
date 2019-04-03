@@ -17,6 +17,7 @@ file(GLOB TEST_SRCS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} *.cpp)
 
 if(BUILD_COREGEN_DAG_INDIVIDUALPASS_KNOWNPASS_TESTING)
 set(BUILD_COREGEN_DAG_INDIVIDUALPASS_KNOWNPASS_STATSPASS_TESTING "ON")
+set(BUILD_COREGEN_DAG_INDIVIDUALPASS_KNOWNPASS_MULTSOCPASS_TESTING "ON")
 foreach(testSrc ${TEST_SRCS})
   # Extract the file name
   get_filename_component(testName ${testSrc} NAME_WE)
@@ -40,3 +41,4 @@ endforeach(testSrc)
 endif()
 
 add_subdirectory(StatsPass)
+add_subdirectory(MultSoCPass)
