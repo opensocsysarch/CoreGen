@@ -122,15 +122,9 @@ sudo yum -y install cmake centos-release-scl texlive texlive-*.noarch llvm-stati
 ```
 sudo yum install rpm-build rpmdevtools
 ```
-<<<<<<< HEAD
-1. Enable the SCL LLVM environment (this will create a fresh bash shell with the correct paths)
-``scl enable llvm-toolset-7 devtoolset-7 bash``
-1. Clone the CoreGen repository
-=======
 3. Enable the SCL LLVM environment (this will create a fresh bash shell with the correct paths)
 ``scl enable llvm-toolset-7 devtoolset-7 bash``
 4. Clone the CoreGen repository
->>>>>>> devel
 ```
 git clone https://github.com/opensocsysarch/CoreGen.git
 ```
