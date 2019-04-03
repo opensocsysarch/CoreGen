@@ -233,7 +233,8 @@ make
 * -DBUILD\_COREGEN\_DAG\_INDIVIDUALPASS\_KNOWNPASS\_TESTING=ON : Enable DAG's individual pass test harness for known correct tests
 * -DBUILD\_COREGEN\_DAG\_INDIVIDUALPASS\_KNOWNPASS\_STATSPASS\_TESTING=ON : Enable DAG's individual pass test harness for the StatsPass
 * -DBUILD\_COREGEN\_DAG\_INDIVIDUALPASS\_KNOWNPASS\_MULTSOCPASS\_TESTING=ON : Enable DAG's individual pass test harness for the MultSoCPass
-* -DBUILD\_COREGEN\_DAG\_INDIVIDUALPASS\_KNOWNPASS\_DanglingRegionPass\_TESTING=ON : Enable DAG's individual pass test harness for the DanglingRegionPass
+* -DBUILD\_COREGEN\_DAG\_INDIVIDUALPASS\_KNOWNPASS\_DANGLINGREGIONPASS\_TESTING=ON : Enable DAG's individual pass test harness for the DanglingRegionPass
+* -DBUILD\_COREGEN\_DAG\_INDIVIDUALPASS\_KNOWNPASS\_DANGLINGNODEPASS\_TESTING=ON : Enable DAG's individual pass test harness for the DanglingNodePass
 * -DBUILD\_COREGEN\_DAG\_INDIVIDUALPASS\_KNOWNFAIL\_TESTING=ON : Enable DAG's individual pass test harness for known fail tests
 * -DBUILD\_COREGEN\_DAG\_INDIVIDUALPASS\_KNOWNFAIL\_ASP\_TESTING=ON : Enable DAG's individual ASP pass test harness for known fail tests
 * -DBUILD\_COREGEN\_PLUGIN\_TESTING=ON : Enable plugin test harness
