@@ -16,6 +16,7 @@ include_directories(${CLINGO_PATH}/libluaclingo)
 file(GLOB TEST_SRCS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} *.cpp)
 
 if(BUILD_COREGEN_DAG_INDIVIDUALPASS_KNOWNPASS_TESTING)
+set(BUILD_COREGEN_DAG_INDIVIDUALPASS_KNOWNPASS_STATSPASS_TESTING "ON")
 foreach(testSrc ${TEST_SRCS})
   # Extract the file name
   get_filename_component(testName ${testSrc} NAME_WE)
@@ -38,3 +39,4 @@ foreach(testSrc ${TEST_SRCS})
 endforeach(testSrc)
 endif()
 
+add_subdirectory(StatsPass)
