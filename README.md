@@ -44,7 +44,7 @@ sudo apt-get update
 ```
 1.  Install the system dependencies:
 ```
-sudo apt-get install -y libllvm-6.0-ocaml-dev libllvm6.0 llvm-6.0 llvm-6.0-dev llvm-6.0-doc llvm-6.0-examples llvm-6.0-runtime clang-6.0 clang-tools-6.0 clang-6.0-doc libclang-common-6.0-dev libclang-6.0-dev libclang1-6.0 clang-format-6.0 python-clang-6.0
+sudo apt-get install -y libllvm-6.0-ocaml-dev libllvm6.0 llvm-6.0 llvm-6.0-dev llvm-6.0-doc llvm-6.0-examples llvm-6.0-runtime clang-6.0 clang-tools-6.0 clang-6.0-doc libclang-common-6.0-dev libclang-6.0-dev libclang1-6.0 clang-format-6.0 python-clang-6.0 re2c lua5.3 liblua5.3-dev
 ```
 1. Clone the CoreGen repository
 ```
@@ -76,7 +76,7 @@ sudo apt-get update
 ```
 1.  Install the system dependencies:
 ```
-sudo apt-get install -y clang-6.0 lldb-6.0 lld-6.0 libllvm6.0 llvm-6.0 llvm-6.0-dev llvm-6.0-doc llvm-6.0-examples llvm-6.0-runtime
+sudo apt-get install -y clang-6.0 lldb-6.0 lld-6.0 libllvm6.0 llvm-6.0 llvm-6.0-dev llvm-6.0-doc llvm-6.0-examples llvm-6.0-runtime re2c lua5.3 liblua5.3-dev
 ```
 1. Clone the CoreGen repository
 ```
@@ -106,14 +106,14 @@ steps on vanilla CentOS 7.4 systems.
 
 1.  Install the system dependencies:
 ```
-sudo yum -y install cmake centos-release-scl texlive texlive-*.noarch llvm-static llvm-toolset-7-llvm-devel llvm-toolset-7-build llvm-toolset-7-cmake llvm-toolset-7-lldb-devel llvm-toolset-7-libomp-devel llvm-toolset-7-clang-devel llvm-toolset-7-llvm-static zlib-devel
+sudo yum -y install cmake centos-release-scl texlive texlive-*.noarch llvm-static llvm-toolset-7-llvm-devel llvm-toolset-7-build llvm-toolset-7-cmake llvm-toolset-7-lldb-devel llvm-toolset-7-libomp-devel llvm-toolset-7-clang-devel llvm-toolset-7-llvm-static zlib-devel re2c lua lua-devel devtoolset-7
 ```
 1. [Optional] For those wishing to build CentOS7 RPMS, you also need the following packages.
 ```
 sudo yum install rpm-build rpmdevtools
 ```
 1. Enable the SCL LLVM environment (this will create a fresh bash shell with the correct paths)
-``scl enable llvm-toolset-7 bash``
+``scl enable llvm-toolset-7 devtoolset-7 bash``
 1. Clone the CoreGen repository
 ```
 git clone https://github.com/opensocsysarch/CoreGen.git
@@ -145,6 +145,8 @@ the ``HomeBrew`` package manager in order to fulfill these dependencies.
 brew cask install mactex
 brew install cmake
 brew install llvm@5
+brew install re2c
+brew install lua
 ```
 1. Clone the CoreGen repository
 ```
@@ -220,11 +222,17 @@ make
 * -DBUILD\_COREGEN\_DAG\_INDIVIDUALPASS\_TESTING=ON : Enable DAG's individual pass test harness
 * -DBUILD\_COREGEN\_DAG\_INDIVIDUALPASS\_KNOWNPASS\_TESTING=ON : Enable DAG's individual pass test harness for known correct tests
 * -DBUILD\_COREGEN\_DAG\_INDIVIDUALPASS\_KNOWNFAIL\_TESTING=ON : Enable DAG's individual pass test harness for known fail tests
+* -DBUILD\_COREGEN\_DAG\_INDIVIDUALPASS\_KNOWNFAIL\_ASP\_TESTING=ON : Enable DAG's individual ASP pass test harness for known fail tests
 * -DBUILD\_COREGEN\_PLUGIN\_TESTING=ON : Enable plugin test harness
 * -DBUILD\_COREGEN\_YAML\_TESTING=ON : Enable yaml test harness
 * -DBUILD\_COREGEN\_YAML\_READER\_TESTING=ON : Enable yaml reader test harness
 * -DBUILD\_COREGEN\_YAML\_READER\_MISSING\_DATA\_TESTING=ON : Enable yaml reader test harness for yaml with known missing data
 * -DBUILD\_COREGEN\_YAML\_WRITER\_TESTING=ON : Enable yaml writer test harness
+* -DBUILD\_COREGEN\_STONECUTTER\_TESTING=ON : Enables the StoneCutter test harness
+* -DBUILD\_COREGEN\_STONECUTTER\_CLI\_TESTING=ON : Enables the StoneCutter CLI test harness
+* -DBUILD\_COREGEN\_STONECUTTER\_PARSER\_TESTING=ON : Enables the StoneCutter parser test harness
+* -DBUILD\_COREGEN\_STONECUTTER\_PARSER\_TESTING=ON : Enables the StoneCutter parser test harness
+* -DBUILD\_COREGEN\_STONECUTTER\_PARSER\_KNOWNFAIL\_TESTING=ON : Enables the StoneCutter parser known fail test harness
 
 ## Contributing
 

@@ -30,9 +30,8 @@ AST.cpp
 )
 
 include_directories(${COREGEN_INCLUDE_PATH})
+include_directories(${CLINGO_PATH}/libclingo)
+include_directories(${CLINGO_PATH}/libgringo)
+include_directories(${CLINGO_PATH}/libluaclingo)
 add_library(AnalysisPassObjs OBJECT ${AnalysisPassSrcs})
 
-#install(DIRECTORY "."
-#        DESTINATION "include/Passes/Analysis"
-#        FILES_MATCHING
-#        PATTERN "*.h")

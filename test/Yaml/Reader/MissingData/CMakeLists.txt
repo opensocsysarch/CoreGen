@@ -12,6 +12,10 @@ include_directories(${YAML_PATH}/include)
 #include_directories(${COREGEN_PATH}/Passes)
 #include_directories(${COREGEN_PLUGIN_PATH})
 
+include_directories(${CLINGO_PATH}/libclingo)
+include_directories(${CLINGO_PATH}/libgringo)
+include_directories(${CLINGO_PATH}/libluaclingo)
+
 file(GLOB TEST_SRCS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} *.cpp)
 
 if(BUILD_COREGEN_YAML_READER_MISSING_DATA_TESTING)

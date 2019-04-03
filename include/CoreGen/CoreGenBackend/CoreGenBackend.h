@@ -206,6 +206,9 @@ public:
   /// Export the DAG in a DOT graphviz file
   bool ExportDOT(std::string FName);
 
+  /// Determines whether the pass manage is initialized
+  bool IsPassMgr();
+
   /// Initialize the pass manager
   bool InitPassMgr();
 
