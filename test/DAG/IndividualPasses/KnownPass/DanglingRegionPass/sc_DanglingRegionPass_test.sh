@@ -8,10 +8,10 @@ if [ ! -f $CGCLI_PATH/cgcli ]; then
   exit -1
 fi
 
-$CGCLI_PATH/cgcli --ir $FILE --pass --enable-pass "MultSoCPass"
+$CGCLI_PATH/cgcli --ir $FILE --pass --enable-pass "DanglingRegionPass"
 retVal=$?
 if [[  "$retVal" -ne 0 ]]; then
-  echo "$CGCLI_PATH/cgcli --ir $FILE --pass --enable-pass \"MultSoCPass\" FAILED with return code $retVal"
+  echo "$CGCLI_PATH/cgcli --ir $FILE --pass --enable-pass \"DanglingRegionPass\" FAILED with return code $retVal"
   exit $retVal
 fi
 
