@@ -1,1 +1,0 @@
-/usr/bin/c++   -O3 -std=c++11 -Wall -DCGIPREFIX=/usr/local -DCOREGEN_PLATFORM=Linux -O2  -rdynamic CMakeFiles/parse.dir/parse.cpp.o  -o parse ../libyaml-cpp.a 

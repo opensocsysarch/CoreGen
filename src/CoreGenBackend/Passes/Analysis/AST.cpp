@@ -1,5 +1,16 @@
-#include "AST.h"
+//
+// _AST_cpp_
+//
+// Copyright (C) 2017-2019 Tactical Computing Laboratories, LLC
+// All Rights Reserved
+// contact@tactcomplabs.com
+//
+// See LICENSE in the top level directory for licensing details
+//
+
 #include <iostream>
+
+#include "CoreGen/CoreGenBackend/Passes/Analysis/AST.h"
 
 ///ASTNode
 AST::ASTNode::ASTNode(nodeType type){
@@ -525,3 +536,5 @@ void AST::build_asp(){
 std::string AST::get_asp(){
   return this->asp;
 }
+
+// EOF
