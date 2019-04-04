@@ -59,7 +59,6 @@ void CoreGenPassMgr::InitSoCPasses(std::ostream *O){
   Passes.push_back(static_cast<CoreGenPass *>(new MandatoryFieldPass(O,DAG,Errno)));
   Passes.push_back(static_cast<CoreGenPass *>(new EncodingGapPass(O,DAG,Errno)));
   Passes.push_back(static_cast<CoreGenPass *>(new PInstSafetyPass(O,DAG,Errno)));
-  Passes.push_back(static_cast<CoreGenPass *>(new CommSafetyPass(O,DAG,Errno)));
 
   // Optimization Passes
   Passes.push_back(static_cast<CoreGenPass *>(new RegClassOpt(O,DAG,Errno)));
@@ -85,7 +84,6 @@ void CoreGenPassMgr::InitModPasses(std::ostream *O){
   Passes.push_back(static_cast<CoreGenPass *>(new MandatoryFieldPass(O,DAG,Errno)));
   Passes.push_back(static_cast<CoreGenPass *>(new EncodingGapPass(O,DAG,Errno)));
   Passes.push_back(static_cast<CoreGenPass *>(new PInstSafetyPass(O,DAG,Errno)));
-  Passes.push_back(static_cast<CoreGenPass *>(new CommSafetyPass(O,DAG,Errno)));
 
   // Optimization Passes
   Passes.push_back(static_cast<CoreGenPass *>(new RegClassOpt(O,DAG,Errno)));
@@ -110,7 +108,6 @@ void CoreGenPassMgr::InitExtPasses(std::ostream *O){
   Passes.push_back(static_cast<CoreGenPass *>(new MandatoryFieldPass(O,DAG,Errno)));
   Passes.push_back(static_cast<CoreGenPass *>(new EncodingGapPass(O,DAG,Errno)));
   Passes.push_back(static_cast<CoreGenPass *>(new PInstSafetyPass(O,DAG,Errno)));
-  Passes.push_back(static_cast<CoreGenPass *>(new CommSafetyPass(O,DAG,Errno)));
 
   // Optimization Passes
   Passes.push_back(static_cast<CoreGenPass *>(new RegClassOpt(O,DAG,Errno)));
