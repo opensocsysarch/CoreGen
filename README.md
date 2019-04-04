@@ -244,6 +244,7 @@ make
 * -DBUILD\_COREGEN\_DAG\_INDIVIDUALPASS\_KNOWNPASS\_REGFIELDPASS\_TESTING=ON : Enable DAG's individual pass test harness for the RegSafetyPass
 * -DBUILD\_COREGEN\_DAG\_INDIVIDUALPASS\_KNOWNPASS\_CORESAFETYPASS\_TESTING=ON : Enable DAG's individual pass test harness for the RegSafetyPass
 * -DBUILD\_COREGEN\_DAG\_INDIVIDUALPASS\_KNOWNPASS\_COMMSAFETYPASS\_TESTING=ON : Enable DAG's individual pass test harness for the RegSafetyPass
+* -DBUILD\_COREGEN\_DAG\_INDIVIDUALPASS\_KNOWNPASS\_MANDATORYFIELDPASS\_TESTING=ON : Enable DAG's individual pass test harness for the RegSafetyPass
 * -DBUILD\_COREGEN\_DAG\_INDIVIDUALPASS\_KNOWNFAIL\_TESTING=ON : Enable DAG's individual pass test harness for known fail tests
 * -DBUILD\_COREGEN\_DAG\_INDIVIDUALPASS\_KNOWNFAIL\_ASP\_TESTING=ON : Enable DAG's individual ASP pass test harness for known fail tests
 * -DBUILD\_COREGEN\_PLUGIN\_TESTING=ON : Enable plugin test harness
