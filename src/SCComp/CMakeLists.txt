@@ -13,4 +13,6 @@ include_directories(${COREGEN_INCLUDE_PATH})
 
 target_link_libraries(sccomp SCComp)
 
+install(TARGETS sccomp DESTINATION bin)
+
 #-- EOF

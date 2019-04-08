@@ -28,9 +28,18 @@ execute_process(COMMAND lsb_release -cs
 )
 
 #------------------------------------------------------------------------
+#-- CLINGO OPTIONS
+#------------------------------------------------------------------------
+set(CLINGO_BUILD_STATIC ON CACHE BOOL "Forcing Clingo to build static libs")
+set(CLINGO_MANAGE_RPATH OFF CACHE BOOL "Disable Clingo management of RPATH")
+set(CLINGO_BUILD_APPS OFF CACHE BOOL "Disabling Clingo Apps")
+set(LIB_POTASSCO_INSTALL_LIB ON CACHE BOOL "Forcing Potassco install")
+set(CLASP_INSTALL_LIB ON CACHE BOOL "Forcing Clasp install")
+
+#------------------------------------------------------------------------
 #-- COMPILER MACROS
 #------------------------------------------------------------------------
-set(CLINGO_COMPILER_MACROS "-DCLINGO_WITH_LUA")
+set(CLINGO_COMPILER_MACROS "-DCLINGO_WITH_LUA") 
 set(COREGEN_COMPILER_MACROS "-DCGIPREFIX=${CMAKE_INSTALL_PREFIX} ${CLINGO_COMPILER_MACROS}")
 
 #------------------------------------------------------------------------
@@ -165,7 +174,7 @@ if(COREGEN_BUILD_RPM)
   set(CPACK_PACKAGE_RELEASE 1)
   set(CPACK_PACKAGE_CONTACT "John Leidel")
   set(CPACK_PACKAGE_VENDOR "Tactical Computing Laboratories, LLC")
-  set(CPACK_RPM_PACKAGE_REQUIRES "llvm-toolset-7 zlib-devel re2c lua lua-devel devtoolset-7")
+  set(CPACK_RPM_PACKAGE_REQUIRES "llvm-toolset-7 zlib-devel re2c lua lua-devel devtoolset-7-gcc-c++")
   set(CPACK_PACKAGING_INSTALL_PREFIX ${CMAKE_INSTALL_PREFIX})
   set(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION}-${CPACK_PACKAGE_RELEASE}.${CMAKE_SYSTEM_PROCESSOR}")
   include(CPack)

@@ -24,6 +24,10 @@ set_target_properties(libluaclingo PROPERTIES
     FOLDER lib)
 if (NOT CLINGO_BUILD_LUA_SHARED)
     target_compile_definitions(libluaclingo PUBLIC LUACLINGO_NO_VISIBILITY)
+    install(TARGETS libluaclingo
+        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
 else()
     set_target_properties(libluaclingo PROPERTIES SOVERSION 1 VERSION 1.0)
     install(TARGETS libluaclingo

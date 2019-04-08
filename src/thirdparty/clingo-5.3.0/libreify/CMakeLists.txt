@@ -26,6 +26,16 @@ set_target_properties(libreify PROPERTIES
     OUTPUT_NAME reify
     FOLDER lib)
 
+install(TARGETS libreify
+        EXPORT ClingoTargets
+        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
+install(DIRECTORY "./reify"
+        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/libreify
+        FILES_MATCHING
+        PATTERN "*.h")
+
 if (CLINGO_BUILD_TESTS)
     add_subdirectory(tests)
 endif()

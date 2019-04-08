@@ -52,6 +52,20 @@ target_include_directories(libclingo
 target_compile_definitions(libclingo PRIVATE CLINGO_BUILD_LIBRARY)
 if (NOT CLINGO_BUILD_SHARED)
     target_compile_definitions(libclingo PUBLIC CLINGO_NO_VISIBILITY)
+
+    install(TARGETS libclingo
+        EXPORT ClingoTargets
+        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
+    install(FILES
+        "${CMAKE_CURRENT_SOURCE_DIR}/clingo.hh"
+        "${CMAKE_CURRENT_SOURCE_DIR}/clingo.h"
+        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+    install(EXPORT ClingoTargets
+        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/Clingo)
+
+
 else()
     set_target_properties(libclingo PROPERTIES SOVERSION 2 VERSION 2.0)
     install(TARGETS libclingo
@@ -62,7 +76,7 @@ else()
     install(FILES
         "${CMAKE_CURRENT_SOURCE_DIR}/clingo.hh"
         "${CMAKE_CURRENT_SOURCE_DIR}/clingo.h"
-        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/libclingo)
     install(EXPORT ClingoTargets
         DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/Clingo)
 

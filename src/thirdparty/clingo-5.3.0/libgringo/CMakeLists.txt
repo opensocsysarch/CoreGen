@@ -137,6 +137,17 @@ target_include_directories(libgringo
 configure_file("${CMAKE_CURRENT_SOURCE_DIR}/src/input/clingopath.hh.in" "${CMAKE_CURRENT_BINARY_DIR}/src/input/clingopath.hh")
 if (NOT CLINGO_BUILD_SHARED)
     target_compile_definitions(libgringo PUBLIC CLINGO_NO_VISIBILITY)
+
+    install(TARGETS libgringo
+            EXPORT ClingoTargets
+            RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+            LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+            ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
+    install(DIRECTORY "./gringo"
+            DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/libgringo
+            FILES_MATCHING
+            PATTERN "*.h")
+
 endif()
 if(MSVC)
     target_compile_definitions(libgringo PRIVATE _SCL_SECURE_NO_WARNINGS _CRT_SECURE_NO_WARNINGS)
