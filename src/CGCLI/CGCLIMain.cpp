@@ -19,6 +19,9 @@ std::string get_working_dir(){
   char buff[MAXPATHLEN];
   char *NStr = nullptr;
   NStr = getcwd( buff, MAXPATHLEN);
+  if( NStr == nullptr ){
+    return "/tmp";
+  }
   std::string cwd( buff );
   return cwd;
 }
