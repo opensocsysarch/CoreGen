@@ -15,8 +15,8 @@ CGCLIOpts::CGCLIOpts( int argc, char **argv )
     GroupPasses(false), DataPasses(false), AnalysisPasses(false),
     OptPasses(false), ListPasses(false), Verify(false), ExecPass(false),
     CGChisel(false), CGComp(false), CGVersion(false), CheckPlugins(false),
-    ListSysPasses(false), ExecSysPass(false), ASPSolver(false),
-    ProjName("UNKNOWN"), ASPClean(true){
+    ListSysPasses(false), ExecSysPass(false), ASPSolver(false), ASPClean(true),
+    ProjName("UNKNOWN"){
   // setup default project root
   char PATH[FILENAME_MAX];
   if( getcwd(PATH,sizeof(PATH)) == NULL ){

@@ -44,7 +44,7 @@ extern "C" CLINGO_VISIBILITY_DEFAULT int clingo_main_(int argc, char *argv[]);
 
 class ASPSolverPass : public CoreGenPass{
 private:
-  std::vector<std::string> Files;
+  std::vector<std::string> Files;   ///< List of files as input
 public:
   /// Default constructor
   ASPSolverPass(std::ostream *O, CoreGenDAG *D, CoreGenErrno *E);
