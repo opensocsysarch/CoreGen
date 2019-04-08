@@ -72,7 +72,7 @@ public:
   /// Default constructor
   ConstrParser();
 
-  // Overloaded constructor
+  /// Overloaded constructor
   ConstrParser(std::string);
 
   /// Default destructor
