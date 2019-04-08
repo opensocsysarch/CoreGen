@@ -206,6 +206,9 @@ public:
   /// Export the DAG in a DOT graphviz file
   bool ExportDOT(std::string FName);
 
+  /// Determines whether the pass manage is initialized
+  bool IsPassMgr();
+
   /// Initialize the pass manager
   bool InitPassMgr();
 
@@ -259,6 +262,9 @@ public:
 
   /// Retrieve an object pointer to the target plugin
   CoreGenPlugin *GetPlugin( std::string Plugin );
+
+  /// Set the ASP Files to Test
+  void SetASPFiles(std::vector<std::string>);
 };
 
 #endif

@@ -1,0 +1,1357 @@
+# -------------------------------------------------------
+# BasicRISC.yaml
+#
+# CoreGen Design Tutorial
+# Copyright 2018 Tactical Computing Laboratories, LLC
+#
+# Licensed under an Apache2 license
+# -------------------------------------------------------
+
+# -------------------------------------------------------
+# ProjectInfo Section
+# -------------------------------------------------------
+ProjectInfo:
+  - ProjectName: BasicRISC
+    ProjectRoot: ./BasicRISC
+    ProjectType: soc
+    ChiselMajorVersion: 3
+    ChiselMinorVersion: 0
+
+
+# -------------------------------------------------------
+# Register Section
+# -------------------------------------------------------
+Registers:
+  - RegName: r0
+    Width: 64
+    Index: 0
+    PseudoName: zero
+    IsFixedValue: true
+    FixedValue: 0
+    IsSIMD: false
+    RWReg: false
+    ROReg: true
+    CSRReg: false
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: r1
+    Width: 64
+    Index: 1
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: false
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: r2
+    Width: 64
+    Index: 2
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: false
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: r3
+    Width: 64
+    Index: 3
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: false
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: r4
+    Width: 64
+    Index: 4
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: false
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: r5
+    Width: 64
+    Index: 5
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: false
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: r6
+    Width: 64
+    Index: 6
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: false
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: r7
+    Width: 64
+    Index: 7
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: false
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: r8
+    Width: 64
+    Index: 8
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: false
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: r9
+    Width: 64
+    Index: 9
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: false
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: r10
+    Width: 64
+    Index: 10
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: false
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: r11
+    Width: 64
+    Index: 11
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: false
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: r12
+    Width: 64
+    Index: 12
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: false
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: r13
+    Width: 64
+    Index: 13
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: false
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: r14
+    Width: 64
+    Index: 14
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: false
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: r15
+    Width: 64
+    Index: 15
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: false
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: r16
+    Width: 64
+    Index: 16
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: false
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: r17
+    Width: 64
+    Index: 17
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: false
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: r18
+    Width: 64
+    Index: 18
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: false
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: r19
+    Width: 64
+    Index: 19
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: false
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: r20
+    Width: 64
+    Index: 20
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: false
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: r21
+    Width: 64
+    Index: 21
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: false
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: r22
+    Width: 64
+    Index: 22
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: false
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: r23
+    Width: 64
+    Index: 23
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: false
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: r24
+    Width: 64
+    Index: 24
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: false
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: r25
+    Width: 64
+    Index: 25
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: false
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: r26
+    Width: 64
+    Index: 26
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: false
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: r27
+    Width: 64
+    Index: 27
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: false
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: r28
+    Width: 64
+    Index: 28
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: false
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: r29
+    Width: 64
+    Index: 29
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: false
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: r30
+    Width: 64
+    Index: 30
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: false
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: r31
+    Width: 64
+    Index: 31
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: false
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+
+  - RegName: pc
+    Width: 64
+    Index: 0
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: true
+    CSRReg: false
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: exc
+    Width: 64
+    Index: 1
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: true
+    CSRReg: false
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: ne
+    Width: 64
+    Index: 2
+    IsFixedValue: true
+    FixedValue: 2
+    IsSIMD: false
+    RWReg: false
+    ROReg: true
+    CSRReg: false
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: eq
+    Width: 64
+    Index: 3
+    IsFixedValue: true
+    FixedValue: 3
+    IsSIMD: false
+    RWReg: false
+    ROReg: true
+    CSRReg: false
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: gt
+    Width: 64
+    Index: 4
+    IsFixedValue: true
+    FixedValue: 4
+    IsSIMD: false
+    RWReg: false
+    ROReg: true
+    CSRReg: false
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: lt
+    Width: 64
+    Index: 5
+    IsFixedValue: true
+    FixedValue: 5
+    IsSIMD: false
+    RWReg: false
+    ROReg: true
+    CSRReg: false
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: gte
+    Width: 64
+    Index: 6
+    IsFixedValue: true
+    FixedValue: 6
+    IsSIMD: false
+    RWReg: false
+    ROReg: true
+    CSRReg: false
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: lte
+    Width: 64
+    Index: 7
+    IsFixedValue: true
+    FixedValue: 7
+    IsSIMD: false
+    RWReg: false
+    ROReg: true
+    CSRReg: false
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: sp
+    Width: 64
+    Index: 16
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: false
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: fp
+    Width: 64
+    Index: 17
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: false
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: rp
+    Width: 64
+    Index: 18
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: false
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+
+# -------------------------------------------------------
+# Register Class Section
+# -------------------------------------------------------
+RegClasses:
+  - RegisterClassName: GPR
+    Registers:
+      - r0
+      - r1
+      - r2
+      - r3
+      - r4
+      - r5
+      - r6
+      - r7
+      - r8
+      - r9
+      - r10
+      - r11
+      - r12
+      - r13
+      - r14
+      - r15
+      - r16
+      - r17
+      - r18
+      - r19
+      - r20
+      - r21
+      - r22
+      - r23
+      - r24
+      - r25
+      - r26
+      - r27
+      - r28
+      - r29
+      - r30
+      - r31
+  - RegisterClassName: CTRL
+    Registers:
+      - pc
+      - exc
+      - ne
+      - eq
+      - gt
+      - lt
+      - gte
+      - lte
+      - sp
+      - fp
+      - rp
+
+# -------------------------------------------------------
+# ISA Section
+# -------------------------------------------------------
+ISAs:
+  - ISAName: BasicRISC.ISA
+
+
+# -------------------------------------------------------
+# Instruction Format Section
+# -------------------------------------------------------
+InstFormats:
+  - InstFormatName: Arith.if
+    ISA: BasicRISC.ISA
+    FormatWidth: 32
+    Fields:
+      - FieldName: ra
+        FieldType: CGInstReg
+        FieldWidth: 5
+        StartBit: 0
+        EndBit: 4
+        MandatoryField: false
+        RegClass: GPR
+      - FieldName: rb
+        FieldType: CGInstReg
+        FieldWidth: 5
+        StartBit: 5
+        EndBit: 9
+        MandatoryField: false
+        RegClass: GPR
+      - FieldName: rt
+        FieldType: CGInstReg
+        FieldWidth: 5
+        StartBit: 10
+        EndBit: 14
+        MandatoryField: false
+        RegClass: GPR
+      - FieldName: opc
+        FieldType: CGInstCode
+        FieldWidth: 5
+        StartBit: 15
+        EndBit: 19
+        MandatoryField: true
+      - FieldName: func
+        FieldType: CGInstCode
+        FieldWidth: 5
+        StartBit: 20
+        EndBit: 24
+        MandatoryField: true
+      - FieldName: imm
+        FieldType: CGInstImm
+        FieldWidth: 7
+        StartBit: 25
+        EndBit: 31
+        MandatoryField: false
+  - InstFormatName: ReadCtrl.if
+    ISA: BasicRISC.ISA
+    FormatWidth: 32
+    Fields:
+      - FieldName: ra
+        FieldType: CGInstReg
+        FieldWidth: 5
+        StartBit: 0
+        EndBit: 4
+        MandatoryField: false
+        RegClass: GPR
+      - FieldName: rb
+        FieldType: CGInstReg
+        FieldWidth: 5
+        StartBit: 5
+        EndBit: 9
+        MandatoryField: false
+        RegClass: CTRL
+      - FieldName: rt
+        FieldType: CGInstReg
+        FieldWidth: 5
+        StartBit: 10
+        EndBit: 14
+        MandatoryField: false
+        RegClass: GPR
+      - FieldName: opc
+        FieldType: CGInstCode
+        FieldWidth: 5
+        StartBit: 15
+        EndBit: 19
+        MandatoryField: true
+      - FieldName: func
+        FieldType: CGInstCode
+        FieldWidth: 5
+        StartBit: 20
+        EndBit: 24
+        MandatoryField: true
+      - FieldName: imm
+        FieldType: CGInstImm
+        FieldWidth: 7
+        StartBit: 25
+        EndBit: 31
+        MandatoryField: false
+  - InstFormatName: WriteCtrl.if
+    ISA: BasicRISC.ISA
+    FormatWidth: 32
+    Fields:
+      - FieldName: ra
+        FieldType: CGInstReg
+        FieldWidth: 5
+        StartBit: 0
+        EndBit: 4
+        MandatoryField: false
+        RegClass: GPR
+      - FieldName: rb
+        FieldType: CGInstReg
+        FieldWidth: 5
+        StartBit: 5
+        EndBit: 9
+        MandatoryField: false
+        RegClass: GPR
+      - FieldName: rt
+        FieldType: CGInstReg
+        FieldWidth: 5
+        StartBit: 10
+        EndBit: 14
+        MandatoryField: false
+        RegClass: CTRL
+      - FieldName: opc
+        FieldType: CGInstCode
+        FieldWidth: 5
+        StartBit: 15
+        EndBit: 19
+        MandatoryField: true
+      - FieldName: func
+        FieldType: CGInstCode
+        FieldWidth: 5
+        StartBit: 20
+        EndBit: 24
+        MandatoryField: true
+      - FieldName: imm
+        FieldType: CGInstImm
+        FieldWidth: 7
+        StartBit: 25
+        EndBit: 31
+        MandatoryField: false
+
+
+# -------------------------------------------------------
+# Instruction Section
+# -------------------------------------------------------
+Insts:
+# -- Integer Arithmetic
+  - Inst: add
+    ISA: BasicRISC.ISA
+    InstFormat: Arith.if
+    Encodings:
+      - EncodingField: opc
+        EncodingWidth: 5
+        EncodingValue: 0
+      - EncodingField: func
+        EncodingWidth: 5
+        EncodingValue: 0
+      - EncodingField: imm
+        EncodingWidth: 7
+        EncodingValue: 0
+    Impl: rt = ra + rb
+  - Inst: sub
+    ISA: BasicRISC.ISA
+    InstFormat: Arith.if
+    Encodings:
+      - EncodingField: opc
+        EncodingWidth: 5
+        EncodingValue: 0
+      - EncodingField: func
+        EncodingWidth: 5
+        EncodingValue: 1
+      - EncodingField: imm
+        EncodingWidth: 7
+        EncodingValue: 0
+    Impl: rt = ra - rb
+  - Inst: mul
+    ISA: BasicRISC.ISA
+    InstFormat: Arith.if
+    Encodings:
+      - EncodingField: opc
+        EncodingWidth: 5
+        EncodingValue: 0
+      - EncodingField: func
+        EncodingWidth: 5
+        EncodingValue: 2
+      - EncodingField: imm
+        EncodingWidth: 7
+        EncodingValue: 0
+    Impl: rt = ra * rb
+  - Inst: div
+    ISA: BasicRISC.ISA
+    InstFormat: Arith.if
+    Encodings:
+      - EncodingField: opc
+        EncodingWidth: 5
+        EncodingValue: 0
+      - EncodingField: func
+        EncodingWidth: 5
+        EncodingValue: 3
+      - EncodingField: imm
+        EncodingWidth: 7
+        EncodingValue: 0
+    Impl: rt = ra / rb
+  - Inst: divu
+    ISA: BasicRISC.ISA
+    InstFormat: Arith.if
+    Encodings:
+      - EncodingField: opc
+        EncodingWidth: 5
+        EncodingValue: 0
+      - EncodingField: func
+        EncodingWidth: 5
+        EncodingValue: 4
+      - EncodingField: imm
+        EncodingWidth: 7
+        EncodingValue: 0
+    Impl: rt = ra / rb
+  - Inst: sll
+    ISA: BasicRISC.ISA
+    InstFormat: Arith.if
+    Encodings:
+      - EncodingField: opc
+        EncodingWidth: 5
+        EncodingValue: 0
+      - EncodingField: func
+        EncodingWidth: 5
+        EncodingValue: 5
+      - EncodingField: imm
+        EncodingWidth: 7
+        EncodingValue: 0
+    Impl: rt = ra << rb
+  - Inst: srl
+    ISA: BasicRISC.ISA
+    InstFormat: Arith.if
+    Encodings:
+      - EncodingField: opc
+        EncodingWidth: 5
+        EncodingValue: 0
+      - EncodingField: func
+        EncodingWidth: 5
+        EncodingValue: 6
+      - EncodingField: imm
+        EncodingWidth: 7
+        EncodingValue: 0
+    Impl: rt = ra >> rb
+  - Inst: sra
+    ISA: BasicRISC.ISA
+    InstFormat: Arith.if
+    Encodings:
+      - EncodingField: opc
+        EncodingWidth: 5
+        EncodingValue: 0
+      - EncodingField: func
+        EncodingWidth: 5
+        EncodingValue: 7
+      - EncodingField: imm
+        EncodingWidth: 7
+        EncodingValue: 0
+    Impl: rt = ra >> rb
+  - Inst: and
+    ISA: BasicRISC.ISA
+    InstFormat: Arith.if
+    Encodings:
+      - EncodingField: opc
+        EncodingWidth: 5
+        EncodingValue: 0
+      - EncodingField: func
+        EncodingWidth: 5
+        EncodingValue: 8
+      - EncodingField: imm
+        EncodingWidth: 7
+        EncodingValue: 0
+    Impl: rt = ra & rb
+  - Inst: or
+    ISA: BasicRISC.ISA
+    InstFormat: Arith.if
+    Encodings:
+      - EncodingField: opc
+        EncodingWidth: 5
+        EncodingValue: 0
+      - EncodingField: func
+        EncodingWidth: 5
+        EncodingValue: 9
+      - EncodingField: imm
+        EncodingWidth: 7
+        EncodingValue: 0
+    Impl: rt = ra | rb
+  - Inst: nand
+    ISA: BasicRISC.ISA
+    InstFormat: Arith.if
+    Encodings:
+      - EncodingField: opc
+        EncodingWidth: 5
+        EncodingValue: 0
+      - EncodingField: func
+        EncodingWidth: 5
+        EncodingValue: 10
+      - EncodingField: imm
+        EncodingWidth: 7
+        EncodingValue: 0
+    Impl: rt = NOT(ra & rb)
+  - Inst: nor
+    ISA: BasicRISC.ISA
+    InstFormat: Arith.if
+    Encodings:
+      - EncodingField: opc
+        EncodingWidth: 5
+        EncodingValue: 0
+      - EncodingField: func
+        EncodingWidth: 5
+        EncodingValue: 11
+      - EncodingField: imm
+        EncodingWidth: 7
+        EncodingValue: 0
+    Impl: rt = NOT(ra | rb)
+  - Inst: xor
+    ISA: BasicRISC.ISA
+    InstFormat: Arith.if
+    Encodings:
+      - EncodingField: opc
+        EncodingWidth: 5
+        EncodingValue: 0
+      - EncodingField: func
+        EncodingWidth: 5
+        EncodingValue: 12
+      - EncodingField: imm
+        EncodingWidth: 7
+        EncodingValue: 0
+    Impl: rt = ra ^ rb
+
+# -- Comparisons
+  - Inst: cmp.ne
+    ISA: BasicRISC.ISA
+    InstFormat: Arith.if
+    Encodings:
+      - EncodingField: opc
+        EncodingWidth: 5
+        EncodingValue: 1
+      - EncodingField: func
+        EncodingWidth: 5
+        EncodingValue: 2
+      - EncodingField: imm
+        EncodingWidth: 7
+        EncodingValue: 0
+    Impl: if( ra != rb ){ rt = 2 }else{ rt = 0 }
+  - Inst: cmp.eq
+    ISA: BasicRISC.ISA
+    InstFormat: Arith.if
+    Encodings:
+      - EncodingField: opc
+        EncodingWidth: 5
+        EncodingValue: 1
+      - EncodingField: func
+        EncodingWidth: 5
+        EncodingValue: 3
+      - EncodingField: imm
+        EncodingWidth: 7
+        EncodingValue: 0
+    Impl: if( ra == rb ){ rt = 3 }else{ rt = 0 }
+  - Inst: cmp.gt
+    ISA: BasicRISC.ISA
+    InstFormat: Arith.if
+    Encodings:
+      - EncodingField: opc
+        EncodingWidth: 5
+        EncodingValue: 1
+      - EncodingField: func
+        EncodingWidth: 5
+        EncodingValue: 4
+      - EncodingField: imm
+        EncodingWidth: 7
+        EncodingValue: 0
+    Impl: if( ra > rb ){ rt = 4 }else{ rt = 0 }
+  - Inst: cmp.lt
+    ISA: BasicRISC.ISA
+    InstFormat: Arith.if
+    Encodings:
+      - EncodingField: opc
+        EncodingWidth: 5
+        EncodingValue: 1
+      - EncodingField: func
+        EncodingWidth: 5
+        EncodingValue: 5
+      - EncodingField: imm
+        EncodingWidth: 7
+        EncodingValue: 0
+    Impl: if( ra < rb ){ rt = 5 }else{ rt = 0 }
+  - Inst: cmp.gte
+    ISA: BasicRISC.ISA
+    InstFormat: Arith.if
+    Encodings:
+      - EncodingField: opc
+        EncodingWidth: 5
+        EncodingValue: 1
+      - EncodingField: func
+        EncodingWidth: 5
+        EncodingValue: 6
+      - EncodingField: imm
+        EncodingWidth: 7
+        EncodingValue: 0
+    Impl: if( ra >= rb ){ rt = 6 }else{ rt = 0 }
+  - Inst: cmp.lte
+    ISA: BasicRISC.ISA
+    InstFormat: Arith.if
+    Encodings:
+      - EncodingField: opc
+        EncodingWidth: 5
+        EncodingValue: 1
+      - EncodingField: func
+        EncodingWidth: 5
+        EncodingValue: 7
+      - EncodingField: imm
+        EncodingWidth: 7
+        EncodingValue: 0
+    Impl: if( ra <= rb ){ rt = 7 }else{ rt = 0 }
+
+# -- Memory I/O
+  - Inst: lb
+    ISA: BasicRISC.ISA
+    InstFormat: Arith.if
+    Encodings:
+      - EncodingField: opc
+        EncodingWidth: 5
+        EncodingValue: 2
+      - EncodingField: func
+        EncodingWidth: 5
+        EncodingValue: 0
+      - EncodingField: rb
+        EncodingWidth: 5
+        EncodingValue: 0
+    Impl: rt = SEXT(LOADELEM(ra+imm,8))
+  - Inst: lh
+    ISA: BasicRISC.ISA
+    InstFormat: Arith.if
+    Encodings:
+      - EncodingField: opc
+        EncodingWidth: 5
+        EncodingValue: 2
+      - EncodingField: func
+        EncodingWidth: 5
+        EncodingValue: 1
+      - EncodingField: rb
+        EncodingWidth: 5
+        EncodingValue: 0
+    Impl: rt = SEXT(LOADELEM(ra+imm,16))
+  - Inst: lw
+    ISA: BasicRISC.ISA
+    InstFormat: Arith.if
+    Encodings:
+      - EncodingField: opc
+        EncodingWidth: 5
+        EncodingValue: 2
+      - EncodingField: func
+        EncodingWidth: 5
+        EncodingValue: 2
+      - EncodingField: rb
+        EncodingWidth: 5
+        EncodingValue: 0
+    Impl: rt = SEXT(LOADELEM(ra+imm,32))
+  - Inst: ld
+    ISA: BasicRISC.ISA
+    InstFormat: Arith.if
+    Encodings:
+      - EncodingField: opc
+        EncodingWidth: 5
+        EncodingValue: 2
+      - EncodingField: func
+        EncodingWidth: 5
+        EncodingValue: 3
+      - EncodingField: rb
+        EncodingWidth: 5
+        EncodingValue: 0
+    Impl: rt = LOADELEM(ra+imm,64)
+  - Inst: sb
+    ISA: BasicRISC.ISA
+    InstFormat: Arith.if
+    Encodings:
+      - EncodingField: opc
+        EncodingWidth: 5
+        EncodingValue: 2
+      - EncodingField: func
+        EncodingWidth: 5
+        EncodingValue: 4
+      - EncodingField: rb
+        EncodingWidth: 5
+        EncodingValue: 0
+    Impl: STOREELEM(ra,rt+imm,8)
+  - Inst: sh
+    ISA: BasicRISC.ISA
+    InstFormat: Arith.if
+    Encodings:
+      - EncodingField: opc
+        EncodingWidth: 5
+        EncodingValue: 2
+      - EncodingField: func
+        EncodingWidth: 5
+        EncodingValue: 5
+      - EncodingField: rb
+        EncodingWidth: 5
+        EncodingValue: 0
+    Impl: STOREELEM(SEXT(ra),rt+imm,16)
+  - Inst: sw
+    ISA: BasicRISC.ISA
+    InstFormat: Arith.if
+    Encodings:
+      - EncodingField: opc
+        EncodingWidth: 5
+        EncodingValue: 2
+      - EncodingField: func
+        EncodingWidth: 5
+        EncodingValue: 6
+      - EncodingField: rb
+        EncodingWidth: 5
+        EncodingValue: 0
+    Impl: STOREELEM(SEXT(ra),rt+imm,32)
+  - Inst: sd
+    ISA: BasicRISC.ISA
+    InstFormat: Arith.if
+    Encodings:
+      - EncodingField: opc
+        EncodingWidth: 5
+        EncodingValue: 2
+      - EncodingField: func
+        EncodingWidth: 5
+        EncodingValue: 7
+      - EncodingField: rb
+        EncodingWidth: 5
+        EncodingValue: 0
+    Impl: STOREELEM(SEXT(ra),rt+imm,64)
+  - Inst: lbu
+    ISA: BasicRISC.ISA
+    InstFormat: Arith.if
+    Encodings:
+      - EncodingField: opc
+        EncodingWidth: 5
+        EncodingValue: 2
+      - EncodingField: func
+        EncodingWidth: 5
+        EncodingValue: 16
+      - EncodingField: rb
+        EncodingWidth: 5
+        EncodingValue: 0
+    Impl: rt = ZEXT(LOADELEM(ra+imm,8))
+  - Inst: lhu
+    ISA: BasicRISC.ISA
+    InstFormat: Arith.if
+    Encodings:
+      - EncodingField: opc
+        EncodingWidth: 5
+        EncodingValue: 2
+      - EncodingField: func
+        EncodingWidth: 5
+        EncodingValue: 17
+      - EncodingField: rb
+        EncodingWidth: 5
+        EncodingValue: 0
+    Impl: rt = ZEXT(LOADELEM(ra+imm,16))
+  - Inst: lwu
+    ISA: BasicRISC.ISA
+    InstFormat: Arith.if
+    Encodings:
+      - EncodingField: opc
+        EncodingWidth: 5
+        EncodingValue: 2
+      - EncodingField: func
+        EncodingWidth: 5
+        EncodingValue: 18
+      - EncodingField: rb
+        EncodingWidth: 5
+        EncodingValue: 0
+    Impl: rt = ZEXT(LOADELEM(ra+imm,32))
+  - Inst: sbu
+    ISA: BasicRISC.ISA
+    InstFormat: Arith.if
+    Encodings:
+      - EncodingField: opc
+        EncodingWidth: 5
+        EncodingValue: 2
+      - EncodingField: func
+        EncodingWidth: 5
+        EncodingValue: 20
+      - EncodingField: rb
+        EncodingWidth: 5
+        EncodingValue: 0
+    Impl: STOREELEM(ZEXT(ra),rt+imm,8)
+  - Inst: shu
+    ISA: BasicRISC.ISA
+    InstFormat: Arith.if
+    Encodings:
+      - EncodingField: opc
+        EncodingWidth: 5
+        EncodingValue: 2
+      - EncodingField: func
+        EncodingWidth: 5
+        EncodingValue: 21
+      - EncodingField: rb
+        EncodingWidth: 5
+        EncodingValue: 0
+    Impl: STOREELEM(ZEXT(ra),rt+imm,16)
+  - Inst: swu
+    ISA: BasicRISC.ISA
+    InstFormat: Arith.if
+    Encodings:
+      - EncodingField: opc
+        EncodingWidth: 5
+        EncodingValue: 2
+      - EncodingField: func
+        EncodingWidth: 5
+        EncodingValue: 22
+      - EncodingField: rb
+        EncodingWidth: 5
+        EncodingValue: 0
+    Impl: STOREELEM(ZEXT(ra),rt+imm,32)
+
+# -- Two Operand Arithmetic
+  - Inst: not
+    ISA: BasicRISC.ISA
+    InstFormat: Arith.if
+    Encodings:
+      - EncodingField: opc
+        EncodingWidth: 5
+        EncodingValue: 3
+      - EncodingField: func
+        EncodingWidth: 5
+        EncodingValue: 15
+      - EncodingField: rb
+        EncodingWidth: 5
+        EncodingValue: 0
+      - EncodingField: imm
+        EncodingWidth: 7
+        EncodingValue: 0
+    Impl: rt = NOT(ra)
+
+# -- Unconditional Branches
+  - Inst: bra
+    ISA: BasicRISC.ISA
+    InstFormat: Arith.if
+    Encodings:
+      - EncodingField: opc
+        EncodingWidth: 5
+        EncodingValue: 4
+      - EncodingField: func
+        EncodingWidth: 5
+        EncodingValue: 0
+      - EncodingField: ra
+        EncodingWidth: 5
+        EncodingValue: 0
+      - EncodingField: rb
+        EncodingWidth: 5
+        EncodingValue: 0
+      - EncodingField: imm
+        EncodingWidth: 7
+        EncodingValue: 0
+    Impl: pc = rt
+  - Inst: br
+    ISA: BasicRISC.ISA
+    InstFormat: Arith.if
+    Encodings:
+      - EncodingField: opc
+        EncodingWidth: 5
+        EncodingValue: 4
+      - EncodingField: func
+        EncodingWidth: 5
+        EncodingValue: 1
+      - EncodingField: ra
+        EncodingWidth: 5
+        EncodingValue: 0
+      - EncodingField: rb
+        EncodingWidth: 5
+        EncodingValue: 0
+      - EncodingField: imm
+        EncodingWidth: 7
+        EncodingValue: 0
+    Impl: pc = SEXT(pc + rt)
+
+# -- Read from Control
+  - Inst: cadd
+    ISA: BasicRISC.ISA
+    InstFormat: ReadCtrl.if
+    Encodings:
+      - EncodingField: opc
+        EncodingWidth: 5
+        EncodingValue: 9
+      - EncodingField: func
+        EncodingWidth: 5
+        EncodingValue: 0
+      - EncodingField: imm
+        EncodingWidth: 7
+        EncodingValue: 0
+    Impl: rt = ra + rb
+
+# -- Conditional Branches
+  - Inst: brac
+    ISA: BasicRISC.ISA
+    InstFormat: ReadCtrl.if
+    Encodings:
+      - EncodingField: opc
+        EncodingWidth: 5
+        EncodingValue: 10
+      - EncodingField: func
+        EncodingWidth: 5
+        EncodingValue: 0
+      - EncodingField: imm
+        EncodingWidth: 7
+        EncodingValue: 0
+    Impl: if( ra == rb ){ pc = rt }else{ pc = pc + 4 }
+  - Inst: brc
+    ISA: BasicRISC.ISA
+    InstFormat: ReadCtrl.if
+    Encodings:
+      - EncodingField: opc
+        EncodingWidth: 5
+        EncodingValue: 10
+      - EncodingField: func
+        EncodingWidth: 5
+        EncodingValue: 1
+      - EncodingField: imm
+        EncodingWidth: 7
+        EncodingValue: 0
+    Impl: if( ra == rb ){ pc = pc + rt }else{ pc = pc + 4 }
+
+# -- Move to Control
+  - Inst: ladd
+    ISA: BasicRISC.ISA
+    InstFormat: WriteCtrl.if
+    Encodings:
+      - EncodingField: opc
+        EncodingWidth: 5
+        EncodingValue: 23
+      - EncodingField: func
+        EncodingWidth: 5
+        EncodingValue: 0
+      - EncodingField: imm
+        EncodingWidth: 7
+        EncodingValue: 0
+    Impl: rt = ra + rb
+
+# -- Call/Rtn Spport
+  - Inst: brr
+    ISA: BasicRISC.ISA
+    InstFormat: WriteCtrl.if
+    Encodings:
+      - EncodingField: opc
+        EncodingWidth: 5
+        EncodingValue: 24
+      - EncodingField: func
+        EncodingWidth: 5
+        EncodingValue: 0
+      - EncodingField: imm
+        EncodingWidth: 7
+        EncodingValue: 0
+
+# -------------------------------------------------------
+# Pseudo Instruction Section
+# -------------------------------------------------------
+PseudoInsts:
+  - PseudoInst: mov
+    ISA: BasicRISC.ISA
+    Inst: add
+    Encodings:
+      - EncodingField: ra
+        EncodingWidth: 5
+        EncodingValue: 0
+  - PseudoInst: movcg
+    ISA: BasicRISC.ISA
+    Inst: cadd
+    Encodings:
+      - EncodingField: ra
+        EncodingWidth: 5
+        EncodingValue: 0
+  - PseudoInst: movgc
+    ISA: BasicRISC.ISA
+    Inst: cadd
+    Encodings:
+      - EncodingField: ra
+        EncodingWidth: 5
+        EncodingValue: 0
+
+# -------------------------------------------------------
+# Cache Section
+# -------------------------------------------------------
+Caches:
+  - Cache: Core0.L1.cache
+    Sets: 2
+    Ways: 8
+
+# -------------------------------------------------------
+# Core Section
+# -------------------------------------------------------
+Cores:
+  - Core: core0
+    ThreadUnits: 1
+    Cache: Core0.L1.cache
+    ISA: BasicRISC.ISA
+    RegisterClasses:
+      - RegClass: GPR
+      - RegClass: CTRL
+

@@ -30,13 +30,14 @@ execute_process(COMMAND lsb_release -cs
 #------------------------------------------------------------------------
 #-- COMPILER MACROS
 #------------------------------------------------------------------------
-set(COREGEN_COMPILER_MACROS "-DCGIPREFIX=${CMAKE_INSTALL_PREFIX}")
+set(CLINGO_COMPILER_MACROS "-DCLINGO_WITH_LUA")
+set(COREGEN_COMPILER_MACROS "-DCGIPREFIX=${CMAKE_INSTALL_PREFIX} ${CLINGO_COMPILER_MACROS}")
 
 #------------------------------------------------------------------------
 #-- COMPILER OPTIONS
 #------------------------------------------------------------------------
 # Require C++11
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -std=c++11 -Wall ${COREGEN_COMPILER_MACROS}")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -std=c++14 -Wall ${COREGEN_COMPILER_MACROS}")
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -O0 -Wall ${COREGEN_COMPILER_MACROS}")
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3 -Wall ${COREGEN_COMPILER_MACROS}")
 
@@ -62,6 +63,9 @@ if( (${CMAKE_SYSTEM_NAME} EQUAL "Darwin") OR (${CMAKE_SYSTEM_NAME} EQUAL "Linux"
 else()
   set(COREGEN_LINK_LIBS "")
 endif()
+
+# Set the clingo build options
+set(CLINGO_BUILD_STATIC ON)
 
 #------------------------------------------------------------------------
 #-- FIND PACKAGES
@@ -112,8 +116,13 @@ if(NOT COREGEN_BUILD_DIR)
 endif()
 
 if(NOT YAML_PATH)
-  set(YAML_PATH "${CMAKE_CURRENT_SOURCE_DIR}/src/yaml/yaml-cpp")
+  set(YAML_PATH "${CMAKE_CURRENT_SOURCE_DIR}/src/thirdparty/yaml/yaml-cpp")
   message(STATUS "YAML_PATH set to ${YAML_PATH}")
+endif()
+
+if(NOT CLINGO_PATH)
+  set(CLINGO_PATH "${CMAKE_CURRENT_SOURCE_DIR}/src/thirdparty/clingo-5.3.0")
+  message(STATUS "CLINGO_PATH set to ${CLINGO_PATH}")
 endif()
 
 #------------------------------------------------------------------------
@@ -156,7 +165,7 @@ if(COREGEN_BUILD_RPM)
   set(CPACK_PACKAGE_RELEASE 1)
   set(CPACK_PACKAGE_CONTACT "John Leidel")
   set(CPACK_PACKAGE_VENDOR "Tactical Computing Laboratories, LLC")
-  set(CPACK_RPM_PACKAGE_REQUIRES "llvm-toolset-7 zlib-devel")
+  set(CPACK_RPM_PACKAGE_REQUIRES "llvm-toolset-7 zlib-devel re2c lua lua-devel devtoolset-7")
   set(CPACK_PACKAGING_INSTALL_PREFIX ${CMAKE_INSTALL_PREFIX})
   set(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION}-${CPACK_PACKAGE_RELEASE}.${CMAKE_SYSTEM_PROCESSOR}")
   include(CPack)
@@ -174,10 +183,10 @@ if(COREGEN_BUILD_DEB)
   #-- setup package deps
   if( "${COREGEN_RELEASE_CODENAME}" STREQUAL "bionic" )
     message(STATUS "Setting package dependencies for Ubuntu 18.04 (bionic)")
-    set(CPACK_DEBIAN_PACKAGE_DEPENDS "clang-6.0 lldb-6.0 lld-6.0 libllvm6.0 llvm-6.0 llvm-6.0-dev llvm-6.0-doc llvm-6.0-examples llvm-6.0-runtime")
+    set(CPACK_DEBIAN_PACKAGE_DEPENDS "clang-6.0 lldb-6.0 lld-6.0 libllvm6.0 llvm-6.0 llvm-6.0-dev llvm-6.0-doc llvm-6.0-examples llvm-6.0-runtime re2c lua5.3 liblua5.3-dev")
   elseif( "${COREGEN_RELEASE_CODENAME}" STREQUAL "xenial" )
     message(STATUS "Setting package dependencies for Ubuntu 16.04 (xenial)")
-    set(CPACK_DEBIAN_PACKAGE_DEPENDS "libllvm-6.0-ocaml-dev libllvm6.0 llvm-6.0 llvm-6.0-dev llvm-6.0-doc llvm-6.0-examples llvm-6.0-runtime clang-6.0 clang-tools-6.0 clang-6.0-doc libclang-common-6.0-dev libclang-6.0-dev libclang1-6.0 clang-format-6.0 python-clang-6.0")
+    set(CPACK_DEBIAN_PACKAGE_DEPENDS "libllvm-6.0-ocaml-dev libllvm6.0 llvm-6.0 llvm-6.0-dev llvm-6.0-doc llvm-6.0-examples llvm-6.0-runtime clang-6.0 clang-tools-6.0 clang-6.0-doc libclang-common-6.0-dev libclang-6.0-dev libclang1-6.0 clang-format-6.0 python-clang-6.0 re2c lua5.3 liblua5.3-dev")
   else()
     message(STATUS "Unknown debian version: ${COREGEN_RELEASE_CODENAME}")
     message(STATUS "No debian package dependencies are set!!!")

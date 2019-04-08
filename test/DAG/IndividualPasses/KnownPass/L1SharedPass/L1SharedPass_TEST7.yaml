@@ -1,0 +1,2051 @@
+ISAs:
+  - ISAName: TEST7.isa
+Cores:
+  - Core: TEST7.0.core
+    ISA: TEST7.isa
+  - Core: TEST7.1.core
+    ISA: TEST7.isa
+  - Core: TEST7.2.core
+    ISA: TEST7.isa
+  - Core: TEST7.3.core
+    ISA: TEST7.isa
+  - Core: TEST7.4.core
+    ISA: TEST7.isa
+  - Core: TEST7.5.core
+    ISA: TEST7.isa
+  - Core: TEST7.6.core
+    ISA: TEST7.isa
+  - Core: TEST7.7.core
+    ISA: TEST7.isa
+  - Core: TEST7.8.core
+    ISA: TEST7.isa
+  - Core: TEST7.9.core
+    ISA: TEST7.isa
+  - Core: TEST7.10.core
+    ISA: TEST7.isa
+  - Core: TEST7.11.core
+    ISA: TEST7.isa
+  - Core: TEST7.12.core
+    ISA: TEST7.isa
+  - Core: TEST7.13.core
+    ISA: TEST7.isa
+  - Core: TEST7.14.core
+    ISA: TEST7.isa
+  - Core: TEST7.15.core
+    ISA: TEST7.isa
+  - Core: TEST7.16.core
+    ISA: TEST7.isa
+  - Core: TEST7.17.core
+    ISA: TEST7.isa
+  - Core: TEST7.18.core
+    ISA: TEST7.isa
+  - Core: TEST7.19.core
+    ISA: TEST7.isa
+  - Core: TEST7.20.core
+    ISA: TEST7.isa
+  - Core: TEST7.21.core
+    ISA: TEST7.isa
+  - Core: TEST7.22.core
+    ISA: TEST7.isa
+  - Core: TEST7.23.core
+    ISA: TEST7.isa
+  - Core: TEST7.24.core
+    ISA: TEST7.isa
+  - Core: TEST7.25.core
+    ISA: TEST7.isa
+  - Core: TEST7.26.core
+    ISA: TEST7.isa
+  - Core: TEST7.27.core
+    ISA: TEST7.isa
+  - Core: TEST7.28.core
+    ISA: TEST7.isa
+  - Core: TEST7.29.core
+    ISA: TEST7.isa
+  - Core: TEST7.30.core
+    ISA: TEST7.isa
+  - Core: TEST7.31.core
+    ISA: TEST7.isa
+  - Core: TEST7.32.core
+    ISA: TEST7.isa
+  - Core: TEST7.33.core
+    ISA: TEST7.isa
+  - Core: TEST7.34.core
+    ISA: TEST7.isa
+  - Core: TEST7.35.core
+    ISA: TEST7.isa
+  - Core: TEST7.36.core
+    ISA: TEST7.isa
+  - Core: TEST7.37.core
+    ISA: TEST7.isa
+  - Core: TEST7.38.core
+    ISA: TEST7.isa
+  - Core: TEST7.39.core
+    ISA: TEST7.isa
+  - Core: TEST7.40.core
+    ISA: TEST7.isa
+  - Core: TEST7.41.core
+    ISA: TEST7.isa
+  - Core: TEST7.42.core
+    ISA: TEST7.isa
+  - Core: TEST7.43.core
+    ISA: TEST7.isa
+  - Core: TEST7.44.core
+    ISA: TEST7.isa
+  - Core: TEST7.45.core
+    ISA: TEST7.isa
+  - Core: TEST7.46.core
+    ISA: TEST7.isa
+  - Core: TEST7.47.core
+    ISA: TEST7.isa
+  - Core: TEST7.48.core
+    ISA: TEST7.isa
+  - Core: TEST7.49.core
+    ISA: TEST7.isa
+  - Core: TEST7.50.core
+    ISA: TEST7.isa
+  - Core: TEST7.51.core
+    ISA: TEST7.isa
+  - Core: TEST7.52.core
+    ISA: TEST7.isa
+  - Core: TEST7.53.core
+    ISA: TEST7.isa
+  - Core: TEST7.54.core
+    ISA: TEST7.isa
+  - Core: TEST7.55.core
+    ISA: TEST7.isa
+  - Core: TEST7.56.core
+    ISA: TEST7.isa
+  - Core: TEST7.57.core
+    ISA: TEST7.isa
+  - Core: TEST7.58.core
+    ISA: TEST7.isa
+  - Core: TEST7.59.core
+    ISA: TEST7.isa
+  - Core: TEST7.60.core
+    ISA: TEST7.isa
+  - Core: TEST7.61.core
+    ISA: TEST7.isa
+  - Core: TEST7.62.core
+    ISA: TEST7.isa
+  - Core: TEST7.63.core
+    ISA: TEST7.isa
+  - Core: TEST7.64.core
+    ISA: TEST7.isa
+  - Core: TEST7.65.core
+    ISA: TEST7.isa
+  - Core: TEST7.66.core
+    ISA: TEST7.isa
+  - Core: TEST7.67.core
+    ISA: TEST7.isa
+  - Core: TEST7.68.core
+    ISA: TEST7.isa
+  - Core: TEST7.69.core
+    ISA: TEST7.isa
+  - Core: TEST7.70.core
+    ISA: TEST7.isa
+  - Core: TEST7.71.core
+    ISA: TEST7.isa
+  - Core: TEST7.72.core
+    ISA: TEST7.isa
+  - Core: TEST7.73.core
+    ISA: TEST7.isa
+  - Core: TEST7.74.core
+    ISA: TEST7.isa
+  - Core: TEST7.75.core
+    ISA: TEST7.isa
+  - Core: TEST7.76.core
+    ISA: TEST7.isa
+  - Core: TEST7.77.core
+    ISA: TEST7.isa
+  - Core: TEST7.78.core
+    ISA: TEST7.isa
+  - Core: TEST7.79.core
+    ISA: TEST7.isa
+  - Core: TEST7.80.core
+    ISA: TEST7.isa
+  - Core: TEST7.81.core
+    ISA: TEST7.isa
+  - Core: TEST7.82.core
+    ISA: TEST7.isa
+  - Core: TEST7.83.core
+    ISA: TEST7.isa
+  - Core: TEST7.84.core
+    ISA: TEST7.isa
+  - Core: TEST7.85.core
+    ISA: TEST7.isa
+  - Core: TEST7.86.core
+    ISA: TEST7.isa
+  - Core: TEST7.87.core
+    ISA: TEST7.isa
+  - Core: TEST7.88.core
+    ISA: TEST7.isa
+  - Core: TEST7.89.core
+    ISA: TEST7.isa
+  - Core: TEST7.90.core
+    ISA: TEST7.isa
+  - Core: TEST7.91.core
+    ISA: TEST7.isa
+  - Core: TEST7.92.core
+    ISA: TEST7.isa
+  - Core: TEST7.93.core
+    ISA: TEST7.isa
+  - Core: TEST7.94.core
+    ISA: TEST7.isa
+  - Core: TEST7.95.core
+    ISA: TEST7.isa
+  - Core: TEST7.96.core
+    ISA: TEST7.isa
+  - Core: TEST7.97.core
+    ISA: TEST7.isa
+  - Core: TEST7.98.core
+    ISA: TEST7.isa
+  - Core: TEST7.99.core
+    ISA: TEST7.isa
+  - Core: TEST7.100.core
+    ISA: TEST7.isa
+  - Core: TEST7.101.core
+    ISA: TEST7.isa
+  - Core: TEST7.102.core
+    ISA: TEST7.isa
+  - Core: TEST7.103.core
+    ISA: TEST7.isa
+  - Core: TEST7.104.core
+    ISA: TEST7.isa
+  - Core: TEST7.105.core
+    ISA: TEST7.isa
+  - Core: TEST7.106.core
+    ISA: TEST7.isa
+  - Core: TEST7.107.core
+    ISA: TEST7.isa
+  - Core: TEST7.108.core
+    ISA: TEST7.isa
+  - Core: TEST7.109.core
+    ISA: TEST7.isa
+  - Core: TEST7.110.core
+    ISA: TEST7.isa
+  - Core: TEST7.111.core
+    ISA: TEST7.isa
+  - Core: TEST7.112.core
+    ISA: TEST7.isa
+  - Core: TEST7.113.core
+    ISA: TEST7.isa
+  - Core: TEST7.114.core
+    ISA: TEST7.isa
+  - Core: TEST7.115.core
+    ISA: TEST7.isa
+  - Core: TEST7.116.core
+    ISA: TEST7.isa
+  - Core: TEST7.117.core
+    ISA: TEST7.isa
+  - Core: TEST7.118.core
+    ISA: TEST7.isa
+  - Core: TEST7.119.core
+    ISA: TEST7.isa
+  - Core: TEST7.120.core
+    ISA: TEST7.isa
+  - Core: TEST7.121.core
+    ISA: TEST7.isa
+  - Core: TEST7.122.core
+    ISA: TEST7.isa
+  - Core: TEST7.123.core
+    ISA: TEST7.isa
+  - Core: TEST7.124.core
+    ISA: TEST7.isa
+  - Core: TEST7.125.core
+    ISA: TEST7.isa
+  - Core: TEST7.126.core
+    ISA: TEST7.isa
+  - Core: TEST7.127.core
+    ISA: TEST7.isa
+  - Core: TEST7.128.core
+    ISA: TEST7.isa
+  - Core: TEST7.129.core
+    ISA: TEST7.isa
+  - Core: TEST7.130.core
+    ISA: TEST7.isa
+  - Core: TEST7.131.core
+    ISA: TEST7.isa
+  - Core: TEST7.132.core
+    ISA: TEST7.isa
+  - Core: TEST7.133.core
+    ISA: TEST7.isa
+  - Core: TEST7.134.core
+    ISA: TEST7.isa
+  - Core: TEST7.135.core
+    ISA: TEST7.isa
+  - Core: TEST7.136.core
+    ISA: TEST7.isa
+  - Core: TEST7.137.core
+    ISA: TEST7.isa
+  - Core: TEST7.138.core
+    ISA: TEST7.isa
+  - Core: TEST7.139.core
+    ISA: TEST7.isa
+  - Core: TEST7.140.core
+    ISA: TEST7.isa
+  - Core: TEST7.141.core
+    ISA: TEST7.isa
+  - Core: TEST7.142.core
+    ISA: TEST7.isa
+  - Core: TEST7.143.core
+    ISA: TEST7.isa
+  - Core: TEST7.144.core
+    ISA: TEST7.isa
+  - Core: TEST7.145.core
+    ISA: TEST7.isa
+  - Core: TEST7.146.core
+    ISA: TEST7.isa
+  - Core: TEST7.147.core
+    ISA: TEST7.isa
+  - Core: TEST7.148.core
+    ISA: TEST7.isa
+  - Core: TEST7.149.core
+    ISA: TEST7.isa
+  - Core: TEST7.150.core
+    ISA: TEST7.isa
+  - Core: TEST7.151.core
+    ISA: TEST7.isa
+  - Core: TEST7.152.core
+    ISA: TEST7.isa
+  - Core: TEST7.153.core
+    ISA: TEST7.isa
+  - Core: TEST7.154.core
+    ISA: TEST7.isa
+  - Core: TEST7.155.core
+    ISA: TEST7.isa
+  - Core: TEST7.156.core
+    ISA: TEST7.isa
+  - Core: TEST7.157.core
+    ISA: TEST7.isa
+  - Core: TEST7.158.core
+    ISA: TEST7.isa
+  - Core: TEST7.159.core
+    ISA: TEST7.isa
+  - Core: TEST7.160.core
+    ISA: TEST7.isa
+  - Core: TEST7.161.core
+    ISA: TEST7.isa
+  - Core: TEST7.162.core
+    ISA: TEST7.isa
+  - Core: TEST7.163.core
+    ISA: TEST7.isa
+  - Core: TEST7.164.core
+    ISA: TEST7.isa
+  - Core: TEST7.165.core
+    ISA: TEST7.isa
+  - Core: TEST7.166.core
+    ISA: TEST7.isa
+  - Core: TEST7.167.core
+    ISA: TEST7.isa
+  - Core: TEST7.168.core
+    ISA: TEST7.isa
+  - Core: TEST7.169.core
+    ISA: TEST7.isa
+  - Core: TEST7.170.core
+    ISA: TEST7.isa
+  - Core: TEST7.171.core
+    ISA: TEST7.isa
+  - Core: TEST7.172.core
+    ISA: TEST7.isa
+  - Core: TEST7.173.core
+    ISA: TEST7.isa
+  - Core: TEST7.174.core
+    ISA: TEST7.isa
+  - Core: TEST7.175.core
+    ISA: TEST7.isa
+  - Core: TEST7.176.core
+    ISA: TEST7.isa
+  - Core: TEST7.177.core
+    ISA: TEST7.isa
+  - Core: TEST7.178.core
+    ISA: TEST7.isa
+  - Core: TEST7.179.core
+    ISA: TEST7.isa
+  - Core: TEST7.180.core
+    ISA: TEST7.isa
+  - Core: TEST7.181.core
+    ISA: TEST7.isa
+  - Core: TEST7.182.core
+    ISA: TEST7.isa
+  - Core: TEST7.183.core
+    ISA: TEST7.isa
+  - Core: TEST7.184.core
+    ISA: TEST7.isa
+  - Core: TEST7.185.core
+    ISA: TEST7.isa
+  - Core: TEST7.186.core
+    ISA: TEST7.isa
+  - Core: TEST7.187.core
+    ISA: TEST7.isa
+  - Core: TEST7.188.core
+    ISA: TEST7.isa
+  - Core: TEST7.189.core
+    ISA: TEST7.isa
+  - Core: TEST7.190.core
+    ISA: TEST7.isa
+  - Core: TEST7.191.core
+    ISA: TEST7.isa
+  - Core: TEST7.192.core
+    ISA: TEST7.isa
+  - Core: TEST7.193.core
+    ISA: TEST7.isa
+  - Core: TEST7.194.core
+    ISA: TEST7.isa
+  - Core: TEST7.195.core
+    ISA: TEST7.isa
+  - Core: TEST7.196.core
+    ISA: TEST7.isa
+  - Core: TEST7.197.core
+    ISA: TEST7.isa
+  - Core: TEST7.198.core
+    ISA: TEST7.isa
+  - Core: TEST7.199.core
+    ISA: TEST7.isa
+  - Core: TEST7.200.core
+    ISA: TEST7.isa
+  - Core: TEST7.201.core
+    ISA: TEST7.isa
+  - Core: TEST7.202.core
+    ISA: TEST7.isa
+  - Core: TEST7.203.core
+    ISA: TEST7.isa
+  - Core: TEST7.204.core
+    ISA: TEST7.isa
+  - Core: TEST7.205.core
+    ISA: TEST7.isa
+  - Core: TEST7.206.core
+    ISA: TEST7.isa
+  - Core: TEST7.207.core
+    ISA: TEST7.isa
+  - Core: TEST7.208.core
+    ISA: TEST7.isa
+  - Core: TEST7.209.core
+    ISA: TEST7.isa
+  - Core: TEST7.210.core
+    ISA: TEST7.isa
+  - Core: TEST7.211.core
+    ISA: TEST7.isa
+  - Core: TEST7.212.core
+    ISA: TEST7.isa
+  - Core: TEST7.213.core
+    ISA: TEST7.isa
+  - Core: TEST7.214.core
+    ISA: TEST7.isa
+  - Core: TEST7.215.core
+    ISA: TEST7.isa
+  - Core: TEST7.216.core
+    ISA: TEST7.isa
+  - Core: TEST7.217.core
+    ISA: TEST7.isa
+  - Core: TEST7.218.core
+    ISA: TEST7.isa
+  - Core: TEST7.219.core
+    ISA: TEST7.isa
+  - Core: TEST7.220.core
+    ISA: TEST7.isa
+  - Core: TEST7.221.core
+    ISA: TEST7.isa
+  - Core: TEST7.222.core
+    ISA: TEST7.isa
+  - Core: TEST7.223.core
+    ISA: TEST7.isa
+  - Core: TEST7.224.core
+    ISA: TEST7.isa
+  - Core: TEST7.225.core
+    ISA: TEST7.isa
+  - Core: TEST7.226.core
+    ISA: TEST7.isa
+  - Core: TEST7.227.core
+    ISA: TEST7.isa
+  - Core: TEST7.228.core
+    ISA: TEST7.isa
+  - Core: TEST7.229.core
+    ISA: TEST7.isa
+  - Core: TEST7.230.core
+    ISA: TEST7.isa
+  - Core: TEST7.231.core
+    ISA: TEST7.isa
+  - Core: TEST7.232.core
+    ISA: TEST7.isa
+  - Core: TEST7.233.core
+    ISA: TEST7.isa
+  - Core: TEST7.234.core
+    ISA: TEST7.isa
+  - Core: TEST7.235.core
+    ISA: TEST7.isa
+  - Core: TEST7.236.core
+    ISA: TEST7.isa
+  - Core: TEST7.237.core
+    ISA: TEST7.isa
+  - Core: TEST7.238.core
+    ISA: TEST7.isa
+  - Core: TEST7.239.core
+    ISA: TEST7.isa
+  - Core: TEST7.240.core
+    ISA: TEST7.isa
+  - Core: TEST7.241.core
+    ISA: TEST7.isa
+  - Core: TEST7.242.core
+    ISA: TEST7.isa
+  - Core: TEST7.243.core
+    ISA: TEST7.isa
+  - Core: TEST7.244.core
+    ISA: TEST7.isa
+  - Core: TEST7.245.core
+    ISA: TEST7.isa
+  - Core: TEST7.246.core
+    ISA: TEST7.isa
+  - Core: TEST7.247.core
+    ISA: TEST7.isa
+  - Core: TEST7.248.core
+    ISA: TEST7.isa
+  - Core: TEST7.249.core
+    ISA: TEST7.isa
+  - Core: TEST7.250.core
+    ISA: TEST7.isa
+  - Core: TEST7.251.core
+    ISA: TEST7.isa
+  - Core: TEST7.252.core
+    ISA: TEST7.isa
+  - Core: TEST7.253.core
+    ISA: TEST7.isa
+  - Core: TEST7.254.core
+    ISA: TEST7.isa
+  - Core: TEST7.255.core
+    ISA: TEST7.isa
+  - Core: TEST7.256.core
+    ISA: TEST7.isa
+  - Core: TEST7.257.core
+    ISA: TEST7.isa
+  - Core: TEST7.258.core
+    ISA: TEST7.isa
+  - Core: TEST7.259.core
+    ISA: TEST7.isa
+  - Core: TEST7.260.core
+    ISA: TEST7.isa
+  - Core: TEST7.261.core
+    ISA: TEST7.isa
+  - Core: TEST7.262.core
+    ISA: TEST7.isa
+  - Core: TEST7.263.core
+    ISA: TEST7.isa
+  - Core: TEST7.264.core
+    ISA: TEST7.isa
+  - Core: TEST7.265.core
+    ISA: TEST7.isa
+  - Core: TEST7.266.core
+    ISA: TEST7.isa
+  - Core: TEST7.267.core
+    ISA: TEST7.isa
+  - Core: TEST7.268.core
+    ISA: TEST7.isa
+  - Core: TEST7.269.core
+    ISA: TEST7.isa
+  - Core: TEST7.270.core
+    ISA: TEST7.isa
+  - Core: TEST7.271.core
+    ISA: TEST7.isa
+  - Core: TEST7.272.core
+    ISA: TEST7.isa
+  - Core: TEST7.273.core
+    ISA: TEST7.isa
+  - Core: TEST7.274.core
+    ISA: TEST7.isa
+  - Core: TEST7.275.core
+    ISA: TEST7.isa
+  - Core: TEST7.276.core
+    ISA: TEST7.isa
+  - Core: TEST7.277.core
+    ISA: TEST7.isa
+  - Core: TEST7.278.core
+    ISA: TEST7.isa
+  - Core: TEST7.279.core
+    ISA: TEST7.isa
+  - Core: TEST7.280.core
+    ISA: TEST7.isa
+  - Core: TEST7.281.core
+    ISA: TEST7.isa
+  - Core: TEST7.282.core
+    ISA: TEST7.isa
+  - Core: TEST7.283.core
+    ISA: TEST7.isa
+  - Core: TEST7.284.core
+    ISA: TEST7.isa
+  - Core: TEST7.285.core
+    ISA: TEST7.isa
+  - Core: TEST7.286.core
+    ISA: TEST7.isa
+  - Core: TEST7.287.core
+    ISA: TEST7.isa
+  - Core: TEST7.288.core
+    ISA: TEST7.isa
+  - Core: TEST7.289.core
+    ISA: TEST7.isa
+  - Core: TEST7.290.core
+    ISA: TEST7.isa
+  - Core: TEST7.291.core
+    ISA: TEST7.isa
+  - Core: TEST7.292.core
+    ISA: TEST7.isa
+  - Core: TEST7.293.core
+    ISA: TEST7.isa
+  - Core: TEST7.294.core
+    ISA: TEST7.isa
+  - Core: TEST7.295.core
+    ISA: TEST7.isa
+  - Core: TEST7.296.core
+    ISA: TEST7.isa
+  - Core: TEST7.297.core
+    ISA: TEST7.isa
+  - Core: TEST7.298.core
+    ISA: TEST7.isa
+  - Core: TEST7.299.core
+    ISA: TEST7.isa
+  - Core: TEST7.300.core
+    ISA: TEST7.isa
+  - Core: TEST7.301.core
+    ISA: TEST7.isa
+  - Core: TEST7.302.core
+    ISA: TEST7.isa
+  - Core: TEST7.303.core
+    ISA: TEST7.isa
+  - Core: TEST7.304.core
+    ISA: TEST7.isa
+  - Core: TEST7.305.core
+    ISA: TEST7.isa
+  - Core: TEST7.306.core
+    ISA: TEST7.isa
+  - Core: TEST7.307.core
+    ISA: TEST7.isa
+  - Core: TEST7.308.core
+    ISA: TEST7.isa
+  - Core: TEST7.309.core
+    ISA: TEST7.isa
+  - Core: TEST7.310.core
+    ISA: TEST7.isa
+  - Core: TEST7.311.core
+    ISA: TEST7.isa
+  - Core: TEST7.312.core
+    ISA: TEST7.isa
+  - Core: TEST7.313.core
+    ISA: TEST7.isa
+  - Core: TEST7.314.core
+    ISA: TEST7.isa
+  - Core: TEST7.315.core
+    ISA: TEST7.isa
+  - Core: TEST7.316.core
+    ISA: TEST7.isa
+  - Core: TEST7.317.core
+    ISA: TEST7.isa
+  - Core: TEST7.318.core
+    ISA: TEST7.isa
+  - Core: TEST7.319.core
+    ISA: TEST7.isa
+  - Core: TEST7.320.core
+    ISA: TEST7.isa
+  - Core: TEST7.321.core
+    ISA: TEST7.isa
+  - Core: TEST7.322.core
+    ISA: TEST7.isa
+  - Core: TEST7.323.core
+    ISA: TEST7.isa
+  - Core: TEST7.324.core
+    ISA: TEST7.isa
+  - Core: TEST7.325.core
+    ISA: TEST7.isa
+  - Core: TEST7.326.core
+    ISA: TEST7.isa
+  - Core: TEST7.327.core
+    ISA: TEST7.isa
+  - Core: TEST7.328.core
+    ISA: TEST7.isa
+  - Core: TEST7.329.core
+    ISA: TEST7.isa
+  - Core: TEST7.330.core
+    ISA: TEST7.isa
+  - Core: TEST7.331.core
+    ISA: TEST7.isa
+  - Core: TEST7.332.core
+    ISA: TEST7.isa
+  - Core: TEST7.333.core
+    ISA: TEST7.isa
+  - Core: TEST7.334.core
+    ISA: TEST7.isa
+  - Core: TEST7.335.core
+    ISA: TEST7.isa
+  - Core: TEST7.336.core
+    ISA: TEST7.isa
+  - Core: TEST7.337.core
+    ISA: TEST7.isa
+  - Core: TEST7.338.core
+    ISA: TEST7.isa
+  - Core: TEST7.339.core
+    ISA: TEST7.isa
+  - Core: TEST7.340.core
+    ISA: TEST7.isa
+  - Core: TEST7.341.core
+    ISA: TEST7.isa
+  - Core: TEST7.342.core
+    ISA: TEST7.isa
+  - Core: TEST7.343.core
+    ISA: TEST7.isa
+  - Core: TEST7.344.core
+    ISA: TEST7.isa
+  - Core: TEST7.345.core
+    ISA: TEST7.isa
+  - Core: TEST7.346.core
+    ISA: TEST7.isa
+  - Core: TEST7.347.core
+    ISA: TEST7.isa
+  - Core: TEST7.348.core
+    ISA: TEST7.isa
+  - Core: TEST7.349.core
+    ISA: TEST7.isa
+  - Core: TEST7.350.core
+    ISA: TEST7.isa
+  - Core: TEST7.351.core
+    ISA: TEST7.isa
+  - Core: TEST7.352.core
+    ISA: TEST7.isa
+  - Core: TEST7.353.core
+    ISA: TEST7.isa
+  - Core: TEST7.354.core
+    ISA: TEST7.isa
+  - Core: TEST7.355.core
+    ISA: TEST7.isa
+  - Core: TEST7.356.core
+    ISA: TEST7.isa
+  - Core: TEST7.357.core
+    ISA: TEST7.isa
+  - Core: TEST7.358.core
+    ISA: TEST7.isa
+  - Core: TEST7.359.core
+    ISA: TEST7.isa
+  - Core: TEST7.360.core
+    ISA: TEST7.isa
+  - Core: TEST7.361.core
+    ISA: TEST7.isa
+  - Core: TEST7.362.core
+    ISA: TEST7.isa
+  - Core: TEST7.363.core
+    ISA: TEST7.isa
+  - Core: TEST7.364.core
+    ISA: TEST7.isa
+  - Core: TEST7.365.core
+    ISA: TEST7.isa
+  - Core: TEST7.366.core
+    ISA: TEST7.isa
+  - Core: TEST7.367.core
+    ISA: TEST7.isa
+  - Core: TEST7.368.core
+    ISA: TEST7.isa
+  - Core: TEST7.369.core
+    ISA: TEST7.isa
+  - Core: TEST7.370.core
+    ISA: TEST7.isa
+  - Core: TEST7.371.core
+    ISA: TEST7.isa
+  - Core: TEST7.372.core
+    ISA: TEST7.isa
+  - Core: TEST7.373.core
+    ISA: TEST7.isa
+  - Core: TEST7.374.core
+    ISA: TEST7.isa
+  - Core: TEST7.375.core
+    ISA: TEST7.isa
+  - Core: TEST7.376.core
+    ISA: TEST7.isa
+  - Core: TEST7.377.core
+    ISA: TEST7.isa
+  - Core: TEST7.378.core
+    ISA: TEST7.isa
+  - Core: TEST7.379.core
+    ISA: TEST7.isa
+  - Core: TEST7.380.core
+    ISA: TEST7.isa
+  - Core: TEST7.381.core
+    ISA: TEST7.isa
+  - Core: TEST7.382.core
+    ISA: TEST7.isa
+  - Core: TEST7.383.core
+    ISA: TEST7.isa
+  - Core: TEST7.384.core
+    ISA: TEST7.isa
+  - Core: TEST7.385.core
+    ISA: TEST7.isa
+  - Core: TEST7.386.core
+    ISA: TEST7.isa
+  - Core: TEST7.387.core
+    ISA: TEST7.isa
+  - Core: TEST7.388.core
+    ISA: TEST7.isa
+  - Core: TEST7.389.core
+    ISA: TEST7.isa
+  - Core: TEST7.390.core
+    ISA: TEST7.isa
+  - Core: TEST7.391.core
+    ISA: TEST7.isa
+  - Core: TEST7.392.core
+    ISA: TEST7.isa
+  - Core: TEST7.393.core
+    ISA: TEST7.isa
+  - Core: TEST7.394.core
+    ISA: TEST7.isa
+  - Core: TEST7.395.core
+    ISA: TEST7.isa
+  - Core: TEST7.396.core
+    ISA: TEST7.isa
+  - Core: TEST7.397.core
+    ISA: TEST7.isa
+  - Core: TEST7.398.core
+    ISA: TEST7.isa
+  - Core: TEST7.399.core
+    ISA: TEST7.isa
+  - Core: TEST7.400.core
+    ISA: TEST7.isa
+  - Core: TEST7.401.core
+    ISA: TEST7.isa
+  - Core: TEST7.402.core
+    ISA: TEST7.isa
+  - Core: TEST7.403.core
+    ISA: TEST7.isa
+  - Core: TEST7.404.core
+    ISA: TEST7.isa
+  - Core: TEST7.405.core
+    ISA: TEST7.isa
+  - Core: TEST7.406.core
+    ISA: TEST7.isa
+  - Core: TEST7.407.core
+    ISA: TEST7.isa
+  - Core: TEST7.408.core
+    ISA: TEST7.isa
+  - Core: TEST7.409.core
+    ISA: TEST7.isa
+  - Core: TEST7.410.core
+    ISA: TEST7.isa
+  - Core: TEST7.411.core
+    ISA: TEST7.isa
+  - Core: TEST7.412.core
+    ISA: TEST7.isa
+  - Core: TEST7.413.core
+    ISA: TEST7.isa
+  - Core: TEST7.414.core
+    ISA: TEST7.isa
+  - Core: TEST7.415.core
+    ISA: TEST7.isa
+  - Core: TEST7.416.core
+    ISA: TEST7.isa
+  - Core: TEST7.417.core
+    ISA: TEST7.isa
+  - Core: TEST7.418.core
+    ISA: TEST7.isa
+  - Core: TEST7.419.core
+    ISA: TEST7.isa
+  - Core: TEST7.420.core
+    ISA: TEST7.isa
+  - Core: TEST7.421.core
+    ISA: TEST7.isa
+  - Core: TEST7.422.core
+    ISA: TEST7.isa
+  - Core: TEST7.423.core
+    ISA: TEST7.isa
+  - Core: TEST7.424.core
+    ISA: TEST7.isa
+  - Core: TEST7.425.core
+    ISA: TEST7.isa
+  - Core: TEST7.426.core
+    ISA: TEST7.isa
+  - Core: TEST7.427.core
+    ISA: TEST7.isa
+  - Core: TEST7.428.core
+    ISA: TEST7.isa
+  - Core: TEST7.429.core
+    ISA: TEST7.isa
+  - Core: TEST7.430.core
+    ISA: TEST7.isa
+  - Core: TEST7.431.core
+    ISA: TEST7.isa
+  - Core: TEST7.432.core
+    ISA: TEST7.isa
+  - Core: TEST7.433.core
+    ISA: TEST7.isa
+  - Core: TEST7.434.core
+    ISA: TEST7.isa
+  - Core: TEST7.435.core
+    ISA: TEST7.isa
+  - Core: TEST7.436.core
+    ISA: TEST7.isa
+  - Core: TEST7.437.core
+    ISA: TEST7.isa
+  - Core: TEST7.438.core
+    ISA: TEST7.isa
+  - Core: TEST7.439.core
+    ISA: TEST7.isa
+  - Core: TEST7.440.core
+    ISA: TEST7.isa
+  - Core: TEST7.441.core
+    ISA: TEST7.isa
+  - Core: TEST7.442.core
+    ISA: TEST7.isa
+  - Core: TEST7.443.core
+    ISA: TEST7.isa
+  - Core: TEST7.444.core
+    ISA: TEST7.isa
+  - Core: TEST7.445.core
+    ISA: TEST7.isa
+  - Core: TEST7.446.core
+    ISA: TEST7.isa
+  - Core: TEST7.447.core
+    ISA: TEST7.isa
+  - Core: TEST7.448.core
+    ISA: TEST7.isa
+  - Core: TEST7.449.core
+    ISA: TEST7.isa
+  - Core: TEST7.450.core
+    ISA: TEST7.isa
+  - Core: TEST7.451.core
+    ISA: TEST7.isa
+  - Core: TEST7.452.core
+    ISA: TEST7.isa
+  - Core: TEST7.453.core
+    ISA: TEST7.isa
+  - Core: TEST7.454.core
+    ISA: TEST7.isa
+  - Core: TEST7.455.core
+    ISA: TEST7.isa
+  - Core: TEST7.456.core
+    ISA: TEST7.isa
+  - Core: TEST7.457.core
+    ISA: TEST7.isa
+  - Core: TEST7.458.core
+    ISA: TEST7.isa
+  - Core: TEST7.459.core
+    ISA: TEST7.isa
+  - Core: TEST7.460.core
+    ISA: TEST7.isa
+  - Core: TEST7.461.core
+    ISA: TEST7.isa
+  - Core: TEST7.462.core
+    ISA: TEST7.isa
+  - Core: TEST7.463.core
+    ISA: TEST7.isa
+  - Core: TEST7.464.core
+    ISA: TEST7.isa
+  - Core: TEST7.465.core
+    ISA: TEST7.isa
+  - Core: TEST7.466.core
+    ISA: TEST7.isa
+  - Core: TEST7.467.core
+    ISA: TEST7.isa
+  - Core: TEST7.468.core
+    ISA: TEST7.isa
+  - Core: TEST7.469.core
+    ISA: TEST7.isa
+  - Core: TEST7.470.core
+    ISA: TEST7.isa
+  - Core: TEST7.471.core
+    ISA: TEST7.isa
+  - Core: TEST7.472.core
+    ISA: TEST7.isa
+  - Core: TEST7.473.core
+    ISA: TEST7.isa
+  - Core: TEST7.474.core
+    ISA: TEST7.isa
+  - Core: TEST7.475.core
+    ISA: TEST7.isa
+  - Core: TEST7.476.core
+    ISA: TEST7.isa
+  - Core: TEST7.477.core
+    ISA: TEST7.isa
+  - Core: TEST7.478.core
+    ISA: TEST7.isa
+  - Core: TEST7.479.core
+    ISA: TEST7.isa
+  - Core: TEST7.480.core
+    ISA: TEST7.isa
+  - Core: TEST7.481.core
+    ISA: TEST7.isa
+  - Core: TEST7.482.core
+    ISA: TEST7.isa
+  - Core: TEST7.483.core
+    ISA: TEST7.isa
+  - Core: TEST7.484.core
+    ISA: TEST7.isa
+  - Core: TEST7.485.core
+    ISA: TEST7.isa
+  - Core: TEST7.486.core
+    ISA: TEST7.isa
+  - Core: TEST7.487.core
+    ISA: TEST7.isa
+  - Core: TEST7.488.core
+    ISA: TEST7.isa
+  - Core: TEST7.489.core
+    ISA: TEST7.isa
+  - Core: TEST7.490.core
+    ISA: TEST7.isa
+  - Core: TEST7.491.core
+    ISA: TEST7.isa
+  - Core: TEST7.492.core
+    ISA: TEST7.isa
+  - Core: TEST7.493.core
+    ISA: TEST7.isa
+  - Core: TEST7.494.core
+    ISA: TEST7.isa
+  - Core: TEST7.495.core
+    ISA: TEST7.isa
+  - Core: TEST7.496.core
+    ISA: TEST7.isa
+  - Core: TEST7.497.core
+    ISA: TEST7.isa
+  - Core: TEST7.498.core
+    ISA: TEST7.isa
+  - Core: TEST7.499.core
+    ISA: TEST7.isa
+  - Core: TEST7.500.core
+    ISA: TEST7.isa
+  - Core: TEST7.501.core
+    ISA: TEST7.isa
+  - Core: TEST7.502.core
+    ISA: TEST7.isa
+  - Core: TEST7.503.core
+    ISA: TEST7.isa
+  - Core: TEST7.504.core
+    ISA: TEST7.isa
+  - Core: TEST7.505.core
+    ISA: TEST7.isa
+  - Core: TEST7.506.core
+    ISA: TEST7.isa
+  - Core: TEST7.507.core
+    ISA: TEST7.isa
+  - Core: TEST7.508.core
+    ISA: TEST7.isa
+  - Core: TEST7.509.core
+    ISA: TEST7.isa
+  - Core: TEST7.510.core
+    ISA: TEST7.isa
+  - Core: TEST7.511.core
+    ISA: TEST7.isa
+  - Core: TEST7.512.core
+    ISA: TEST7.isa
+  - Core: TEST7.513.core
+    ISA: TEST7.isa
+  - Core: TEST7.514.core
+    ISA: TEST7.isa
+  - Core: TEST7.515.core
+    ISA: TEST7.isa
+  - Core: TEST7.516.core
+    ISA: TEST7.isa
+  - Core: TEST7.517.core
+    ISA: TEST7.isa
+  - Core: TEST7.518.core
+    ISA: TEST7.isa
+  - Core: TEST7.519.core
+    ISA: TEST7.isa
+  - Core: TEST7.520.core
+    ISA: TEST7.isa
+  - Core: TEST7.521.core
+    ISA: TEST7.isa
+  - Core: TEST7.522.core
+    ISA: TEST7.isa
+  - Core: TEST7.523.core
+    ISA: TEST7.isa
+  - Core: TEST7.524.core
+    ISA: TEST7.isa
+  - Core: TEST7.525.core
+    ISA: TEST7.isa
+  - Core: TEST7.526.core
+    ISA: TEST7.isa
+  - Core: TEST7.527.core
+    ISA: TEST7.isa
+  - Core: TEST7.528.core
+    ISA: TEST7.isa
+  - Core: TEST7.529.core
+    ISA: TEST7.isa
+  - Core: TEST7.530.core
+    ISA: TEST7.isa
+  - Core: TEST7.531.core
+    ISA: TEST7.isa
+  - Core: TEST7.532.core
+    ISA: TEST7.isa
+  - Core: TEST7.533.core
+    ISA: TEST7.isa
+  - Core: TEST7.534.core
+    ISA: TEST7.isa
+  - Core: TEST7.535.core
+    ISA: TEST7.isa
+  - Core: TEST7.536.core
+    ISA: TEST7.isa
+  - Core: TEST7.537.core
+    ISA: TEST7.isa
+  - Core: TEST7.538.core
+    ISA: TEST7.isa
+  - Core: TEST7.539.core
+    ISA: TEST7.isa
+  - Core: TEST7.540.core
+    ISA: TEST7.isa
+  - Core: TEST7.541.core
+    ISA: TEST7.isa
+  - Core: TEST7.542.core
+    ISA: TEST7.isa
+  - Core: TEST7.543.core
+    ISA: TEST7.isa
+  - Core: TEST7.544.core
+    ISA: TEST7.isa
+  - Core: TEST7.545.core
+    ISA: TEST7.isa
+  - Core: TEST7.546.core
+    ISA: TEST7.isa
+  - Core: TEST7.547.core
+    ISA: TEST7.isa
+  - Core: TEST7.548.core
+    ISA: TEST7.isa
+  - Core: TEST7.549.core
+    ISA: TEST7.isa
+  - Core: TEST7.550.core
+    ISA: TEST7.isa
+  - Core: TEST7.551.core
+    ISA: TEST7.isa
+  - Core: TEST7.552.core
+    ISA: TEST7.isa
+  - Core: TEST7.553.core
+    ISA: TEST7.isa
+  - Core: TEST7.554.core
+    ISA: TEST7.isa
+  - Core: TEST7.555.core
+    ISA: TEST7.isa
+  - Core: TEST7.556.core
+    ISA: TEST7.isa
+  - Core: TEST7.557.core
+    ISA: TEST7.isa
+  - Core: TEST7.558.core
+    ISA: TEST7.isa
+  - Core: TEST7.559.core
+    ISA: TEST7.isa
+  - Core: TEST7.560.core
+    ISA: TEST7.isa
+  - Core: TEST7.561.core
+    ISA: TEST7.isa
+  - Core: TEST7.562.core
+    ISA: TEST7.isa
+  - Core: TEST7.563.core
+    ISA: TEST7.isa
+  - Core: TEST7.564.core
+    ISA: TEST7.isa
+  - Core: TEST7.565.core
+    ISA: TEST7.isa
+  - Core: TEST7.566.core
+    ISA: TEST7.isa
+  - Core: TEST7.567.core
+    ISA: TEST7.isa
+  - Core: TEST7.568.core
+    ISA: TEST7.isa
+  - Core: TEST7.569.core
+    ISA: TEST7.isa
+  - Core: TEST7.570.core
+    ISA: TEST7.isa
+  - Core: TEST7.571.core
+    ISA: TEST7.isa
+  - Core: TEST7.572.core
+    ISA: TEST7.isa
+  - Core: TEST7.573.core
+    ISA: TEST7.isa
+  - Core: TEST7.574.core
+    ISA: TEST7.isa
+  - Core: TEST7.575.core
+    ISA: TEST7.isa
+  - Core: TEST7.576.core
+    ISA: TEST7.isa
+  - Core: TEST7.577.core
+    ISA: TEST7.isa
+  - Core: TEST7.578.core
+    ISA: TEST7.isa
+  - Core: TEST7.579.core
+    ISA: TEST7.isa
+  - Core: TEST7.580.core
+    ISA: TEST7.isa
+  - Core: TEST7.581.core
+    ISA: TEST7.isa
+  - Core: TEST7.582.core
+    ISA: TEST7.isa
+  - Core: TEST7.583.core
+    ISA: TEST7.isa
+  - Core: TEST7.584.core
+    ISA: TEST7.isa
+  - Core: TEST7.585.core
+    ISA: TEST7.isa
+  - Core: TEST7.586.core
+    ISA: TEST7.isa
+  - Core: TEST7.587.core
+    ISA: TEST7.isa
+  - Core: TEST7.588.core
+    ISA: TEST7.isa
+  - Core: TEST7.589.core
+    ISA: TEST7.isa
+  - Core: TEST7.590.core
+    ISA: TEST7.isa
+  - Core: TEST7.591.core
+    ISA: TEST7.isa
+  - Core: TEST7.592.core
+    ISA: TEST7.isa
+  - Core: TEST7.593.core
+    ISA: TEST7.isa
+  - Core: TEST7.594.core
+    ISA: TEST7.isa
+  - Core: TEST7.595.core
+    ISA: TEST7.isa
+  - Core: TEST7.596.core
+    ISA: TEST7.isa
+  - Core: TEST7.597.core
+    ISA: TEST7.isa
+  - Core: TEST7.598.core
+    ISA: TEST7.isa
+  - Core: TEST7.599.core
+    ISA: TEST7.isa
+  - Core: TEST7.600.core
+    ISA: TEST7.isa
+  - Core: TEST7.601.core
+    ISA: TEST7.isa
+  - Core: TEST7.602.core
+    ISA: TEST7.isa
+  - Core: TEST7.603.core
+    ISA: TEST7.isa
+  - Core: TEST7.604.core
+    ISA: TEST7.isa
+  - Core: TEST7.605.core
+    ISA: TEST7.isa
+  - Core: TEST7.606.core
+    ISA: TEST7.isa
+  - Core: TEST7.607.core
+    ISA: TEST7.isa
+  - Core: TEST7.608.core
+    ISA: TEST7.isa
+  - Core: TEST7.609.core
+    ISA: TEST7.isa
+  - Core: TEST7.610.core
+    ISA: TEST7.isa
+  - Core: TEST7.611.core
+    ISA: TEST7.isa
+  - Core: TEST7.612.core
+    ISA: TEST7.isa
+  - Core: TEST7.613.core
+    ISA: TEST7.isa
+  - Core: TEST7.614.core
+    ISA: TEST7.isa
+  - Core: TEST7.615.core
+    ISA: TEST7.isa
+  - Core: TEST7.616.core
+    ISA: TEST7.isa
+  - Core: TEST7.617.core
+    ISA: TEST7.isa
+  - Core: TEST7.618.core
+    ISA: TEST7.isa
+  - Core: TEST7.619.core
+    ISA: TEST7.isa
+  - Core: TEST7.620.core
+    ISA: TEST7.isa
+  - Core: TEST7.621.core
+    ISA: TEST7.isa
+  - Core: TEST7.622.core
+    ISA: TEST7.isa
+  - Core: TEST7.623.core
+    ISA: TEST7.isa
+  - Core: TEST7.624.core
+    ISA: TEST7.isa
+  - Core: TEST7.625.core
+    ISA: TEST7.isa
+  - Core: TEST7.626.core
+    ISA: TEST7.isa
+  - Core: TEST7.627.core
+    ISA: TEST7.isa
+  - Core: TEST7.628.core
+    ISA: TEST7.isa
+  - Core: TEST7.629.core
+    ISA: TEST7.isa
+  - Core: TEST7.630.core
+    ISA: TEST7.isa
+  - Core: TEST7.631.core
+    ISA: TEST7.isa
+  - Core: TEST7.632.core
+    ISA: TEST7.isa
+  - Core: TEST7.633.core
+    ISA: TEST7.isa
+  - Core: TEST7.634.core
+    ISA: TEST7.isa
+  - Core: TEST7.635.core
+    ISA: TEST7.isa
+  - Core: TEST7.636.core
+    ISA: TEST7.isa
+  - Core: TEST7.637.core
+    ISA: TEST7.isa
+  - Core: TEST7.638.core
+    ISA: TEST7.isa
+  - Core: TEST7.639.core
+    ISA: TEST7.isa
+  - Core: TEST7.640.core
+    ISA: TEST7.isa
+  - Core: TEST7.641.core
+    ISA: TEST7.isa
+  - Core: TEST7.642.core
+    ISA: TEST7.isa
+  - Core: TEST7.643.core
+    ISA: TEST7.isa
+  - Core: TEST7.644.core
+    ISA: TEST7.isa
+  - Core: TEST7.645.core
+    ISA: TEST7.isa
+  - Core: TEST7.646.core
+    ISA: TEST7.isa
+  - Core: TEST7.647.core
+    ISA: TEST7.isa
+  - Core: TEST7.648.core
+    ISA: TEST7.isa
+  - Core: TEST7.649.core
+    ISA: TEST7.isa
+  - Core: TEST7.650.core
+    ISA: TEST7.isa
+  - Core: TEST7.651.core
+    ISA: TEST7.isa
+  - Core: TEST7.652.core
+    ISA: TEST7.isa
+  - Core: TEST7.653.core
+    ISA: TEST7.isa
+  - Core: TEST7.654.core
+    ISA: TEST7.isa
+  - Core: TEST7.655.core
+    ISA: TEST7.isa
+  - Core: TEST7.656.core
+    ISA: TEST7.isa
+  - Core: TEST7.657.core
+    ISA: TEST7.isa
+  - Core: TEST7.658.core
+    ISA: TEST7.isa
+  - Core: TEST7.659.core
+    ISA: TEST7.isa
+  - Core: TEST7.660.core
+    ISA: TEST7.isa
+  - Core: TEST7.661.core
+    ISA: TEST7.isa
+  - Core: TEST7.662.core
+    ISA: TEST7.isa
+  - Core: TEST7.663.core
+    ISA: TEST7.isa
+  - Core: TEST7.664.core
+    ISA: TEST7.isa
+  - Core: TEST7.665.core
+    ISA: TEST7.isa
+  - Core: TEST7.666.core
+    ISA: TEST7.isa
+  - Core: TEST7.667.core
+    ISA: TEST7.isa
+  - Core: TEST7.668.core
+    ISA: TEST7.isa
+  - Core: TEST7.669.core
+    ISA: TEST7.isa
+  - Core: TEST7.670.core
+    ISA: TEST7.isa
+  - Core: TEST7.671.core
+    ISA: TEST7.isa
+  - Core: TEST7.672.core
+    ISA: TEST7.isa
+  - Core: TEST7.673.core
+    ISA: TEST7.isa
+  - Core: TEST7.674.core
+    ISA: TEST7.isa
+  - Core: TEST7.675.core
+    ISA: TEST7.isa
+  - Core: TEST7.676.core
+    ISA: TEST7.isa
+  - Core: TEST7.677.core
+    ISA: TEST7.isa
+  - Core: TEST7.678.core
+    ISA: TEST7.isa
+  - Core: TEST7.679.core
+    ISA: TEST7.isa
+  - Core: TEST7.680.core
+    ISA: TEST7.isa
+  - Core: TEST7.681.core
+    ISA: TEST7.isa
+  - Core: TEST7.682.core
+    ISA: TEST7.isa
+  - Core: TEST7.683.core
+    ISA: TEST7.isa
+  - Core: TEST7.684.core
+    ISA: TEST7.isa
+  - Core: TEST7.685.core
+    ISA: TEST7.isa
+  - Core: TEST7.686.core
+    ISA: TEST7.isa
+  - Core: TEST7.687.core
+    ISA: TEST7.isa
+  - Core: TEST7.688.core
+    ISA: TEST7.isa
+  - Core: TEST7.689.core
+    ISA: TEST7.isa
+  - Core: TEST7.690.core
+    ISA: TEST7.isa
+  - Core: TEST7.691.core
+    ISA: TEST7.isa
+  - Core: TEST7.692.core
+    ISA: TEST7.isa
+  - Core: TEST7.693.core
+    ISA: TEST7.isa
+  - Core: TEST7.694.core
+    ISA: TEST7.isa
+  - Core: TEST7.695.core
+    ISA: TEST7.isa
+  - Core: TEST7.696.core
+    ISA: TEST7.isa
+  - Core: TEST7.697.core
+    ISA: TEST7.isa
+  - Core: TEST7.698.core
+    ISA: TEST7.isa
+  - Core: TEST7.699.core
+    ISA: TEST7.isa
+  - Core: TEST7.700.core
+    ISA: TEST7.isa
+  - Core: TEST7.701.core
+    ISA: TEST7.isa
+  - Core: TEST7.702.core
+    ISA: TEST7.isa
+  - Core: TEST7.703.core
+    ISA: TEST7.isa
+  - Core: TEST7.704.core
+    ISA: TEST7.isa
+  - Core: TEST7.705.core
+    ISA: TEST7.isa
+  - Core: TEST7.706.core
+    ISA: TEST7.isa
+  - Core: TEST7.707.core
+    ISA: TEST7.isa
+  - Core: TEST7.708.core
+    ISA: TEST7.isa
+  - Core: TEST7.709.core
+    ISA: TEST7.isa
+  - Core: TEST7.710.core
+    ISA: TEST7.isa
+  - Core: TEST7.711.core
+    ISA: TEST7.isa
+  - Core: TEST7.712.core
+    ISA: TEST7.isa
+  - Core: TEST7.713.core
+    ISA: TEST7.isa
+  - Core: TEST7.714.core
+    ISA: TEST7.isa
+  - Core: TEST7.715.core
+    ISA: TEST7.isa
+  - Core: TEST7.716.core
+    ISA: TEST7.isa
+  - Core: TEST7.717.core
+    ISA: TEST7.isa
+  - Core: TEST7.718.core
+    ISA: TEST7.isa
+  - Core: TEST7.719.core
+    ISA: TEST7.isa
+  - Core: TEST7.720.core
+    ISA: TEST7.isa
+  - Core: TEST7.721.core
+    ISA: TEST7.isa
+  - Core: TEST7.722.core
+    ISA: TEST7.isa
+  - Core: TEST7.723.core
+    ISA: TEST7.isa
+  - Core: TEST7.724.core
+    ISA: TEST7.isa
+  - Core: TEST7.725.core
+    ISA: TEST7.isa
+  - Core: TEST7.726.core
+    ISA: TEST7.isa
+  - Core: TEST7.727.core
+    ISA: TEST7.isa
+  - Core: TEST7.728.core
+    ISA: TEST7.isa
+  - Core: TEST7.729.core
+    ISA: TEST7.isa
+  - Core: TEST7.730.core
+    ISA: TEST7.isa
+  - Core: TEST7.731.core
+    ISA: TEST7.isa
+  - Core: TEST7.732.core
+    ISA: TEST7.isa
+  - Core: TEST7.733.core
+    ISA: TEST7.isa
+  - Core: TEST7.734.core
+    ISA: TEST7.isa
+  - Core: TEST7.735.core
+    ISA: TEST7.isa
+  - Core: TEST7.736.core
+    ISA: TEST7.isa
+  - Core: TEST7.737.core
+    ISA: TEST7.isa
+  - Core: TEST7.738.core
+    ISA: TEST7.isa
+  - Core: TEST7.739.core
+    ISA: TEST7.isa
+  - Core: TEST7.740.core
+    ISA: TEST7.isa
+  - Core: TEST7.741.core
+    ISA: TEST7.isa
+  - Core: TEST7.742.core
+    ISA: TEST7.isa
+  - Core: TEST7.743.core
+    ISA: TEST7.isa
+  - Core: TEST7.744.core
+    ISA: TEST7.isa
+  - Core: TEST7.745.core
+    ISA: TEST7.isa
+  - Core: TEST7.746.core
+    ISA: TEST7.isa
+  - Core: TEST7.747.core
+    ISA: TEST7.isa
+  - Core: TEST7.748.core
+    ISA: TEST7.isa
+  - Core: TEST7.749.core
+    ISA: TEST7.isa
+  - Core: TEST7.750.core
+    ISA: TEST7.isa
+  - Core: TEST7.751.core
+    ISA: TEST7.isa
+  - Core: TEST7.752.core
+    ISA: TEST7.isa
+  - Core: TEST7.753.core
+    ISA: TEST7.isa
+  - Core: TEST7.754.core
+    ISA: TEST7.isa
+  - Core: TEST7.755.core
+    ISA: TEST7.isa
+  - Core: TEST7.756.core
+    ISA: TEST7.isa
+  - Core: TEST7.757.core
+    ISA: TEST7.isa
+  - Core: TEST7.758.core
+    ISA: TEST7.isa
+  - Core: TEST7.759.core
+    ISA: TEST7.isa
+  - Core: TEST7.760.core
+    ISA: TEST7.isa
+  - Core: TEST7.761.core
+    ISA: TEST7.isa
+  - Core: TEST7.762.core
+    ISA: TEST7.isa
+  - Core: TEST7.763.core
+    ISA: TEST7.isa
+  - Core: TEST7.764.core
+    ISA: TEST7.isa
+  - Core: TEST7.765.core
+    ISA: TEST7.isa
+  - Core: TEST7.766.core
+    ISA: TEST7.isa
+  - Core: TEST7.767.core
+    ISA: TEST7.isa
+  - Core: TEST7.768.core
+    ISA: TEST7.isa
+  - Core: TEST7.769.core
+    ISA: TEST7.isa
+  - Core: TEST7.770.core
+    ISA: TEST7.isa
+  - Core: TEST7.771.core
+    ISA: TEST7.isa
+  - Core: TEST7.772.core
+    ISA: TEST7.isa
+  - Core: TEST7.773.core
+    ISA: TEST7.isa
+  - Core: TEST7.774.core
+    ISA: TEST7.isa
+  - Core: TEST7.775.core
+    ISA: TEST7.isa
+  - Core: TEST7.776.core
+    ISA: TEST7.isa
+  - Core: TEST7.777.core
+    ISA: TEST7.isa
+  - Core: TEST7.778.core
+    ISA: TEST7.isa
+  - Core: TEST7.779.core
+    ISA: TEST7.isa
+  - Core: TEST7.780.core
+    ISA: TEST7.isa
+  - Core: TEST7.781.core
+    ISA: TEST7.isa
+  - Core: TEST7.782.core
+    ISA: TEST7.isa
+  - Core: TEST7.783.core
+    ISA: TEST7.isa
+  - Core: TEST7.784.core
+    ISA: TEST7.isa
+  - Core: TEST7.785.core
+    ISA: TEST7.isa
+  - Core: TEST7.786.core
+    ISA: TEST7.isa
+  - Core: TEST7.787.core
+    ISA: TEST7.isa
+  - Core: TEST7.788.core
+    ISA: TEST7.isa
+  - Core: TEST7.789.core
+    ISA: TEST7.isa
+  - Core: TEST7.790.core
+    ISA: TEST7.isa
+  - Core: TEST7.791.core
+    ISA: TEST7.isa
+  - Core: TEST7.792.core
+    ISA: TEST7.isa
+  - Core: TEST7.793.core
+    ISA: TEST7.isa
+  - Core: TEST7.794.core
+    ISA: TEST7.isa
+  - Core: TEST7.795.core
+    ISA: TEST7.isa
+  - Core: TEST7.796.core
+    ISA: TEST7.isa
+  - Core: TEST7.797.core
+    ISA: TEST7.isa
+  - Core: TEST7.798.core
+    ISA: TEST7.isa
+  - Core: TEST7.799.core
+    ISA: TEST7.isa
+  - Core: TEST7.800.core
+    ISA: TEST7.isa
+  - Core: TEST7.801.core
+    ISA: TEST7.isa
+  - Core: TEST7.802.core
+    ISA: TEST7.isa
+  - Core: TEST7.803.core
+    ISA: TEST7.isa
+  - Core: TEST7.804.core
+    ISA: TEST7.isa
+  - Core: TEST7.805.core
+    ISA: TEST7.isa
+  - Core: TEST7.806.core
+    ISA: TEST7.isa
+  - Core: TEST7.807.core
+    ISA: TEST7.isa
+  - Core: TEST7.808.core
+    ISA: TEST7.isa
+  - Core: TEST7.809.core
+    ISA: TEST7.isa
+  - Core: TEST7.810.core
+    ISA: TEST7.isa
+  - Core: TEST7.811.core
+    ISA: TEST7.isa
+  - Core: TEST7.812.core
+    ISA: TEST7.isa
+  - Core: TEST7.813.core
+    ISA: TEST7.isa
+  - Core: TEST7.814.core
+    ISA: TEST7.isa
+  - Core: TEST7.815.core
+    ISA: TEST7.isa
+  - Core: TEST7.816.core
+    ISA: TEST7.isa
+  - Core: TEST7.817.core
+    ISA: TEST7.isa
+  - Core: TEST7.818.core
+    ISA: TEST7.isa
+  - Core: TEST7.819.core
+    ISA: TEST7.isa
+  - Core: TEST7.820.core
+    ISA: TEST7.isa
+  - Core: TEST7.821.core
+    ISA: TEST7.isa
+  - Core: TEST7.822.core
+    ISA: TEST7.isa
+  - Core: TEST7.823.core
+    ISA: TEST7.isa
+  - Core: TEST7.824.core
+    ISA: TEST7.isa
+  - Core: TEST7.825.core
+    ISA: TEST7.isa
+  - Core: TEST7.826.core
+    ISA: TEST7.isa
+  - Core: TEST7.827.core
+    ISA: TEST7.isa
+  - Core: TEST7.828.core
+    ISA: TEST7.isa
+  - Core: TEST7.829.core
+    ISA: TEST7.isa
+  - Core: TEST7.830.core
+    ISA: TEST7.isa
+  - Core: TEST7.831.core
+    ISA: TEST7.isa
+  - Core: TEST7.832.core
+    ISA: TEST7.isa
+  - Core: TEST7.833.core
+    ISA: TEST7.isa
+  - Core: TEST7.834.core
+    ISA: TEST7.isa
+  - Core: TEST7.835.core
+    ISA: TEST7.isa
+  - Core: TEST7.836.core
+    ISA: TEST7.isa
+  - Core: TEST7.837.core
+    ISA: TEST7.isa
+  - Core: TEST7.838.core
+    ISA: TEST7.isa
+  - Core: TEST7.839.core
+    ISA: TEST7.isa
+  - Core: TEST7.840.core
+    ISA: TEST7.isa
+  - Core: TEST7.841.core
+    ISA: TEST7.isa
+  - Core: TEST7.842.core
+    ISA: TEST7.isa
+  - Core: TEST7.843.core
+    ISA: TEST7.isa
+  - Core: TEST7.844.core
+    ISA: TEST7.isa
+  - Core: TEST7.845.core
+    ISA: TEST7.isa
+  - Core: TEST7.846.core
+    ISA: TEST7.isa
+  - Core: TEST7.847.core
+    ISA: TEST7.isa
+  - Core: TEST7.848.core
+    ISA: TEST7.isa
+  - Core: TEST7.849.core
+    ISA: TEST7.isa
+  - Core: TEST7.850.core
+    ISA: TEST7.isa
+  - Core: TEST7.851.core
+    ISA: TEST7.isa
+  - Core: TEST7.852.core
+    ISA: TEST7.isa
+  - Core: TEST7.853.core
+    ISA: TEST7.isa
+  - Core: TEST7.854.core
+    ISA: TEST7.isa
+  - Core: TEST7.855.core
+    ISA: TEST7.isa
+  - Core: TEST7.856.core
+    ISA: TEST7.isa
+  - Core: TEST7.857.core
+    ISA: TEST7.isa
+  - Core: TEST7.858.core
+    ISA: TEST7.isa
+  - Core: TEST7.859.core
+    ISA: TEST7.isa
+  - Core: TEST7.860.core
+    ISA: TEST7.isa
+  - Core: TEST7.861.core
+    ISA: TEST7.isa
+  - Core: TEST7.862.core
+    ISA: TEST7.isa
+  - Core: TEST7.863.core
+    ISA: TEST7.isa
+  - Core: TEST7.864.core
+    ISA: TEST7.isa
+  - Core: TEST7.865.core
+    ISA: TEST7.isa
+  - Core: TEST7.866.core
+    ISA: TEST7.isa
+  - Core: TEST7.867.core
+    ISA: TEST7.isa
+  - Core: TEST7.868.core
+    ISA: TEST7.isa
+  - Core: TEST7.869.core
+    ISA: TEST7.isa
+  - Core: TEST7.870.core
+    ISA: TEST7.isa
+  - Core: TEST7.871.core
+    ISA: TEST7.isa
+  - Core: TEST7.872.core
+    ISA: TEST7.isa
+  - Core: TEST7.873.core
+    ISA: TEST7.isa
+  - Core: TEST7.874.core
+    ISA: TEST7.isa
+  - Core: TEST7.875.core
+    ISA: TEST7.isa
+  - Core: TEST7.876.core
+    ISA: TEST7.isa
+  - Core: TEST7.877.core
+    ISA: TEST7.isa
+  - Core: TEST7.878.core
+    ISA: TEST7.isa
+  - Core: TEST7.879.core
+    ISA: TEST7.isa
+  - Core: TEST7.880.core
+    ISA: TEST7.isa
+  - Core: TEST7.881.core
+    ISA: TEST7.isa
+  - Core: TEST7.882.core
+    ISA: TEST7.isa
+  - Core: TEST7.883.core
+    ISA: TEST7.isa
+  - Core: TEST7.884.core
+    ISA: TEST7.isa
+  - Core: TEST7.885.core
+    ISA: TEST7.isa
+  - Core: TEST7.886.core
+    ISA: TEST7.isa
+  - Core: TEST7.887.core
+    ISA: TEST7.isa
+  - Core: TEST7.888.core
+    ISA: TEST7.isa
+  - Core: TEST7.889.core
+    ISA: TEST7.isa
+  - Core: TEST7.890.core
+    ISA: TEST7.isa
+  - Core: TEST7.891.core
+    ISA: TEST7.isa
+  - Core: TEST7.892.core
+    ISA: TEST7.isa
+  - Core: TEST7.893.core
+    ISA: TEST7.isa
+  - Core: TEST7.894.core
+    ISA: TEST7.isa
+  - Core: TEST7.895.core
+    ISA: TEST7.isa
+  - Core: TEST7.896.core
+    ISA: TEST7.isa
+  - Core: TEST7.897.core
+    ISA: TEST7.isa
+  - Core: TEST7.898.core
+    ISA: TEST7.isa
+  - Core: TEST7.899.core
+    ISA: TEST7.isa
+  - Core: TEST7.900.core
+    ISA: TEST7.isa
+  - Core: TEST7.901.core
+    ISA: TEST7.isa
+  - Core: TEST7.902.core
+    ISA: TEST7.isa
+  - Core: TEST7.903.core
+    ISA: TEST7.isa
+  - Core: TEST7.904.core
+    ISA: TEST7.isa
+  - Core: TEST7.905.core
+    ISA: TEST7.isa
+  - Core: TEST7.906.core
+    ISA: TEST7.isa
+  - Core: TEST7.907.core
+    ISA: TEST7.isa
+  - Core: TEST7.908.core
+    ISA: TEST7.isa
+  - Core: TEST7.909.core
+    ISA: TEST7.isa
+  - Core: TEST7.910.core
+    ISA: TEST7.isa
+  - Core: TEST7.911.core
+    ISA: TEST7.isa
+  - Core: TEST7.912.core
+    ISA: TEST7.isa
+  - Core: TEST7.913.core
+    ISA: TEST7.isa
+  - Core: TEST7.914.core
+    ISA: TEST7.isa
+  - Core: TEST7.915.core
+    ISA: TEST7.isa
+  - Core: TEST7.916.core
+    ISA: TEST7.isa
+  - Core: TEST7.917.core
+    ISA: TEST7.isa
+  - Core: TEST7.918.core
+    ISA: TEST7.isa
+  - Core: TEST7.919.core
+    ISA: TEST7.isa
+  - Core: TEST7.920.core
+    ISA: TEST7.isa
+  - Core: TEST7.921.core
+    ISA: TEST7.isa
+  - Core: TEST7.922.core
+    ISA: TEST7.isa
+  - Core: TEST7.923.core
+    ISA: TEST7.isa
+  - Core: TEST7.924.core
+    ISA: TEST7.isa
+  - Core: TEST7.925.core
+    ISA: TEST7.isa
+  - Core: TEST7.926.core
+    ISA: TEST7.isa
+  - Core: TEST7.927.core
+    ISA: TEST7.isa
+  - Core: TEST7.928.core
+    ISA: TEST7.isa
+  - Core: TEST7.929.core
+    ISA: TEST7.isa
+  - Core: TEST7.930.core
+    ISA: TEST7.isa
+  - Core: TEST7.931.core
+    ISA: TEST7.isa
+  - Core: TEST7.932.core
+    ISA: TEST7.isa
+  - Core: TEST7.933.core
+    ISA: TEST7.isa
+  - Core: TEST7.934.core
+    ISA: TEST7.isa
+  - Core: TEST7.935.core
+    ISA: TEST7.isa
+  - Core: TEST7.936.core
+    ISA: TEST7.isa
+  - Core: TEST7.937.core
+    ISA: TEST7.isa
+  - Core: TEST7.938.core
+    ISA: TEST7.isa
+  - Core: TEST7.939.core
+    ISA: TEST7.isa
+  - Core: TEST7.940.core
+    ISA: TEST7.isa
+  - Core: TEST7.941.core
+    ISA: TEST7.isa
+  - Core: TEST7.942.core
+    ISA: TEST7.isa
+  - Core: TEST7.943.core
+    ISA: TEST7.isa
+  - Core: TEST7.944.core
+    ISA: TEST7.isa
+  - Core: TEST7.945.core
+    ISA: TEST7.isa
+  - Core: TEST7.946.core
+    ISA: TEST7.isa
+  - Core: TEST7.947.core
+    ISA: TEST7.isa
+  - Core: TEST7.948.core
+    ISA: TEST7.isa
+  - Core: TEST7.949.core
+    ISA: TEST7.isa
+  - Core: TEST7.950.core
+    ISA: TEST7.isa
+  - Core: TEST7.951.core
+    ISA: TEST7.isa
+  - Core: TEST7.952.core
+    ISA: TEST7.isa
+  - Core: TEST7.953.core
+    ISA: TEST7.isa
+  - Core: TEST7.954.core
+    ISA: TEST7.isa
+  - Core: TEST7.955.core
+    ISA: TEST7.isa
+  - Core: TEST7.956.core
+    ISA: TEST7.isa
+  - Core: TEST7.957.core
+    ISA: TEST7.isa
+  - Core: TEST7.958.core
+    ISA: TEST7.isa
+  - Core: TEST7.959.core
+    ISA: TEST7.isa
+  - Core: TEST7.960.core
+    ISA: TEST7.isa
+  - Core: TEST7.961.core
+    ISA: TEST7.isa
+  - Core: TEST7.962.core
+    ISA: TEST7.isa
+  - Core: TEST7.963.core
+    ISA: TEST7.isa
+  - Core: TEST7.964.core
+    ISA: TEST7.isa
+  - Core: TEST7.965.core
+    ISA: TEST7.isa
+  - Core: TEST7.966.core
+    ISA: TEST7.isa
+  - Core: TEST7.967.core
+    ISA: TEST7.isa
+  - Core: TEST7.968.core
+    ISA: TEST7.isa
+  - Core: TEST7.969.core
+    ISA: TEST7.isa
+  - Core: TEST7.970.core
+    ISA: TEST7.isa
+  - Core: TEST7.971.core
+    ISA: TEST7.isa
+  - Core: TEST7.972.core
+    ISA: TEST7.isa
+  - Core: TEST7.973.core
+    ISA: TEST7.isa
+  - Core: TEST7.974.core
+    ISA: TEST7.isa
+  - Core: TEST7.975.core
+    ISA: TEST7.isa
+  - Core: TEST7.976.core
+    ISA: TEST7.isa
+  - Core: TEST7.977.core
+    ISA: TEST7.isa
+  - Core: TEST7.978.core
+    ISA: TEST7.isa
+  - Core: TEST7.979.core
+    ISA: TEST7.isa
+  - Core: TEST7.980.core
+    ISA: TEST7.isa
+  - Core: TEST7.981.core
+    ISA: TEST7.isa
+  - Core: TEST7.982.core
+    ISA: TEST7.isa
+  - Core: TEST7.983.core
+    ISA: TEST7.isa
+  - Core: TEST7.984.core
+    ISA: TEST7.isa
+  - Core: TEST7.985.core
+    ISA: TEST7.isa
+  - Core: TEST7.986.core
+    ISA: TEST7.isa
+  - Core: TEST7.987.core
+    ISA: TEST7.isa
+  - Core: TEST7.988.core
+    ISA: TEST7.isa
+  - Core: TEST7.989.core
+    ISA: TEST7.isa
+  - Core: TEST7.990.core
+    ISA: TEST7.isa
+  - Core: TEST7.991.core
+    ISA: TEST7.isa
+  - Core: TEST7.992.core
+    ISA: TEST7.isa
+  - Core: TEST7.993.core
+    ISA: TEST7.isa
+  - Core: TEST7.994.core
+    ISA: TEST7.isa
+  - Core: TEST7.995.core
+    ISA: TEST7.isa
+  - Core: TEST7.996.core
+    ISA: TEST7.isa
+  - Core: TEST7.997.core
+    ISA: TEST7.isa
+  - Core: TEST7.998.core
+    ISA: TEST7.isa
+  - Core: TEST7.999.core
+    ISA: TEST7.isa
+  - Core: TEST7.1000.core
+    ISA: TEST7.isa
+  - Core: TEST7.1001.core
+    ISA: TEST7.isa
+  - Core: TEST7.1002.core
+    ISA: TEST7.isa
+  - Core: TEST7.1003.core
+    ISA: TEST7.isa
+  - Core: TEST7.1004.core
+    ISA: TEST7.isa
+  - Core: TEST7.1005.core
+    ISA: TEST7.isa
+  - Core: TEST7.1006.core
+    ISA: TEST7.isa
+  - Core: TEST7.1007.core
+    ISA: TEST7.isa
+  - Core: TEST7.1008.core
+    ISA: TEST7.isa
+  - Core: TEST7.1009.core
+    ISA: TEST7.isa
+  - Core: TEST7.1010.core
+    ISA: TEST7.isa
+  - Core: TEST7.1011.core
+    ISA: TEST7.isa
+  - Core: TEST7.1012.core
+    ISA: TEST7.isa
+  - Core: TEST7.1013.core
+    ISA: TEST7.isa
+  - Core: TEST7.1014.core
+    ISA: TEST7.isa
+  - Core: TEST7.1015.core
+    ISA: TEST7.isa
+  - Core: TEST7.1016.core
+    ISA: TEST7.isa
+  - Core: TEST7.1017.core
+    ISA: TEST7.isa
+  - Core: TEST7.1018.core
+    ISA: TEST7.isa
+  - Core: TEST7.1019.core
+    ISA: TEST7.isa
+  - Core: TEST7.1020.core
+    ISA: TEST7.isa
+  - Core: TEST7.1021.core
+    ISA: TEST7.isa
+  - Core: TEST7.1022.core
+    ISA: TEST7.isa
+  - Core: TEST7.1023.core
+    ISA: TEST7.isa
