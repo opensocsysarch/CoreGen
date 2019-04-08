@@ -132,7 +132,7 @@ if(NOT YAML_PATH)
 endif()
 
 if(NOT CLINGO_PATH)
-  set(CLINGO_PATH "${CMAKE_CURRENT_SOURCE_DIR}/src/thirdparty/clingo-5.3.0")
+  set(CLINGO_PATH "${CMAKE_CURRENT_SOURCE_DIR}/src/thirdparty/clingo/clingo-5.3.0")
   message(STATUS "CLINGO_PATH set to ${CLINGO_PATH}")
 endif()
 
