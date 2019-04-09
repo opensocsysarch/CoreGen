@@ -1,27 +1,16 @@
-#-- sc_parser_test15.sc
+#-- sc_codegen_test_4.sc
 
-regclass foo( float f1, double d2, bool b3, u7 i4,
+instformat FORMAT1( enc opcode, enc func, imm imm1, reg[foo] RT )
+
+regclass foo( float f1_foo(u8 f1.a,u8 f1.b), double d2.bar, bool b3, u7 i4,
               u14 i5, u12 i6, u67 i7, s1024 i8, s3 i9,
-              s21 i10, s19 i11)
-regclass bar( float f1, double d2, bool b3, u7 i4,
-              u14 i5, u12 i6, u67 i7, s1024 i8, s3 i9,
-              s21 i10, s19 i11)
+              s21 i10, s19 i11(bool i11.1,s18 i11.2) )
+regclass bar( float f1, double d2, bool b3, u7 i4a,
+              u14 i5a, u12 i6a, u67 i7a, s1024 i8a, s3 i9a,
+              s21 i10a, s19 i11a)
 
 
-def foo(N a b c d e f g){
-  for ( i = 0; i < a; 1 ){
-    for ( j = 0; j < b; 2 ){
-      for ( k = 0; k < c; 3 ){
-        for ( m = 0; m < d; 4 ){
-          for ( o = 0; o < e; 5 ){
-            for ( p = 0; p < f; 6 ){
-              for ( q = 0; q < g; 7 ){
-                N = N + i + j + k + m + o + p + q
-              }
-            }
-          }
-        }
-      }
-    }
-  }
+def foo(RT){
+  EXTRACTS(i4,i5,i6);
+  i7 = EXTRACTS(i4,i5,i6);
 }
