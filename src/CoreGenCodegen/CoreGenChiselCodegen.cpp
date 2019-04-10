@@ -163,6 +163,33 @@ bool CoreGenChiselCodegen::ExecRegClassCodegen(CoreGenNode *N){
   return rtn;
 }
 
+bool CoreGenChiselCodegen::WriteCoreConfig(std::ofstream &O){
+  if( !O.is_open() ){
+    Errno->SetError(CGERR_ERROR, "Could not write core config info" );
+    return false;
+  }
+
+  std::vector<CoreGenNode *> CNodes;
+
+  // walk all the top-level nodes and find all the register classes
+  for( unsigned i=0; i<Top->GetNumChild(); i++ ){
+    if( Top->GetType() == CGCore )
+      CNodes.push_back(Top->GetChild(i));
+  }
+
+  // made the vector unique
+  std::sort(CNodes.begin(),CNodes.end());
+  CNodes.erase(std::unique(CNodes.begin(),CNodes.end()),CNodes.end());
+
+  // for each core, output the relevant configuration data
+  for( unsigned i=0; i<CNodes.size(); i++ ){
+    CoreGenCore *Core = static_cast<CoreGenCore *>(CNodes[i]);
+    O << "val " << CGRemoveDot(Core->GetName()) << "_startaddr = \"h80000000\".U" << std::endl;
+  }
+
+  return true;
+}
+
 bool CoreGenChiselCodegen::WriteRegClassConfig(std::ofstream &O){
   if( !O.is_open() ){
     Errno->SetError(CGERR_ERROR, "Could not write register class config info" );
@@ -210,6 +237,12 @@ bool CoreGenChiselCodegen::GenerateConfig(){
 
   // write out the config parameters
   if( !WriteRegClassConfig(MOutFile) ){
+    MOutFile.close();
+    return false;
+  }
+
+  // write out the core config parameters for reset
+  if( !WriteCoreConfig(MOutFile) ){
     MOutFile.close();
     return false;
   }
