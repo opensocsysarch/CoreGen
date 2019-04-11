@@ -1,6 +1,6 @@
 ProjectInfo:
   - ProjectName: CF193
-    ProjectRoot: ./
+    ProjectRoot: ./CF193
     ProjectType: unknown
     ChiselMajorVersion: 3
     ChiselMinorVersion: 0

@@ -38,5 +38,5 @@ for ISA in $ISAs; do
   fi
 done;
 
-rm -Rf $DIR
+#rm -Rf $DIR
 exit 0
