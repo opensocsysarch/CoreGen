@@ -173,7 +173,7 @@ bool CoreGenChiselCodegen::WriteCoreConfig(std::ofstream &O){
 
   // walk all the top-level nodes and find all the register classes
   for( unsigned i=0; i<Top->GetNumChild(); i++ ){
-    if( Top->GetType() == CGCore )
+    if( Top->GetChild(i)->GetType() == CGCore )
       CNodes.push_back(Top->GetChild(i));
   }
 
@@ -184,7 +184,7 @@ bool CoreGenChiselCodegen::WriteCoreConfig(std::ofstream &O){
   // for each core, output the relevant configuration data
   for( unsigned i=0; i<CNodes.size(); i++ ){
     CoreGenCore *Core = static_cast<CoreGenCore *>(CNodes[i]);
-    O << "val " << CGRemoveDot(Core->GetName()) << "_startaddr = \"h80000000\".U" << std::endl;
+    O << "\tval " << CGRemoveDot(Core->GetName()) << "_startaddr = \"h80000000\".U" << std::endl;
   }
 
   return true;
@@ -200,7 +200,7 @@ bool CoreGenChiselCodegen::WriteRegClassConfig(std::ofstream &O){
 
   // walk all the top-level nodes and find all the register classes
   for( unsigned i=0; i<Top->GetNumChild(); i++ ){
-    if( Top->GetType() == CGRegC )
+    if( Top->GetChild(i)->GetType() == CGRegC )
       RCNodes.push_back(Top->GetChild(i));
   }
 
@@ -211,8 +211,8 @@ bool CoreGenChiselCodegen::WriteRegClassConfig(std::ofstream &O){
   // for each register class node, output the relevant configuration data
   for( unsigned i=0; i<RCNodes.size(); i++ ){
     CoreGenRegClass *RC = static_cast<CoreGenRegClass *>(RCNodes[i]);
-    O << "val " << CGRemoveDot(RC->GetName()) << "_numregs = " << RC->GetNumReg() << std::endl;
-    O << "val " << CGRemoveDot(RC->GetName()) << "_maxwidth = " << RC->GetMaxWidth() << std::endl;
+    O << "\tval " << CGRemoveDot(RC->GetName()) << "_numregs = " << RC->GetNumReg() << std::endl;
+    O << "\tval " << CGRemoveDot(RC->GetName()) << "_maxwidth = " << RC->GetMaxWidth() << std::endl;
   }
 
   return true;
