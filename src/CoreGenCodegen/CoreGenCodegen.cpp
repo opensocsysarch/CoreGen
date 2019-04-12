@@ -412,7 +412,7 @@ bool CoreGenCodegen::BuildChiselCommonPackage(){
   MOutFile << "package Common" << std::endl << std::endl;
 
   MOutFile << "import chisel3._" << std::endl;
-  MOutFile << "import chisel3.util_ " << std::endl;
+  MOutFile << "import chisel3.util_" << std::endl;
   MOutFile << "import scala.math._" << std::endl;
 
   MOutFile.close();

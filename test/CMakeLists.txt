@@ -6,6 +6,13 @@
 # See LICENSE in the top level directory for licensing details
 #
 
+find_program (BASH_EXECUTABLE bash)
+if (BASH_EXECUTABLE)
+  message(STATUS "FOUND BASH AT ${BASH_EXECUTABLE}")
+else ()
+  message(FATAL_ERROR "COULD NOT FIND BASH SHELL")
+endif ()
+
 if(BUILD_ALL_TESTING)
   set(BUILD_COREGEN_YAML_TESTING "ON")
   set(BUILD_COREGEN_DAG_TESTING "ON")

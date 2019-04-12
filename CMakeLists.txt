@@ -59,7 +59,9 @@ if(COREGEN_MEMORY_SANITY)
   else()
     message(FATAL_ERROR "Clang is required to build using memory sanitizer.")
   endif()
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O1 -g -fsanitize=address -fno-omit-frame-pointer")
+  unset(CMAKE_CXX_FLAGS)
+  set(CMAKE_CXX_FLAGS "-O1 -g -std=c++14 -Wall -shared-libstdc++ ${COREGEN_COMPILER_MACROS} -fsanitize=address -fno-omit-frame-pointer")
+  message(STATUS "CMAKE_CXX_FLAGS set to ${CMAKE_CXX_FLAGS}")
 endif()
 
 # Set the system type
@@ -125,12 +127,12 @@ if(NOT COREGEN_BUILD_DIR)
 endif()
 
 if(NOT YAML_PATH)
-  set(YAML_PATH "${CMAKE_CURRENT_SOURCE_DIR}/src/thirdparty/yaml/yaml-cpp")
+  set(YAML_PATH "${CMAKE_CURRENT_SOURCE_DIR}/src/thirdparty/yaml/yaml-cpp-0.6.2")
   message(STATUS "YAML_PATH set to ${YAML_PATH}")
 endif()
 
 if(NOT CLINGO_PATH)
-  set(CLINGO_PATH "${CMAKE_CURRENT_SOURCE_DIR}/src/thirdparty/clingo-5.3.0")
+  set(CLINGO_PATH "${CMAKE_CURRENT_SOURCE_DIR}/src/thirdparty/clingo/clingo-5.3.0")
   message(STATUS "CLINGO_PATH set to ${CLINGO_PATH}")
 endif()
 

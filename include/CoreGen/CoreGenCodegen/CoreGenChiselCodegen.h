@@ -54,6 +54,9 @@ private:
   /// Writes the register class configuration data
   bool WriteRegClassConfig(std::ofstream &O);
 
+  /// Writes the core configuration data
+  bool WriteCoreConfig(std::ofstream &O);
+
   ///Execute the SoC code generator
   bool ExecSocCodegen(CoreGenNode *N);
 

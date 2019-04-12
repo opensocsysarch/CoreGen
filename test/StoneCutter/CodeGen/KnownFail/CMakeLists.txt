@@ -9,14 +9,6 @@
 include_directories(${COREGEN_INCLUDE_PATH})
 include_directories(${YAML_PATH}/include)
 
-find_program (BASH_EXECUTABLE bash)
-if (BASH_EXECUTABLE)
-  message(STATUS "FOUND BASH AT ${BASH_EXECUTABLE}")
-else ()
-  message(FATAL_ERROR "COULD NOT FIND BASH SHELL")
-endif ()
-
-
 file(GLOB TEST_SRCS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} *.sc)
 
 if(BUILD_COREGEN_STONECUTTER_CODEGEN_KNOWNFAIL_TESTING)

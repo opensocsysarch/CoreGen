@@ -152,7 +152,17 @@ int ExecuteCoregen( CGCLIOpts *Opts ){
       return -1;
     }
 
-    CG->SetASPFiles(Opts->GetASPFiles());
+    // retrieve the ASP files and ensure they exist
+    std::vector<std::string> ASPFiles = Opts->GetASPFiles();
+    for( unsigned a=0; a<ASPFiles.size(); a++ ){
+      if( !CGFileExists(ASPFiles[a])){
+        std::cout << "ASP file cannot be found: " << ASPFiles[a] << std::endl;
+        delete CG;
+        return -1;
+      }
+    }
+
+    CG->SetASPFiles(ASPFiles);
 
     if( !CG->ExecuteSysPass("ASPSolverPass") ){
       std::cout << "Error executing ASPSolver"
