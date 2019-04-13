@@ -187,7 +187,7 @@ void SCOpts::PrintHelp(){
   Msgs->PrintRawMsg("Options:");
   Msgs->PrintRawMsg("     -h|-help|--help                     : Print the help menu");
   Msgs->PrintRawMsg("     -k|-keep|--keep                     : Keep intermediate files");
-  Msgs->PrintRawMsg("     -c|-chisel|--chisel                 : Generate Chisel output (default=on");
+  Msgs->PrintRawMsg("     -c|-chisel|--chisel                 : Generate Chisel output (default=on)");
   Msgs->PrintRawMsg("     -p|-parse|--parse                   : Parse but do not compile");
   Msgs->PrintRawMsg("     -f|-outfile|--outfile /path/to/out  : Set the output file name");
   Msgs->PrintRawMsg("     -s|-sigmap|--sigmap /path/to/sigmap : Generates a signal map");
