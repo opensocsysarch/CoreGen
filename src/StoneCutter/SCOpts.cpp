@@ -15,7 +15,7 @@ SCOpts::SCOpts(SCMsg *M, int A, char **C)
   : argc(A), argv(C),
   isKeep(false), isParse(true), isIR(true),
   isOptimize(true), isChisel(true), isCG(false), isVerbose(false),
-  isDisable(false), isEnable(false), isListPass(false),
+  isDisable(false), isEnable(false), isListPass(false), isSigMap(false),
   Msgs(M) {}
 
 // ------------------------------------------------- DESTRUCTOR
@@ -90,6 +90,14 @@ bool SCOpts::ParseOpts(bool *isHelp){
       }
       std::string F(argv[i+1]);
       OutFile = F;
+      i++;
+    }else if( (s=="-s") || (s=="-sigmap") || (s=="--sigmap") ){
+      if( i+1 > (argc-1) ){
+        Msgs->PrintMsg(L_ERROR, "--sigmap requires an argument");
+        return false;
+      }
+      std::string F(argv[i+1]);
+      SigMap = F;
       i++;
     }else if( (s=="-k") || (s=="-keep") || (s=="--keep") ){
       isKeep = true;
@@ -182,6 +190,7 @@ void SCOpts::PrintHelp(){
   Msgs->PrintRawMsg("     -c|-chisel|--chisel                 : Generate Chisel output (default=on");
   Msgs->PrintRawMsg("     -p|-parse|--parse                   : Parse but do not compile");
   Msgs->PrintRawMsg("     -f|-outfile|--outfile /path/to/out  : Set the output file name");
+  Msgs->PrintRawMsg("     -s|-sigmap|--sigmap /path/to/sigmap : Generates a signal map");
   Msgs->PrintRawMsg("     -o|-object|--object                 : Generate target object file [*.o]");
   Msgs->PrintRawMsg("     -V|-version|--version               : Print the version info");
   Msgs->PrintRawMsg(" ");
