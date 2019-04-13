@@ -8,10 +8,9 @@ if [ ! -f $SCCOMP_PATH/sccomp ]; then
 fi
 
 FILE=test.SIGMAP.sc
-DIR=test.SIGMAP
+DIR=test.SIGMAP.yaml
 touch $FILE
 echo "# this is a stonecutter source file" >> $FILE 2>&1
-mkdir $DIR
 
 $SCCOMP_PATH/sccomp -s $DIR $FILE
 retVal=$?

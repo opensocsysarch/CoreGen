@@ -13,6 +13,7 @@ SCInstFormat.cpp
 SCIOWarn.cpp
 SCFieldIO.cpp
 SCPipeBuilder.cpp
+SCSigMap.cpp
 )
 
 set(llvm_codegens
