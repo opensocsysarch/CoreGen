@@ -118,6 +118,9 @@ public:
   /// Retrieves the set of register classes for fields that match the instruction format
   std::vector<std::string> GetRegClassInstTypes(std::string InstFormat);
 
+  /// Traces the target operand back to its origin and returns the original name
+  std::string TraceOperand( Function &F, Use *U, bool &isPredef );
+
   /// Executes the target code generation pass
   virtual bool Execute() = 0;
 

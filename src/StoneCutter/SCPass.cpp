@@ -85,7 +85,7 @@ std::vector<std::string> SCPass::GetInstFields(std::string InstFormat){
     if( AttrSet.hasAttribute("fieldtype") ){
       unsigned Idx = 0;
       while( AttrSet.hasAttribute("instformat"+std::to_string(Idx)) ){
-        if( AttrSet.getAttribute("Instformat"+std::to_string(Idx)).getValueAsString().str() ==
+        if( AttrSet.getAttribute("instformat"+std::to_string(Idx)).getValueAsString().str() ==
             InstFormat )
           Fields.push_back( Global.getName().str() );
         Idx++;
@@ -239,6 +239,15 @@ unsigned SCPass::GetNumRegClasses( std::string Var ){
   }// end for
 
   return 0;
+}
+
+std::string SCPass::TraceOperand( Function &F, Use *U, bool &isPredef ){
+  std::string OpName;
+  for( auto User : U->get()->users() ){
+    if( auto Inst = dyn_cast<Instruction>(User) ){
+    }
+  }
+  return OpName;
 }
 
 // EOF

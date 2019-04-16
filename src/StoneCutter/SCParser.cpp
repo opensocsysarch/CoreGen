@@ -1980,6 +1980,9 @@ Value *InstFormatAST::codegen(){
       // add the global to the top-level names list
       GlobalNamedValues[FName] = val;
 
+      // add the field name to differentiate across other fields
+      val->addAttribute("field_name",FName);
+
       // add an attribute to track the value to the instruction format
       val->addAttribute("instformat0",Name);
 
