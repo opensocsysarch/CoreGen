@@ -38,6 +38,9 @@ bool SCSigMap::TranslateLogicalOp( Function &F,
   Signals.push_back(new SCSig(Type,F.getName().str()));
 
   // interrogate the operands and write the operand enable signals
+  if( !TranslateOperands(F,I) )
+    return false;
+
   return true;
 }
 
@@ -47,6 +50,7 @@ bool SCSigMap::TranslateBinaryOp( Function &F,
   // initiate the binary signal
   Signals.push_back(new SCSig(Type,F.getName().str()));
 
+  // interrogate the operands and write the operand enable signals
   if( !TranslateOperands(F,I) )
     return false;
 
@@ -55,30 +59,37 @@ bool SCSigMap::TranslateBinaryOp( Function &F,
 
 bool SCSigMap::TranslateOperands( Function &F, Instruction &I ){
 
+  // Note: this function only works for operations where we have:
+  // NAME = LHS <op> RHS
+
   // walk all the instruction operands and trace the operands
   // back to the origin; generate the necessary signals from there
   for( auto Op = I.op_begin(); Op != I.op_end(); ++Op){
     bool isPredef = false;
     bool isImm = false;
-    std::string OpName;
-    OpName = TraceOperand(F,Op->get(),isPredef,isImm);
-  }
-
-
-  // interrogate the operands and write the operand enable signals
-  for( unsigned i=0; i<I.getNumOperands(); i++ ){
-    Value *Op = I.getOperand(i);
-    // check to see if this is a predefined register/register class/field
-    if( (HasGlobalAttribute(Op->getName().str(),"register")) ||
-        (HasGlobalAttribute(Op->getName().str(),"subregister")) ||
-        (HasGlobalAttribute(Op->getName().str(),"regclass")) ){
-    }else if( (HasGlobalAttribute(Op->getName().str(),"fieldtype")) ){
-      // part of an instruction format
-      // check to see whether this is an encoding field or an immediate
-    }else{
-      // top-level construct not found, must be a local operand
+    std::string OpName = TraceOperand(F,Op->get(),isPredef,isImm);
+    // generate a signal if the source is register
+    if( isPredef ){
+      Signals.push_back(new SCSig(REG_READ,F.getName().str(),OpName+"_READ"));
+    }else if(!isImm){
+      // create a temporary register
     }
   }
+
+  // now examine the LHS of the operation (instruction name)
+  // to generate the write signals
+  if( I.hasName() ){
+    bool isWPredef = false;
+    bool isWImm = false;
+    Value *LHS = cast<Value>(&I);
+    std::string WOpName = TraceOperand(F,LHS,isWPredef,isWImm);
+    if( isWPredef ){
+      Signals.push_back(new SCSig(REG_WRITE,F.getName().str(),WOpName+"_WRITE"));
+    }else{
+      // create a temporary register
+    }
+  }
+
   return true;
 }
 
@@ -319,6 +330,10 @@ SCSigMap::SCSig::SCSig(SigType T,std::string I) : Type(T), Inst(I){
 
 SCSigMap::SCSig::SCSig(SigType T,unsigned W,std::string I)
   : Type(T), SigWidth(W), Inst(I){
+}
+
+SCSigMap::SCSig::SCSig(SigType T,std::string I,std::string N)
+  : Type(T), Inst(I), Name(N){
 }
 
 SCSigMap::SCSig::SCSig(SigType T,unsigned W,std::string I,std::string N)

@@ -66,7 +66,7 @@ const VarAttrEntry VarAttrEntryTable[] = {
   { "u8",      8, 1, false, false, false },
   { "u16",    16, 1, false, false, false },
   { "u32",    32, 1, false, false, false },
-  { "u64",    32, 1, false, false, false },
+  { "u64",    64, 1, false, false, false },
   { "s8",      8, 1, true,  false, false },
   { "s16",    16, 1, true,  false, false },
   { "s32",    32, 1, true,  false, false },

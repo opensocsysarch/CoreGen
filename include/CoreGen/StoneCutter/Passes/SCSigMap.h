@@ -107,6 +107,9 @@ private:
     SCSig(SigType T, std::string I);
 
     /// Overloaded constructor
+    SCSig(SigType T, std::string I, std::string N);
+
+    /// Overloaded constructor
     SCSig(SigType T, unsigned W, std::string I, std::string N);
 
     /// Default destructor

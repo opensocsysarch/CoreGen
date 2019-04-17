@@ -94,6 +94,9 @@ public:
   /// Retrieves the target attribute from the target global variable
   std::string GetGlobalAttribute(std::string Var, std::string Attribute);
 
+  /// Retrieves the register field register class global value for the target register and associated format
+  std::string GetGlobalRegClass(std::string Field, std::string Format);
+
   /// Retrieves the number of instruction formats that include the target variable
   unsigned GetNumInstFormats(std::string Var);
 
