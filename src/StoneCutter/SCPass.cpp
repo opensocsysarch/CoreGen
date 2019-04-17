@@ -241,10 +241,37 @@ unsigned SCPass::GetNumRegClasses( std::string Var ){
   return 0;
 }
 
-std::string SCPass::TraceOperand( Function &F, Use *U, bool &isPredef ){
+std::string SCPass::TraceOperand( Function &F, Value *V,
+                                  bool &isPredef, bool &isImm ){
   std::string OpName;
-  for( auto User : U->get()->users() ){
+  // check to see if the value is a constant
+
+  // check to see if the operand is a register
+  if( (HasGlobalAttribute(V->getName().str(),"register")) ||
+      (HasGlobalAttribute(V->getName().str(),"regclass")) ){
+    // this is a global var
+    isPredef = true;
+    return V->getName().str();
+  }
+
+  for( auto User : V->users() ){
     if( auto Inst = dyn_cast<Instruction>(User) ){
+      if( Inst->getOpcode() == Instruction::Store ){
+        if( Inst->getOperand(1)->getName().str() == V->getName().str() ){
+          // this is a store operation where the operand is the target
+          // check to see whether the first operand is a global
+          // if it is, return it
+          // otherwise, recurse
+          Value *V0 = Inst->getOperand(0);
+          if( (HasGlobalAttribute(V0->getName().str(),"register")) ||
+              (HasGlobalAttribute(V0->getName().str(),"regclass")) ){
+            isPredef = true;
+            return V0->getName().str();
+          }else{
+            return TraceOperand(F,V0,isPredef,isImm);
+          }
+        }
+      }
     }
   }
   return OpName;

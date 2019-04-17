@@ -59,8 +59,9 @@ bool SCSigMap::TranslateOperands( Function &F, Instruction &I ){
   // back to the origin; generate the necessary signals from there
   for( auto Op = I.op_begin(); Op != I.op_end(); ++Op){
     bool isPredef = false;
+    bool isImm = false;
     std::string OpName;
-    OpName = TraceOperand(F,Op,isPredef);
+    OpName = TraceOperand(F,Op->get(),isPredef,isImm);
   }
 
 

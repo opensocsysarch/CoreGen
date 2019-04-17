@@ -119,7 +119,8 @@ public:
   std::vector<std::string> GetRegClassInstTypes(std::string InstFormat);
 
   /// Traces the target operand back to its origin and returns the original name
-  std::string TraceOperand( Function &F, Use *U, bool &isPredef );
+  std::string TraceOperand( Function &F, Value *V,
+                            bool &isPredef, bool &isImm );
 
   /// Executes the target code generation pass
   virtual bool Execute() = 0;
