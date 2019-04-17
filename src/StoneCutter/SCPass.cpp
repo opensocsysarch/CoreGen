@@ -335,9 +335,11 @@ std::string SCPass::TraceOperand( Function &F, Value *V,
           // and see if it exists as a global
           return TraceOperand(F,Inst->getOperand(0),isPredef,isImm);
         }
-      }else if( Inst->getOpcode() == Instruction::Load ){
+      }else if( Inst->getOpcode() != Instruction::Load && Inst->hasName() ){
+        // else, examine the target of the instruction
+        Value *LHS = cast<Value>(Inst);
+        return TraceOperand(F,LHS,isPredef,isImm);
       }
-      // else, examine the remaining instructions
     }
   }
   // if we reach this point, then the source is unique

@@ -79,11 +79,11 @@ void SCParser::InitIntrinsics(){
 }
 
 void SCParser::InitPassMap(){
-#if 0
+//#if 0
   EPasses.insert(std::pair<std::string,bool>("PromoteMemoryToRegisterPass",true));
   EPasses.insert(std::pair<std::string,bool>("InstructionCombiningPass",true));
   EPasses.insert(std::pair<std::string,bool>("ReassociatePass",true));
-#endif
+//#endif
   EPasses.insert(std::pair<std::string,bool>("GVNPass",true));
   EPasses.insert(std::pair<std::string,bool>("CFGSimplificationPass",true));
   EPasses.insert(std::pair<std::string,bool>("ConstantPropagationPass",true));
@@ -1047,8 +1047,18 @@ std::unique_ptr<PrototypeAST> SCParser::ParsePrototype() {
     return LogErrorP("Expected '(' in prototype");
 
   std::vector<std::string> ArgNames;
+  while (GetNextToken() == tok_identifier){
+    std::string LVar = Lex->GetIdentifierStr();
+    Value *V = SCParser::GlobalNamedValues[LVar];
+    if( !V ){
+      // not a global variable
+      ArgNames.push_back(LVar);
+    }
+  }
+#if 0
   while (GetNextToken() == tok_identifier)
     ArgNames.push_back(Lex->GetIdentifierStr());
+#endif
   if (CurTok != ')')
     return LogErrorP("Expected ')' in prototype");
 
