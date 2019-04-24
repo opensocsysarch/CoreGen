@@ -42,11 +42,20 @@ private:
   /// Find overlapping SubReg names
   bool FindOverlappingSubRegNames(CoreGenReg *Reg);
 
-  /// Find overlappign SubReg bit fields
+  /// Find overlapping SubReg bit fields
   bool FindOverlappingSubRegFields(CoreGenReg *Reg);
 
   /// Test the SubReg values for various conditions
   bool TestSubRegs(CoreGenReg *Reg);
+
+  /// Tests the target register classes for existence of multiple PCs
+  bool TestPCRegs(CoreGenISA *ISA, std::vector<CoreGenRegClass *> RCs);
+
+  /// Test the target ISA for existence of a single PC
+  bool FindMultiplePC(CoreGenDAG *D, CoreGenISA *ISA);
+
+  /// Retrieve the register class fields from the target inst formats
+  std::vector<CoreGenRegClass *> GetRegClassFields( std::vector<CoreGenInstFormat *> IFs );
 
 public:
   /// Default constructor

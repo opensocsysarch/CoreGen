@@ -1626,7 +1626,7 @@ bool CoreGenYaml::ReadRegisterYaml(const YAML::Node& RegNodes,
 
     ASP += "regIsPCReg(" + ASPName;
     if( CheckValidNode(Node,"PCReg") ){
-      TUSReg = Node["PCReg"].as<bool>();
+      PCReg = Node["PCReg"].as<bool>();
       ASP += ", true).\n";
     }
     else{
