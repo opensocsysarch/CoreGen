@@ -1169,6 +1169,7 @@ std::unique_ptr<RegClassAST> SCParser::ParseRegClassDef(){
   if (CurTok != '(')
     return LogErrorR("Expected '(' in regclass prototype");
 
+  std::string PCName;                         // name of the PC register
   std::vector<std::string> ArgNames;          // vector of register names
   std::vector<VarAttrs> ArgAttrs;             // vector of register attributes
   std::vector<std::tuple<std::string,
@@ -1197,9 +1198,42 @@ std::unique_ptr<RegClassAST> SCParser::ParseRegClassDef(){
 
     // Look for the comma or subregister
     GetNextToken();
+
     if( CurTok == ',' ){
       // eat the comma
       GetNextToken();
+    }else if( CurTok == '[' ){
+      // attempt to parse the attribute field
+      // eat the [
+      GetNextToken();
+
+      if( CurTok != tok_identifier ){
+        return LogErrorR("Expected register attribute in [..]");
+      }
+
+      // examine the attribute
+      if( Lex->GetIdentifierStr() == "PC" ){
+        PCName = RegName;
+      }
+
+      // eat the identifier
+      GetNextToken();
+
+      if( CurTok == ']' ){
+        // eat the )
+        GetNextToken();
+      }else{
+        // flag an error
+        return LogErrorR("Expected ']' in register attribute list");
+      }
+
+      if( CurTok == ',' ){
+        // eat the comma
+        GetNextToken();
+      }else{
+        break;
+      }
+
     }else if( CurTok == '(' ){
       // attempt to parse the sub registers
 
@@ -1266,6 +1300,7 @@ std::unique_ptr<RegClassAST> SCParser::ParseRegClassDef(){
   ArgNames.push_back(RName);
 
   return llvm::make_unique<RegClassAST>(RName,
+                                        PCName,
                                         std::move(ArgNames),
                                         std::move(ArgAttrs),
                                         std::move(SubRegs));
@@ -2097,6 +2132,10 @@ Value *RegClassAST::codegen(){
       val->addAttribute("register",Args[i]);
       // insert a special attribute to track the parent register class
       val->addAttribute("regclass", Name);
+
+      if( PC == Args[i] ){
+        val->addAttribute("pc", "true");
+      }
     }else{
       // this is a register class
       // add a special attribute token

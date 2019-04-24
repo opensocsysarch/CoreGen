@@ -304,6 +304,7 @@ public:
   ///               which captures the name and the associated registers
   class RegClassASTContainer {
     std::string Name;     ///< Name of the register class
+    std::string PC;       ///< Name of the PC register
     std::vector<std::string> Args;  ///< Register vector
     std::vector<VarAttrs> Attrs;    ///< Register attribute vector
     std::vector<std::tuple<std::string,std::string,VarAttrs>> SubRegs;  ///< Subregister vector
@@ -311,10 +312,11 @@ public:
   public:
     /// RegClassASTContainer default constructor
     RegClassASTContainer(const std::string &Name,
+                         const std::string &PC,
                          std::vector<std::string> Args,
                          std::vector<VarAttrs> Attrs,
                          std::vector<std::tuple<std::string,std::string,VarAttrs>> SubRegs)
-      : Name(Name), Args(std::move(Args)),
+      : Name(Name), PC(PC), Args(std::move(Args)),
         Attrs(std::move(Attrs)),SubRegs(std::move(SubRegs)) {}
 
     /// RegClassASTContainer: Retrieve the  name of the register class
