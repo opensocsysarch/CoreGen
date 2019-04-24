@@ -40,6 +40,13 @@ bool CoreGenReg::SetPseudoName( std::string PseudoName ){
   return true;
 }
 
+bool CoreGenReg::IsPCAttr(){
+  if( (attrs & CoreGenReg::CGRegPC) > 0 ){
+    return true;
+  }
+  return false;
+}
+
 bool CoreGenReg::IsRWAttr(){
   if( (attrs & CoreGenReg::CGRegRW) > 0 ){
     return true;
@@ -102,6 +109,9 @@ bool CoreGenReg::UnsetAttrs( uint32_t Attr ){
     attrs &= ~(1 << CoreGenReg::CGRegCSR);
   }
   if( (Attr & CoreGenReg::CGRegTUS) > 0 ){
+    attrs &= ~(1 << CoreGenReg::CGRegTUS);
+  }
+  if( (Attr & CoreGenReg::CGRegPC) > 0 ){
     attrs &= ~(1 << CoreGenReg::CGRegTUS);
   }
   return true;

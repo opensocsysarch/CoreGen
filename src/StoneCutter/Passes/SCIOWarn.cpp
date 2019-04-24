@@ -69,6 +69,23 @@ void SCIOWarn::CheckPrototypeIO( Function &F, Instruction &I ){
             return ;
         }
       }
+
+    }
+
+    // Argument does not appear in normal register classes,
+    // check the instruction format fields for a match
+    if( this->HasGlobalAttribute(ArgName,"field_name") ){
+      if( F.hasFnAttribute("instformat") ){
+        // function attribute exists
+        std::string InstFormat =
+          F.getFnAttribute("instformat").getValueAsString().str();
+        std::vector<std::string> Fields = GetInstFields(InstFormat);
+        for( unsigned i=0; i<Fields.size(); i++ ){
+          if( Fields[i] == ArgName ){
+            return ;
+          }
+        }
+      }
     }
 
     this->PrintMsg( L_WARN, "Detected rogue I/O operation to register file for variable=" +

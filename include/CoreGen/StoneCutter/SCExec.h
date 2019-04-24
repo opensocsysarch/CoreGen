@@ -69,6 +69,7 @@ private:
   SCParser *Parser;   ///< SCExec: Parser object
 
   // private functions
+  /// SCExec: Print the list of passes
   bool PrintPassList();
 
 public:

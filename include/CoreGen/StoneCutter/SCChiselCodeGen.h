@@ -72,6 +72,7 @@ private:
   SCOpts *Opts;                               ///< SC Options object
   SCMsg *Msgs;                                ///< SC Messages object
   std::string ChiselFile;                     ///< Output file
+  std::string SigMap;                         ///< Signal map output file
 
   std::ofstream OutFile;                      ///< Output file stream
 
@@ -84,6 +85,7 @@ private:
   void InitIntrinsics();                      ///< Init the intrinsics vector
   void InitPasses();                          ///< Init the pass vector
   bool ExecutePasses();                       ///< Executes all the code generation passes
+  bool ExecuteSignalMap();                    ///< Executes the signal map generator
 
 public:
 
@@ -96,6 +98,8 @@ public:
   /// Generate the LLVM Chisel output
   bool GenerateChisel();
 
+  /// Generate the signal map using the StoneCutter input
+  bool GenerateSignalMap(std::string);
 };
 
 #endif

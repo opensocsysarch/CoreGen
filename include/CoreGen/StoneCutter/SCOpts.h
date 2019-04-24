@@ -57,8 +57,10 @@ private:
   bool isDisable;   ///< SCOpts: Manually disabled passes flag
   bool isEnable;    ///< SCOpts: Manually disabled passes flag
   bool isListPass;  ///< SCOpts: User selected pass listing flag
+  bool isSigMap;    ///< SCOpts: Signal map selected
 
   std::string OutFile;  ///< SCOpts: Output file designator
+  std::string SigMap;   ///< SCOpts: Signal map output file
 
   std::vector<std::string> FileList;  ///< SCOpts: List of files to compile
 
@@ -121,6 +123,9 @@ public:
   /// SCOpts: Is verbosity enabled?
   bool IsVerbose() { return isVerbose; }
 
+  /// SCOpts: Is signal map enabled?
+  bool IsSignalMap() { return isSigMap; }
+
   /// SCOpts: Retrieve the list of disabled passes
   std::vector<std::string> GetDisabledPass() { return DisablePass; }
 
@@ -129,6 +134,9 @@ public:
 
   /// SCOpts: Retrieve the output file name
   std::string GetOutputFile() { return OutFile; }
+
+  /// SCOpts: Retrieve the signal map file name
+  std::string GetSignalMapFile() { return SigMap; }
 
   /// SCOpts: Get the number of input files
   unsigned GetNumInputFiles() { return FileList.size(); }
@@ -163,6 +171,9 @@ public:
   /// SCOpts: Sets the 'verbose' option
   bool SetVerbose() { isVerbose = true; return true; }
 
+  /// SCOpts: Sets the 'sigmap' option
+  bool SetSignalMap(std::string O) { isSigMap = true; SigMap = O; return true; }
+
   /// SCOpts: Disables the 'chisel' option
   bool UnsetChisel() { isChisel = false; return false; }
 
@@ -180,6 +191,9 @@ public:
 
   /// SCOpts: Disables the 'verbose' option
   bool UnsetVerbose() { isVerbose = false; return true; }
+
+  /// SCOpts: Disables the 'sigmap' option
+  bool UnsetSignalMap() { isSigMap = false; return true; }
 };
 
 #endif // _STONECUTTER_SCOPTS_H_

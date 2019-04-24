@@ -56,7 +56,10 @@ bool SCExec::Exec(){
   if( Opts->GetNumInputFiles() > 1 ){
     // retrieve all the files and consolidate them into a single input file
     char *tmpname = strdup("/tmp/SCCTmpFileXXXXXX");
-    mkstemp(tmpname);
+    if( mkstemp(tmpname) == -1 ){
+      Msgs->PrintMsg( L_ERROR, "Failed to generate temporary file" );
+      return false;
+    }
     std::ofstream of(tmpname);
     for( unsigned i=0; i<Opts->GetNumInputFiles(); i++ ){
       std::ifstream infile( Opts->GetInputFile(i) );
@@ -186,7 +189,21 @@ bool SCExec::Exec(){
     // Generate the Chisel output
     CCG = new SCChiselCodeGen(Parser,Opts,Msgs,
                               OTmpFile + ".chisel" );
-    if( !CCG->GenerateChisel() ){
+    if( Opts->IsSignalMap() ){
+      if( !CCG->GenerateSignalMap(Opts->GetSignalMapFile()) ){
+        Msgs->PrintMsg( L_ERROR, "Failed to generate signal map for " +
+                        LTmpFile );
+        delete CCG;
+        if( CG ){
+          delete CG;
+        }
+        delete Parser;
+        if( Opts->GetNumInputFiles() > 1 ){
+          SCDeleteFile(LTmpFile);
+        }
+        return false;
+      }
+    }else if( !CCG->GenerateChisel() ){
       Msgs->PrintMsg( L_ERROR, "Failed to generate Chisel for " +
                       LTmpFile );
       delete CCG;

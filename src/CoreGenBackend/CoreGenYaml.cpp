@@ -783,12 +783,20 @@ void CoreGenYaml::WriteRegYaml(YAML::Emitter *out,
       *out << YAML:: Value << "false";
     }
 
+    *out << YAML::Key << "PCReg";
+    if( Regs[i]->IsPCAttr() ){
+      *out << YAML:: Value << "true";
+    }else{
+      *out << YAML:: Value << "false";
+    }
+
     *out << YAML::Key << "Shared";
     if( Regs[i]->IsShared() ){
       *out << YAML:: Value << "true";
     }else{
       *out << YAML:: Value << "false";
     }
+
 
     // write out the subregister encodings
     if( Regs[i]->GetNumSubRegs() > 0 ){
@@ -1559,6 +1567,7 @@ bool CoreGenYaml::ReadRegisterYaml(const YAML::Node& RegNodes,
     bool CSRReg = false;
     bool AMSReg = false;
     bool TUSReg = false;
+    bool PCReg = false;
     bool IsShared = false;
 
     ASP += "regIsSIMD(" + ASPName;
@@ -1569,6 +1578,7 @@ bool CoreGenYaml::ReadRegisterYaml(const YAML::Node& RegNodes,
     else{
       ASP += ", false).\n";
     }
+
     ASP += "regIsRWReg(" + ASPName;
     if( CheckValidNode(Node,"RWReg") ){
       RWReg = Node["RWReg"].as<bool>();
@@ -1577,6 +1587,7 @@ bool CoreGenYaml::ReadRegisterYaml(const YAML::Node& RegNodes,
     else{
       ASP += ", false).\n";
     }
+
     ASP += "regIsROReg(" + ASPName;
     if( CheckValidNode(Node,"ROReg") ){
       ROReg = Node["ROReg"].as<bool>();
@@ -1585,6 +1596,7 @@ bool CoreGenYaml::ReadRegisterYaml(const YAML::Node& RegNodes,
     else{
       ASP += ", false).\n";
     }
+
     ASP += "regIsCSRReg(" + ASPName;
     if( CheckValidNode(Node,"CSRReg") ){
       CSRReg = Node["CSRReg"].as<bool>();
@@ -1593,6 +1605,7 @@ bool CoreGenYaml::ReadRegisterYaml(const YAML::Node& RegNodes,
     else{
       ASP += ", false).\n";
     }
+
     ASP += "regIsAMSReg(" + ASPName;
     if( CheckValidNode(Node,"AMSReg") ){
       AMSReg = Node["AMSReg"].as<bool>();
@@ -1601,6 +1614,7 @@ bool CoreGenYaml::ReadRegisterYaml(const YAML::Node& RegNodes,
     else{
       ASP += ", false).\n";
     }
+
     ASP += "regIsTUSReg(" + ASPName;
     if( CheckValidNode(Node,"TUSReg") ){
       TUSReg = Node["TUSReg"].as<bool>();
@@ -1609,6 +1623,17 @@ bool CoreGenYaml::ReadRegisterYaml(const YAML::Node& RegNodes,
     else{
       ASP += ", false).\n";
     }
+
+    ASP += "regIsPCReg(" + ASPName;
+    if( CheckValidNode(Node,"PCReg") ){
+      PCReg = Node["PCReg"].as<bool>();
+      ASP += ", true).\n";
+    }
+    else{
+      ASP += ", false).\n";
+    }
+
+
     if( CheckValidNode(Node,"Shared") ){
       IsShared = Node["Shared"].as<bool>();
     }
@@ -1655,6 +1680,9 @@ bool CoreGenYaml::ReadRegisterYaml(const YAML::Node& RegNodes,
     }
     if( TUSReg ){
       Attrs |= CoreGenReg::CGRegTUS;
+    }
+    if( PCReg ){
+      Attrs |= CoreGenReg::CGRegPC;
     }
     R->SetAttrs(Attrs);
     ASP += "regAttrs(" + ASPName + ", " + std::to_string(Attrs) + ").\n";

@@ -85,7 +85,7 @@ std::vector<std::string> SCPass::GetInstFields(std::string InstFormat){
     if( AttrSet.hasAttribute("fieldtype") ){
       unsigned Idx = 0;
       while( AttrSet.hasAttribute("instformat"+std::to_string(Idx)) ){
-        if( AttrSet.getAttribute("Instformat"+std::to_string(Idx)).getValueAsString().str() ==
+        if( AttrSet.getAttribute("instformat"+std::to_string(Idx)).getValueAsString().str() ==
             InstFormat )
           Fields.push_back( Global.getName().str() );
         Idx++;
@@ -201,6 +201,27 @@ std::string SCPass::GetGlobalAttribute( std::string Var,
   return Attr;
 }
 
+std::string SCPass::GetGlobalRegClass( std::string Field,
+                                       std::string Format ){
+  for( auto &Global : TheModule->getGlobalList() ){
+    AttributeSet AttrSet = Global.getAttributes();
+    if( AttrSet.hasAttribute("field_name") ){
+      if( AttrSet.getAttribute("field_name").getValueAsString().str() == Field ){
+        unsigned Idx = 0;
+        while( AttrSet.hasAttribute("instformat"+std::to_string(Idx)) ){
+          if( AttrSet.getAttribute("Instformat"+std::to_string(Idx)).getValueAsString().str() ==
+              Format ){
+            // we found the correct index, retrieve the associated regclasscontainer
+            return AttrSet.getAttribute("regclasscontainer"+std::to_string(Idx)).getValueAsString().str();
+          }
+          Idx++;
+        }
+      }
+    }
+  }
+  return "";
+}
+
 unsigned SCPass::GetNumInstFormats( std::string Var ){
   for( auto &Global : TheModule->getGlobalList() ){
     if( Global.getName().str() == Var ){
@@ -239,6 +260,90 @@ unsigned SCPass::GetNumRegClasses( std::string Var ){
   }// end for
 
   return 0;
+}
+
+std::string SCPass::TraceOperand( Function &F, Value *V,
+                                  bool &isPredef, bool &isImm ){
+  std::string OpName;
+
+  // check to see if the value is a constant
+  if( auto CInt = dyn_cast<ConstantInt>(V) ){
+    isImm = true;
+    isPredef = false;
+    return CInt->getName().str();
+  }
+
+  // check to see if the operand is a register
+  if( HasGlobalAttribute(V->getName().str(),"register") ){
+    // derive the register class type and return it
+    isPredef = true;
+    return GetGlobalAttribute(V->getName().str(),"regclass");
+  }
+
+  // check to see if the operand is a instruction field
+  if( HasGlobalAttribute(V->getName().str(),"fieldtype") ){
+    if( GetGlobalAttribute(V->getName().str(),"fieldtype") == "register" ){
+      // derive the register class type and return it
+      isPredef = true;
+      isImm = false;
+      return GetGlobalRegClass( V->getName().str(),
+                                GetGlobalAttribute(F.getName().str(),
+                                                   "instformat") );
+    }else if( GetGlobalAttribute(V->getName().str(),"fieldtype") == "encoding" ){
+      // return the field name
+      isPredef = true;
+      isImm = false;
+      return V->getName().str();
+    }else if( GetGlobalAttribute(V->getName().str(),"fieldtype") == "immediate" ){
+      // return the field name as this mimics an instruction payload read
+      isPredef = true;
+      isImm = false;
+      return V->getName().str();
+    }
+  }
+
+  // check to see if the operand is a register class
+  if( HasGlobalAttribute(V->getName().str(),"regclass") ){
+    // this is a global var
+    isPredef = true;
+    return V->getName().str();
+  }
+
+  // The current operand was not in our global list, search for all its uses
+  // and determine if it has a global root operand.  If not, return the tmp
+  // name as it requires a custom operand
+  for( auto User : V->users() ){
+    if( auto Inst = dyn_cast<Instruction>(User) ){
+      if( Inst->getOpcode() == Instruction::Store ){
+        // examine the Store instructions
+        // This would be a case where we have one of the following:
+        //
+        // store [type] %REGISTER, [type] %TMP0
+        // ...or...
+        // store [type] %REGISTER, [type] %TMP0
+        // %TMP1 = <op> [type] %REGISTER, %REGISTER
+        // store [type] %TMP1, %TMP0
+        // ...or...
+        // store [type] %TMP, %REGISTER
+        //
+        if( Inst->getOperand(0)->getName().str() == V->getName().str() ){
+          // The source operand is our operand, check the target operand
+          // and see if it exists as a global
+          return TraceOperand(F,Inst->getOperand(1),isPredef,isImm);
+        }else{
+          // The target operand is our operand, check the source operand
+          // and see if it exists as a global
+          return TraceOperand(F,Inst->getOperand(0),isPredef,isImm);
+        }
+      }else if( Inst->getOpcode() != Instruction::Load && Inst->hasName() ){
+        // else, examine the target of the instruction
+        Value *LHS = cast<Value>(Inst);
+        return TraceOperand(F,LHS,isPredef,isImm);
+      }
+    }
+  }
+  // if we reach this point, then the source is unique
+  return OpName;
 }
 
 // EOF

@@ -79,11 +79,11 @@ void SCParser::InitIntrinsics(){
 }
 
 void SCParser::InitPassMap(){
-#if 0
+//#if 0
   EPasses.insert(std::pair<std::string,bool>("PromoteMemoryToRegisterPass",true));
   EPasses.insert(std::pair<std::string,bool>("InstructionCombiningPass",true));
   EPasses.insert(std::pair<std::string,bool>("ReassociatePass",true));
-#endif
+//#endif
   EPasses.insert(std::pair<std::string,bool>("GVNPass",true));
   EPasses.insert(std::pair<std::string,bool>("CFGSimplificationPass",true));
   EPasses.insert(std::pair<std::string,bool>("ConstantPropagationPass",true));
@@ -1047,8 +1047,18 @@ std::unique_ptr<PrototypeAST> SCParser::ParsePrototype() {
     return LogErrorP("Expected '(' in prototype");
 
   std::vector<std::string> ArgNames;
+  while (GetNextToken() == tok_identifier){
+    std::string LVar = Lex->GetIdentifierStr();
+    Value *V = SCParser::GlobalNamedValues[LVar];
+    if( !V ){
+      // not a global variable
+      ArgNames.push_back(LVar);
+    }
+  }
+#if 0
   while (GetNextToken() == tok_identifier)
     ArgNames.push_back(Lex->GetIdentifierStr());
+#endif
   if (CurTok != ')')
     return LogErrorP("Expected ')' in prototype");
 
@@ -1159,6 +1169,7 @@ std::unique_ptr<RegClassAST> SCParser::ParseRegClassDef(){
   if (CurTok != '(')
     return LogErrorR("Expected '(' in regclass prototype");
 
+  std::string PCName;                         // name of the PC register
   std::vector<std::string> ArgNames;          // vector of register names
   std::vector<VarAttrs> ArgAttrs;             // vector of register attributes
   std::vector<std::tuple<std::string,
@@ -1187,9 +1198,42 @@ std::unique_ptr<RegClassAST> SCParser::ParseRegClassDef(){
 
     // Look for the comma or subregister
     GetNextToken();
+
     if( CurTok == ',' ){
       // eat the comma
       GetNextToken();
+    }else if( CurTok == '[' ){
+      // attempt to parse the attribute field
+      // eat the [
+      GetNextToken();
+
+      if( CurTok != tok_identifier ){
+        return LogErrorR("Expected register attribute in [..]");
+      }
+
+      // examine the attribute
+      if( Lex->GetIdentifierStr() == "PC" ){
+        PCName = RegName;
+      }
+
+      // eat the identifier
+      GetNextToken();
+
+      if( CurTok == ']' ){
+        // eat the )
+        GetNextToken();
+      }else{
+        // flag an error
+        return LogErrorR("Expected ']' in register attribute list");
+      }
+
+      if( CurTok == ',' ){
+        // eat the comma
+        GetNextToken();
+      }else{
+        break;
+      }
+
     }else if( CurTok == '(' ){
       // attempt to parse the sub registers
 
@@ -1256,6 +1300,7 @@ std::unique_ptr<RegClassAST> SCParser::ParseRegClassDef(){
   ArgNames.push_back(RName);
 
   return llvm::make_unique<RegClassAST>(RName,
+                                        PCName,
                                         std::move(ArgNames),
                                         std::move(ArgAttrs),
                                         std::move(SubRegs));
@@ -1980,6 +2025,9 @@ Value *InstFormatAST::codegen(){
       // add the global to the top-level names list
       GlobalNamedValues[FName] = val;
 
+      // add the field name to differentiate across other fields
+      val->addAttribute("field_name",FName);
+
       // add an attribute to track the value to the instruction format
       val->addAttribute("instformat0",Name);
 
@@ -2084,6 +2132,10 @@ Value *RegClassAST::codegen(){
       val->addAttribute("register",Args[i]);
       // insert a special attribute to track the parent register class
       val->addAttribute("regclass", Name);
+
+      if( PC == Args[i] ){
+        val->addAttribute("pc", "true");
+      }
     }else{
       // this is a register class
       // add a special attribute token

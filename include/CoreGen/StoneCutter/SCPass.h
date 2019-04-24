@@ -94,6 +94,9 @@ public:
   /// Retrieves the target attribute from the target global variable
   std::string GetGlobalAttribute(std::string Var, std::string Attribute);
 
+  /// Retrieves the register field register class global value for the target register and associated format
+  std::string GetGlobalRegClass(std::string Field, std::string Format);
+
   /// Retrieves the number of instruction formats that include the target variable
   unsigned GetNumInstFormats(std::string Var);
 
@@ -117,6 +120,10 @@ public:
 
   /// Retrieves the set of register classes for fields that match the instruction format
   std::vector<std::string> GetRegClassInstTypes(std::string InstFormat);
+
+  /// Traces the target operand back to its origin and returns the original name
+  std::string TraceOperand( Function &F, Value *V,
+                            bool &isPredef, bool &isImm );
 
   /// Executes the target code generation pass
   virtual bool Execute() = 0;

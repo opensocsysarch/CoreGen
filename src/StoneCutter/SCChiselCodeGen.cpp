@@ -64,6 +64,7 @@ void SCChiselCodeGen::InitPasses(){
   Passes.push_back(static_cast<SCPass *>(new SCPipeBuilder(SCParser::TheModule.get(),
                                                        Opts,
                                                        Msgs)));
+  // temporarily disabling pass
   Passes.push_back(static_cast<SCPass *>(new SCIOWarn(SCParser::TheModule.get(),
                                                       Opts,
                                                       Msgs)));
@@ -118,6 +119,35 @@ bool SCChiselCodeGen::ExecuteCodegen(){
         //std::cout << "\t\tFound instruction: " << curInst->getOpcodeName() << std::endl;
       }
     }
+  }
+
+  return true;
+}
+
+bool SCChiselCodeGen::ExecuteSignalMap(){
+  return true;
+}
+
+bool SCChiselCodeGen::GenerateSignalMap(std::string SM){
+  if( SM.length() == 0 ){
+    Msgs->PrintMsg( L_ERROR, "Signal map output full is null" );
+    return false;
+  }
+  SigMap = SM;
+
+  if( !Parser ){
+    Msgs->PrintMsg( L_ERROR, "No parsing input for generating signal map" );
+    return false;
+  }
+
+  if( !ExecutePasses() ){
+    Msgs->PrintMsg( L_ERROR, "Failed to execute passes for signal map" );
+    return false;
+  }
+
+  if( !ExecuteSignalMap() ){
+    Msgs->PrintMsg( L_ERROR, "Failed to generate signal map" );
+    return false;
   }
 
   return true;

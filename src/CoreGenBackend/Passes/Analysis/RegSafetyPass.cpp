@@ -166,6 +166,69 @@ bool RegSafetyPass::TestSubRegs(CoreGenReg *R){
   return rtn;
 }
 
+std::vector<CoreGenRegClass *> RegSafetyPass::GetRegClassFields(
+                                              std::vector<CoreGenInstFormat *> IFs ){
+  std::vector<CoreGenRegClass *> RCs;
+
+  for( unsigned i=0; i<IFs.size(); i++ ){
+    for( unsigned j=0; j<IFs[i]->GetNumFields(); j++ ){
+      std::string FN = IFs[i]->GetFieldName(j);
+      if( IFs[i]->GetFieldType(FN) == CoreGenInstFormat::CGInstReg ){
+        RCs.push_back(IFs[i]->GetFieldRegClass(FN));
+      }
+    }
+  }
+
+  std::sort( RCs.begin(), RCs.end() );
+  RCs.erase( std::unique(RCs.begin(),RCs.end()), RCs.end() );
+
+  return RCs;
+}
+
+bool RegSafetyPass::TestPCRegs(CoreGenISA *ISA, std::vector<CoreGenRegClass *> RCs){
+  bool Rtn = true;
+  bool PC = false;
+
+  for( unsigned i=0; i<RCs.size(); i++ ){
+    for( unsigned j=0; j<RCs[i]->GetNumReg(); j++ ){
+      if( RCs[i]->GetReg(j)->IsPCAttr() ){
+        // found a PC attr
+        if( PC ){
+          Rtn = false;
+          WriteMsg( "Found multiple PC registers in ISA=" + ISA->GetName() +
+                    "; Potential collision at Register=" + RCs[i]->GetReg(j)->GetName() );
+        }
+        PC = true;
+      }
+    }
+  }
+
+  return Rtn;
+}
+
+bool RegSafetyPass::FindMultiplePC(CoreGenDAG *D, CoreGenISA *ISA){
+
+  std::vector<CoreGenInstFormat *> IFs;
+
+  for( unsigned i=0; i<D->GetDimSize(); i++ ){
+    CoreGenInst *INST = static_cast<CoreGenInst *>(D->FindNodeByIndex(i));
+    if( INST->GetType() == CGInst ){
+      if( INST->GetISA() == ISA ){
+        // this instruction matches
+        // retrieve the format and all its register classes
+        IFs.push_back(INST->GetFormat());
+      }
+    }
+  }
+
+  std::sort( IFs.begin(), IFs.end() );
+  IFs.erase( std::unique(IFs.begin(),IFs.end()), IFs.end() );
+
+  std::vector<CoreGenRegClass *> RCs = GetRegClassFields( IFs );
+
+  return TestPCRegs(ISA, RCs);
+}
+
 bool RegSafetyPass::Execute(){
   // Get the correct DAG level
   CoreGenDAG *D3 = DAG->GetDAGFromLevel(this->GetLevel());
@@ -190,6 +253,15 @@ bool RegSafetyPass::Execute(){
         rtn = false;
       }
       if( !TestSubRegs(REG) ){
+        rtn = false;
+      }
+    }
+  }
+
+  for( unsigned i=0; i<D3->GetDimSize(); i++ ){
+    CoreGenISA *ISA = static_cast<CoreGenISA *>(D3->FindNodeByIndex(i));
+    if( ISA->GetType() == CGISA ){
+      if( !FindMultiplePC(D3, ISA) ){
         rtn = false;
       }
     }

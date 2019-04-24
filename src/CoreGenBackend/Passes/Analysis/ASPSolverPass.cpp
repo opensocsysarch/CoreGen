@@ -91,7 +91,11 @@ bool ASPSolverPass::Execute(){
   char dot[] = ".";        // this is a temporary placeholder
   char *argv[] = {app,strdup(ASPDagFile.c_str()),dot,NULL};
   char *tmpname = strdup("/tmp/ASPTmpFileXXXXXX");
-  mkstemp(tmpname);
+  if( mkstemp(tmpname) == -1 ){
+    Errno->SetError( CGERR_ERROR, this->GetName() +
+                     " : Error generating temporary file" );
+    return false;
+  }
   std::ofstream of(tmpname);
   for( unsigned i=0; i < Files.size(); i++ ){
     std::ifstream infile( Files[i] );

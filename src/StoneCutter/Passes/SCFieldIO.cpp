@@ -46,20 +46,15 @@ bool SCFieldIO::CheckInstArgs( Function &F, Instruction &I ){
   bool Rtn = true;
 
   if( I.getOpcode() == Instruction::Store ){
-    for( auto U : I.getOperand(1)->users() ){
-      if( auto Inst = dyn_cast<Instruction>(U) ){
-        for( unsigned i=0; i<Inst->getNumOperands(); i++ ){
-          // check to see if the i'th operand is in our field list
-          std::vector<std::string>::iterator it = std::find(Fields.begin(),
-                                                            Fields.end(),
-                                                            Inst->getOperand(i)->getName().str() );
-          if( it != Fields.end() ){
-            // print an error
-            this->PrintMsg( L_ERROR, "Cannot write to read-only field: " + *it );
-            Rtn = false;
-          }
-        }
-      }
+    Value *V1 = I.getOperand(1);
+    std::vector<std::string>::iterator it1 = std::find(Fields.begin(),
+                                                      Fields.end(),
+                                                      V1->getName().str() );
+    if( it1 != Fields.end() ){
+      this->PrintMsg( L_ERROR, "Cannot write to read-only field: " +
+                      V1->getName().str() +
+                      " in instruction " + F.getName().str());
+      Rtn = false;
     }
   }
 
