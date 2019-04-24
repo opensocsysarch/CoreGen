@@ -59,7 +59,8 @@ public:
     CGRegRW   = 0x02,     ///< CGRegAttr: Read-Write Register
     CGRegCSR  = 0x04,     ///< CGRegAttr: CSR
     CGRegAMS  = 0x08,     ///< CGRegAttr: Arithmetic Machine State
-    CGRegTUS  = 0x10      ///< CGRegAttr: Thread unit shared
+    CGRegTUS  = 0x10,     ///< CGRegAttr: Thread unit shared
+    CGRegPC   = 0x20      ///< CGRegAttr: PC register (one per reg file)
   }CGRegAttr;             ///< CoreGenReg: Register attributes
 
   /// Default Constructor
@@ -86,6 +87,9 @@ public:
 
   /// Is the register shared across thread units?
   bool IsTUSAttr();
+
+  /// Is the register a PC register?
+  bool IsPCAttr();
 
   /// Is the register file shared?
   bool IsShared() { return isShared; }

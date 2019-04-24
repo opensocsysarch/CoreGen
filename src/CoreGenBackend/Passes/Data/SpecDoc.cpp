@@ -168,6 +168,13 @@ bool SpecDoc::WriteRegisterClassTex(CoreGenDAG *DAG, std::ofstream &ofs ){
           Attrs+="TUS";
           OrVal = true;
         }
+        if( REG->IsPCAttr() ){
+          if( OrVal ){
+            Attrs+=":";
+          }
+          Attrs+="PC";
+          OrVal = true;
+        }
         if( REG->IsShared() ){
           if( OrVal ){
             Attrs+=":";
