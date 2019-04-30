@@ -47,6 +47,7 @@ llvm_map_components_to_libnames(llvm_libs
 )
 
 include_directories(${COREGEN_INCLUDE_PATH})
+include_directories(${YAML_PATH}/include)
 add_library(PassObjs OBJECT ${PassSrcs})
 
 #-- EOF

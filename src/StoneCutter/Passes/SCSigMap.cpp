@@ -27,7 +27,178 @@ bool SCSigMap::SetSignalMapFile(std::string SM){
   return true;
 }
 
+const std::string SCSigMap::SigTypeToStr(SigType T){
+  switch( T ){
+    case SIGUNK:
+      return "SIGUNK";
+      break;
+    case SIGINSTF:
+      return "SIGINSTF";
+      break;
+    case ALU_ADD:
+      return "ALU_ADD";
+      break;
+    case ALU_SUB:
+      return "ALU_SUB";
+      break;
+    case ALU_SLL:
+      return "ALU_SLL";
+      break;
+    case ALU_SRL:
+      return "ALU_SRL";
+      break;
+    case ALU_SRA:
+      return "ALU_SRA";
+      break;
+    case ALU_AND:
+      return "ALU_AND";
+      break;
+    case ALU_OR:
+      return "ALU_OR";
+      break;
+    case ALU_XOR:
+      return "ALU_XOR";
+      break;
+    case ALU_SLT:
+      return "ALU_SLT";
+      break;
+    case ALU_SLTU:
+      return "ALU_SLTU";
+      break;
+    case ALU_COPY:
+      return "ALU_COPY";
+      break;
+    case ALU_MUL:
+      return "ALU_MUL";
+      break;
+    case ALU_DIV:
+      return "ALU_DIV";
+      break;
+    case ALU_REM:
+      return "ALU_REM";
+      break;
+    case ALU_FADD:
+      return "ALU_FADD";
+      break;
+    case ALU_FSUB:
+      return "ALU_FSUB";
+      break;
+    case ALU_FMUL:
+      return "ALU_FMUL";
+      break;
+    case ALU_FDIV:
+      return "ALU_FDIV";
+      break;
+    case ALU_FREM:
+      return "ALU_FREM";
+      break;
+    case PC_INCR:
+      return "PC_INCR";
+      break;
+    case PC_BRJMP:
+      return "PC_BRJMP";
+      break;
+    case PC_JALR:
+      return "PC_JALR";
+      break;
+    case BR_N:
+      return "BR_N";
+      break;
+    case BR_NE:
+      return "BR_NE";
+      break;
+    case BR_EQ:
+      return "BR_EQ";
+      break;
+    case BR_GE:
+      return "BR_GE";
+      break;
+    case BR_GEU:
+      return "BR_GEU";
+      break;
+    case BR_LT:
+      return "BR_LT";
+      break;
+    case BR_LTU:
+      return "BR_LTU";
+      break;
+    case BR_J:
+      return "BR_J";
+      break;
+    case BR_JR:
+      return "BR_JR";
+      break;
+    case REG_READ:
+      return "REG_READ";
+      break;
+    case REG_WRITE:
+      return "REG_WRITE";
+      break;
+    case MEM_READ:
+      return "MEM_READ";
+      break;
+    case MEM_WRITE:
+      return "MEM_WRITE";
+      break;
+    default:
+      return "SIGUNK";
+      break;
+  }
+}
+
+bool SCSigMap::WriteTopLevelSignals(YAML::Emitter *out){
+  if( out == nullptr )
+    return false;
+
+  std::vector<SigType> Sigs;
+
+  // retrieve all the signals
+  for( unsigned i=0; i<Signals.size(); i++ ){
+    Sigs.push_back(Signals[i]->GetType());
+  }
+
+  // make the vector unique
+  std::sort( Sigs.begin(), Sigs.end() );
+  Sigs.erase( std::unique(Sigs.begin(),Sigs.end()), Sigs.end() );
+
+  // write each signal out
+  *out << YAML::Key << "SignalTop" << YAML::BeginSeq << YAML::BeginMap;
+  for( unsigned i=0; i<Sigs.size(); i++ ){
+    *out << YAML::Key << "Signal" << YAML::Value << SigTypeToStr(Sigs[i]);
+  }
+  *out << YAML::EndMap << YAML::EndSeq;
+
+  return true;
+}
+
 bool SCSigMap::WriteSigMap(){
+  if( SigMap.length() == 0 ){
+    this->PrintMsg( L_ERROR, "SigMap file name is null" );
+    return false;
+  }
+
+  // open the file
+  std::ofstream OutYaml(SigMap.c_str());
+
+  /// open the yaml emitter
+  YAML::Emitter out(OutYaml);
+
+  // open the YAML stream
+  out << YAML::BeginMap;
+
+  // write the top-level signals
+  if( !WriteTopLevelSignals(&out) ){
+    this->PrintMsg( L_ERROR, "Failed to write top-level signals" );
+    OutYaml.close();
+    return false;
+  }
+
+  // end the YAML stream
+  out << YAML::EndMap;
+
+  // close the file
+  OutYaml.close();
+
   return true;
 }
 

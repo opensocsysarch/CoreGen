@@ -56,9 +56,11 @@ llvm_map_components_to_libnames(llvm_libs
 add_subdirectory(Intrinsics)
 add_subdirectory(Passes)
 
+include_directories(${YAML_PATH}/include)
+
 add_library(SCComp ${SCCompSrcs} $<TARGET_OBJECTS:IntrinObjs> $<TARGET_OBJECTS:PassObjs>)
 
-target_link_libraries(SCComp ${llvm_libs})
+target_link_libraries(SCComp ${llvm_libs} yaml-cpp)
 
 install(TARGETS SCComp DESTINATION lib)
 

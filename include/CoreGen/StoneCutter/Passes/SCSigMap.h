@@ -20,9 +20,16 @@
 #ifndef _STONECUTTER_SCPASS_SCSIGMAP_H_
 #define _STONECUTTER_SCPASS_SCSIGMAP_H_
 
+// standard headers
 #include <map>
 #include <vector>
+#include <fstream>
+
+// CoreGen headers
 #include "CoreGen/StoneCutter/SCPass.h"
+
+// YAML headers
+#include "yaml-cpp/yaml.h"
 
 class SCSigMap : public SCPass {
 private:
@@ -174,6 +181,12 @@ private:
 
   /// Translates the I/O operands to signals
   bool TranslateOperands( Function &F, Instruction &I );
+
+  /// Writes the top-level signal map to the YAML file
+  bool WriteTopLevelSignals(YAML::Emitter *out);
+
+  /// Translates signal type to std::string
+  const std::string SigTypeToStr(SigType T);
 
 public:
   /// Default cosntructor
