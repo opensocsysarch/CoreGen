@@ -19,6 +19,7 @@ set(SCCompSrcs
 )
 
 include_directories(${COREGEN_INCLUDE_PATH})
+include_directories(${YAML_PATH}/include)
 
 set(llvm_codegens
   x86codegen
@@ -55,8 +56,6 @@ llvm_map_components_to_libnames(llvm_libs
 
 add_subdirectory(Intrinsics)
 add_subdirectory(Passes)
-
-include_directories(${YAML_PATH}/include)
 
 add_library(SCComp ${SCCompSrcs} $<TARGET_OBJECTS:IntrinObjs> $<TARGET_OBJECTS:PassObjs>)
 

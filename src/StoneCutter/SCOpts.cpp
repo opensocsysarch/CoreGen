@@ -98,6 +98,7 @@ bool SCOpts::ParseOpts(bool *isHelp){
       }
       std::string F(argv[i+1]);
       SigMap = F;
+      isSigMap = true;
       i++;
     }else if( (s=="-k") || (s=="-keep") || (s=="--keep") ){
       isKeep = true;

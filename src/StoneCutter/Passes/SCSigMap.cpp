@@ -146,6 +146,43 @@ const std::string SCSigMap::SigTypeToStr(SigType T){
   }
 }
 
+bool SCSigMap::WriteInstSignals(YAML::Emitter *out){
+  if( out == nullptr )
+    return false;
+
+  *out << YAML::Key << "Instructions" << YAML::BeginSeq;
+
+  // walk all the functions and generate the appropriate signals
+  for( auto &Func : TheModule->getFunctionList() ){
+    std::string Inst = Func.getName().str();
+    std::vector<SigType> Sigs;
+
+    *out << YAML::BeginMap << YAML::Key << "Inst" << YAML::Value << Inst;
+
+    // walk all the known signals and derive the per-instruction
+    // signal map
+    for( unsigned i=0; i<Signals.size(); i++ ){
+      if( Signals[i]->GetInst() == Inst )
+        Sigs.push_back(Signals[i]->GetType());
+    }
+
+    // make the vector unique
+    std::sort( Sigs.begin(), Sigs.end() );
+    Sigs.erase( std::unique(Sigs.begin(),Sigs.end()), Sigs.end() );
+
+    // write the individual vector signal map
+    for( unsigned j=0; j<Sigs.size(); j++ ){
+      *out << YAML::Key << "Signal" << YAML::Value << SigTypeToStr(Sigs[j]);
+    }
+
+    *out << YAML::EndMap;
+  }
+
+  *out << YAML::EndSeq;
+
+  return true;
+}
+
 bool SCSigMap::WriteTopLevelSignals(YAML::Emitter *out){
   if( out == nullptr )
     return false;
@@ -189,6 +226,13 @@ bool SCSigMap::WriteSigMap(){
   // write the top-level signals
   if( !WriteTopLevelSignals(&out) ){
     this->PrintMsg( L_ERROR, "Failed to write top-level signals" );
+    OutYaml.close();
+    return false;
+  }
+
+  // write the individual instruction signals
+  if( !WriteInstSignals(&out) ){
+    this->PrintMsg( L_ERROR, "Failed to write individual instruction signals" );
     OutYaml.close();
     return false;
   }

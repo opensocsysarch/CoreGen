@@ -25,11 +25,12 @@
 #include <vector>
 #include <fstream>
 
+// YAML headers
+#include "yaml-cpp/yaml.h"
+
 // CoreGen headers
 #include "CoreGen/StoneCutter/SCPass.h"
 
-// YAML headers
-#include "yaml-cpp/yaml.h"
 
 class SCSigMap : public SCPass {
 private:
@@ -184,6 +185,9 @@ private:
 
   /// Writes the top-level signal map to the YAML file
   bool WriteTopLevelSignals(YAML::Emitter *out);
+
+  /// Writes the individual instruction signal map to the YAML file
+  bool WriteInstSignals(YAML::Emitter *out);
 
   /// Translates signal type to std::string
   const std::string SigTypeToStr(SigType T);

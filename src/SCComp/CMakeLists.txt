@@ -10,6 +10,7 @@
 add_executable(sccomp SCComp.cpp)
 
 include_directories(${COREGEN_INCLUDE_PATH})
+include_directories(${YAML_PATH}/include)
 
 target_link_libraries(sccomp SCComp)
 

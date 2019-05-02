@@ -71,7 +71,7 @@ public:
          SCMsg *M);
 
   /// Default destructor
-  ~SCPass();
+  virtual ~SCPass();
 
   /// Retrieve the name of the pass
   std::string GetName() { return Name; }
