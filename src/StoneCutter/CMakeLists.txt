@@ -59,7 +59,7 @@ add_subdirectory(Passes)
 
 add_library(SCComp ${SCCompSrcs} $<TARGET_OBJECTS:IntrinObjs> $<TARGET_OBJECTS:PassObjs>)
 
-target_link_libraries(SCComp ${llvm_libs} yaml-cpp)
+target_link_libraries(SCComp ${llvm_libs} CoreGenSigMap)
 
 install(TARGETS SCComp DESTINATION lib)
 
