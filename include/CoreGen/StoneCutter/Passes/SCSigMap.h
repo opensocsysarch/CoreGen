@@ -56,6 +56,9 @@ private:
   /// Translates logical operations to signals
   bool TranslateLogicalOp( Function &F, Instruction &I, SigType Type );
 
+  /// Translates memory operations to signals
+  bool TranslateMemOp( Function &F, Instruction &I );
+
   /// Translates the I/O operands to signals
   bool TranslateOperands( Function &F, Instruction &I );
 

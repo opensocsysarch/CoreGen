@@ -53,6 +53,15 @@ bool SCSigMap::TranslateBinaryOp( Function &F,
   return true;
 }
 
+bool SCSigMap::TranslateMemOp( Function &F,
+                               Instruction &I ){
+  // interrogate the operands and write the operand enable signals
+  if( !TranslateOperands(F,I) )
+    return false;
+
+  return true;
+}
+
 bool SCSigMap::TranslateOperands( Function &F, Instruction &I ){
 
   // Note: this function only works for operations where we have:
@@ -174,50 +183,15 @@ bool SCSigMap::CheckSigReq( Function &F, Instruction &I ){
       return false;
     break;
     // memory access signals
-  case Instruction::Alloca :
-    break;
   case Instruction::Load :
-    break;
   case Instruction::Store :
-    break;
-  case Instruction::GetElementPtr :
-    break;
-  case Instruction::Fence :
-    break;
-  case Instruction::AtomicCmpXchg :
-    break;
-  case Instruction::AtomicRMW :
+    if( !TranslateMemOp(F,I) )
+      return false;
     break;
     // cast signals
-  case Instruction::Trunc :
-    break;
   case Instruction::ZExt :
     break;
   case Instruction::SExt :
-    break;
-  case Instruction::FPToUI :
-    break;
-  case Instruction::FPToSI :
-    break;
-  case Instruction::UIToFP :
-    break;
-  case Instruction::SIToFP :
-    break;
-  case Instruction::FPTrunc :
-    break;
-  case Instruction::FPExt :
-    break;
-  case Instruction::PtrToInt :
-    break;
-  case Instruction::IntToPtr :
-    break;
-  case Instruction::BitCast :
-    break;
-  case Instruction::AddrSpaceCast :
-    break;
-  case Instruction::CleanupPad :
-    break;
-  case Instruction::CatchPad :
     break;
     // other signals (cmp, etc)
   case Instruction::ICmp :
@@ -228,16 +202,29 @@ bool SCSigMap::CheckSigReq( Function &F, Instruction &I ){
     break;
   case Instruction::Select :
     break;
-  case Instruction::ExtractElement :
-    break;
-  case Instruction::InsertElement :
-    break;
+  case Instruction::FPToUI :
+  case Instruction::FPToSI :
+  case Instruction::UIToFP :
+  case Instruction::SIToFP :
+  case Instruction::FPTrunc :
+  case Instruction::FPExt :
+  case Instruction::BitCast :
+  case Instruction::PtrToInt :
+  case Instruction::IntToPtr :
+  case Instruction::ExtractElement :  // revisit
+  case Instruction::InsertElement :   // revisit
+  case Instruction::ExtractValue :    // revisit
+  case Instruction::InsertValue :     // revisit
+  case Instruction::Trunc :
+  case Instruction::Fence :
+  case Instruction::AtomicCmpXchg :
+  case Instruction::AtomicRMW :
   case Instruction::ShuffleVector :
-    break;
-  case Instruction::ExtractValue :
-    break;
-  case Instruction::InsertValue :
-    break;
+  case Instruction::AddrSpaceCast :
+  case Instruction::CleanupPad :
+  case Instruction::CatchPad :
+  case Instruction::GetElementPtr :
+  case Instruction::Alloca :
   case Instruction::Ret :
   case Instruction::PHI :
   case Instruction::UserOp1 :
@@ -294,6 +281,7 @@ bool SCSigMap::CheckPCReq(Function &F){
   if( !PCJump ){
     // create PCIncr signal
     Signals->InsertSignal(new SCSig(PC_INCR,F.getName().str(),"PC_INCR"));
+    Signals->InsertSignal(new SCSig(PC_INCR,F.getName().str(),"BR_N"));
   }else{
     // create PCJmp signal
     Signals->InsertSignal(new SCSig(PC_BRJMP,F.getName().str(),"PC_BRJMP"));
