@@ -11,20 +11,24 @@
 #include "CoreGen/CoreGenSigMap/SCSig.h"
 
 SCSig::SCSig(SigType T) : Type(T), SigWidth(0){
+  Name = this->SigTypeToStr();
 }
 
 SCSig::SCSig(SigType T,unsigned W) : Type(T), SigWidth(W){
+  Name = this->SigTypeToStr();
 }
 
-SCSig::SCSig(SigType T,std::string I) : Type(T), Inst(I){
+SCSig::SCSig(SigType T,std::string I) : Type(T), SigWidth(0), Inst(I){
+  Name = this->SigTypeToStr();
 }
 
 SCSig::SCSig(SigType T,unsigned W,std::string I)
   : Type(T), SigWidth(W), Inst(I){
+  Name = this->SigTypeToStr();
 }
 
 SCSig::SCSig(SigType T,std::string I,std::string N)
-  : Type(T), Inst(I), Name(N){
+  : Type(T), SigWidth(0), Inst(I), Name(N){
 }
 
 SCSig::SCSig(SigType T,unsigned W,std::string I,std::string N)

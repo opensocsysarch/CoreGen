@@ -35,12 +35,26 @@ private:
   // private variables
   std::vector<SCSig *> Signals;
 
+  std::vector<SigType> TopSigs;
+
   // private functions
   /// Writes the top-level signal map to the YAML file
   bool WriteTopLevelSignals(YAML::Emitter *out);
 
   /// Writes the individual instruction signal map to the YAML file
   bool WriteInstSignals(YAML::Emitter *out);
+
+  /// Determines if the target YAML node is valid
+  bool CheckValidNode(const YAML::Node Node, std::string Token);
+
+  /// Reads the top-level signal map
+  bool ReadTopLevelSignals(const YAML::Node& TopNodes);
+
+  /// Reads the instruction-level signal map
+  bool ReadInstSignals(const YAML::Node& InstNodes);
+
+  /// Converts the string to a signal name
+  SigType StrToSigType( std::string Sig );
 
 public:
 
