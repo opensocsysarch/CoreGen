@@ -261,13 +261,9 @@ bool SCSigMap::TranslatePCSig(Instruction &I,
   bool PC = false;
   for( auto Op = I.op_begin(); Op != I.op_end(); ++Op){
     Value *V = Op->get();
-    if( auto CInt = dyn_cast<ConstantInt>(V) ){
-      // immediate value, ignore it
-    }else{
-      if( HasGlobalAttribute(V->getName().str(),"register") &&
-          HasGlobalAttribute(V->getName().str(),"pc") ){
-        PC = true;
-      }
+    if( HasGlobalAttribute(V->getName().str(),"register") &&
+        HasGlobalAttribute(V->getName().str(),"pc") ){
+      PC = true;
     }
   }
 
@@ -312,17 +308,21 @@ bool SCSigMap::DiscoverSigMap(){
   for( auto &Func : TheModule->getFunctionList() ){
     // walk all the basic blocks
     for( auto &BB : Func.getBasicBlockList() ){
+      if( !Func.isDeclaration() ){
       // walk all the instructions
-      for( auto &Inst : BB.getInstList() ){
-        if( !CheckSigReq(Func,Inst) ){
-          Rtn = false;
+        for( auto &Inst : BB.getInstList() ){
+          if( !CheckSigReq(Func,Inst) ){
+            Rtn = false;
+          }
         }
       }
     }
 
     // check the target function for explicit PC signals
-    if( !CheckPCReq(Func) ){
-      Rtn = false;
+    if( !Func.isDeclaration() ){
+      if( !CheckPCReq(Func) ){
+        Rtn = false;
+      }
     }
   }
 
