@@ -254,6 +254,58 @@ bool SCSigMap::CheckSigReq( Function &F, Instruction &I ){
   return true;
 }
 
+bool SCSigMap::TranslatePCSig(Instruction &I,
+                              bool &PCJump){
+  // walk all the operands and investigate to see whether
+  // their values are PC registers
+  bool PC = false;
+  for( auto Op = I.op_begin(); Op != I.op_end(); ++Op){
+    Value *V = Op->get();
+    if( auto CInt = dyn_cast<ConstantInt>(V) ){
+      // immediate value, ignore it
+    }else{
+      if( HasGlobalAttribute(V->getName().str(),"register") &&
+          HasGlobalAttribute(V->getName().str(),"pc") ){
+        PC = true;
+      }
+    }
+  }
+
+  PCJump = PC;
+
+  return true;
+}
+
+bool SCSigMap::CheckPCReq(Function &F){
+  bool Rtn = true;
+  bool PCJump = false;
+  // walk all the basic blocks and instructions
+  // disover any relevant PC-related signals
+  // if none are found, create an automatic
+  // PCIncr signal, otherwise create a PCJmp signal
+  for( auto &BB : F.getBasicBlockList() ){
+    for( auto &Inst : BB.getInstList() ){
+      bool LPC = false;
+      if( !TranslatePCSig(Inst,LPC) )
+        Rtn = false;
+
+      if( LPC )
+        PCJump = true;
+    }
+  }
+
+  // create the signals
+  if( !PCJump ){
+    // create PCIncr signal
+    Signals->InsertSignal(new SCSig(PC_INCR,F.getName().str(),"PC_INCR"));
+  }else{
+    // create PCJmp signal
+    Signals->InsertSignal(new SCSig(PC_BRJMP,F.getName().str(),"PC_BRJMP"));
+  }
+
+  return Rtn;
+}
+
 bool SCSigMap::DiscoverSigMap(){
   bool Rtn = true;
   // Walk all the functions
@@ -266,6 +318,11 @@ bool SCSigMap::DiscoverSigMap(){
           Rtn = false;
         }
       }
+    }
+
+    // check the target function for explicit PC signals
+    if( !CheckPCReq(Func) ){
+      Rtn = false;
     }
   }
 

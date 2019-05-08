@@ -47,6 +47,9 @@ private:
   /// Decodes an individual instruction for the signal map
   bool CheckSigReq( Function &F, Instruction &I );
 
+  /// Decodes the PC signals for each instruction within a function
+  bool CheckPCReq( Function &F );
+
   /// Translates binary operations to signals
   bool TranslateBinaryOp( Function &F, Instruction &I, SigType Type );
 
@@ -55,6 +58,9 @@ private:
 
   /// Translates the I/O operands to signals
   bool TranslateOperands( Function &F, Instruction &I );
+
+  /// Translates the instruction I/O operans to PC enable signals
+  bool TranslatePCSig( Instruction &I, bool &PCJump );
 
 public:
   /// Default cosntructor
