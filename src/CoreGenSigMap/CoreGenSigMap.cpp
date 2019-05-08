@@ -173,6 +173,20 @@ bool CoreGenSigMap::ReadInstSignals(const YAML::Node& InstNodes){
     return false;
 
   for( unsigned i=0; i<InstNodes.size(); i++ ){
+    const YAML::Node& Node = InstNodes[i];
+    if( !CheckValidNode(Node,"Inst") )
+      return false;
+    std::string Name = Node["Inst"].as<std::string>();
+    if( Node["Signals"] ){
+      const YAML::Node& SNode = Node["Signals"];
+      for( unsigned j=0; j<SNode.size(); j++ ){
+        const YAML::Node& LSNode = SNode[j];
+        std::string SigName = LSNode["Signal"].as<std::string>();
+        SigType Type = StrToSigType(LSNode["Type"].as<std::string>());
+        unsigned Width = LSNode["Width"].as<unsigned>();
+        Signals.push_back(new SCSig(Type,Width,Name,SigName));
+      }
+    }
   }
 
   return true;
@@ -282,32 +296,6 @@ bool CoreGenSigMap::WriteInstSignals(YAML::Emitter *out){
 bool CoreGenSigMap::WriteTopLevelSignals(YAML::Emitter *out){
   if( out == nullptr )
     return false;
-#if 0
-  // make a copy of the signal vector
-  std::vector<SCSig *> Sigs;
-
-  // build a unique vector of all the signals
-  for( unsigned i=0; i<Signals.size(); i++ ){
-    if( Sigs.size() > 0 ){
-      bool found = false;
-      for( unsigned j=0; j<Sigs.size(); j++ ){
-        if( Signals[i]->GetType() == Sigs[j]->GetType() )
-          found = true;
-      }
-      if( !found )
-        Sigs.push_back(Signals[i]);
-    }else{
-      Sigs.push_back(Signals[i]);
-    }
-  }
-
-  // write each signal out
-  *out << YAML::Key << "SignalTop" << YAML::BeginSeq << YAML::BeginMap;
-  for( unsigned i=0; i<Sigs.size(); i++ ){
-    *out << YAML::Key << "Signal" << YAML::Value << Sigs[i]->SigTypeToStr();
-  }
-  *out << YAML::EndMap << YAML::EndSeq;
-#endif
 
   std::vector<std::string> Sigs;
   for( unsigned i=0; i<Signals.size(); i++ ){
