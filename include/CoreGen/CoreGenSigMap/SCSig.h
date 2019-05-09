@@ -58,20 +58,24 @@ typedef enum{
   BR_N      = 40,           ///< SigType: Next
   BR_NE     = 41,           ///< SigType: Branch not equal
   BR_EQ     = 42,           ///< SigType: Branch equal
-  BR_GE     = 43,           ///< SigType: Branch greater than equal to signed
-  BR_GEU    = 44,           ///< SigType: Branch greater than equal to unsigned
-  BR_LT     = 45,           ///< SigType: Branch less than signed
-  BR_LTU    = 46,           ///< SigType: Branch less than unsigned
-  BR_J      = 47,           ///< SigType: Jump
-  BR_JR     = 48,           ///< SigType: Jump Register
+  BR_GT     = 43,           ///< SigType: Branch greater than
+  BR_GTU    = 44,           ///< SigType: Branch greater than unsigned
+  BR_GE     = 45,           ///< SigType: Branch greater than equal to signed
+  BR_GEU    = 46,           ///< SigType: Branch greater than equal to unsigned
+  BR_LT     = 47,           ///< SigType: Branch less than signed
+  BR_LTU    = 48,           ///< SigType: Branch less than unsigned
+  BR_LE     = 49,           ///< SigType: Branch less than equal to signed
+  BR_LEU    = 50,           ///< SigType: Branch less than equal to unsigned
+  BR_J      = 51,           ///< SigType: Jump
+  BR_JR     = 52,           ///< SigType: Jump Register
 
   // Register signals
-  REG_READ  = 49,           ///< SigType: Register read
-  REG_WRITE = 50,           ///< SigType: Register write
+  REG_READ  = 60,           ///< SigType: Register read
+  REG_WRITE = 61,           ///< SigType: Register write
 
   // Memory signals
-  MEM_READ  = 60,           ///< SigType: Memory read
-  MEM_WRITE = 61            ///< SigType: Memory write
+  MEM_READ  = 70,           ///< SigType: Memory read
+  MEM_WRITE = 71            ///< SigType: Memory write
 }SigType;                   ///< CoreGenSigMap: Emumerated types to represent signals
 
 class SCSig{

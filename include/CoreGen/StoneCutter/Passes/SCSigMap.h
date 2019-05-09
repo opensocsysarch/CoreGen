@@ -68,6 +68,9 @@ private:
   /// Translates the target call operation to the appropriate signals
   bool TranslateCallSig(Instruction &I);
 
+  /// Translates the compare operation to the appropriate signals
+  bool TranslateCmpOp(Function &F, Instruction &I);
+
 public:
   /// Default cosntructor
   SCSigMap(Module *TM, SCOpts *O, SCMsg *M);

@@ -67,10 +67,14 @@ bool SCSig::SetType( SigType T ){
   case BR_N:
   case BR_NE:
   case BR_EQ:
+  case BR_GT:
+  case BR_GTU:
   case BR_GE:
   case BR_GEU:
   case BR_LT:
   case BR_LTU:
+  case BR_LE:
+  case BR_LEU:
   case BR_J:
   case BR_JR:
   case REG_READ:
@@ -207,6 +211,10 @@ const std::string SCSig::SigTypeToStr(){
     case BR_EQ:
       return "BR_EQ";
       break;
+    case BR_GT:
+      return "BR_GT";
+    case BR_GTU:
+      return "BR_GTU";
     case BR_GE:
       return "BR_GE";
       break;
@@ -218,6 +226,12 @@ const std::string SCSig::SigTypeToStr(){
       break;
     case BR_LTU:
       return "BR_LTU";
+      break;
+    case BR_LE:
+      return "BR_LE";
+      break;
+    case BR_LEU:
+      return "BR_LEU";
       break;
     case BR_J:
       return "BR_J";
