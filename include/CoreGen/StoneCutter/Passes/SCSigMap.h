@@ -65,6 +65,9 @@ private:
   /// Translates the instruction I/O operans to PC enable signals
   bool TranslatePCSig( Instruction &I, bool &PCJump );
 
+  /// Translates the target call operation to the appropriate signals
+  bool TranslateCallSig(Instruction &I);
+
 public:
   /// Default cosntructor
   SCSigMap(Module *TM, SCOpts *O, SCMsg *M);

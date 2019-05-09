@@ -98,6 +98,10 @@ bool SCSigMap::TranslateOperands( Function &F, Instruction &I ){
   return true;
 }
 
+bool SCSigMap::TranslateCallSig(Instruction &I){
+  return true;
+}
+
 bool SCSigMap::CheckSigReq( Function &F, Instruction &I ){
   // Decode each one of the relevant operations.
   // The decoding map can be found in Instruction.def from
@@ -199,6 +203,8 @@ bool SCSigMap::CheckSigReq( Function &F, Instruction &I ){
   case Instruction::FCmp :
     break;
   case Instruction::Call :
+    if( !TranslateCallSig(I) )
+      return false;
     break;
   case Instruction::Select :
     break;

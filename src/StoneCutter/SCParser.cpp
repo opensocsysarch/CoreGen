@@ -1925,7 +1925,7 @@ Value *BinaryExprAST::codegen() {
     case dyad_eqeq:
       return SCParser::Builder.CreateICmpEQ(L, R, "cmpeq" );
     case dyad_noteq:
-      return SCParser::Builder.CreateICmpNE(L, R, "cmpeq" );
+      return SCParser::Builder.CreateICmpNE(L, R, "cmpne" );
     case dyad_logand:
       return SCParser::Builder.CreateAnd(L, R, "andtmp" );
     case dyad_logor:
