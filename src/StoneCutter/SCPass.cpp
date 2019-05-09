@@ -297,7 +297,7 @@ std::string SCPass::TraceOperand( Function &F, Value *V,
     }else if( GetGlobalAttribute(V->getName().str(),"fieldtype") == "immediate" ){
       // return the field name as this mimics an instruction payload read
       isPredef = true;
-      isImm = false;
+      isImm = true;
       return V->getName().str();
     }
   }

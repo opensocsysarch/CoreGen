@@ -88,7 +88,7 @@ bool SCSigMap::TranslateOperands( Function &F, Instruction &I ){
     bool isWImm = false;
     Value *LHS = cast<Value>(&I);
     std::string WOpName = TraceOperand(F,LHS,isWPredef,isWImm);
-    if( isWPredef ){
+    if( isWPredef && !isWImm ){
       Signals->InsertSignal(new SCSig(REG_WRITE,F.getName().str(),WOpName+"_WRITE"));
     }else{
       // create a temporary register
@@ -382,7 +382,6 @@ bool SCSigMap::CheckPCReq(Function &F){
   if( !PCJump ){
     // create PCIncr signal
     Signals->InsertSignal(new SCSig(PC_INCR,F.getName().str(),"PC_INCR"));
-    Signals->InsertSignal(new SCSig(PC_INCR,F.getName().str(),"BR_N"));
   }else{
     // create PCJmp signal
     Signals->InsertSignal(new SCSig(PC_BRJMP,F.getName().str(),"PC_BRJMP"));
