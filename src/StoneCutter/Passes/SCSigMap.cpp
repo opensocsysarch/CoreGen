@@ -336,10 +336,10 @@ bool SCSigMap::CheckSigReq( Function &F, Instruction &I ){
   case Instruction::BitCast :
   case Instruction::PtrToInt :
   case Instruction::IntToPtr :
-  case Instruction::ExtractElement :  // revisit
-  case Instruction::InsertElement :   // revisit
-  case Instruction::ExtractValue :    // revisit
-  case Instruction::InsertValue :     // revisit
+  case Instruction::ExtractElement :
+  case Instruction::InsertElement :
+  case Instruction::ExtractValue :
+  case Instruction::InsertValue :
   case Instruction::Trunc :
   case Instruction::Fence :
   case Instruction::AtomicCmpXchg :

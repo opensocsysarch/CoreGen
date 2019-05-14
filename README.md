@@ -259,6 +259,7 @@ make
 * -DBUILD\_COREGEN\_STONECUTTER\_PARSER\_TESTING=ON : Enables the StoneCutter parser test harness
 * -DBUILD\_COREGEN\_STONECUTTER\_PARSER\_KNOWNFAIL\_TESTING=ON : Enables the StoneCutter parser known fail test harness
 * -DBUILD\_COREGEN\_STONECUTTER\_PARSER\_KNOWNPASS\_MULTIFILE\_TESTING=ON : Enables the StoneCutter parser multi-file test harness
+* -DBUILD\_COREGEN\_STONECUTTER\_SIGMAP\_TESTING=ON : Enables the StoneCutter SigMap pass testing
 * -DBUILD\_COREGEN\_STONECUTTER\_CODEGEN\_TESTING=ON : Enables the StoneCutter codegen test harness
 * -DBUILD\_COREGEN\_STONECUTTER\_CODEGEN\_KNOWNPASS\_TESTING=ON : Enables the StoneCutter codegen knownpass test harness
 * -DBUILD\_COREGEN\_STONECUTTER\_CODEGEN\_KNOWNFAIL\_TESTING=ON : Enables the StoneCutter codegen knownfail test harness
