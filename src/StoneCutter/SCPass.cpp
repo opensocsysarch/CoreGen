@@ -262,10 +262,15 @@ unsigned SCPass::GetNumRegClasses( std::string Var ){
   return 0;
 }
 
+std::string SCPass::StrToUpper(std::string S){
+  for( unsigned i=0; i<S.length(); i++ ){
+    S[i] = toupper(S[i]);
+  }
+  return S;
+}
+
 std::string SCPass::TraceOperand( Function &F, Value *V,
                                   bool &isPredef, bool &isImm ){
-  std::string OpName;
-
   // check to see if the value is a constant
   if( auto CInt = dyn_cast<ConstantInt>(V) ){
     isImm = true;
@@ -277,7 +282,7 @@ std::string SCPass::TraceOperand( Function &F, Value *V,
   if( HasGlobalAttribute(V->getName().str(),"register") ){
     // derive the register class type and return it
     isPredef = true;
-    return GetGlobalAttribute(V->getName().str(),"regclass");
+    return V->getName().str() + "_" + GetGlobalAttribute(V->getName().str(),"regclass");
   }
 
   // check to see if the operand is a instruction field
@@ -286,7 +291,7 @@ std::string SCPass::TraceOperand( Function &F, Value *V,
       // derive the register class type and return it
       isPredef = true;
       isImm = false;
-      return GetGlobalRegClass( V->getName().str(),
+      return V->getName().str() + "_" + GetGlobalRegClass( V->getName().str(),
                                 GetGlobalAttribute(F.getName().str(),
                                                    "instformat") );
     }else if( GetGlobalAttribute(V->getName().str(),"fieldtype") == "encoding" ){
@@ -338,12 +343,13 @@ std::string SCPass::TraceOperand( Function &F, Value *V,
       }else if( Inst->getOpcode() != Instruction::Load && Inst->hasName() ){
         // else, examine the target of the instruction
         Value *LHS = cast<Value>(Inst);
+        std::cout << "LHS = " << LHS->getName().str() << std::endl;
         return TraceOperand(F,LHS,isPredef,isImm);
       }
     }
   }
   // if we reach this point, then the source is unique
-  return OpName;
+  return V->getName().str();
 }
 
 // EOF

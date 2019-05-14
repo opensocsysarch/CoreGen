@@ -58,6 +58,9 @@ private:
   std::string Name;                   ///< Name of the StoneCutter pass
   SCMsg *Msgs;                        ///< StoneCutter messages output
 
+  /// Convert a string to upper case
+  std::string StrToUpper(std::string S);
+
 protected:
   SCOpts *Opts;                       ///< StoneCutter options
   Module *TheModule;                  ///< LLVM IR Module

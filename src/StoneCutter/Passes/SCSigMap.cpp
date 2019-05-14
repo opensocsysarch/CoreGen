@@ -55,9 +55,25 @@ bool SCSigMap::TranslateBinaryOp( Function &F,
 
 bool SCSigMap::TranslateMemOp( Function &F,
                                Instruction &I ){
-  // interrogate the operands and write the operand enable signals
-  if( !TranslateOperands(F,I) )
+  if( I.getOpcode() == Instruction::Store ){
+    // store operations need to trace the target (op 1) of the instruction
+    bool isPredef = false;
+    bool isImm = false;
+    std::string WOpName = TraceOperand(F,I.getOperand(1),isPredef,isImm);
+    if( isPredef ){
+      Signals->InsertSignal(new SCSig(REG_WRITE,F.getName().str(),WOpName+"_WRITE"));
+    }
+  }else if( I.getOpcode() == Instruction::Load ){
+    // load operations need to trace the address of the source (op 0)
+    bool isPredef = false;
+    bool isImm = false;
+    std::string WOpName = TraceOperand(F,I.getOperand(0),isPredef,isImm);
+    if( isPredef ){
+      Signals->InsertSignal(new SCSig(REG_READ,F.getName().str(),WOpName+"_READ"));
+    }
+  }else{
     return false;
+  }
 
   return true;
 }
@@ -78,6 +94,7 @@ bool SCSigMap::TranslateOperands( Function &F, Instruction &I ){
       Signals->InsertSignal(new SCSig(REG_READ,F.getName().str(),OpName+"_READ"));
     }else if(!isImm){
       // create a temporary register
+      std::cout << "create a temp : " << OpName << std::endl;
     }
   }
 
@@ -90,8 +107,9 @@ bool SCSigMap::TranslateOperands( Function &F, Instruction &I ){
     std::string WOpName = TraceOperand(F,LHS,isWPredef,isWImm);
     if( isWPredef && !isWImm ){
       Signals->InsertSignal(new SCSig(REG_WRITE,F.getName().str(),WOpName+"_WRITE"));
-    }else{
+    }else if(!isWImm){
       // create a temporary register
+      std::cout << "create a temp : " << I.getName().str() << " from " << F.getName().str() << std::endl;
     }
   }
 
