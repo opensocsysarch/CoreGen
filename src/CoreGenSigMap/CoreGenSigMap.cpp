@@ -142,6 +142,28 @@ SigType CoreGenSigMap::StrToSigType( std::string Sig ){
     return BR_J;
   }else if( Sig == "BR_JR" ){
     return BR_JR;
+  }else if( Sig == "MUX_NE" ){
+    return MUX_NE;
+  }else if( Sig == "MUX_EQ" ){
+    return MUX_EQ;
+  }else if( Sig == "MUX_GT" ){
+    return MUX_GT;
+  }else if( Sig == "MUX_GTU" ){
+    return MUX_GTU;
+  }else if( Sig == "MUX_GE" ){
+    return MUX_GE;
+  }else if( Sig == "MUX_GEU" ){
+    return MUX_GEU;
+  }else if( Sig == "MUX_LT" ){
+    return MUX_LT;
+  }else if( Sig == "MUX_LTU" ){
+    return MUX_LTU;
+  }else if( Sig == "MUX_LE" ){
+    return MUX_LE;
+  }else if( Sig == "MUX_LEU" ){
+    return MUX_LEU;
+  }else if( Sig == "MUX" ){
+    return MUX;
   }else if( Sig == "REG_READ" ){
     return REG_READ;
   }else if( Sig == "REG_WRITE" ){

@@ -116,8 +116,12 @@ bool SCSigMap::TranslateOperands( Function &F, Instruction &I ){
   return true;
 }
 
-bool SCSigMap::TranslateCallSig(Instruction &I){
+bool SCSigMap::TranslateCallSig(Function &F, Instruction &I){
   return true;
+}
+
+bool SCSigMap::TranslateSelectSig(Function &F, Instruction &I ){
+  return Signals->InsertSignal(new SCSig(MUX,F.getName().str()));
 }
 
 bool SCSigMap::TranslateCmpOp(Function &F, Instruction &I){
@@ -129,79 +133,79 @@ bool SCSigMap::TranslateCmpOp(Function &F, Instruction &I){
   case CmpInst::FCMP_FALSE:
     break;
   case CmpInst::FCMP_OEQ:
-    Signals->InsertSignal(new SCSig(BR_EQ,F.getName().str()));
+    Signals->InsertSignal(new SCSig(MUX_EQ,F.getName().str()));
     break;
   case CmpInst::FCMP_OGT:
-    Signals->InsertSignal(new SCSig(BR_GTU,F.getName().str()));
+    Signals->InsertSignal(new SCSig(MUX_GTU,F.getName().str()));
     break;
   case CmpInst::FCMP_OGE:
-    Signals->InsertSignal(new SCSig(BR_GEU,F.getName().str()));
+    Signals->InsertSignal(new SCSig(MUX_GEU,F.getName().str()));
     break;
   case CmpInst::FCMP_OLT:
-    Signals->InsertSignal(new SCSig(BR_LTU,F.getName().str()));
+    Signals->InsertSignal(new SCSig(MUX_LTU,F.getName().str()));
     break;
   case CmpInst::FCMP_OLE:
-    Signals->InsertSignal(new SCSig(BR_LEU,F.getName().str()));
+    Signals->InsertSignal(new SCSig(MUX_LEU,F.getName().str()));
     break;
   case CmpInst::FCMP_ONE:
-    Signals->InsertSignal(new SCSig(BR_EQ,F.getName().str()));
+    Signals->InsertSignal(new SCSig(MUX_EQ,F.getName().str()));
     break;
   case CmpInst::FCMP_ORD:
-    Signals->InsertSignal(new SCSig(BR_NE,F.getName().str()));
+    Signals->InsertSignal(new SCSig(MUX_NE,F.getName().str()));
     break;
   case CmpInst::FCMP_UNO:
-    Signals->InsertSignal(new SCSig(BR_NE,F.getName().str()));
+    Signals->InsertSignal(new SCSig(MUX_NE,F.getName().str()));
     break;
   case CmpInst::FCMP_UEQ:
-    Signals->InsertSignal(new SCSig(BR_EQ,F.getName().str()));
+    Signals->InsertSignal(new SCSig(MUX_EQ,F.getName().str()));
     break;
   case CmpInst::FCMP_UGT:
-    Signals->InsertSignal(new SCSig(BR_GTU,F.getName().str()));
+    Signals->InsertSignal(new SCSig(MUX_GTU,F.getName().str()));
     break;
   case CmpInst::FCMP_UGE:
-    Signals->InsertSignal(new SCSig(BR_GEU,F.getName().str()));
+    Signals->InsertSignal(new SCSig(MUX_GEU,F.getName().str()));
     break;
   case CmpInst::FCMP_ULT:
-    Signals->InsertSignal(new SCSig(BR_LTU,F.getName().str()));
+    Signals->InsertSignal(new SCSig(MUX_LTU,F.getName().str()));
     break;
   case CmpInst::FCMP_ULE:
-    Signals->InsertSignal(new SCSig(BR_LEU,F.getName().str()));
+    Signals->InsertSignal(new SCSig(MUX_LEU,F.getName().str()));
     break;
   case CmpInst::FCMP_UNE:
-    Signals->InsertSignal(new SCSig(BR_NE,F.getName().str()));
+    Signals->InsertSignal(new SCSig(MUX_NE,F.getName().str()));
     break;
   case CmpInst::FCMP_TRUE:
-    Signals->InsertSignal(new SCSig(BR_EQ,F.getName().str()));
+    Signals->InsertSignal(new SCSig(MUX_EQ,F.getName().str()));
     break;
   case CmpInst::ICMP_EQ:
-    Signals->InsertSignal(new SCSig(BR_EQ,F.getName().str()));
+    Signals->InsertSignal(new SCSig(MUX_EQ,F.getName().str()));
     break;
   case CmpInst::ICMP_NE:
-    Signals->InsertSignal(new SCSig(BR_NE,F.getName().str()));
+    Signals->InsertSignal(new SCSig(MUX_NE,F.getName().str()));
     break;
   case CmpInst::ICMP_UGT:
-    Signals->InsertSignal(new SCSig(BR_GTU,F.getName().str()));
+    Signals->InsertSignal(new SCSig(MUX_GTU,F.getName().str()));
     break;
   case CmpInst::ICMP_UGE:
-    Signals->InsertSignal(new SCSig(BR_GEU,F.getName().str()));
+    Signals->InsertSignal(new SCSig(MUX_GEU,F.getName().str()));
     break;
   case CmpInst::ICMP_ULT:
-    Signals->InsertSignal(new SCSig(BR_LTU,F.getName().str()));
+    Signals->InsertSignal(new SCSig(MUX_LTU,F.getName().str()));
     break;
   case CmpInst::ICMP_ULE:
-    Signals->InsertSignal(new SCSig(BR_LEU,F.getName().str()));
+    Signals->InsertSignal(new SCSig(MUX_LEU,F.getName().str()));
     break;
   case CmpInst::ICMP_SGT:
-    Signals->InsertSignal(new SCSig(BR_GT,F.getName().str()));
+    Signals->InsertSignal(new SCSig(MUX_GT,F.getName().str()));
     break;
   case CmpInst::ICMP_SGE:
-    Signals->InsertSignal(new SCSig(BR_GE,F.getName().str()));
+    Signals->InsertSignal(new SCSig(MUX_GE,F.getName().str()));
     break;
   case CmpInst::ICMP_SLT:
-    Signals->InsertSignal(new SCSig(BR_LT,F.getName().str()));
+    Signals->InsertSignal(new SCSig(MUX_LT,F.getName().str()));
     break;
   case CmpInst::ICMP_SLE:
-    Signals->InsertSignal(new SCSig(BR_LE,F.getName().str()));
+    Signals->InsertSignal(new SCSig(MUX_LE,F.getName().str()));
     break;
   default:
     Signals->InsertSignal(new SCSig(SIGUNK,F.getName().str()));
@@ -316,10 +320,12 @@ bool SCSigMap::CheckSigReq( Function &F, Instruction &I ){
       return false;
     break;
   case Instruction::Call :
-    if( !TranslateCallSig(I) )
+    if( !TranslateCallSig(F,I) )
       return false;
     break;
   case Instruction::Select :
+    if( !TranslateSelectSig(F,I) )
+      return false;
     break;
   case Instruction::FPToUI :
   case Instruction::FPToSI :

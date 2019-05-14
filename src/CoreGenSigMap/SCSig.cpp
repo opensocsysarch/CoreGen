@@ -77,6 +77,17 @@ bool SCSig::SetType( SigType T ){
   case BR_LEU:
   case BR_J:
   case BR_JR:
+  case MUX_NE:
+  case MUX_EQ:
+  case MUX_GT:
+  case MUX_GTU:
+  case MUX_GE:
+  case MUX_GEU:
+  case MUX_LT:
+  case MUX_LTU:
+  case MUX_LE:
+  case MUX_LEU:
+  case MUX:
   case REG_READ:
   case REG_WRITE:
   case MEM_READ:
@@ -238,6 +249,39 @@ const std::string SCSig::SigTypeToStr(){
       break;
     case BR_JR:
       return "BR_JR";
+      break;
+    case MUX_NE:
+      return "MUX_NE";
+      break;
+    case MUX_EQ:
+      return "MUX_EQ";
+      break;
+    case MUX_GT:
+      return "MUX_GT";
+      break;
+    case MUX_GTU:
+      return "MUX_GTU";
+      break;
+    case MUX_GE:
+      return "MUX_GE";
+      break;
+    case MUX_GEU:
+      return "MUX_GEU";
+      break;
+    case MUX_LT:
+      return "MUX_LT";
+      break;
+    case MUX_LTU:
+      return "MUX_LTU";
+      break;
+    case MUX_LE:
+      return "MUX_LE";
+      break;
+    case MUX_LEU:
+      return "MUX_LEU";
+      break;
+    case MUX:
+      return "MUX";
       break;
     case REG_READ:
       return "REG_READ";

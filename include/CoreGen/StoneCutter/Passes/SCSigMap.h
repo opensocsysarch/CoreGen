@@ -59,6 +59,9 @@ private:
   /// Translates memory operations to signals
   bool TranslateMemOp( Function &F, Instruction &I );
 
+  /// Translates select operations to mux signals
+  bool TranslateSelectSig( Function &F, Instruction &I );
+
   /// Translates the I/O operands to signals
   bool TranslateOperands( Function &F, Instruction &I );
 
@@ -66,7 +69,7 @@ private:
   bool TranslatePCSig( Instruction &I, bool &PCJump );
 
   /// Translates the target call operation to the appropriate signals
-  bool TranslateCallSig(Instruction &I);
+  bool TranslateCallSig(Function &F, Instruction &I);
 
   /// Translates the compare operation to the appropriate signals
   bool TranslateCmpOp(Function &F, Instruction &I);

@@ -69,13 +69,26 @@ typedef enum{
   BR_J      = 51,           ///< SigType: Jump
   BR_JR     = 52,           ///< SigType: Jump Register
 
+  // Mux signals
+  MUX_NE    = 60,           ///< SigType: Compare not equal
+  MUX_EQ    = 61,           ///< SigType: Compare equal
+  MUX_GT    = 62,           ///< SigType: Compare greater than
+  MUX_GTU   = 63,           ///< SigType: Compare greater than unsigned
+  MUX_GE    = 64,           ///< SigType: Compare greater than equal to signed
+  MUX_GEU   = 65,           ///< SigType: Compare greater than equal to unsigned
+  MUX_LT    = 66,           ///< SigType: Compare less than
+  MUX_LTU   = 67,           ///< SigType: Compare less than unsigned
+  MUX_LE    = 68,           ///< SigType: Compare less than equal to signed
+  MUX_LEU   = 69,           ///< SigType: Compare less than equal to unsigned
+  MUX       = 70,           ///< SigType: Generic Mux enable signal
+
   // Register signals
-  REG_READ  = 60,           ///< SigType: Register read
-  REG_WRITE = 61,           ///< SigType: Register write
+  REG_READ  = 80,           ///< SigType: Register read
+  REG_WRITE = 81,           ///< SigType: Register write
 
   // Memory signals
-  MEM_READ  = 70,           ///< SigType: Memory read
-  MEM_WRITE = 71            ///< SigType: Memory write
+  MEM_READ  = 90,           ///< SigType: Memory read
+  MEM_WRITE = 91            ///< SigType: Memory write
 }SigType;                   ///< CoreGenSigMap: Emumerated types to represent signals
 
 class SCSig{
