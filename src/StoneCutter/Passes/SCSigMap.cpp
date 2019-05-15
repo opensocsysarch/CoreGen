@@ -91,9 +91,11 @@ bool SCSigMap::TranslateOperands( Function &F, Instruction &I ){
     bool isPredef = false;
     bool isImm = false;
     unsigned Width = 0;
+#if 0
     std::cout << "Tracing " << Op->get()->getName().str()
       << " from Func:Inst "
       << F.getName().str() << ":" << I.getName().str() << std::endl;
+#endif
     std::string OpName = TraceOperand(F,Op->get(),isPredef,isImm,Width);
     // generate a signal if the source is register
     if( isPredef ){
@@ -117,16 +119,20 @@ bool SCSigMap::TranslateOperands( Function &F, Instruction &I ){
     bool isWImm = false;
     unsigned Width = 0;
     Value *LHS = cast<Value>(&I);
+#if 0
     std::cout << "Tracing target " << LHS->getName().str()
       << " from Func:Inst "
       << F.getName().str() << ":" << I.getName().str() << std::endl;
+#endif
     std::string WOpName = TraceOperand(F,LHS,isWPredef,isWImm,Width);
     if( isWPredef && !isWImm ){
       Signals->InsertSignal(new SCSig(REG_WRITE,F.getName().str(),WOpName+"_WRITE"));
     }else if(!isWImm){
       // create a temporary register
+#if 0
       std::cout << "create a temp : " << LHS->getName().str()
                 << " from " << F.getName().str() << " of width " << Width << std::endl;
+#endif
       std::string tmp = Signals->GetTempReg(F.getName().str(),
                                             LHS->getName().str(), Width );
       Signals->InsertSignal(new SCSig(AREG_WRITE,F.getName().str(),tmp+"_WRITE"));

@@ -343,7 +343,6 @@ std::string SCPass::TraceOperand( Function &F, Value *V,
         }
       }else if( (Inst->getOpcode() != Instruction::Load) && Inst->hasName() ){
         // else, examine the target of the instruction
-        std::cout << "------------------------------------> HERE" << std::endl;
         Value *LHS = cast<Value>(Inst);
         //std::cout << "LHS = " << LHS->getName().str() << " from " << F.getName().str() << std::endl;
         return TraceOperand(F,LHS,isPredef,isImm,Width);
