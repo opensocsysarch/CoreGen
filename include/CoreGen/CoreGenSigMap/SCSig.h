@@ -9,7 +9,7 @@
 //
 
 /**
- * \class SigMap
+ * \class SCSig
  *
  * \ingroup CoreGenSigMap
  *
@@ -85,6 +85,8 @@ typedef enum{
   // Register signals
   REG_READ  = 80,           ///< SigType: Register read
   REG_WRITE = 81,           ///< SigType: Register write
+  AREG_READ = 82,           ///< SigType: ALU register read
+  AREG_WRITE= 83,           ///< SigType: ALU register write
 
   // Memory signals
   MEM_READ  = 90,           ///< SigType: Memory read

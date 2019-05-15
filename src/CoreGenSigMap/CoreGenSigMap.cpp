@@ -10,7 +10,7 @@
 
 #include "CoreGen/CoreGenSigMap/CoreGenSigMap.h"
 
-CoreGenSigMap::CoreGenSigMap(){
+CoreGenSigMap::CoreGenSigMap() : TmpIdx(0) {
 }
 
 CoreGenSigMap::~CoreGenSigMap(){
@@ -62,6 +62,12 @@ bool CoreGenSigMap::WriteSigMap( std::string File ){
 
   // write the individual instruction signals
   if( !WriteInstSignals(&out) ){
+    OutYaml.close();
+    return false;
+  }
+
+  // write all the tmp reg info
+  if( !WriteTempRegs(&out) ){
     OutYaml.close();
     return false;
   }
@@ -168,6 +174,10 @@ SigType CoreGenSigMap::StrToSigType( std::string Sig ){
     return REG_READ;
   }else if( Sig == "REG_WRITE" ){
     return REG_WRITE;
+  }else if( Sig == "AREG_READ" ){
+    return AREG_READ;
+  }else if( Sig == "AREG_WRITE" ){
+    return AREG_WRITE;
   }else if( Sig == "MEM_READ" ){
     return MEM_READ;
   }else if( Sig == "MEM_WRITE" ){
@@ -214,6 +224,42 @@ bool CoreGenSigMap::ReadInstSignals(const YAML::Node& InstNodes){
   return true;
 }
 
+bool CoreGenSigMap::ReadTmpRegs(const YAML::Node& TmpNodes){
+
+  for( unsigned i=0; i<TmpNodes.size(); i++ ){
+    const YAML::Node& Node = TmpNodes[i];
+    if( !CheckValidNode(Node,"Temp") )
+      return false;
+    std::string Name = Node["Temp"].as<std::string>();
+
+    if( !CheckValidNode(Node,"Width") )
+      return false;
+    unsigned Width = Node["Width"].as<unsigned>();
+
+    if( Node["Mappings"] ){
+      const YAML::Node& MNode = Node["Mappings"];
+      SCTmp *T = nullptr;
+      for( unsigned j=0; j<MNode.size(); j++ ){
+        const YAML::Node& MSNode = MNode[j];
+        std::string Inst = MSNode["Map"].as<std::string>();
+        std::string IRName = MSNode["IRName"].as<std::string>();
+
+        if( j==0 ){
+          // create a new object
+          T = new SCTmp(Name,Width,Inst,IRName);
+        }else{
+          // insert a new pair into the object
+          T->InsertTmpPair(Inst,IRName);
+        }
+      }
+      // add the object to our vector of tmps
+      TempRegs.push_back(T);
+    }
+  }
+
+  return true;
+}
+
 bool CoreGenSigMap::ReadSigMap( std::string File ){
   if( File.length() == 0 )
     return false;
@@ -240,6 +286,13 @@ bool CoreGenSigMap::ReadSigMap( std::string File ){
   const YAML::Node& InstNodes = IR["Instructions"];
   if( CheckValidNode(IR,"Instructions") ){
     if( !ReadInstSignals(InstNodes) )
+      return false;
+  }
+
+  // read the temporary register values
+  const YAML::Node& TmpNodes = IR["Temps"];
+  if( CheckValidNode(IR,"Temps") ){
+    if( !ReadTmpRegs(TmpNodes) )
       return false;
   }
 
@@ -315,6 +368,32 @@ bool CoreGenSigMap::WriteInstSignals(YAML::Emitter *out){
   return true;
 }
 
+bool CoreGenSigMap::WriteTempRegs(YAML::Emitter *out){
+  if( out == nullptr )
+    return false;
+
+  *out << YAML::Key << "Temps" << YAML::BeginSeq;
+  for( unsigned i=0; i<TempRegs.size(); i++ ){
+    *out << YAML::BeginMap << YAML::Key << "Temp" << YAML::Value << TempRegs[i]->GetName();
+    *out << YAML::Key << "Width" << YAML::Value << TempRegs[i]->GetWidth();
+    *out << YAML::Key << "Mappings" << YAML::Value << YAML::BeginSeq;
+
+    for( unsigned j=0; j<TempRegs[i]->GetNumMappings(); j++ ){
+      *out << YAML::BeginMap;
+      std::pair<std::string,std::string> Map = TempRegs[i]->GetMap(j);
+      *out << YAML::Key << "Map" << YAML::Value << Map.first;
+      *out << YAML::Key << "IRName" << YAML::Value << Map.second;
+      *out << YAML::EndMap;
+    }
+
+    *out << YAML::EndSeq;
+    *out << YAML::EndMap;
+  }
+  *out << YAML::EndSeq;
+
+  return true;
+}
+
 bool CoreGenSigMap::WriteTopLevelSignals(YAML::Emitter *out){
   if( out == nullptr )
     return false;
@@ -334,6 +413,23 @@ bool CoreGenSigMap::WriteTopLevelSignals(YAML::Emitter *out){
   *out << YAML::EndMap << YAML::EndSeq;
 
   return true;
+}
+
+std::string CoreGenSigMap::GetTempReg( std::string Inst, std::string IRName,
+                                       unsigned width ){
+  std::string TmpName = "ALUTMP" + std::to_string(TmpIdx) + "_" + std::to_string(width);
+  TmpIdx++;
+  TempRegs.push_back( new SCTmp(TmpName,width,Inst,IRName) );
+  return TmpName;
+}
+
+std::string CoreGenSigMap::GetTempMap( std::string Inst, std::string IRName ){
+  for( unsigned i=0; i<TempRegs.size(); i++ ){
+    if( TempRegs[i]->IsPairFound(Inst,IRName) )
+      return TempRegs[i]->GetName();
+  }
+  std::string NStr = "";
+  return NStr;
 }
 
 // EOF

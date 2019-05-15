@@ -10,6 +10,7 @@
 set(SigMapSrcs
 CoreGenSigMap.cpp
 SCSig.cpp
+SCTmp.cpp
 )
 
 include_directories(${YAML_PATH}/include)

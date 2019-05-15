@@ -90,6 +90,8 @@ bool SCSig::SetType( SigType T ){
   case MUX:
   case REG_READ:
   case REG_WRITE:
+  case AREG_READ:
+  case AREG_WRITE:
   case MEM_READ:
     case MEM_WRITE:
     Type = T;
@@ -291,6 +293,12 @@ const std::string SCSig::SigTypeToStr(){
       break;
     case MEM_READ:
       return "MEM_READ";
+      break;
+    case AREG_READ:
+      return "AREG_READ";
+      break;
+    case AREG_WRITE:
+      return "AREG_WRITE";
       break;
     case MEM_WRITE:
       return "MEM_WRITE";

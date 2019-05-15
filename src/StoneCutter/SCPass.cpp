@@ -270,7 +270,8 @@ std::string SCPass::StrToUpper(std::string S){
 }
 
 std::string SCPass::TraceOperand( Function &F, Value *V,
-                                  bool &isPredef, bool &isImm ){
+                                  bool &isPredef, bool &isImm,
+                                  unsigned &Width ){
   // check to see if the value is a constant
   if( auto CInt = dyn_cast<ConstantInt>(V) ){
     isImm = true;
@@ -334,21 +335,25 @@ std::string SCPass::TraceOperand( Function &F, Value *V,
         if( Inst->getOperand(0)->getName().str() == V->getName().str() ){
           // The source operand is our operand, check the target operand
           // and see if it exists as a global
-          return TraceOperand(F,Inst->getOperand(1),isPredef,isImm);
+          return TraceOperand(F,Inst->getOperand(1),isPredef,isImm,Width);
         }else{
           // The target operand is our operand, check the source operand
           // and see if it exists as a global
-          return TraceOperand(F,Inst->getOperand(0),isPredef,isImm);
+          return TraceOperand(F,Inst->getOperand(0),isPredef,isImm,Width);
         }
-      }else if( Inst->getOpcode() != Instruction::Load && Inst->hasName() ){
+      }else if( (Inst->getOpcode() != Instruction::Load) && Inst->hasName() ){
         // else, examine the target of the instruction
+        std::cout << "------------------------------------> HERE" << std::endl;
         Value *LHS = cast<Value>(Inst);
-        std::cout << "LHS = " << LHS->getName().str() << std::endl;
-        return TraceOperand(F,LHS,isPredef,isImm);
+        //std::cout << "LHS = " << LHS->getName().str() << " from " << F.getName().str() << std::endl;
+        return TraceOperand(F,LHS,isPredef,isImm,Width);
       }
     }
   }
   // if we reach this point, then the source is unique
+  isImm = false;
+  isPredef = false;
+  Width = V->getType()->getIntegerBitWidth();
   return V->getName().str();
 }
 
