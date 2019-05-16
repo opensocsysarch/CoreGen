@@ -104,7 +104,9 @@ bool SCSigMap::TranslateOperands( Function &F, Instruction &I ){
       << " from Func:Inst "
       << F.getName().str() << ":" << I.getName().str() << std::endl;
 #endif
+
     std::string OpName = TraceOperand(F,Op->get(),isPredef,isImm,Width);
+
     // generate a signal if the source is register
     if( isPredef ){
       Signals->InsertSignal(new SCSig(REG_READ,F.getName().str(),OpName+"_READ"));
@@ -161,6 +163,51 @@ bool SCSigMap::TranslateCallSig(Function &F, Instruction &I){
     SCIntrin *Intrin = i;
     if( Intrin->GetKeyword() == Callee ){
       // found a matching intrinsic
+
+      // Translate the arguments to the necessary signals
+      for( auto Arg = CInst->arg_begin(); Arg != CInst->arg_end(); ++Arg){
+        bool isPredef = false;
+        bool isImm = false;
+        unsigned Width = 0;
+
+        std::string OpName = TraceOperand(F,Arg->get(),isPredef,isImm,Width);
+
+        if( isPredef ){
+          Signals->InsertSignal(new SCSig(REG_READ,F.getName().str(),OpName+"_READ"));
+        }else if(!isImm){
+          // search for temporaries that match the instruction:irname mapping
+          std::string TmpReg = Signals->GetTempMap(F.getName().str(),
+                                                   Arg->get()->getName().str());
+          if( TmpReg.length() == 0 ){
+            // we cannot create a new temp on register read
+            std::cout << "FAILED HERE: " << Arg->get()->getName().str()
+                      << " from " << F.getName().str() << std::endl;
+            return false;
+          }
+          Signals->InsertSignal(new SCSig(AREG_READ,F.getName().str(),TmpReg+"_READ"));
+        }
+      }// end for auto Arg
+
+      // Generate the logic signals for the intrinsic
+      // TODO
+
+      // Walk the output arg and generate the write-enable intrinsics
+      if( CInst->hasName() ){
+        bool isWPredef = false;
+        bool isWImm = false;
+        unsigned Width = 0;
+        Value *LHS = cast<Value>(CInst);
+
+        std::string WOpName = TraceOperand(F,LHS,isWPredef,isWImm,Width);
+        if( isWPredef && !isWImm ){
+          Signals->InsertSignal(new SCSig(REG_WRITE,F.getName().str(),WOpName+"_WRITE"));
+        }else if(!isWImm){
+          std::string tmp = Signals->GetTempReg(F.getName().str(),
+                                            LHS->getName().str(), Width );
+          Signals->InsertSignal(new SCSig(AREG_WRITE,F.getName().str(),tmp+"_WRITE"));
+        }
+      }
+
       return true;
     }
   }
