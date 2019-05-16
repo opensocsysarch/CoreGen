@@ -27,6 +27,14 @@ bool SCSigMap::SetSignalMapFile(std::string SM){
   return true;
 }
 
+bool SCSigMap::SetIntrins(std::vector<SCIntrin *>* I){
+  if( I == nullptr )
+    return false;
+
+  Intrins = I;
+  return true;
+}
+
 bool SCSigMap::TranslateLogicalOp( Function &F,
                                    Instruction &I,
                                    SigType Type ){
@@ -143,7 +151,21 @@ bool SCSigMap::TranslateOperands( Function &F, Instruction &I ){
 }
 
 bool SCSigMap::TranslateCallSig(Function &F, Instruction &I){
-  return true;
+  // retrieve the name of the called function
+  auto *CInst = dyn_cast<CallInst>(&I);
+  std::string Callee = CInst->getCalledFunction()->getName().str();
+
+  // walk the intrinsic vector and determine which
+  // intrinsic is found
+  for( auto i : *Intrins ){
+    SCIntrin *Intrin = i;
+    if( Intrin->GetKeyword() == Callee ){
+      // found a matching intrinsic
+      return true;
+    }
+  }
+
+  return false;
 }
 
 bool SCSigMap::TranslateSelectSig(Function &F, Instruction &I ){
