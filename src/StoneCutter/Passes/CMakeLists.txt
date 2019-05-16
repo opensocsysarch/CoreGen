@@ -16,6 +16,9 @@ SCPipeBuilder.cpp
 SCSigMap.cpp
 )
 
+include_directories(${COREGEN_INCLUDE_PATH})
+include_directories(${YAML_PATH}/include)
+
 set(llvm_codegens
   x86codegen
   AArch64codegen
@@ -46,7 +49,6 @@ llvm_map_components_to_libnames(llvm_libs
   ${llvm_parsers}
 )
 
-include_directories(${COREGEN_INCLUDE_PATH})
 add_library(PassObjs OBJECT ${PassSrcs})
 
 #-- EOF

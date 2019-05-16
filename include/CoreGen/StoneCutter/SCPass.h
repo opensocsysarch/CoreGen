@@ -58,6 +58,9 @@ private:
   std::string Name;                   ///< Name of the StoneCutter pass
   SCMsg *Msgs;                        ///< StoneCutter messages output
 
+  /// Convert a string to upper case
+  std::string StrToUpper(std::string S);
+
 protected:
   SCOpts *Opts;                       ///< StoneCutter options
   Module *TheModule;                  ///< LLVM IR Module
@@ -71,7 +74,7 @@ public:
          SCMsg *M);
 
   /// Default destructor
-  ~SCPass();
+  virtual ~SCPass();
 
   /// Retrieve the name of the pass
   std::string GetName() { return Name; }
@@ -123,7 +126,8 @@ public:
 
   /// Traces the target operand back to its origin and returns the original name
   std::string TraceOperand( Function &F, Value *V,
-                            bool &isPredef, bool &isImm );
+                            bool &isPredef, bool &isImm,
+                            unsigned &Width );
 
   /// Executes the target code generation pass
   virtual bool Execute() = 0;

@@ -17,6 +17,7 @@
 #include "CoreGen/StoneCutter/Passes/SCIOWarn.h"
 #include "CoreGen/StoneCutter/Passes/SCFieldIO.h"
 #include "CoreGen/StoneCutter/Passes/SCPipeBuilder.h"
+#include "CoreGen/StoneCutter/Passes/SCSigMap.h"
 
 #endif
 

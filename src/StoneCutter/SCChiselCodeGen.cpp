@@ -125,7 +125,26 @@ bool SCChiselCodeGen::ExecuteCodegen(){
 }
 
 bool SCChiselCodeGen::ExecuteSignalMap(){
-  return true;
+  // create a new signal map object
+  SCSigMap *SM = new SCSigMap(SCParser::TheModule.get(),
+                              Opts,
+                              Msgs);
+  if( SM == nullptr )
+    return false;
+
+  // set the signal map file
+  if( !SM->SetSignalMapFile(SigMap) )
+    return false;
+
+  // execute the signal map pass
+  bool rtn = true;
+  if( !SM->Execute() )
+    rtn = false;
+
+  // delete the signal map object
+  delete SM;
+
+  return rtn;
 }
 
 bool SCChiselCodeGen::GenerateSignalMap(std::string SM){

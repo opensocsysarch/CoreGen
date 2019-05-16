@@ -21,7 +21,7 @@ include_directories(${COREGEN_INCLUDE_PATH})
 
 add_library(CoreGenCodegen ${CodegenSrcs} $<TARGET_OBJECTS:NodeCodegenObjs>)
 
-target_link_libraries(CoreGenCodegen CoreGenBackend CoreGenPluginImpl)
+target_link_libraries(CoreGenCodegen CoreGenBackend CoreGenPluginImpl CoreGenSigMap )
 
 install(TARGETS CoreGenCodegen DESTINATION lib)
 # EOF

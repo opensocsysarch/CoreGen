@@ -116,7 +116,7 @@ steps on vanilla CentOS 7.4 systems.
 
 1.  Install the system dependencies:
 ```
-sudo yum -y install cmake centos-release-scl texlive texlive-*.noarch llvm-static llvm-toolset-7-llvm-devel llvm-toolset-7-build llvm-toolset-7-cmake llvm-toolset-7-lldb-devel llvm-toolset-7-libomp-devel llvm-toolset-7-clang-devel llvm-toolset-7-llvm-static zlib-devel re2c lua lua-devel devtoolset-7
+sudo yum -y install cmake centos-release-scl texlive texlive-*.noarch llvm-static llvm-toolset-7-llvm-devel llvm-toolset-7-build llvm-toolset-7-cmake llvm-toolset-7-lldb-devel llvm-toolset-7-libomp-devel llvm-toolset-7-clang-devel llvm-toolset-7-llvm-static zlib-devel re2c lua lua-devel devtoolset-7 python-devel bison
 ```
 2. [Optional] For those wishing to build CentOS7 RPMS, you also need the following packages.
 ```
@@ -259,6 +259,7 @@ make
 * -DBUILD\_COREGEN\_STONECUTTER\_PARSER\_TESTING=ON : Enables the StoneCutter parser test harness
 * -DBUILD\_COREGEN\_STONECUTTER\_PARSER\_KNOWNFAIL\_TESTING=ON : Enables the StoneCutter parser known fail test harness
 * -DBUILD\_COREGEN\_STONECUTTER\_PARSER\_KNOWNPASS\_MULTIFILE\_TESTING=ON : Enables the StoneCutter parser multi-file test harness
+* -DBUILD\_COREGEN\_STONECUTTER\_SIGMAP\_TESTING=ON : Enables the StoneCutter SigMap pass testing
 * -DBUILD\_COREGEN\_STONECUTTER\_CODEGEN\_TESTING=ON : Enables the StoneCutter codegen test harness
 * -DBUILD\_COREGEN\_STONECUTTER\_CODEGEN\_KNOWNPASS\_TESTING=ON : Enables the StoneCutter codegen knownpass test harness
 * -DBUILD\_COREGEN\_STONECUTTER\_CODEGEN\_KNOWNFAIL\_TESTING=ON : Enables the StoneCutter codegen knownfail test harness

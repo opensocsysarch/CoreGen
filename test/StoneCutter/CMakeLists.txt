@@ -12,11 +12,13 @@ if(BUILD_COREGEN_STONECUTTER_TESTING)
   set(BUILD_COREGEN_STONECUTTER_OPTPARSER_TESTING "ON")
   set(BUILD_COREGEN_STONECUTTER_OPTPARSER_TESTING "ON")
   set(BUILD_COREGEN_STONECUTTER_CODEGEN_TESTING "ON")
+  set(BUILD_COREGEN_STONECUTTER_SIGMAP_TESTING "ON")
 endif()
 
 add_subdirectory(CLI)
 add_subdirectory(OptParser)
 add_subdirectory(Parser)
 add_subdirectory(CodeGen)
+add_subdirectory(SigMap)
 
 #-- EOF

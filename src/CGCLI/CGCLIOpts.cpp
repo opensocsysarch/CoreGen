@@ -16,7 +16,7 @@ CGCLIOpts::CGCLIOpts( int argc, char **argv )
     OptPasses(false), ListPasses(false), Verify(false), ExecPass(false),
     CGChisel(false), CGComp(false), CGVersion(false), CheckPlugins(false),
     ListSysPasses(false), ExecSysPass(false), ASPSolver(false), ASPClean(true),
-    ProjName("UNKNOWN"){
+    SigInput(false), ProjName("UNKNOWN"){
   // setup default project root
   char PATH[FILENAME_MAX];
   if( getcwd(PATH,sizeof(PATH)) == NULL ){
@@ -51,6 +51,7 @@ void CGCLIOpts::PrintOptions(){
   std::cout << "\t-p|-project|--project ProjectName     : Set the project name" << std::endl;
   std::cout << "\t-r|-root|--root /path/                : Set the project root" << std::endl;
   std::cout << "\t-a|-archive|--archive /path/          : Set the archive path" << std::endl;
+  std::cout << "\t-s|-sigmap|--sigmap /path/to/sm.yaml  : Set the signal map file path" << std::endl;
   std::cout << std::endl;
   std::cout << " Plugin Options:" << std::endl;
   std::cout << "\t--check-plugin \"PLUGIN1.so,PLUGIN2.so\": Read features from the target plugin" << std::endl;
@@ -309,6 +310,16 @@ bool CGCLIOpts::ParseOpts( int argc, char **argv ){
       }
       std::string P(argv[i+1]);
       Archive = P;
+      i++;
+    }else if( (s=="-s") || (s=="-sigmap") || (s=="--sigmap") ){
+      // signal map
+      if( i+1 > (argc-1) ){
+        std::cout << "Error : --sigmap requires an argument" << std::endl;
+        return false;
+      }
+      std::string P(argv[i+1]);
+      SigMap = P;
+      SigInput = true;
       i++;
     }else if( s=="--check-plugin" ){
       // check the target plugins

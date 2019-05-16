@@ -262,10 +262,16 @@ unsigned SCPass::GetNumRegClasses( std::string Var ){
   return 0;
 }
 
-std::string SCPass::TraceOperand( Function &F, Value *V,
-                                  bool &isPredef, bool &isImm ){
-  std::string OpName;
+std::string SCPass::StrToUpper(std::string S){
+  for( unsigned i=0; i<S.length(); i++ ){
+    S[i] = toupper(S[i]);
+  }
+  return S;
+}
 
+std::string SCPass::TraceOperand( Function &F, Value *V,
+                                  bool &isPredef, bool &isImm,
+                                  unsigned &Width ){
   // check to see if the value is a constant
   if( auto CInt = dyn_cast<ConstantInt>(V) ){
     isImm = true;
@@ -277,7 +283,7 @@ std::string SCPass::TraceOperand( Function &F, Value *V,
   if( HasGlobalAttribute(V->getName().str(),"register") ){
     // derive the register class type and return it
     isPredef = true;
-    return GetGlobalAttribute(V->getName().str(),"regclass");
+    return V->getName().str() + "_" + GetGlobalAttribute(V->getName().str(),"regclass");
   }
 
   // check to see if the operand is a instruction field
@@ -286,7 +292,7 @@ std::string SCPass::TraceOperand( Function &F, Value *V,
       // derive the register class type and return it
       isPredef = true;
       isImm = false;
-      return GetGlobalRegClass( V->getName().str(),
+      return V->getName().str() + "_" + GetGlobalRegClass( V->getName().str(),
                                 GetGlobalAttribute(F.getName().str(),
                                                    "instformat") );
     }else if( GetGlobalAttribute(V->getName().str(),"fieldtype") == "encoding" ){
@@ -297,7 +303,7 @@ std::string SCPass::TraceOperand( Function &F, Value *V,
     }else if( GetGlobalAttribute(V->getName().str(),"fieldtype") == "immediate" ){
       // return the field name as this mimics an instruction payload read
       isPredef = true;
-      isImm = false;
+      isImm = true;
       return V->getName().str();
     }
   }
@@ -329,21 +335,25 @@ std::string SCPass::TraceOperand( Function &F, Value *V,
         if( Inst->getOperand(0)->getName().str() == V->getName().str() ){
           // The source operand is our operand, check the target operand
           // and see if it exists as a global
-          return TraceOperand(F,Inst->getOperand(1),isPredef,isImm);
+          return TraceOperand(F,Inst->getOperand(1),isPredef,isImm,Width);
         }else{
           // The target operand is our operand, check the source operand
           // and see if it exists as a global
-          return TraceOperand(F,Inst->getOperand(0),isPredef,isImm);
+          return TraceOperand(F,Inst->getOperand(0),isPredef,isImm,Width);
         }
-      }else if( Inst->getOpcode() != Instruction::Load && Inst->hasName() ){
+      }else if( (Inst->getOpcode() != Instruction::Load) && Inst->hasName() ){
         // else, examine the target of the instruction
         Value *LHS = cast<Value>(Inst);
-        return TraceOperand(F,LHS,isPredef,isImm);
+        //std::cout << "LHS = " << LHS->getName().str() << " from " << F.getName().str() << std::endl;
+        return TraceOperand(F,LHS,isPredef,isImm,Width);
       }
     }
   }
   // if we reach this point, then the source is unique
-  return OpName;
+  isImm = false;
+  isPredef = false;
+  Width = V->getType()->getIntegerBitWidth();
+  return V->getName().str();
 }
 
 // EOF

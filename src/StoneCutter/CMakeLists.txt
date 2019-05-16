@@ -19,6 +19,7 @@ set(SCCompSrcs
 )
 
 include_directories(${COREGEN_INCLUDE_PATH})
+include_directories(${YAML_PATH}/include)
 
 set(llvm_codegens
   x86codegen
@@ -58,7 +59,7 @@ add_subdirectory(Passes)
 
 add_library(SCComp ${SCCompSrcs} $<TARGET_OBJECTS:IntrinObjs> $<TARGET_OBJECTS:PassObjs>)
 
-target_link_libraries(SCComp ${llvm_libs})
+target_link_libraries(SCComp ${llvm_libs} CoreGenSigMap)
 
 install(TARGETS SCComp DESTINATION lib)
 
