@@ -417,6 +417,18 @@ bool CoreGenSigMap::WriteTopLevelSignals(YAML::Emitter *out){
 
 std::string CoreGenSigMap::GetTempReg( std::string Inst, std::string IRName,
                                        unsigned width ){
+
+  // Search the current set of temporaries.  If we find an existing match
+  // on the IRName and the width, use it.  In LLVM SSA form, we should not
+  // see duplicate temporaries within a target instruction
+  for( unsigned i=0; i<TempRegs.size(); i++ ){
+    if( TempRegs[i]->IsIRFound(IRName) && (TempRegs[i]->GetWidth() == width) ){
+      TempRegs[i]->InsertTmpPair( Inst, IRName );
+      return TempRegs[i]->GetName();
+    }
+  }
+
+  // Could not find an existing temporary, return a new temp
   std::string TmpName = "ALUTMP" + std::to_string(TmpIdx) + "_" + std::to_string(width);
   TmpIdx++;
   TempRegs.push_back( new SCTmp(TmpName,width,Inst,IRName) );
