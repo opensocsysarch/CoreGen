@@ -33,6 +33,9 @@
 #include "llvm/IR/Type.h"
 #include "llvm/IR/Verifier.h"
 
+// CoreGen headers
+#include "CoreGen/CoreGenSigMap/CoreGenSigMap.h"
+
 // Standard headers
 #include <algorithm>
 #include <cctype>
@@ -62,6 +65,14 @@ public:
   /// Retrieve the target keyword
   std::string GetKeyword() { return Keyword; }
 
+  /// Generates the intrinsic signal map
+  bool GetSigMap(CoreGenSigMap *Sigs){
+    for( auto i : ISignals ){
+      Sigs->InsertSignal( new SCSig(*i) );
+    }
+    return true;
+  }
+
   // virtual functions
 
   /// Executes the intrinsic codegenerator
@@ -70,6 +81,7 @@ public:
 private:
   unsigned NumInputs;               ///< Number of required input arguments
   std::string Keyword;              ///< Intrinsic Keyword
+  std::vector<SCSig *> ISignals;    ///< Intrinsic Signals
 };
 
 #endif

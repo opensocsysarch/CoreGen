@@ -180,8 +180,6 @@ bool SCSigMap::TranslateCallSig(Function &F, Instruction &I){
                                                    Arg->get()->getName().str());
           if( TmpReg.length() == 0 ){
             // we cannot create a new temp on register read
-            std::cout << "FAILED HERE: " << Arg->get()->getName().str()
-                      << " from " << F.getName().str() << std::endl;
             return false;
           }
           Signals->InsertSignal(new SCSig(AREG_READ,F.getName().str(),TmpReg+"_READ"));
@@ -189,7 +187,8 @@ bool SCSigMap::TranslateCallSig(Function &F, Instruction &I){
       }// end for auto Arg
 
       // Generate the logic signals for the intrinsic
-      // TODO
+      if( !Intrin->GetSigMap(Signals) )
+        return false;
 
       // Walk the output arg and generate the write-enable intrinsics
       if( CInst->hasName() ){
