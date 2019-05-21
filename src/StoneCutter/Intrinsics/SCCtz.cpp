@@ -11,6 +11,9 @@
 #include "CoreGen/StoneCutter/Intrinsics/SCCtz.h"
 
 SCCtz::SCCtz() : SCIntrin(1,"CTZ") {
+  ISignals.push_back(new SCSig(BR_LT));
+  ISignals.push_back(new SCSig(ALU_SRL));
+  ISignals.push_back(new SCSig(ALU_ADD));
 }
 
 SCCtz::SCCtz(unsigned NI, std::string K) : SCIntrin(NI,K) {
