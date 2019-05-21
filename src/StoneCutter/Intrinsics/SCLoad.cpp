@@ -23,10 +23,11 @@ Value *SCLoad::codegen(){
   return nullptr;
 }
 
-bool SCLoad::GetSigMap(CoreGenSigMap *Sigs, Instruction &I){
+bool SCLoad::GetSigMap(CoreGenSigMap *Sigs,
+                       Instruction &I,
+                       std::string Inst){
   unsigned width = I.getOperand(0)->getType()->getIntegerBitWidth();
-  ISignals.push_back(new SCSig(MEM_READ,width) );
-  return true;
+  return Sigs->InsertSignal(new SCSig(MEM_READ,width,Inst) );
 }
 
 // EOF

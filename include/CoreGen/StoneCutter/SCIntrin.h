@@ -71,8 +71,9 @@ public:
   virtual Value *codegen() { return nullptr; }
 
   /// Generates the intrinsic signal map
-  virtual bool GetSigMap(CoreGenSigMap *Sigs,Instruction &I){
+  virtual bool GetSigMap(CoreGenSigMap *Sigs,Instruction &I,std::string Inst){
     for( auto i : ISignals ){
+      // TODO, fix this
       Sigs->InsertSignal( new SCSig(*i) );
     }
     return true;

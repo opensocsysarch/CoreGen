@@ -38,7 +38,9 @@ public:
   virtual Value *codegen();
 
   /// Retrieve the signal map
-  virtual bool GetSigMap(CoreGenSigMap *Sigs, Instruction& I);
+  virtual bool GetSigMap(CoreGenSigMap *Sigs,
+                         Instruction& I,
+                         std::string Inst);
 };
 
 #endif
