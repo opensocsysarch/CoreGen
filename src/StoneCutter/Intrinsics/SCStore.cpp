@@ -23,4 +23,10 @@ Value *SCStore::codegen(){
   return nullptr;
 }
 
+bool SCStore::GetSigMap(CoreGenSigMap *Sigs, Instruction &I){
+  unsigned width = I.getOperand(0)->getType()->getIntegerBitWidth();
+  ISignals.push_back(new SCSig(MEM_WRITE,width) );
+  return true;
+}
+
 // EOF

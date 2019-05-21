@@ -65,23 +65,25 @@ public:
   /// Retrieve the target keyword
   std::string GetKeyword() { return Keyword; }
 
+  // virtual functions
+
+  /// Executes the intrinsic codegenerator
+  virtual Value *codegen() { return nullptr; }
+
   /// Generates the intrinsic signal map
-  bool GetSigMap(CoreGenSigMap *Sigs){
+  virtual bool GetSigMap(CoreGenSigMap *Sigs,Instruction &I){
     for( auto i : ISignals ){
       Sigs->InsertSignal( new SCSig(*i) );
     }
     return true;
   }
 
-  // virtual functions
-
-  /// Executes the intrinsic codegenerator
-  virtual Value *codegen() { return nullptr; }
+protected:
+  std::vector<SCSig *> ISignals;    ///< Intrinsic Signals
 
 private:
   unsigned NumInputs;               ///< Number of required input arguments
   std::string Keyword;              ///< Intrinsic Keyword
-  std::vector<SCSig *> ISignals;    ///< Intrinsic Signals
 };
 
 #endif

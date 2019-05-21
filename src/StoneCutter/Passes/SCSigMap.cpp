@@ -187,7 +187,7 @@ bool SCSigMap::TranslateCallSig(Function &F, Instruction &I){
       }// end for auto Arg
 
       // Generate the logic signals for the intrinsic
-      if( !Intrin->GetSigMap(Signals) )
+      if( !Intrin->GetSigMap(Signals,I) )
         return false;
 
       // Walk the output arg and generate the write-enable intrinsics
