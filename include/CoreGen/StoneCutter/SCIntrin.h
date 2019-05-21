@@ -73,8 +73,7 @@ public:
   /// Generates the intrinsic signal map
   virtual bool GetSigMap(CoreGenSigMap *Sigs,Instruction &I,std::string Inst){
     for( auto i : ISignals ){
-      // TODO, fix this
-      Sigs->InsertSignal( new SCSig(*i) );
+      Sigs->InsertSignal(new SCSig(i->GetType(), i->GetWidth(), Inst));
     }
     return true;
   }
