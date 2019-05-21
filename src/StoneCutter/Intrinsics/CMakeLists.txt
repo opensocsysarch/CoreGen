@@ -35,6 +35,7 @@ SCMerge.cpp
 SCConcat.cpp
 SCLss.cpp
 SCFence.cpp
+SCBsel.cpp
 )
 
 set(llvm_codegens
