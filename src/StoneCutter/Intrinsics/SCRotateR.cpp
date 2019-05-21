@@ -11,6 +11,10 @@
 #include "CoreGen/StoneCutter/Intrinsics/SCRotateR.h"
 
 SCRotateR::SCRotateR() : SCIntrin(2,"ROTR") {
+  ISignals.push_back(new SCSig(ALU_SLL));
+  ISignals.push_back(new SCSig(ALU_SRL));
+  ISignals.push_back(new SCSig(ALU_OR));
+  ISignals.push_back(new SCSig(ALU_SUB));
 }
 
 SCRotateR::SCRotateR(unsigned NI, std::string K) : SCIntrin(NI,K) {
