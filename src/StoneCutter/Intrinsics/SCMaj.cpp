@@ -11,7 +11,9 @@
 #include "CoreGen/StoneCutter/Intrinsics/SCMaj.h"
 
 SCMaj::SCMaj() : SCIntrin(3,"MAJ") {
-  ISignals.push_back(new SCSig(MUX_EQ));
+  ISignals.push_back(new SCSig(MUX_GT));
+  ISignals.push_back(new SCSig(MUX_LT));
+  ISignals.push_back(new SCSig(ALU_SUB));
   ISignals.push_back(new SCSig(MUX));
 }
 
