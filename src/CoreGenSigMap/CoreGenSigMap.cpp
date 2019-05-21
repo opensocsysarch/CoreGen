@@ -182,6 +182,8 @@ SigType CoreGenSigMap::StrToSigType( std::string Sig ){
     return MEM_READ;
   }else if( Sig == "MEM_WRITE" ){
     return MEM_WRITE;
+  }else if( Sig == "FENCE" ){
+    return FENCE;
   }
   return SIGUNK;
 }

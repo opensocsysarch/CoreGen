@@ -90,7 +90,10 @@ typedef enum{
 
   // Memory signals
   MEM_READ  = 90,           ///< SigType: Memory read
-  MEM_WRITE = 91            ///< SigType: Memory write
+  MEM_WRITE = 91,           ///< SigType: Memory write
+
+  // Misc signals
+  FENCE     = 100           ///< SigType: Fence
 }SigType;                   ///< CoreGenSigMap: Emumerated types to represent signals
 
 class SCSig{
