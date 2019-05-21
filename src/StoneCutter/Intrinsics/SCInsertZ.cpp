@@ -11,6 +11,7 @@
 #include "CoreGen/StoneCutter/Intrinsics/SCInsertZ.h"
 
 SCInsertZ::SCInsertZ() : SCIntrin(3,"INSERTZ") {
+  ISignals.push_back(new SCSig(ALU_OR));
 }
 
 SCInsertZ::SCInsertZ(unsigned NI, std::string K) : SCIntrin(NI,K) {
