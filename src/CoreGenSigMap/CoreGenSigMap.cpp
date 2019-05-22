@@ -8,6 +8,7 @@
 // See LICENSE in the top level directory for licensing details
 //
 
+#include <iostream>
 #include "CoreGen/CoreGenSigMap/CoreGenSigMap.h"
 
 CoreGenSigMap::CoreGenSigMap() : TmpIdx(0) {
@@ -182,6 +183,8 @@ SigType CoreGenSigMap::StrToSigType( std::string Sig ){
     return MEM_READ;
   }else if( Sig == "MEM_WRITE" ){
     return MEM_WRITE;
+  }else if( Sig == "FENCE" ){
+    return FENCE;
   }
   return SIGUNK;
 }
@@ -195,7 +198,10 @@ bool CoreGenSigMap::ReadTopLevelSignals(const YAML::Node& TopNodes){
     if( !CheckValidNode(Node,"Signal") ){
       return false;
     }
-    TopSigs.push_back(StrToSigType(Node["Signal"].as<std::string>()));
+    std::string LSig = Node["Signal"].as<std::string>();
+    if( LSig.length() == 0 )
+      return false;
+    TopSigs.push_back(StrToSigType(LSig));
   }
   return true;
 }
@@ -213,9 +219,18 @@ bool CoreGenSigMap::ReadInstSignals(const YAML::Node& InstNodes){
       const YAML::Node& SNode = Node["Signals"];
       for( unsigned j=0; j<SNode.size(); j++ ){
         const YAML::Node& LSNode = SNode[j];
+        if( !CheckValidNode(LSNode,"Signal") )
+          return false;
         std::string SigName = LSNode["Signal"].as<std::string>();
+
+        if( !CheckValidNode(LSNode,"Type") )
+          return false;
         SigType Type = StrToSigType(LSNode["Type"].as<std::string>());
+
+        if( !CheckValidNode(LSNode,"Width") )
+          return false;
         unsigned Width = LSNode["Width"].as<unsigned>();
+
         Signals.push_back(new SCSig(Type,Width,Name,SigName));
       }
     }
@@ -406,17 +421,31 @@ bool CoreGenSigMap::WriteTopLevelSignals(YAML::Emitter *out){
   std::sort(Sigs.begin(),Sigs.end());
   Sigs.erase( std::unique(Sigs.begin(),Sigs.end()), Sigs.end());
 
-  *out << YAML::Key << "SignalTop" << YAML::BeginSeq << YAML::BeginMap;
+  *out << YAML::Key << "SignalTop" << YAML::BeginSeq;
   for( unsigned i=0; i<Sigs.size(); i++ ){
-    *out << YAML::Key << "Signal" << YAML::Value << Sigs[i];
+    *out << YAML::BeginMap << YAML::Key
+         << "Signal" << YAML::Value << Sigs[i]
+         << YAML::EndMap;
   }
-  *out << YAML::EndMap << YAML::EndSeq;
+  *out << YAML::EndSeq;
 
   return true;
 }
 
 std::string CoreGenSigMap::GetTempReg( std::string Inst, std::string IRName,
                                        unsigned width ){
+
+  // Search the current set of temporaries.  If we find an existing match
+  // on the IRName and the width, use it.  In LLVM SSA form, we should not
+  // see duplicate temporaries within a target instruction
+  for( unsigned i=0; i<TempRegs.size(); i++ ){
+    if( TempRegs[i]->IsIRFound(IRName) && (TempRegs[i]->GetWidth() == width) ){
+      TempRegs[i]->InsertTmpPair( Inst, IRName );
+      return TempRegs[i]->GetName();
+    }
+  }
+
+  // Could not find an existing temporary, return a new temp
   std::string TmpName = "ALUTMP" + std::to_string(TmpIdx) + "_" + std::to_string(width);
   TmpIdx++;
   TempRegs.push_back( new SCTmp(TmpName,width,Inst,IRName) );

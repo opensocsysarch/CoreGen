@@ -21,9 +21,18 @@ SCSigMap::~SCSigMap(){
 
 bool SCSigMap::SetSignalMapFile(std::string SM){
   if( SM.length() == 0 ){
+    this->PrintMsg( L_ERROR, "Signal map file is null" );
     return false;
   }
   SigMap = SM;
+  return true;
+}
+
+bool SCSigMap::SetIntrins(std::vector<SCIntrin *>* I){
+  if( I == nullptr )
+    return false;
+
+  Intrins = I;
   return true;
 }
 
@@ -74,6 +83,7 @@ bool SCSigMap::TranslateMemOp( Function &F,
       Signals->InsertSignal(new SCSig(REG_READ,F.getName().str(),WOpName+"_READ"));
     }
   }else{
+    this->PrintMsg( L_ERROR, "Encountered a memory operation that is not a Load or Store operation" );
     return false;
   }
 
@@ -96,7 +106,9 @@ bool SCSigMap::TranslateOperands( Function &F, Instruction &I ){
       << " from Func:Inst "
       << F.getName().str() << ":" << I.getName().str() << std::endl;
 #endif
+
     std::string OpName = TraceOperand(F,Op->get(),isPredef,isImm,Width);
+
     // generate a signal if the source is register
     if( isPredef ){
       Signals->InsertSignal(new SCSig(REG_READ,F.getName().str(),OpName+"_READ"));
@@ -106,6 +118,7 @@ bool SCSigMap::TranslateOperands( Function &F, Instruction &I ){
                                                Op->get()->getName().str());
       if( TmpReg.length() == 0 ){
         // we cannot create a new temp on register read
+        this->PrintMsg( L_ERROR, "Cannot create temporary registers for register read signals" );
         return false;
       }
       Signals->InsertSignal(new SCSig(AREG_READ,F.getName().str(),TmpReg+"_READ"));
@@ -143,7 +156,65 @@ bool SCSigMap::TranslateOperands( Function &F, Instruction &I ){
 }
 
 bool SCSigMap::TranslateCallSig(Function &F, Instruction &I){
-  return true;
+  // retrieve the name of the called function
+  auto *CInst = dyn_cast<CallInst>(&I);
+  std::string Callee = CInst->getCalledFunction()->getName().str();
+
+  // walk the intrinsic vector and determine which
+  // intrinsic is found
+  for( auto i : *Intrins ){
+    SCIntrin *Intrin = i;
+    if( Intrin->GetKeyword() == Callee ){
+      // found a matching intrinsic
+
+      // Translate the arguments to the necessary signals
+      for( auto Arg = CInst->arg_begin(); Arg != CInst->arg_end(); ++Arg){
+        bool isPredef = false;
+        bool isImm = false;
+        unsigned Width = 0;
+
+        std::string OpName = TraceOperand(F,Arg->get(),isPredef,isImm,Width);
+
+        if( isPredef ){
+          Signals->InsertSignal(new SCSig(REG_READ,F.getName().str(),OpName+"_READ"));
+        }else if(!isImm){
+          // search for temporaries that match the instruction:irname mapping
+          std::string TmpReg = Signals->GetTempMap(F.getName().str(),
+                                                   Arg->get()->getName().str());
+          if( TmpReg.length() == 0 ){
+            // we cannot create a new temp on register read
+            return false;
+          }
+          Signals->InsertSignal(new SCSig(AREG_READ,F.getName().str(),TmpReg+"_READ"));
+        }
+      }// end for auto Arg
+
+      // Generate the logic signals for the intrinsic
+      if( !Intrin->GetSigMap(Signals,I,F.getName().str()) )
+        return false;
+
+      // Walk the output arg and generate the write-enable intrinsics
+      if( CInst->hasName() ){
+        bool isWPredef = false;
+        bool isWImm = false;
+        unsigned Width = 0;
+        Value *LHS = cast<Value>(CInst);
+
+        std::string WOpName = TraceOperand(F,LHS,isWPredef,isWImm,Width);
+        if( isWPredef && !isWImm ){
+          Signals->InsertSignal(new SCSig(REG_WRITE,F.getName().str(),WOpName+"_WRITE"));
+        }else if(!isWImm){
+          std::string tmp = Signals->GetTempReg(F.getName().str(),
+                                            LHS->getName().str(), Width );
+          Signals->InsertSignal(new SCSig(AREG_WRITE,F.getName().str(),tmp+"_WRITE"));
+        }
+      }
+
+      return true;
+    }
+  }
+
+  return false;
 }
 
 bool SCSigMap::TranslateSelectSig(Function &F, Instruction &I ){
@@ -386,6 +457,7 @@ bool SCSigMap::CheckSigReq( Function &F, Instruction &I ){
     return true;
     break;
   default:
+    this->PrintMsg( L_ERROR, "Failed to decode instruction type" );
     return false;
     break;
   }
@@ -437,6 +509,9 @@ bool SCSigMap::CheckPCReq(Function &F){
     Signals->InsertSignal(new SCSig(PC_BRJMP,F.getName().str(),"PC_BRJMP"));
   }
 
+  if( !Rtn )
+    this->PrintMsg( L_ERROR, "Failed to discover the PC signal requirements" );
+
   return Rtn;
 }
 
@@ -485,6 +560,7 @@ bool SCSigMap::Execute(){
   // Stage 3: write the signal map out to a yaml file
   if( !Signals->WriteSigMap(SigMap) ){
     delete Signals;
+    this->PrintMsg( L_ERROR, "Failed to write the signal map to a file" );
     return false;
   }
 

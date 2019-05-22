@@ -13,7 +13,8 @@
  *
  * \ingroup StoneCutter
  *
- * \brief StoneCutter Intrinsic: Zero Extension
+ * \brief StoneCutter Intrinsic: Zero Extension: ZEXT( VALUE, BASE )
+ *        where VALUE is the target to zero extend and BASE is the most significant bit
  *
  */
 

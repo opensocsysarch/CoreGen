@@ -134,19 +134,19 @@ if( ra <= rb ){ rt = 7 }else{ rt = 0 }
 # lb
 def lb:Arith.if( ra rb rt imm )
 {
-rt = SEXT(LOADELEM(ra+imm,8))
+rt = SEXT(LOADELEM(ra+imm,8),7)
 }
 
 # lh
 def lh:Arith.if( ra rb rt imm )
 {
-rt = SEXT(LOADELEM(ra+imm,16))
+rt = SEXT(LOADELEM(ra+imm,16),15)
 }
 
 # lw
 def lw:Arith.if( ra rb rt imm )
 {
-rt = SEXT(LOADELEM(ra+imm,32))
+rt = SEXT(LOADELEM(ra+imm,32),31)
 }
 
 # ld
@@ -164,55 +164,55 @@ STOREELEM(ra,rt+imm,8)
 # sh
 def sh:Arith.if( ra rb rt imm )
 {
-STOREELEM(SEXT(ra),rt+imm,16)
+STOREELEM(SEXT(ra,15),rt+imm,16)
 }
 
 # sw
 def sw:Arith.if( ra rb rt imm )
 {
-STOREELEM(SEXT(ra),rt+imm,32)
+STOREELEM(SEXT(ra,31),rt+imm,32)
 }
 
 # sd
 def sd:Arith.if( ra rb rt imm )
 {
-STOREELEM(SEXT(ra),rt+imm,64)
+STOREELEM(ra,rt+imm,64)
 }
 
 # lbu
 def lbu:Arith.if( ra rb rt imm )
 {
-rt = ZEXT(LOADELEM(ra+imm,8))
+rt = ZEXT(LOADELEM(ra+imm,8),7)
 }
 
 # lhu
 def lhu:Arith.if( ra rb rt imm )
 {
-rt = ZEXT(LOADELEM(ra+imm,16))
+rt = ZEXT(LOADELEM(ra+imm,16),15)
 }
 
 # lwu
 def lwu:Arith.if( ra rb rt imm )
 {
-rt = ZEXT(LOADELEM(ra+imm,32))
+rt = ZEXT(LOADELEM(ra+imm,32),31)
 }
 
 # sbu
 def sbu:Arith.if( ra rb rt imm )
 {
-STOREELEM(ZEXT(ra),rt+imm,8)
+STOREELEM(ZEXT(ra,7),rt+imm,8)
 }
 
 # shu
 def shu:Arith.if( ra rb rt imm )
 {
-STOREELEM(ZEXT(ra),rt+imm,16)
+STOREELEM(ZEXT(ra,15),rt+imm,16)
 }
 
 # swu
 def swu:Arith.if( ra rb rt imm )
 {
-STOREELEM(ZEXT(ra),rt+imm,32)
+STOREELEM(ZEXT(ra,31),rt+imm,32)
 }
 
 # not
@@ -230,7 +230,7 @@ pc = rt
 # br
 def br:Arith.if( ra rb rt imm )
 {
-pc = SEXT(pc + rt)
+pc = pc+rt
 }
 
 # cadd

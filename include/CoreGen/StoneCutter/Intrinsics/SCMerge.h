@@ -13,7 +13,7 @@
  *
  * \ingroup StoneCutter
  *
- * \brief StoneCutter Intrinsic: Merge under mask
+ * \brief StoneCutter Intrinsic: Merge under mask: r = a ^ ((a ^ b) & mask)
  *
  */
 

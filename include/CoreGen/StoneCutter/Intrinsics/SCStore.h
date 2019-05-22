@@ -36,6 +36,11 @@ public:
 
   /// Execute the codegen
   virtual Value *codegen();
+
+  /// Retrieve the signal map
+  virtual bool GetSigMap(CoreGenSigMap *Sigs,
+                         Instruction& I,
+                         std::string Inst);
 };
 
 #endif

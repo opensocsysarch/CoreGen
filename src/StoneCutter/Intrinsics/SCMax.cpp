@@ -11,6 +11,8 @@
 #include "CoreGen/StoneCutter/Intrinsics/SCMax.h"
 
 SCMax::SCMax() : SCIntrin(2,"MAX") {
+  ISignals.push_back(new SCSig(MUX_GE));
+  ISignals.push_back(new SCSig(MUX));
 }
 
 SCMax::SCMax(unsigned NI, std::string K) : SCIntrin(NI,K) {

@@ -22,7 +22,6 @@
 
 /// CoreGen Data Passes
 #include "CoreGen/CoreGenBackend/Passes/Data/StatsPass.h"
-#include "CoreGen/CoreGenBackend/Passes/Data/InstTable.h"
 #include "CoreGen/CoreGenBackend/Passes/Data/SpecDoc.h"
 
 /// CoreGen Analysis Passes

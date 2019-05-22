@@ -11,8 +11,6 @@ regclass bar( float f1, double d2, bool b3, u7 i4,
 
 
 def foo(a b c){
-  do{
-    b = b << c
-    a = a-1
-  }while(a > i4)
+  BSEL(a,b,c)
+  a = BSEL(a,b,c)
 }

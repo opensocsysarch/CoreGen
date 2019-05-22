@@ -11,6 +11,8 @@
 #include "CoreGen/StoneCutter/Intrinsics/SCDoz.h"
 
 SCDoz::SCDoz() : SCIntrin(2,"DOZ") {
+  ISignals.push_back(new SCSig(ALU_SUB));
+  ISignals.push_back(new SCSig(MUX_LT));
 }
 
 SCDoz::SCDoz(unsigned NI, std::string K) : SCIntrin(NI,K) {

@@ -11,6 +11,8 @@
 #include "CoreGen/StoneCutter/Intrinsics/SCConcat.h"
 
 SCConcat::SCConcat() : SCIntrin(2,"CONCAT") {
+  ISignals.push_back(new SCSig(ALU_SLL));
+  ISignals.push_back(new SCSig(ALU_OR));
 }
 
 SCConcat::SCConcat(unsigned NI, std::string K) : SCIntrin(NI,K) {

@@ -11,6 +11,7 @@
 #include "CoreGen/StoneCutter/Intrinsics/SCExtractS.h"
 
 SCExtractS::SCExtractS() : SCIntrin(3,"EXTRACTS") {
+  // no signals
 }
 
 SCExtractS::SCExtractS(unsigned NI, std::string K) : SCIntrin(NI,K) {

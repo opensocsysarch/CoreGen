@@ -276,6 +276,7 @@ std::string SCPass::TraceOperand( Function &F, Value *V,
   if( auto CInt = dyn_cast<ConstantInt>(V) ){
     isImm = true;
     isPredef = false;
+    Width = (unsigned)(CInt->getSExtValue());
     return CInt->getName().str();
   }
 

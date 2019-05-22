@@ -13,7 +13,8 @@
  *
  * \ingroup StoneCutter
  *
- * \brief StoneCutter Intrinsic: Sign Extension
+ * \brief StoneCutter Intrinsic: Sign Extension SEXT( VALUE, BASE )
+ *        where VALUE is the target to sign extend and BASE is the sign bit
  *
  */
 

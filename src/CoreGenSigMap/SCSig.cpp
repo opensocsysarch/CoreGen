@@ -93,7 +93,8 @@ bool SCSig::SetType( SigType T ){
   case AREG_READ:
   case AREG_WRITE:
   case MEM_READ:
-    case MEM_WRITE:
+  case MEM_WRITE:
+  case FENCE:
     Type = T;
     return true;
   default:
@@ -302,6 +303,9 @@ const std::string SCSig::SigTypeToStr(){
       break;
     case MEM_WRITE:
       return "MEM_WRITE";
+      break;
+    case FENCE:
+      return "FENCE";
       break;
     default:
       return "SIGUNK";

@@ -39,6 +39,7 @@ private:
   // Private variables
   CoreGenSigMap *Signals;           ///< CoreGenSigMap handler
   std::string SigMap;               ///< Signal map output file
+  std::vector<SCIntrin *>* Intrins; ///< Intrinsics vector
 
   // Private functions
   /// walks the LLVM Module object and discovers all the interior signals
@@ -86,6 +87,9 @@ public:
 
   /// Sets the signal map file name
   bool SetSignalMapFile(std::string SM);
+
+  /// Sets the intrinsics vector
+  bool SetIntrins(std::vector<SCIntrin *>* Intrins);
 };
 
 #endif

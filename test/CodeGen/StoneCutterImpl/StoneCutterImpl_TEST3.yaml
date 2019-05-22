@@ -2178,7 +2178,7 @@ Insts:
       - EncodingField: opcode
         EncodingWidth: 8
         EncodingValue: 28
-    Impl: RT = SEXT(RA) + RB
+    Impl: RT = SEXT(RA,7) + RB
     Syntax: TEST74.inst27 %RT, %RA, %RB
   - Inst: TEST74.inst28
     ISA: TEST74.isa
@@ -2196,7 +2196,7 @@ Insts:
       - EncodingField: opcode
         EncodingWidth: 8
         EncodingValue: 30
-    Impl: RT = ZEXT(RA)
+    Impl: RT = ZEXT(RA,7)
     Syntax: TEST74.inst29 %RT, %RA, %RB
   - Inst: TEST74.inst30
     ISA: TEST74.isa

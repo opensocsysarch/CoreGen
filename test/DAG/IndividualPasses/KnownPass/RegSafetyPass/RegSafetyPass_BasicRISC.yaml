@@ -987,7 +987,7 @@ Insts:
       - EncodingField: rb
         EncodingWidth: 5
         EncodingValue: 0
-    Impl: rt = SEXT(LOADELEM(ra+imm,8))
+    Impl: rt = SEXT(LOADELEM(ra+imm,8),7)
   - Inst: lh
     ISA: BasicRISC.ISA
     InstFormat: Arith.if
@@ -1001,7 +1001,7 @@ Insts:
       - EncodingField: rb
         EncodingWidth: 5
         EncodingValue: 0
-    Impl: rt = SEXT(LOADELEM(ra+imm,16))
+    Impl: rt = SEXT(LOADELEM(ra+imm,16),15)
   - Inst: lw
     ISA: BasicRISC.ISA
     InstFormat: Arith.if
@@ -1015,7 +1015,7 @@ Insts:
       - EncodingField: rb
         EncodingWidth: 5
         EncodingValue: 0
-    Impl: rt = SEXT(LOADELEM(ra+imm,32))
+    Impl: rt = SEXT(LOADELEM(ra+imm,32),31)
   - Inst: ld
     ISA: BasicRISC.ISA
     InstFormat: Arith.if
@@ -1057,7 +1057,7 @@ Insts:
       - EncodingField: rb
         EncodingWidth: 5
         EncodingValue: 0
-    Impl: STOREELEM(SEXT(ra),rt+imm,16)
+    Impl: STOREELEM(SEXT(ra,15),rt+imm,16)
   - Inst: sw
     ISA: BasicRISC.ISA
     InstFormat: Arith.if
@@ -1071,7 +1071,7 @@ Insts:
       - EncodingField: rb
         EncodingWidth: 5
         EncodingValue: 0
-    Impl: STOREELEM(SEXT(ra),rt+imm,32)
+    Impl: STOREELEM(SEXT(ra,31),rt+imm,32)
   - Inst: sd
     ISA: BasicRISC.ISA
     InstFormat: Arith.if
@@ -1085,7 +1085,7 @@ Insts:
       - EncodingField: rb
         EncodingWidth: 5
         EncodingValue: 0
-    Impl: STOREELEM(SEXT(ra),rt+imm,64)
+    Impl: STOREELEM(ra,rt+imm,64)
   - Inst: lbu
     ISA: BasicRISC.ISA
     InstFormat: Arith.if
@@ -1099,7 +1099,7 @@ Insts:
       - EncodingField: rb
         EncodingWidth: 5
         EncodingValue: 0
-    Impl: rt = ZEXT(LOADELEM(ra+imm,8))
+    Impl: rt = ZEXT(LOADELEM(ra+imm,8),7)
   - Inst: lhu
     ISA: BasicRISC.ISA
     InstFormat: Arith.if
@@ -1113,7 +1113,7 @@ Insts:
       - EncodingField: rb
         EncodingWidth: 5
         EncodingValue: 0
-    Impl: rt = ZEXT(LOADELEM(ra+imm,16))
+    Impl: rt = ZEXT(LOADELEM(ra+imm,16),15)
   - Inst: lwu
     ISA: BasicRISC.ISA
     InstFormat: Arith.if
@@ -1127,7 +1127,7 @@ Insts:
       - EncodingField: rb
         EncodingWidth: 5
         EncodingValue: 0
-    Impl: rt = ZEXT(LOADELEM(ra+imm,32))
+    Impl: rt = ZEXT(LOADELEM(ra+imm,32),31)
   - Inst: sbu
     ISA: BasicRISC.ISA
     InstFormat: Arith.if
@@ -1141,7 +1141,7 @@ Insts:
       - EncodingField: rb
         EncodingWidth: 5
         EncodingValue: 0
-    Impl: STOREELEM(ZEXT(ra),rt+imm,8)
+    Impl: STOREELEM(ZEXT(ra,7),rt+imm,8)
   - Inst: shu
     ISA: BasicRISC.ISA
     InstFormat: Arith.if
@@ -1155,7 +1155,7 @@ Insts:
       - EncodingField: rb
         EncodingWidth: 5
         EncodingValue: 0
-    Impl: STOREELEM(ZEXT(ra),rt+imm,16)
+    Impl: STOREELEM(ZEXT(ra,15),rt+imm,16)
   - Inst: swu
     ISA: BasicRISC.ISA
     InstFormat: Arith.if
@@ -1169,7 +1169,7 @@ Insts:
       - EncodingField: rb
         EncodingWidth: 5
         EncodingValue: 0
-    Impl: STOREELEM(ZEXT(ra),rt+imm,32)
+    Impl: STOREELEM(ZEXT(ra,31),rt+imm,32)
 
 # -- Two Operand Arithmetic
   - Inst: not
@@ -1230,7 +1230,7 @@ Insts:
       - EncodingField: imm
         EncodingWidth: 7
         EncodingValue: 0
-    Impl: pc = SEXT(pc + rt)
+    Impl: pc = pc + rt
 
 # -- Read from Control
   - Inst: cadd

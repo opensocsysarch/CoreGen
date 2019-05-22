@@ -9,6 +9,6 @@ regclass bar( float f1, double d2, bool b3, u7 i4,
 
 
 def foo(a b x){
-  SEXT(a);
-  x = SEXT(b);
+  SEXT(a,8);
+  x = SEXT(b,16);
 }

@@ -10,7 +10,8 @@
 
 #include "CoreGen/StoneCutter/Intrinsics/SCZext.h"
 
-SCZext::SCZext() : SCIntrin(1,"ZEXT") {
+SCZext::SCZext() : SCIntrin(2,"ZEXT") {
+  // no signals
 }
 
 SCZext::SCZext(unsigned NI, std::string K) : SCIntrin(NI,K) {

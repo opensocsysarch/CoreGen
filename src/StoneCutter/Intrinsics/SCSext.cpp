@@ -10,7 +10,8 @@
 
 #include "CoreGen/StoneCutter/Intrinsics/SCSext.h"
 
-SCSext::SCSext() : SCIntrin(1,"SEXT") {
+SCSext::SCSext() : SCIntrin(2,"SEXT") {
+  // no signals
 }
 
 SCSext::SCSext(unsigned NI, std::string K) : SCIntrin(NI,K) {

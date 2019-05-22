@@ -23,4 +23,17 @@ Value *SCLoadElem::codegen(){
   return nullptr;
 }
 
+bool SCLoadElem::GetSigMap(CoreGenSigMap *Sigs,
+                           Instruction &I,
+                           std::string Inst){
+  unsigned width = 0;
+  if( auto CInt = dyn_cast<ConstantInt>(I.getOperand(1)) ){
+    width = (unsigned)(CInt->getSExtValue());
+  }else{
+    width = I.getOperand(1)->getType()->getIntegerBitWidth();
+  }
+
+  return Sigs->InsertSignal(new SCSig(MEM_READ,width,Inst) );
+}
+
 // EOF

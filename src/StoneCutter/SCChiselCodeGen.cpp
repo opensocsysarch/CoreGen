@@ -52,6 +52,7 @@ void SCChiselCodeGen::InitIntrinsics(){
   Intrins.push_back(static_cast<SCIntrin *>(new SCConcat()));
   Intrins.push_back(static_cast<SCIntrin *>(new SCLss()));
   Intrins.push_back(static_cast<SCIntrin *>(new SCFence()));
+  Intrins.push_back(static_cast<SCIntrin *>(new SCBsel()));
 }
 
 void SCChiselCodeGen::InitPasses(){
@@ -64,7 +65,6 @@ void SCChiselCodeGen::InitPasses(){
   Passes.push_back(static_cast<SCPass *>(new SCPipeBuilder(SCParser::TheModule.get(),
                                                        Opts,
                                                        Msgs)));
-  // temporarily disabling pass
   Passes.push_back(static_cast<SCPass *>(new SCIOWarn(SCParser::TheModule.get(),
                                                       Opts,
                                                       Msgs)));
@@ -133,8 +133,16 @@ bool SCChiselCodeGen::ExecuteSignalMap(){
     return false;
 
   // set the signal map file
-  if( !SM->SetSignalMapFile(SigMap) )
+  if( !SM->SetSignalMapFile(SigMap) ){
+    delete SM;
     return false;
+  }
+
+  // set the intrinsics vector
+  if( !SM->SetIntrins(&Intrins) ){
+    delete SM;
+    return false;
+  }
 
   // execute the signal map pass
   bool rtn = true;
