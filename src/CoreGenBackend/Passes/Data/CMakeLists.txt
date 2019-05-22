@@ -8,14 +8,9 @@
 
 set(DataPassSrcs
 StatsPass.cpp
-InstTable.cpp
 SpecDoc.cpp
 )
 
 include_directories(${COREGEN_INCLUDE_PATH})
 add_library(DataPassObjs OBJECT ${DataPassSrcs})
 
-#install(DIRECTORY "."
-#        DESTINATION "include/Passes/Data"
-#        FILES_MATCHING
-#        PATTERN "*.h")
