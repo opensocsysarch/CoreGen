@@ -219,9 +219,18 @@ bool CoreGenSigMap::ReadInstSignals(const YAML::Node& InstNodes){
       const YAML::Node& SNode = Node["Signals"];
       for( unsigned j=0; j<SNode.size(); j++ ){
         const YAML::Node& LSNode = SNode[j];
+        if( !CheckValidNode(LSNode,"Signal") )
+          return false;
         std::string SigName = LSNode["Signal"].as<std::string>();
+
+        if( !CheckValidNode(LSNode,"Type") )
+          return false;
         SigType Type = StrToSigType(LSNode["Type"].as<std::string>());
+
+        if( !CheckValidNode(LSNode,"Width") )
+          return false;
         unsigned Width = LSNode["Width"].as<unsigned>();
+
         Signals.push_back(new SCSig(Type,Width,Name,SigName));
       }
     }
