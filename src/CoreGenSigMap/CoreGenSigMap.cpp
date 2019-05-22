@@ -8,6 +8,7 @@
 // See LICENSE in the top level directory for licensing details
 //
 
+#include <iostream>
 #include "CoreGen/CoreGenSigMap/CoreGenSigMap.h"
 
 CoreGenSigMap::CoreGenSigMap() : TmpIdx(0) {
@@ -197,7 +198,10 @@ bool CoreGenSigMap::ReadTopLevelSignals(const YAML::Node& TopNodes){
     if( !CheckValidNode(Node,"Signal") ){
       return false;
     }
-    TopSigs.push_back(StrToSigType(Node["Signal"].as<std::string>()));
+    std::string LSig = Node["Signal"].as<std::string>();
+    if( LSig.length() == 0 )
+      return false;
+    TopSigs.push_back(StrToSigType(LSig));
   }
   return true;
 }
@@ -408,11 +412,13 @@ bool CoreGenSigMap::WriteTopLevelSignals(YAML::Emitter *out){
   std::sort(Sigs.begin(),Sigs.end());
   Sigs.erase( std::unique(Sigs.begin(),Sigs.end()), Sigs.end());
 
-  *out << YAML::Key << "SignalTop" << YAML::BeginSeq << YAML::BeginMap;
+  *out << YAML::Key << "SignalTop" << YAML::BeginSeq;
   for( unsigned i=0; i<Sigs.size(); i++ ){
-    *out << YAML::Key << "Signal" << YAML::Value << Sigs[i];
+    *out << YAML::BeginMap << YAML::Key
+         << "Signal" << YAML::Value << Sigs[i]
+         << YAML::EndMap;
   }
-  *out << YAML::EndMap << YAML::EndSeq;
+  *out << YAML::EndSeq;
 
   return true;
 }
