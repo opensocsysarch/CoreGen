@@ -10,6 +10,6 @@
 add_subdirectory(NodeCodegen)
 
 install(DIRECTORY "."
-        DESTINATION "include/CoreGenCodegen"
+        DESTINATION "CoreGen/include/CoreGenCodegen"
         FILES_MATCHING
         PATTERN "*.h")

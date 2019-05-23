@@ -10,6 +10,6 @@
 add_subdirectory(Passes)
 
 install(DIRECTORY "."
-        DESTINATION "include/CoreGenBackend"
+        DESTINATION "CoreGen/include/CoreGenBackend"
         FILES_MATCHING
         PATTERN "*.h")

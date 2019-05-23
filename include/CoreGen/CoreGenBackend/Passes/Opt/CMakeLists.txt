@@ -8,6 +8,6 @@
 #
 
 install(DIRECTORY "."
-        DESTINATION "include/CoreGenBackend/Passes/Opt"
+        DESTINATION "CoreGen/include/CoreGenBackend/Passes/Opt"
         FILES_MATCHING
         PATTERN "*.h")

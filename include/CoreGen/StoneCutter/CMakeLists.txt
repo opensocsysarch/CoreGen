@@ -11,6 +11,6 @@ add_subdirectory(Intrinsics)
 add_subdirectory(Passes)
 
 install(DIRECTORY "."
-        DESTINATION "include/StoneCutter"
+        DESTINATION "CoreGen/include/StoneCutter"
         FILES_MATCHING
         PATTERN "*.h")
