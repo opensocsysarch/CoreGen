@@ -128,6 +128,7 @@ set(source
 # ]]]
 
 add_library(libgringo STATIC ${header} ${source})
+include_directories(${CLINGO_PATH}/clasp/libpotassco)
 target_link_libraries(libgringo PUBLIC libpotassco libreify)
 target_include_directories(libgringo
     PUBLIC
