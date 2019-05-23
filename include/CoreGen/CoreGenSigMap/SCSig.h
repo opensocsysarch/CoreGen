@@ -107,7 +107,7 @@ public:
   /// Default constructor
   SCSig(SigType T);
 
-  // Overloaded constructor
+  /// Overloaded constructor
   SCSig(SigType T, unsigned W);
 
   /// Overloaded constructor

@@ -8,6 +8,6 @@
 #
 
 install(DIRECTORY "."
-        DESTINATION "include/CoreGenSigMap"
+        DESTINATION "include/CoreGen/CoreGenSigMap"
         FILES_MATCHING
         PATTERN "*.h")

@@ -21,6 +21,10 @@ target_include_directories(libpyclingo PUBLIC
 target_compile_definitions(libpyclingo PRIVATE PYCLINGO_BUILD_LIBRARY PUBLIC CLINGO_WITH_PYTHON)
 if (NOT CLINGO_BUILD_PY_SHARED)
     target_compile_definitions(libpyclingo PUBLIC PYCLINGO_NO_VISIBILITY)
+    install(TARGETS libpyclingo
+        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
 else()
     set_target_properties(libpyclingo PROPERTIES SOVERSION 1 VERSION 1.0)
     install(TARGETS libpyclingo

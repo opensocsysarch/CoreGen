@@ -12,6 +12,6 @@ add_subdirectory(Data)
 add_subdirectory(Opt)
 
 install(DIRECTORY "."
-        DESTINATION "include/CoreGenBackend/Passes"
+        DESTINATION "include/CoreGen/CoreGenBackend/Passes"
         FILES_MATCHING
         PATTERN "*.h")

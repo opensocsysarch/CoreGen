@@ -552,9 +552,16 @@ bool CoreGenCodegen::BuildISAChisel( CoreGenISA *ISA,
 
       CoreGenReg *REG = static_cast<CoreGenReg *>(RC[i]->GetReg(j));
 
+      std::string REGNAME;
+      if( REG->IsPCAttr() ){
+        REGNAME = REG->GetName() + "[PC]";
+      }else{
+        REGNAME = REG->GetName();
+      }
+
       if( REG->GetNumSubRegs() > 0 ){
         // write out the register with the subregs
-        MOutFile << " u" << REG->GetWidth() << " " << REG->GetName() << "(";
+        MOutFile << " u" << REG->GetWidth() << " " << REGNAME << "(";
         for( unsigned k=0; k<REG->GetNumSubRegs(); k++ ){
           std::string Name;
           unsigned Start;
@@ -572,7 +579,7 @@ bool CoreGenCodegen::BuildISAChisel( CoreGenISA *ISA,
         MOutFile << ")";
       }else{
         // write out the register with no subregs
-        MOutFile << " u" << REG->GetWidth() << " " << REG->GetName();
+        MOutFile << " u" << REG->GetWidth() << " " << REGNAME;
       }
 
       // print a comma between registers
