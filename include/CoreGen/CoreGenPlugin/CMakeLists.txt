@@ -8,6 +8,6 @@
 #
 
 install(DIRECTORY "."
-        DESTINATION "CoreGen/include/CoreGenPlugin"
+        DESTINATION "include/CoreGen/CoreGenPlugin"
         FILES_MATCHING
         PATTERN "*.h")

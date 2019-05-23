@@ -9,6 +9,6 @@
 
 
 install(DIRECTORY "."
-        DESTINATION "CoreGen/include/CoreGenCodegen/NodeCodegen"
+        DESTINATION "include/CoreGen/CoreGenCodegen/NodeCodegen"
         FILES_MATCHING
         PATTERN "*.h")

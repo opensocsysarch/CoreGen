@@ -8,6 +8,6 @@
 #
 
 install(DIRECTORY "."
-        DESTINATION "CoreGen/include/StoneCutter/Passes"
+        DESTINATION "include/CoreGen/StoneCutter/Passes"
         FILES_MATCHING
         PATTERN "*.h")

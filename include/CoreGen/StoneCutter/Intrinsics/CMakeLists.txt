@@ -8,6 +8,6 @@
 #
 
 install(DIRECTORY "."
-        DESTINATION "CoreGen/include/StoneCutter/Intrinsics"
+        DESTINATION "include/CoreGen/StoneCutter/Intrinsics"
         FILES_MATCHING
         PATTERN "*.h")
