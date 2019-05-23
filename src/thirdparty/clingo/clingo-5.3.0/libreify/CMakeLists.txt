@@ -17,7 +17,6 @@ set(source
 # ]]]
 
 add_library(libreify STATIC ${header} ${source})
-include_directories(${CLINGO_PATH}/clasp/libpotassco)
 target_link_libraries(libreify PUBLIC libpotassco)
 target_include_directories(libreify PUBLIC
     "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>"
