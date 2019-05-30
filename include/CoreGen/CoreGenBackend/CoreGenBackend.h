@@ -194,6 +194,9 @@ public:
   /// Insert a new VTP node
   CoreGenVTP *InsertVTP( std::string Name );
 
+  /// Retrieve the top-level DAG node
+  CoreGenNode *GetTop() { return Top; }
+
   /// Insert a loaded plugin node
   bool InsertPlugin( CoreGenPlugin *Plugin );
 
