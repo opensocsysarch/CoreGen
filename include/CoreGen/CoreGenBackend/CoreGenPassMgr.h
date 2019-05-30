@@ -84,6 +84,9 @@ public:
   /// Retrieve a list of all initialized pass names
   std::vector<std::string> GetPassNames();
 
+  /// Retrieve a list of all initialized pass descriptions
+  std::vector<std::string> GetPassDescriptions();
+
   /// Print all the pass information to the status stream
   bool PrintPassInfo();
 

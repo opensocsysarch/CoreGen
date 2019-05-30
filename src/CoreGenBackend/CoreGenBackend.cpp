@@ -323,6 +323,15 @@ std::vector<std::string> CoreGenBackend::GetPasses(){
   return PassMgr->GetPassNames();
 }
 
+std::vector<std::string> CoreGenBackend::GetPassDescriptions(){
+  std::vector<std::string> dummy;
+  if( PassMgr == nullptr ){
+    Errno->SetError( CGERR_ERROR, "Pass manager is null" );
+    return dummy;
+  }
+  return PassMgr->GetPassDescriptions();
+}
+
 bool CoreGenBackend::PrintPassInfo(){
   if( PassMgr == nullptr ){
     Errno->SetError( CGERR_ERROR, "Pass manager is null" );

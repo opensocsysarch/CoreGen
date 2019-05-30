@@ -221,6 +221,9 @@ public:
   /// Retrieve a list of all the passes
   std::vector<std::string> GetPasses();
 
+  /// Retrieve a list of all the pass decriptions
+  std::vector<std::string> GetPassDescriptions();
+
   /// Print all the pass info
   bool PrintPassInfo();
 

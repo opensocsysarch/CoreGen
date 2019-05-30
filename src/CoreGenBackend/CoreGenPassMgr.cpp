@@ -132,6 +132,18 @@ std::vector<std::string> CoreGenPassMgr::GetPassNames(){
   return PName;
 }
 
+std::vector<std::string> CoreGenPassMgr::GetPassDescriptions(){
+  std::vector<std::string> Descs;
+
+  std::vector<CoreGenPass *>::iterator it;
+  for( it=Passes.begin(); it != Passes.end(); ++it ){
+    CoreGenPass *P = (*it);
+    Descs.push_back(P->GetPassDesc());
+  }
+
+  return Descs;
+}
+
 bool CoreGenPassMgr::ExecuteSys( std::string Pass ){
   std::vector<CoreGenPass *>::iterator it;
   for( it=SysPasses.begin(); it != SysPasses.end(); ++it ){
