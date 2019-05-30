@@ -530,6 +530,40 @@ bool CoreGenBackend::DeleteVTPNode(CoreGenVTP *V){
 }
 
 bool CoreGenBackend::DeletePluginNode(CoreGenPlugin *P){
+
+  // stage 1: walk all the top-level nodes and ensure that we remove
+  //          any nodes with this plugin overriden.
+  //          make sure the dag is constructed first
+  if( !DAG )
+    this->BuildDAG();
+
+  for( unsigned i=0; i<Top->GetNumChild(); i++ ){
+    if( static_cast<CoreGenNode *>(P) ==
+        Top->GetChild(i) ){
+      Top->DeleteChild(Top->GetChild(i));
+    }
+  }
+
+  // stage 2: walk the nodes and determine if anyone is using
+  //          the target node as a overriden plugin, if so, remove
+  //          that node and adjust any links to it
+  for( unsigned i=0; i<Top->GetNumChild(); i++ ){
+    if( static_cast<CoreGenNode *>(P) ==
+        Top->GetChild(i)->GetPlugin() ){
+      // adjust the links pointing to us
+      for( unsigned j=0; j<Top->GetNumChild(); j++ ){
+        for( unsigned k=0; k<Top->GetChild(j)->GetNumChild(); k++ ){
+          if( Top->GetChild(j)->GetChild(k) == Top->GetChild(i) ){
+            Top->GetChild(j)->DeleteChild(Top->GetChild(i));
+          }
+        }
+      }
+    }
+  }
+
+  // stage 3: delete the node
+  delete P;
+
   return true;
 }
 
