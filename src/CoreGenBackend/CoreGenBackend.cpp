@@ -473,6 +473,142 @@ bool CoreGenBackend::BuildDAG(){
   return DAG->LowerAll();
 }
 
+bool CoreGenBackend::DeleteCacheNode(CoreGenCache *C){
+  return true;
+}
+
+bool CoreGenBackend::DeleteCoreNode(CoreGenCore *C){
+  return true;
+}
+
+bool CoreGenBackend::DeleteInstNode(CoreGenInst *I){
+  return true;
+}
+
+bool CoreGenBackend::DeletePInstNode(CoreGenPseudoInst *P){
+  return true;
+}
+
+bool CoreGenBackend::DeleteInstFormatNode(CoreGenInstFormat *I){
+  return true;
+}
+
+bool CoreGenBackend::DeleteRegNode(CoreGenReg *R){
+  return true;
+}
+
+bool CoreGenBackend::DeleteRegClassNode(CoreGenRegClass *RC){
+  return true;
+}
+
+bool CoreGenBackend::DeleteSoCNode(CoreGenSoC *S){
+  return true;
+}
+
+bool CoreGenBackend::DeleteISANode(CoreGenISA *I){
+  return true;
+}
+
+bool CoreGenBackend::DeleteExtNode(CoreGenExt *E){
+  return true;
+}
+
+bool CoreGenBackend::DeleteCommNode(CoreGenComm *C){
+  return true;
+}
+
+bool CoreGenBackend::DeleteSpadNode(CoreGenSpad *S){
+  return true;
+}
+
+bool CoreGenBackend::DeleteMCtrlNode(CoreGenMCtrl *M){
+  return true;
+}
+
+bool CoreGenBackend::DeleteVTPNode(CoreGenVTP *V){
+  return true;
+}
+
+bool CoreGenBackend::DeletePluginNode(CoreGenPlugin *P){
+  return true;
+}
+
+bool CoreGenBackend::DeleteNode( CoreGenNode *N ){
+  if( !N )
+    return false;
+
+  // stage 1: Determine what type of node this is
+  //          Certain nodes will require deleting
+  //          child nodes that are encodings.
+  //          Further, we must remove the necessary
+  //          nodes from the Top-level DAG lists
+  switch(N->GetType()){
+  case CGSoc:
+    return DeleteSoCNode(static_cast<CoreGenSoC *>(N));
+    break;
+  case CGCore:
+    return DeleteCoreNode(static_cast<CoreGenCore *>(N));
+    break;
+  case CGInstF:
+    return DeleteInstFormatNode(static_cast<CoreGenInstFormat *>(N));
+    break;
+  case CGInst:
+    return DeleteInstNode(static_cast<CoreGenInst *>(N));
+    break;
+  case CGPInst:
+    return DeletePInstNode(static_cast<CoreGenPseudoInst *>(N));
+    break;
+  case CGRegC:
+    return DeleteRegClassNode(static_cast<CoreGenRegClass *>(N));
+    break;
+  case CGReg:
+    return DeleteRegNode(static_cast<CoreGenReg *>(N));
+    break;
+  case CGISA:
+    return DeleteISANode(static_cast<CoreGenISA *>(N));
+    break;
+  case CGCache:
+    return DeleteCacheNode(static_cast<CoreGenCache *>(N));
+    break;
+  case CGEnc:
+    Errno->SetError( CGERR_ERROR, "Cannot delete individual encodings" );
+    return false;
+    break;
+  case CGExt:
+    return DeleteExtNode(static_cast<CoreGenExt *>(N));
+    break;
+  case CGComm:
+    return DeleteCommNode(static_cast<CoreGenComm *>(N));
+    break;
+  case CGSpad:
+    return DeleteSpadNode(static_cast<CoreGenSpad *>(N));
+    break;
+  case CGMCtrl:
+    return DeleteMCtrlNode(static_cast<CoreGenMCtrl *>(N));
+    break;
+  case CGVTP:
+    return DeleteVTPNode(static_cast<CoreGenVTP *>(N));
+    break;
+  case CGPlugin:
+    Errno->SetError( CGERR_WARN, "Deleting a plugin will remove all its children" );
+    return DeletePluginNode(static_cast<CoreGenPlugin *>(N));
+    break;
+  case CGTop:
+    Errno->SetError( CGERR_ERROR, "Top-level DAG nodes cannot be deleted" );
+    return false;
+    break;
+  default:
+    // something went wrong
+    Errno->SetError( CGERR_ERROR, "Unrecognized node type for deletion" );
+    delete N;
+    return false;
+    break;
+  }
+
+  // if we get here, something went wrong
+  return false;
+}
+
 CoreGenCache *CoreGenBackend::InsertCache(std::string Name,
                                           unsigned Sets,
                                           unsigned Ways){
