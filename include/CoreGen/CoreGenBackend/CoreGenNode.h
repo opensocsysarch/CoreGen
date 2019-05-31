@@ -141,6 +141,7 @@ public:
   /// Determine if there is a plugin node to override this node
   bool IsPlugin();
 
+  /// Retrieves the target plugin node
   CoreGenNode *GetPlugin(){ return PluginNode; }
 
   /// Set inline RTL
