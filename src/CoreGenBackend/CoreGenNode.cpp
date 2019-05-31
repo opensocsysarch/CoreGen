@@ -20,6 +20,7 @@ CoreGenNode::CoreGenNode(CGNodeType T, std::string N, CoreGenErrno *E)
     : Name(N), Type(T), RTLType(RTLUnk), ASP(""), PluginNode(NULL), Errno(E) {}
 
 CoreGenNode::~CoreGenNode() {
+#if 0
   if( Type == CGPlugin ){
     // for plugin nodes, delete all the children
     for( unsigned i=0; i<this->GetNumChild(); i++ ){
@@ -43,6 +44,7 @@ CoreGenNode::~CoreGenNode() {
       }
     }
   }
+#endif
 }
 
 CGNodeType CoreGenNode::GetType() { return Type; }
