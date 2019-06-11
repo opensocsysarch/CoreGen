@@ -1,2 +1,0 @@
-/usr/bin/ar qc ../../../../../lib/libclingo.a  CMakeFiles/libclingo.dir/src/ast.cc.o CMakeFiles/libclingo.dir/src/clingo_app.cc.o CMakeFiles/libclingo.dir/src/clingocontrol.cc.o CMakeFiles/libclingo.dir/src/control.cc.o CMakeFiles/libclingo.dir/src/gringo_app.cc.o CMakeFiles/libclingo.dir/src/incmode.cc.o CMakeFiles/libclingo.dir/src/scripts.cc.o CMakeFiles/libclingo.dir/__/clasp/app/clasp_app.cpp.o
-/usr/bin/ranlib ../../../../../lib/libclingo.a

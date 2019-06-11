@@ -1,2 +1,0 @@
-/usr/bin/ar qc libCoreGenCodegen.a  CMakeFiles/CoreGenCodegen.dir/CoreGenCodegen.cpp.o CMakeFiles/CoreGenCodegen.dir/CoreGenChiselCodegen.cpp.o CMakeFiles/CoreGenCodegen.dir/CoreGenLLVMCodegen.cpp.o CMakeFiles/CoreGenCodegen.dir/CoreGenNodeCodegen.cpp.o NodeCodegen/CMakeFiles/NodeCodegenObjs.dir/RegClassCG.cpp.o NodeCodegen/CMakeFiles/NodeCodegenObjs.dir/SpadCG.cpp.o NodeCodegen/CMakeFiles/NodeCodegenObjs.dir/SocCG.cpp.o NodeCodegen/CMakeFiles/NodeCodegenObjs.dir/ISACG.cpp.o
-/usr/bin/ranlib libCoreGenCodegen.a
