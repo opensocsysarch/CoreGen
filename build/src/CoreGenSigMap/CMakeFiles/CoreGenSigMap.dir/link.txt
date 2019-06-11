@@ -1,0 +1,2 @@
+/usr/bin/ar qc libCoreGenSigMap.a  CMakeFiles/CoreGenSigMap.dir/CoreGenSigMap.cpp.o CMakeFiles/CoreGenSigMap.dir/SCSig.cpp.o CMakeFiles/CoreGenSigMap.dir/SCTmp.cpp.o
+/usr/bin/ranlib libCoreGenSigMap.a

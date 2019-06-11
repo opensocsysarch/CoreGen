@@ -1,0 +1,2 @@
+/usr/bin/ar qc ../../../../../lib/libluaclingo.a  CMakeFiles/libluaclingo.dir/luaclingo.cc.o
+/usr/bin/ranlib ../../../../../lib/libluaclingo.a

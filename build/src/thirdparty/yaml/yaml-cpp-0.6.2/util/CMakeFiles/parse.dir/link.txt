@@ -1,0 +1,1 @@
+/usr/bin/c++   -O3 -std=c++14 -Wall -DCGIPREFIX=/usr/local -DCLINGO_WITH_LUA -DCOREGEN_PLATFORM=Linux -O2  -rdynamic CMakeFiles/parse.dir/parse.cpp.o  -o parse ../libyaml-cpp.a 

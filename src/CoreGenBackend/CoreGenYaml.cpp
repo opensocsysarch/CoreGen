@@ -1522,6 +1522,7 @@ bool CoreGenYaml::ReadRegisterYaml(const YAML::Node& RegNodes,
     int Width = Node["Width"].as<int>();
     //TODO: add width pred
     ASP += "regWidth(" + ASPName + ", " + std::to_string(Width) + ").\n";
+    ASP += "int(" + std::to_string(Width) + ").\n";
 
     if( !CheckValidNode(Node,"Index") ){
       PrintParserError(Node,
@@ -1532,6 +1533,7 @@ bool CoreGenYaml::ReadRegisterYaml(const YAML::Node& RegNodes,
     int Index = Node["Index"].as<int>();
     //TODO: add index pred
     ASP += "regIndex(" + ASPName + ", " + std::to_string(Index) + ").\n";
+    ASP += "int(" + std::to_string(Index) + ").\n";
 
     if( !CheckValidNode(Node,"IsFixedValue") ){
       PrintParserError(Node,
@@ -1559,6 +1561,7 @@ bool CoreGenYaml::ReadRegisterYaml(const YAML::Node& RegNodes,
       //TODO:: add val pred
       FixedVals.push_back( Node["FixedValue"].as<uint64_t>() );
       ASP += "regFixedVal(" + ASPName + ", " + Node["FixedValue"].as<std::string>() + ").\n";
+      ASP += "int(" + Node["FixedValue"].as<std::string>() + ").\n";
     }
 
     bool IsSIMD = false;
@@ -1649,6 +1652,7 @@ bool CoreGenYaml::ReadRegisterYaml(const YAML::Node& RegNodes,
       R->SetPseudoName(Node["PseudoName"].as<std::string>());
       std::string ASPPseudoName = PrepForASP(Node["PseudoName"].as<std::string>());
       ASP += "regPseudoName(" + ASPName + ", " + ASPPseudoName + ").\n";
+      ASP += "pName(" + ASPPseudoName + ").\n";
     }
 
     // set the simd attrs
@@ -1656,6 +1660,7 @@ bool CoreGenYaml::ReadRegisterYaml(const YAML::Node& RegNodes,
       int SIMDWidth = Node["SIMDWidth"].as<int>();
       R->SetSIMD(SIMDWidth);
       ASP += "regSIMDWidth(" + ASPName + ", " + std::to_string(SIMDWidth) + ").\n";
+      ASP += "int(" + std::to_string(SIMDWidth) + ").\n";
     }
 
     if( IFV ){
@@ -1686,6 +1691,7 @@ bool CoreGenYaml::ReadRegisterYaml(const YAML::Node& RegNodes,
     }
     R->SetAttrs(Attrs);
     ASP += "regAttrs(" + ASPName + ", " + std::to_string(Attrs) + ").\n";
+    ASP += "int(" + std::to_string(Attrs) + ").\n";
 
     R->SetShared(IsShared);
     if (IsShared){
@@ -1723,6 +1729,7 @@ bool CoreGenYaml::ReadRegisterYaml(const YAML::Node& RegNodes,
         }
         unsigned SB = LSNode["StartBit"].as<unsigned>();
         ASP += "subregStartBit(" + ASPSName + ", " + std::to_string(SB) + ").\n";
+        ASP += "int(" + std::to_string(SB) + ").\n";
 
         // end bit
         if( !CheckValidNode(LSNode, "EndBit") ){
@@ -1731,6 +1738,7 @@ bool CoreGenYaml::ReadRegisterYaml(const YAML::Node& RegNodes,
         }
         unsigned EB = LSNode["EndBit"].as<unsigned>();
         ASP += "subregEndBit(" + ASPSName + ", " + std::to_string(EB) + ").\n";
+        ASP += "int(" + std::to_string(EB) + ").\n";
 
         // insert the subreg into the register
         if( !R->InsertSubReg(SName,SB,EB) ){
@@ -2007,10 +2015,12 @@ bool CoreGenYaml::ReadInstFormatYaml(const YAML::Node& InstFormatNodes,
         std::string FieldType = LFNode["FieldType"].as<std::string>();
 
         ASP += "fieldType(" + ASPFieldName + ", " + PrepForASP(FieldType) + ").\n";
+        ASP += "fType(" + PrepForASP(FieldType) + ").\n";
 #if 0
         // currently unused
         int FieldWidth = LFNode["FieldWidth"].as<int>();
         ASP += "fieldWidth(" + ASPFieldName + ", " + std::to_string(FieldWidth) + ").\n";
+        ASP += "int(" + std::to_string(FieldWidth) + ").\n";
 #endif
         if( !CheckValidNode(LFNode,"StartBit") ){
           PrintParserError(LFNode,"Fields","StartBit");
@@ -2019,6 +2029,7 @@ bool CoreGenYaml::ReadInstFormatYaml(const YAML::Node& InstFormatNodes,
         int StartBit = LFNode["StartBit"].as<int>();
 
         ASP += "fieldStartBit(" + ASPFieldName + ", " + std::to_string(StartBit) + ").\n";
+        ASP += "int(" + std::to_string(StartBit) + ").\n";
 
         if( !CheckValidNode(LFNode,"EndBit") ){
           PrintParserError(LFNode,"Fields","EndBit");
@@ -2027,6 +2038,7 @@ bool CoreGenYaml::ReadInstFormatYaml(const YAML::Node& InstFormatNodes,
         int EndBit = LFNode["EndBit"].as<int>();
 
         ASP += "fieldEndBit(" + ASPFieldName + ", " + std::to_string(EndBit) + ").\n";
+        ASP += "int(" + std::to_string(EndBit) + ").\n";
 
         if( !CheckValidNode(LFNode,"MandatoryField") ){
           PrintParserError(LFNode,"Fields","MandatoryField");
@@ -2190,6 +2202,7 @@ bool CoreGenYaml::ReadInstYaml(const YAML::Node& InstNodes,
         int Value = LFNode["EncodingValue"].as<int>();
         std::string ASPEV = std::to_string(Value);
         ASP += "encFieldValue(" + ASPFieldName + ", " + ASPEV + ").\n";
+        ASP += "int(" + ASPEV + ").\n";
 
         if( !Inst->SetEncoding(FieldName,Value) ){
           return false;
@@ -2300,6 +2313,7 @@ bool CoreGenYaml::ReadPseudoInstYaml(const YAML::Node& PInstNodes,
         int Value = LFNode["EncodingValue"].as<int>();
         std::string ASPEV = std::to_string(Value);
         ASP += "pEncFieldValue(" + ASPFieldName + ", " + ASPEV + ").\n";
+        ASP += "int(" + ASPEV + ").\n";
 
         if( !P->SetEncoding(FieldName,Value) ){
           return false;
@@ -2357,6 +2371,8 @@ bool CoreGenYaml::ReadCacheYaml(const YAML::Node& CacheNodes,
     ASP += "cache(" + ASPName + ").\n";
     ASP += "cacheSets(" + ASPName + ", " + std::to_string(Sets) + ").\n";
     ASP += "cacheWays(" + ASPName + ", " + std::to_string(Ways) + ").\n";
+    ASP += "int(" + std::to_string(Sets) + ").\n";
+    ASP += "int(" + std::to_string(Ways) + ").\n";
 
     std::string SubLevel;
     std::string ASPSubLevel;
@@ -2477,6 +2493,7 @@ bool CoreGenYaml::ReadCoreYaml(const YAML::Node& CoreNodes,
       ThreadUnits = Node["ThreadUnits"].as<unsigned>();
       std::string TU = Node["ThreadUnits"].as<std::string>();
       ASP += "coreThreadUnits(" + ASPName + ", " + TU + ").\n";
+      ASP += "int(" + TU + ").\n";
       if( !C->SetNumThreadUnits(ThreadUnits) ){
         return false;
       }
@@ -2667,21 +2684,25 @@ bool CoreGenYaml::ReadSpadYaml(const YAML::Node& SpadNodes,
       MemSize = Node["MemSize"].as<unsigned>();
       std::string ASPMemSize = std::to_string(MemSize);
       ASP += "spadMemSize(" + ASPName + ", " + ASPMemSize + ").\n";
+      ASP += "int(" + ASPMemSize + ").\n";
     }
     if( Node["RqstPorts"] ){
       RqstPorts = Node["RqstPorts"].as<unsigned>();
       std::string ASPRqstPorts = std::to_string(RqstPorts);
       ASP += "spadRqstPorts(" + ASPName + ", " + ASPRqstPorts + ").\n";
+      ASP += "int(" + ASPRqstPorts + ").\n";
     }
     if( Node["RspPorts"] ){
       RspPorts = Node["RspPorts"].as<unsigned>();
       std::string ASPRspPorts = std::to_string(RspPorts);
       ASP += "spadRspPorts(" + ASPName + ", " + ASPRspPorts + ").\n";
+      ASP += "int(" + ASPRspPorts + ").\n";
     }
     if( Node["StartAddr"] ){
       StartAddr = Node["StartAddr"].as<uint64_t>();
       std::string ASPStartAddr = std::to_string(StartAddr);
       ASP += "spadStartAddr(" + ASPName + ", " + ASPStartAddr + ").\n";
+      ASP += "int(" + ASPStartAddr + ").\n";
     }
 
     CoreGenSpad *S = new CoreGenSpad(Name,Errno,MemSize,
@@ -2740,6 +2761,7 @@ bool CoreGenYaml::ReadMCtrlYaml(const YAML::Node& MCtrlNodes,
     }
 
     ASP += "memCtrlPorts(" + ASPName + ", " + std::to_string(Ports) + ").\n";
+    ASP += "int(" + std::to_string(Ports) + ").\n";
     CoreGenMCtrl *M = new CoreGenMCtrl(Name,Errno,Ports);
 
     if( Node["RTL"] ){
@@ -2909,6 +2931,7 @@ bool CoreGenYaml::ReadPluginYaml(const YAML::Node& PluginNodes,
           std::string ASPFType = PrepForASP(FTypeStr);
 
           ASP += "featureType(" + ASPFName + ", " + ASPFType + ").\n";
+          ASP += "int(" + ASPFType + ").\n";
 
           if( !CheckValidNode(FNodeJ,"FeatureValue") ){
             PrintParserError(FNodeJ,
@@ -3186,6 +3209,7 @@ bool CoreGenYaml::ReadExtYaml(const YAML::Node& ExtNodes,
     std::string Type = Node["Type"].as<std::string>();
     std::string ASPType = PrepForASP(Type);
     ASP += "extensionType(" + ASPName + ", " + ASPType + ").\n";
+    ASP += "eType(" + ASPType + ").\n";
     std::transform(Type.begin(),Type.end(),Type.begin(),::tolower);
     CGExtType FullType;
     if( Type == "template" ){
@@ -3460,7 +3484,8 @@ bool CoreGenYaml::ReadCommYaml( const YAML::Node& CommNodes,
     // type
     std::string Type = Node["Type"].as<std::string>();
     std::string ASPType = PrepForASP(Type);
-    ASP += "commType(" + ASPType + ").\n";
+    ASP += "commType(" + ASPName + ", " + ASPType + ").\n";
+    ASP += "cType(" + ASPType + ").\n";
     CGCommType FullType = CGCommUnk;
     if( Type == "P2P" ){
       FullType = CGCommP2P;
@@ -3477,6 +3502,7 @@ bool CoreGenYaml::ReadCommYaml( const YAML::Node& CommNodes,
     }
     std::string ASPWidth = std::to_string(Width);
     ASP += "commWidth(" + ASPName + ", " + ASPWidth + ").\n";
+    ASP += "int(" + ASPWidth + ").\n";
 
     CoreGenComm *Comm = new CoreGenComm(Name,FullType,Width,Errno);
     if( Comm == nullptr ){

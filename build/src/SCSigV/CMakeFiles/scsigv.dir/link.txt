@@ -1,0 +1,1 @@
+/usr/bin/c++   -O3 -std=c++14 -Wall -DCGIPREFIX=/usr/local -DCLINGO_WITH_LUA -DCOREGEN_PLATFORM=Linux   CMakeFiles/scsigv.dir/SCSigV.cpp.o  -o scsigv ../CoreGenSigMap/libCoreGenSigMap.a ../thirdparty/yaml/yaml-cpp-0.6.2/libyaml-cpp.a 

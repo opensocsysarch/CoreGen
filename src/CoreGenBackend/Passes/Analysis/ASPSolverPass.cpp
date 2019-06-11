@@ -9,6 +9,7 @@
 //
 
 #include "CoreGen/CoreGenBackend/Passes/Analysis/ASPSolverPass.h"
+#include "CoreGen/CoreGenBackend/Passes/Analysis/ConstrParser.h"
 
 ASPSolverPass::ASPSolverPass(std::ostream *O,
                        CoreGenDAG *D,
@@ -62,10 +63,15 @@ bool ASPSolverPass::Execute(){
       out << N->GetASP();
     }
   }
+  ConstrParser cp(this->Files[0]);
+  cp.parse();
+  cp.build_asp();
   out << "cacheIsParent(X, true) :- cacheParentOf(X, Y)." << std::endl;
   out << "cacheIsChild(X, true) :- cacheChildOf(X, Y)." << std::endl;
   out << "cacheIsParent(X, false) :- not cacheIsParent(X, true), cache(X)." << std::endl;
   out << "cacheIsChild(X, false) :- not cacheIsChild(X, true), cache(X)." << std::endl;
+  out << "bool(true).\nbool(false).\n";
+  out << cp.get_asp();
   out.close();
 
   // initialize clingo/gringo
@@ -96,6 +102,7 @@ bool ASPSolverPass::Execute(){
                      " : Error generating temporary file" );
     return false;
   }
+  /*
   std::ofstream of(tmpname);
   for( unsigned i=0; i < Files.size(); i++ ){
     std::ifstream infile( Files[i] );
@@ -106,7 +113,7 @@ bool ASPSolverPass::Execute(){
   std::string LTmpFile(tmpname);
 
   argv[2] = strdup(LTmpFile.c_str());
-
+  */
   // execute clingo
   bool isSuccess = true;
   double StartT = CGGetWallTime();
@@ -116,7 +123,7 @@ bool ASPSolverPass::Execute(){
   }
   double EndT = CGGetWallTime();
 
-  WriteMsg( CGPrintDotStr( LTmpFile.length(), 30 ) + LTmpFile );
+  //WriteMsg( CGPrintDotStr( LTmpFile.length(), 30 ) + LTmpFile );
   WriteMsg( CGPrintDotStr( CGDoubleToStr(EndT-StartT).length(), 30 ) +
             CGDoubleToStr(EndT-StartT) );
 
@@ -126,7 +133,7 @@ bool ASPSolverPass::Execute(){
     WriteMsg( CGPrintDotStr( 6, 30 ) + "FAILED" );
   }
 
-  CGDeleteFile(LTmpFile);
+  //CGDeleteFile(LTmpFile);
   return rtn;
 }
 

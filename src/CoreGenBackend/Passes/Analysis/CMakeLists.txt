@@ -27,6 +27,7 @@ PInstSafetyPass.cpp
 CommSafetyPass.cpp
 ASPSolverPass.cpp
 AST.cpp
+ConstrParser.cpp
 )
 
 include_directories(${COREGEN_INCLUDE_PATH})
