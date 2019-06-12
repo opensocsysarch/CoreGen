@@ -31,7 +31,6 @@ CoreGenNode::~CoreGenNode() {
     // this will instantiate the plugin's destructor
     delete PluginNode;
     PluginNode = nullptr;
-#if 0
   }else{
     // deletes any target encoding nodes since these are not exposed to the
     // top dag node
@@ -43,7 +42,6 @@ CoreGenNode::~CoreGenNode() {
         delete DN;
       }
     }
-#endif
   }
 }
 
