@@ -31,18 +31,6 @@ CoreGenNode::~CoreGenNode() {
     // this will instantiate the plugin's destructor
     delete PluginNode;
     PluginNode = nullptr;
-  }else{
-    // deletes any target encoding nodes since these are not exposed to the
-    // top dag node
-    std::vector<CoreGenNode*>::iterator it;
-    for( auto it = CNodes.begin(); it != CNodes.end(); ){
-      CoreGenNode *DN = (*it);
-      if( DN->GetType() == CGEnc ){
-        it = CNodes.erase(it);
-      }else{
-        ++it;
-      }
-    }
   }
 }
 
