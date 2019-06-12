@@ -33,9 +33,21 @@ bool CoreGenCache::SetChildCache( CoreGenCache *C ){
   return InsertChild(static_cast<CoreGenNode *>(Child));
 }
 
+bool CoreGenCache::SetNullChildCache(){
+  Child = nullptr;
+  ParentLevel = false;
+  return true;
+}
+
 bool CoreGenCache::SetParentCache( CoreGenCache *P ){
   Parent = P;
   SubLevel = true;
+  return true;
+}
+
+bool CoreGenCache::SetNullParentCache(){
+  Parent = nullptr;
+  SubLevel = false;
   return true;
 }
 

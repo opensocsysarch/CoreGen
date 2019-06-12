@@ -503,6 +503,25 @@ bool CoreGenBackend::DeleteCacheNode(CoreGenCache *C){
   // stage 2: walk all the nodes and determine if anyone is pointing to us
   DeleteDepChild( static_cast<CoreGenNode *>(C) );
 
+  // stage 3: clean up the parent/child pointers
+  for( unsigned i=0; i<Top->GetNumChild(); i++  ){
+    if( Top->GetChild(i)->GetType() == CGCache ){
+      CoreGenCache *TCache = static_cast<CoreGenCache *>(Top->GetChild(i));
+      if( TCache->GetSubCache() == C ){
+        TCache->SetNullChildCache();
+      }
+      if( TCache->GetParentCache() == C ){
+        TCache->SetNullParentCache();
+      }
+    }
+    if( Top->GetChild(i)->GetType() == CGCore ){
+      CoreGenCore *TCore = static_cast<CoreGenCore *>(Top->GetChild(i));
+      if( TCore->GetCache() == C ){
+        TCore->SetNullCache();
+      }
+    }
+  }
+
   delete C;
 
   return true;
@@ -665,6 +684,14 @@ bool CoreGenBackend::DeleteRegClassNode(CoreGenRegClass *RC){
         }
       }
     }
+    if( Top->GetChild(i)->GetType() ==  CGCore ){
+      CoreGenCore *Core = static_cast<CoreGenCore *>(Top->GetChild(i));
+      for( unsigned j=0; j<Core->GetNumRegClass(); j++ ){
+        if( Core->GetRegClass(j) == RC ){
+          Core->DeleteRegClass(j);
+        }
+      }
+    }
   }
 
   delete RC;
@@ -719,6 +746,12 @@ bool CoreGenBackend::DeleteISANode(CoreGenISA *ISA){
       CoreGenInst *Inst = static_cast<CoreGenInst *>(Top->GetChild(i));
       if( Inst->GetISA() == ISA ){
         Inst->SetNullISA();
+      }
+    }
+    if( Top->GetChild(i)->GetType() == CGCore ){
+      CoreGenCore *Core = static_cast<CoreGenCore *>(Top->GetChild(i));
+      if( Core->GetISA() == ISA ){
+        Core->SetNullISA();
       }
     }
   }

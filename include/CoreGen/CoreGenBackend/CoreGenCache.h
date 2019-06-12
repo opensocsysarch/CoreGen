@@ -68,6 +68,12 @@ public:
   /// Sets a parent cache level
   bool SetParentCache( CoreGenCache *C );
 
+  /// Sets the parent cache to null
+  bool SetNullChildCache();
+
+  /// Sets the sublevel cache to null
+  bool SetNullParentCache();
+
   /// Retrieve a pointer to a cache sublevel
   CoreGenCache *GetSubCache();
 

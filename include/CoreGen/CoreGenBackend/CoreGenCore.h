@@ -79,8 +79,17 @@ public:
   /// Retrieve the target register class
   CoreGenRegClass *GetRegClass( unsigned C );
 
+  /// Deletes the target register class
+  bool DeleteRegClass( unsigned C );
+
   /// Retreive the target extension
   CoreGenNode *GetExt( unsigned E );
+
+  /// Sets the cache to null
+  bool SetNullCache() { Cache = nullptr; return true; }
+
+  /// Sets the ISA to null
+  bool SetNullISA() { ISA = nullptr; return true; }
 };
 
 #endif
