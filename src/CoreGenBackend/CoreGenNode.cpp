@@ -20,7 +20,6 @@ CoreGenNode::CoreGenNode(CGNodeType T, std::string N, CoreGenErrno *E)
     : Name(N), Type(T), RTLType(RTLUnk), ASP(""), PluginNode(NULL), Errno(E) {}
 
 CoreGenNode::~CoreGenNode() {
-#if 0
   if( Type == CGPlugin ){
     // for plugin nodes, delete all the children
     for( unsigned i=0; i<this->GetNumChild(); i++ ){
@@ -32,6 +31,7 @@ CoreGenNode::~CoreGenNode() {
     // this will instantiate the plugin's destructor
     delete PluginNode;
     PluginNode = nullptr;
+#if 0
   }else{
     // deletes any target encoding nodes since these are not exposed to the
     // top dag node
@@ -39,12 +39,12 @@ CoreGenNode::~CoreGenNode() {
     for( auto it = CNodes.begin(); it != CNodes.end(); ++it ){
       CoreGenNode *DN = (*it);
       if( DN->GetType() == CGEnc ){
-        delete DN;
         CNodes.erase(it);
+        delete DN;
       }
     }
-  }
 #endif
+  }
 }
 
 CGNodeType CoreGenNode::GetType() { return Type; }

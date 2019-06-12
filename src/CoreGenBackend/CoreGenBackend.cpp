@@ -623,6 +623,37 @@ bool CoreGenBackend::DeleteRegNode(CoreGenReg *R){
 }
 
 bool CoreGenBackend::DeleteRegClassNode(CoreGenRegClass *RC){
+
+  // stage 1: walk all the top-level nodes and ensure that we remove
+  //          any nodes with this plugin overriden.
+  //          make sure the dag is constructed first
+  if( !DAG )
+    this->BuildDAG();
+
+  for( unsigned i=0; i<Top->GetNumChild(); i++ ){
+    if( static_cast<CoreGenNode *>(RC) ==
+        Top->GetChild(i) ){
+      Top->DeleteChild(Top->GetChild(i));
+    }
+  }
+
+  // stage 2: remove the register class attributes from any instructions
+  for( unsigned i=0; i<Top->GetNumChild(); i++ ){
+    if( Top->GetChild(i)->GetType() ==  CGInstF ){
+      // get the instruction format
+      CoreGenInstFormat *Format =
+        static_cast<CoreGenInstFormat *>(Top->GetChild(i));
+
+      for( unsigned j=0; j<Format->GetNumFields(); j++ ){
+        if( (Format->GetFieldType(Format->GetFieldName(j)) ==
+            CoreGenInstFormat::CGInstReg) &&
+            (Format->GetFieldRegClass(Format->GetFieldName(j)) == RC) ){
+          Format->SetNullField(Format->GetFieldName(j));
+        }
+      }
+    }
+  }
+
   return true;
 }
 
