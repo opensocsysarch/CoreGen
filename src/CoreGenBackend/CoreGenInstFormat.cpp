@@ -196,6 +196,19 @@ CoreGenInstFormat::CGInstField CoreGenInstFormat::GetFieldType( std::string Name
   return CGInstField::CGInstUnk;
 }
 
+bool CoreGenInstFormat::SetNullField( std::string Name ){
+  std::vector<std::tuple<std::string,unsigned,unsigned,CGInstField,bool>>::iterator it;
+
+  // nullify the field
+  if( !this->SetFieldType(Name,CoreGenInstFormat::CGInstUnk) )
+    return false;
+
+  // remove the entry in the regclass map
+  RegMap.erase(Name);
+
+  return true;
+}
+
 CoreGenRegClass *CoreGenInstFormat::GetFieldRegClass( std::string Name ){
   std::map<std::string,CoreGenRegClass *>::iterator it;
 
@@ -203,7 +216,7 @@ CoreGenRegClass *CoreGenInstFormat::GetFieldRegClass( std::string Name ){
   if( it != RegMap.end() ){
     return it->second;
   }
-  return NULL;
+  return nullptr;
 }
 
 unsigned CoreGenInstFormat::GetFormatWidth(){

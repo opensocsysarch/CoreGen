@@ -96,7 +96,24 @@ private:
 
   CoreGenNode *Top;                         ///< CoreGenBackend: Top-level project node
 
-  CoreGenDAG *DAG;                          ///< CoreGeBackend: Highest DAG node
+  CoreGenDAG *DAG;                          ///< CoreGenBackend: Highest DAG node
+
+  bool DeleteDepChild(CoreGenNode *N);              ///< CoreGenBackend: deletes dependent child
+  bool DeleteCacheNode(CoreGenCache *C);            ///< CoreGenBackend: deletes a cache node
+  bool DeleteCoreNode(CoreGenCore *C);              ///< CoreGenBackend: deletes a core node
+  bool DeleteInstNode(CoreGenInst *I);              ///< CoreGenBackend: deletes an inst node
+  bool DeletePInstNode(CoreGenPseudoInst *P);       ///< CoreGenBackend: deletes a pinst node
+  bool DeleteInstFormatNode(CoreGenInstFormat *I);  ///< CoreGenBackend: deletes inst format node
+  bool DeleteRegNode(CoreGenReg *R);                ///< CoreGenBackend: deletes a reg node
+  bool DeleteRegClassNode(CoreGenRegClass *RC);     ///< CoreGenBackend: deletes a reg class node
+  bool DeleteSoCNode(CoreGenSoC *S);                ///< CoreGenBackend: deletes an SoC node
+  bool DeleteISANode(CoreGenISA *I);                ///< CoreGenBackend: deletes an ISA node
+  bool DeleteExtNode(CoreGenExt *E);                ///< CoreGenBackend: deletes an extension node
+  bool DeleteCommNode(CoreGenComm *C);              ///< CoreGenBackend: deletes a comm node
+  bool DeleteSpadNode(CoreGenSpad *S);              ///< CoreGenBackend: deletes an Spad node
+  bool DeleteMCtrlNode(CoreGenMCtrl *M);            ///< CoreGenBackend: deletes an mctrl node
+  bool DeleteVTPNode(CoreGenVTP *V);                ///< CoreGenBackend: deletes a VTP node
+  bool DeletePluginNode(CoreGenPlugin *P);          ///< CoreGenBackend: deletes a plugin node
 
 public:
 
@@ -194,6 +211,12 @@ public:
   /// Insert a new VTP node
   CoreGenVTP *InsertVTP( std::string Name );
 
+  /// Retrieve the top-level DAG node
+  CoreGenNode *GetTop() { return Top; }
+
+  /// Remove the target node
+  bool DeleteNode( CoreGenNode *N );
+
   /// Insert a loaded plugin node
   bool InsertPlugin( CoreGenPlugin *Plugin );
 
@@ -217,6 +240,9 @@ public:
 
   /// Retrieve a list of all the passes
   std::vector<std::string> GetPasses();
+
+  /// Retrieve a list of all the pass decriptions
+  std::vector<std::string> GetPassDescriptions();
 
   /// Print all the pass info
   bool PrintPassInfo();

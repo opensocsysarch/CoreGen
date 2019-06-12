@@ -72,6 +72,17 @@ CoreGenRegClass *CoreGenCore::GetRegClass( unsigned C ){
   return Regs[C];
 }
 
+bool CoreGenCore::DeleteRegClass( unsigned C ){
+  if( C > (Regs.size()-1) ){
+    Errno->SetError( CGERR_ERROR, "Register class " + std::to_string(C)
+              + " out of bounds");
+    return false;
+  }
+
+  Regs.erase(Regs.begin()+C);
+  return true;
+}
+
 CoreGenNode *CoreGenCore::GetExt( unsigned E ){
   if( E > (Exts.size()-1) ){
     Errno->SetError( CGERR_ERROR, "Extension" + std::to_string(E)

@@ -64,6 +64,12 @@ CoreGenEncoding *CoreGenPseudoInst::GetEncoding( unsigned I ){
   return Encodings[I];
 }
 
+bool CoreGenPseudoInst::SetNullInst(){
+  Inst = nullptr;
+  Encodings.clear();
+  return true;
+}
+
 bool CoreGenPseudoInst::SetEncoding( std::string F, uint64_t V ){
 
   if( !Inst ){

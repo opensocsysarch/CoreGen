@@ -323,6 +323,15 @@ std::vector<std::string> CoreGenBackend::GetPasses(){
   return PassMgr->GetPassNames();
 }
 
+std::vector<std::string> CoreGenBackend::GetPassDescriptions(){
+  std::vector<std::string> dummy;
+  if( PassMgr == nullptr ){
+    Errno->SetError( CGERR_ERROR, "Pass manager is null" );
+    return dummy;
+  }
+  return PassMgr->GetPassDescriptions();
+}
+
 bool CoreGenBackend::PrintPassInfo(){
   if( PassMgr == nullptr ){
     Errno->SetError( CGERR_ERROR, "Pass manager is null" );
@@ -462,6 +471,552 @@ bool CoreGenBackend::BuildDAG(){
 
   // Lower everything
   return DAG->LowerAll();
+}
+
+bool CoreGenBackend::DeleteDepChild( CoreGenNode *N ){
+  // delete all the dependent child nodes
+  for( unsigned i=0; i<Top->GetNumChild(); i++ ){
+    for( unsigned j=0; j<Top->GetChild(i)->GetNumChild(); j++ ){
+      if( Top->GetChild(i)->GetChild(j) == N ){
+        Top->GetChild(i)->DeleteChild(Top->GetChild(i)->GetChild(j));
+      }
+    }
+  }
+
+  // delete all the comm references
+  for( unsigned i=0; i<Top->GetNumChild(); i++ ){
+    if( Top->GetChild(i)->GetType() == CGComm ){
+      // found a comm node
+      CoreGenComm *Comm = static_cast<CoreGenComm *>(Top->GetChild(i));
+      for( unsigned j=0; j<Comm->GetNumEndpoints(); j++ ){
+        if( Comm->GetEndpoint(j) == N ){
+          Comm->DeleteEndpoint(j);
+        }
+      }
+    }
+  }
+
+  return true;
+}
+
+bool CoreGenBackend::DeleteCacheNode(CoreGenCache *C){
+
+  // stage 1: walk all the top-level nodes and ensure that we remove
+  //          any nodes with this plugin overriden.
+  //          make sure the dag is constructed first
+  if( !DAG )
+    this->BuildDAG();
+
+  for( unsigned i=0; i<Top->GetNumChild(); i++ ){
+    if( static_cast<CoreGenNode *>(C) ==
+        Top->GetChild(i) ){
+      Top->DeleteChild(Top->GetChild(i));
+    }
+  }
+
+  // stage 2: walk all the nodes and determine if anyone is pointing to us
+  DeleteDepChild( static_cast<CoreGenNode *>(C) );
+
+  // stage 3: clean up the parent/child pointers
+  for( unsigned i=0; i<Top->GetNumChild(); i++  ){
+    if( Top->GetChild(i)->GetType() == CGCache ){
+      CoreGenCache *TCache = static_cast<CoreGenCache *>(Top->GetChild(i));
+      if( TCache->GetSubCache() == C ){
+        TCache->SetNullChildCache();
+      }
+      if( TCache->GetParentCache() == C ){
+        TCache->SetNullParentCache();
+      }
+    }
+    if( Top->GetChild(i)->GetType() == CGCore ){
+      CoreGenCore *TCore = static_cast<CoreGenCore *>(Top->GetChild(i));
+      if( TCore->GetCache() == C ){
+        TCore->SetNullCache();
+      }
+    }
+  }
+
+  delete C;
+
+  return true;
+}
+
+bool CoreGenBackend::DeleteCoreNode(CoreGenCore *C){
+
+  // stage 1: walk all the top-level nodes and ensure that we remove
+  //          any nodes with this plugin overriden.
+  //          make sure the dag is constructed first
+  if( !DAG )
+    this->BuildDAG();
+
+  for( unsigned i=0; i<Top->GetNumChild(); i++ ){
+    if( static_cast<CoreGenNode *>(C) ==
+        Top->GetChild(i) ){
+      Top->DeleteChild(Top->GetChild(i));
+    }
+  }
+
+  // stage 2: walk all the nodes and determine if anyone is pointing to us
+  DeleteDepChild( static_cast<CoreGenNode *>(C) );
+
+  delete C;
+
+  return true;
+}
+
+bool CoreGenBackend::DeleteInstNode(CoreGenInst *Inst){
+
+  // stage 1: walk all the top-level nodes and ensure that we remove
+  //          any nodes with this plugin overriden.
+  //          make sure the dag is constructed first
+  if( !DAG )
+    this->BuildDAG();
+
+  for( unsigned i=0; i<Top->GetNumChild(); i++ ){
+    if( static_cast<CoreGenNode *>(Inst) ==
+        Top->GetChild(i) ){
+      Top->DeleteChild(Top->GetChild(i));
+    }
+  }
+
+  // stage 2: walk all the nodes and determine if anyone is pointing to us
+  DeleteDepChild( static_cast<CoreGenNode *>(Inst) );
+
+  for( unsigned i=0; i<Top->GetNumChild(); i++  ){
+    if( Top->GetChild(i)->GetType() == CGPInst ){
+      CoreGenPseudoInst *PInst = static_cast<CoreGenPseudoInst *>(Top->GetChild(i));
+      if( PInst->GetInst() == Inst ){
+        PInst->SetNullInst();
+      }
+    }
+  }
+  delete Inst;
+
+  return true;
+}
+
+bool CoreGenBackend::DeletePInstNode(CoreGenPseudoInst *P){
+
+  // stage 1: walk all the top-level nodes and ensure that we remove
+  //          any nodes with this plugin overriden.
+  //          make sure the dag is constructed first
+  if( !DAG )
+    this->BuildDAG();
+
+  for( unsigned i=0; i<Top->GetNumChild(); i++ ){
+    if( static_cast<CoreGenNode *>(P) ==
+        Top->GetChild(i) ){
+      Top->DeleteChild(Top->GetChild(i));
+    }
+  }
+
+  // stage 2: walk all the nodes and determine if anyone is pointing to us
+  DeleteDepChild( static_cast<CoreGenNode *>(P) );
+
+  delete P;
+
+  return true;
+}
+
+bool CoreGenBackend::DeleteInstFormatNode(CoreGenInstFormat *I){
+  // stage 1: walk all the top-level nodes and ensure that we remove
+  //          any nodes with this plugin overriden.
+  //          make sure the dag is constructed first
+  if( !DAG )
+    this->BuildDAG();
+
+  for( unsigned i=0; i<Top->GetNumChild(); i++ ){
+    if( static_cast<CoreGenNode *>(I) ==
+        Top->GetChild(i) ){
+      Top->DeleteChild(Top->GetChild(i));
+    }
+  }
+
+  // stage 2: walk all the nodes and determine if anyone is pointing to us
+  DeleteDepChild( static_cast<CoreGenNode *>(I) );
+
+  // stage 3: walk all the instructions and nullify any candidates
+  for( unsigned i=0; i<Top->GetNumChild(); i++ ){
+    if( Top->GetChild(i)->GetType() == CGInst ){
+      CoreGenInst *Inst = static_cast<CoreGenInst *>(Top->GetChild(i));
+      if( Inst->GetFormat() == I ){
+        Inst->SetNullFormat();
+      }
+    }
+  }
+
+  delete I;
+
+  return true;
+}
+
+bool CoreGenBackend::DeleteRegNode(CoreGenReg *R){
+
+  // stage 1: walk all the top-level nodes and ensure that we remove
+  //          any nodes with this plugin overriden.
+  //          make sure the dag is constructed first
+  if( !DAG )
+    this->BuildDAG();
+
+  for( unsigned i=0; i<Top->GetNumChild(); i++ ){
+    if( static_cast<CoreGenNode *>(R) ==
+        Top->GetChild(i) ){
+      Top->DeleteChild(Top->GetChild(i));
+    }
+  }
+
+  // stage 2: walk all the nodes and determine if anyone is pointing to us
+  DeleteDepChild( static_cast<CoreGenNode *>(R) );
+
+  delete R;
+
+  return true;
+}
+
+bool CoreGenBackend::DeleteRegClassNode(CoreGenRegClass *RC){
+
+  // stage 1: walk all the top-level nodes and ensure that we remove
+  //          any nodes with this plugin overriden.
+  //          make sure the dag is constructed first
+  if( !DAG )
+    this->BuildDAG();
+
+  for( unsigned i=0; i<Top->GetNumChild(); i++ ){
+    if( static_cast<CoreGenNode *>(RC) ==
+        Top->GetChild(i) ){
+      Top->DeleteChild(Top->GetChild(i));
+    }
+  }
+
+  // stage 2: walk all the nodes and determine if anyone is pointing to us
+  DeleteDepChild( static_cast<CoreGenNode *>(RC) );
+
+  // stage 3: remove the register class attributes from any instructions
+  for( unsigned i=0; i<Top->GetNumChild(); i++ ){
+    if( Top->GetChild(i)->GetType() ==  CGInstF ){
+      // get the instruction format
+      CoreGenInstFormat *Format =
+        static_cast<CoreGenInstFormat *>(Top->GetChild(i));
+
+      for( unsigned j=0; j<Format->GetNumFields(); j++ ){
+        if( (Format->GetFieldType(Format->GetFieldName(j)) ==
+            CoreGenInstFormat::CGInstReg) &&
+            (Format->GetFieldRegClass(Format->GetFieldName(j)) == RC) ){
+          Format->SetNullField(Format->GetFieldName(j));
+        }
+      }
+    }
+    if( Top->GetChild(i)->GetType() ==  CGCore ){
+      CoreGenCore *Core = static_cast<CoreGenCore *>(Top->GetChild(i));
+      for( unsigned j=0; j<Core->GetNumRegClass(); j++ ){
+        if( Core->GetRegClass(j) == RC ){
+          Core->DeleteRegClass(j);
+        }
+      }
+    }
+  }
+
+  delete RC;
+
+  return true;
+}
+
+bool CoreGenBackend::DeleteSoCNode(CoreGenSoC *S){
+
+  // stage 1: walk all the top-level nodes and ensure that we remove
+  //          any nodes with this plugin overriden.
+  //          make sure the dag is constructed first
+  if( !DAG )
+    this->BuildDAG();
+
+  for( unsigned i=0; i<Top->GetNumChild(); i++ ){
+    if( static_cast<CoreGenNode *>(S) ==
+        Top->GetChild(i) ){
+      Top->DeleteChild(Top->GetChild(i));
+    }
+  }
+
+  // stage 2: walk all the nodes and determine if anyone is pointing to us
+  DeleteDepChild( static_cast<CoreGenNode *>(S) );
+
+  delete S;
+
+  return true;
+}
+
+bool CoreGenBackend::DeleteISANode(CoreGenISA *ISA){
+
+  // stage 1: walk all the top-level nodes and ensure that we remove
+  //          any nodes with this plugin overriden.
+  //          make sure the dag is constructed first
+  if( !DAG )
+    this->BuildDAG();
+
+  for( unsigned i=0; i<Top->GetNumChild(); i++ ){
+    if( static_cast<CoreGenNode *>(ISA) ==
+        Top->GetChild(i) ){
+      Top->DeleteChild(Top->GetChild(i));
+    }
+  }
+
+  // stage 2: walk all the nodes and determine if anyone is pointing to us
+  DeleteDepChild( static_cast<CoreGenNode *>(ISA) );
+
+  // stage 3: walk all the nodes and set any instructions ISA to null
+  for( unsigned i=0; i<Top->GetNumChild(); i++ ){
+    if( Top->GetChild(i)->GetType() == CGInst ){
+      CoreGenInst *Inst = static_cast<CoreGenInst *>(Top->GetChild(i));
+      if( Inst->GetISA() == ISA ){
+        Inst->SetNullISA();
+      }
+    }
+    if( Top->GetChild(i)->GetType() == CGPInst ){
+      CoreGenPseudoInst *PInst = static_cast<CoreGenPseudoInst *>(Top->GetChild(i));
+      if( PInst->GetISA() == ISA ){
+        PInst->SetNullISA();
+      }
+    }
+    if( Top->GetChild(i)->GetType() == CGCore ){
+      CoreGenCore *Core = static_cast<CoreGenCore *>(Top->GetChild(i));
+      if( Core->GetISA() == ISA ){
+        Core->SetNullISA();
+      }
+    }
+  }
+
+  delete ISA;
+
+  return true;
+}
+
+bool CoreGenBackend::DeleteExtNode(CoreGenExt *E){
+  if( !DAG )
+    this->BuildDAG();
+
+  for( unsigned i=0; i<Top->GetNumChild(); i++ ){
+    if( static_cast<CoreGenNode *>(E) ==
+        Top->GetChild(i) ){
+      Top->DeleteChild(Top->GetChild(i));
+    }
+  }
+
+  // stage 2: walk all the nodes and determine if anyone is pointing to us
+  DeleteDepChild( static_cast<CoreGenNode *>(E) );
+
+  // NOTE: when deleting extensions, it is not currently possible to know
+  // the difference between an existing node and a new node that was inserted
+  // specifically for this extension.  As a result, all the child nodes will
+  // become orphans
+
+  delete E;
+
+  return true;
+}
+
+bool CoreGenBackend::DeleteCommNode(CoreGenComm *C){
+
+  // stage 1: walk all the top-level nodes and ensure that we remove
+  //          any nodes with this plugin overriden.
+  //          make sure the dag is constructed first
+  if( !DAG )
+    this->BuildDAG();
+
+  for( unsigned i=0; i<Top->GetNumChild(); i++ ){
+    if( static_cast<CoreGenNode *>(C) ==
+        Top->GetChild(i) ){
+      Top->DeleteChild(Top->GetChild(i));
+    }
+  }
+
+  // stage 2: walk all the nodes and determine if anyone is pointing to us
+  DeleteDepChild( static_cast<CoreGenNode *>(C) );
+
+  delete C;
+
+  return true;
+}
+
+bool CoreGenBackend::DeleteSpadNode(CoreGenSpad *S){
+
+  // stage 1: walk all the top-level nodes and ensure that we remove
+  //          any nodes with this plugin overriden.
+  //          make sure the dag is constructed first
+  if( !DAG )
+    this->BuildDAG();
+
+  for( unsigned i=0; i<Top->GetNumChild(); i++ ){
+    if( static_cast<CoreGenNode *>(S) ==
+        Top->GetChild(i) ){
+      Top->DeleteChild(Top->GetChild(i));
+    }
+  }
+
+  // stage 2: walk all the nodes and determine if anyone is pointing to us
+  DeleteDepChild( static_cast<CoreGenNode *>(S) );
+
+  delete S;
+
+  return true;
+}
+
+bool CoreGenBackend::DeleteMCtrlNode(CoreGenMCtrl *M){
+
+  // stage 1: walk all the top-level nodes and ensure that we remove
+  //          any nodes with this plugin overriden.
+  //          make sure the dag is constructed first
+  if( !DAG )
+    this->BuildDAG();
+
+  for( unsigned i=0; i<Top->GetNumChild(); i++ ){
+    if( static_cast<CoreGenNode *>(M) ==
+        Top->GetChild(i) ){
+      Top->DeleteChild(Top->GetChild(i));
+    }
+  }
+
+  // stage 2: walk all the nodes and determine if anyone is pointing to us
+  DeleteDepChild( static_cast<CoreGenNode *>(M) );
+
+  delete M;
+
+  return true;
+}
+
+bool CoreGenBackend::DeleteVTPNode(CoreGenVTP *V){
+
+  // stage 1: walk all the top-level nodes and ensure that we remove
+  //          any nodes with this plugin overriden.
+  //          make sure the dag is constructed first
+  if( !DAG )
+    this->BuildDAG();
+
+  for( unsigned i=0; i<Top->GetNumChild(); i++ ){
+    if( static_cast<CoreGenNode *>(V) ==
+        Top->GetChild(i) ){
+      Top->DeleteChild(Top->GetChild(i));
+    }
+  }
+
+  // stage 2: walk all the nodes and determine if anyone is pointing to us
+  DeleteDepChild( static_cast<CoreGenNode *>(V) );
+
+  delete V;
+
+  return true;
+}
+
+bool CoreGenBackend::DeletePluginNode(CoreGenPlugin *P){
+
+  // stage 1: walk all the top-level nodes and ensure that we remove
+  //          any nodes with this plugin overriden.
+  //          make sure the dag is constructed first
+  if( !DAG )
+    this->BuildDAG();
+
+  for( unsigned i=0; i<Top->GetNumChild(); i++ ){
+    if( static_cast<CoreGenNode *>(P) ==
+        Top->GetChild(i) ){
+      Top->DeleteChild(Top->GetChild(i));
+    }
+  }
+
+  // stage 2: walk the nodes and determine if anyone is using
+  //          the target node as a overriden plugin, if so, remove
+  //          that node and adjust any links to it
+  for( unsigned i=0; i<Top->GetNumChild(); i++ ){
+    if( static_cast<CoreGenNode *>(P) ==
+        Top->GetChild(i)->GetPlugin() ){
+      // adjust the links pointing to us
+      for( unsigned j=0; j<Top->GetNumChild(); j++ ){
+        for( unsigned k=0; k<Top->GetChild(j)->GetNumChild(); k++ ){
+          if( Top->GetChild(j)->GetChild(k) == Top->GetChild(i) ){
+            Top->GetChild(j)->DeleteChild(Top->GetChild(i));
+          }
+        }
+      }
+    }
+  }
+
+  // stage 3: delete the node
+  delete P;
+
+  return true;
+}
+
+bool CoreGenBackend::DeleteNode( CoreGenNode *N ){
+  if( !N )
+    return false;
+
+  // stage 1: Determine what type of node this is
+  //          Certain nodes will require deleting
+  //          child nodes that are encodings.
+  //          Further, we must remove the necessary
+  //          nodes from the Top-level DAG lists
+  switch(N->GetType()){
+  case CGSoc:
+    return DeleteSoCNode(static_cast<CoreGenSoC *>(N));
+    break;
+  case CGCore:
+    return DeleteCoreNode(static_cast<CoreGenCore *>(N));
+    break;
+  case CGInstF:
+    return DeleteInstFormatNode(static_cast<CoreGenInstFormat *>(N));
+    break;
+  case CGInst:
+    return DeleteInstNode(static_cast<CoreGenInst *>(N));
+    break;
+  case CGPInst:
+    return DeletePInstNode(static_cast<CoreGenPseudoInst *>(N));
+    break;
+  case CGRegC:
+    return DeleteRegClassNode(static_cast<CoreGenRegClass *>(N));
+    break;
+  case CGReg:
+    return DeleteRegNode(static_cast<CoreGenReg *>(N));
+    break;
+  case CGISA:
+    return DeleteISANode(static_cast<CoreGenISA *>(N));
+    break;
+  case CGCache:
+    return DeleteCacheNode(static_cast<CoreGenCache *>(N));
+    break;
+  case CGEnc:
+    Errno->SetError( CGERR_ERROR, "Cannot delete individual encodings" );
+    return false;
+    break;
+  case CGExt:
+    return DeleteExtNode(static_cast<CoreGenExt *>(N));
+    break;
+  case CGComm:
+    return DeleteCommNode(static_cast<CoreGenComm *>(N));
+    break;
+  case CGSpad:
+    return DeleteSpadNode(static_cast<CoreGenSpad *>(N));
+    break;
+  case CGMCtrl:
+    return DeleteMCtrlNode(static_cast<CoreGenMCtrl *>(N));
+    break;
+  case CGVTP:
+    return DeleteVTPNode(static_cast<CoreGenVTP *>(N));
+    break;
+  case CGPlugin:
+    Errno->SetError( CGERR_WARN, "Deleting a plugin will remove all its children" );
+    return DeletePluginNode(static_cast<CoreGenPlugin *>(N));
+    break;
+  case CGTop:
+    Errno->SetError( CGERR_ERROR, "Top-level DAG nodes cannot be deleted" );
+    return false;
+    break;
+  default:
+    // something went wrong
+    Errno->SetError( CGERR_ERROR, "Unrecognized node type for deletion" );
+    delete N;
+    return false;
+    break;
+  }
+
+  // if we get here, something went wrong
+  return false;
 }
 
 CoreGenCache *CoreGenBackend::InsertCache(std::string Name,

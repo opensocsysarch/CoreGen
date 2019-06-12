@@ -158,6 +158,9 @@ public:
     CGPrintSpace( this->TypeToStr().length(), 15 );
     *OutStream << Desc << std::endl;
   }
+
+  /// Retrieve the pass description info
+  std::string GetPassDesc() { return Desc; }
 };
 
 #endif

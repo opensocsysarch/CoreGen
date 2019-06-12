@@ -79,6 +79,9 @@ public:
 
     /// Retrieve the target endpoint
     CoreGenNode *GetEndpoint( std::string Name );
+
+    /// Retrieve the target endpoint
+    bool DeleteEndpoint( unsigned Idx );
 };
 
 #endif

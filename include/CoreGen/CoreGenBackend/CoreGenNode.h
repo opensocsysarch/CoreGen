@@ -135,6 +135,15 @@ public:
   /// Insert a plugin node
   bool InsertPlugin( CoreGenNode *N );
 
+  /// Delete a plugin node
+  bool DeletePlugin();
+
+  /// Determine if there is a plugin node to override this node
+  bool IsPlugin();
+
+  /// Retrieves the target plugin node
+  CoreGenNode *GetPlugin(){ return PluginNode; }
+
   /// Set inline RTL
   bool SetRTL( std::string RTL );
 

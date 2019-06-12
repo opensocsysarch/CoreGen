@@ -94,6 +94,12 @@ public:
 
   /// Determine if the Syntax has been set
   bool IsSyntax() { if( Syntax.length() > 0 ){ return true; }else{ return false;} }
+
+  /// Set a null format for the target instruction
+  bool SetNullFormat();
+
+  /// Set a null ISA for the target instruction
+  bool SetNullISA();
 };
 
 #endif

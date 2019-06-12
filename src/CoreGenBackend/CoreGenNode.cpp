@@ -19,7 +19,20 @@ CoreGenNode::CoreGenNode(CGNodeType T, CoreGenErrno *E)
 CoreGenNode::CoreGenNode(CGNodeType T, std::string N, CoreGenErrno *E)
     : Name(N), Type(T), RTLType(RTLUnk), ASP(""), PluginNode(NULL), Errno(E) {}
 
-CoreGenNode::~CoreGenNode() {}
+CoreGenNode::~CoreGenNode() {
+  if( Type == CGPlugin ){
+    // for plugin nodes, delete all the children
+    for( unsigned i=0; i<this->GetNumChild(); i++ ){
+      delete CNodes[i];
+      CNodes[i] = nullptr;
+    }
+  }else if( PluginNode ){
+    // delete the target plugin instance
+    // this will instantiate the plugin's destructor
+    delete PluginNode;
+    PluginNode = nullptr;
+  }
+}
 
 CGNodeType CoreGenNode::GetType() { return Type; }
 
@@ -34,6 +47,20 @@ std::string CoreGenNode::GetName() { return Name; }
 bool CoreGenNode::SetName(std::string N) { Name = N; return true; }
 
 unsigned CoreGenNode::GetNumChild() { return CNodes.size(); }
+
+bool CoreGenNode::DeletePlugin(){
+  if( PluginNode ){
+    PluginNode = nullptr;
+    return true;
+  }
+  return false;
+}
+
+bool CoreGenNode::IsPlugin(){
+  if( PluginNode )
+    return true;
+  return false;
+}
 
 bool CoreGenNode::IsOverridden() {
   if( PluginNode ){
@@ -93,12 +120,14 @@ bool CoreGenNode::InsertPlugin( CoreGenNode *N ){
 }
 
 bool CoreGenNode::DeleteChild( CoreGenNode *N ){
-  if( !N ){ return false; }
-    for( unsigned i=0; i<CNodes.size(); i++ ){
-      if( CNodes[i] == N ){
-        CNodes.erase(CNodes.begin()+i);
-      }
+  if( !N )
+    return false;
+
+  for( unsigned i=0; i<CNodes.size(); i++ ){
+    if( CNodes[i] == N ){
+      CNodes.erase(CNodes.begin()+i);
     }
+  }
   return true;
 }
 

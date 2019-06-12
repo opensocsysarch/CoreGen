@@ -64,8 +64,14 @@ public:
   /// Get the target instruction set bundle
   CoreGenISA *GetISA() { return ISA; }
 
+  /// Sets the ISA to null
+  bool SetNullISA() { ISA = nullptr; return true; }
+
   /// Get the target instruction mapping
   CoreGenInst *GetInst() { return Inst; }
+
+  /// Sets the instruction to null
+  bool SetNullInst();
 };
 
 #endif

@@ -74,6 +74,13 @@ bool CoreGenComm::SetWidth( unsigned W ){
   return true;
 }
 
+bool CoreGenComm::DeleteEndpoint( unsigned Idx ){
+  if( Idx > (EndPoints.size()+1) )
+    return false;
+
+  EndPoints.erase(EndPoints.begin()+Idx);
+}
+
 CoreGenNode *CoreGenComm::GetEndpoint( unsigned Idx ){
   if( Idx > (EndPoints.size()+1) ){
     return nullptr;
