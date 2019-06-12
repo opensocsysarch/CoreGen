@@ -474,10 +474,24 @@ bool CoreGenBackend::BuildDAG(){
 }
 
 bool CoreGenBackend::DeleteDepChild( CoreGenNode *N ){
+  // delete all the dependent child nodes
   for( unsigned i=0; i<Top->GetNumChild(); i++ ){
     for( unsigned j=0; j<Top->GetChild(i)->GetNumChild(); j++ ){
       if( Top->GetChild(i)->GetChild(j) == N ){
         Top->GetChild(i)->DeleteChild(Top->GetChild(i)->GetChild(j));
+      }
+    }
+  }
+
+  // delete all the comm references
+  for( unsigned i=0; i<Top->GetNumChild(); i++ ){
+    if( Top->GetChild(i)->GetType() == CGComm ){
+      // found a comm node
+      CoreGenComm *Comm = static_cast<CoreGenComm *>(Top->GetChild(i));
+      for( unsigned j=0; j<Comm->GetNumEndpoints(); j++ ){
+        if( Comm->GetEndpoint(j) == N ){
+          Comm->DeleteEndpoint(j);
+        }
       }
     }
   }
@@ -568,6 +582,14 @@ bool CoreGenBackend::DeleteInstNode(CoreGenInst *Inst){
   // stage 2: walk all the nodes and determine if anyone is pointing to us
   DeleteDepChild( static_cast<CoreGenNode *>(Inst) );
 
+  for( unsigned i=0; i<Top->GetNumChild(); i++  ){
+    if( Top->GetChild(i)->GetType() == CGPInst ){
+      CoreGenPseudoInst *PInst = static_cast<CoreGenPseudoInst *>(Top->GetChild(i));
+      if( PInst->GetInst() == Inst ){
+        PInst->SetNullInst();
+      }
+    }
+  }
   delete Inst;
 
   return true;
@@ -746,6 +768,12 @@ bool CoreGenBackend::DeleteISANode(CoreGenISA *ISA){
       CoreGenInst *Inst = static_cast<CoreGenInst *>(Top->GetChild(i));
       if( Inst->GetISA() == ISA ){
         Inst->SetNullISA();
+      }
+    }
+    if( Top->GetChild(i)->GetType() == CGPInst ){
+      CoreGenPseudoInst *PInst = static_cast<CoreGenPseudoInst *>(Top->GetChild(i));
+      if( PInst->GetISA() == ISA ){
+        PInst->SetNullISA();
       }
     }
     if( Top->GetChild(i)->GetType() == CGCore ){
