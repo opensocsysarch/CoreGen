@@ -790,6 +790,26 @@ bool CoreGenBackend::DeleteISANode(CoreGenISA *ISA){
 }
 
 bool CoreGenBackend::DeleteExtNode(CoreGenExt *E){
+  if( !DAG )
+    this->BuildDAG();
+
+  for( unsigned i=0; i<Top->GetNumChild(); i++ ){
+    if( static_cast<CoreGenNode *>(E) ==
+        Top->GetChild(i) ){
+      Top->DeleteChild(Top->GetChild(i));
+    }
+  }
+
+  // stage 2: walk all the nodes and determine if anyone is pointing to us
+  DeleteDepChild( static_cast<CoreGenNode *>(E) );
+
+  // NOTE: when deleting extensions, it is not currently possible to know
+  // the difference between an existing node and a new node that was inserted
+  // specifically for this extension.  As a result, all the child nodes will
+  // become orphans
+
+  delete E;
+
   return true;
 }
 
