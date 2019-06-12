@@ -473,6 +473,18 @@ bool CoreGenBackend::BuildDAG(){
   return DAG->LowerAll();
 }
 
+bool CoreGenBackend::DeleteDepChild( CoreGenNode *N ){
+  for( unsigned i=0; i<Top->GetNumChild(); i++ ){
+    for( unsigned j=0; j<Top->GetChild(i)->GetNumChild(); j++ ){
+      if( Top->GetChild(i)->GetChild(j) == N ){
+        Top->GetChild(i)->DeleteChild(Top->GetChild(i)->GetChild(j));
+      }
+    }
+  }
+
+  return true;
+}
+
 bool CoreGenBackend::DeleteCacheNode(CoreGenCache *C){
 
   // stage 1: walk all the top-level nodes and ensure that we remove
@@ -489,13 +501,7 @@ bool CoreGenBackend::DeleteCacheNode(CoreGenCache *C){
   }
 
   // stage 2: walk all the nodes and determine if anyone is pointing to us
-  for( unsigned i=0; i<Top->GetNumChild(); i++ ){
-    for( unsigned j=0; j<Top->GetChild(i)->GetNumChild(); j++ ){
-      if( Top->GetChild(i)->GetChild(j) == static_cast<CoreGenNode *>(C) ){
-        Top->GetChild(i)->DeleteChild(Top->GetChild(i)->GetChild(j));
-      }
-    }
-  }
+  DeleteDepChild( static_cast<CoreGenNode *>(C) );
 
   delete C;
 
@@ -518,13 +524,7 @@ bool CoreGenBackend::DeleteCoreNode(CoreGenCore *C){
   }
 
   // stage 2: walk all the nodes and determine if anyone is pointing to us
-  for( unsigned i=0; i<Top->GetNumChild(); i++ ){
-    for( unsigned j=0; j<Top->GetChild(i)->GetNumChild(); j++ ){
-      if( Top->GetChild(i)->GetChild(j) == static_cast<CoreGenNode *>(C) ){
-        Top->GetChild(i)->DeleteChild(Top->GetChild(i)->GetChild(j));
-      }
-    }
-  }
+  DeleteDepChild( static_cast<CoreGenNode *>(C) );
 
   delete C;
 
@@ -547,13 +547,7 @@ bool CoreGenBackend::DeleteInstNode(CoreGenInst *Inst){
   }
 
   // stage 2: walk all the nodes and determine if anyone is pointing to us
-  for( unsigned i=0; i<Top->GetNumChild(); i++ ){
-    for( unsigned j=0; j<Top->GetChild(i)->GetNumChild(); j++ ){
-      if( Top->GetChild(i)->GetChild(j) == static_cast<CoreGenNode *>(Inst) ){
-        Top->GetChild(i)->DeleteChild(Top->GetChild(i)->GetChild(j));
-      }
-    }
-  }
+  DeleteDepChild( static_cast<CoreGenNode *>(Inst) );
 
   delete Inst;
 
@@ -576,13 +570,7 @@ bool CoreGenBackend::DeletePInstNode(CoreGenPseudoInst *P){
   }
 
   // stage 2: walk all the nodes and determine if anyone is pointing to us
-  for( unsigned i=0; i<Top->GetNumChild(); i++ ){
-    for( unsigned j=0; j<Top->GetChild(i)->GetNumChild(); j++ ){
-      if( Top->GetChild(i)->GetChild(j) == static_cast<CoreGenNode *>(P) ){
-        Top->GetChild(i)->DeleteChild(Top->GetChild(i)->GetChild(j));
-      }
-    }
-  }
+  DeleteDepChild( static_cast<CoreGenNode *>(P) );
 
   delete P;
 
@@ -590,6 +578,34 @@ bool CoreGenBackend::DeletePInstNode(CoreGenPseudoInst *P){
 }
 
 bool CoreGenBackend::DeleteInstFormatNode(CoreGenInstFormat *I){
+  // stage 1: walk all the top-level nodes and ensure that we remove
+  //          any nodes with this plugin overriden.
+  //          make sure the dag is constructed first
+  if( !DAG )
+    this->BuildDAG();
+
+  for( unsigned i=0; i<Top->GetNumChild(); i++ ){
+    if( static_cast<CoreGenNode *>(I) ==
+        Top->GetChild(i) ){
+      Top->DeleteChild(Top->GetChild(i));
+    }
+  }
+
+  // stage 2: walk all the nodes and determine if anyone is pointing to us
+  DeleteDepChild( static_cast<CoreGenNode *>(I) );
+
+  // stage 3: walk all the instructions and nullify any candidates
+  for( unsigned i=0; i<Top->GetNumChild(); i++ ){
+    if( Top->GetChild(i)->GetType() == CGInst ){
+      CoreGenInst *Inst = static_cast<CoreGenInst *>(Top->GetChild(i));
+      if( Inst->GetFormat() == I ){
+        Inst->SetNullFormat();
+      }
+    }
+  }
+
+  delete I;
+
   return true;
 }
 
@@ -609,13 +625,7 @@ bool CoreGenBackend::DeleteRegNode(CoreGenReg *R){
   }
 
   // stage 2: walk all the nodes and determine if anyone is pointing to us
-  for( unsigned i=0; i<Top->GetNumChild(); i++ ){
-    for( unsigned j=0; j<Top->GetChild(i)->GetNumChild(); j++ ){
-      if( Top->GetChild(i)->GetChild(j) == static_cast<CoreGenNode *>(R) ){
-        Top->GetChild(i)->DeleteChild(Top->GetChild(i)->GetChild(j));
-      }
-    }
-  }
+  DeleteDepChild( static_cast<CoreGenNode *>(R) );
 
   delete R;
 
@@ -637,7 +647,10 @@ bool CoreGenBackend::DeleteRegClassNode(CoreGenRegClass *RC){
     }
   }
 
-  // stage 2: remove the register class attributes from any instructions
+  // stage 2: walk all the nodes and determine if anyone is pointing to us
+  DeleteDepChild( static_cast<CoreGenNode *>(RC) );
+
+  // stage 3: remove the register class attributes from any instructions
   for( unsigned i=0; i<Top->GetNumChild(); i++ ){
     if( Top->GetChild(i)->GetType() ==  CGInstF ){
       // get the instruction format
@@ -653,6 +666,8 @@ bool CoreGenBackend::DeleteRegClassNode(CoreGenRegClass *RC){
       }
     }
   }
+
+  delete RC;
 
   return true;
 }
@@ -673,13 +688,7 @@ bool CoreGenBackend::DeleteSoCNode(CoreGenSoC *S){
   }
 
   // stage 2: walk all the nodes and determine if anyone is pointing to us
-  for( unsigned i=0; i<Top->GetNumChild(); i++ ){
-    for( unsigned j=0; j<Top->GetChild(i)->GetNumChild(); j++ ){
-      if( Top->GetChild(i)->GetChild(j) == static_cast<CoreGenNode *>(S) ){
-        Top->GetChild(i)->DeleteChild(Top->GetChild(i)->GetChild(j));
-      }
-    }
-  }
+  DeleteDepChild( static_cast<CoreGenNode *>(S) );
 
   delete S;
 
@@ -702,10 +711,14 @@ bool CoreGenBackend::DeleteISANode(CoreGenISA *ISA){
   }
 
   // stage 2: walk all the nodes and determine if anyone is pointing to us
+  DeleteDepChild( static_cast<CoreGenNode *>(ISA) );
+
+  // stage 3: walk all the nodes and set any instructions ISA to null
   for( unsigned i=0; i<Top->GetNumChild(); i++ ){
-    for( unsigned j=0; j<Top->GetChild(i)->GetNumChild(); j++ ){
-      if( Top->GetChild(i)->GetChild(j) == static_cast<CoreGenNode *>(ISA) ){
-        Top->GetChild(i)->DeleteChild(Top->GetChild(i)->GetChild(j));
+    if( Top->GetChild(i)->GetType() == CGInst ){
+      CoreGenInst *Inst = static_cast<CoreGenInst *>(Top->GetChild(i));
+      if( Inst->GetISA() == ISA ){
+        Inst->SetNullISA();
       }
     }
   }
@@ -735,13 +748,7 @@ bool CoreGenBackend::DeleteCommNode(CoreGenComm *C){
   }
 
   // stage 2: walk all the nodes and determine if anyone is pointing to us
-  for( unsigned i=0; i<Top->GetNumChild(); i++ ){
-    for( unsigned j=0; j<Top->GetChild(i)->GetNumChild(); j++ ){
-      if( Top->GetChild(i)->GetChild(j) == static_cast<CoreGenNode *>(C) ){
-        Top->GetChild(i)->DeleteChild(Top->GetChild(i)->GetChild(j));
-      }
-    }
-  }
+  DeleteDepChild( static_cast<CoreGenNode *>(C) );
 
   delete C;
 
@@ -764,13 +771,7 @@ bool CoreGenBackend::DeleteSpadNode(CoreGenSpad *S){
   }
 
   // stage 2: walk all the nodes and determine if anyone is pointing to us
-  for( unsigned i=0; i<Top->GetNumChild(); i++ ){
-    for( unsigned j=0; j<Top->GetChild(i)->GetNumChild(); j++ ){
-      if( Top->GetChild(i)->GetChild(j) == static_cast<CoreGenNode *>(S) ){
-        Top->GetChild(i)->DeleteChild(Top->GetChild(i)->GetChild(j));
-      }
-    }
-  }
+  DeleteDepChild( static_cast<CoreGenNode *>(S) );
 
   delete S;
 
@@ -793,13 +794,7 @@ bool CoreGenBackend::DeleteMCtrlNode(CoreGenMCtrl *M){
   }
 
   // stage 2: walk all the nodes and determine if anyone is pointing to us
-  for( unsigned i=0; i<Top->GetNumChild(); i++ ){
-    for( unsigned j=0; j<Top->GetChild(i)->GetNumChild(); j++ ){
-      if( Top->GetChild(i)->GetChild(j) == static_cast<CoreGenNode *>(M) ){
-        Top->GetChild(i)->DeleteChild(Top->GetChild(i)->GetChild(j));
-      }
-    }
-  }
+  DeleteDepChild( static_cast<CoreGenNode *>(M) );
 
   delete M;
 
@@ -822,13 +817,7 @@ bool CoreGenBackend::DeleteVTPNode(CoreGenVTP *V){
   }
 
   // stage 2: walk all the nodes and determine if anyone is pointing to us
-  for( unsigned i=0; i<Top->GetNumChild(); i++ ){
-    for( unsigned j=0; j<Top->GetChild(i)->GetNumChild(); j++ ){
-      if( Top->GetChild(i)->GetChild(j) == static_cast<CoreGenNode *>(V) ){
-        Top->GetChild(i)->DeleteChild(Top->GetChild(i)->GetChild(j));
-      }
-    }
-  }
+  DeleteDepChild( static_cast<CoreGenNode *>(V) );
 
   delete V;
 

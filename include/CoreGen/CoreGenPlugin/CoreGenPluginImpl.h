@@ -78,15 +78,15 @@ typedef enum{
  *
  */
 typedef struct{
-  unsigned UnsignedData;  ///< CGFeatureVal: unsigned int data
-  uint32_t Uint32tData;   ///< CGFeatureVal: uint32_t data
-  int32_t Int32tData;     ///< CGFeatureVal: int32_t data
-  uint64_t Uint64tData;   ///< CGFeatureVal: uint64_t data
-  int64_t Int64tData;     ///< CGFeatureVal: int64_t data
-  float FloatData;        ///< CGFeatureVal: float data
-  double DoubleData;      ///< CGFeatureVal: double data
-  std::string StringData; ///< CGFeatureVal: string data
-  bool BoolData;          ///< CGFeatureVal: bool data
+  unsigned UnsignedData   = 0;      ///< CGFeatureVal: unsigned int data
+  uint32_t Uint32tData    = 0;      ///< CGFeatureVal: uint32_t data
+  int32_t Int32tData      = 0;      ///< CGFeatureVal: int32_t data
+  uint64_t Uint64tData    = 0;      ///< CGFeatureVal: uint64_t data
+  int64_t Int64tData      = 0;      ///< CGFeatureVal: int64_t data
+  float FloatData         = 0.;     ///< CGFeatureVal: float data
+  double DoubleData       = 0.;     ///< CGFeatureVal: double data
+  std::string StringData  = "";     ///< CGFeatureVal: string data
+  bool BoolData           = false;  ///< CGFeatureVal: bool data
 }CGFeatureVal;
 
 /*! \struct CGFeatureTable

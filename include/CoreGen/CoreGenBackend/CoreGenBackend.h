@@ -98,6 +98,7 @@ private:
 
   CoreGenDAG *DAG;                          ///< CoreGenBackend: Highest DAG node
 
+  bool DeleteDepChild(CoreGenNode *N);              ///< CoreGenBackend: deletes dependent child
   bool DeleteCacheNode(CoreGenCache *C);            ///< CoreGenBackend: deletes a cache node
   bool DeleteCoreNode(CoreGenCore *C);              ///< CoreGenBackend: deletes a core node
   bool DeleteInstNode(CoreGenInst *I);              ///< CoreGenBackend: deletes an inst node

@@ -30,6 +30,17 @@ CoreGenInst::~CoreGenInst(){
     }
 }
 
+bool CoreGenInst::SetNullFormat(){
+  Encodings.clear();
+  format = nullptr;
+  return true;
+}
+
+bool CoreGenInst::SetNullISA(){
+  isa = nullptr;
+  return true;
+}
+
 bool CoreGenInst::ValidateSyntax(std::string S){
   // check the first character
   if( (S[0]=='$') || (S[0]=='%') ){
