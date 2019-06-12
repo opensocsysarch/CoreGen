@@ -39,7 +39,6 @@ CoreGenNode::~CoreGenNode() {
       CoreGenNode *DN = (*it);
       if( DN->GetType() == CGEnc ){
         CNodes.erase(it);
-        delete DN;
       }
     }
   }
