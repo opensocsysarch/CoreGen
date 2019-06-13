@@ -3437,6 +3437,7 @@ bool CoreGenYaml::ReadExtYaml(const YAML::Node& ExtNodes,
                     std::vector<CoreGenNode *>(Exts.begin(),Exts.end()) ) ){
       return false;
     }
+    E->UpdateChildNodes();
     Exts.push_back(E);
 
   }// end ExtNodes

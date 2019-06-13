@@ -132,6 +132,9 @@ public:
   /// Delete all child nodes equivalent to input
   bool DeleteChild( CoreGenNode *N );
 
+  /// Purge all the child nodes from node
+  bool PurgeChildren();
+
   /// Insert a plugin node
   bool InsertPlugin( CoreGenNode *N );
 

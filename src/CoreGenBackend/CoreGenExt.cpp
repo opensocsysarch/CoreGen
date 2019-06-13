@@ -56,6 +56,38 @@ bool CoreGenExt::SetType(CGExtType T){
   return true;
 }
 
+bool CoreGenExt::UpdateChildNodes(){
+  this->PurgeChildren();
+  for( unsigned i=0; i<Cores.size(); i++ ){
+    this->InsertChild(static_cast<CoreGenNode *>(Cores[i]));
+  }
+  for( unsigned i=0; i<Caches.size(); i++ ){
+    this->InsertChild(static_cast<CoreGenNode *>(Caches[i]));
+  }
+  for( unsigned i=0; i<Exts.size(); i++ ){
+    this->InsertChild(static_cast<CoreGenNode *>(Exts[i]));
+  }
+  for( unsigned i=0; i<Insts.size(); i++ ){
+    this->InsertChild(static_cast<CoreGenNode *>(Insts[i]));
+  }
+  for( unsigned i=0; i<Formats.size(); i++ ){
+    this->InsertChild(static_cast<CoreGenNode *>(Formats[i]));
+  }
+  for( unsigned i=0; i<Regs.size(); i++ ){
+    this->InsertChild(static_cast<CoreGenNode *>(Regs[i]));
+  }
+  for( unsigned i=0; i<RegClasses.size(); i++ ){
+    this->InsertChild(static_cast<CoreGenNode *>(RegClasses[i]));
+  }
+  for( unsigned i=0; i<ISAs.size(); i++ ){
+    this->InsertChild(static_cast<CoreGenNode *>(ISAs[i]));
+  }
+  for( unsigned i=0; i<Comms.size(); i++ ){
+    this->InsertChild(static_cast<CoreGenNode *>(Comms[i]));
+  }
+  return true;
+}
+
 CoreGenCache *CoreGenExt::InsertCache(std::string Name,
                           unsigned Sets,
                           unsigned Ways){
