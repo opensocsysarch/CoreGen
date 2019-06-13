@@ -269,6 +269,9 @@ void CoreGenPluginImpl::InitFeatureValue(CGFeatureVal &Value){
 }
 
 bool CoreGenPluginImpl::BuildDAG(){
+  // purge all the children of Top
+  Top->PurgeChildren();
+
   // add all the subnodes
   for( unsigned i=0; i<Caches.size(); i++ ){
     Top->InsertChild(static_cast<CoreGenNode *>(Caches[i]));
