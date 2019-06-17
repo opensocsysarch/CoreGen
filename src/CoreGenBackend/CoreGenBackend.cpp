@@ -503,9 +503,7 @@ bool CoreGenBackend::DeleteDepChild( CoreGenNode *N ){
 
 bool CoreGenBackend::DeleteCacheNode(CoreGenCache *C){
 
-  // stage 1: walk all the top-level nodes and ensure that we remove
-  //          any nodes with this plugin overriden.
-  //          make sure the dag is constructed first
+  // stage 1: walk all the top-level nodes and ensure that we remove the node
   if( !DAG )
     this->BuildDAG();
 
@@ -555,9 +553,7 @@ bool CoreGenBackend::DeleteCacheNode(CoreGenCache *C){
 
 bool CoreGenBackend::DeleteCoreNode(CoreGenCore *C){
 
-  // stage 1: walk all the top-level nodes and ensure that we remove
-  //          any nodes with this plugin overriden.
-  //          make sure the dag is constructed first
+  // stage 1: walk all the top-level nodes and ensure that we remove the node
   if( !DAG )
     this->BuildDAG();
 
@@ -588,9 +584,7 @@ bool CoreGenBackend::DeleteCoreNode(CoreGenCore *C){
 
 bool CoreGenBackend::DeleteInstNode(CoreGenInst *Inst){
 
-  // stage 1: walk all the top-level nodes and ensure that we remove
-  //          any nodes with this plugin overriden.
-  //          make sure the dag is constructed first
+  // stage 1: walk all the top-level nodes and ensure that we remove the node
   if( !DAG )
     this->BuildDAG();
 
@@ -630,9 +624,7 @@ bool CoreGenBackend::DeleteInstNode(CoreGenInst *Inst){
 
 bool CoreGenBackend::DeletePInstNode(CoreGenPseudoInst *P){
 
-  // stage 1: walk all the top-level nodes and ensure that we remove
-  //          any nodes with this plugin overriden.
-  //          make sure the dag is constructed first
+  // stage 1: walk all the top-level nodes and ensure that we remove the node
   if( !DAG )
     this->BuildDAG();
 
@@ -662,9 +654,7 @@ bool CoreGenBackend::DeletePInstNode(CoreGenPseudoInst *P){
 }
 
 bool CoreGenBackend::DeleteInstFormatNode(CoreGenInstFormat *I){
-  // stage 1: walk all the top-level nodes and ensure that we remove
-  //          any nodes with this plugin overriden.
-  //          make sure the dag is constructed first
+  // stage 1: walk all the top-level nodes and ensure that we remove the node
   if( !DAG )
     this->BuildDAG();
 
@@ -705,9 +695,7 @@ bool CoreGenBackend::DeleteInstFormatNode(CoreGenInstFormat *I){
 
 bool CoreGenBackend::DeleteRegNode(CoreGenReg *R){
 
-  // stage 1: walk all the top-level nodes and ensure that we remove
-  //          any nodes with this plugin overriden.
-  //          make sure the dag is constructed first
+  // stage 1: walk all the top-level nodes and ensure that we remove the node
   if( !DAG )
     this->BuildDAG();
 
@@ -738,9 +726,7 @@ bool CoreGenBackend::DeleteRegNode(CoreGenReg *R){
 
 bool CoreGenBackend::DeleteRegClassNode(CoreGenRegClass *RC){
 
-  // stage 1: walk all the top-level nodes and ensure that we remove
-  //          any nodes with this plugin overriden.
-  //          make sure the dag is constructed first
+  // stage 1: walk all the top-level nodes and ensure that we remove the node
   if( !DAG )
     this->BuildDAG();
 
@@ -796,9 +782,7 @@ bool CoreGenBackend::DeleteRegClassNode(CoreGenRegClass *RC){
 
 bool CoreGenBackend::DeleteSoCNode(CoreGenSoC *S){
 
-  // stage 1: walk all the top-level nodes and ensure that we remove
-  //          any nodes with this plugin overriden.
-  //          make sure the dag is constructed first
+  // stage 1: walk all the top-level nodes and ensure that we remove the node
   if( !DAG )
     this->BuildDAG();
 
@@ -829,9 +813,7 @@ bool CoreGenBackend::DeleteSoCNode(CoreGenSoC *S){
 
 bool CoreGenBackend::DeleteISANode(CoreGenISA *ISA){
 
-  // stage 1: walk all the top-level nodes and ensure that we remove
-  //          any nodes with this plugin overriden.
-  //          make sure the dag is constructed first
+  // stage 1: walk all the top-level nodes and ensure that we remove the node
   if( !DAG )
     this->BuildDAG();
 
@@ -911,7 +893,6 @@ bool CoreGenBackend::DeleteExtNode(CoreGenExt *E){
     Exts.erase(Exts.begin()+DIdx[i]);
   }
 
-
   delete E;
 
   return true;
@@ -919,9 +900,7 @@ bool CoreGenBackend::DeleteExtNode(CoreGenExt *E){
 
 bool CoreGenBackend::DeleteCommNode(CoreGenComm *C){
 
-  // stage 1: walk all the top-level nodes and ensure that we remove
-  //          any nodes with this plugin overriden.
-  //          make sure the dag is constructed first
+  // stage 1: walk all the top-level nodes and ensure that we remove the node
   if( !DAG )
     this->BuildDAG();
 
@@ -952,9 +931,7 @@ bool CoreGenBackend::DeleteCommNode(CoreGenComm *C){
 
 bool CoreGenBackend::DeleteSpadNode(CoreGenSpad *S){
 
-  // stage 1: walk all the top-level nodes and ensure that we remove
-  //          any nodes with this plugin overriden.
-  //          make sure the dag is constructed first
+  // stage 1: walk all the top-level nodes and ensure that we remove the node
   if( !DAG )
     this->BuildDAG();
 
@@ -985,9 +962,7 @@ bool CoreGenBackend::DeleteSpadNode(CoreGenSpad *S){
 
 bool CoreGenBackend::DeleteMCtrlNode(CoreGenMCtrl *M){
 
-  // stage 1: walk all the top-level nodes and ensure that we remove
-  //          any nodes with this plugin overriden.
-  //          make sure the dag is constructed first
+  // stage 1: walk all the top-level nodes and ensure that we remove the node
   if( !DAG )
     this->BuildDAG();
 
@@ -1018,9 +993,7 @@ bool CoreGenBackend::DeleteMCtrlNode(CoreGenMCtrl *M){
 
 bool CoreGenBackend::DeleteVTPNode(CoreGenVTP *V){
 
-  // stage 1: walk all the top-level nodes and ensure that we remove
-  //          any nodes with this plugin overriden.
-  //          make sure the dag is constructed first
+  // stage 1: walk all the top-level nodes and ensure that we remove the node
   if( !DAG )
     this->BuildDAG();
 
@@ -1051,9 +1024,7 @@ bool CoreGenBackend::DeleteVTPNode(CoreGenVTP *V){
 
 bool CoreGenBackend::DeletePluginNode(CoreGenPlugin *P){
 
-  // stage 1: walk all the top-level nodes and ensure that we remove
-  //          any nodes with this plugin overriden.
-  //          make sure the dag is constructed first
+  // stage 1: walk all the top-level nodes and ensure that we remove the node
   if( !DAG )
     this->BuildDAG();
 
