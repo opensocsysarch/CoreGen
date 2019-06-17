@@ -405,7 +405,9 @@ bool CoreGenBackend::PurgeDAG(){
 bool CoreGenBackend::BuildDAG(){
   if( DAG != nullptr ){
     // delete the old DAG
-    this->PurgeDAG();
+    //this->PurgeDAG();
+    delete Top;
+    Top = new CoreGenNode(CGTop,Errno);
     delete DAG;
   }
 
