@@ -78,6 +78,7 @@ bool CoreGenComm::DeleteEndpoint( unsigned Idx ){
     return false;
 
   EndPoints.erase(EndPoints.begin()+Idx);
+  return true;
 }
 
 CoreGenNode *CoreGenComm::GetEndpoint( unsigned Idx ){

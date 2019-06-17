@@ -393,22 +393,25 @@ bool CoreGenBackend::InitPassMgr(){
 }
 
 bool CoreGenBackend::PurgeDAG(){
+#if 0
   for( unsigned i=0; i<Top->GetNumChild(); i++ ){
     if( !Top->DeleteChild(Top->GetChild(i)) ){
       Errno->SetError( CGERR_ERROR, "Error purging top-level nodes" );
       return false;
     }
   }
+#endif
+  Top->PurgeChildren();
   return true;
 }
 
 bool CoreGenBackend::BuildDAG(){
   if( DAG != nullptr ){
     // delete the old DAG
-    //this->PurgeDAG();
-    delete Top;
+    this->PurgeDAG();
+    //delete Top;
     delete DAG;
-    Top = new CoreGenNode(CGTop,Errno);
+    //Top = new CoreGenNode(CGTop,Errno);
   }
 
   DAG = new CoreGenDAG(Errno);
