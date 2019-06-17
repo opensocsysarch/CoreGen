@@ -561,6 +561,13 @@ bool CoreGenBackend::DeleteCoreNode(CoreGenCore *C){
     if( static_cast<CoreGenNode *>(C) ==
         Top->GetChild(i) ){
       Top->DeleteChild(Top->GetChild(i));
+    }else if( Top->GetChild(i)->GetType() == CGSoc ){
+      CoreGenSoC *Soc = static_cast<CoreGenSoC *>(Top->GetChild(i));
+      for( unsigned i=0; i<Soc->GetNumCores(); i++ ){
+        if( Soc->GetCore(i) == C ){
+          Soc->DeleteCore( C );
+        }
+      }
     }
   }
 
