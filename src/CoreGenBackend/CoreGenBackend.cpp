@@ -407,8 +407,8 @@ bool CoreGenBackend::BuildDAG(){
     // delete the old DAG
     //this->PurgeDAG();
     delete Top;
-    Top = new CoreGenNode(CGTop,Errno);
     delete DAG;
+    Top = new CoreGenNode(CGTop,Errno);
   }
 
   DAG = new CoreGenDAG(Errno);
@@ -538,6 +538,16 @@ bool CoreGenBackend::DeleteCacheNode(CoreGenCache *C){
     }
   }
 
+  // stgae 4: remove from the vector
+  std::vector<unsigned> DIdx;
+  for( unsigned i=0; i<Caches.size(); i++ ){
+    if( Caches[i] == C )
+      DIdx.push_back(i);
+  }
+  for( unsigned i=0; i<DIdx.size(); i++ ){
+    Caches.erase(Caches.begin()+DIdx[i]);
+  }
+
   delete C;
 
   return true;
@@ -560,6 +570,16 @@ bool CoreGenBackend::DeleteCoreNode(CoreGenCore *C){
 
   // stage 2: walk all the nodes and determine if anyone is pointing to us
   DeleteDepChild( static_cast<CoreGenNode *>(C) );
+
+  // stage 3: remove from the vector
+  std::vector<unsigned> DIdx;
+  for( unsigned i=0; i<Cores.size(); i++ ){
+    if( Cores[i] == C )
+      DIdx.push_back(i);
+  }
+  for( unsigned i=0; i<DIdx.size(); i++ ){
+    Cores.erase(Cores.begin()+DIdx[i]);
+  }
 
   delete C;
 
@@ -592,6 +612,17 @@ bool CoreGenBackend::DeleteInstNode(CoreGenInst *Inst){
       }
     }
   }
+
+  // stage 3: remove from the vector
+  std::vector<unsigned> DIdx;
+  for( unsigned i=0; i<Insts.size(); i++ ){
+    if( Insts[i] == Inst )
+      DIdx.push_back(i);
+  }
+  for( unsigned i=0; i<DIdx.size(); i++ ){
+    Insts.erase(Insts.begin()+DIdx[i]);
+  }
+
   delete Inst;
 
   return true;
@@ -614,6 +645,16 @@ bool CoreGenBackend::DeletePInstNode(CoreGenPseudoInst *P){
 
   // stage 2: walk all the nodes and determine if anyone is pointing to us
   DeleteDepChild( static_cast<CoreGenNode *>(P) );
+
+  // stage 3: remove from the vector
+  std::vector<unsigned> DIdx;
+  for( unsigned i=0; i<PInsts.size(); i++ ){
+    if( PInsts[i] == P )
+      DIdx.push_back(i);
+  }
+  for( unsigned i=0; i<DIdx.size(); i++ ){
+    PInsts.erase(PInsts.begin()+DIdx[i]);
+  }
 
   delete P;
 
@@ -647,6 +688,16 @@ bool CoreGenBackend::DeleteInstFormatNode(CoreGenInstFormat *I){
     }
   }
 
+  // stage 4: remove from the vector
+  std::vector<unsigned> DIdx;
+  for( unsigned i=0; i<Formats.size(); i++ ){
+    if( Formats[i] == I )
+      DIdx.push_back(i);
+  }
+  for( unsigned i=0; i<DIdx.size(); i++ ){
+    Formats.erase(Formats.begin()+DIdx[i]);
+  }
+
   delete I;
 
   return true;
@@ -669,6 +720,16 @@ bool CoreGenBackend::DeleteRegNode(CoreGenReg *R){
 
   // stage 2: walk all the nodes and determine if anyone is pointing to us
   DeleteDepChild( static_cast<CoreGenNode *>(R) );
+
+  // stage 3: remove from the vector
+  std::vector<unsigned> DIdx;
+  for( unsigned i=0; i<Regs.size(); i++ ){
+    if( Regs[i] == R )
+      DIdx.push_back(i);
+  }
+  for( unsigned i=0; i<DIdx.size(); i++ ){
+    Regs.erase(Regs.begin()+DIdx[i]);
+  }
 
   delete R;
 
@@ -718,6 +779,16 @@ bool CoreGenBackend::DeleteRegClassNode(CoreGenRegClass *RC){
     }
   }
 
+  // stage 4: remove from the vector
+  std::vector<unsigned> DIdx;
+  for( unsigned i=0; i<RegClasses.size(); i++ ){
+    if( RegClasses[i] == RC )
+      DIdx.push_back(i);
+  }
+  for( unsigned i=0; i<DIdx.size(); i++ ){
+    RegClasses.erase(RegClasses.begin()+DIdx[i]);
+  }
+
   delete RC;
 
   return true;
@@ -740,6 +811,16 @@ bool CoreGenBackend::DeleteSoCNode(CoreGenSoC *S){
 
   // stage 2: walk all the nodes and determine if anyone is pointing to us
   DeleteDepChild( static_cast<CoreGenNode *>(S) );
+
+  // stage 3: remove from the vector
+  std::vector<unsigned> DIdx;
+  for( unsigned i=0; i<Socs.size(); i++ ){
+    if( Socs[i] == S )
+      DIdx.push_back(i);
+  }
+  for( unsigned i=0; i<DIdx.size(); i++ ){
+    Socs.erase(Socs.begin()+DIdx[i]);
+  }
 
   delete S;
 
@@ -786,6 +867,16 @@ bool CoreGenBackend::DeleteISANode(CoreGenISA *ISA){
     }
   }
 
+  // stage 4: remove from the vector
+  std::vector<unsigned> DIdx;
+  for( unsigned i=0; i<ISAs.size(); i++ ){
+    if( ISAs[i] == ISA )
+      DIdx.push_back(i);
+  }
+  for( unsigned i=0; i<DIdx.size(); i++ ){
+    ISAs.erase(ISAs.begin()+DIdx[i]);
+  }
+
   delete ISA;
 
   return true;
@@ -810,6 +901,17 @@ bool CoreGenBackend::DeleteExtNode(CoreGenExt *E){
   // specifically for this extension.  As a result, all the child nodes will
   // become orphans
 
+  // stage 3: remove from the vector
+  std::vector<unsigned> DIdx;
+  for( unsigned i=0; i<Exts.size(); i++ ){
+    if( Exts[i] == E )
+      DIdx.push_back(i);
+  }
+  for( unsigned i=0; i<DIdx.size(); i++ ){
+    Exts.erase(Exts.begin()+DIdx[i]);
+  }
+
+
   delete E;
 
   return true;
@@ -832,6 +934,16 @@ bool CoreGenBackend::DeleteCommNode(CoreGenComm *C){
 
   // stage 2: walk all the nodes and determine if anyone is pointing to us
   DeleteDepChild( static_cast<CoreGenNode *>(C) );
+
+  // stage 3: remove from the vector
+  std::vector<unsigned> DIdx;
+  for( unsigned i=0; i<Comms.size(); i++ ){
+    if( Comms[i] == C )
+      DIdx.push_back(i);
+  }
+  for( unsigned i=0; i<DIdx.size(); i++ ){
+    Comms.erase(Comms.begin()+DIdx[i]);
+  }
 
   delete C;
 
@@ -856,6 +968,16 @@ bool CoreGenBackend::DeleteSpadNode(CoreGenSpad *S){
   // stage 2: walk all the nodes and determine if anyone is pointing to us
   DeleteDepChild( static_cast<CoreGenNode *>(S) );
 
+  // stage 3: remove from the vector
+  std::vector<unsigned> DIdx;
+  for( unsigned i=0; i<Spads.size(); i++ ){
+    if( Spads[i] == S )
+      DIdx.push_back(i);
+  }
+  for( unsigned i=0; i<DIdx.size(); i++ ){
+    Spads.erase(Spads.begin()+DIdx[i]);
+  }
+
   delete S;
 
   return true;
@@ -879,6 +1001,16 @@ bool CoreGenBackend::DeleteMCtrlNode(CoreGenMCtrl *M){
   // stage 2: walk all the nodes and determine if anyone is pointing to us
   DeleteDepChild( static_cast<CoreGenNode *>(M) );
 
+  // stage 3: remove from the vector
+  std::vector<unsigned> DIdx;
+  for( unsigned i=0; i<MCtrls.size(); i++ ){
+    if( MCtrls[i] == M )
+      DIdx.push_back(i);
+  }
+  for( unsigned i=0; i<DIdx.size(); i++ ){
+    MCtrls.erase(MCtrls.begin()+DIdx[i]);
+  }
+
   delete M;
 
   return true;
@@ -901,6 +1033,16 @@ bool CoreGenBackend::DeleteVTPNode(CoreGenVTP *V){
 
   // stage 2: walk all the nodes and determine if anyone is pointing to us
   DeleteDepChild( static_cast<CoreGenNode *>(V) );
+
+  // stage 3: remove from the vector
+  std::vector<unsigned> DIdx;
+  for( unsigned i=0; i<VTPs.size(); i++ ){
+    if( VTPs[i] == V )
+      DIdx.push_back(i);
+  }
+  for( unsigned i=0; i<DIdx.size(); i++ ){
+    VTPs.erase(VTPs.begin()+DIdx[i]);
+  }
 
   delete V;
 
@@ -939,7 +1081,17 @@ bool CoreGenBackend::DeletePluginNode(CoreGenPlugin *P){
     }
   }
 
-  // stage 3: delete the node
+  // stage 3: remove from the vector
+  std::vector<unsigned> DIdx;
+  for( unsigned i=0; i<Plugins.size(); i++ ){
+    if( Plugins[i] == P )
+      DIdx.push_back(i);
+  }
+  for( unsigned i=0; i<DIdx.size(); i++ ){
+    Plugins.erase(Plugins.begin()+DIdx[i]);
+  }
+
+  // stage 4: delete the node
   delete P;
 
   return true;
