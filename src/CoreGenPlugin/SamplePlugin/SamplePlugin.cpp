@@ -44,7 +44,8 @@ extern "C" char *__getname(){
 // information.
 //
 SamplePlugin::SamplePlugin(CoreGenErrno *E)
-  : CoreGenPluginImpl(std::string(__PLUGIN_NAME),   // Name of of the plugin
+  : CoreGenPluginImpl(std::string(__PLUGIN_NAME),   // Name of the plugin
+                      CGPNode,                      // Type of the plugin
                       __PLUGIN_HAS_HDL_CODEGEN,     // Is there an overloaded HPL codegen?
                       __PLUGIN_HAS_LLVM_CODEGEN,    // Is there an overloaded LLVM codegen?
                       __PLUGIN_MAJOR_VERSION,       // Major version

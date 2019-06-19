@@ -11,13 +11,14 @@
 #include "CoreGen/CoreGenPlugin/CoreGenPluginImpl.h"
 
 CoreGenPluginImpl::CoreGenPluginImpl(std::string N,
+                                     CGPluginType T,
                                      bool HDL,
                                      bool LLVM,
                                      unsigned MaV,
                                      unsigned MiV,
                                      unsigned PaV,
                                      CoreGenErrno *E)
-  : Name(N), NumFeatures(0), HDLCodegen(HDL), LLVMCodegen(LLVM),
+  : Name(N), Type(T), NumFeatures(0), HDLCodegen(HDL), LLVMCodegen(LLVM),
     MajorVersion(MaV), MinorVersion(MiV), PatchVersion(PaV),
     Errno(E),Top(new CoreGenNode(CGTop,Errno)) {
 }
@@ -29,6 +30,10 @@ CoreGenPluginImpl::~CoreGenPluginImpl(){
   if( Top ){
     delete Top;
   }
+}
+
+CGPluginType CoreGenPluginImpl::GetPluginType(){
+  return Type;
 }
 
 bool CoreGenPluginImpl::PurgeNodes(){
