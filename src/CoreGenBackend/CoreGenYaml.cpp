@@ -1110,7 +1110,7 @@ void CoreGenYaml::WritePluginYaml( YAML::Emitter *out,
           *out << YAML::Key << "FeatureValue";
           *out << YAML::Value << FVal.Uint32tData;
           break;
-        case CGFint32t:
+        case CGFInt32t:
           *out << YAML::Value << "Int32t";
           *out << YAML::Key << "FeatureValue";
           *out << YAML::Value << FVal.Int32tData;

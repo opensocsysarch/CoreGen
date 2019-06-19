@@ -292,7 +292,7 @@ void AST::TermNode::build_asp() {
 	this->asp += this->name;
 	if (this->tType == PRED) {
 		this->asp += "(";
-		for (int i = 0; i < this->posToVar.size(); i++){
+		for (unsigned i = 0; i < this->posToVar.size(); i++){
 			if (i != 0){
 				this->asp += ", ";
 			}

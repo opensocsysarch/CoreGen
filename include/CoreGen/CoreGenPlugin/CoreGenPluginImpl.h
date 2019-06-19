@@ -60,7 +60,7 @@
 typedef enum{
   CGFUnsigned     = 0,    ///< CGFeatureType: unsigned integer
   CGFUin32t       = 1,    ///< CGFeatureType: uint32_t
-  CGFint32t       = 2,    ///< CGFeatureType: int32_t
+  CGFInt32t       = 2,    ///< CGFeatureType: int32_t
   CGFUint64t      = 3,    ///< CGFeatureType: uint64_t
   CGFInt64t       = 4,    ///< CGFeatureType: in64_t
   CGFFloat        = 5,    ///< CGFeatureType: Float

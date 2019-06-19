@@ -340,7 +340,7 @@ std::string FeatureTypeToString( CGFeatureType Type ){
   case CGFUin32t:
     return "Uint32t";
     break;
-  case CGFint32t:
+  case CGFInt32t:
     return "Int32t";
     break;
   case CGFUint64t:

@@ -67,7 +67,7 @@ int main( int argc, char **argv ){
     case CGFUin32t:
       FTypeName =  "Uint32t";
       break;
-    case CGFint32t:
+    case CGFInt32t:
       FTypeName =  "Int32t";
       break;
     case CGFUint64t:
