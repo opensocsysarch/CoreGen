@@ -14,7 +14,7 @@ SCChiselCodeGen::SCChiselCodeGen( SCParser *P,
                                   SCOpts *O,
                                   SCMsg *M,
                                   std::string COF )
-  : Parser(P), Opts(O), Msgs(M), ChiselFile(COF) {
+  : Parser(P), Opts(O), Msgs(M), ChiselFile(COF), SM(nullptr) {
   InitIntrinsics();
   InitPasses();
 }
@@ -183,6 +183,7 @@ bool SCChiselCodeGen::GenerateSignalMap(std::string SM){
 bool SCChiselCodeGen::GenerateChisel(){
 
   if( !Parser ){
+    Msgs->PrintMsg( L_ERROR, "No parser input" );
     return false;
   }
 
@@ -190,6 +191,15 @@ bool SCChiselCodeGen::GenerateChisel(){
   if( ChiselFile.length() == 0 ){
     Msgs->PrintMsg( L_ERROR, "Chisel output file cannot be null" );
     return false;
+  }
+
+  // if it exists, read the signal map
+  if( SigMap.length() > 0 ){
+    SM = new CoreGenSigMap();
+    if( !SM->ReadSigMap(SigMap) ){
+      Msgs->PrintMsg( L_ERROR, "Error reading signal map" );
+      return false;
+    }
   }
 
   // open the output file

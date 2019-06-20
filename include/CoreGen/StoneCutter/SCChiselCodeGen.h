@@ -64,6 +64,8 @@
 #include "CoreGen/StoneCutter/SCPass.h"
 #include "CoreGen/StoneCutter/SCPasses.h"
 
+#include "CoreGen/CoreGenSigMap/CoreGenSigMap.h"
+
 using namespace llvm;
 
 class SCChiselCodeGen{
@@ -73,6 +75,8 @@ private:
   SCMsg *Msgs;                                ///< SC Messages object
   std::string ChiselFile;                     ///< Output file
   std::string SigMap;                         ///< Signal map output file
+
+  CoreGenSigMap *SM;                          ///< Signal map
 
   std::ofstream OutFile;                      ///< Output file stream
 

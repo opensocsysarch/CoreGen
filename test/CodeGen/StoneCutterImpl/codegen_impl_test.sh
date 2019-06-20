@@ -29,6 +29,15 @@ ISAs=`grep "ISAName" $FILE | awk '{print $3}' | uniq`
 #-- walk through all the stonecutter files and attempt to compile them
 for ISA in $ISAs; do
   if [ -f $DIR/RTL/stonecutter/$ISA.sc ]; then
+    #-- generate the signal map
+    $SCCOMP_PATH/sccomp -s $DIR/RTL/stonecutter/$ISA.yaml $DIR/RTL/stonecutter/$ISA.sc
+    retValSm=$?
+    if [[  "$retValSm" -ne 0 ]]; then
+      echo "$SCCOMP_PATH/sccomp -s $DIR/RTL/stonecutter/$ISA.yaml $DIR/RTL/stonecutter/$ISA.sc failed with return code = $retValSc"
+      exit $retValSc
+    fi
+
+    #-- run the stonecutter codegen
     $SCCOMP_PATH/sccomp -p $DIR/RTL/stonecutter/$ISA.sc
     retValSc=$?
     if [[  "$retValSc" -ne 0 ]]; then
