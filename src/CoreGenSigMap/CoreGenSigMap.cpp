@@ -40,6 +40,42 @@ SCSig *CoreGenSigMap::GetSignal( unsigned Idx ){
   return Signals[Idx];
 }
 
+unsigned CoreGenSigMap::GetMaxSignalWidth( unsigned Idx ){
+  if( Idx > (Signals.size()-1) ){
+    return 0;
+  }
+
+  SigType Type = Signals[Idx]->GetType();
+  unsigned Max = Signals[Idx]->GetWidth();
+
+  for( unsigned i=0; i<Signals.size(); i++ ){
+    if( Signals[i]->GetType() == Type ){
+      if( Signals[i]->GetWidth() > Max )
+        Max = Signals[i]->GetWidth();
+    }
+  }
+
+  return Max;
+}
+
+unsigned CoreGenSigMap::GetMinSignalWidth( unsigned Idx ){
+  if( Idx > (Signals.size()-1) ){
+    return 0;
+  }
+
+  SigType Type = Signals[Idx]->GetType();
+  unsigned Min = Signals[Idx]->GetWidth();
+
+  for( unsigned i=0; i<Signals.size(); i++ ){
+    if( Signals[i]->GetType() == Type ){
+      if( Signals[i]->GetWidth() < Min )
+        Min = Signals[i]->GetWidth();
+    }
+  }
+
+  return Min;
+}
+
 bool CoreGenSigMap::WriteSigMap( std::string File ){
   if( File.length() == 0 )
     return false;
