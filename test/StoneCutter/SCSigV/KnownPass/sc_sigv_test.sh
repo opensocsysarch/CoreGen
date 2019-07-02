@@ -16,4 +16,25 @@ if [[  "$retVal" -ne 0 ]]; then
   exit $retVal
 fi
 
+$SCSIGV_PATH/scsigv -s $FILE
+retVal=$?
+if [[  "$retVal" -ne 0 ]]; then
+  echo "$SCSIGV_PATH/scsigv -s $FILE failed with return code = $retVal"
+  exit $retVal
+fi
+
+$SCSIGV_PATH/scsigv -stats $FILE
+retVal=$?
+if [[  "$retVal" -ne 0 ]]; then
+  echo "$SCSIGV_PATH/scsigv -stats $FILE failed with return code = $retVal"
+  exit $retVal
+fi
+
+$SCSIGV_PATH/scsigv --stats $FILE
+retVal=$?
+if [[  "$retVal" -ne 0 ]]; then
+  echo "$SCSIGV_PATH/scsigv --stats $FILE failed with return code = $retVal"
+  exit $retVal
+fi
+
 exit 0
