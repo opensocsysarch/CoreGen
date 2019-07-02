@@ -40,7 +40,7 @@ bool SCSigMap::TranslateLogicalOp( Function &F,
                                    Instruction &I,
                                    SigType Type ){
   // initiate the binary signal
-  Signals->InsertSignal(new SCSig(Type,F.getName().str()));
+  Signals->InsertSignal(new SCSig(Type,1,F.getName().str()));
 
   // interrogate the operands and write the operand enable signals
   if( !TranslateOperands(F,I) )
@@ -53,7 +53,7 @@ bool SCSigMap::TranslateBinaryOp( Function &F,
                                   Instruction &I,
                                   SigType Type ){
   // initiate the binary signal
-  Signals->InsertSignal(new SCSig(Type,F.getName().str()));
+  Signals->InsertSignal(new SCSig(Type,1,F.getName().str()));
 
   // interrogate the operands and write the operand enable signals
   if( !TranslateOperands(F,I) )
@@ -71,7 +71,7 @@ bool SCSigMap::TranslateMemOp( Function &F,
     unsigned Width = 0;
     std::string WOpName = TraceOperand(F,I.getOperand(1),isPredef,isImm,Width);
     if( isPredef ){
-      Signals->InsertSignal(new SCSig(REG_WRITE,F.getName().str(),WOpName+"_WRITE"));
+      Signals->InsertSignal(new SCSig(REG_WRITE,Width,F.getName().str(),WOpName+"_WRITE"));
     }
   }else if( I.getOpcode() == Instruction::Load ){
     // load operations need to trace the address of the source (op 0)
@@ -80,7 +80,7 @@ bool SCSigMap::TranslateMemOp( Function &F,
     unsigned Width = 0;
     std::string WOpName = TraceOperand(F,I.getOperand(0),isPredef,isImm,Width);
     if( isPredef ){
-      Signals->InsertSignal(new SCSig(REG_READ,F.getName().str(),WOpName+"_READ"));
+      Signals->InsertSignal(new SCSig(REG_READ,Width,F.getName().str(),WOpName+"_READ"));
     }
   }else{
     this->PrintMsg( L_ERROR, "Encountered a memory operation that is not a Load or Store operation" );
@@ -111,7 +111,7 @@ bool SCSigMap::TranslateOperands( Function &F, Instruction &I ){
 
     // generate a signal if the source is register
     if( isPredef ){
-      Signals->InsertSignal(new SCSig(REG_READ,F.getName().str(),OpName+"_READ"));
+      Signals->InsertSignal(new SCSig(REG_READ,Width,F.getName().str(),OpName+"_READ"));
     }else if(!isImm){
       // search for temporaries that match the instruction:irname mapping
       std::string TmpReg = Signals->GetTempMap(F.getName().str(),
@@ -121,7 +121,7 @@ bool SCSigMap::TranslateOperands( Function &F, Instruction &I ){
         this->PrintMsg( L_ERROR, "Cannot create temporary registers for register read signals" );
         return false;
       }
-      Signals->InsertSignal(new SCSig(AREG_READ,F.getName().str(),TmpReg+"_READ"));
+      Signals->InsertSignal(new SCSig(AREG_READ,Width,F.getName().str(),TmpReg+"_READ"));
     }
   }
 
@@ -139,7 +139,7 @@ bool SCSigMap::TranslateOperands( Function &F, Instruction &I ){
 #endif
     std::string WOpName = TraceOperand(F,LHS,isWPredef,isWImm,Width);
     if( isWPredef && !isWImm ){
-      Signals->InsertSignal(new SCSig(REG_WRITE,F.getName().str(),WOpName+"_WRITE"));
+      Signals->InsertSignal(new SCSig(REG_WRITE,Width,F.getName().str(),WOpName+"_WRITE"));
     }else if(!isWImm){
       // create a temporary register
 #if 0
@@ -148,7 +148,7 @@ bool SCSigMap::TranslateOperands( Function &F, Instruction &I ){
 #endif
       std::string tmp = Signals->GetTempReg(F.getName().str(),
                                             LHS->getName().str(), Width );
-      Signals->InsertSignal(new SCSig(AREG_WRITE,F.getName().str(),tmp+"_WRITE"));
+      Signals->InsertSignal(new SCSig(AREG_WRITE,Width,F.getName().str(),tmp+"_WRITE"));
     }
   }
 
@@ -176,7 +176,7 @@ bool SCSigMap::TranslateCallSig(Function &F, Instruction &I){
         std::string OpName = TraceOperand(F,Arg->get(),isPredef,isImm,Width);
 
         if( isPredef ){
-          Signals->InsertSignal(new SCSig(REG_READ,F.getName().str(),OpName+"_READ"));
+          Signals->InsertSignal(new SCSig(REG_READ,Width,F.getName().str(),OpName+"_READ"));
         }else if(!isImm){
           // search for temporaries that match the instruction:irname mapping
           std::string TmpReg = Signals->GetTempMap(F.getName().str(),
@@ -185,7 +185,7 @@ bool SCSigMap::TranslateCallSig(Function &F, Instruction &I){
             // we cannot create a new temp on register read
             return false;
           }
-          Signals->InsertSignal(new SCSig(AREG_READ,F.getName().str(),TmpReg+"_READ"));
+          Signals->InsertSignal(new SCSig(AREG_READ,Width,F.getName().str(),TmpReg+"_READ"));
         }
       }// end for auto Arg
 
@@ -202,11 +202,11 @@ bool SCSigMap::TranslateCallSig(Function &F, Instruction &I){
 
         std::string WOpName = TraceOperand(F,LHS,isWPredef,isWImm,Width);
         if( isWPredef && !isWImm ){
-          Signals->InsertSignal(new SCSig(REG_WRITE,F.getName().str(),WOpName+"_WRITE"));
+          Signals->InsertSignal(new SCSig(REG_WRITE,Width,F.getName().str(),WOpName+"_WRITE"));
         }else if(!isWImm){
           std::string tmp = Signals->GetTempReg(F.getName().str(),
                                             LHS->getName().str(), Width );
-          Signals->InsertSignal(new SCSig(AREG_WRITE,F.getName().str(),tmp+"_WRITE"));
+          Signals->InsertSignal(new SCSig(AREG_WRITE,Width,F.getName().str(),tmp+"_WRITE"));
         }
       }
 
@@ -218,7 +218,7 @@ bool SCSigMap::TranslateCallSig(Function &F, Instruction &I){
 }
 
 bool SCSigMap::TranslateSelectSig(Function &F, Instruction &I ){
-  return Signals->InsertSignal(new SCSig(MUX,F.getName().str()));
+  return Signals->InsertSignal(new SCSig(MUX,1,F.getName().str()));
 }
 
 bool SCSigMap::TranslateCmpOp(Function &F, Instruction &I){
@@ -230,82 +230,82 @@ bool SCSigMap::TranslateCmpOp(Function &F, Instruction &I){
   case CmpInst::FCMP_FALSE:
     break;
   case CmpInst::FCMP_OEQ:
-    Signals->InsertSignal(new SCSig(MUX_EQ,F.getName().str()));
+    Signals->InsertSignal(new SCSig(MUX_EQ,1,F.getName().str()));
     break;
   case CmpInst::FCMP_OGT:
-    Signals->InsertSignal(new SCSig(MUX_GTU,F.getName().str()));
+    Signals->InsertSignal(new SCSig(MUX_GTU,1,F.getName().str()));
     break;
   case CmpInst::FCMP_OGE:
-    Signals->InsertSignal(new SCSig(MUX_GEU,F.getName().str()));
+    Signals->InsertSignal(new SCSig(MUX_GEU,1,F.getName().str()));
     break;
   case CmpInst::FCMP_OLT:
-    Signals->InsertSignal(new SCSig(MUX_LTU,F.getName().str()));
+    Signals->InsertSignal(new SCSig(MUX_LTU,1,F.getName().str()));
     break;
   case CmpInst::FCMP_OLE:
-    Signals->InsertSignal(new SCSig(MUX_LEU,F.getName().str()));
+    Signals->InsertSignal(new SCSig(MUX_LEU,1,F.getName().str()));
     break;
   case CmpInst::FCMP_ONE:
-    Signals->InsertSignal(new SCSig(MUX_EQ,F.getName().str()));
+    Signals->InsertSignal(new SCSig(MUX_EQ,1,F.getName().str()));
     break;
   case CmpInst::FCMP_ORD:
-    Signals->InsertSignal(new SCSig(MUX_NE,F.getName().str()));
+    Signals->InsertSignal(new SCSig(MUX_NE,1,F.getName().str()));
     break;
   case CmpInst::FCMP_UNO:
-    Signals->InsertSignal(new SCSig(MUX_NE,F.getName().str()));
+    Signals->InsertSignal(new SCSig(MUX_NE,1,F.getName().str()));
     break;
   case CmpInst::FCMP_UEQ:
-    Signals->InsertSignal(new SCSig(MUX_EQ,F.getName().str()));
+    Signals->InsertSignal(new SCSig(MUX_EQ,1,F.getName().str()));
     break;
   case CmpInst::FCMP_UGT:
-    Signals->InsertSignal(new SCSig(MUX_GTU,F.getName().str()));
+    Signals->InsertSignal(new SCSig(MUX_GTU,1,F.getName().str()));
     break;
   case CmpInst::FCMP_UGE:
-    Signals->InsertSignal(new SCSig(MUX_GEU,F.getName().str()));
+    Signals->InsertSignal(new SCSig(MUX_GEU,1,F.getName().str()));
     break;
   case CmpInst::FCMP_ULT:
-    Signals->InsertSignal(new SCSig(MUX_LTU,F.getName().str()));
+    Signals->InsertSignal(new SCSig(MUX_LTU,1,F.getName().str()));
     break;
   case CmpInst::FCMP_ULE:
-    Signals->InsertSignal(new SCSig(MUX_LEU,F.getName().str()));
+    Signals->InsertSignal(new SCSig(MUX_LEU,1,F.getName().str()));
     break;
   case CmpInst::FCMP_UNE:
-    Signals->InsertSignal(new SCSig(MUX_NE,F.getName().str()));
+    Signals->InsertSignal(new SCSig(MUX_NE,1,F.getName().str()));
     break;
   case CmpInst::FCMP_TRUE:
-    Signals->InsertSignal(new SCSig(MUX_EQ,F.getName().str()));
+    Signals->InsertSignal(new SCSig(MUX_EQ,1,F.getName().str()));
     break;
   case CmpInst::ICMP_EQ:
-    Signals->InsertSignal(new SCSig(MUX_EQ,F.getName().str()));
+    Signals->InsertSignal(new SCSig(MUX_EQ,1,F.getName().str()));
     break;
   case CmpInst::ICMP_NE:
-    Signals->InsertSignal(new SCSig(MUX_NE,F.getName().str()));
+    Signals->InsertSignal(new SCSig(MUX_NE,1,F.getName().str()));
     break;
   case CmpInst::ICMP_UGT:
-    Signals->InsertSignal(new SCSig(MUX_GTU,F.getName().str()));
+    Signals->InsertSignal(new SCSig(MUX_GTU,1,F.getName().str()));
     break;
   case CmpInst::ICMP_UGE:
-    Signals->InsertSignal(new SCSig(MUX_GEU,F.getName().str()));
+    Signals->InsertSignal(new SCSig(MUX_GEU,1,F.getName().str()));
     break;
   case CmpInst::ICMP_ULT:
-    Signals->InsertSignal(new SCSig(MUX_LTU,F.getName().str()));
+    Signals->InsertSignal(new SCSig(MUX_LTU,1,F.getName().str()));
     break;
   case CmpInst::ICMP_ULE:
-    Signals->InsertSignal(new SCSig(MUX_LEU,F.getName().str()));
+    Signals->InsertSignal(new SCSig(MUX_LEU,1,F.getName().str()));
     break;
   case CmpInst::ICMP_SGT:
-    Signals->InsertSignal(new SCSig(MUX_GT,F.getName().str()));
+    Signals->InsertSignal(new SCSig(MUX_GT,1,F.getName().str()));
     break;
   case CmpInst::ICMP_SGE:
-    Signals->InsertSignal(new SCSig(MUX_GE,F.getName().str()));
+    Signals->InsertSignal(new SCSig(MUX_GE,1,F.getName().str()));
     break;
   case CmpInst::ICMP_SLT:
-    Signals->InsertSignal(new SCSig(MUX_LT,F.getName().str()));
+    Signals->InsertSignal(new SCSig(MUX_LT,1,F.getName().str()));
     break;
   case CmpInst::ICMP_SLE:
-    Signals->InsertSignal(new SCSig(MUX_LE,F.getName().str()));
+    Signals->InsertSignal(new SCSig(MUX_LE,1,F.getName().str()));
     break;
   default:
-    Signals->InsertSignal(new SCSig(SIGUNK,F.getName().str()));
+    Signals->InsertSignal(new SCSig(SIGUNK,1,F.getName().str()));
     break;
   }
 
@@ -503,10 +503,10 @@ bool SCSigMap::CheckPCReq(Function &F){
   // create the signals
   if( !PCJump ){
     // create PCIncr signal
-    Signals->InsertSignal(new SCSig(PC_INCR,F.getName().str(),"PC_INCR"));
+    Signals->InsertSignal(new SCSig(PC_INCR,1,F.getName().str(),"PC_INCR"));
   }else{
     // create PCJmp signal
-    Signals->InsertSignal(new SCSig(PC_BRJMP,F.getName().str(),"PC_BRJMP"));
+    Signals->InsertSignal(new SCSig(PC_BRJMP,1,F.getName().str(),"PC_BRJMP"));
   }
 
   if( !Rtn )
