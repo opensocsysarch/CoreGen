@@ -350,6 +350,10 @@ void CoreGenYaml::WriteCoreYaml( YAML::Emitter *out,
       *out << YAML::Key << "RTLType";
       *out << YAML::Value << CGRTLToStr(Cores[i]->GetRTLType());
     }
+    if( Cores[i]->IsPlugin() ){
+      *out << YAML::Key << "Override"
+           << YAML::Value << Cores[i]->GetPlugin()->GetName();
+    }
 
     *out << YAML::EndMap;
   }
@@ -392,6 +396,10 @@ void CoreGenYaml::WriteSocYaml( YAML::Emitter *out,
       *out << YAML::Value << Socs[i]->GetRTLFile();
       *out << YAML::Key << "RTLType";
       *out << YAML::Value << CGRTLToStr(Socs[i]->GetRTLType());
+    }
+    if( Socs[i]->IsPlugin() ){
+      *out << YAML::Key << "Override"
+           << YAML::Value << Socs[i]->GetPlugin()->GetName();
     }
 
     *out << YAML::EndMap;
@@ -447,6 +455,10 @@ void CoreGenYaml::PrintCache( YAML::Emitter *out,
     *out << YAML::Key << "RTLType";
     *out << YAML::Value << CGRTLToStr(Cache->GetRTLType());
   }
+  if( Cache->IsPlugin() ){
+    *out << YAML::Key << "Override"
+         << YAML::Value << Cache->GetPlugin()->GetName();
+   }
 
   *out << YAML::EndMap;
 }
@@ -485,6 +497,10 @@ void CoreGenYaml::WriteISAYaml(YAML::Emitter *out,
       *out << YAML::Value << ISAs[i]->GetRTLFile();
       *out << YAML::Key << "RTLType";
       *out << YAML::Value << CGRTLToStr(ISAs[i]->GetRTLType());
+    }
+    if( ISAs[i]->IsPlugin() ){
+      *out << YAML::Key << "Override"
+           << YAML::Value << ISAs[i]->GetPlugin()->GetName();
     }
     *out << YAML::EndMap;
   }
@@ -555,6 +571,10 @@ void CoreGenYaml::WriteInstFormatYaml(YAML::Emitter *out,
       *out << YAML::Key << "RTLType";
       *out << YAML::Value << CGRTLToStr(Formats[i]->GetRTLType());
     }
+    if( Formats[i]->IsPlugin() ){
+      *out << YAML::Key << "Override"
+           << YAML::Value << Formats[i]->GetPlugin()->GetName();
+    }
 
     *out << YAML::EndMap; // End InstFormat->GetName()
   }
@@ -613,6 +633,10 @@ void CoreGenYaml::WriteInstYaml(YAML::Emitter *out,
       *out << YAML::Value << Insts[i]->GetRTLFile();
       *out << YAML::Key << "RTLType";
       *out << YAML::Value << CGRTLToStr(Insts[i]->GetRTLType());
+    }
+    if( Insts[i]->IsPlugin() ){
+      *out << YAML::Key << "Override"
+           << YAML::Value << Insts[i]->GetPlugin()->GetName();
     }
 
     *out << YAML::EndMap; // individual instruction
@@ -696,6 +720,10 @@ void CoreGenYaml::WriteRegClassYaml(YAML::Emitter *out,
       *out << YAML::Value << RegClasses[i]->GetRTLFile();
       *out << YAML::Key << "RTLType";
       *out << YAML::Value << CGRTLToStr(RegClasses[i]->GetRTLType());
+    }
+    if( RegClasses[i]->IsPlugin() ){
+      *out << YAML::Key << "Override"
+           << YAML::Value << RegClasses[i]->GetPlugin()->GetName();
     }
 
     *out << YAML::EndMap;
@@ -832,6 +860,10 @@ void CoreGenYaml::WriteRegYaml(YAML::Emitter *out,
       *out << YAML::Key << "RTLType";
       *out << YAML::Value << CGRTLToStr(Regs[i]->GetRTLType());
     }
+    if( Regs[i]->IsPlugin() ){
+      *out << YAML::Key << "Override"
+           << YAML::Value << Regs[i]->GetPlugin()->GetName();
+    }
 
     *out << YAML::EndMap;
   }
@@ -887,6 +919,10 @@ void CoreGenYaml::WriteCommYaml( YAML::Emitter *out,
       *out << YAML::Key << "RTLType";
       *out << YAML::Value << CGRTLToStr(Comms[i]->GetRTLType());
     }
+    if( Comms[i]->IsPlugin() ){
+      *out << YAML::Key << "Override"
+           << YAML::Value << Comms[i]->GetPlugin()->GetName();
+    }
 
     *out << YAML::EndMap;
   }
@@ -922,6 +958,10 @@ void CoreGenYaml::WriteSpadYaml( YAML::Emitter *out,
       *out << YAML::Key << "RTLType";
       *out << YAML::Value << CGRTLToStr(Spads[i]->GetRTLType());
     }
+    if( Spads[i]->IsPlugin() ){
+      *out << YAML::Key << "Override"
+           << YAML::Value << Spads[i]->GetPlugin()->GetName();
+    }
 
     *out << YAML::EndMap;
   }
@@ -951,6 +991,10 @@ void CoreGenYaml::WriteMCtrlYaml( YAML::Emitter *out,
       *out << YAML::Key << "RTLType";
       *out << YAML::Value << CGRTLToStr(MCtrls[i]->GetRTLType());
     }
+    if( MCtrls[i]->IsPlugin() ){
+      *out << YAML::Key << "Override"
+           << YAML::Value << MCtrls[i]->GetPlugin()->GetName();
+    }
 
     *out << YAML::EndMap;
   }
@@ -965,6 +1009,10 @@ void CoreGenYaml::WriteVTPYaml( YAML::Emitter *out,
     *out << YAML::BeginMap;
     *out << YAML::Key << "VTP";
     *out << YAML::Value << VTPs[i]->GetName();
+    if( VTPs[i]->IsPlugin() ){
+      *out << YAML::Key << "Override"
+           << YAML::Value << VTPs[i]->GetPlugin()->GetName();
+    }
     *out << YAML::EndMap;
   }
   *out << YAML::EndSeq;
