@@ -67,6 +67,8 @@ private:
 
   std::vector<std::string> CNames; ///< CoreGenYaml: Cache printer storage
 
+  std::vector<CoreGenPlugin *> *PluginPtr;  ///< CoreGenYaml: Pointer to plugin vector
+
   /// Determine if the YAML node name is valid
   bool IsValidName(std::string Name);
 
@@ -240,6 +242,7 @@ private:
                      std::vector<CoreGenExt *>  &Exts,
                      std::vector<CoreGenPlugin *> &Plugins );
 
+  /// Convert a node name to the target CoreGenNode pointer
   CoreGenNode *NameToNode( std::string Target,
                            std::vector<CoreGenSoC *>  &Socs,
                            std::vector<CoreGenCore *>  &Cores,
@@ -256,9 +259,14 @@ private:
                            std::vector<CoreGenVTP *> &VTPs,
                            std::vector<CoreGenExt *>  &Exts,
                            std::vector<CoreGenPlugin *> &Plugins );
+
+  /// Determine if the target node is a duplicate
   bool IsDuplicate( const YAML::Node Node,
                     CoreGenNode *N,
                     std::vector<CoreGenNode *> V);
+
+  /// Checks the target name against the known set of plugin nodes
+  CoreGenNode *CheckOverridePlugin(std::string Name);
 
 public:
   /// Default Constructor
