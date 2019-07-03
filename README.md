@@ -239,6 +239,7 @@ make
 * -DBUILD\_COREGEN\_DAG\_INDIVIDUALPASS\_KNOWNPASS\_REGIDXPASS\_TESTING=ON : Enable DAG's individual pass test harness for the RegIdxPass
 * -DBUILD\_COREGEN\_DAG\_INDIVIDUALPASS\_KNOWNPASS\_CACHELEVELPASS\_TESTING=ON : Enable DAG's individual pass test harness for the CacheLevelPass
 * -DBUILD\_COREGEN\_DAG\_INDIVIDUALPASS\_KNOWNPASS\_REGSAFETYPASS\_TESTING=ON : Enable DAG's individual pass test harness for the RegSafetyPass
+* -DBUILD\_COREGEN\_DAG\_INDIVIDUALPASS\_KNOWNPASS\_SPADSAFETYPASS\_TESTING=ON : Enable DAG's individual pass test harness for the SpadSafetyPass
 * -DBUILD\_COREGEN\_DAG\_INDIVIDUALPASS\_KNOWNPASS\_ICACHECHECKERPASS\_TESTING=ON : Enable DAG's individual pass test harness for the RegSafetyPass
 * -DBUILD\_COREGEN\_DAG\_INDIVIDUALPASS\_KNOWNPASS\_L1SHAREDPASS\_TESTING=ON : Enable DAG's individual pass test harness for the RegSafetyPass
 * -DBUILD\_COREGEN\_DAG\_INDIVIDUALPASS\_KNOWNPASS\_REGFIELDPASS\_TESTING=ON : Enable DAG's individual pass test harness for the RegSafetyPass
