@@ -70,12 +70,17 @@ bool SCExec::Exec(){
     LTmpFile = std::string(tmpname);
     OTmpFile = Opts->GetOutputFile();
     if( OTmpFile.length() == 0 ){
-      OTmpFile = "scc.out";
+      OTmpFile = "scc.chisel";
     }
   }else{
     // single file
     LTmpFile = Opts->GetInputFile(0);
-    OTmpFile = LTmpFile;
+    //LTmpFile = Opts->GetOutputFile();
+    //OTmpFile = LTmpFile;
+    OTmpFile = Opts->GetOutputFile();
+    if( OTmpFile.length() == 0 ){
+      OTmpFile = LTmpFile + ".chisel";
+    }
   }
 
   // Read the file into a buffer
@@ -188,7 +193,8 @@ bool SCExec::Exec(){
 
     // Generate the Chisel output
     CCG = new SCChiselCodeGen(Parser,Opts,Msgs,
-                              OTmpFile + ".chisel" );
+                              OTmpFile );
+                              //OTmpFile + ".chisel" );
     if( Opts->IsSignalMap() ){
       if( !CCG->GenerateSignalMap(Opts->GetSignalMapFile()) ){
         Msgs->PrintMsg( L_ERROR, "Failed to generate signal map for " +
