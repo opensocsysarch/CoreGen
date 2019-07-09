@@ -179,6 +179,36 @@ bool SCExec::Exec(){
 
   SCChiselCodeGen *CCG = nullptr;
 
+  if( Opts->IsSignalMap() ){
+    if( !Opts->IsIR() ){
+      Msgs->PrintMsg( L_ERROR, "LLVM IR is required for signal map output" );
+      delete CG;
+      delete Parser;
+      if( Opts->GetNumInputFiles() > 1 ){
+        SCDeleteFile(LTmpFile);
+      }
+      return false;
+    }
+
+    // Generate the Chisel output
+    CCG = new SCChiselCodeGen(Parser,Opts,Msgs,
+                              OTmpFile );
+
+    if( !CCG->GenerateSignalMap(Opts->GetSignalMapFile()) ){
+      Msgs->PrintMsg( L_ERROR, "Failed to generate signal map for " +
+                      LTmpFile );
+      delete CCG;
+      if( CG ){
+        delete CG;
+      }
+      delete Parser;
+      if( Opts->GetNumInputFiles() > 1 ){
+        SCDeleteFile(LTmpFile);
+      }
+      return false;
+    }
+  }
+
   // Do we generate Chisel?
   if( Opts->IsChisel() ){
     if( !Opts->IsIR() ){
@@ -192,9 +222,12 @@ bool SCExec::Exec(){
     }
 
     // Generate the Chisel output
-    CCG = new SCChiselCodeGen(Parser,Opts,Msgs,
-                              OTmpFile );
-                              //OTmpFile + ".chisel" );
+    if( CCG == nullptr ){
+      CCG = new SCChiselCodeGen(Parser,Opts,Msgs,
+                                OTmpFile );
+    }
+
+#if 0
     // generate the signal map
     if( Opts->IsSignalMap() ){
       if( !CCG->GenerateSignalMap(Opts->GetSignalMapFile()) ){
@@ -211,7 +244,7 @@ bool SCExec::Exec(){
         return false;
       }
     }
-
+#endif
     // generate the output chisel
     if( !CCG->GenerateChisel() ){
       Msgs->PrintMsg( L_ERROR, "Failed to generate Chisel for " +
