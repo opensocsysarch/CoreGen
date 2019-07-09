@@ -96,13 +96,11 @@ bool SCChiselCodeGen::ExecutePasses(){
   return rtn;
 }
 
-bool SCChiselCodeGen::ExecuteCodegen(){
+bool SCChiselCodeGen::ExecuteUcodeCodegen(){
+  return true;
+}
 
-  // Execute all the necessary passes
-  if( !ExecutePasses() ){
-    return false;
-  }
-
+bool SCChiselCodeGen::ExecuteManualCodegen(){
   // walk all the functions in the module
   for( auto curFref = SCParser::TheModule->begin(),
             endFref = SCParser::TheModule->end();
@@ -122,6 +120,27 @@ bool SCChiselCodeGen::ExecuteCodegen(){
   }
 
   return true;
+}
+
+bool SCChiselCodeGen::ExecuteCodegen(){
+
+  // Execute all the necessary passes
+  if( !ExecutePasses() ){
+    return false;
+  }
+
+  // attempt to read the signal map back out
+  CoreGenSigMap *CSM = nullptr;
+  if( SigMap.length() > 0 ){
+    CSM = new CoreGenSigMap();
+    if( !CSM->ReadSigMap( SigMap ) ){
+      Msgs->PrintMsg( L_ERROR, "Could not read signal map from file: " + SigMap );
+      return false;
+    }
+    return ExecuteUcodeCodegen();
+  }else{
+    return ExecuteManualCodegen();
+  }
 }
 
 bool SCChiselCodeGen::ExecuteSignalMap(){

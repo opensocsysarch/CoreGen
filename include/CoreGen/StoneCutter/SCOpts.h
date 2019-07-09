@@ -62,6 +62,9 @@ private:
   std::string OutFile;  ///< SCOpts: Output file designator
   std::string SigMap;   ///< SCOpts: Signal map output file
 
+  std::string Package;  ///< SCOpts: Chisel package name
+  std::string ISA;      ///< SCOpts: Chisel ISA name
+
   std::vector<std::string> FileList;  ///< SCOpts: List of files to compile
 
   std::vector<std::string> EnablePass;  ///< SCOpts: List of enabled passes
@@ -82,6 +85,9 @@ private:
   /// Split the options list by commas
   void Split(const std::string &s, char delim,
              std::vector<std::string>& v);
+
+  /// Derives the ISA name from the path
+  std::string GetISANameFromPath();
 
 public:
   /// SCOpts: Constructor
@@ -143,6 +149,18 @@ public:
 
   /// SCOpts: Get the target input file
   std::string GetInputFile( unsigned );
+
+  /// SCOpts: Get the package name
+  std::string GetPackage(){ return Package; }
+
+  /// SCOpts: Get the ISA name
+  std::string GetISA(){ return ISA; }
+
+  /// SCOpts: Set the package name
+  bool SetPackage( std::string P ){ Package = P; return true; }
+
+  /// SCOpts: Set the ISA name
+  bool SetISA( std::string I ){ ISA = I; return true; }
 
   /// SCOpts: Set the output file name
   bool SetOutputFile( std::string O ){ OutFile = O; return true; }

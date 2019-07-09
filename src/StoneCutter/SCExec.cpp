@@ -195,6 +195,7 @@ bool SCExec::Exec(){
     CCG = new SCChiselCodeGen(Parser,Opts,Msgs,
                               OTmpFile );
                               //OTmpFile + ".chisel" );
+    // generate the signal map
     if( Opts->IsSignalMap() ){
       if( !CCG->GenerateSignalMap(Opts->GetSignalMapFile()) ){
         Msgs->PrintMsg( L_ERROR, "Failed to generate signal map for " +
@@ -209,7 +210,10 @@ bool SCExec::Exec(){
         }
         return false;
       }
-    }else if( !CCG->GenerateChisel() ){
+    }
+
+    // generate the output chisel
+    if( !CCG->GenerateChisel() ){
       Msgs->PrintMsg( L_ERROR, "Failed to generate Chisel for " +
                       LTmpFile );
       delete CCG;
