@@ -227,24 +227,6 @@ bool SCExec::Exec(){
                                 OTmpFile );
     }
 
-#if 0
-    // generate the signal map
-    if( Opts->IsSignalMap() ){
-      if( !CCG->GenerateSignalMap(Opts->GetSignalMapFile()) ){
-        Msgs->PrintMsg( L_ERROR, "Failed to generate signal map for " +
-                        LTmpFile );
-        delete CCG;
-        if( CG ){
-          delete CG;
-        }
-        delete Parser;
-        if( Opts->GetNumInputFiles() > 1 ){
-          SCDeleteFile(LTmpFile);
-        }
-        return false;
-      }
-    }
-#endif
     // generate the output chisel
     if( !CCG->GenerateChisel() ){
       Msgs->PrintMsg( L_ERROR, "Failed to generate Chisel for " +
