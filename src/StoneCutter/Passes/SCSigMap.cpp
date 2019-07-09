@@ -214,6 +214,8 @@ bool SCSigMap::TranslateCallSig(Function &F, Instruction &I){
     }
   }
 
+  // no intrinsic was found for the callee
+  this->PrintMsg( L_ERROR, "No intrinsic found for " + Callee );
   return false;
 }
 
