@@ -154,8 +154,10 @@ bool SCChiselCodeGen::ExecuteManualCodegen(){
 bool SCChiselCodeGen::ExecuteCodegen(){
 
   // Execute all the necessary passes
-  if( !ExecutePasses() ){
-    return false;
+  if( !Opts->IsPassRun() ){
+    if( !ExecutePasses() ){
+      return false;
+    }
   }
 
   // attempt to read the signal map back out
@@ -219,6 +221,8 @@ bool SCChiselCodeGen::GenerateSignalMap(std::string SM){
     Msgs->PrintMsg( L_ERROR, "Failed to execute passes for signal map" );
     return false;
   }
+
+  Opts->PassRun();
 
   if( !ExecuteSignalMap() ){
     Msgs->PrintMsg( L_ERROR, "Failed to generate signal map" );

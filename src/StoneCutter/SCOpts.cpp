@@ -16,6 +16,7 @@ SCOpts::SCOpts(SCMsg *M, int A, char **C)
   isKeep(false), isParse(true), isIR(true),
   isOptimize(true), isChisel(true), isCG(false), isVerbose(false),
   isDisable(false), isEnable(false), isListPass(false), isSigMap(false),
+  isPassRun(false),
   Msgs(M) {}
 
 // ------------------------------------------------- DESTRUCTOR

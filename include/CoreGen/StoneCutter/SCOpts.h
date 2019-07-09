@@ -62,6 +62,7 @@ private:
   bool isEnable;    ///< SCOpts: Manually disabled passes flag
   bool isListPass;  ///< SCOpts: User selected pass listing flag
   bool isSigMap;    ///< SCOpts: Signal map selected
+  bool isPassRun;   ///< SCOpts: Have the passes been executed?
 
   std::string OutFile;  ///< SCOpts: Output file designator
   std::string SigMap;   ///< SCOpts: Signal map output file
@@ -138,6 +139,12 @@ public:
 
   /// SCOpts: Is signal map enabled?
   bool IsSignalMap() { return isSigMap; }
+
+  /// SCOpts: Have the passes been executed()?
+  bool IsPassRun() { return isPassRun; }
+
+  /// SCOpts: Notify the options object that the passes have been run
+  void PassRun() { isPassRun = true; }
 
   /// SCOpts: Retrieve the list of disabled passes
   std::vector<std::string> GetDisabledPass() { return DisablePass; }
