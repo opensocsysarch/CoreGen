@@ -39,6 +39,12 @@ void SCOpts::Split(const std::string& s, char delim,
   }
 }
 
+// ------------------------------------------------- SCREMOVEDOT
+std::string SCOpts::SCRemoveDot( std::string in ){
+  std::string out = in;
+  out.erase(std::remove(out.begin(),out.end(),'.'),out.end());
+  return out;
+}
 // ------------------------------------------------- GETISANAME
 std::string SCOpts::GetISANameFromPath(){
   std::string FilePath = FileList[0];
@@ -52,8 +58,8 @@ std::string SCOpts::GetISANameFromPath(){
   bool withExtension = false;
 
   if( sepPos != std::string::npos ){
-    return FilePath.substr( sepPos + 1,
-                            FilePath.size() - (withExtension || dotPos != std::string::npos ? 1 : dotPos) );
+    return SCRemoveDot(FilePath.substr( sepPos + 1,
+                            FilePath.size() - (withExtension || dotPos != std::string::npos ? 1 : dotPos) ));
   }
   return "";
 }

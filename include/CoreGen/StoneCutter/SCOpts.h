@@ -26,6 +26,10 @@
 #include <vector>
 #include <streambuf>
 
+#include <fstream>
+#include <sstream>
+#include <algorithm>
+
 // StoneCutter Headers
 #include "CoreGen/StoneCutter/SCMsg.h"
 
@@ -88,6 +92,9 @@ private:
 
   /// Derives the ISA name from the path
   std::string GetISANameFromPath();
+
+  /// Removes any dots in the ISA name
+  std::string SCRemoveDot(std::string);
 
 public:
   /// SCOpts: Constructor

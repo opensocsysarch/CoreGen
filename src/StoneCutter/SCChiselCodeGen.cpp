@@ -97,6 +97,35 @@ bool SCChiselCodeGen::ExecutePasses(){
 }
 
 bool SCChiselCodeGen::ExecuteUcodeCodegen(){
+  // retrieve the package and isa names
+  std::string Package = Opts->GetPackage();
+  std::string ISA = Opts->GetISA();
+
+  if( Package.length() == 0 ){
+    Package = ISA;
+  }
+
+  // write the package info and required chisel packages
+  OutFile << "package " << Package << std::endl;
+  OutFile << "{" << std::endl;
+
+  OutFile << "import chisel3._" << std::endl;
+  OutFile << "import chisel3.util._" << std::endl;
+  OutFile << "import Constants._" << std::endl;
+  OutFile << "import Common._" << std::endl;
+
+  // write out the microcode object
+  OutFile << "object " << ISA << "Microcode" << std::endl;
+  OutFile << "{" << std::endl;
+  OutFile << "\tval codes = Array[" << ISA << "MicroOp](" << std::endl;
+
+
+  OutFile << "\t)" << std::endl;
+  OutFile << "}" << std::endl;
+
+  // write the footer
+  OutFile << "}" << std::endl;
+
   return true;
 }
 
