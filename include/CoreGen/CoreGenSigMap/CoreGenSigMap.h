@@ -67,6 +67,9 @@ private:
   /// Converts the string to a signal name
   SigType StrToSigType( std::string Sig );
 
+  /// Converst the string to a fused op name
+  FusedOpType StrToFusedOpType( std::string Fop );
+
 public:
 
   /// Default constructor

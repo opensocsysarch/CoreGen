@@ -114,6 +114,8 @@ bool SCChiselCodeGen::ExecuteUcodeCodegen(){
   OutFile << "import Constants._" << std::endl;
   OutFile << "import Common._" << std::endl;
 
+  // TODO: generate all the temporary registers inside the core
+
   // write out the microcode object
   OutFile << "object " << ISA << "Microcode" << std::endl;
   OutFile << "{" << std::endl;

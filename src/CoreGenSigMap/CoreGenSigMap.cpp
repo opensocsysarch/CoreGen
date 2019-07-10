@@ -118,6 +118,21 @@ bool CoreGenSigMap::WriteSigMap( std::string File ){
   return true;
 }
 
+FusedOpType CoreGenSigMap::StrToFusedOpType( std::string Fop ){
+  if( Fop == "FOP_UNK" ){
+    return FOP_UNK;
+  }else if( Fop == "FOP_SEXT" ){
+    return FOP_SEXT;
+  }else if( Fop == "FOP_ZEXT" ){
+    return FOP_ZEXT;
+  }else if( Fop == "FOP_NOT" ){
+    return FOP_NOT;
+  }else if( Fop == "FOP_NEG" ){
+    return FOP_NEG;
+  }
+  return FOP_UNK;
+}
+
 SigType CoreGenSigMap::StrToSigType( std::string Sig ){
   if( Sig == "SIGUNK" ){
     return SIGUNK;
@@ -267,7 +282,17 @@ bool CoreGenSigMap::ReadInstSignals(const YAML::Node& InstNodes){
           return false;
         unsigned Width = LSNode["Width"].as<unsigned>();
 
+        std::string FusedOp;
+        if( CheckValidNode(LSNode,"FusedOp") ){
+          FusedOp = LSNode["FusedOp"].as<std::string>();
+        }
+
         Signals.push_back(new SCSig(Type,Width,Name,SigName));
+        if( FusedOp.length() > 0 ){
+          // write the fused op to the latest signal
+          FusedOpType FType = StrToFusedOpType(FusedOp);
+          Signals[Signals.size()-1]->SetFusedType(FType);
+        }
       }
     }
   }
@@ -408,6 +433,8 @@ bool CoreGenSigMap::WriteInstSignals(YAML::Emitter *out){
       *out << YAML::Key << "Signal" << YAML::Value << CSigs[j]->GetName();
       *out << YAML::Key << "Type" << YAML::Value << CSigs[j]->SigTypeToStr();
       *out << YAML::Key << "Width" << YAML::Value << CSigs[j]->GetWidth();
+      if( CSigs[j]->GetFusedType() != FOP_UNK )
+        *out << YAML::Key << "FusedOp" << YAML::Value << CSigs[j]->FusedOpTypeToStr();
       *out << YAML::EndMap;
     }
     *out << YAML::EndSeq;
