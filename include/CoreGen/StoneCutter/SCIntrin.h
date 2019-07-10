@@ -54,7 +54,8 @@ public:
   SCIntrin();
 
   /// Overloaded Constructor
-  SCIntrin( unsigned NI, std::string K ) : NumInputs(NI), Keyword(K) {}
+  SCIntrin( unsigned NI, std::string K, bool F )
+    : NumInputs(NI), Keyword(K), isFOp(F) {}
 
   /// Standard destructor
   ~SCIntrin() {};
@@ -64,6 +65,9 @@ public:
 
   /// Retrieve the target keyword
   std::string GetKeyword() { return Keyword; }
+
+  /// Determine whether the target intrinsic implements a fused operation
+  bool IsFusedOp() { return isFOp; }
 
   // virtual functions
 
@@ -84,6 +88,7 @@ protected:
 private:
   unsigned NumInputs;               ///< Number of required input arguments
   std::string Keyword;              ///< Intrinsic Keyword
+  bool isFOp;                       ///< Is the intrinsic a fused operation?
 };
 
 #endif

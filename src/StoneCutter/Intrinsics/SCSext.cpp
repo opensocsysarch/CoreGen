@@ -9,13 +9,12 @@
 //
 
 #include "CoreGen/StoneCutter/Intrinsics/SCSext.h"
-#include <iostream>
 
-SCSext::SCSext() : SCIntrin(2,"SEXT") {
+SCSext::SCSext() : SCIntrin(2,"SEXT",true) {
   // no signals
 }
 
-SCSext::SCSext(unsigned NI, std::string K) : SCIntrin(NI,K) {
+SCSext::SCSext(unsigned NI, std::string K) : SCIntrin(NI,K,true) {
 }
 
 SCSext::~SCSext(){
@@ -28,7 +27,7 @@ Value *SCSext::codegen(){
 bool SCSext::GetSigMap(CoreGenSigMap *Sigs,
                            Instruction &I,
                            std::string Inst){
-  return Sigs->GetSignal(Sigs->GetNumSignals()-2)->SetFusedType(FOP_SEXT);
+  return Sigs->GetSignal(Sigs->GetNumSignals()-1)->SetFusedType(FOP_SEXT);
 }
 
 // EOF

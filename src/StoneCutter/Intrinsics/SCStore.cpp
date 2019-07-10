@@ -10,10 +10,10 @@
 
 #include "CoreGen/StoneCutter/Intrinsics/SCStore.h"
 
-SCStore::SCStore() : SCIntrin(2,"STORE") {
+SCStore::SCStore() : SCIntrin(2,"STORE",false) {
 }
 
-SCStore::SCStore(unsigned NI, std::string K) : SCIntrin(NI,K) {
+SCStore::SCStore(unsigned NI, std::string K) : SCIntrin(NI,K,false) {
 }
 
 SCStore::~SCStore(){

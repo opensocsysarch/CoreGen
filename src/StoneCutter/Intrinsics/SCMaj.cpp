@@ -10,14 +10,18 @@
 
 #include "CoreGen/StoneCutter/Intrinsics/SCMaj.h"
 
-SCMaj::SCMaj() : SCIntrin(3,"MAJ") {
+SCMaj::SCMaj() : SCIntrin(3,"MAJ",false) {
   ISignals.push_back(new SCSig(MUX_GT));
   ISignals.push_back(new SCSig(MUX_LT));
   ISignals.push_back(new SCSig(ALU_SUB));
   ISignals.push_back(new SCSig(MUX));
 }
 
-SCMaj::SCMaj(unsigned NI, std::string K) : SCIntrin(NI,K) {
+SCMaj::SCMaj(unsigned NI, std::string K) : SCIntrin(NI,K,false) {
+  ISignals.push_back(new SCSig(MUX_GT));
+  ISignals.push_back(new SCSig(MUX_LT));
+  ISignals.push_back(new SCSig(ALU_SUB));
+  ISignals.push_back(new SCSig(MUX));
 }
 
 SCMaj::~SCMaj(){

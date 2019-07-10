@@ -10,10 +10,10 @@
 
 #include "CoreGen/StoneCutter/Intrinsics/SCLoad.h"
 
-SCLoad::SCLoad() : SCIntrin(1,"LOAD") {
+SCLoad::SCLoad() : SCIntrin(1,"LOAD",false) {
 }
 
-SCLoad::SCLoad(unsigned NI, std::string K) : SCIntrin(NI,K) {
+SCLoad::SCLoad(unsigned NI, std::string K) : SCIntrin(NI,K,false) {
 }
 
 SCLoad::~SCLoad(){

@@ -66,6 +66,9 @@ private:
   /// Translates the I/O operands to signals
   bool TranslateOperands( Function &F, Instruction &I );
 
+  /// Translates the target operand (instruction name)  to signals
+  bool TranslateTargetOperands( Function &F, Instruction &I );
+
   /// Translates the instruction I/O operans to PC enable signals
   bool TranslatePCSig( Instruction &I, bool &PCJump );
 

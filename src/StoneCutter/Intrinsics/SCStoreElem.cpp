@@ -10,10 +10,10 @@
 
 #include "CoreGen/StoneCutter/Intrinsics/SCStoreElem.h"
 
-SCStoreElem::SCStoreElem() : SCIntrin(3,"STOREELEM") {
+SCStoreElem::SCStoreElem() : SCIntrin(3,"STOREELEM",false) {
 }
 
-SCStoreElem::SCStoreElem(unsigned NI, std::string K) : SCIntrin(NI,K) {
+SCStoreElem::SCStoreElem(unsigned NI, std::string K) : SCIntrin(NI,K,false) {
 }
 
 SCStoreElem::~SCStoreElem(){
