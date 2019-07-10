@@ -24,4 +24,10 @@ Value *SCNot::codegen(){
   return nullptr;
 }
 
+bool SCNot::GetSigMap(CoreGenSigMap *Sigs,
+                           Instruction &I,
+                           std::string Inst){
+  return Sigs->GetSignal(Sigs->GetNumSignals()-1)->SetFusedType(FOP_NOT);
+}
+
 // EOF

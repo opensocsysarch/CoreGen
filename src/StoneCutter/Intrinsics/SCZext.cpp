@@ -24,4 +24,10 @@ Value *SCZext::codegen(){
   return nullptr;
 }
 
+bool SCZext::GetSigMap(CoreGenSigMap *Sigs,
+                           Instruction &I,
+                           std::string Inst){
+  return Sigs->GetSignal(Sigs->GetNumSignals()-2)->SetFusedType(FOP_ZEXT);
+}
+
 // EOF
