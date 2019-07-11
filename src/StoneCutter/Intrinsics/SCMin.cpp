@@ -10,12 +10,14 @@
 
 #include "CoreGen/StoneCutter/Intrinsics/SCMin.h"
 
-SCMin::SCMin() : SCIntrin(2,"MIN") {
+SCMin::SCMin() : SCIntrin(2,"MIN",false) {
   ISignals.push_back(new SCSig(MUX_LE));
   ISignals.push_back(new SCSig(MUX));
 }
 
-SCMin::SCMin(unsigned NI, std::string K) : SCIntrin(NI,K) {
+SCMin::SCMin(unsigned NI, std::string K) : SCIntrin(NI,K,false) {
+  ISignals.push_back(new SCSig(MUX_LE));
+  ISignals.push_back(new SCSig(MUX));
 }
 
 SCMin::~SCMin(){

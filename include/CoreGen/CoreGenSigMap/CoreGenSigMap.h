@@ -67,6 +67,9 @@ private:
   /// Converts the string to a signal name
   SigType StrToSigType( std::string Sig );
 
+  /// Converst the string to a fused op name
+  FusedOpType StrToFusedOpType( std::string Fop );
+
 public:
 
   /// Default constructor
@@ -80,6 +83,12 @@ public:
 
   /// Retrieves the target signal from the signal map
   SCSig *GetSignal( unsigned Idx );
+
+  /// Retrieves the maximum signal width for the target signal
+  unsigned GetMaxSignalWidth( unsigned Idx );
+
+  /// Retrieves the minimum signal width for the target signal
+  unsigned GetMinSignalWidth( unsigned Idx );
 
   /// Retrieves the number of signals in the signal map
   unsigned GetNumSignals() { return Signals.size(); }

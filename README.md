@@ -239,6 +239,7 @@ make
 * -DBUILD\_COREGEN\_DAG\_INDIVIDUALPASS\_KNOWNPASS\_REGIDXPASS\_TESTING=ON : Enable DAG's individual pass test harness for the RegIdxPass
 * -DBUILD\_COREGEN\_DAG\_INDIVIDUALPASS\_KNOWNPASS\_CACHELEVELPASS\_TESTING=ON : Enable DAG's individual pass test harness for the CacheLevelPass
 * -DBUILD\_COREGEN\_DAG\_INDIVIDUALPASS\_KNOWNPASS\_REGSAFETYPASS\_TESTING=ON : Enable DAG's individual pass test harness for the RegSafetyPass
+* -DBUILD\_COREGEN\_DAG\_INDIVIDUALPASS\_KNOWNPASS\_SPADSAFETYPASS\_TESTING=ON : Enable DAG's individual pass test harness for the SpadSafetyPass
 * -DBUILD\_COREGEN\_DAG\_INDIVIDUALPASS\_KNOWNPASS\_ICACHECHECKERPASS\_TESTING=ON : Enable DAG's individual pass test harness for the RegSafetyPass
 * -DBUILD\_COREGEN\_DAG\_INDIVIDUALPASS\_KNOWNPASS\_L1SHAREDPASS\_TESTING=ON : Enable DAG's individual pass test harness for the RegSafetyPass
 * -DBUILD\_COREGEN\_DAG\_INDIVIDUALPASS\_KNOWNPASS\_REGFIELDPASS\_TESTING=ON : Enable DAG's individual pass test harness for the RegSafetyPass
@@ -249,6 +250,7 @@ make
 * -DBUILD\_COREGEN\_DAG\_INDIVIDUALPASS\_KNOWNPASS\_PINSTSAFETYPASS\_TESTING=ON : Enable DAG's individual pass test harness for the RegSafetyPass
 * -DBUILD\_COREGEN\_DAG\_INDIVIDUALPASS\_KNOWNFAIL\_TESTING=ON : Enable DAG's individual pass test harness for known fail tests
 * -DBUILD\_COREGEN\_DAG\_INDIVIDUALPASS\_KNOWNFAIL\_ASP\_TESTING=ON : Enable DAG's individual ASP pass test harness for known fail tests
+* -DBUILD\_COREGEN\_DAG\_DELETENODE\_TESTING=ON : Enable DAG's node deletion test harness
 * -DBUILD\_COREGEN\_PLUGIN\_TESTING=ON : Enable plugin test harness
 * -DBUILD\_COREGEN\_YAML\_TESTING=ON : Enable yaml test harness
 * -DBUILD\_COREGEN\_YAML\_READER\_TESTING=ON : Enable yaml reader test harness

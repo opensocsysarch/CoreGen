@@ -15,6 +15,7 @@ CacheLevelPass.cpp
 RegIdxPass.cpp
 RegFieldPass.cpp
 RegSafetyPass.cpp
+SpadSafetyPass.cpp
 CoreSafetyPass.cpp
 L1SharedPass.cpp
 MultSoCPass.cpp

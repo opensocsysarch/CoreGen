@@ -23,6 +23,20 @@
 #include <string>
 
 typedef enum{
+  // Generic fused ops
+  FOP_UNK   = 0,            ///< FusedOpType: unknown fused operation
+
+  // Field manipulations
+  FOP_SEXT  = 10,           ///< FusedOpType: sign extension
+  FOP_ZEXT  = 11,           ///< FusedOpType: zero extension
+
+  // Bit manipulations
+  FOP_NOT   = 20,           ///< FusedOpType: bit complement
+  FOP_NEG   = 21            ///< FusedOpType: negation
+
+}FusedOpType;               ///< CoreGenSigMap: Emumerated types to represent fused micro ops
+
+typedef enum{
   // Generic signals
   SIGUNK    = 0,            ///< SigType: Unknown generic signal
   SIGINSTF  = 1,            ///< SigType: Instruction field
@@ -99,6 +113,7 @@ typedef enum{
 class SCSig{
 private:
   SigType Type;             ///< SCSig: Signal type
+  FusedOpType FType;        ///< SCSig: Fused of type
   unsigned SigWidth;        ///< SCSig: Width of the target signal (in bits)
   std::string Inst;         ///< SCSig: Name of the instruction
   std::string Name;         ///< SCSig: Name of the signal
@@ -128,6 +143,9 @@ public:
   /// Converts the signal name to a std::string
   const std::string SigTypeToStr();
 
+  /// Converts the fused op type to a std::string
+  const std::string FusedOpTypeToStr();
+
   /// Returns true if the target signal is an ALU signal
   bool isALUSig();
 
@@ -143,8 +161,14 @@ public:
   /// Sets the signal type
   bool SetType( SigType Type );
 
+  /// Sets the fused operation type
+  bool SetFusedType( FusedOpType Type );
+
   /// Retrieves the signal type
   SigType GetType() { return Type; }
+
+  /// Retrieves the fused type
+  FusedOpType GetFusedType() { return FType; }
 
   /// Sets the width of the target signal
   bool SetWidth( unsigned Width );

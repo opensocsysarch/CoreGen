@@ -14,28 +14,45 @@ SCSig::SCSig(SigType T) : Type(T), SigWidth(0){
   Name = this->SigTypeToStr();
 }
 
-SCSig::SCSig(SigType T,unsigned W) : Type(T), SigWidth(W){
+SCSig::SCSig(SigType T,unsigned W) : Type(T), FType(FOP_UNK), SigWidth(W){
   Name = this->SigTypeToStr();
 }
 
-SCSig::SCSig(SigType T,std::string I) : Type(T), SigWidth(0), Inst(I){
+SCSig::SCSig(SigType T,std::string I)
+  : Type(T), FType(FOP_UNK), SigWidth(0), Inst(I){
   Name = this->SigTypeToStr();
 }
 
 SCSig::SCSig(SigType T,unsigned W,std::string I)
-  : Type(T), SigWidth(W), Inst(I){
+  : Type(T), FType(FOP_UNK), SigWidth(W), Inst(I){
   Name = this->SigTypeToStr();
 }
 
 SCSig::SCSig(SigType T,std::string I,std::string N)
-  : Type(T), SigWidth(0), Inst(I), Name(N){
+  : Type(T), FType(FOP_UNK), SigWidth(0), Inst(I), Name(N){
 }
 
 SCSig::SCSig(SigType T,unsigned W,std::string I,std::string N)
-  : Type(T), SigWidth(W), Inst(I), Name(N){
+  : Type(T), FType(FOP_UNK), SigWidth(W), Inst(I), Name(N){
 }
 
 SCSig::~SCSig(){
+}
+
+bool SCSig::SetFusedType( FusedOpType T ){
+  switch( T ){
+  case FOP_UNK:
+  case FOP_SEXT:
+  case FOP_ZEXT:
+  case FOP_NOT:
+  case FOP_NEG:
+    FType = T;
+    return true;
+    break;
+  default:
+    return false;
+    break;
+  }
 }
 
 bool SCSig::SetType( SigType T ){
@@ -100,7 +117,6 @@ bool SCSig::SetType( SigType T ){
   default:
     return false;
   }
-  return true;
 }
 
 bool SCSig::SetWidth( unsigned W ){
@@ -140,6 +156,29 @@ bool SCSig::isBranchSig(){
   if( (Type>PC_JALR) && (Type<REG_READ) )
     return true;
   return false;
+}
+
+const std::string SCSig::FusedOpTypeToStr(){
+  switch( FType ){
+  case FOP_SEXT:
+    return "FOP_SEXT";
+    break;
+  case FOP_ZEXT:
+    return "FOP_ZEXT";
+    break;
+  case FOP_NOT:
+    return "FOP_NOT";
+    break;
+  case FOP_NEG:
+    return "FOP_NEG";
+    break;
+  case FOP_UNK:
+    break;
+  default:
+    return "FOP_UNK";
+    break;
+  }
+  return "FOP_UNK";
 }
 
 const std::string SCSig::SigTypeToStr(){

@@ -38,7 +38,6 @@ private:
   bool ExecSysPass;     ///< CGCLIOpts: Execute a system pass
   bool ASPSolver;       ///< CGCLIOpts: Execute the ASP Solver
   bool ASPClean;        ///< CGCLIOpts: Clean up the ASP DAG file
-  bool SigInput;        ///< CGCLIOpts: Is there a signal map file included?
 
   std::string IRFile;   ///< CGCLIOpts: Input IR File
   std::string OutFile;  ///< CGCLIOpts: Output IR File
@@ -46,7 +45,6 @@ private:
   std::string ProjName; ///< CGCLIOpts: Project Name
   std::string ProjRoot; ///< CGCLIOpts: Project Root
   std::string Archive;  ///< CGCLIOpts: Archive Path
-  std::string SigMap;   ///< CGCLIOpts: Signal Map Input File
 
   std::vector<std::string> EnablePass;  ///< CGCLIOpts: Manually enabled passes
   std::vector<std::string> DisablePass; ///< CGCLIOpts: Manually disabled passes
@@ -144,9 +142,6 @@ public:
   /// Check to see if the check plugins option is enabled
   bool IsCheckPluginsEnabled() { return CheckPlugins; }
 
-  /// Check to see if the signal map option is enabled
-  bool IsSignalMap() { return SigInput; }
-
   /// Check if ASP DAG needs to bee cleaned up
   bool CleanASP() { return ASPClean; }
 
@@ -163,9 +158,6 @@ public:
     }
     return Plugins[P];
   }
-
-  /// Retrieve the signal map file name
-  std::string GetSignalMap() { return SigMap; }
 
   /// Retrieve the number of enabled system passes
   unsigned GetNumSysPasses() { return EnableSysPass.size(); }

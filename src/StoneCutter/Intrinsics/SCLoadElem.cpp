@@ -10,10 +10,10 @@
 
 #include "CoreGen/StoneCutter/Intrinsics/SCLoadElem.h"
 
-SCLoadElem::SCLoadElem() : SCIntrin(2,"LOADELEM") {
+SCLoadElem::SCLoadElem() : SCIntrin(2,"LOADELEM",false) {
 }
 
-SCLoadElem::SCLoadElem(unsigned NI, std::string K) : SCIntrin(NI,K) {
+SCLoadElem::SCLoadElem(unsigned NI, std::string K) : SCIntrin(NI,K,false) {
 }
 
 SCLoadElem::~SCLoadElem(){

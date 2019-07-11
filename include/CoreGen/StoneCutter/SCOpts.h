@@ -26,6 +26,10 @@
 #include <vector>
 #include <streambuf>
 
+#include <fstream>
+#include <sstream>
+#include <algorithm>
+
 // StoneCutter Headers
 #include "CoreGen/StoneCutter/SCMsg.h"
 
@@ -58,9 +62,13 @@ private:
   bool isEnable;    ///< SCOpts: Manually disabled passes flag
   bool isListPass;  ///< SCOpts: User selected pass listing flag
   bool isSigMap;    ///< SCOpts: Signal map selected
+  bool isPassRun;   ///< SCOpts: Have the passes been executed?
 
   std::string OutFile;  ///< SCOpts: Output file designator
   std::string SigMap;   ///< SCOpts: Signal map output file
+
+  std::string Package;  ///< SCOpts: Chisel package name
+  std::string ISA;      ///< SCOpts: Chisel ISA name
 
   std::vector<std::string> FileList;  ///< SCOpts: List of files to compile
 
@@ -82,6 +90,12 @@ private:
   /// Split the options list by commas
   void Split(const std::string &s, char delim,
              std::vector<std::string>& v);
+
+  /// Derives the ISA name from the path
+  std::string GetISANameFromPath();
+
+  /// Removes any dots in the ISA name
+  std::string SCRemoveDot(std::string);
 
 public:
   /// SCOpts: Constructor
@@ -126,6 +140,12 @@ public:
   /// SCOpts: Is signal map enabled?
   bool IsSignalMap() { return isSigMap; }
 
+  /// SCOpts: Have the passes been executed()?
+  bool IsPassRun() { return isPassRun; }
+
+  /// SCOpts: Notify the options object that the passes have been run
+  void PassRun() { isPassRun = true; }
+
   /// SCOpts: Retrieve the list of disabled passes
   std::vector<std::string> GetDisabledPass() { return DisablePass; }
 
@@ -143,6 +163,18 @@ public:
 
   /// SCOpts: Get the target input file
   std::string GetInputFile( unsigned );
+
+  /// SCOpts: Get the package name
+  std::string GetPackage(){ return Package; }
+
+  /// SCOpts: Get the ISA name
+  std::string GetISA(){ return ISA; }
+
+  /// SCOpts: Set the package name
+  bool SetPackage( std::string P ){ Package = P; return true; }
+
+  /// SCOpts: Set the ISA name
+  bool SetISA( std::string I ){ ISA = I; return true; }
 
   /// SCOpts: Set the output file name
   bool SetOutputFile( std::string O ){ OutFile = O; return true; }

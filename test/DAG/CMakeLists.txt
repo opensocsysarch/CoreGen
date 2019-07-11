@@ -10,10 +10,12 @@ if(BUILD_COREGEN_DAG_TESTING)
   set(BUILD_COREGEN_DAG_DOT_TESTING "ON")
   set(BUILD_COREGEN_DAG_FULLPASS_TESTING "ON")
   set(BUILD_COREGEN_DAG_INDIVIDUALPASS_TESTING "ON")
+  set(BUILD_COREGEN_DAG_DELETENODE_TESTING "ON")
 endif()
 
 add_subdirectory(DOT)
 add_subdirectory(FullPasses)
 add_subdirectory(IndividualPasses)
+add_subdirectory(DeleteNode)
 
 # EOF

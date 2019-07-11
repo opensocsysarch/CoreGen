@@ -14,7 +14,7 @@ SCChiselCodeGen::SCChiselCodeGen( SCParser *P,
                                   SCOpts *O,
                                   SCMsg *M,
                                   std::string COF )
-  : Parser(P), Opts(O), Msgs(M), ChiselFile(COF) {
+  : Parser(P), Opts(O), Msgs(M), ChiselFile(COF), SM(nullptr) {
   InitIntrinsics();
   InitPasses();
 }
@@ -96,13 +96,42 @@ bool SCChiselCodeGen::ExecutePasses(){
   return rtn;
 }
 
-bool SCChiselCodeGen::ExecuteCodegen(){
+bool SCChiselCodeGen::ExecuteUcodeCodegen(){
+  // retrieve the package and isa names
+  std::string Package = Opts->GetPackage();
+  std::string ISA = Opts->GetISA();
 
-  // Execute all the necessary passes
-  if( !ExecutePasses() ){
-    return false;
+  if( Package.length() == 0 ){
+    Package = ISA;
   }
 
+  // write the package info and required chisel packages
+  OutFile << "package " << Package << std::endl;
+  OutFile << "{" << std::endl;
+
+  OutFile << "import chisel3._" << std::endl;
+  OutFile << "import chisel3.util._" << std::endl;
+  OutFile << "import Constants._" << std::endl;
+  OutFile << "import Common._" << std::endl;
+
+  // TODO: generate all the temporary registers inside the core
+
+  // write out the microcode object
+  OutFile << "object " << ISA << "Microcode" << std::endl;
+  OutFile << "{" << std::endl;
+  OutFile << "\tval codes = Array[" << ISA << "MicroOp](" << std::endl;
+
+
+  OutFile << "\t)" << std::endl;
+  OutFile << "}" << std::endl;
+
+  // write the footer
+  OutFile << "}" << std::endl;
+
+  return true;
+}
+
+bool SCChiselCodeGen::ExecuteManualCodegen(){
   // walk all the functions in the module
   for( auto curFref = SCParser::TheModule->begin(),
             endFref = SCParser::TheModule->end();
@@ -122,6 +151,29 @@ bool SCChiselCodeGen::ExecuteCodegen(){
   }
 
   return true;
+}
+
+bool SCChiselCodeGen::ExecuteCodegen(){
+
+  // Execute all the necessary passes
+  if( !Opts->IsPassRun() ){
+    if( !ExecutePasses() ){
+      return false;
+    }
+  }
+
+  // attempt to read the signal map back out
+  CoreGenSigMap *CSM = nullptr;
+  if( SigMap.length() > 0 ){
+    CSM = new CoreGenSigMap();
+    if( !CSM->ReadSigMap( SigMap ) ){
+      Msgs->PrintMsg( L_ERROR, "Could not read signal map from file: " + SigMap );
+      return false;
+    }
+    return ExecuteUcodeCodegen();
+  }else{
+    return ExecuteManualCodegen();
+  }
 }
 
 bool SCChiselCodeGen::ExecuteSignalMap(){
@@ -172,6 +224,8 @@ bool SCChiselCodeGen::GenerateSignalMap(std::string SM){
     return false;
   }
 
+  Opts->PassRun();
+
   if( !ExecuteSignalMap() ){
     Msgs->PrintMsg( L_ERROR, "Failed to generate signal map" );
     return false;
@@ -183,6 +237,7 @@ bool SCChiselCodeGen::GenerateSignalMap(std::string SM){
 bool SCChiselCodeGen::GenerateChisel(){
 
   if( !Parser ){
+    Msgs->PrintMsg( L_ERROR, "No parser input" );
     return false;
   }
 
@@ -190,6 +245,15 @@ bool SCChiselCodeGen::GenerateChisel(){
   if( ChiselFile.length() == 0 ){
     Msgs->PrintMsg( L_ERROR, "Chisel output file cannot be null" );
     return false;
+  }
+
+  // if it exists, read the signal map
+  if( SigMap.length() > 0 ){
+    SM = new CoreGenSigMap();
+    if( !SM->ReadSigMap(SigMap) ){
+      Msgs->PrintMsg( L_ERROR, "Error reading signal map" );
+      return false;
+    }
   }
 
   // open the output file

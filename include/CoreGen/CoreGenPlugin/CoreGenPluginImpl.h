@@ -49,6 +49,18 @@
 #include "CoreGen/CoreGenBackend/CoreGenMCtrl.h"
 #include "CoreGen/CoreGenBackend/CoreGenVTP.h"
 
+/*! \enum CGPluginType
+ *  \brief Defnes the type of the CoreGenPlugin
+ *
+ * Defines the supported types of plugins in the
+ * CoreGen infrastructure
+ *
+ */
+typedef enum{
+  CGPNode         = 0,    ///< CGPluginType: Node override plugin
+  CGPTemplate     = 1     ///< CGPluginType: Template plugin
+}CGPluginType;
+
 /*! \enum CGFeatureType
  *  \brief Defines the CoreGenPlugin feature types
  *
@@ -60,7 +72,7 @@
 typedef enum{
   CGFUnsigned     = 0,    ///< CGFeatureType: unsigned integer
   CGFUin32t       = 1,    ///< CGFeatureType: uint32_t
-  CGFint32t       = 2,    ///< CGFeatureType: int32_t
+  CGFInt32t       = 2,    ///< CGFeatureType: int32_t
   CGFUint64t      = 3,    ///< CGFeatureType: uint64_t
   CGFInt64t       = 4,    ///< CGFeatureType: in64_t
   CGFFloat        = 5,    ///< CGFeatureType: Float
@@ -112,6 +124,7 @@ typedef struct{
 class CoreGenPluginImpl{
 private:
   std::string Name;       ///< CoreGenPluginImpl: Plugin Name
+  CGPluginType Type;      ///< CoreGenPluginImpl: Plugin Type
   unsigned NumFeatures;   ///< CoreGenPluginImpl: Number of features
   bool HDLCodegen;        ///< CoreGenPluginImpl: Is there an HDL Codegen
   bool LLVMCodegen;       ///< CoreGenPluginImpl: Is there an LLVM Codegen
@@ -146,6 +159,7 @@ protected:
 public:
   /// Default Constructor
   CoreGenPluginImpl(std::string Name,
+                    CGPluginType Type,
                     bool HDL,
                     bool LLVM,
                     unsigned MajorVersion,
@@ -377,6 +391,9 @@ public:
 
   /// Retrieve a reference to the soc vector
   std::vector<CoreGenSoC *> &GetSocVect() { return Socs; }
+
+  /// Retrieve the type of the target plugin
+  CGPluginType GetPluginType();
 
   // -- virtual methods --
 

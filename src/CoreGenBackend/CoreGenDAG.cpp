@@ -240,6 +240,7 @@ bool CoreGenDAG::BuildDAGFromPlugin( CoreGenNode *Plugin ){
 
   // walk all the private members behind the plugin implementation
   CoreGenPlugin *P = static_cast<CoreGenPlugin *>(Plugin);
+  P->BuildDAG();
   CoreGenNode *Top = P->GetTop();
   for( unsigned i=0; i<Top->GetNumChild(); i++ ){
     CoreGenNode *CNode = Top->GetChild(i);

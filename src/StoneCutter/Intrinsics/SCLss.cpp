@@ -10,7 +10,7 @@
 
 #include "CoreGen/StoneCutter/Intrinsics/SCLss.h"
 
-SCLss::SCLss() : SCIntrin(1,"LSS") {
+SCLss::SCLss() : SCIntrin(1,"LSS",false) {
   ISignals.push_back(new SCSig(BR_LT));
   ISignals.push_back(new SCSig(ALU_SLL));
   ISignals.push_back(new SCSig(ALU_ADD));
@@ -18,7 +18,12 @@ SCLss::SCLss() : SCIntrin(1,"LSS") {
   ISignals.push_back(new SCSig(ALU_OR));
 }
 
-SCLss::SCLss(unsigned NI, std::string K) : SCIntrin(NI,K) {
+SCLss::SCLss(unsigned NI, std::string K) : SCIntrin(NI,K,false) {
+  ISignals.push_back(new SCSig(BR_LT));
+  ISignals.push_back(new SCSig(ALU_SLL));
+  ISignals.push_back(new SCSig(ALU_ADD));
+  ISignals.push_back(new SCSig(ALU_SUB));
+  ISignals.push_back(new SCSig(ALU_OR));
 }
 
 SCLss::~SCLss(){

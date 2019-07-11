@@ -54,8 +54,7 @@ bool CoreGenComm::DeleteEndpoint( CoreGenNode *N ){
     return false;
   }
   EndPoints.erase(it);
-  this->DeleteChild( N );
-  return true;
+  return this->DeleteChild( N );
 }
 
 bool CoreGenComm::SetCommType( CGCommType T ){
@@ -79,6 +78,7 @@ bool CoreGenComm::DeleteEndpoint( unsigned Idx ){
     return false;
 
   EndPoints.erase(EndPoints.begin()+Idx);
+  return true;
 }
 
 CoreGenNode *CoreGenComm::GetEndpoint( unsigned Idx ){

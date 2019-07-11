@@ -151,6 +151,9 @@ public:
   /// Retrieve the number of child memory controllers
   unsigned GetNumMCtrls() { return MCtrls.size(); }
 
+  /// Updates the child node structure after inserting new nodes
+  bool UpdateChildNodes();
+
   /// Insert a new cache node
   CoreGenCache *InsertCache(std::string Name,
                           unsigned Sets,

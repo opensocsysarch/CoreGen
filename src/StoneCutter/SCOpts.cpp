@@ -16,6 +16,7 @@ SCOpts::SCOpts(SCMsg *M, int A, char **C)
   isKeep(false), isParse(true), isIR(true),
   isOptimize(true), isChisel(true), isCG(false), isVerbose(false),
   isDisable(false), isEnable(false), isListPass(false), isSigMap(false),
+  isPassRun(false),
   Msgs(M) {}
 
 // ------------------------------------------------- DESTRUCTOR
@@ -37,6 +38,31 @@ void SCOpts::Split(const std::string& s, char delim,
       v.push_back(s.substr(i,s.length()));
     }
   }
+}
+
+// ------------------------------------------------- SCREMOVEDOT
+std::string SCOpts::SCRemoveDot( std::string in ){
+  std::string out = in;
+  out.erase(std::remove(out.begin(),out.end(),'.'),out.end());
+  return out;
+}
+// ------------------------------------------------- GETISANAME
+std::string SCOpts::GetISANameFromPath(){
+  std::string FilePath = FileList[0];
+#ifdef _WIN32
+  char sep = '\\';
+#else
+  char sep = '/';
+#endif
+  std::size_t dotPos = FilePath.rfind('.');
+  std::size_t sepPos = FilePath.rfind(sep);
+  bool withExtension = false;
+
+  if( sepPos != std::string::npos ){
+    return SCRemoveDot(FilePath.substr( sepPos + 1,
+                            FilePath.size() - (withExtension || dotPos != std::string::npos ? 1 : dotPos) ));
+  }
+  return "";
 }
 
 // ------------------------------------------------- PARSEPASSES
@@ -99,6 +125,22 @@ bool SCOpts::ParseOpts(bool *isHelp){
       std::string F(argv[i+1]);
       SigMap = F;
       isSigMap = true;
+      i++;
+    }else if( (s=="-a") || (s=="-package") || (s=="--package") ){
+      if( i+1 > (argc-1) ){
+        Msgs->PrintMsg(L_ERROR, "--package requires an argument");
+        return false;
+      }
+      std::string F(argv[i+1]);
+      Package = F;
+      i++;
+    }else if( (s=="-i") || (s=="-isa") || (s=="--isa") ){
+      if( i+1 > (argc-1) ){
+        Msgs->PrintMsg(L_ERROR, "--isa requires an argument");
+        return false;
+      }
+      std::string F(argv[i+1]);
+      ISA = F;
       i++;
     }else if( (s=="-k") || (s=="-keep") || (s=="--keep") ){
       isKeep = true;
@@ -163,6 +205,11 @@ bool SCOpts::ParseOpts(bool *isHelp){
     return false;
   }
 
+  // derive the ISA if it wasn't specified
+  if( ISA.length() == 0 ){
+    ISA = GetISANameFromPath();
+  }
+
   return true;
 }
 
@@ -188,7 +235,7 @@ void SCOpts::PrintHelp(){
   Msgs->PrintRawMsg("Options:");
   Msgs->PrintRawMsg("     -h|-help|--help                     : Print the help menu");
   Msgs->PrintRawMsg("     -k|-keep|--keep                     : Keep intermediate files");
-  Msgs->PrintRawMsg("     -c|-chisel|--chisel                 : Generate Chisel output (default=on)");
+  Msgs->PrintRawMsg("     -c|-chisel|--chisel                 : Generate Chisel output [default=on]");
   Msgs->PrintRawMsg("     -p|-parse|--parse                   : Parse but do not compile");
   Msgs->PrintRawMsg("     -f|-outfile|--outfile /path/to/out  : Set the output file name");
   Msgs->PrintRawMsg("     -s|-sigmap|--sigmap /path/to/sigmap : Generates a signal map");
@@ -196,7 +243,7 @@ void SCOpts::PrintHelp(){
   Msgs->PrintRawMsg("     -V|-version|--version               : Print the version info");
   Msgs->PrintRawMsg(" ");
   Msgs->PrintRawMsg("Execution Options:");
-  Msgs->PrintRawMsg("     -O|-optimize|--optimize             : Execute the optimizer" );
+  Msgs->PrintRawMsg("     -O|-optimize|--optimize             : Execute the optimizer [default=on]" );
   Msgs->PrintRawMsg("     -N|-no-optimize|--no-optimize       : Do not execute the optimizer" );
   Msgs->PrintRawMsg("     -D|-disable-chisel|--disable-chisel : Disables Chisel output" );
   Msgs->PrintRawMsg("     -v|-verbose|--verbose               : Enable verbosity");
@@ -205,6 +252,10 @@ void SCOpts::PrintHelp(){
   Msgs->PrintRawMsg("     --list-passes                       : Lists all the LLVM passes");
   Msgs->PrintRawMsg("     --enable-pass \"PASS1,PASS2\"         : Enables individual passes");
   Msgs->PrintRawMsg("     --disable-pass \"PASS1,PASS2\"        : Disables individual passes");
+  Msgs->PrintRawMsg(" ");
+  Msgs->PrintRawMsg("Chisel Output Options:");
+  Msgs->PrintRawMsg("     -a|-package|--package PACKAGE       : Sets the Chisel package name");
+  Msgs->PrintRawMsg("     -i|-isa|--isa ISA                   : Sets the Chisel ISA name");
 }
 
 // EOF

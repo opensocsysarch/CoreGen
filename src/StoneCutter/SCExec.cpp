@@ -70,12 +70,17 @@ bool SCExec::Exec(){
     LTmpFile = std::string(tmpname);
     OTmpFile = Opts->GetOutputFile();
     if( OTmpFile.length() == 0 ){
-      OTmpFile = "scc.out";
+      OTmpFile = "scc.chisel";
     }
   }else{
     // single file
     LTmpFile = Opts->GetInputFile(0);
-    OTmpFile = LTmpFile;
+    //LTmpFile = Opts->GetOutputFile();
+    //OTmpFile = LTmpFile;
+    OTmpFile = Opts->GetOutputFile();
+    if( OTmpFile.length() == 0 ){
+      OTmpFile = LTmpFile + ".chisel";
+    }
   }
 
   // Read the file into a buffer
@@ -174,6 +179,36 @@ bool SCExec::Exec(){
 
   SCChiselCodeGen *CCG = nullptr;
 
+  if( Opts->IsSignalMap() ){
+    if( !Opts->IsIR() ){
+      Msgs->PrintMsg( L_ERROR, "LLVM IR is required for signal map output" );
+      delete CG;
+      delete Parser;
+      if( Opts->GetNumInputFiles() > 1 ){
+        SCDeleteFile(LTmpFile);
+      }
+      return false;
+    }
+
+    // Generate the Chisel output
+    CCG = new SCChiselCodeGen(Parser,Opts,Msgs,
+                              OTmpFile );
+
+    if( !CCG->GenerateSignalMap(Opts->GetSignalMapFile()) ){
+      Msgs->PrintMsg( L_ERROR, "Failed to generate signal map for " +
+                      LTmpFile );
+      delete CCG;
+      if( CG ){
+        delete CG;
+      }
+      delete Parser;
+      if( Opts->GetNumInputFiles() > 1 ){
+        SCDeleteFile(LTmpFile);
+      }
+      return false;
+    }
+  }
+
   // Do we generate Chisel?
   if( Opts->IsChisel() ){
     if( !Opts->IsIR() ){
@@ -187,23 +222,13 @@ bool SCExec::Exec(){
     }
 
     // Generate the Chisel output
-    CCG = new SCChiselCodeGen(Parser,Opts,Msgs,
-                              OTmpFile + ".chisel" );
-    if( Opts->IsSignalMap() ){
-      if( !CCG->GenerateSignalMap(Opts->GetSignalMapFile()) ){
-        Msgs->PrintMsg( L_ERROR, "Failed to generate signal map for " +
-                        LTmpFile );
-        delete CCG;
-        if( CG ){
-          delete CG;
-        }
-        delete Parser;
-        if( Opts->GetNumInputFiles() > 1 ){
-          SCDeleteFile(LTmpFile);
-        }
-        return false;
-      }
-    }else if( !CCG->GenerateChisel() ){
+    if( CCG == nullptr ){
+      CCG = new SCChiselCodeGen(Parser,Opts,Msgs,
+                                OTmpFile );
+    }
+
+    // generate the output chisel
+    if( !CCG->GenerateChisel() ){
       Msgs->PrintMsg( L_ERROR, "Failed to generate Chisel for " +
                       LTmpFile );
       delete CCG;

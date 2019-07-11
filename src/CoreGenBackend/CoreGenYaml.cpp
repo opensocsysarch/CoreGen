@@ -14,7 +14,7 @@
 CoreGenYaml::CoreGenYaml( std::string F, CoreGenPluginMgr *P,
                           CoreGenEnv *En, CoreGenProj *Pr, CoreGenErrno *E )
   : FileName(F), Errno(E), ParserErrorLine(0), PluginMgr(P), Env(En),
-    Proj(Pr) {
+    Proj(Pr), PluginPtr(nullptr) {
 }
 
 CoreGenYaml::~CoreGenYaml(){
@@ -350,6 +350,10 @@ void CoreGenYaml::WriteCoreYaml( YAML::Emitter *out,
       *out << YAML::Key << "RTLType";
       *out << YAML::Value << CGRTLToStr(Cores[i]->GetRTLType());
     }
+    if( Cores[i]->IsPlugin() ){
+      *out << YAML::Key << "Override"
+           << YAML::Value << Cores[i]->GetPlugin()->GetName();
+    }
 
     *out << YAML::EndMap;
   }
@@ -392,6 +396,10 @@ void CoreGenYaml::WriteSocYaml( YAML::Emitter *out,
       *out << YAML::Value << Socs[i]->GetRTLFile();
       *out << YAML::Key << "RTLType";
       *out << YAML::Value << CGRTLToStr(Socs[i]->GetRTLType());
+    }
+    if( Socs[i]->IsPlugin() ){
+      *out << YAML::Key << "Override"
+           << YAML::Value << Socs[i]->GetPlugin()->GetName();
     }
 
     *out << YAML::EndMap;
@@ -447,6 +455,10 @@ void CoreGenYaml::PrintCache( YAML::Emitter *out,
     *out << YAML::Key << "RTLType";
     *out << YAML::Value << CGRTLToStr(Cache->GetRTLType());
   }
+  if( Cache->IsPlugin() ){
+    *out << YAML::Key << "Override"
+         << YAML::Value << Cache->GetPlugin()->GetName();
+   }
 
   *out << YAML::EndMap;
 }
@@ -485,6 +497,10 @@ void CoreGenYaml::WriteISAYaml(YAML::Emitter *out,
       *out << YAML::Value << ISAs[i]->GetRTLFile();
       *out << YAML::Key << "RTLType";
       *out << YAML::Value << CGRTLToStr(ISAs[i]->GetRTLType());
+    }
+    if( ISAs[i]->IsPlugin() ){
+      *out << YAML::Key << "Override"
+           << YAML::Value << ISAs[i]->GetPlugin()->GetName();
     }
     *out << YAML::EndMap;
   }
@@ -555,6 +571,10 @@ void CoreGenYaml::WriteInstFormatYaml(YAML::Emitter *out,
       *out << YAML::Key << "RTLType";
       *out << YAML::Value << CGRTLToStr(Formats[i]->GetRTLType());
     }
+    if( Formats[i]->IsPlugin() ){
+      *out << YAML::Key << "Override"
+           << YAML::Value << Formats[i]->GetPlugin()->GetName();
+    }
 
     *out << YAML::EndMap; // End InstFormat->GetName()
   }
@@ -613,6 +633,10 @@ void CoreGenYaml::WriteInstYaml(YAML::Emitter *out,
       *out << YAML::Value << Insts[i]->GetRTLFile();
       *out << YAML::Key << "RTLType";
       *out << YAML::Value << CGRTLToStr(Insts[i]->GetRTLType());
+    }
+    if( Insts[i]->IsPlugin() ){
+      *out << YAML::Key << "Override"
+           << YAML::Value << Insts[i]->GetPlugin()->GetName();
     }
 
     *out << YAML::EndMap; // individual instruction
@@ -696,6 +720,10 @@ void CoreGenYaml::WriteRegClassYaml(YAML::Emitter *out,
       *out << YAML::Value << RegClasses[i]->GetRTLFile();
       *out << YAML::Key << "RTLType";
       *out << YAML::Value << CGRTLToStr(RegClasses[i]->GetRTLType());
+    }
+    if( RegClasses[i]->IsPlugin() ){
+      *out << YAML::Key << "Override"
+           << YAML::Value << RegClasses[i]->GetPlugin()->GetName();
     }
 
     *out << YAML::EndMap;
@@ -832,6 +860,10 @@ void CoreGenYaml::WriteRegYaml(YAML::Emitter *out,
       *out << YAML::Key << "RTLType";
       *out << YAML::Value << CGRTLToStr(Regs[i]->GetRTLType());
     }
+    if( Regs[i]->IsPlugin() ){
+      *out << YAML::Key << "Override"
+           << YAML::Value << Regs[i]->GetPlugin()->GetName();
+    }
 
     *out << YAML::EndMap;
   }
@@ -887,6 +919,10 @@ void CoreGenYaml::WriteCommYaml( YAML::Emitter *out,
       *out << YAML::Key << "RTLType";
       *out << YAML::Value << CGRTLToStr(Comms[i]->GetRTLType());
     }
+    if( Comms[i]->IsPlugin() ){
+      *out << YAML::Key << "Override"
+           << YAML::Value << Comms[i]->GetPlugin()->GetName();
+    }
 
     *out << YAML::EndMap;
   }
@@ -922,6 +958,10 @@ void CoreGenYaml::WriteSpadYaml( YAML::Emitter *out,
       *out << YAML::Key << "RTLType";
       *out << YAML::Value << CGRTLToStr(Spads[i]->GetRTLType());
     }
+    if( Spads[i]->IsPlugin() ){
+      *out << YAML::Key << "Override"
+           << YAML::Value << Spads[i]->GetPlugin()->GetName();
+    }
 
     *out << YAML::EndMap;
   }
@@ -951,6 +991,10 @@ void CoreGenYaml::WriteMCtrlYaml( YAML::Emitter *out,
       *out << YAML::Key << "RTLType";
       *out << YAML::Value << CGRTLToStr(MCtrls[i]->GetRTLType());
     }
+    if( MCtrls[i]->IsPlugin() ){
+      *out << YAML::Key << "Override"
+           << YAML::Value << MCtrls[i]->GetPlugin()->GetName();
+    }
 
     *out << YAML::EndMap;
   }
@@ -965,6 +1009,10 @@ void CoreGenYaml::WriteVTPYaml( YAML::Emitter *out,
     *out << YAML::BeginMap;
     *out << YAML::Key << "VTP";
     *out << YAML::Value << VTPs[i]->GetName();
+    if( VTPs[i]->IsPlugin() ){
+      *out << YAML::Key << "Override"
+           << YAML::Value << VTPs[i]->GetPlugin()->GetName();
+    }
     *out << YAML::EndMap;
   }
   *out << YAML::EndSeq;
@@ -1110,7 +1158,7 @@ void CoreGenYaml::WritePluginYaml( YAML::Emitter *out,
           *out << YAML::Key << "FeatureValue";
           *out << YAML::Value << FVal.Uint32tData;
           break;
-        case CGFint32t:
+        case CGFInt32t:
           *out << YAML::Value << "Int32t";
           *out << YAML::Key << "FeatureValue";
           *out << YAML::Value << FVal.Int32tData;
@@ -1762,6 +1810,17 @@ bool CoreGenYaml::ReadRegisterYaml(const YAML::Node& RegNodes,
       }
     }
 
+    // check for plugin override
+    if( CheckValidNode(Node,"Override") ){
+      std::string ONode = Node["Override"].as<std::string>();
+      CoreGenNode *PNode = CheckOverridePlugin(ONode);
+      if( PNode == nullptr ){
+        Errno->SetError(CGERR_ERROR, "Invalid override node " + ONode + " for node=" + Name );
+        return false;
+      }
+      R->SetOverriddenNode(PNode);
+    }
+
     R->AppendASP(ASP);
 
     if( IsDuplicate(Node,
@@ -1852,6 +1911,17 @@ bool CoreGenYaml::ReadRegisterClassYaml(const YAML::Node& RegClassNodes,
       }
     }
 
+    // check for plugin override
+    if( CheckValidNode(Node,"Override") ){
+      std::string ONode = Node["Override"].as<std::string>();
+      CoreGenNode *PNode = CheckOverridePlugin(ONode);
+      if( PNode == nullptr ){
+        Errno->SetError(CGERR_ERROR, "Invalid override node " + ONode + " for node=" + Name );
+        return false;
+      }
+      RC->SetOverriddenNode(PNode);
+    }
+
     RC->AppendASP(ASP);
 
     if( IsDuplicate(Node,
@@ -1900,6 +1970,17 @@ bool CoreGenYaml::ReadISAYaml(const YAML::Node& ISANodes,
       if( !ISA->SetRTLType( StrToCGRTL(Node["RTLType"].as<std::string>()) ) ){
         return false;
       }
+    }
+
+    // check for plugin override
+    if( CheckValidNode(Node,"Override") ){
+      std::string ONode = Node["Override"].as<std::string>();
+      CoreGenNode *PNode = CheckOverridePlugin(ONode);
+      if( PNode == nullptr ){
+        Errno->SetError(CGERR_ERROR, "Invalid override node " + ONode + " for node=" + ISAName );
+        return false;
+      }
+      ISA->SetOverriddenNode(PNode);
     }
 
     ISA->AppendASP(ASP);
@@ -2118,6 +2199,17 @@ bool CoreGenYaml::ReadInstFormatYaml(const YAML::Node& InstFormatNodes,
       }
     }
 
+    // check for plugin override
+    if( CheckValidNode(Node,"Override") ){
+      std::string ONode = Node["Override"].as<std::string>();
+      CoreGenNode *PNode = CheckOverridePlugin(ONode);
+      if( PNode == nullptr ){
+        Errno->SetError(CGERR_ERROR, "Invalid override node " + ONode + " for node=" + Name );
+        return false;
+      }
+      IF->SetOverriddenNode(PNode);
+    }
+
     IF->AppendASP(ASP);
 
     if( IsDuplicate(Node,
@@ -2230,6 +2322,16 @@ bool CoreGenYaml::ReadInstYaml(const YAML::Node& InstNodes,
       if( !Inst->SetRTLType( StrToCGRTL(Node["RTLType"].as<std::string>()) ) ){
         return false;
       }
+    }
+    // check for plugin override
+    if( CheckValidNode(Node,"Override") ){
+      std::string ONode = Node["Override"].as<std::string>();
+      CoreGenNode *PNode = CheckOverridePlugin(ONode);
+      if( PNode == nullptr ){
+        Errno->SetError(CGERR_ERROR, "Invalid override node " + ONode + " for node=" + Name );
+        return false;
+      }
+      Inst->SetOverriddenNode(PNode);
     }
 
     Inst->AppendASP(ASP);
@@ -2415,6 +2517,16 @@ bool CoreGenYaml::ReadCacheYaml(const YAML::Node& CacheNodes,
         return false;
       }
     }
+    // check for plugin override
+    if( CheckValidNode(Node,"Override") ){
+      std::string ONode = Node["Override"].as<std::string>();
+      CoreGenNode *PNode = CheckOverridePlugin(ONode);
+      if( PNode == nullptr ){
+        Errno->SetError(CGERR_ERROR, "Invalid override node " + ONode + " for node=" + Name );
+        return false;
+      }
+      C->SetOverriddenNode(PNode);
+    }
 
     C->AppendASP(ASP);
 
@@ -2568,6 +2680,16 @@ bool CoreGenYaml::ReadCoreYaml(const YAML::Node& CoreNodes,
         return false;
       }
     }
+    // check for plugin override
+    if( CheckValidNode(Node,"Override") ){
+      std::string ONode = Node["Override"].as<std::string>();
+      CoreGenNode *PNode = CheckOverridePlugin(ONode);
+      if( PNode == nullptr ){
+        Errno->SetError(CGERR_ERROR, "Invalid override node " + ONode + " for node=" + Name );
+        return false;
+      }
+      C->SetOverriddenNode(PNode);
+    }
 
     C->AppendASP(ASP);
 
@@ -2640,6 +2762,16 @@ bool CoreGenYaml::ReadSocYaml(const YAML::Node& SocNodes,
       if( !S->SetRTLType( StrToCGRTL(Node["RTLType"].as<std::string>()) ) ){
         return false;
       }
+    }
+    // check for plugin override
+    if( CheckValidNode(Node,"Override") ){
+      std::string ONode = Node["Override"].as<std::string>();
+      CoreGenNode *PNode = CheckOverridePlugin(ONode);
+      if( PNode == nullptr ){
+        Errno->SetError(CGERR_ERROR, "Invalid override node " + ONode + " for node=" + Name );
+        return false;
+      }
+      S->SetOverriddenNode(PNode);
     }
 
     S->AppendASP(ASP);
@@ -2719,6 +2851,16 @@ bool CoreGenYaml::ReadSpadYaml(const YAML::Node& SpadNodes,
         return false;
       }
     }
+    // check for plugin override
+    if( CheckValidNode(Node,"Override") ){
+      std::string ONode = Node["Override"].as<std::string>();
+      CoreGenNode *PNode = CheckOverridePlugin(ONode);
+      if( PNode == nullptr ){
+        Errno->SetError(CGERR_ERROR, "Invalid override node " + ONode + " for node=" + Name );
+        return false;
+      }
+      S->SetOverriddenNode(PNode);
+    }
 
     S->SetStartAddr( StartAddr );
     S->AppendASP(ASP);
@@ -2775,6 +2917,16 @@ bool CoreGenYaml::ReadMCtrlYaml(const YAML::Node& MCtrlNodes,
         return false;
       }
     }
+    // check for plugin override
+    if( CheckValidNode(Node,"Override") ){
+      std::string ONode = Node["Override"].as<std::string>();
+      CoreGenNode *PNode = CheckOverridePlugin(ONode);
+      if( PNode == nullptr ){
+        Errno->SetError(CGERR_ERROR, "Invalid override node " + ONode + " for node=" + Name );
+        return false;
+      }
+      M->SetOverriddenNode(PNode);
+    }
 
     M->AppendASP(ASP);
 
@@ -2809,6 +2961,16 @@ bool CoreGenYaml::ReadVTPYaml( const YAML::Node& VTPNodes,
     }
 
     CoreGenVTP *V = new CoreGenVTP(Name,Errno);
+    // check for plugin override
+    if( CheckValidNode(Node,"Override") ){
+      std::string ONode = Node["Override"].as<std::string>();
+      CoreGenNode *PNode = CheckOverridePlugin(ONode);
+      if( PNode == nullptr ){
+        Errno->SetError(CGERR_ERROR, "Invalid override node " + ONode + " for node=" + Name );
+        return false;
+      }
+      V->SetOverriddenNode(PNode);
+    }
     V->AppendASP(ASP);
     if( IsDuplicate(Node,
                     static_cast<CoreGenNode *>(V),
@@ -3437,6 +3599,7 @@ bool CoreGenYaml::ReadExtYaml(const YAML::Node& ExtNodes,
                     std::vector<CoreGenNode *>(Exts.begin(),Exts.end()) ) ){
       return false;
     }
+    E->UpdateChildNodes();
     Exts.push_back(E);
 
   }// end ExtNodes
@@ -3559,6 +3722,16 @@ bool CoreGenYaml::ReadCommYaml( const YAML::Node& CommNodes,
       }// endpoint loop
     }// endpoint handler
 
+    // check for plugin override
+    if( CheckValidNode(Node,"Override") ){
+      std::string ONode = Node["Override"].as<std::string>();
+      CoreGenNode *PNode = CheckOverridePlugin(ONode);
+      if( PNode == nullptr ){
+        Errno->SetError(CGERR_ERROR, "Invalid override node " + ONode + " for node=" + Name );
+        return false;
+      }
+      Comm->SetOverriddenNode(PNode);
+    }
     Comm->AppendASP(ASP);
 
     if( IsDuplicate(Node,
@@ -3593,6 +3766,8 @@ bool CoreGenYaml::ReadYaml(  std::vector<CoreGenSoC *>  &Socs,
     return false;
   }
 
+  PluginPtr = &Plugins;
+
   // load the config file
   YAML::Node IR;
   try{
@@ -3613,6 +3788,12 @@ bool CoreGenYaml::ReadYaml(  std::vector<CoreGenSoC *>  &Socs,
     if( !ReadProjYaml(ProjNodes) ){
       return false;
     }
+  }
+
+  //-- Plugins
+  const YAML::Node& PluginNodes = IR["Plugins"];
+  if( !ReadPluginYaml(PluginNodes,Plugins) ){
+    return false;
   }
 
   //-- Registers
@@ -3693,12 +3874,6 @@ bool CoreGenYaml::ReadYaml(  std::vector<CoreGenSoC *>  &Socs,
     return false;
   }
 
-  //-- Plugins
-  const YAML::Node& PluginNodes = IR["Plugins"];
-  if( !ReadPluginYaml(PluginNodes,Plugins) ){
-    return false;
-  }
-
   //-- Comms: read these last in order to resolve all the names
   const YAML::Node& CommNodes = IR["Comms"];
   if( !ReadCommYaml(CommNodes,
@@ -3721,6 +3896,15 @@ bool CoreGenYaml::ReadYaml(  std::vector<CoreGenSoC *>  &Socs,
   }
 
   return true;
+}
+
+CoreGenNode *CoreGenYaml::CheckOverridePlugin(std::string Name){
+  for( unsigned i=0; i<(*PluginPtr).size(); i++ ){
+    if( (*PluginPtr)[i]->GetName() == Name ){
+      return static_cast<CoreGenNode *>((*PluginPtr)[i]);
+    }
+  }
+  return nullptr;
 }
 
 // EOF

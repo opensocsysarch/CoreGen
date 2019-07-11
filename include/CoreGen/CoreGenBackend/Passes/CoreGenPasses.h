@@ -35,6 +35,7 @@
 #include "CoreGen/CoreGenBackend/Passes/Analysis/RegSafetyPass.h"
 #include "CoreGen/CoreGenBackend/Passes/Analysis/CoreSafetyPass.h"
 #include "CoreGen/CoreGenBackend/Passes/Analysis/RegClassSafetyPass.h"
+#include "CoreGen/CoreGenBackend/Passes/Analysis/SpadSafetyPass.h"
 #include "CoreGen/CoreGenBackend/Passes/Analysis/L1SharedPass.h"
 #include "CoreGen/CoreGenBackend/Passes/Analysis/MultSoCPass.h"
 #include "CoreGen/CoreGenBackend/Passes/Analysis/MandatoryFieldPass.h"

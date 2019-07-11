@@ -35,6 +35,19 @@ bool CoreGenSoC::InsertCore( CoreGenCore *C ){
   return InsertChild(static_cast<CoreGenNode *>(C));
 }
 
+bool CoreGenSoC::DeleteCore( CoreGenCore *C ){
+  if( !C )
+    return false;
+
+  for( unsigned i=0; i<Cores.size(); i++ ){
+    if( Cores[i] == C ){
+      Cores.erase(Cores.begin()+i);
+      return true;
+    }
+  }
+  return false;
+}
+
 CoreGenCore *CoreGenSoC::GetCore( unsigned C ){
   if( C > (Cores.size()-1)){
     Errno->SetError( CGERR_ERROR, "Core index "

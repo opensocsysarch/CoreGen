@@ -10,11 +10,11 @@
 
 #include "CoreGen/StoneCutter/Intrinsics/SCZext.h"
 
-SCZext::SCZext() : SCIntrin(2,"ZEXT") {
+SCZext::SCZext() : SCIntrin(2,"ZEXT",true) {
   // no signals
 }
 
-SCZext::SCZext(unsigned NI, std::string K) : SCIntrin(NI,K) {
+SCZext::SCZext(unsigned NI, std::string K) : SCIntrin(NI,K,true) {
 }
 
 SCZext::~SCZext(){
@@ -22,6 +22,12 @@ SCZext::~SCZext(){
 
 Value *SCZext::codegen(){
   return nullptr;
+}
+
+bool SCZext::GetSigMap(CoreGenSigMap *Sigs,
+                           Instruction &I,
+                           std::string Inst){
+  return Sigs->GetSignal(Sigs->GetNumSignals()-1)->SetFusedType(FOP_ZEXT);
 }
 
 // EOF

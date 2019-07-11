@@ -10,14 +10,18 @@
 
 #include "CoreGen/StoneCutter/Intrinsics/SCReverse.h"
 
-SCReverse::SCReverse() : SCIntrin(1,"REVERSE") {
+SCReverse::SCReverse() : SCIntrin(1,"REVERSE",false) {
   ISignals.push_back(new SCSig(ALU_SLTU));
   ISignals.push_back(new SCSig(ALU_OR));
   ISignals.push_back(new SCSig(ALU_AND));
   ISignals.push_back(new SCSig(BR_GT));
 }
 
-SCReverse::SCReverse(unsigned NI, std::string K) : SCIntrin(NI,K) {
+SCReverse::SCReverse(unsigned NI, std::string K) : SCIntrin(NI,K,false) {
+  ISignals.push_back(new SCSig(ALU_SLTU));
+  ISignals.push_back(new SCSig(ALU_OR));
+  ISignals.push_back(new SCSig(ALU_AND));
+  ISignals.push_back(new SCSig(BR_GT));
 }
 
 SCReverse::~SCReverse(){

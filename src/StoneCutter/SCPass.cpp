@@ -276,7 +276,7 @@ std::string SCPass::TraceOperand( Function &F, Value *V,
   if( auto CInt = dyn_cast<ConstantInt>(V) ){
     isImm = true;
     isPredef = false;
-    Width = (unsigned)(CInt->getSExtValue());
+    Width = (unsigned)(CInt->getBitWidth());
     return CInt->getName().str();
   }
 
@@ -284,6 +284,9 @@ std::string SCPass::TraceOperand( Function &F, Value *V,
   if( HasGlobalAttribute(V->getName().str(),"register") ){
     // derive the register class type and return it
     isPredef = true;
+    Width = 1;
+    if( V->getType()->isIntegerTy() )
+      Width = V->getType()->getIntegerBitWidth();
     return V->getName().str() + "_" + GetGlobalAttribute(V->getName().str(),"regclass");
   }
 
@@ -293,6 +296,9 @@ std::string SCPass::TraceOperand( Function &F, Value *V,
       // derive the register class type and return it
       isPredef = true;
       isImm = false;
+      Width = 1; // need to derive the register width
+      if( V->getType()->isIntegerTy() )
+        Width = V->getType()->getIntegerBitWidth();
       return V->getName().str() + "_" + GetGlobalRegClass( V->getName().str(),
                                 GetGlobalAttribute(F.getName().str(),
                                                    "instformat") );
@@ -300,11 +306,13 @@ std::string SCPass::TraceOperand( Function &F, Value *V,
       // return the field name
       isPredef = true;
       isImm = false;
+      Width = 1;  // need to derive the encoding width
       return V->getName().str();
     }else if( GetGlobalAttribute(V->getName().str(),"fieldtype") == "immediate" ){
       // return the field name as this mimics an instruction payload read
       isPredef = true;
       isImm = true;
+      Width = 1;  // need to derive the immediate width
       return V->getName().str();
     }
   }
@@ -313,6 +321,9 @@ std::string SCPass::TraceOperand( Function &F, Value *V,
   if( HasGlobalAttribute(V->getName().str(),"regclass") ){
     // this is a global var
     isPredef = true;
+    Width = 1;
+    if( V->getType()->isIntegerTy() )
+      Width = V->getType()->getIntegerBitWidth();
     return V->getName().str();
   }
 
@@ -353,7 +364,9 @@ std::string SCPass::TraceOperand( Function &F, Value *V,
   // if we reach this point, then the source is unique
   isImm = false;
   isPredef = false;
-  Width = V->getType()->getIntegerBitWidth();
+  Width = 1;
+  if( V->getType()->isIntegerTy() )
+    Width = V->getType()->getIntegerBitWidth();
   return V->getName().str();
 }
 

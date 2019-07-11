@@ -42,6 +42,9 @@ public:
   /// Insert a core into the SoC
   bool InsertCore( CoreGenCore *C );
 
+  /// Deletes the target core
+  bool DeleteCore( CoreGenCore *C );
+
   /// Retrieve the target core from the SoC
   CoreGenCore *GetCore( unsigned C );
 

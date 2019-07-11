@@ -10,11 +10,11 @@
 
 #include "CoreGen/StoneCutter/Intrinsics/SCNot.h"
 
-SCNot::SCNot() : SCIntrin(1,"NOT") {
+SCNot::SCNot() : SCIntrin(1,"NOT",true) {
   // no signals generated
 }
 
-SCNot::SCNot(unsigned NI, std::string K) : SCIntrin(NI,K) {
+SCNot::SCNot(unsigned NI, std::string K) : SCIntrin(NI,K,true) {
 }
 
 SCNot::~SCNot(){
@@ -22,6 +22,12 @@ SCNot::~SCNot(){
 
 Value *SCNot::codegen(){
   return nullptr;
+}
+
+bool SCNot::GetSigMap(CoreGenSigMap *Sigs,
+                           Instruction &I,
+                           std::string Inst){
+  return Sigs->GetSignal(Sigs->GetNumSignals()-1)->SetFusedType(FOP_NOT);
 }
 
 // EOF

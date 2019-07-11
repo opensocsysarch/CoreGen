@@ -49,6 +49,7 @@ void CoreGenPassMgr::InitSoCPasses(std::ostream *O){
   Passes.push_back(static_cast<CoreGenPass *>(new RegIdxPass(O,DAG,Errno)));
   Passes.push_back(static_cast<CoreGenPass *>(new RegFieldPass(O,DAG,Errno)));
   Passes.push_back(static_cast<CoreGenPass *>(new RegSafetyPass(O,DAG,Errno)));
+  Passes.push_back(static_cast<CoreGenPass *>(new SpadSafetyPass(O,DAG,Errno)));
   Passes.push_back(static_cast<CoreGenPass *>(new CoreSafetyPass(O,DAG,Errno)));
   Passes.push_back(static_cast<CoreGenPass *>(new CommSafetyPass(O,DAG,Errno)));
   Passes.push_back(static_cast<CoreGenPass *>(new RegClassSafetyPass(O,DAG,Errno)));
@@ -74,6 +75,7 @@ void CoreGenPassMgr::InitModPasses(std::ostream *O){
   Passes.push_back(static_cast<CoreGenPass *>(new RegIdxPass(O,DAG,Errno)));
   Passes.push_back(static_cast<CoreGenPass *>(new RegFieldPass(O,DAG,Errno)));
   Passes.push_back(static_cast<CoreGenPass *>(new RegSafetyPass(O,DAG,Errno)));
+  Passes.push_back(static_cast<CoreGenPass *>(new SpadSafetyPass(O,DAG,Errno)));
   Passes.push_back(static_cast<CoreGenPass *>(new CoreSafetyPass(O,DAG,Errno)));
   Passes.push_back(static_cast<CoreGenPass *>(new CommSafetyPass(O,DAG,Errno)));
   Passes.push_back(static_cast<CoreGenPass *>(new RegClassSafetyPass(O,DAG,Errno)));
@@ -98,6 +100,7 @@ void CoreGenPassMgr::InitExtPasses(std::ostream *O){
   Passes.push_back(static_cast<CoreGenPass *>(new RegIdxPass(O,DAG,Errno)));
   Passes.push_back(static_cast<CoreGenPass *>(new RegFieldPass(O,DAG,Errno)));
   Passes.push_back(static_cast<CoreGenPass *>(new RegSafetyPass(O,DAG,Errno)));
+  Passes.push_back(static_cast<CoreGenPass *>(new SpadSafetyPass(O,DAG,Errno)));
   Passes.push_back(static_cast<CoreGenPass *>(new CoreSafetyPass(O,DAG,Errno)));
   Passes.push_back(static_cast<CoreGenPass *>(new CommSafetyPass(O,DAG,Errno)));
   Passes.push_back(static_cast<CoreGenPass *>(new RegClassSafetyPass(O,DAG,Errno)));

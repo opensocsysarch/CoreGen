@@ -163,6 +163,22 @@ bool CoreGenChiselCodegen::ExecRegClassCodegen(CoreGenNode *N){
   return rtn;
 }
 
+bool CoreGenChiselCodegen::ExecPluginCodegen(CoreGenNode *N){
+  std::string FullPath = ChiselRoot + "/top/"
+                                    + CGRemoveDot(N->GetName())
+                                    + ".chisel";
+  std::string Package = Proj->GetProjName();
+
+  PluginCG *CG = new PluginCG(N,Proj,Package,FullPath,true,Errno);
+  bool rtn = true;
+  if( !CG->Execute() ){
+    rtn = false;
+  }
+
+  delete CG;
+  return rtn;
+}
+
 bool CoreGenChiselCodegen::WriteCoreConfig(std::ofstream &O){
   if( !O.is_open() ){
     Errno->SetError(CGERR_ERROR, "Could not write core config info" );
@@ -308,6 +324,11 @@ bool CoreGenChiselCodegen::Execute(){
   CoreGenNode *SocNode = nullptr;
 
   for( unsigned i=0; i<Top->GetNumChild(); i++ ){
+    if( Top->GetChild(i)->IsOverridden() ){
+      if( !ExecPluginCodegen(Top->GetChild(i)) )
+          rtn = false;
+    }
+
     // codegen the i'th node
     switch( Top->GetChild(i)->GetType() ){
     case CGSoc:

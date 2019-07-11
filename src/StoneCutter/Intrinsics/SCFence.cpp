@@ -10,11 +10,11 @@
 
 #include "CoreGen/StoneCutter/Intrinsics/SCFence.h"
 
-SCFence::SCFence() : SCIntrin(0,"FENCE") {
+SCFence::SCFence() : SCIntrin(0,"FENCE",false) {
   ISignals.push_back(new SCSig(FENCE));
 }
 
-SCFence::SCFence(unsigned NI, std::string K) : SCIntrin(NI,K) {
+SCFence::SCFence(unsigned NI, std::string K) : SCIntrin(NI,K,false) {
 }
 
 SCFence::~SCFence(){

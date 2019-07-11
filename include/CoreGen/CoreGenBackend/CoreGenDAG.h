@@ -91,6 +91,7 @@ private:
   friend class RegIdxPass;
   friend class RegFieldPass;
   friend class RegSafetyPass;
+  friend class SpadSafetyPass;
   friend class RegClassSafetyPass;
   friend class L1SharedPass;
   friend class MultSoCPass;

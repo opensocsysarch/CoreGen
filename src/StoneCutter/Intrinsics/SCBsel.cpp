@@ -10,10 +10,10 @@
 
 #include "CoreGen/StoneCutter/Intrinsics/SCBsel.h"
 
-SCBsel::SCBsel() : SCIntrin(3,"BSEL") {
+SCBsel::SCBsel() : SCIntrin(3,"BSEL",false) {
 }
 
-SCBsel::SCBsel(unsigned NI, std::string K) : SCIntrin(NI,K) {
+SCBsel::SCBsel(unsigned NI, std::string K) : SCIntrin(NI,K,false) {
 }
 
 SCBsel::~SCBsel(){

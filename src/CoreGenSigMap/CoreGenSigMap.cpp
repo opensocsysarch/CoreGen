@@ -29,7 +29,20 @@ bool CoreGenSigMap::InsertSignal( SCSig *S ){
   if( S == nullptr )
     return false;
 
-  Signals.push_back( S );
+  if( this->GetNumSignals() > 0 ){
+    SCSig *Prev = this->GetSignal(this->GetNumSignals()-1);
+    if( (Prev->GetInst() == S->GetInst()) &&
+        (Prev->GetName() == S->GetName()) ){
+      // duplicate signal found, just return
+      return true;
+    }else{
+      // not a duplicate
+      Signals.push_back( S );
+    }
+  }else{
+    Signals.push_back( S );
+  }
+
   return true;
 }
 
@@ -38,6 +51,42 @@ SCSig *CoreGenSigMap::GetSignal( unsigned Idx ){
     return nullptr;
 
   return Signals[Idx];
+}
+
+unsigned CoreGenSigMap::GetMaxSignalWidth( unsigned Idx ){
+  if( Idx > (Signals.size()-1) ){
+    return 0;
+  }
+
+  SigType Type = Signals[Idx]->GetType();
+  unsigned Max = Signals[Idx]->GetWidth();
+
+  for( unsigned i=0; i<Signals.size(); i++ ){
+    if( Signals[i]->GetType() == Type ){
+      if( Signals[i]->GetWidth() > Max )
+        Max = Signals[i]->GetWidth();
+    }
+  }
+
+  return Max;
+}
+
+unsigned CoreGenSigMap::GetMinSignalWidth( unsigned Idx ){
+  if( Idx > (Signals.size()-1) ){
+    return 0;
+  }
+
+  SigType Type = Signals[Idx]->GetType();
+  unsigned Min = Signals[Idx]->GetWidth();
+
+  for( unsigned i=0; i<Signals.size(); i++ ){
+    if( Signals[i]->GetType() == Type ){
+      if( Signals[i]->GetWidth() < Min )
+        Min = Signals[i]->GetWidth();
+    }
+  }
+
+  return Min;
 }
 
 bool CoreGenSigMap::WriteSigMap( std::string File ){
@@ -80,6 +129,21 @@ bool CoreGenSigMap::WriteSigMap( std::string File ){
   OutYaml.close();
 
   return true;
+}
+
+FusedOpType CoreGenSigMap::StrToFusedOpType( std::string Fop ){
+  if( Fop == "FOP_UNK" ){
+    return FOP_UNK;
+  }else if( Fop == "FOP_SEXT" ){
+    return FOP_SEXT;
+  }else if( Fop == "FOP_ZEXT" ){
+    return FOP_ZEXT;
+  }else if( Fop == "FOP_NOT" ){
+    return FOP_NOT;
+  }else if( Fop == "FOP_NEG" ){
+    return FOP_NEG;
+  }
+  return FOP_UNK;
 }
 
 SigType CoreGenSigMap::StrToSigType( std::string Sig ){
@@ -231,7 +295,17 @@ bool CoreGenSigMap::ReadInstSignals(const YAML::Node& InstNodes){
           return false;
         unsigned Width = LSNode["Width"].as<unsigned>();
 
+        std::string FusedOp;
+        if( CheckValidNode(LSNode,"FusedOp") ){
+          FusedOp = LSNode["FusedOp"].as<std::string>();
+        }
+
         Signals.push_back(new SCSig(Type,Width,Name,SigName));
+        if( FusedOp.length() > 0 ){
+          // write the fused op to the latest signal
+          FusedOpType FType = StrToFusedOpType(FusedOp);
+          Signals[Signals.size()-1]->SetFusedType(FType);
+        }
       }
     }
   }
@@ -323,6 +397,13 @@ bool CoreGenSigMap::WriteInstSignals(YAML::Emitter *out){
   // walk all the signals and derive the names
   std::vector<std::string> SigNames;
   for( unsigned i=0; i<Signals.size(); i++ ){
+    SigNames.push_back(Signals[i]->GetInst());
+  }
+  std::sort(SigNames.begin(), SigNames.end());
+  SigNames.erase( std::unique( SigNames.begin(), SigNames.end()), SigNames.end() );
+
+#if 0
+  for( unsigned i=0; i<Signals.size(); i++ ){
     if( SigNames.size() > 0 ){
       bool found = false;
       for( unsigned j=0; j<SigNames.size(); j++ ){
@@ -335,17 +416,20 @@ bool CoreGenSigMap::WriteInstSignals(YAML::Emitter *out){
       SigNames.push_back(Signals[i]->GetInst());
     }
   }
+#endif
 
   // walk all the signal names, derive all the signals and write them out
   for( unsigned i=0; i<SigNames.size(); i++ ){
-    std::vector<SCSig *> Sigs;
+    //std::vector<SCSig *> Sigs;
+    std::vector<SCSig *> CSigs;
 
     // retrieve all the signals for the target instruction
     for( unsigned j=0; j<Signals.size(); j++ ){
       if( Signals[j]->GetInst() == SigNames[i] )
-        Sigs.push_back(Signals[j]);
+        CSigs.push_back(Signals[j]);
     }
 
+#if 0
     // make the vector unique
     std::vector<SCSig *> CSigs;
 
@@ -363,6 +447,7 @@ bool CoreGenSigMap::WriteInstSignals(YAML::Emitter *out){
         CSigs.push_back(Sigs[j]);
       }
     }
+#endif
 
     // write out the instruction
     *out << YAML::BeginMap << YAML::Key << "Inst" << YAML::Value << SigNames[i];
@@ -372,6 +457,8 @@ bool CoreGenSigMap::WriteInstSignals(YAML::Emitter *out){
       *out << YAML::Key << "Signal" << YAML::Value << CSigs[j]->GetName();
       *out << YAML::Key << "Type" << YAML::Value << CSigs[j]->SigTypeToStr();
       *out << YAML::Key << "Width" << YAML::Value << CSigs[j]->GetWidth();
+      if( CSigs[j]->GetFusedType() != FOP_UNK )
+        *out << YAML::Key << "FusedOp" << YAML::Value << CSigs[j]->FusedOpTypeToStr();
       *out << YAML::EndMap;
     }
     *out << YAML::EndSeq;

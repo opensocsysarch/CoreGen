@@ -119,6 +119,11 @@ bool CoreGenNode::InsertPlugin( CoreGenNode *N ){
   return InsertChild(N);
 }
 
+bool CoreGenNode::PurgeChildren(){
+  CNodes.clear();
+  return true;
+}
+
 bool CoreGenNode::DeleteChild( CoreGenNode *N ){
   if( !N )
     return false;
