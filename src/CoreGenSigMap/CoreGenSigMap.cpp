@@ -254,17 +254,22 @@ SigType CoreGenSigMap::StrToSigType( std::string Sig ){
 }
 
 bool CoreGenSigMap::ReadTopLevelSignals(const YAML::Node& TopNodes){
-  if( TopNodes.size() == 0 )
+  if( TopNodes.size() == 0 ){
+    Error = "No top-level signals found";
     return false;
+  }
 
   for( unsigned i=0; i<TopNodes.size(); i++ ){
     const YAML::Node& Node = TopNodes[i];
     if( !CheckValidNode(Node,"Signal") ){
+      Error = "Top-level signal node contains no name";
       return false;
     }
     std::string LSig = Node["Signal"].as<std::string>();
-    if( LSig.length() == 0 )
+    if( LSig.length() == 0 ){
+      Error = "Top level signal has a null name";
       return false;
+    }
     TopSigs.push_back(StrToSigType(LSig));
   }
   return true;
@@ -276,23 +281,31 @@ bool CoreGenSigMap::ReadInstSignals(const YAML::Node& InstNodes){
 
   for( unsigned i=0; i<InstNodes.size(); i++ ){
     const YAML::Node& Node = InstNodes[i];
-    if( !CheckValidNode(Node,"Inst") )
+    if( !CheckValidNode(Node,"Inst") ){
+      Error = "Instruction block has no name";
       return false;
+    }
     std::string Name = Node["Inst"].as<std::string>();
     if( Node["Signals"] ){
       const YAML::Node& SNode = Node["Signals"];
       for( unsigned j=0; j<SNode.size(); j++ ){
         const YAML::Node& LSNode = SNode[j];
-        if( !CheckValidNode(LSNode,"Signal") )
+        if( !CheckValidNode(LSNode,"Signal") ){
+          Error = "Instruction signal has no name";
           return false;
+        }
         std::string SigName = LSNode["Signal"].as<std::string>();
 
-        if( !CheckValidNode(LSNode,"Type") )
+        if( !CheckValidNode(LSNode,"Type") ){
+          Error = "Instruction signal has no type: Instruction=" + Name;
           return false;
+        }
         SigType Type = StrToSigType(LSNode["Type"].as<std::string>());
 
-        if( !CheckValidNode(LSNode,"Width") )
+        if( !CheckValidNode(LSNode,"Width") ){
+          Error = "Instruction signal has no width: Instruction=" + Name;
           return false;
+        }
         unsigned Width = LSNode["Width"].as<unsigned>();
 
         std::string FusedOp;
@@ -317,12 +330,16 @@ bool CoreGenSigMap::ReadTmpRegs(const YAML::Node& TmpNodes){
 
   for( unsigned i=0; i<TmpNodes.size(); i++ ){
     const YAML::Node& Node = TmpNodes[i];
-    if( !CheckValidNode(Node,"Temp") )
+    if( !CheckValidNode(Node,"Temp") ){
+      Error = "Temp register has no name";
       return false;
+    }
     std::string Name = Node["Temp"].as<std::string>();
 
-    if( !CheckValidNode(Node,"Width") )
+    if( !CheckValidNode(Node,"Width") ){
+      Error = "Temp register has no width: Temp=" + Name;
       return false;
+    }
     unsigned Width = Node["Width"].as<unsigned>();
 
     if( Node["Mappings"] ){
@@ -358,10 +375,13 @@ bool CoreGenSigMap::ReadSigMap( std::string File ){
   try{
     IR = YAML::LoadFile(File);
   }catch(YAML::ParserException& e){
+    Error = "Yaml parser failed: caught exception";
     return false;
   }
-  if( IR.IsNull() )
+  if( IR.IsNull() ){
+    Error = "Signal map is empty";
     return false;
+  }
 
   // the file is open and has nodes, read everything that is valid
   // read the top-level signals

@@ -23,6 +23,7 @@
 #include <vector>
 #include <fstream>
 #include <algorithm>
+#include <string>
 
 // YAML headers
 #include "yaml-cpp/yaml.h"
@@ -41,6 +42,8 @@ private:
   std::vector<SigType> TopSigs;
 
   unsigned TmpIdx;
+
+  std::string Error;
 
   // private functions
   /// Writes the top-level signal map to the YAML file
@@ -77,6 +80,9 @@ public:
 
   /// Default destructor
   ~CoreGenSigMap();
+
+  /// Retrieves the internal error string for any failed operations
+  std::string GetErrStr() { return Error; }
 
   /// Inserts a signal into the signal map
   bool InsertSignal( SCSig *Sig );
