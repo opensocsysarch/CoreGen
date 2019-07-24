@@ -32,6 +32,7 @@ void SCChiselCodeGen::InitIntrinsics(){
   Intrins.push_back(static_cast<SCIntrin *>(new SCLoadElem()));
   Intrins.push_back(static_cast<SCIntrin *>(new SCStoreElem()));
   Intrins.push_back(static_cast<SCIntrin *>(new SCNot()));
+  Intrins.push_back(static_cast<SCIntrin *>(new SCNeg()));
   Intrins.push_back(static_cast<SCIntrin *>(new SCReverse()));
   Intrins.push_back(static_cast<SCIntrin *>(new SCPopcount()));
   Intrins.push_back(static_cast<SCIntrin *>(new SCClz()));

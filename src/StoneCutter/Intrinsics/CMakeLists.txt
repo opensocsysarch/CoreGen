@@ -17,6 +17,7 @@ SCStoreElem.cpp
 SCClz.cpp
 SCCtz.cpp
 SCNot.cpp
+SCNeg.cpp
 SCPopcount.cpp
 SCReverse.cpp
 SCSext.cpp

@@ -115,6 +115,7 @@ int main( int argc, char **argv ){
   CoreGenSigMap *SM = new CoreGenSigMap();
   if( !SM->ReadSigMap(FName) ){
     std::cout << "Failed to read signal map: " << FName << std::endl;
+    std::cout << "Error = " << SM->GetErrStr() << std::endl;
     delete SM;
     return -1;
   }else{
