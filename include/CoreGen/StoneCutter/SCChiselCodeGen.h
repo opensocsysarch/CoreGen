@@ -93,6 +93,8 @@ private:
   bool ExecuteUcodeCodegen();                 ///< Executes a microcode codegen using sigmaps
   bool ExecuteManualCodegen();                ///< Executes a manual codegen
 
+  void WriteUCodeTableComment();              ///< Writes the microcode table comment to the Chisel file
+
 public:
 
   /// Default constructor

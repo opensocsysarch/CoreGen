@@ -97,6 +97,13 @@ bool SCChiselCodeGen::ExecutePasses(){
   return rtn;
 }
 
+void SCChiselCodeGen::WriteUCodeTableComment(){
+  OutFile << "//----------------------------------------------------------------" << std::endl;
+  OutFile << "// Microcode Table Fields" << std::endl;
+  OutFile << "//----------------------------------------------------------------" << std::endl;
+  OutFile << "//----------------------------------------------------------------" << std::endl;
+}
+
 bool SCChiselCodeGen::ExecuteUcodeCodegen(){
   // retrieve the package and isa names
   std::string Package = Opts->GetPackage();
@@ -117,12 +124,20 @@ bool SCChiselCodeGen::ExecuteUcodeCodegen(){
 
   // TODO: generate all the temporary registers inside the core
 
+  // write out a comment block to describe all the fields
+  WriteUCodeTableComment();
+
   // write out the microcode object
   OutFile << "object " << ISA << "Microcode" << std::endl;
   OutFile << "{" << std::endl;
   OutFile << "\tval codes = Array[" << ISA << "MicroOp](" << std::endl;
 
+  // Stage 1: write out the predefined operations
+  // These include:
+  // - 
 
+
+  // write out the closure of the table structure
   OutFile << "\t)" << std::endl;
   OutFile << "}" << std::endl;
 
