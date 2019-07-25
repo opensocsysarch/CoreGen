@@ -75,12 +75,12 @@ void SCChiselCodeGen::InitPasses(){
 }
 
 void SCChiselCodeGen::WriteChiselHeader(){
-  OutFile << "\\\\" << std::endl;
-  OutFile << "\\\\ " << ChiselFile << std::endl;
-  OutFile << "\\\\" << std::endl;
-  OutFile << "\\\\ Chisel generated from StoneCutter input source" << std::endl;
-  OutFile << "\\\\ " << SCCurrentDateTime();
-  OutFile << "\\\\" << std::endl << std::endl;
+  OutFile << "//" << std::endl;
+  OutFile << "// " << ChiselFile << std::endl;
+  OutFile << "//" << std::endl;
+  OutFile << "// Chisel generated from StoneCutter input source" << std::endl;
+  OutFile << "// " << SCCurrentDateTime();
+  OutFile << "//" << std::endl << std::endl;
 }
 
 bool SCChiselCodeGen::ExecutePasses(){
@@ -97,11 +97,46 @@ bool SCChiselCodeGen::ExecutePasses(){
   return rtn;
 }
 
-void SCChiselCodeGen::WriteUCodeTableComment(){
+void SCChiselCodeGen::WriteUCodeTableComment(SCPipeInfo *PInfo){
+  OutFile << std::endl << std::endl;
   OutFile << "//----------------------------------------------------------------" << std::endl;
   OutFile << "// Microcode Table Fields" << std::endl;
   OutFile << "//----------------------------------------------------------------" << std::endl;
+  OutFile << "// | LABEL | LD_IR | REG_SEL | REG_WR | EN_REG ";
+
+  for( unsigned i=0; i<PInfo->GetNumUniqueRegFields(); i++ ){
+    OutFile << "| LD_" << PInfo->GetUniqueFieldName(i) << " ";
+  }
+
+  if( PInfo->GetNumUniqueImmFields() > 0 ){
+    OutFile << "| IMM_SEL | EN_IMM | ALU_OP | EN_ALU | LD_MA | MEM_WR | EN_MEM | uBr_SEL | uBr_TARGET |" << std::endl;
+  }else{
+    OutFile << "| ALU_OP | EN_ALU | LD_MA | MEM_WR | EN_MEM | uBr_SEL | uBr_TARGET |" << std::endl;
+  }
   OutFile << "//----------------------------------------------------------------" << std::endl;
+  OutFile << "// Descriptions" << std::endl;
+  OutFile << "// - LD_IR = Load instruction register" << std::endl;
+  OutFile << "// - REG_SEL = Register address select" << std::endl;
+  OutFile << "// - REG_WR = Determines if operation is read/write" << std::endl;
+  OutFile << "// - EN_REG = Register enable signal **" << std::endl;
+
+  for( unsigned i=0; i<PInfo->GetNumUniqueRegFields(); i++ ){
+    OutFile << "// - LD_" << PInfo->GetUniqueFieldName(i) << " = AMS Register enable" << std::endl;
+  }
+
+  if( PInfo->GetNumUniqueImmFields() > 0 ){
+    OutFile << "// - IMM_SEL = Determines the immediate field to select" << std::endl;
+    OutFile << "// - EN_IMM = Immediate enable signal **" << std::endl;
+  }
+  OutFile << "// - ALU_OP = Determines the type of ALU operation" << std::endl;
+  OutFile << "// - EN_ALU = ALU enable signal **" << std::endl;
+  OutFile << "// - LD_MA = Load memory address" << std::endl;
+  OutFile << "// - MEM_WR = Determines is opeation is read/write" << std::endl;
+  OutFile << "// - EN_MEM = Memory enable signal **" << std::endl;
+  OutFile << "//----------------------------------------------------------------" << std::endl;
+  OutFile << "// ** - Only one of these signals can be selected within a give uOp" << std::endl;
+  OutFile << "//----------------------------------------------------------------" << std::endl;
+  OutFile << std::endl << std::endl;
 }
 
 bool SCChiselCodeGen::ExecuteUcodeCodegen(){
@@ -111,6 +146,15 @@ bool SCChiselCodeGen::ExecuteUcodeCodegen(){
 
   if( Package.length() == 0 ){
     Package = ISA;
+  }
+
+  // derive all the field info for our ISA
+  SCPipeInfo *PInfo = new SCPipeInfo( SCParser::TheModule.get(),
+                                      Opts,
+                                      Msgs );
+  if( PInfo == nullptr ){
+    Msgs->PrintMsg( L_ERROR, "Could not generate pipe info from IR attributes" );
+    return false;
   }
 
   // write the package info and required chisel packages
@@ -125,7 +169,7 @@ bool SCChiselCodeGen::ExecuteUcodeCodegen(){
   // TODO: generate all the temporary registers inside the core
 
   // write out a comment block to describe all the fields
-  WriteUCodeTableComment();
+  WriteUCodeTableComment(PInfo);
 
   // write out the microcode object
   OutFile << "object " << ISA << "Microcode" << std::endl;
@@ -134,7 +178,11 @@ bool SCChiselCodeGen::ExecuteUcodeCodegen(){
 
   // Stage 1: write out the predefined operations
   // These include:
-  // - 
+  // - FETCH : fetch new instruction
+  // - NOP : no operation
+  // - ILLEGAL : illegal operation
+  // - UNIMPL : unimplemented instruction
+  // - INIT_PC : init the PC
 
 
   // write out the closure of the table structure
@@ -143,6 +191,8 @@ bool SCChiselCodeGen::ExecuteUcodeCodegen(){
 
   // write the footer
   OutFile << "}" << std::endl;
+
+  delete PInfo;
 
   return true;
 }

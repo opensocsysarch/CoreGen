@@ -23,7 +23,7 @@ SCPipeInfo::SCPipeInfo(Module *TM, SCOpts *O, SCMsg *M)
       AttributeSet AttrSet = Global.getAttributes();
 
       if( AttrSet.hasAttribute("fieldtype") ){
-        if( AttrSet.getAttribute("fieldype").getValueAsString().str() == "immediate" ){
+        if( AttrSet.getAttribute("fieldtype").getValueAsString().str() == "immediate" ){
           // found an immediate field
           unsigned Idx = 0;
           while( AttrSet.hasAttribute("instformat"+std::to_string(Idx)) ){
@@ -31,8 +31,9 @@ SCPipeInfo::SCPipeInfo(Module *TM, SCOpts *O, SCMsg *M)
               std::make_pair<std::string,std::string>(
                 AttrSet.getAttribute("instformat"+std::to_string(Idx)).getValueAsString().str(),
                 Global.getName().str()) );
+            Idx++;
           }
-        }else if( AttrSet.getAttribute("fieldype").getValueAsString().str() == "immediate" ){
+        }else if( AttrSet.getAttribute("fieldtype").getValueAsString().str() == "register" ){
           // found a register field
           unsigned Idx = 0;
           while( AttrSet.hasAttribute("instformat"+std::to_string(Idx)) ){
@@ -40,6 +41,7 @@ SCPipeInfo::SCPipeInfo(Module *TM, SCOpts *O, SCMsg *M)
               std::make_pair<std::string,std::string>(
                 AttrSet.getAttribute("instformat"+std::to_string(Idx)).getValueAsString().str(),
                 Global.getName().str()) );
+            Idx++;
           }
         }
         // else, ignore the encoding fields
@@ -49,6 +51,7 @@ SCPipeInfo::SCPipeInfo(Module *TM, SCOpts *O, SCMsg *M)
           // found a pc register
           PCReg.first  = AttrSet.getAttribute("regclass").getValueAsString().str();
           PCReg.second = AttrSet.getAttribute("register").getValueAsString().str();
+          PCPresent = true;
         }
       }
     }

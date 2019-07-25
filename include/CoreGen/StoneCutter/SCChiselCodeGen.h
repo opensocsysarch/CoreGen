@@ -63,6 +63,7 @@
 #include "CoreGen/StoneCutter/SCIntrinsics.h"
 #include "CoreGen/StoneCutter/SCPass.h"
 #include "CoreGen/StoneCutter/SCPasses.h"
+#include "CoreGen/StoneCutter/SCPipeInfo.h"
 
 #include "CoreGen/CoreGenSigMap/CoreGenSigMap.h"
 
@@ -93,7 +94,7 @@ private:
   bool ExecuteUcodeCodegen();                 ///< Executes a microcode codegen using sigmaps
   bool ExecuteManualCodegen();                ///< Executes a manual codegen
 
-  void WriteUCodeTableComment();              ///< Writes the microcode table comment to the Chisel file
+  void WriteUCodeTableComment(SCPipeInfo *P); ///< Writes the microcode table comment to the Chisel file
 
 public:
 
