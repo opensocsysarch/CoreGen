@@ -131,12 +131,176 @@ void SCChiselCodeGen::WriteUCodeTableComment(SCPipeInfo *PInfo){
   OutFile << "// - ALU_OP = Determines the type of ALU operation" << std::endl;
   OutFile << "// - EN_ALU = ALU enable signal **" << std::endl;
   OutFile << "// - LD_MA = Load memory address" << std::endl;
-  OutFile << "// - MEM_WR = Determines is opeation is read/write" << std::endl;
+  OutFile << "// - MEM_WR = Determines is operation is read/write" << std::endl;
   OutFile << "// - EN_MEM = Memory enable signal **" << std::endl;
   OutFile << "//----------------------------------------------------------------" << std::endl;
   OutFile << "// ** - Only one of these signals can be selected within a give uOp" << std::endl;
   OutFile << "//----------------------------------------------------------------" << std::endl;
   OutFile << std::endl << std::endl;
+}
+
+void SCChiselCodeGen::WriteFETCHUOp(SCPipeInfo *PInfo){
+  // LABEL | LD_IR | REG_SEL | REG_WR | EN_REG
+  // <LD_regfield,...>
+  // <IMM_SEL,EN_IMM>
+  // ALU_OP | EN_ALU | LD_MA | MEM_WR | EN_MEM | uBr_SEL | uBr_Target
+
+  //-- [MA <- PC]
+  //-- [A <- PC]
+  OutFile << "\t\tLabel(\"U_FETCH\"), Signals(Cat(LDIR_X, RS_PC, RWR_0, REN_1, ";
+  // write out the register selects
+  for( unsigned i=0; i<PInfo->GetNumUniqueRegFields(); i++ ){
+    if( i == 0 ){
+      OutFile << "LD" << PInfo->GetUniqueFieldName(i) << "_1, ";
+    }else{
+      OutFile << "LD" << PInfo->GetUniqueFieldName(i) << "_X, ";
+    }
+  }
+  // write out the immediate selects
+  if( PInfo->GetNumUniqueImmFields() > 0 ){
+    OutFile << "IS_X, IEN_0, ";
+  }
+  OutFile << "ALU_X, AEN_0, LDMA_1, MWR_X, MEN_0, UBR_N), \"X\")" << std::endl;
+
+  //-- [IR <- MEM]
+  OutFile << "\t\t\tSignals(Cat(LDIR_1, RS_X, RWR_X, REN_0, ";
+  // write out the register selects
+  for( unsigned i=0; i<PInfo->GetNumUniqueRegFields(); i++ ){
+    if( i == 0 ){
+      OutFile << "LD" << PInfo->GetUniqueFieldName(i) << "_0, ";
+    }else{
+      OutFile << "LD" << PInfo->GetUniqueFieldName(i) << "_X, ";
+    }
+  }
+  // write out the immediate selects
+  if( PInfo->GetNumUniqueImmFields() > 0 ){
+    OutFile << "IS_X, IEN_0, ";
+  }
+  OutFile << "ALU_X, AEN_0, LDMA_0, MWR_0, MEN_1, UBR_S), \"X\")" << std::endl;
+
+  //-- [PC <- A + 4]
+  OutFile << "\t\t\tSignals(Cat(LDIR_0, RS_X, RWR_1, REN_1, ";
+  // write out the register selects
+  for( unsigned i=0; i<PInfo->GetNumUniqueRegFields(); i++ ){
+    if( i == 0 ){
+      OutFile << "LD" << PInfo->GetUniqueFieldName(i) << "_0, ";
+    }else{
+      OutFile << "LD" << PInfo->GetUniqueFieldName(i) << "_X, ";
+    }
+  }
+  // write out the immediate selects
+  if( PInfo->GetNumUniqueImmFields() > 0 ){
+    OutFile << "IS_X, IEN_0, ";
+  }
+  // TODO : need to derive what the width of the instructions are
+  OutFile << "ALU_IN_A_4, AEN_1, LDMA_X, MWR_X, MEN_0, UBR_D), \"X\")" << std::endl;
+}
+
+void SCChiselCodeGen::WriteNOPUOp(SCPipeInfo *PInfo){
+  // LABEL | LD_IR | REG_SEL | REG_WR | EN_REG
+  // <LD_regfield,...>
+  // <IMM_SEL,EN_IMM>
+  // ALU_OP | EN_ALU | LD_MA | MEM_WR | EN_MEM | uBr_SEL | uBr_Target
+
+  //-- [uBr to FETCH]
+  OutFile << "\t\t,Label(\"U_NOP\"), Signals(Cat(LDIR_0, RS_X, RWR_X, REN_0, ";
+  // write out the register selects
+  for( unsigned i=0; i<PInfo->GetNumUniqueRegFields(); i++ ){
+    if( i == 0 ){
+      OutFile << "LD" << PInfo->GetUniqueFieldName(i) << "_X, ";
+    }else{
+      OutFile << "LD" << PInfo->GetUniqueFieldName(i) << "_X, ";
+    }
+  }
+  // write out the immediate selects
+  if( PInfo->GetNumUniqueImmFields() > 0 ){
+    OutFile << "IS_X, IEN_0, ";
+  }
+  OutFile << "ALU_X, AEN_0, LDMA_X, MWR_X, MEN_X, UBR_J), \"U_FETCH\")" << std::endl;
+}
+
+void SCChiselCodeGen::WriteILLEGALUOp(SCPipeInfo *PInfo){
+  // LABEL | LD_IR | REG_SEL | REG_WR | EN_REG
+  // <LD_regfield,...>
+  // <IMM_SEL,EN_IMM>
+  // ALU_OP | EN_ALU | LD_MA | MEM_WR | EN_MEM | uBr_SEL | uBr_Target
+
+  //-- [uBr to FETCH]
+  OutFile << "\t\t,Label(\"U_ILLEGAL\"), Signals(Cat(LDIR_0, RS_X, RWR_X, REN_0, ";
+  // write out the register selects
+  for( unsigned i=0; i<PInfo->GetNumUniqueRegFields(); i++ ){
+    if( i == 0 ){
+      OutFile << "LD" << PInfo->GetUniqueFieldName(i) << "_X, ";
+    }else{
+      OutFile << "LD" << PInfo->GetUniqueFieldName(i) << "_X, ";
+    }
+  }
+  // write out the immediate selects
+  if( PInfo->GetNumUniqueImmFields() > 0 ){
+    OutFile << "IS_X, IEN_0, ";
+  }
+  OutFile << "ALU_X, AEN_0, LDMA_X, MWR_X, MEN_X, UBR_N), \"X\")" << std::endl;
+
+  OutFile << "\t\t\tSignals(Cat(LDIR_0, RS_PC, RWR_1, REN_1, ";
+  // write out the register selects
+  for( unsigned i=0; i<PInfo->GetNumUniqueRegFields(); i++ ){
+    if( i == 0 ){
+      OutFile << "LD" << PInfo->GetUniqueFieldName(i) << "_X, ";
+    }else{
+      OutFile << "LD" << PInfo->GetUniqueFieldName(i) << "_X, ";
+    }
+  }
+  // write out the immediate selects
+  if( PInfo->GetNumUniqueImmFields() > 0 ){
+    OutFile << "IS_X, IEN_0, ";
+  }
+  OutFile << "ALU_EVEC, AEN_1, LDMA_X, MWR_X, MEN_0, UBR_J), \"U_FETCH\")" << std::endl;
+}
+
+void SCChiselCodeGen::WriteUNIMPLUOp(SCPipeInfo *PInfo){
+  // LABEL | LD_IR | REG_SEL | REG_WR | EN_REG
+  // <LD_regfield,...>
+  // <IMM_SEL,EN_IMM>
+  // ALU_OP | EN_ALU | LD_MA | MEM_WR | EN_MEM | uBr_SEL | uBr_Target
+
+  //-- [uBr to FETCH]
+  OutFile << "\t\t,Label(\"U_UNIMP\"), Signals(Cat(LDIR_0, RS_X, RWR_X, REN_0, ";
+  // write out the register selects
+  for( unsigned i=0; i<PInfo->GetNumUniqueRegFields(); i++ ){
+    if( i == 0 ){
+      OutFile << "LD" << PInfo->GetUniqueFieldName(i) << "_X, ";
+    }else{
+      OutFile << "LD" << PInfo->GetUniqueFieldName(i) << "_X, ";
+    }
+  }
+  // write out the immediate selects
+  if( PInfo->GetNumUniqueImmFields() > 0 ){
+    OutFile << "IS_X, IEN_0, ";
+  }
+  OutFile << "ALU_X, AEN_0, LDMA_X, MWR_X, MEN_X, UBR_J), \"U_FETCH\")" << std::endl;
+}
+
+void SCChiselCodeGen::WriteINITPCUOp(SCPipeInfo *PInfo){
+  // LABEL | LD_IR | REG_SEL | REG_WR | EN_REG
+  // <LD_regfield,...>
+  // <IMM_SEL,EN_IMM>
+  // ALU_OP | EN_ALU | LD_MA | MEM_WR | EN_MEM | uBr_SEL | uBr_Target
+
+  //-- [uBr to FETCH]
+  OutFile << "\t\t,Label(\"U_INITPC\"), Signals(Cat(LDIR_0, RS_PC, RWR_1, REN_1, ";
+  // write out the register selects
+  for( unsigned i=0; i<PInfo->GetNumUniqueRegFields(); i++ ){
+    if( i == 0 ){
+      OutFile << "LD" << PInfo->GetUniqueFieldName(i) << "_X, ";
+    }else{
+      OutFile << "LD" << PInfo->GetUniqueFieldName(i) << "_X, ";
+    }
+  }
+  // write out the immediate selects
+  if( PInfo->GetNumUniqueImmFields() > 0 ){
+    OutFile << "IS_X, IEN_0, ";
+  }
+  OutFile << "ALU_X, AEN_0, LDMA_X, MWR_X, MEN_X, UBR_J), \"U_FETCH\")" << std::endl;
 }
 
 bool SCChiselCodeGen::ExecuteUcodeCodegen(){
@@ -183,6 +347,11 @@ bool SCChiselCodeGen::ExecuteUcodeCodegen(){
   // - ILLEGAL : illegal operation
   // - UNIMPL : unimplemented instruction
   // - INIT_PC : init the PC
+  WriteFETCHUOp(PInfo);
+  WriteNOPUOp(PInfo);
+  WriteILLEGALUOp(PInfo);
+  WriteUNIMPLUOp(PInfo);
+  WriteINITPCUOp(PInfo);
 
 
   // write out the closure of the table structure

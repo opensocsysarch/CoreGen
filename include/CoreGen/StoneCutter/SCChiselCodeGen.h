@@ -95,6 +95,11 @@ private:
   bool ExecuteManualCodegen();                ///< Executes a manual codegen
 
   void WriteUCodeTableComment(SCPipeInfo *P); ///< Writes the microcode table comment to the Chisel file
+  void WriteFETCHUOp(SCPipeInfo *PInfo);
+  void WriteNOPUOp(SCPipeInfo *PInfo);
+  void WriteILLEGALUOp(SCPipeInfo *PInfo);
+  void WriteUNIMPLUOp(SCPipeInfo *PInfo);
+  void WriteINITPCUOp(SCPipeInfo *PInfo);
 
 public:
 
