@@ -193,7 +193,7 @@ void SCChiselCodeGen::WriteFETCHUOp(SCPipeInfo *PInfo){
     OutFile << "IS_X, IEN_0, ";
   }
   // TODO : need to derive what the width of the instructions are
-  OutFile << "ALU_IN_A_4, AEN_1, LDMA_X, MWR_X, MEN_0, UBR_D), \"X\")" << std::endl;
+  OutFile << "ALU_INC_A_4, AEN_1, LDMA_X, MWR_X, MEN_0, UBR_D), \"X\")" << std::endl;
 }
 
 void SCChiselCodeGen::WriteNOPUOp(SCPipeInfo *PInfo){
