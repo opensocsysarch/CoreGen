@@ -77,7 +77,7 @@ private:
   std::string ChiselFile;                     ///< Output file
   std::string SigMap;                         ///< Signal map output file
 
-  CoreGenSigMap *SM;                          ///< Signal map
+  CoreGenSigMap *CSM;                         ///< Signal map
 
   std::ofstream OutFile;                      ///< Output file stream
 

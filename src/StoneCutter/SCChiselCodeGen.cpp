@@ -14,7 +14,7 @@ SCChiselCodeGen::SCChiselCodeGen( SCParser *P,
                                   SCOpts *O,
                                   SCMsg *M,
                                   std::string COF )
-  : Parser(P), Opts(O), Msgs(M), ChiselFile(COF), SM(nullptr) {
+  : Parser(P), Opts(O), Msgs(M), ChiselFile(COF), CSM(nullptr) {
   InitIntrinsics();
   InitPasses();
 }
@@ -22,6 +22,8 @@ SCChiselCodeGen::SCChiselCodeGen( SCParser *P,
 SCChiselCodeGen::~SCChiselCodeGen(){
   Intrins.clear();
   Passes.clear();
+  if( CSM )
+    delete CSM;
 }
 
 void SCChiselCodeGen::InitIntrinsics(){
@@ -353,6 +355,10 @@ bool SCChiselCodeGen::ExecuteUcodeCodegen(){
   WriteUNIMPLUOp(PInfo);
   WriteINITPCUOp(PInfo);
 
+  // Stage 2: for each instruction in the signal map,
+  //          walk the list of signals and generate the uOp
+  //          table for each instruction
+
 
   // write out the closure of the table structure
   OutFile << "\t)" << std::endl;
@@ -398,13 +404,7 @@ bool SCChiselCodeGen::ExecuteCodegen(){
   }
 
   // attempt to read the signal map back out
-  CoreGenSigMap *CSM = nullptr;
-  if( SigMap.length() > 0 ){
-    CSM = new CoreGenSigMap();
-    if( !CSM->ReadSigMap( SigMap ) ){
-      Msgs->PrintMsg( L_ERROR, "Could not read signal map from file: " + SigMap );
-      return false;
-    }
+  if( CSM ){
     return ExecuteUcodeCodegen();
   }else{
     return ExecuteManualCodegen();
@@ -484,8 +484,8 @@ bool SCChiselCodeGen::GenerateChisel(){
 
   // if it exists, read the signal map
   if( SigMap.length() > 0 ){
-    SM = new CoreGenSigMap();
-    if( !SM->ReadSigMap(SigMap) ){
+    CSM = new CoreGenSigMap();
+    if( !CSM->ReadSigMap(SigMap) ){
       Msgs->PrintMsg( L_ERROR, "Error reading signal map" );
       return false;
     }

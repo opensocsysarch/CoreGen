@@ -408,6 +408,37 @@ bool CoreGenSigMap::ReadSigMap( std::string File ){
   return true;
 }
 
+unsigned CoreGenSigMap::GetNumInst(){
+  std::vector<std::string> SigNames;
+  for( unsigned i=0; i<Signals.size(); i++ ){
+    SigNames.push_back(Signals[i]->GetInst());
+  }
+  std::sort(SigNames.begin(), SigNames.end());
+  SigNames.erase( std::unique( SigNames.begin(), SigNames.end()), SigNames.end() );
+
+  return SigNames.size();
+}
+
+std::vector<std::string> CoreGenSigMap::GetInstVect(){
+  std::vector<std::string> SigNames;
+  for( unsigned i=0; i<Signals.size(); i++ ){
+    SigNames.push_back(Signals[i]->GetInst());
+  }
+  std::sort(SigNames.begin(), SigNames.end());
+  SigNames.erase( std::unique( SigNames.begin(), SigNames.end()), SigNames.end() );
+  return SigNames;
+}
+
+std::vector<SCSig *> CoreGenSigMap::GetSigVect(std::string Inst){
+  std::vector<SCSig *> CSigs;
+  for( unsigned i=0; i<Signals.size(); i++ ){
+    if( Signals[i]->GetInst() == Inst ){
+      CSigs.push_back(Signals[i]);
+    }
+  }
+  return CSigs;
+}
+
 bool CoreGenSigMap::WriteInstSignals(YAML::Emitter *out){
   if( out == nullptr )
     return false;
@@ -422,22 +453,6 @@ bool CoreGenSigMap::WriteInstSignals(YAML::Emitter *out){
   std::sort(SigNames.begin(), SigNames.end());
   SigNames.erase( std::unique( SigNames.begin(), SigNames.end()), SigNames.end() );
 
-#if 0
-  for( unsigned i=0; i<Signals.size(); i++ ){
-    if( SigNames.size() > 0 ){
-      bool found = false;
-      for( unsigned j=0; j<SigNames.size(); j++ ){
-        if( Signals[i]->GetInst() == SigNames[j] )
-          found = true;
-      }
-      if( !found )
-        SigNames.push_back(Signals[i]->GetInst());
-    }else{
-      SigNames.push_back(Signals[i]->GetInst());
-    }
-  }
-#endif
-
   // walk all the signal names, derive all the signals and write them out
   for( unsigned i=0; i<SigNames.size(); i++ ){
     //std::vector<SCSig *> Sigs;
@@ -448,26 +463,6 @@ bool CoreGenSigMap::WriteInstSignals(YAML::Emitter *out){
       if( Signals[j]->GetInst() == SigNames[i] )
         CSigs.push_back(Signals[j]);
     }
-
-#if 0
-    // make the vector unique
-    std::vector<SCSig *> CSigs;
-
-    // build a unique vector of all the local instruction signals
-    for( unsigned j=0; j<Sigs.size(); j++ ){
-      if( CSigs.size() > 0 ){
-        bool found = false;
-        for( unsigned k=0; k<CSigs.size(); k++ ){
-          if( Sigs[j]->GetName() == CSigs[k]->GetName() )
-            found = true;
-        }
-        if( !found )
-          CSigs.push_back(Sigs[j]);
-      }else{
-        CSigs.push_back(Sigs[j]);
-      }
-    }
-#endif
 
     // write out the instruction
     *out << YAML::BeginMap << YAML::Key << "Inst" << YAML::Value << SigNames[i];
