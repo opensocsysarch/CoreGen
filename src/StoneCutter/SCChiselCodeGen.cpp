@@ -305,6 +305,682 @@ void SCChiselCodeGen::WriteINITPCUOp(SCPipeInfo *PInfo){
   OutFile << "ALU_X, AEN_0, LDMA_X, MWR_X, MEN_X, UBR_J), \"U_FETCH\")" << std::endl;
 }
 
+void SCChiselCodeGen::EmitNOP(SCSig *Sig,
+                              unsigned NumSigs,
+                              unsigned NSig,
+                              std::string &BrTarget,
+                              std::string &UOpBr,
+                              SCPipeInfo *PInfo ){
+  // LABEL | LD_IR | REG_SEL | REG_WR | EN_REG
+  // <LD_regfield,...>
+  // <IMM_SEL,EN_IMM>
+  // ALU_OP | EN_ALU | LD_MA | MEM_WR | EN_MEM | uBr_SEL | uBr_Target
+
+  //-- [uBr to FETCH]
+  OutFile << "LDIR_0, RS_PC, RWR_1, REN_1, ";
+  // write out the register selects
+  for( unsigned i=0; i<PInfo->GetNumUniqueRegFields(); i++ ){
+    if( i == 0 ){
+      OutFile << "LD" << PInfo->GetUniqueFieldName(i) << "_X, ";
+    }else{
+      OutFile << "LD" << PInfo->GetUniqueFieldName(i) << "_X, ";
+    }
+  }
+  // write out the immediate selects
+  if( PInfo->GetNumUniqueImmFields() > 0 ){
+    OutFile << "IS_X, IEN_0, ";
+  }
+  OutFile << "ALU_X, AEN_0, LDMA_X, MWR_X, MEN_X, ";
+
+  // determine if this is the final uOp in the instruction
+  if( IsFinalUOp( NumSigs, NSig ) ){
+    BrTarget  = "U_FETCH";
+    UOpBr     = "UBR_J";
+  }
+}
+
+void SCChiselCodeGen::EmitSIGINSTF(SCSig *Sig,
+                            unsigned NumSigs,
+                            unsigned NSig,
+                            std::string &BrTarget,
+                            std::string &UOpBr,
+                            SCPipeInfo *PInfo ){
+}
+
+void SCChiselCodeGen::EmitALU_ADD(SCSig *Sig,
+                            unsigned NumSigs,
+                            unsigned NSig,
+                            std::string &BrTarget,
+                            std::string &UOpBr,
+                            SCPipeInfo *PInfo ){
+}
+
+void SCChiselCodeGen::EmitALU_SUB(SCSig *Sig,
+                            unsigned NumSigs,
+                            unsigned NSig,
+                            std::string &BrTarget,
+                            std::string &UOpBr,
+                            SCPipeInfo *PInfo ){
+}
+
+void SCChiselCodeGen::EmitALU_SLL(SCSig *Sig,
+                            unsigned NumSigs,
+                            unsigned NSig,
+                            std::string &BrTarget,
+                            std::string &UOpBr,
+                            SCPipeInfo *PInfo ){
+}
+
+void SCChiselCodeGen::EmitALU_SRL(SCSig *Sig,
+                            unsigned NumSigs,
+                            unsigned NSig,
+                            std::string &BrTarget,
+                            std::string &UOpBr,
+                            SCPipeInfo *PInfo ){
+}
+
+void SCChiselCodeGen::EmitALU_SRA(SCSig *Sig,
+                            unsigned NumSigs,
+                            unsigned NSig,
+                            std::string &BrTarget,
+                            std::string &UOpBr,
+                            SCPipeInfo *PInfo ){
+}
+
+void SCChiselCodeGen::EmitALU_AND(SCSig *Sig,
+                            unsigned NumSigs,
+                            unsigned NSig,
+                            std::string &BrTarget,
+                            std::string &UOpBr,
+                            SCPipeInfo *PInfo ){
+}
+
+void SCChiselCodeGen::EmitALU_OR(SCSig *Sig,
+                            unsigned NumSigs,
+                            unsigned NSig,
+                            std::string &BrTarget,
+                            std::string &UOpBr,
+                            SCPipeInfo *PInfo ){
+}
+
+void SCChiselCodeGen::EmitALU_XOR(SCSig *Sig,
+                            unsigned NumSigs,
+                            unsigned NSig,
+                            std::string &BrTarget,
+                            std::string &UOpBr,
+                            SCPipeInfo *PInfo ){
+}
+
+void SCChiselCodeGen::EmitALU_SLT(SCSig *Sig,
+                            unsigned NumSigs,
+                            unsigned NSig,
+                            std::string &BrTarget,
+                            std::string &UOpBr,
+                            SCPipeInfo *PInfo ){
+}
+
+void SCChiselCodeGen::EmitALU_SLTU(SCSig *Sig,
+                            unsigned NumSigs,
+                            unsigned NSig,
+                            std::string &BrTarget,
+                            std::string &UOpBr,
+                            SCPipeInfo *PInfo ){
+}
+
+void SCChiselCodeGen::EmitALU_COPY(SCSig *Sig,
+                            unsigned NumSigs,
+                            unsigned NSig,
+                            std::string &BrTarget,
+                            std::string &UOpBr,
+                            SCPipeInfo *PInfo ){
+}
+
+void SCChiselCodeGen::EmitALU_MUL(SCSig *Sig,
+                            unsigned NumSigs,
+                            unsigned NSig,
+                            std::string &BrTarget,
+                            std::string &UOpBr,
+                            SCPipeInfo *PInfo ){
+}
+
+void SCChiselCodeGen::EmitALU_DIV(SCSig *Sig,
+                            unsigned NumSigs,
+                            unsigned NSig,
+                            std::string &BrTarget,
+                            std::string &UOpBr,
+                            SCPipeInfo *PInfo ){
+}
+
+void SCChiselCodeGen::EmitALU_REM(SCSig *Sig,
+                            unsigned NumSigs,
+                            unsigned NSig,
+                            std::string &BrTarget,
+                            std::string &UOpBr,
+                            SCPipeInfo *PInfo ){
+}
+
+void SCChiselCodeGen::EmitALU_FADD(SCSig *Sig,
+                            unsigned NumSigs,
+                            unsigned NSig,
+                            std::string &BrTarget,
+                            std::string &UOpBr,
+                            SCPipeInfo *PInfo ){
+}
+
+void SCChiselCodeGen::EmitALU_FSUB(SCSig *Sig,
+                            unsigned NumSigs,
+                            unsigned NSig,
+                            std::string &BrTarget,
+                            std::string &UOpBr,
+                            SCPipeInfo *PInfo ){
+}
+
+void SCChiselCodeGen::EmitALU_FMUL(SCSig *Sig,
+                            unsigned NumSigs,
+                            unsigned NSig,
+                            std::string &BrTarget,
+                            std::string &UOpBr,
+                            SCPipeInfo *PInfo ){
+}
+
+void SCChiselCodeGen::EmitALU_FDIV(SCSig *Sig,
+                            unsigned NumSigs,
+                            unsigned NSig,
+                            std::string &BrTarget,
+                            std::string &UOpBr,
+                            SCPipeInfo *PInfo ){
+}
+
+void SCChiselCodeGen::EmitALU_FREM(SCSig *Sig,
+                            unsigned NumSigs,
+                            unsigned NSig,
+                            std::string &BrTarget,
+                            std::string &UOpBr,
+                            SCPipeInfo *PInfo ){
+}
+
+void SCChiselCodeGen::EmitPC_INCR(SCSig *Sig,
+                            unsigned NumSigs,
+                            unsigned NSig,
+                            std::string &BrTarget,
+                            std::string &UOpBr,
+                            SCPipeInfo *PInfo ){
+  // this is the same as a NOP, just to FETCH
+  EmitNOP(Sig,NumSigs,NSig,BrTarget,UOpBr,PInfo);
+}
+
+void SCChiselCodeGen::EmitPC_BRJMP(SCSig *Sig,
+                            unsigned NumSigs,
+                            unsigned NSig,
+                            std::string &BrTarget,
+                            std::string &UOpBr,
+                            SCPipeInfo *PInfo ){
+}
+
+void SCChiselCodeGen::EmitPC_JALR(SCSig *Sig,
+                            unsigned NumSigs,
+                            unsigned NSig,
+                            std::string &BrTarget,
+                            std::string &UOpBr,
+                            SCPipeInfo *PInfo ){
+}
+
+void SCChiselCodeGen::EmitBR_N(SCSig *Sig,
+                            unsigned NumSigs,
+                            unsigned NSig,
+                            std::string &BrTarget,
+                            std::string &UOpBr,
+                            SCPipeInfo *PInfo ){
+}
+
+void SCChiselCodeGen::EmitBR_NE(SCSig *Sig,
+                            unsigned NumSigs,
+                            unsigned NSig,
+                            std::string &BrTarget,
+                            std::string &UOpBr,
+                            SCPipeInfo *PInfo ){
+}
+
+void SCChiselCodeGen::EmitBR_EQ(SCSig *Sig,
+                            unsigned NumSigs,
+                            unsigned NSig,
+                            std::string &BrTarget,
+                            std::string &UOpBr,
+                            SCPipeInfo *PInfo ){
+}
+
+void SCChiselCodeGen::EmitBR_GT(SCSig *Sig,
+                            unsigned NumSigs,
+                            unsigned NSig,
+                            std::string &BrTarget,
+                            std::string &UOpBr,
+                            SCPipeInfo *PInfo ){
+}
+
+void SCChiselCodeGen::EmitBR_GTU(SCSig *Sig,
+                            unsigned NumSigs,
+                            unsigned NSig,
+                            std::string &BrTarget,
+                            std::string &UOpBr,
+                            SCPipeInfo *PInfo ){
+}
+
+void SCChiselCodeGen::EmitBR_GE(SCSig *Sig,
+                            unsigned NumSigs,
+                            unsigned NSig,
+                            std::string &BrTarget,
+                            std::string &UOpBr,
+                            SCPipeInfo *PInfo ){
+}
+
+void SCChiselCodeGen::EmitBR_GEU(SCSig *Sig,
+                            unsigned NumSigs,
+                            unsigned NSig,
+                            std::string &BrTarget,
+                            std::string &UOpBr,
+                            SCPipeInfo *PInfo ){
+}
+
+void SCChiselCodeGen::EmitBR_LT(SCSig *Sig,
+                            unsigned NumSigs,
+                            unsigned NSig,
+                            std::string &BrTarget,
+                            std::string &UOpBr,
+                            SCPipeInfo *PInfo ){
+}
+
+void SCChiselCodeGen::EmitBR_LTU(SCSig *Sig,
+                            unsigned NumSigs,
+                            unsigned NSig,
+                            std::string &BrTarget,
+                            std::string &UOpBr,
+                            SCPipeInfo *PInfo ){
+}
+
+void SCChiselCodeGen::EmitBR_LE(SCSig *Sig,
+                            unsigned NumSigs,
+                            unsigned NSig,
+                            std::string &BrTarget,
+                            std::string &UOpBr,
+                            SCPipeInfo *PInfo ){
+}
+
+void SCChiselCodeGen::EmitBR_LEU(SCSig *Sig,
+                            unsigned NumSigs,
+                            unsigned NSig,
+                            std::string &BrTarget,
+                            std::string &UOpBr,
+                            SCPipeInfo *PInfo ){
+}
+
+void SCChiselCodeGen::EmitBR_J(SCSig *Sig,
+                            unsigned NumSigs,
+                            unsigned NSig,
+                            std::string &BrTarget,
+                            std::string &UOpBr,
+                            SCPipeInfo *PInfo ){
+}
+
+void SCChiselCodeGen::EmitBR_JR(SCSig *Sig,
+                            unsigned NumSigs,
+                            unsigned NSig,
+                            std::string &BrTarget,
+                            std::string &UOpBr,
+                            SCPipeInfo *PInfo ){
+}
+
+void SCChiselCodeGen::EmitMUX_NE(SCSig *Sig,
+                            unsigned NumSigs,
+                            unsigned NSig,
+                            std::string &BrTarget,
+                            std::string &UOpBr,
+                            SCPipeInfo *PInfo ){
+}
+
+void SCChiselCodeGen::EmitMUX_EQ(SCSig *Sig,
+                            unsigned NumSigs,
+                            unsigned NSig,
+                            std::string &BrTarget,
+                            std::string &UOpBr,
+                            SCPipeInfo *PInfo ){
+}
+
+void SCChiselCodeGen::EmitMUX_GT(SCSig *Sig,
+                            unsigned NumSigs,
+                            unsigned NSig,
+                            std::string &BrTarget,
+                            std::string &UOpBr,
+                            SCPipeInfo *PInfo ){
+}
+
+void SCChiselCodeGen::EmitMUX_GTU(SCSig *Sig,
+                            unsigned NumSigs,
+                            unsigned NSig,
+                            std::string &BrTarget,
+                            std::string &UOpBr,
+                            SCPipeInfo *PInfo ){
+}
+
+void SCChiselCodeGen::EmitMUX_GE(SCSig *Sig,
+                            unsigned NumSigs,
+                            unsigned NSig,
+                            std::string &BrTarget,
+                            std::string &UOpBr,
+                            SCPipeInfo *PInfo ){
+}
+
+void SCChiselCodeGen::EmitMUX_GEU(SCSig *Sig,
+                            unsigned NumSigs,
+                            unsigned NSig,
+                            std::string &BrTarget,
+                            std::string &UOpBr,
+                            SCPipeInfo *PInfo ){
+}
+
+void SCChiselCodeGen::EmitMUX_LT(SCSig *Sig,
+                            unsigned NumSigs,
+                            unsigned NSig,
+                            std::string &BrTarget,
+                            std::string &UOpBr,
+                            SCPipeInfo *PInfo ){
+}
+
+void SCChiselCodeGen::EmitMUX_LTU(SCSig *Sig,
+                            unsigned NumSigs,
+                            unsigned NSig,
+                            std::string &BrTarget,
+                            std::string &UOpBr,
+                            SCPipeInfo *PInfo ){
+}
+
+void SCChiselCodeGen::EmitMUX_LE(SCSig *Sig,
+                            unsigned NumSigs,
+                            unsigned NSig,
+                            std::string &BrTarget,
+                            std::string &UOpBr,
+                            SCPipeInfo *PInfo ){
+}
+
+void SCChiselCodeGen::EmitMUX_LEU(SCSig *Sig,
+                            unsigned NumSigs,
+                            unsigned NSig,
+                            std::string &BrTarget,
+                            std::string &UOpBr,
+                            SCPipeInfo *PInfo ){
+}
+
+void SCChiselCodeGen::EmitMUX(SCSig *Sig,
+                            unsigned NumSigs,
+                            unsigned NSig,
+                            std::string &BrTarget,
+                            std::string &UOpBr,
+                            SCPipeInfo *PInfo ){
+}
+
+void SCChiselCodeGen::EmitREG_READ(SCSig *Sig,
+                            unsigned NumSigs,
+                            unsigned NSig,
+                            std::string &BrTarget,
+                            std::string &UOpBr,
+                            SCPipeInfo *PInfo ){
+}
+
+void SCChiselCodeGen::EmitREG_WRITE(SCSig *Sig,
+                            unsigned NumSigs,
+                            unsigned NSig,
+                            std::string &BrTarget,
+                            std::string &UOpBr,
+                            SCPipeInfo *PInfo ){
+}
+
+void SCChiselCodeGen::EmitAREG_READ(SCSig *Sig,
+                            unsigned NumSigs,
+                            unsigned NSig,
+                            std::string &BrTarget,
+                            std::string &UOpBr,
+                            SCPipeInfo *PInfo ){
+}
+
+void SCChiselCodeGen::EmitAREG_WRITE(SCSig *Sig,
+                            unsigned NumSigs,
+                            unsigned NSig,
+                            std::string &BrTarget,
+                            std::string &UOpBr,
+                            SCPipeInfo *PInfo ){
+}
+
+void SCChiselCodeGen::EmitMEM_READ(SCSig *Sig,
+                            unsigned NumSigs,
+                            unsigned NSig,
+                            std::string &BrTarget,
+                            std::string &UOpBr,
+                            SCPipeInfo *PInfo ){
+}
+
+void SCChiselCodeGen::EmitMEM_WRITE(SCSig *Sig,
+                            unsigned NumSigs,
+                            unsigned NSig,
+                            std::string &BrTarget,
+                            std::string &UOpBr,
+                            SCPipeInfo *PInfo ){
+}
+
+void SCChiselCodeGen::EmitFENCE(SCSig *Sig,
+                            unsigned NumSigs,
+                            unsigned NSig,
+                            std::string &BrTarget,
+                            std::string &UOpBr,
+                            SCPipeInfo *PInfo ){
+}
+
+inline bool SCChiselCodeGen::IsFinalUOp( unsigned NumSigs, unsigned NSig ){
+  if( (NSig+1) == NumSigs )
+    return true;
+  return false;
+}
+
+void SCChiselCodeGen::WriteUOp( SCSig *Sig,
+                                unsigned NumSigs,
+                                unsigned NSig,
+                                SCPipeInfo *PInfo ){
+#if 0
+  std::cout << "Writing "
+            << Sigs[j]->GetInst() << ":"
+            << Sigs[j]->GetName() << ":"
+            << Sigs[j]->SigTypeToStr() << std::endl;
+#endif
+  // Step 1: write out instruction label
+  if( NSig == 0 ){
+    // write out the top-level instruction label
+    OutFile << "\t\t,Label(\"" << Sig->GetInst() << "\"),Signals(Cat(";
+  }else{
+    // write out all subsequent instruction labels
+    // this permits us to perform uOp branches within a target instruction
+    OutFile << "\t\t,Label(\"" << Sig->GetInst() << "."
+      << std::to_string(NSig) << "\"),Signals(Cat(";
+  }
+
+  // Step 2: decode the target uOp and write out the fields
+  std::string BrTarget  = "X";     // the uOp branch target
+  std::string UOpBr     = "UBR_N"; // the uOp branch type
+
+  switch( Sig->GetType() ){
+  case SIGINSTF:
+    EmitSIGINSTF(Sig,NumSigs,NSig,BrTarget,UOpBr,PInfo);
+    break;
+  case ALU_ADD:
+    EmitALU_ADD(Sig,NumSigs,NSig,BrTarget,UOpBr,PInfo);
+    break;
+  case ALU_SUB:
+    EmitALU_SUB(Sig,NumSigs,NSig,BrTarget,UOpBr,PInfo);
+    break;
+  case ALU_SLL:
+    EmitALU_SLL(Sig,NumSigs,NSig,BrTarget,UOpBr,PInfo);
+    break;
+  case ALU_SRL:
+    EmitALU_SRL(Sig,NumSigs,NSig,BrTarget,UOpBr,PInfo);
+    break;
+  case ALU_SRA:
+    EmitALU_SRA(Sig,NumSigs,NSig,BrTarget,UOpBr,PInfo);
+    break;
+  case ALU_AND:
+    EmitALU_AND(Sig,NumSigs,NSig,BrTarget,UOpBr,PInfo);
+    break;
+  case ALU_OR:
+    EmitALU_OR(Sig,NumSigs,NSig,BrTarget,UOpBr,PInfo);
+    break;
+  case ALU_XOR:
+    EmitALU_XOR(Sig,NumSigs,NSig,BrTarget,UOpBr,PInfo);
+    break;
+  case ALU_SLT:
+    EmitALU_SLT(Sig,NumSigs,NSig,BrTarget,UOpBr,PInfo);
+    break;
+  case ALU_SLTU:
+    EmitALU_SLTU(Sig,NumSigs,NSig,BrTarget,UOpBr,PInfo);
+    break;
+  case ALU_COPY:
+    EmitALU_COPY(Sig,NumSigs,NSig,BrTarget,UOpBr,PInfo);
+    break;
+  case ALU_MUL:
+    EmitALU_MUL(Sig,NumSigs,NSig,BrTarget,UOpBr,PInfo);
+    break;
+  case ALU_DIV:
+    EmitALU_DIV(Sig,NumSigs,NSig,BrTarget,UOpBr,PInfo);
+    break;
+  case ALU_REM:
+    EmitALU_REM(Sig,NumSigs,NSig,BrTarget,UOpBr,PInfo);
+    break;
+  case ALU_FADD:
+    EmitALU_FADD(Sig,NumSigs,NSig,BrTarget,UOpBr,PInfo);
+    break;
+  case ALU_FSUB:
+    EmitALU_FSUB(Sig,NumSigs,NSig,BrTarget,UOpBr,PInfo);
+    break;
+  case ALU_FMUL:
+    EmitALU_FMUL(Sig,NumSigs,NSig,BrTarget,UOpBr,PInfo);
+    break;
+  case ALU_FDIV:
+    EmitALU_FDIV(Sig,NumSigs,NSig,BrTarget,UOpBr,PInfo);
+    break;
+  case ALU_FREM:
+    EmitALU_FREM(Sig,NumSigs,NSig,BrTarget,UOpBr,PInfo);
+    break;
+  case PC_INCR:
+    EmitPC_INCR(Sig,NumSigs,NSig,BrTarget,UOpBr,PInfo);
+    break;
+  case PC_BRJMP:
+    EmitPC_BRJMP(Sig,NumSigs,NSig,BrTarget,UOpBr,PInfo);
+    break;
+  case PC_JALR:
+    EmitPC_JALR(Sig,NumSigs,NSig,BrTarget,UOpBr,PInfo);
+    break;
+  case BR_N:
+    EmitBR_N(Sig,NumSigs,NSig,BrTarget,UOpBr,PInfo);
+    break;
+  case BR_NE:
+    EmitBR_NE(Sig,NumSigs,NSig,BrTarget,UOpBr,PInfo);
+    break;
+  case BR_EQ:
+    EmitBR_EQ(Sig,NumSigs,NSig,BrTarget,UOpBr,PInfo);
+    break;
+  case BR_GT:
+    EmitBR_GT(Sig,NumSigs,NSig,BrTarget,UOpBr,PInfo);
+    break;
+  case BR_GTU:
+    EmitBR_GTU(Sig,NumSigs,NSig,BrTarget,UOpBr,PInfo);
+    break;
+  case BR_GE:
+    EmitBR_GE(Sig,NumSigs,NSig,BrTarget,UOpBr,PInfo);
+    break;
+  case BR_GEU:
+    EmitBR_GEU(Sig,NumSigs,NSig,BrTarget,UOpBr,PInfo);
+    break;
+  case BR_LT:
+    EmitBR_LT(Sig,NumSigs,NSig,BrTarget,UOpBr,PInfo);
+    break;
+  case BR_LTU:
+    EmitBR_LTU(Sig,NumSigs,NSig,BrTarget,UOpBr,PInfo);
+    break;
+  case BR_LE:
+    EmitBR_LE(Sig,NumSigs,NSig,BrTarget,UOpBr,PInfo);
+    break;
+  case BR_LEU:
+    EmitBR_LEU(Sig,NumSigs,NSig,BrTarget,UOpBr,PInfo);
+    break;
+  case BR_J:
+    EmitBR_J(Sig,NumSigs,NSig,BrTarget,UOpBr,PInfo);
+    break;
+  case BR_JR:
+    EmitBR_JR(Sig,NumSigs,NSig,BrTarget,UOpBr,PInfo);
+    break;
+  case MUX_NE:
+    EmitMUX_NE(Sig,NumSigs,NSig,BrTarget,UOpBr,PInfo);
+    break;
+  case MUX_EQ:
+    EmitMUX_EQ(Sig,NumSigs,NSig,BrTarget,UOpBr,PInfo);
+    break;
+  case MUX_GT:
+    EmitMUX_GT(Sig,NumSigs,NSig,BrTarget,UOpBr,PInfo);
+    break;
+  case MUX_GTU:
+    EmitMUX_GTU(Sig,NumSigs,NSig,BrTarget,UOpBr,PInfo);
+    break;
+  case MUX_GE:
+    EmitMUX_GE(Sig,NumSigs,NSig,BrTarget,UOpBr,PInfo);
+    break;
+  case MUX_GEU:
+    EmitMUX_GEU(Sig,NumSigs,NSig,BrTarget,UOpBr,PInfo);
+    break;
+  case MUX_LT:
+    EmitMUX_LT(Sig,NumSigs,NSig,BrTarget,UOpBr,PInfo);
+    break;
+  case MUX_LTU:
+    EmitMUX_LTU(Sig,NumSigs,NSig,BrTarget,UOpBr,PInfo);
+    break;
+  case MUX_LE:
+    EmitMUX_LE(Sig,NumSigs,NSig,BrTarget,UOpBr,PInfo);
+    break;
+  case MUX_LEU:
+    EmitMUX_LEU(Sig,NumSigs,NSig,BrTarget,UOpBr,PInfo);
+    break;
+  case MUX:
+    EmitMUX(Sig,NumSigs,NSig,BrTarget,UOpBr,PInfo);
+    break;
+  case REG_READ:
+    EmitREG_READ(Sig,NumSigs,NSig,BrTarget,UOpBr,PInfo);
+    break;
+  case REG_WRITE:
+    EmitREG_WRITE(Sig,NumSigs,NSig,BrTarget,UOpBr,PInfo);
+    break;
+  case AREG_READ:
+    EmitAREG_READ(Sig,NumSigs,NSig,BrTarget,UOpBr,PInfo);
+    break;
+  case AREG_WRITE:
+    EmitAREG_WRITE(Sig,NumSigs,NSig,BrTarget,UOpBr,PInfo);
+    break;
+  case MEM_READ:
+    EmitMEM_READ(Sig,NumSigs,NSig,BrTarget,UOpBr,PInfo);
+    break;
+  case MEM_WRITE:
+    EmitMEM_WRITE(Sig,NumSigs,NSig,BrTarget,UOpBr,PInfo);
+    break;
+  case FENCE:
+    EmitFENCE(Sig,NumSigs,NSig,BrTarget,UOpBr,PInfo);
+    break;
+  case SIGUNK:
+  default:
+    // write a NOP
+    EmitNOP(Sig,NumSigs,NSig,BrTarget,UOpBr,PInfo);
+    break;
+  }
+
+  // Step 3: write out the uOp branch logic
+  OutFile << UOpBr << "), \"" << BrTarget << "\")" << std::endl;
+
+  // Step 4: write out the end of the uOp
+  OutFile << ")" << std::endl;
+}
+
 bool SCChiselCodeGen::ExecuteUcodeCodegen(){
   // retrieve the package and isa names
   std::string Package = Opts->GetPackage();
@@ -358,7 +1034,19 @@ bool SCChiselCodeGen::ExecuteUcodeCodegen(){
   // Stage 2: for each instruction in the signal map,
   //          walk the list of signals and generate the uOp
   //          table for each instruction
-
+  bool rtn = true;
+  if( CSM->GetNumInst() == 0 ){
+    rtn = false;
+    Msgs->PrintMsg( L_ERROR, "Signal map contains no instructions" );
+  }else{
+    std::vector<std::string> Insts = CSM->GetInstVect();
+    for( unsigned i=0; i<Insts.size(); i++ ){
+      std::vector<SCSig *> Sigs = CSM->GetSigVect(Insts[i]);
+      for( unsigned j=0; j<Sigs.size(); j++ ){
+        WriteUOp( Sigs[j], Sigs.size(), j, PInfo );
+      }
+    }
+  }
 
   // write out the closure of the table structure
   OutFile << "\t)" << std::endl;
@@ -369,7 +1057,7 @@ bool SCChiselCodeGen::ExecuteUcodeCodegen(){
 
   delete PInfo;
 
-  return true;
+  return rtn;
 }
 
 bool SCChiselCodeGen::ExecuteManualCodegen(){
