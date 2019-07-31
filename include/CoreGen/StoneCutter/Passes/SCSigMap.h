@@ -66,6 +66,9 @@ private:
   /// Translates the I/O operands to signals
   bool TranslateOperands( Function &F, Instruction &I );
 
+  /// Translates the target input operands for the ALU instruction
+  bool TranslateALUOperands( Function &F, Instruction &I, SCSig *Sig );
+
   /// Translates the target operand (instruction name)  to signals
   bool TranslateTargetOperands( Function &F, Instruction &I );
 
