@@ -319,6 +319,24 @@ bool CoreGenSigMap::ReadInstSignals(const YAML::Node& InstNodes){
           FusedOpType FType = StrToFusedOpType(FusedOp);
           Signals[Signals.size()-1]->SetFusedType(FType);
         }
+
+        // check for inputs
+        if( LSNode["Inputs"] ){
+          const YAML::Node& INode = LSNode["Inputs"];
+          for( unsigned k=0; k<INode.size(); k++ ){
+            const YAML::Node& LINode = INode[k];
+            if( !CheckValidNode(LINode,"Input") ){
+              Error = "Input has no name";
+              return false;
+            }
+            std::string InputStr = LINode["Input"].as<std::string>();
+            if( InputStr.length() == 0 ){
+              Error = "Input has a null name";
+              return false;
+            }
+            Signals[Signals.size()-1]->InsertInput(InputStr);
+          }
+        } // end check for inputs
       }
     }
   }
