@@ -474,6 +474,15 @@ bool CoreGenSigMap::WriteInstSignals(YAML::Emitter *out){
       *out << YAML::Key << "Width" << YAML::Value << CSigs[j]->GetWidth();
       if( CSigs[j]->GetFusedType() != FOP_UNK )
         *out << YAML::Key << "FusedOp" << YAML::Value << CSigs[j]->FusedOpTypeToStr();
+
+      // determine whether we need to write out the input block
+      if( CSigs[j]->GetNumInputs() > 0 ){
+        *out << YAML::Key << "Inputs" << YAML::Value << YAML::BeginSeq << YAML::BeginMap;
+        for( unsigned k=0; k<CSigs[j]->GetNumInputs() ; k++ ){
+          *out << YAML::Key << "Input" << YAML::Value << CSigs[j]->GetInput(k);
+        }
+        *out << YAML::EndMap << YAML::EndSeq;
+      }
       *out << YAML::EndMap;
     }
     *out << YAML::EndSeq;

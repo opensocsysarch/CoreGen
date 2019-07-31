@@ -167,6 +167,9 @@ public:
   /// Inserts a new required input operand into the target signal
   bool InsertInput( std::string Input );
 
+  /// Retrieves the input at the desired index
+  std::string GetInput( unsigned Idx );
+
   /// Sets the signal type
   bool SetType( SigType Type );
 

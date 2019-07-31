@@ -47,6 +47,12 @@ bool SCSig::InsertInput( std::string Input ){
   return true;
 }
 
+std::string SCSig::GetInput( unsigned Idx ){
+  if( Idx > (Inputs.size()-1) )
+    return "";
+  return Inputs[Idx];
+}
+
 bool SCSig::SetFusedType( FusedOpType T ){
   switch( T ){
   case FOP_UNK:
