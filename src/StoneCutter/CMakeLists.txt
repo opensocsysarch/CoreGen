@@ -16,6 +16,7 @@ set(SCCompSrcs
  SCLLCodeGen.cpp
  SCChiselCodeGen.cpp
  SCPass.cpp
+ SCPipeInfo.cpp
 )
 
 include_directories(${COREGEN_INCLUDE_PATH})

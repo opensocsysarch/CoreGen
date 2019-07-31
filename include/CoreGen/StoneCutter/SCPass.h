@@ -13,7 +13,7 @@
  *
  * \ingroup StoneCutter
  *
- * \brief StoneCutter code generation base class
+ * \brief StoneCutter code generation base stonecutter pass class
  *
  */
 
