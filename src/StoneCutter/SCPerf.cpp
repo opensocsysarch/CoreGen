@@ -29,7 +29,7 @@ bool SCPerf::InsertUOp(std::string Inst){
 
   for( unsigned i=0; i<UOps.size(); i++ ){
     if( UOps[i].first == Inst ){
-      UOps[i].first += 1;
+      UOps[i].second += 1;
       return true;
     }
   }
@@ -41,8 +41,10 @@ bool SCPerf::InsertUOp(std::string Inst){
 
 void SCPerf::PrintStats(){
   *mStream << "=============================================================" << std::endl;
+  *mStream << "   Instruction       MicroOps" << std::endl;
+  *mStream << "=============================================================" << std::endl;
   for( unsigned i=0; i<UOps.size(); i++ ){
-    *mStream << UOps[i].first << std::setw(20-UOps[i].first.length())
+    *mStream << " - " << UOps[i].first << std::setw(20-UOps[i].first.length())
              << UOps[i].second << std::endl;
   }
   *mStream << "=============================================================" << std::endl;
