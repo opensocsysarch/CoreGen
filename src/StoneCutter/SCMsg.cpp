@@ -16,6 +16,11 @@ SCMsg::SCMsg()
   mStream = &std::cout;
 }
 
+// ------------------------------------------------- CONSTRUCTOR
+SCMsg::SCMsg( std::streambuf* sb )
+  : isCout(false), mStream(new std::ostream(sb)){
+}
+
 // ------------------------------------------------- DESTRUCTOR
 SCMsg::~SCMsg(){
   if( (!isCout) && (mStream) ){

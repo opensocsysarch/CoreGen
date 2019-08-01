@@ -16,7 +16,7 @@ SCOpts::SCOpts(SCMsg *M, int A, char **C)
   isKeep(false), isParse(true), isIR(true),
   isOptimize(true), isChisel(true), isCG(false), isVerbose(false),
   isDisable(false), isEnable(false), isListPass(false), isSigMap(false),
-  isPassRun(false),
+  isPassRun(false), isPerf(false),
   Msgs(M) {}
 
 // ------------------------------------------------- DESTRUCTOR
@@ -144,6 +144,8 @@ bool SCOpts::ParseOpts(bool *isHelp){
       i++;
     }else if( (s=="-k") || (s=="-keep") || (s=="--keep") ){
       isKeep = true;
+    }else if( (s=="-P") || (s=="-perf") || (s=="--perf") ){
+      isPerf = true;
     }else if( (s=="-D") || (s=="-disable-chisel") || (s=="--disable-chisel") ){
       isChisel = false;
     }else if( (s=="-O") || (s=="-optimize") || (s=="--optimize") ){
@@ -246,6 +248,7 @@ void SCOpts::PrintHelp(){
   Msgs->PrintRawMsg("     -O|-optimize|--optimize             : Execute the optimizer [default=on]" );
   Msgs->PrintRawMsg("     -N|-no-optimize|--no-optimize       : Do not execute the optimizer" );
   Msgs->PrintRawMsg("     -D|-disable-chisel|--disable-chisel : Disables Chisel output" );
+  Msgs->PrintRawMsg("     -P|-perf|--perf                     : Prints performance info" );
   Msgs->PrintRawMsg("     -v|-verbose|--verbose               : Enable verbosity");
   Msgs->PrintRawMsg(" ");
   Msgs->PrintRawMsg("Optimization Pass Options:");

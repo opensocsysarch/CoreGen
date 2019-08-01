@@ -14,9 +14,10 @@ SCChiselCodeGen::SCChiselCodeGen( SCParser *P,
                                   SCOpts *O,
                                   SCMsg *M,
                                   std::string COF )
-  : Parser(P), Opts(O), Msgs(M), ChiselFile(COF), CSM(nullptr) {
+  : Parser(P), Opts(O), Msgs(M), Perf(NULL), ChiselFile(COF), CSM(nullptr) {
   InitIntrinsics();
   InitPasses();
+  Perf = new SCPerf(Msgs->GetStream());
 }
 
 SCChiselCodeGen::~SCChiselCodeGen(){
@@ -24,6 +25,8 @@ SCChiselCodeGen::~SCChiselCodeGen(){
   Passes.clear();
   if( CSM )
     delete CSM;
+  if( Perf )
+    delete Perf;
 }
 
 void SCChiselCodeGen::InitIntrinsics(){
@@ -995,6 +998,7 @@ bool SCChiselCodeGen::ExecuteUcodeCodegen(){
     for( unsigned i=0; i<Insts.size(); i++ ){
       std::vector<SCSig *> Sigs = CSM->GetSigVect(Insts[i]);
       for( unsigned j=0; j<Sigs.size(); j++ ){
+        Perf->InsertUOp(Insts[i]);
         WriteUOp( Sigs[j], Sigs.size(), j, PInfo );
       }
     }
@@ -1150,6 +1154,10 @@ bool SCChiselCodeGen::GenerateChisel(){
 
   // close the output file
   OutFile.close();
+
+  if( Opts->IsPerf() ){
+    Perf->PrintStats();
+  }
 
   return true;
 }

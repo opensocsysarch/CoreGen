@@ -8,7 +8,7 @@ if [ ! -f $SCCOMP_PATH/sccomp ]; then
   exit -1
 fi
 
-$SCCOMP_PATH/sccomp -c $FILE
+$SCCOMP_PATH/sccomp -c $FILE -P
 retVal=$?
 if [[  "$retVal" -ne 0 ]]; then
   echo "$SCCOMP_PATH/sccomp -c $FILE failed with return code = $retVal"

@@ -65,6 +65,7 @@
 #include "CoreGen/StoneCutter/SCPass.h"
 #include "CoreGen/StoneCutter/SCPasses.h"
 #include "CoreGen/StoneCutter/SCPipeInfo.h"
+#include "CoreGen/StoneCutter/SCPerf.h"
 
 #include "CoreGen/CoreGenSigMap/CoreGenSigMap.h"
 
@@ -75,6 +76,7 @@ private:
   SCParser *Parser;                           ///< SC Parser object
   SCOpts *Opts;                               ///< SC Options object
   SCMsg *Msgs;                                ///< SC Messages object
+  SCPerf *Perf;                               ///< SC Perf object
   std::string ChiselFile;                     ///< Output file
   std::string SigMap;                         ///< Signal map output file
 
