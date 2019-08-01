@@ -105,7 +105,9 @@ private:
 
   inline bool IsFinalUOp( unsigned NumSigs, unsigned NSig );  ///< Determines if this is the final micro op
 
-  std::string DecodeRegSlot(std::string SigStr, bool &IsImm); ///< Decodes the requested signal to the register slot
+  std::string DecodeRegSlot(std::string &SigStr,
+                            SCPipeInfo *PInfo,
+                            bool &IsImm);                     ///< Decodes the requested signal to the register slot
   std::string SCToUpper(std::string Str);                     ///< Capitalizes the requested string
 
   ///< Emit the NOP uOP

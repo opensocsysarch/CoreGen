@@ -285,8 +285,24 @@ void SCChiselCodeGen::WriteINITPCUOp(SCPipeInfo *PInfo){
   OutFile << "ALU_X, AEN_0, LDMA_X, MWR_X, MEN_X, UBR_J), \"U_FETCH\")" << std::endl;
 }
 
-std::string SCChiselCodeGen::DecodeRegSlot( std::string SigStr,
+std::string SCChiselCodeGen::DecodeRegSlot( std::string &SigStr,
+                                            SCPipeInfo *PInfo,
                                             bool &IsImm ){
+  // inputs are in the form "FIELD_SIGTYPE"
+  // we need to strip the field out
+  std::vector<std::string> tokens;
+  std::string token;
+  std::istringstream tokenStream(SigStr);
+  while(std::getline(tokenStream,token,'_'))
+    tokens.push_back(token);
+
+  // now determine if this is an immediate value
+  for( unsigned i=0; i<PInfo->GetNumUniqueImmFields(); i++ ){
+    if( tokens[0] == PInfo->GetUniqueImmFieldName(i) )
+      IsImm = true;
+  }
+
+  return tokens[0];
 }
 
 std::string SCChiselCodeGen::SCToUpper( std::string Str ){
@@ -623,7 +639,8 @@ void SCChiselCodeGen::EmitREG_READ(SCSig *Sig,
 
   // decode the register select
   bool IsImm = false;
-  std::string Slot = DecodeRegSlot(Sig->GetName(),IsImm);
+  std::string FieldName = Sig->GetName();
+  std::string Slot = DecodeRegSlot(FieldName,PInfo,IsImm);
 
   //-- [uBr to FETCH]
   if( !IsImm ){
@@ -648,7 +665,11 @@ void SCChiselCodeGen::EmitREG_READ(SCSig *Sig,
   }
   // write out the immediate selects
   if( PInfo->GetNumUniqueImmFields() > 0 ){
-    OutFile << "IS_X, IEN_0, ";
+    if( !IsImm ){
+      OutFile << "IS_X, IEN_0, ";
+    }else{
+      OutFile << "IS_" << Slot << ", IEN_1, ";
+    }
   }
   OutFile << "ALU_X, AEN_0, LDMA_X, MWR_X, MEN_0, ";
 
