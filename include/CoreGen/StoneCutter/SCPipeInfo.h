@@ -110,6 +110,12 @@ public:
   /// Determines if there is an explicit PC present in the ISA
   bool IsPCPresent() { return PCPresent; }
 
+  /// Determines if the requested field appears as a register field
+  bool IsRegisterField( std::string Field );
+
+  /// Determines if the requests field appears as an immediate field
+  bool IsImmField( std::string Field );
+
   /// Retrieves the name of the PC register.  If there is no PC specified in the ISA, 
   /// this returns a default name
   std::string GetPCName();

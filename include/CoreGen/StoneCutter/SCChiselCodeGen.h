@@ -32,6 +32,7 @@
 #include <iostream>
 #include <fstream>
 #include <locale>
+#include <regex>
 
 // llvm headers
 #include "llvm/ADT/APFloat.h"
@@ -111,6 +112,8 @@ private:
                             SCPipeInfo *PInfo,
                             bool &IsImm);                     ///< Decodes the requested signal to the register slot
   std::string SCToUpper(std::string Str);                     ///< Capitalizes the requested string
+  bool IsInteger(std::string Str);                            ///< Determines if the target string is an integer constant
+  bool IsRegEnabled(SCSig *Sig, std::string Field);           ///< Determines if the target Field is enabled as an input
 
   ///< Emit the NOP uOP
   void EmitNOP(SCSig *Sig,

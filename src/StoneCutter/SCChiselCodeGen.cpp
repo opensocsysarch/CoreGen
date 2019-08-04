@@ -102,6 +102,20 @@ bool SCChiselCodeGen::ExecutePasses(){
   return rtn;
 }
 
+bool SCChiselCodeGen::IsRegEnabled( SCSig *Sig, std::string Field ){
+  for( unsigned i=0; i<Sig->GetNumInputs(); i++ ){
+    if( Sig->GetInput(i) == Field )
+      return true;
+  }
+  return false;
+}
+
+bool SCChiselCodeGen::IsInteger(std::string Str){
+  if( Str.length() == 0 )
+    return false;
+  return std::regex_match( Str, std::regex( ( "((\\+|-)?[[:digit:]]+)(\\.(([[:digit:]]+)?))?" ) ) );
+}
+
 void SCChiselCodeGen::WriteUCodeTableComment(SCPipeInfo *PInfo){
   OutFile << std::endl << std::endl;
   OutFile << "//----------------------------------------------------------------" << std::endl;
@@ -400,18 +414,57 @@ void SCChiselCodeGen::EmitALU_OP(SCSig *Sig,
   // <IMM_SEL,EN_IMM>
   // ALU_OP | EN_ALU | LD_MA | MEM_WR | EN_MEM | uBr_SEL | uBr_Target
 
-  //-- [uBr to FETCH]
-  // TODO : need to test the operands
-  OutFile << "LDIR_0, RS_RD, RWR_1, REN_1, ";
-  // write out the register selects
-  for( unsigned i=0; i<PInfo->GetNumUniqueRegFields(); i++ ){
-    OutFile << "LD" << PInfo->GetUniqueFieldName(i) << "_0, ";
+  // Step 1: Query the inputs and look for any immediate fields and constants
+  unsigned Constant = 0;      // unsigned constant integer; integers < 0 are converted to unsigned
+  bool isConstant   = false;  // determines if we have a constant int
+  bool isImmediate  = false;  // determines if we have an immediate field value
+  bool isRegister   = false;  // determines if we have a register input
+  std::string ImmEn;
+  for( unsigned i=0; i<Sig->GetNumInputs(); i++ ){
+    if(IsInteger( Sig->GetInput( i ))){
+      std::string::size_type sz;
+      Constant = (unsigned)(std::stoi(Sig->GetInput(i),&sz));
+      isConstant = true;
+    }else if( PInfo->IsRegisterField(Sig->GetInput(i)) ){
+      ImmEn = Sig->GetInput(i);
+      isImmediate = true;
+    }else if( PInfo->IsImmField(Sig->GetInput(i)) ){
+      isRegister = true;
+    }
   }
-  // write out the immediate selects
+
+  // Step 2: write out the register selects
+  if( isRegister ){
+    OutFile << "LDIR_0, RS_RD, RWR_1, REN_1, ";
+    for( unsigned i=0; i<PInfo->GetNumUniqueRegFields(); i++ ){
+      if( IsRegEnabled( Sig, PInfo->GetUniqueFieldName(i) ))
+        OutFile << "LD" << PInfo->GetUniqueFieldName(i) << "_1, ";
+      else
+        OutFile << "LD" << PInfo->GetUniqueFieldName(i) << "_0, ";
+    }
+  }else{
+    OutFile << "LDIR_0, RS_X, RWR_X, REN_0, ";
+    for( unsigned i=0; i<PInfo->GetNumUniqueRegFields(); i++ ){
+      OutFile << "LD" << PInfo->GetUniqueFieldName(i) << "_0, ";
+    }
+  }
+
+  // Step 3: write out the immediate selects
   if( PInfo->GetNumUniqueImmFields() > 0 ){
-    OutFile << "IS_X, IEN_0, ";
+    if( isImmediate ){
+      OutFile << "IS_" << ImmEn << ", IEN_1, ";
+    }else{
+      OutFile << "IS_X, IEN_0, ";
+    }
   }
-  OutFile << Sig->SigTypeToStr() << ", AEN_1, LDMA_X, MWR_X, MEN_0, ";
+
+  // Step 4: write out the ALU selects
+  if( isConstant ){
+    OutFile << Sig->SigTypeToStr() << "_" << std::to_string(Constant)
+            << ", AEN_1, LDMA_X, MWR_X, MEN_0, ";
+  }else{
+    OutFile << Sig->SigTypeToStr() << ", AEN_1, LDMA_X, MWR_X, MEN_0, ";
+  }
 
   // determine if this is the final uOp in the instruction
   if( IsFinalUOp( NumSigs, NSig ) ){

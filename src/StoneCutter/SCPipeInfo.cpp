@@ -17,7 +17,7 @@ SCPipeInfo::SCPipeInfo(Module *TM, SCOpts *O, SCMsg *M)
     PCReg.second = "PC";
 
     // Derive all the register fields and immediates
-    for( auto &Global : TM->getGlobalList() ){
+    for( auto &Global : TheModule->getGlobalList() ){
       // walk all the global variables and retrieve their attribute lists
       // look for the appropriate set of immediate and register encoding fields
       AttributeSet AttrSet = Global.getAttributes();
@@ -122,6 +122,30 @@ std::string SCPipeInfo::GetUniqueImmFieldName( unsigned Idx ){
     return "";
   }
   return UniqueImmFields[Idx];
+}
+
+bool SCPipeInfo::IsRegisterField( std::string Field ){
+  if( Field.length() == 0 )
+    return false;
+
+  for( unsigned i=0; i<UniqueRegFields.size(); i++ ){
+    if( UniqueRegFields[i] == Field )
+      return true;
+  }
+
+  return false;
+}
+
+bool SCPipeInfo::IsImmField( std::string Field ){
+  if( Field.length() == 0 )
+    return false;
+
+  for( unsigned i=0; i<UniqueImmFields.size(); i++ ){
+    if( UniqueImmFields[i] == Field )
+      return true;
+  }
+
+  return false;
 }
 
 std::string SCPipeInfo::GetPCName(){
