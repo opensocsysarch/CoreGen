@@ -2145,7 +2145,11 @@ bool CoreGenYaml::ReadInstFormatYaml(const YAML::Node& InstFormatNodes,
         }else if( FieldType == "CGInstImm" ){
           FT = CoreGenInstFormat::CGInstImm;
         }else{
-          FT = CoreGenInstFormat::CGInstUnk;
+          Errno->SetError(CGERR_ERROR,
+                  "Error: Could not decode instruction field type: \""
+                  + FieldType + "\" for instruction format " + Name
+                  + " at line " + std::to_string(GetLineNum(LFNode)));
+          return false;
         }
 
         if( !IF->InsertField(FieldName,StartBit,EndBit,FT,Mand) ){
