@@ -106,7 +106,7 @@ bool StatsPass::Execute(){
   WriteMsg("==> Node Summary" );
   WriteMsg("==> SoC Nodes:\t\t" + std::to_string(SocNode));
   WriteMsg("==> Core Nodes:\t\t" + std::to_string(CoreNode));
-  WriteMsg("==> Inst Format Nodes:\t" + std::to_string(InstNode));
+  WriteMsg("==> Inst Format Nodes:\t" + std::to_string(InstFormatNode));
   WriteMsg("==> Inst Nodes:\t\t" + std::to_string(InstNode));
   WriteMsg("==> Pseudo Inst Nodes:\t" + std::to_string(PseudoInstNode));
   WriteMsg("==> RegClass Nodes:\t\t" + std::to_string(RegClassNode));
