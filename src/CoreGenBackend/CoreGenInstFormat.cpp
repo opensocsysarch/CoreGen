@@ -23,7 +23,17 @@ bool CoreGenInstFormat::InsertField( std::string Name, unsigned StartBit,
   if( StartBit > EndBit ){
     return false;
   }
-  //QUESTION: Where did this vector come from?
+
+  // ensure that this new field doesn't conflict with adjacent fields
+  std::vector<std::tuple<std::string,unsigned,unsigned,CGInstField,bool>>::iterator it;
+  for( it=Format.begin(); it != Format.end(); ++it ){
+    if( Name == std::get<0>(*it) ){
+      Errno->SetError(CGERR_ERROR,
+                      "Attempting to insert a duplicate field; Name="+Name);
+      return false;
+    }
+  }
+
   Format.push_back(
     std::tuple< std::string,unsigned,
                 unsigned,CGInstField,bool>(Name,StartBit,
