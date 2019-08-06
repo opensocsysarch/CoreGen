@@ -2183,7 +2183,7 @@ bool CoreGenYaml::ReadInstFormatYaml(const YAML::Node& InstFormatNodes,
 
           if( !IF->InsertRegFieldMap(FieldName,RC) ){
             Errno->SetError(CGERR_ERROR,
-                  "Error: Could not insert register field mapping into InstructionFormat"
+                  "Error: Could not insert register field mapping into InstructionFormat="
                   + Name + " for field " + FieldName);
             return false;
           }
