@@ -29,7 +29,7 @@ bool CoreGenInstFormat::InsertField( std::string Name, unsigned StartBit,
   for( it=Format.begin(); it != Format.end(); ++it ){
     if( Name == std::get<0>(*it) ){
       Errno->SetError(CGERR_ERROR,
-                      "Attempting to insert a duplicate field; Name="+Name);
+                      "Attempting to insert a duplicate field; Name="+Name+"; InstFormat="+this->GetName());
       return false;
     }
   }
