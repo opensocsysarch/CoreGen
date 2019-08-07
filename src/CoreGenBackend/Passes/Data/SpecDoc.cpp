@@ -200,7 +200,7 @@ bool SpecDoc::WriteRegisterClassTex(CoreGenDAG *DAG, std::ofstream &ofs ){
           ofs << "NA & ";
         }
         if( REG->IsFixedValue() ){
-          ofs << " Y & ";
+          //ofs << "Y & ";
           std::vector<uint64_t> Vals;
           REG->GetFixedVals(Vals);
 
@@ -317,7 +317,9 @@ bool SpecDoc::WriteInstFormatDotFile( CoreGenInstFormat *IF ){
   if( !IF )
     return false;
 
-  std::string OFile = this->GetOutputPath() + "/" + IF->GetName() + ".dot";
+  std::cout << "building dot file for " << IF->GetName() << std::endl;
+
+  std::string OFile = this->GetOutputPath() + "/" + CGRemoveDot(IF->GetName()) + ".dot";
   bool PrevFile = false;
 
   if( CGFileExists(OFile) ){
@@ -327,24 +329,28 @@ bool SpecDoc::WriteInstFormatDotFile( CoreGenInstFormat *IF ){
     CGDeleteFile(OFile);
   }
 
-  std::ofstream ofs;
-  ofs.open(OFile.c_str(), std::ofstream::out | std::ofstream::app);
+  std::ofstream dofs;
+  dofs.open(OFile.c_str(), std::ofstream::out | std::ofstream::app);
+  if( !dofs.is_open() )
+    return false;
 
-  ofs << "digraph struct {" << std::endl;
-  ofs << "\tnode[shape=record];" << std::endl;
+  dofs << "digraph struct {" << std::endl;
+  dofs << "\tnode[shape=record];" << std::endl;
   unsigned NumFields = IF->GetNumFields();
   for( signed j=NumFields-1; j>=0; j-- ){
     if( j==(NumFields-1) ){
-      ofs << "struct1 [label=\"";
+      dofs << "struct1 [label=\"";
     }else{
-      ofs << "|";
+      dofs << "|";
     }
-    ofs << IF->GetFieldName(j) << "\\n["
+    dofs << IF->GetFieldName(j) << "\\n["
         << std::to_string(IF->GetEndBit(IF->GetFieldName(j))) << ":"
         << std::to_string(IF->GetStartBit(IF->GetFieldName(j))) << "]";
   }
-  ofs << "\"];" << std::endl;
-  ofs << "}" << std::endl;
+  dofs << "\"];" << std::endl;
+  dofs << "}" << std::endl;
+
+  dofs.close();
 
   if( PrevFile ){
     CGDeleteFile(OFile + ".back");
@@ -376,71 +382,15 @@ bool SpecDoc::WriteInstFormatTex(CoreGenDAG *DAG, std::ofstream &ofs ){
       // write out the dot file for the target inst format
       WriteInstFormatDotFile(IF);
 
-      // draw an instruction format block diagram
+      std::string FigFile = CGRemoveDot(IF->GetName()) + ".pdf";
+
       ofs << "\\vspace{0.25in}" << std::endl;
       ofs << "\\begin{figure}[H]" << std::endl;
       ofs << "\\begin{center}" << std::endl;
-      ofs << "\\begin{tabular}{" << GenerateInstFormatHeader(IF) << "}" << std::endl;
-      ofs << "\\\\" << std::endl;
-
-      // print all the bit ranges
-      for( signed j=(IF->GetNumFields()-1); j>=0; j-- ){
-        ofs << "\\instbitrange{" << IF->GetEndBit(IF->GetFieldName(j))
-            << "}{" << IF->GetStartBit(IF->GetFieldName(j)) << "}";
-        if( j!=0 ){
-          ofs << " & " << std::endl;
-        }else{
-          ofs << "\\\\" << std::endl;
-        }
-      }
-
-      ofs << "\\hline" << std::endl;
-
-      // print the multicolumn data
-      for( signed j=(IF->GetNumFields()-1); j>=0; j-- ){
-        signed comp = IF->GetNumFields()-1;
-        if( j==comp ){
-          ofs << "\\multicolumn{1}{|c|}{"
-              << IF->GetFieldName(j)
-              << "} &" << std::endl;
-        }else if (j==0){
-          ofs << "\\multicolumn{1}{c|}{"
-              << IF->GetFieldName(j)
-              << "} \\\\" << std::endl;
-          ofs << "\\hline" << std::endl;
-        }else{
-          ofs << "\\multicolumn{1}{c|}{"
-              << IF->GetFieldName(j)
-              << "} &" << std::endl;
-        }
-      }
-
-      // print all the bit widths
-      for( signed j=(IF->GetNumFields()-1); j>=0; j-- ){
-        ofs << (IF->GetEndBit(IF->GetFieldName(j)) -
-                IF->GetStartBit(IF->GetFieldName(j)))+1;
-        if( j!=0 ){
-          ofs << " & ";
-        }else{
-          ofs << "\\\\" << std::endl;
-        }
-      }
-
-      // print all the field names
-      for( signed j=(IF->GetNumFields()-1); j>=0; j-- ){
-        ofs << IF->GetFieldName(j);
-        if( j !=0 ){
-          ofs << " & ";
-        }else{
-          ofs << "\\\\" << std::endl;
-        }
-      }
-
-      //print the end of the table
-      ofs << "\\end{tabular}" << std::endl;
-      ofs << "\\end{center}" << std::endl;
+      ofs << "\\includegraphics[width=6.5in]{" << FigFile << "}" << std::endl;
       ofs << "\\caption{" << EscapeUnderscore(IF->GetName()) << "}" << std::endl;
       ofs << "\\label{fig:" << FixUnderscore(IF->GetName()) << "}" << std::endl;
+      ofs << "\\end{center}" << std::endl;
       ofs << "\\end{figure}" << std::endl;
 
       ofs << std::endl << std::endl;
@@ -516,10 +466,10 @@ bool SpecDoc::WriteInstTex(CoreGenDAG *DAG, std::ofstream &ofs ){
       }
 
       // print an instruction table
-      ofs << "\\begin{longtable}[h]" << std::endl;
-      ofs << "\\caption{" << EscapeUnderscore(INST->GetName()) << " Information}" << std::endl;
-      ofs << "\\label{tab:" << FixUnderscore(INST->GetName()) << "INFO}" << std::endl;
-      ofs << "\\begin{tabular}{c c c}" << std::endl;
+      ofs << "\\begin{center}" << std::endl;
+      ofs << "\\begin{longtable}{c c c}" << std::endl;
+      ofs << "\\caption{" << EscapeUnderscore(INST->GetName()) << " Information} ";
+      ofs << "\\label{tab:" << FixUnderscore(INST->GetName()) << "INFO}\\\\" << std::endl;
       ofs << "\\hline" << std::endl;
       ofs << "\\textbf{General Info} & &\\\\" << std::endl;
       ofs << "\\hline" << std::endl;
@@ -538,8 +488,8 @@ bool SpecDoc::WriteInstTex(CoreGenDAG *DAG, std::ofstream &ofs ){
       }
 
       ofs << "\\hline" << std::endl;
-      ofs << "\\end{tabular}" << std::endl;
       ofs << "\\end{longtable}" << std::endl;
+      ofs << "\\end{center}" << std::endl;
 
       ofs << std::endl << std::endl;
 
@@ -586,10 +536,10 @@ bool SpecDoc::WritePseudoInstTex(CoreGenDAG *DAG, std::ofstream &ofs ){
           << std::endl;
 
       // print an instruction table
-      ofs << "\\begin{longtable}[h]" << std::endl;
-      ofs << "\\caption{" << EscapeUnderscore(INST->GetName()) << " Information}" << std::endl;
-      ofs << "\\label{tab:" << FixUnderscore(INST->GetName()) << "INFO}" << std::endl;
-      ofs << "\\begin{tabular}{c c c}" << std::endl;
+      ofs << "\\begin{center}" << std::endl;
+      ofs << "\\begin{longtable}{c c c}" << std::endl;
+      ofs << "\\caption{" << EscapeUnderscore(INST->GetName()) << " Information} ";
+      ofs << "\\label{tab:" << FixUnderscore(INST->GetName()) << "INFO}\\\\" << std::endl;
       ofs << "\\hline" << std::endl;
       ofs << "\\textbf{General Info} & &\\\\" << std::endl;
       ofs << "\\hline" << std::endl;
@@ -612,8 +562,8 @@ bool SpecDoc::WritePseudoInstTex(CoreGenDAG *DAG, std::ofstream &ofs ){
 
 
       ofs << "\\hline" << std::endl;
-      ofs << "\\end{tabular}" << std::endl;
       ofs << "\\end{longtable}" << std::endl;
+      ofs << "\\end{center}" << std::endl;
 
       ofs << std::endl << std::endl;
     }
