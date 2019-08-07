@@ -63,6 +63,9 @@ private:
   /// Write the instruction table tex
   bool WriteInstTableTex( CoreGenDAG *D, std::ofstream &O );
 
+  /// Write a dot file for the inst format
+  bool WriteInstFormatDotFile( CoreGenInstFormat *IF );
+
   /// Generate the LaTeX table headers for inst formats
   std::string GenerateInstFormatHeader(CoreGenInstFormat *IF);
 

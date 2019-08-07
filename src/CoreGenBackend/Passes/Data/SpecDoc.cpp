@@ -70,13 +70,16 @@ bool SpecDoc::WriteMakefile() {
   ofs << std::endl;
   ofs << ".PHONY: all clean" << std::endl;
   ofs << std::endl;
+  ofs << "\%.pdf : *.dot" << std::endl;
+  ofs << "\tdot -Tpdf -o $@ $<" << std::endl;
+  ofs << "all: $(addsuffix .pdf, $(basename $(wildcard *.dot))) $(DOC).pdf" << std::endl;
   ofs << "$(DOC).pdf: $(TEXT) $(FIGS)" << std::endl;
   ofs << "\techo $(FIGS)" << std::endl;
   ofs << "\tpdflatex -halt-on-error $(DOC)" << std::endl;
   ofs << "\tpdflatex -halt-on-error $(DOC)" << std::endl;
   ofs << "\tpdflatex -halt-on-error $(DOC)" << std::endl;
   ofs << "clean:" << std::endl;
-  ofs << "\trm -f *.aux *.bbl *.blg *.log *.lof *.lol *.lot *.out *.toc $(DOC).pdf" << std::endl;
+  ofs << "\trm -f *.aux *.bbl *.blg *.log *.lof *.lol *.lot *.out *.toc *.pdf $(DOC).pdf" << std::endl;
 
   ofs.close();
 
@@ -310,6 +313,45 @@ std::string SpecDoc::GenerateInstFormatHeader(CoreGenInstFormat *IF){
   return Header;
 }
 
+bool SpecDoc::WriteInstFormatDotFile( CoreGenInstFormat *IF ){
+  if( !IF )
+    return false;
+
+  std::string OFile = this->GetOutputPath() + "/" + IF->GetName() + ".dot";
+  bool PrevFile = false;
+
+  if( CGFileExists(OFile) ){
+    PrevFile = true;
+    CGFileCopy( OFile,
+                OFile + ".back" );
+    CGDeleteFile(OFile);
+  }
+
+  std::ofstream ofs;
+  ofs.open(OFile.c_str(), std::ofstream::out | std::ofstream::app);
+
+  ofs << "digraph struct {" << std::endl;
+  ofs << "\tnode[shape=record];" << std::endl;
+  unsigned NumFields = IF->GetNumFields();
+  for( signed j=NumFields-1; j>=0; j-- ){
+    if( j==(NumFields-1) ){
+      ofs << "struct1 [label=\"";
+    }else{
+      ofs << "|";
+    }
+    ofs << IF->GetFieldName(j) << "\\n["
+        << std::to_string(IF->GetEndBit(IF->GetFieldName(j))) << ":"
+        << std::to_string(IF->GetStartBit(IF->GetFieldName(j))) << "]";
+  }
+  ofs << "\"];" << std::endl;
+  ofs << "}" << std::endl;
+
+  if( PrevFile ){
+    CGDeleteFile(OFile + ".back");
+  }
+  return true;
+}
+
 bool SpecDoc::WriteInstFormatTex(CoreGenDAG *DAG, std::ofstream &ofs ){
   ofs << "\% ---------------------------------------------------------------" << std::endl;
   ofs << "\% INSTRUCTION FORMATS" << std::endl;
@@ -330,6 +372,9 @@ bool SpecDoc::WriteInstFormatTex(CoreGenDAG *DAG, std::ofstream &ofs ){
       ofs << "The following diagrams represent the " << EscapeUnderscore(IF->GetName())
           << " instruction format from the " << EscapeUnderscore(IF->GetISA()->GetName())
           << " instruction set architecture." << std::endl;
+
+      // write out the dot file for the target inst format
+      WriteInstFormatDotFile(IF);
 
       // draw an instruction format block diagram
       ofs << "\\vspace{0.25in}" << std::endl;
