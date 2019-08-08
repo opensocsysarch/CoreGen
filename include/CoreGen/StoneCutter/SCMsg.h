@@ -46,6 +46,9 @@ public:
   /// SCMsg: Constructor
   SCMsg();
 
+  /// SCMsg: Overridden constructor
+  SCMsg( std::streambuf* sb );
+
   /// SCMsg: Destructor
   ~SCMsg();
 
@@ -65,6 +68,9 @@ public:
 
   /// SCMsg: Sets the message stream to STDOUT
   bool SetStdout();
+
+  /// SCMSg: Retrieve the output stream
+  std::ostream *GetStream() { return mStream; }
 };
 
 #endif // _STONECUTTER_SCMSG_H_

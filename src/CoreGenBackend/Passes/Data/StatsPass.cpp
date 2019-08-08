@@ -19,7 +19,7 @@ StatsPass::StatsPass(std::ostream *O,
     PseudoInstNode(0),RegClassNode(0),RegNode(0),
     ISANode(0),CacheNode(0),EncodingNode(0),
     ExtNode(0),CommNode(0),SpadNode(0),MCtrlNode(0),
-    VTPNode(0),PluginNode(0){
+    VTPNode(0),PluginNode(0),EncNode(0){
 }
 
 StatsPass::~StatsPass(){
@@ -38,6 +38,7 @@ void StatsPass::RecordNodeType( CoreGenNode *N ){
     break;
   case CGInst:
     InstNode++;
+    EncNode += static_cast<CoreGenInst *>(N)->GetNumEncodings();
     break;
   case CGPInst:
     PseudoInstNode++;
@@ -106,8 +107,9 @@ bool StatsPass::Execute(){
   WriteMsg("==> Node Summary" );
   WriteMsg("==> SoC Nodes:\t\t" + std::to_string(SocNode));
   WriteMsg("==> Core Nodes:\t\t" + std::to_string(CoreNode));
-  WriteMsg("==> Inst Format Nodes:\t" + std::to_string(InstNode));
+  WriteMsg("==> Inst Format Nodes:\t" + std::to_string(InstFormatNode));
   WriteMsg("==> Inst Nodes:\t\t" + std::to_string(InstNode));
+  WriteMsg("==> Encoding Nodes:\t\t" + std::to_string(EncNode));
   WriteMsg("==> Pseudo Inst Nodes:\t" + std::to_string(PseudoInstNode));
   WriteMsg("==> RegClass Nodes:\t\t" + std::to_string(RegClassNode));
   WriteMsg("==> Register Nodes:\t\t" + std::to_string(RegNode));
@@ -124,7 +126,7 @@ bool StatsPass::Execute(){
   unsigned int Total = SocNode+CoreNode+InstNode+PseudoInstNode+
                        RegClassNode+RegNode+ISANode+CacheNode+
                        EncodingNode+ExtNode+ExtNode+SpadNode+
-                       MCtrlNode+VTPNode+PluginNode;
+                       MCtrlNode+VTPNode+PluginNode+EncNode;
   WriteMsg("==> TOTAL NODES:\t\t" + std::to_string(Total));
 
 

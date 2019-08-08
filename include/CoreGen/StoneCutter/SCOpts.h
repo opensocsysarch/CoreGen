@@ -63,6 +63,7 @@ private:
   bool isListPass;  ///< SCOpts: User selected pass listing flag
   bool isSigMap;    ///< SCOpts: Signal map selected
   bool isPassRun;   ///< SCOpts: Have the passes been executed?
+  bool isPerf;      ///< SCOpts: Are the performance stats enabled?
 
   std::string OutFile;  ///< SCOpts: Output file designator
   std::string SigMap;   ///< SCOpts: Signal map output file
@@ -118,6 +119,9 @@ public:
 
   /// SCOpts: Do we generate chisel output
   bool IsChisel() { return isChisel; }
+
+  /// SCOpts: Are the performance stats enabled
+  bool IsPerf() { return isPerf; }
 
   /// SCOpts: Do we execute the parser
   bool IsParse() { return isParse; }
@@ -181,6 +185,9 @@ public:
 
   /// SCOpts: Determines whether an output file name has been set
   bool IsOutputFile() { if( OutFile.length() > 0 ){ return true;} return false; }
+
+  /// SCOpts: Set the 'perf' option
+  bool SetPerf() { isPerf = true; return true; }
 
   /// SCOpts: Set the 'chisel' option
   bool SetChisel() { isChisel = true; return true; }

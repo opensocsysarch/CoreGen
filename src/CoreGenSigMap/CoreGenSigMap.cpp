@@ -319,6 +319,24 @@ bool CoreGenSigMap::ReadInstSignals(const YAML::Node& InstNodes){
           FusedOpType FType = StrToFusedOpType(FusedOp);
           Signals[Signals.size()-1]->SetFusedType(FType);
         }
+
+        // check for inputs
+        if( LSNode["Inputs"] ){
+          const YAML::Node& INode = LSNode["Inputs"];
+          for( unsigned k=0; k<INode.size(); k++ ){
+            const YAML::Node& LINode = INode[k];
+            if( !CheckValidNode(LINode,"Input") ){
+              Error = "Input has no name";
+              return false;
+            }
+            std::string InputStr = LINode["Input"].as<std::string>();
+            if( InputStr.length() == 0 ){
+              Error = "Input has a null name";
+              return false;
+            }
+            Signals[Signals.size()-1]->InsertInput(InputStr);
+          }
+        } // end check for inputs
       }
     }
   }
@@ -474,6 +492,15 @@ bool CoreGenSigMap::WriteInstSignals(YAML::Emitter *out){
       *out << YAML::Key << "Width" << YAML::Value << CSigs[j]->GetWidth();
       if( CSigs[j]->GetFusedType() != FOP_UNK )
         *out << YAML::Key << "FusedOp" << YAML::Value << CSigs[j]->FusedOpTypeToStr();
+
+      // determine whether we need to write out the input block
+      if( CSigs[j]->GetNumInputs() > 0 ){
+        *out << YAML::Key << "Inputs" << YAML::Value << YAML::BeginSeq << YAML::BeginMap;
+        for( unsigned k=0; k<CSigs[j]->GetNumInputs() ; k++ ){
+          *out << YAML::Key << "Input" << YAML::Value << CSigs[j]->GetInput(k);
+        }
+        *out << YAML::EndMap << YAML::EndSeq;
+      }
       *out << YAML::EndMap;
     }
     *out << YAML::EndSeq;

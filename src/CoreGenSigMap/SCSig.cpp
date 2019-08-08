@@ -39,6 +39,20 @@ SCSig::SCSig(SigType T,unsigned W,std::string I,std::string N)
 SCSig::~SCSig(){
 }
 
+bool SCSig::InsertInput( std::string Input ){
+  // only insert unique input names
+  auto it = std::find( Inputs.begin(), Inputs.end(), Input );
+  if( it == Inputs.end() )
+    Inputs.push_back(Input);
+  return true;
+}
+
+std::string SCSig::GetInput( unsigned Idx ){
+  if( Idx > (Inputs.size()-1) )
+    return "";
+  return Inputs[Idx];
+}
+
 bool SCSig::SetFusedType( FusedOpType T ){
   switch( T ){
   case FOP_UNK:

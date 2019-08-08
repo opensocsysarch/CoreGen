@@ -277,7 +277,7 @@ std::string SCPass::TraceOperand( Function &F, Value *V,
     isImm = true;
     isPredef = false;
     Width = (unsigned)(CInt->getBitWidth());
-    return CInt->getName().str();
+    return std::to_string(CInt->getSExtValue());
   }
 
   // check to see if the operand is a register

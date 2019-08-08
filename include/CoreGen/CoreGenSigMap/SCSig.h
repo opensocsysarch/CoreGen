@@ -21,6 +21,8 @@
 #define _SCSIG_H_
 
 #include <string>
+#include <vector>
+#include <algorithm>
 
 typedef enum{
   // Generic fused ops
@@ -117,6 +119,7 @@ private:
   unsigned SigWidth;        ///< SCSig: Width of the target signal (in bits)
   std::string Inst;         ///< SCSig: Name of the instruction
   std::string Name;         ///< SCSig: Name of the signal
+  std::vector<std::string> Inputs; ///< SCSig: vector of required inputs for ALU ops
 
 public:
   /// Default constructor
@@ -157,6 +160,15 @@ public:
 
   /// Returns true if the target signal is a branch signal
   bool isBranchSig();
+
+  /// Returns the number of required input operands found for the target signal
+  unsigned GetNumInputs() { return Inputs.size(); }
+
+  /// Inserts a new required input operand into the target signal
+  bool InsertInput( std::string Input );
+
+  /// Retrieves the input at the desired index
+  std::string GetInput( unsigned Idx );
 
   /// Sets the signal type
   bool SetType( SigType Type );

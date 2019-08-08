@@ -42,9 +42,28 @@ bool SCSigMap::TranslateLogicalOp( Function &F,
   // initiate the binary signal
   Signals->InsertSignal(new SCSig(Type,1,F.getName().str()));
 
+  // we have the new signal, now we need to insert the target input requirements
+  // by default, we use the last signal utilized
+  if(!TranslateALUOperands(F,I,Signals->GetSignal(Signals->GetNumSignals()-1)))
+    return false;
+
   // interrogate the operands and write the operand enable signals
   if( !TranslateTargetOperands(F,I) )
     return false;
+
+  return true;
+}
+
+bool SCSigMap::TranslateALUOperands( Function &F,
+                                     Instruction &I,
+                                     SCSig *Sig ){
+  bool isPredef = false;
+  bool isImm = false;
+  unsigned Width = 0;
+  for( unsigned i=0; i<I.getNumOperands(); i++ ){
+    Sig->InsertInput( TraceOperand(F,I.getOperand(i),isPredef,isImm,Width) );
+    Sig->SetWidth(Width);
+  }
 
   return true;
 }
@@ -54,6 +73,11 @@ bool SCSigMap::TranslateBinaryOp( Function &F,
                                   SigType Type ){
   // initiate the binary signal
   Signals->InsertSignal(new SCSig(Type,1,F.getName().str()));
+
+  // we have the new signal, now we need to insert the target input requirements
+  // by default, we use the last signal utilized
+  if(!TranslateALUOperands(F,I,Signals->GetSignal(Signals->GetNumSignals()-1)))
+    return false;
 
   // interrogate the operands and write the operand enable signals
   if( !TranslateTargetOperands(F,I) )

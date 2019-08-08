@@ -14,9 +14,10 @@ SCChiselCodeGen::SCChiselCodeGen( SCParser *P,
                                   SCOpts *O,
                                   SCMsg *M,
                                   std::string COF )
-  : Parser(P), Opts(O), Msgs(M), ChiselFile(COF), CSM(nullptr) {
+  : Parser(P), Opts(O), Msgs(M), Perf(NULL), ChiselFile(COF), CSM(nullptr) {
   InitIntrinsics();
   InitPasses();
+  Perf = new SCPerf(Msgs->GetStream());
 }
 
 SCChiselCodeGen::~SCChiselCodeGen(){
@@ -24,6 +25,8 @@ SCChiselCodeGen::~SCChiselCodeGen(){
   Passes.clear();
   if( CSM )
     delete CSM;
+  if( Perf )
+    delete Perf;
 }
 
 void SCChiselCodeGen::InitIntrinsics(){
@@ -97,6 +100,20 @@ bool SCChiselCodeGen::ExecutePasses(){
   }
 
   return rtn;
+}
+
+bool SCChiselCodeGen::IsRegEnabled( SCSig *Sig, std::string Field ){
+  for( unsigned i=0; i<Sig->GetNumInputs(); i++ ){
+    if( Sig->GetInput(i) == Field )
+      return true;
+  }
+  return false;
+}
+
+bool SCChiselCodeGen::IsInteger(std::string Str){
+  if( Str.length() == 0 )
+    return false;
+  return std::regex_match( Str, std::regex( ( "((\\+|-)?[[:digit:]]+)(\\.(([[:digit:]]+)?))?" ) ) );
 }
 
 void SCChiselCodeGen::WriteUCodeTableComment(SCPipeInfo *PInfo){
@@ -208,11 +225,7 @@ void SCChiselCodeGen::WriteNOPUOp(SCPipeInfo *PInfo){
   OutFile << "\t\t,Label(\"U_NOP\"), Signals(Cat(LDIR_0, RS_X, RWR_X, REN_0, ";
   // write out the register selects
   for( unsigned i=0; i<PInfo->GetNumUniqueRegFields(); i++ ){
-    if( i == 0 ){
-      OutFile << "LD" << PInfo->GetUniqueFieldName(i) << "_X, ";
-    }else{
-      OutFile << "LD" << PInfo->GetUniqueFieldName(i) << "_X, ";
-    }
+    OutFile << "LD" << PInfo->GetUniqueFieldName(i) << "_X, ";
   }
   // write out the immediate selects
   if( PInfo->GetNumUniqueImmFields() > 0 ){
@@ -231,11 +244,7 @@ void SCChiselCodeGen::WriteILLEGALUOp(SCPipeInfo *PInfo){
   OutFile << "\t\t,Label(\"U_ILLEGAL\"), Signals(Cat(LDIR_0, RS_X, RWR_X, REN_0, ";
   // write out the register selects
   for( unsigned i=0; i<PInfo->GetNumUniqueRegFields(); i++ ){
-    if( i == 0 ){
-      OutFile << "LD" << PInfo->GetUniqueFieldName(i) << "_X, ";
-    }else{
-      OutFile << "LD" << PInfo->GetUniqueFieldName(i) << "_X, ";
-    }
+    OutFile << "LD" << PInfo->GetUniqueFieldName(i) << "_X, ";
   }
   // write out the immediate selects
   if( PInfo->GetNumUniqueImmFields() > 0 ){
@@ -246,11 +255,7 @@ void SCChiselCodeGen::WriteILLEGALUOp(SCPipeInfo *PInfo){
   OutFile << "\t\t\tSignals(Cat(LDIR_0, RS_PC, RWR_1, REN_1, ";
   // write out the register selects
   for( unsigned i=0; i<PInfo->GetNumUniqueRegFields(); i++ ){
-    if( i == 0 ){
-      OutFile << "LD" << PInfo->GetUniqueFieldName(i) << "_X, ";
-    }else{
-      OutFile << "LD" << PInfo->GetUniqueFieldName(i) << "_X, ";
-    }
+    OutFile << "LD" << PInfo->GetUniqueFieldName(i) << "_X, ";
   }
   // write out the immediate selects
   if( PInfo->GetNumUniqueImmFields() > 0 ){
@@ -269,11 +274,7 @@ void SCChiselCodeGen::WriteUNIMPLUOp(SCPipeInfo *PInfo){
   OutFile << "\t\t,Label(\"U_UNIMP\"), Signals(Cat(LDIR_0, RS_X, RWR_X, REN_0, ";
   // write out the register selects
   for( unsigned i=0; i<PInfo->GetNumUniqueRegFields(); i++ ){
-    if( i == 0 ){
-      OutFile << "LD" << PInfo->GetUniqueFieldName(i) << "_X, ";
-    }else{
-      OutFile << "LD" << PInfo->GetUniqueFieldName(i) << "_X, ";
-    }
+    OutFile << "LD" << PInfo->GetUniqueFieldName(i) << "_X, ";
   }
   // write out the immediate selects
   if( PInfo->GetNumUniqueImmFields() > 0 ){
@@ -292,17 +293,42 @@ void SCChiselCodeGen::WriteINITPCUOp(SCPipeInfo *PInfo){
   OutFile << "\t\t,Label(\"U_INITPC\"), Signals(Cat(LDIR_0, RS_PC, RWR_1, REN_1, ";
   // write out the register selects
   for( unsigned i=0; i<PInfo->GetNumUniqueRegFields(); i++ ){
-    if( i == 0 ){
-      OutFile << "LD" << PInfo->GetUniqueFieldName(i) << "_X, ";
-    }else{
-      OutFile << "LD" << PInfo->GetUniqueFieldName(i) << "_X, ";
-    }
+    OutFile << "LD" << PInfo->GetUniqueFieldName(i) << "_X, ";
   }
   // write out the immediate selects
   if( PInfo->GetNumUniqueImmFields() > 0 ){
     OutFile << "IS_X, IEN_0, ";
   }
   OutFile << "ALU_X, AEN_0, LDMA_X, MWR_X, MEN_X, UBR_J), \"U_FETCH\")" << std::endl;
+}
+
+std::string SCChiselCodeGen::DecodeRegSlot( std::string &SigStr,
+                                            SCPipeInfo *PInfo,
+                                            bool &IsImm ){
+  // inputs are in the form "FIELD_SIGTYPE"
+  // we need to strip the field out
+  std::vector<std::string> tokens;
+  std::string token;
+  std::istringstream tokenStream(SigStr);
+  while(std::getline(tokenStream,token,'_'))
+    tokens.push_back(token);
+
+  // now determine if this is an immediate value
+  for( unsigned i=0; i<PInfo->GetNumUniqueImmFields(); i++ ){
+    if( tokens[0] == PInfo->GetUniqueImmFieldName(i) )
+      IsImm = true;
+  }
+
+  return tokens[0];
+}
+
+std::string SCChiselCodeGen::SCToUpper( std::string Str ){
+  std::locale loc;
+  std::string RtnStr;
+  for (std::string::size_type i=0; i<Str.length(); ++i)
+    RtnStr += std::toupper(Str[i],loc);
+
+  return RtnStr;
 }
 
 void SCChiselCodeGen::EmitNOP(SCSig *Sig,
@@ -320,11 +346,7 @@ void SCChiselCodeGen::EmitNOP(SCSig *Sig,
   OutFile << "LDIR_0, RS_PC, RWR_1, REN_1, ";
   // write out the register selects
   for( unsigned i=0; i<PInfo->GetNumUniqueRegFields(); i++ ){
-    if( i == 0 ){
-      OutFile << "LD" << PInfo->GetUniqueFieldName(i) << "_X, ";
-    }else{
-      OutFile << "LD" << PInfo->GetUniqueFieldName(i) << "_X, ";
-    }
+    OutFile << "LD" << PInfo->GetUniqueFieldName(i) << "_X, ";
   }
   // write out the immediate selects
   if( PInfo->GetNumUniqueImmFields() > 0 ){
@@ -340,70 +362,6 @@ void SCChiselCodeGen::EmitNOP(SCSig *Sig,
 }
 
 void SCChiselCodeGen::EmitSIGINSTF(SCSig *Sig,
-                            unsigned NumSigs,
-                            unsigned NSig,
-                            std::string &BrTarget,
-                            std::string &UOpBr,
-                            SCPipeInfo *PInfo ){
-}
-
-void SCChiselCodeGen::EmitALU_ADD(SCSig *Sig,
-                            unsigned NumSigs,
-                            unsigned NSig,
-                            std::string &BrTarget,
-                            std::string &UOpBr,
-                            SCPipeInfo *PInfo ){
-}
-
-void SCChiselCodeGen::EmitALU_SUB(SCSig *Sig,
-                            unsigned NumSigs,
-                            unsigned NSig,
-                            std::string &BrTarget,
-                            std::string &UOpBr,
-                            SCPipeInfo *PInfo ){
-}
-
-void SCChiselCodeGen::EmitALU_SLL(SCSig *Sig,
-                            unsigned NumSigs,
-                            unsigned NSig,
-                            std::string &BrTarget,
-                            std::string &UOpBr,
-                            SCPipeInfo *PInfo ){
-}
-
-void SCChiselCodeGen::EmitALU_SRL(SCSig *Sig,
-                            unsigned NumSigs,
-                            unsigned NSig,
-                            std::string &BrTarget,
-                            std::string &UOpBr,
-                            SCPipeInfo *PInfo ){
-}
-
-void SCChiselCodeGen::EmitALU_SRA(SCSig *Sig,
-                            unsigned NumSigs,
-                            unsigned NSig,
-                            std::string &BrTarget,
-                            std::string &UOpBr,
-                            SCPipeInfo *PInfo ){
-}
-
-void SCChiselCodeGen::EmitALU_AND(SCSig *Sig,
-                            unsigned NumSigs,
-                            unsigned NSig,
-                            std::string &BrTarget,
-                            std::string &UOpBr,
-                            SCPipeInfo *PInfo ){
-}
-
-void SCChiselCodeGen::EmitALU_OR(SCSig *Sig,
-                            unsigned NumSigs,
-                            unsigned NSig,
-                            std::string &BrTarget,
-                            std::string &UOpBr,
-                            SCPipeInfo *PInfo ){
-}
-
-void SCChiselCodeGen::EmitALU_XOR(SCSig *Sig,
                             unsigned NumSigs,
                             unsigned NSig,
                             std::string &BrTarget,
@@ -435,70 +393,6 @@ void SCChiselCodeGen::EmitALU_COPY(SCSig *Sig,
                             SCPipeInfo *PInfo ){
 }
 
-void SCChiselCodeGen::EmitALU_MUL(SCSig *Sig,
-                            unsigned NumSigs,
-                            unsigned NSig,
-                            std::string &BrTarget,
-                            std::string &UOpBr,
-                            SCPipeInfo *PInfo ){
-}
-
-void SCChiselCodeGen::EmitALU_DIV(SCSig *Sig,
-                            unsigned NumSigs,
-                            unsigned NSig,
-                            std::string &BrTarget,
-                            std::string &UOpBr,
-                            SCPipeInfo *PInfo ){
-}
-
-void SCChiselCodeGen::EmitALU_REM(SCSig *Sig,
-                            unsigned NumSigs,
-                            unsigned NSig,
-                            std::string &BrTarget,
-                            std::string &UOpBr,
-                            SCPipeInfo *PInfo ){
-}
-
-void SCChiselCodeGen::EmitALU_FADD(SCSig *Sig,
-                            unsigned NumSigs,
-                            unsigned NSig,
-                            std::string &BrTarget,
-                            std::string &UOpBr,
-                            SCPipeInfo *PInfo ){
-}
-
-void SCChiselCodeGen::EmitALU_FSUB(SCSig *Sig,
-                            unsigned NumSigs,
-                            unsigned NSig,
-                            std::string &BrTarget,
-                            std::string &UOpBr,
-                            SCPipeInfo *PInfo ){
-}
-
-void SCChiselCodeGen::EmitALU_FMUL(SCSig *Sig,
-                            unsigned NumSigs,
-                            unsigned NSig,
-                            std::string &BrTarget,
-                            std::string &UOpBr,
-                            SCPipeInfo *PInfo ){
-}
-
-void SCChiselCodeGen::EmitALU_FDIV(SCSig *Sig,
-                            unsigned NumSigs,
-                            unsigned NSig,
-                            std::string &BrTarget,
-                            std::string &UOpBr,
-                            SCPipeInfo *PInfo ){
-}
-
-void SCChiselCodeGen::EmitALU_FREM(SCSig *Sig,
-                            unsigned NumSigs,
-                            unsigned NSig,
-                            std::string &BrTarget,
-                            std::string &UOpBr,
-                            SCPipeInfo *PInfo ){
-}
-
 void SCChiselCodeGen::EmitPC_INCR(SCSig *Sig,
                             unsigned NumSigs,
                             unsigned NSig,
@@ -508,6 +402,77 @@ void SCChiselCodeGen::EmitPC_INCR(SCSig *Sig,
   // this is the same as a NOP, just to FETCH
   EmitNOP(Sig,NumSigs,NSig,BrTarget,UOpBr,PInfo);
 }
+
+void SCChiselCodeGen::EmitALU_OP(SCSig *Sig,
+                            unsigned NumSigs,
+                            unsigned NSig,
+                            std::string &BrTarget,
+                            std::string &UOpBr,
+                            SCPipeInfo *PInfo ){
+  // LABEL | LD_IR | REG_SEL | REG_WR | EN_REG
+  // <LD_regfield,...>
+  // <IMM_SEL,EN_IMM>
+  // ALU_OP | EN_ALU | LD_MA | MEM_WR | EN_MEM | uBr_SEL | uBr_Target
+
+  // Step 1: Query the inputs and look for any immediate fields and constants
+  unsigned Constant = 0;      // unsigned constant integer; integers < 0 are converted to unsigned
+  bool isConstant   = false;  // determines if we have a constant int
+  bool isImmediate  = false;  // determines if we have an immediate field value
+  bool isRegister   = false;  // determines if we have a register input
+  std::string ImmEn;
+  for( unsigned i=0; i<Sig->GetNumInputs(); i++ ){
+    if(IsInteger( Sig->GetInput( i ))){
+      std::string::size_type sz;
+      Constant = (unsigned)(std::stoi(Sig->GetInput(i),&sz));
+      isConstant = true;
+    }else if( PInfo->IsRegisterField(Sig->GetInput(i)) ){
+      ImmEn = Sig->GetInput(i);
+      isImmediate = true;
+    }else if( PInfo->IsImmField(Sig->GetInput(i)) ){
+      isRegister = true;
+    }
+  }
+
+  // Step 2: write out the register selects
+  if( isRegister ){
+    OutFile << "LDIR_0, RS_RD, RWR_1, REN_1, ";
+    for( unsigned i=0; i<PInfo->GetNumUniqueRegFields(); i++ ){
+      if( IsRegEnabled( Sig, PInfo->GetUniqueFieldName(i) ))
+        OutFile << "LD" << PInfo->GetUniqueFieldName(i) << "_1, ";
+      else
+        OutFile << "LD" << PInfo->GetUniqueFieldName(i) << "_0, ";
+    }
+  }else{
+    OutFile << "LDIR_0, RS_X, RWR_X, REN_0, ";
+    for( unsigned i=0; i<PInfo->GetNumUniqueRegFields(); i++ ){
+      OutFile << "LD" << PInfo->GetUniqueFieldName(i) << "_0, ";
+    }
+  }
+
+  // Step 3: write out the immediate selects
+  if( PInfo->GetNumUniqueImmFields() > 0 ){
+    if( isImmediate ){
+      OutFile << "IS_" << ImmEn << ", IEN_1, ";
+    }else{
+      OutFile << "IS_X, IEN_0, ";
+    }
+  }
+
+  // Step 4: write out the ALU selects
+  if( isConstant ){
+    OutFile << Sig->SigTypeToStr() << "_" << std::to_string(Constant)
+            << ", AEN_1, LDMA_X, MWR_X, MEN_0, ";
+  }else{
+    OutFile << Sig->SigTypeToStr() << ", AEN_1, LDMA_X, MWR_X, MEN_0, ";
+  }
+
+  // determine if this is the final uOp in the instruction
+  if( IsFinalUOp( NumSigs, NSig ) ){
+    BrTarget  = "U_FETCH";
+    UOpBr     = "UBR_J";
+  }
+}
+
 
 void SCChiselCodeGen::EmitPC_BRJMP(SCSig *Sig,
                             unsigned NumSigs,
@@ -723,6 +688,52 @@ void SCChiselCodeGen::EmitREG_READ(SCSig *Sig,
                             std::string &BrTarget,
                             std::string &UOpBr,
                             SCPipeInfo *PInfo ){
+  // LABEL | LD_IR | REG_SEL | REG_WR | EN_REG
+  // <LD_regfield,...>
+  // <IMM_SEL,EN_IMM>
+  // ALU_OP | EN_ALU | LD_MA | MEM_WR | EN_MEM | uBr_SEL | uBr_Target
+
+  // decode the register select
+  bool IsImm = false;
+  std::string FieldName = Sig->GetName();
+  std::string Slot = DecodeRegSlot(FieldName,PInfo,IsImm);
+
+  //-- [uBr to FETCH]
+  if( !IsImm ){
+    OutFile << "LDIR_0, RS_" << SCToUpper(Slot) << ", RWR_0, REN_1, ";
+  }else{
+    OutFile << "LDIR_0, RS_X, RWR_0, REN_0, ";
+  }
+
+  // write out the register selects
+  for( unsigned i=0; i<PInfo->GetNumUniqueRegFields(); i++ ){
+    if( !IsImm ){
+      // write out a register select
+      if( Slot == PInfo->GetUniqueFieldName(i) ){
+        OutFile << "LD" << PInfo->GetUniqueFieldName(i) << "_1, ";
+      }else{
+        OutFile << "LD" << PInfo->GetUniqueFieldName(i) << "_0, ";
+      }
+    }else{
+      // disable all the registers
+      OutFile << "LD" << PInfo->GetUniqueFieldName(i) << "_X, ";
+    }
+  }
+  // write out the immediate selects
+  if( PInfo->GetNumUniqueImmFields() > 0 ){
+    if( !IsImm ){
+      OutFile << "IS_X, IEN_0, ";
+    }else{
+      OutFile << "IS_" << Slot << ", IEN_1, ";
+    }
+  }
+  OutFile << "ALU_X, AEN_0, LDMA_X, MWR_X, MEN_0, ";
+
+  // determine if this is the final uOp in the instruction
+  if( IsFinalUOp( NumSigs, NSig ) ){
+    BrTarget  = "U_FETCH";
+    UOpBr     = "UBR_J";
+  }
 }
 
 void SCChiselCodeGen::EmitREG_WRITE(SCSig *Sig,
@@ -809,28 +820,28 @@ void SCChiselCodeGen::WriteUOp( SCSig *Sig,
     EmitSIGINSTF(Sig,NumSigs,NSig,BrTarget,UOpBr,PInfo);
     break;
   case ALU_ADD:
-    EmitALU_ADD(Sig,NumSigs,NSig,BrTarget,UOpBr,PInfo);
+    EmitALU_OP(Sig,NumSigs,NSig,BrTarget,UOpBr,PInfo);
     break;
   case ALU_SUB:
-    EmitALU_SUB(Sig,NumSigs,NSig,BrTarget,UOpBr,PInfo);
+    EmitALU_OP(Sig,NumSigs,NSig,BrTarget,UOpBr,PInfo);
     break;
   case ALU_SLL:
-    EmitALU_SLL(Sig,NumSigs,NSig,BrTarget,UOpBr,PInfo);
+    EmitALU_OP(Sig,NumSigs,NSig,BrTarget,UOpBr,PInfo);
     break;
   case ALU_SRL:
-    EmitALU_SRL(Sig,NumSigs,NSig,BrTarget,UOpBr,PInfo);
+    EmitALU_OP(Sig,NumSigs,NSig,BrTarget,UOpBr,PInfo);
     break;
   case ALU_SRA:
-    EmitALU_SRA(Sig,NumSigs,NSig,BrTarget,UOpBr,PInfo);
+    EmitALU_OP(Sig,NumSigs,NSig,BrTarget,UOpBr,PInfo);
     break;
   case ALU_AND:
-    EmitALU_AND(Sig,NumSigs,NSig,BrTarget,UOpBr,PInfo);
+    EmitALU_OP(Sig,NumSigs,NSig,BrTarget,UOpBr,PInfo);
     break;
   case ALU_OR:
-    EmitALU_OR(Sig,NumSigs,NSig,BrTarget,UOpBr,PInfo);
+    EmitALU_OP(Sig,NumSigs,NSig,BrTarget,UOpBr,PInfo);
     break;
   case ALU_XOR:
-    EmitALU_XOR(Sig,NumSigs,NSig,BrTarget,UOpBr,PInfo);
+    EmitALU_OP(Sig,NumSigs,NSig,BrTarget,UOpBr,PInfo);
     break;
   case ALU_SLT:
     EmitALU_SLT(Sig,NumSigs,NSig,BrTarget,UOpBr,PInfo);
@@ -842,28 +853,28 @@ void SCChiselCodeGen::WriteUOp( SCSig *Sig,
     EmitALU_COPY(Sig,NumSigs,NSig,BrTarget,UOpBr,PInfo);
     break;
   case ALU_MUL:
-    EmitALU_MUL(Sig,NumSigs,NSig,BrTarget,UOpBr,PInfo);
+    EmitALU_OP(Sig,NumSigs,NSig,BrTarget,UOpBr,PInfo);
     break;
   case ALU_DIV:
-    EmitALU_DIV(Sig,NumSigs,NSig,BrTarget,UOpBr,PInfo);
+    EmitALU_OP(Sig,NumSigs,NSig,BrTarget,UOpBr,PInfo);
     break;
   case ALU_REM:
-    EmitALU_REM(Sig,NumSigs,NSig,BrTarget,UOpBr,PInfo);
+    EmitALU_OP(Sig,NumSigs,NSig,BrTarget,UOpBr,PInfo);
     break;
   case ALU_FADD:
-    EmitALU_FADD(Sig,NumSigs,NSig,BrTarget,UOpBr,PInfo);
+    EmitALU_OP(Sig,NumSigs,NSig,BrTarget,UOpBr,PInfo);
     break;
   case ALU_FSUB:
-    EmitALU_FSUB(Sig,NumSigs,NSig,BrTarget,UOpBr,PInfo);
+    EmitALU_OP(Sig,NumSigs,NSig,BrTarget,UOpBr,PInfo);
     break;
   case ALU_FMUL:
-    EmitALU_FMUL(Sig,NumSigs,NSig,BrTarget,UOpBr,PInfo);
+    EmitALU_OP(Sig,NumSigs,NSig,BrTarget,UOpBr,PInfo);
     break;
   case ALU_FDIV:
-    EmitALU_FDIV(Sig,NumSigs,NSig,BrTarget,UOpBr,PInfo);
+    EmitALU_OP(Sig,NumSigs,NSig,BrTarget,UOpBr,PInfo);
     break;
   case ALU_FREM:
-    EmitALU_FREM(Sig,NumSigs,NSig,BrTarget,UOpBr,PInfo);
+    EmitALU_OP(Sig,NumSigs,NSig,BrTarget,UOpBr,PInfo);
     break;
   case PC_INCR:
     EmitPC_INCR(Sig,NumSigs,NSig,BrTarget,UOpBr,PInfo);
@@ -976,9 +987,6 @@ void SCChiselCodeGen::WriteUOp( SCSig *Sig,
 
   // Step 3: write out the uOp branch logic
   OutFile << UOpBr << "), \"" << BrTarget << "\")" << std::endl;
-
-  // Step 4: write out the end of the uOp
-  OutFile << ")" << std::endl;
 }
 
 bool SCChiselCodeGen::ExecuteUcodeCodegen(){
@@ -1043,6 +1051,7 @@ bool SCChiselCodeGen::ExecuteUcodeCodegen(){
     for( unsigned i=0; i<Insts.size(); i++ ){
       std::vector<SCSig *> Sigs = CSM->GetSigVect(Insts[i]);
       for( unsigned j=0; j<Sigs.size(); j++ ){
+        Perf->InsertUOp(Insts[i]);
         WriteUOp( Sigs[j], Sigs.size(), j, PInfo );
       }
     }
@@ -1198,6 +1207,10 @@ bool SCChiselCodeGen::GenerateChisel(){
 
   // close the output file
   OutFile.close();
+
+  if( Opts->IsPerf() ){
+    Perf->PrintStats();
+  }
 
   return true;
 }
