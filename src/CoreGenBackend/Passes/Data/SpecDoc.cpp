@@ -317,8 +317,6 @@ bool SpecDoc::WriteInstFormatDotFile( CoreGenInstFormat *IF ){
   if( !IF )
     return false;
 
-  std::cout << "building dot file for " << IF->GetName() << std::endl;
-
   std::string OFile = this->GetOutputPath() + "/" + CGRemoveDot(IF->GetName()) + ".dot";
   bool PrevFile = false;
 
