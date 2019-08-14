@@ -11,6 +11,14 @@
 #include "CoreGen/StoneCutter/SCOpts.h"
 
 // ------------------------------------------------- CONSTRUCTOR
+SCOpts::SCOpts(SCMsg *M)
+  : argc(0), argv(NULL),
+  isKeep(false), isParse(true), isIR(true),
+  isOptimize(true), isChisel(true), isCG(false), isVerbose(false),
+  isDisable(false), isEnable(false), isListPass(false), isSigMap(false),
+  isPassRun(false), isPerf(false),
+  Msgs(M) {}
+
 SCOpts::SCOpts(SCMsg *M, int A, char **C)
   : argc(A), argv(C),
   isKeep(false), isParse(true), isIR(true),
@@ -213,6 +221,18 @@ bool SCOpts::ParseOpts(bool *isHelp){
   }
 
   return true;
+}
+
+// ------------------------------------------------- PurgeInputFiles
+bool SCOpts::PurgeInputFiles(){
+  FileList.clear();
+  return true;
+}
+
+// ------------------------------------------------- SetInputFile
+bool SCOpts::SetInputFile( std::string I ){
+  FileList.push_back( I );
+  return 0;
 }
 
 // ------------------------------------------------- GetInputFile
