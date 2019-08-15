@@ -291,6 +291,52 @@ public:
 
   /// Set the ASP Files to Test
   void SetASPFiles(std::vector<std::string>);
+
+  /// Get a Cache node by name
+  CoreGenCache* GetCacheNodeByName(std::string Name);
+
+  /// Get a Core node by name
+  CoreGenCore* GetCoreNodeByName(std::string Name);
+
+  /// Get an Inst node by name
+  CoreGenInst* GetInstNodeByName(std::string Name);
+
+  /// Get a PInst node by name
+  CoreGenPseudoInst* GetPInstNodeByName(std::string Name);
+
+  /// Get an InstFormate node by name
+  CoreGenInstFormat* GetInstFormatNodeByName(std::string Name);
+
+  /// Get a Reg node by name
+  CoreGenReg* GetRegNodeByName(std::string Name);
+
+  /// Get a RegClass node by name
+  CoreGenRegClass* GetRegClassNodeByName(std::string Name);
+
+  /// Get an SoC node by name
+  CoreGenSoC* GetSoCNodeByName(std::string Name);
+
+  /// Get an ISA node by name
+  CoreGenISA* GetISANodeByName(std::string Name);
+
+  /// Get an Ext node by name
+  CoreGenExt* GetExtNodeByName(std::string Name);
+
+  /// Get a Comm node by name
+  CoreGenComm* GetCommNodeByName(std::string Name);
+
+  /// Get an Spad node by name
+  CoreGenSpad* GetSpadNodeByName(std::string Name);
+
+  /// Get an MCtrl node by name
+  CoreGenMCtrl* GetMCtrlNodeByName(std::string Name);
+
+  /// Get a VTP node by name
+  CoreGenVTP* GetVTPNodeByName(std::string Name);
+
+  /// Get a Plugin node by name
+  CoreGenPlugin* GetPluginNodeByName(std::string Name);
+
 };
 
 #endif

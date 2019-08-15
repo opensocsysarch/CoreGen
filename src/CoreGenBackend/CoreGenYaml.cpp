@@ -410,10 +410,6 @@ void CoreGenYaml::WriteSocYaml( YAML::Emitter *out,
 void CoreGenYaml::PrintCache( YAML::Emitter *out,
                               CoreGenCache *Cache,
                               std::vector<std::string> &Printed ){
-  if( Cache->IsParentLevel() ){
-    PrintCache( out, Cache->GetSubCache(), Printed );
-  }
-
   for( unsigned i=0; i<CNames.size(); i++ ){
     if( CNames[i] == Cache->GetName() ){
       // this cache node has already been referenced
@@ -429,6 +425,10 @@ void CoreGenYaml::PrintCache( YAML::Emitter *out,
   }
 
   Printed.push_back(Cache->GetName());
+
+  if( Cache->IsParentLevel() ){
+    PrintCache( out, Cache->GetSubCache(), Printed );
+  }
 
   // this cache node has not yet been referenced, print it
   *out << YAML::BeginMap;
