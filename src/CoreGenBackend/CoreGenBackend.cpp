@@ -1403,9 +1403,9 @@ CoreGenVTP* CoreGenBackend::GetVTPNodeByName(std::string Name){
 }
 
 CoreGenPlugin* CoreGenBackend::GetPluginNodeByName(std::string Name){
-  for(unsigned int i = 0; i < this->VTPs.size(); i++){
-    if(this->VTPs[i]->GetName() == Name){
-      return this->VTPs[i];
+  for(unsigned int i = 0; i < this->Plugins.size(); i++){
+    if(this->Plugins[i]->GetName() == Name){
+      return this->Plugins[i];
     }
   }
   return NULL;
