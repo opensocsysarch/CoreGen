@@ -100,6 +100,9 @@ private:
 
 public:
   /// SCOpts: Constructor
+  SCOpts(SCMsg *);
+
+  /// SCOpts: Overloaded constructor
   SCOpts(SCMsg *,int,char **);
 
   /// SCOpts: Desctructor
@@ -185,6 +188,12 @@ public:
 
   /// SCOpts: Determines whether an output file name has been set
   bool IsOutputFile() { if( OutFile.length() > 0 ){ return true;} return false; }
+
+  /// SCOpts: Set the input file name
+  bool SetInputFile( std::string I );
+
+  /// SCOpts: Purge the input file names
+  bool PurgeInputFiles();
 
   /// SCOpts: Set the 'perf' option
   bool SetPerf() { isPerf = true; return true; }

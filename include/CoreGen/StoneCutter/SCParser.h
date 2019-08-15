@@ -277,8 +277,8 @@ public:
     bool isIntrin() { return Intrin; }
   };
 
-  /// InstFormatAST - This class represents an instruction format definition
-  ///                 which captures the fields of an instruction format
+  /// InstFormatASTContainer - This class represents an instruction format definition
+  ///                          which captures the fields of an instruction format
   class InstFormatASTContainer {
     std::string Name;   ///< Name of the instruction format
     std::vector<std::tuple<std::string,
@@ -300,7 +300,7 @@ public:
     Value *codegen();
   };
 
-  /// RegClassAST - This class represents a register class definition
+  /// RegClassASTContainer - This class represents a register class definition
   ///               which captures the name and the associated registers
   class RegClassASTContainer {
     std::string Name;     ///< Name of the register class
@@ -327,7 +327,7 @@ public:
   };
 
 
-  /// PrototypeAST - This class represents the "prototype" for a function,
+  /// PrototypeASTContainer - This class represents the "prototype" for a function,
   /// which captures its name, and its argument names (thus implicitly the number
   /// of arguments the function takes).
   class PrototypeASTContainer {
@@ -475,7 +475,7 @@ private:
   std::unique_ptr<PrototypeASTContainer> ParsePrototype();
 
   /// Parse register class definitions
-  std::unique_ptr<RegClassASTContainer> ParseRegClassDef();
+  std::unique_ptr<ContainerRegClassASTContainer> ParseRegClassDef();
 
   /// Parse instructon field definitions
   std::unique_ptr<InstFormatASTContainer> ParseInstFormatDef();
