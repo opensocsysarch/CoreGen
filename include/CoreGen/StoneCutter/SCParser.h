@@ -475,7 +475,7 @@ private:
   std::unique_ptr<PrototypeASTContainer> ParsePrototype();
 
   /// Parse register class definitions
-  std::unique_ptr<ContainerRegClassASTContainer> ParseRegClassDef();
+  std::unique_ptr<RegClassASTContainer> ParseRegClassDef();
 
   /// Parse instructon field definitions
   std::unique_ptr<InstFormatASTContainer> ParseInstFormatDef();
