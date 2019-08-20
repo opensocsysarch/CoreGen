@@ -1488,8 +1488,6 @@ bool CoreGenYaml::ReadProjYaml(const YAML::Node& ProjNodes ){
   std::string ProjectRoot = Node["ProjectRoot"].as<std::string>();
   if( Proj->GetProjRoot().length() == 0 )
     Proj->SetProjRoot(ProjectRoot);
-  else
-    std::cout << "Project root == " << Proj->GetProjRoot() << std::endl;
 
   if( !CheckValidNode(Node,"ProjectType") ){
     PrintParserError(Node,"ProjectInfo","ProjectType");
