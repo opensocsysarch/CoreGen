@@ -338,8 +338,8 @@ bool SpecDoc::WriteInstFormatDotFile( CoreGenInstFormat *IF ){
   dofs << "digraph struct {" << std::endl;
   dofs << "\tnode[shape=record];" << std::endl;
   unsigned NumFields = IF->GetNumFields();
-  for( signed j=NumFields-1; j>=0; j-- ){
-    if( j==(NumFields-1) ){
+  for( signed j=((signed)(NumFields)-1); j>=0; j-- ){
+    if( j==((signed)(NumFields)-1) ){
       dofs << "struct1 [label=\"";
     }else{
       dofs << "|";
