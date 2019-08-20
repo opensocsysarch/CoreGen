@@ -25,10 +25,13 @@ bool EncodingCollisionPass::Process64bitInsts(std::vector<CoreGenInst *> Insts,
                                               CoreGenInstFormat *F){
 
   std::vector<uint64_t> Encs;
+  srand(time(NULL));
 
   for( unsigned i=0; i<Insts.size(); i++ ){
     uint64_t Enc = 0x00ull;
 
+#if 0
+    // get all the required encodings
     for( unsigned j=0; j<Insts[i]->GetNumEncodings(); j++ ){
       CoreGenEncoding *E = Insts[i]->GetEncoding(j);
       unsigned StartBit = F->GetStartBit( E->GetField() );
@@ -41,6 +44,34 @@ bool EncodingCollisionPass::Process64bitInsts(std::vector<CoreGenInst *> Insts,
 
       // OR in the encoding
       Enc |= ((E->GetEncoding()<<StartBit) & Mask);
+    }
+#endif
+
+    // get all the required encodings
+    // if the field is a code, write the speific code in the encoding mask
+    // if the field is a register field or immediate, generate a random input value
+    for( unsigned j=0; j<F->GetNumFields(); j++ ){
+      unsigned StartBit = F->GetStartBit( F->GetFieldName(j) );
+      uint64_t Mask = 0x00ull;
+
+      for( unsigned k=0; k<F->GetFieldWidth(F->GetFieldName(j)); k++ ){
+        Mask |= 1 << (uint64_t)(StartBit + k );
+      }
+
+      // OR in the encoding
+      if( F->GetFieldType(F->GetFieldName(j)) == CoreGenInstFormat::CGInstCode ){
+        CoreGenEncoding *E = Insts[i]->GetEncoding(F->GetFieldName(j));
+        if( !E ){
+          WriteMsg( "Failed to retrieve required encoding field \"" +
+                    F->GetFieldName(j) + "\" from instruction \"" +
+                    Insts[i]->GetName() + "\"");
+          return false;
+        }
+        Enc |= ((E->GetEncoding()<<StartBit) & Mask);
+      }else{
+        uint64_t RandField = (uint64_t)(rand()) % Mask;
+        Enc |= ((RandField<<StartBit) & Mask);
+      }
     }
 
     // add it to our vector

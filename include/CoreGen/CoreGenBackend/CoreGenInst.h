@@ -77,6 +77,9 @@ public:
   /// Retrieve the target encoding
   CoreGenEncoding *GetEncoding(unsigned I);
 
+  /// Retrieve the target encoding by its field name
+  CoreGenEncoding *GetEncoding(std::string S);
+
   /// Retrieve the ISA bundle type
   CoreGenISA *GetISA() { return isa; }
 
