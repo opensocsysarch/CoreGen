@@ -30,23 +30,6 @@ bool EncodingCollisionPass::Process64bitInsts(std::vector<CoreGenInst *> Insts,
   for( unsigned i=0; i<Insts.size(); i++ ){
     uint64_t Enc = 0x00ull;
 
-#if 0
-    // get all the required encodings
-    for( unsigned j=0; j<Insts[i]->GetNumEncodings(); j++ ){
-      CoreGenEncoding *E = Insts[i]->GetEncoding(j);
-      unsigned StartBit = F->GetStartBit( E->GetField() );
-      uint64_t Mask = 0x00ull;
-
-      // create the mask
-      for( unsigned k=0; k<E->GetLength(); k++ ){
-        Mask |= 1 << (uint64_t)(StartBit + k );
-      }
-
-      // OR in the encoding
-      Enc |= ((E->GetEncoding()<<StartBit) & Mask);
-    }
-#endif
-
     // get all the required encodings
     // if the field is a code, write the speific code in the encoding mask
     // if the field is a register field or immediate, generate a random input value
@@ -95,6 +78,7 @@ bool EncodingCollisionPass::Process64bitInsts(std::vector<CoreGenInst *> Insts,
 bool EncodingCollisionPass::ProcessLongInsts(std::vector<CoreGenInst *> Insts,
                                              CoreGenInstFormat *F){
   std::vector<ENCLongInt *> Encs;
+  srand(time(NULL));
 
   // get the total width of the instructions
   unsigned NVals = F->GetFormatWidth()/64;
@@ -105,6 +89,7 @@ bool EncodingCollisionPass::ProcessLongInsts(std::vector<CoreGenInst *> Insts,
   for( unsigned i=0; i<Insts.size(); i++ ){
     // create a new encoding
     Encs.push_back( new ENCLongInt(F->GetFormatWidth(),NVals) );
+
 
     // write each field into the sample encoding
     for( unsigned j=0; j<Insts[i]->GetNumEncodings(); j++ ){
@@ -118,10 +103,39 @@ bool EncodingCollisionPass::ProcessLongInsts(std::vector<CoreGenInst *> Insts,
         Errno->SetError( CGERR_ERROR, this->GetName() +
                          " : Error setting instruction mask for instruction = " +
                          Insts[i]->GetName() );
-        for( unsigned i=0; i<Insts.size(); i++ ){
-          delete Encs[i];
+        for( unsigned k=0; k<Insts.size(); k++ ){
+          delete Encs[k];
         }
         return false;
+      }
+    }
+
+    // write the register and immediate fields
+    for( unsigned j=0; j<F->GetNumFields(); j++ ){
+      if( F->GetFieldType(F->GetFieldName(j)) != CoreGenInstFormat::CGInstCode ){
+        unsigned StartBit = F->GetStartBit( F->GetFieldName(j) );
+        unsigned EndBit   = F->GetEndBit( F->GetFieldName(j) );
+        uint64_t Mask = 0x00ull;
+
+        for( unsigned k=0; k<F->GetFieldWidth(F->GetFieldName(j)); k++ ){
+          if( k < 64 )
+            Mask |= 1 << (uint64_t)(StartBit + k );
+        }
+        uint64_t RandField = (uint64_t)(rand()) % Mask;
+        if( !Encs[Encs.size()-1]->SetMask( StartBit,
+                                            EndBit,
+                                            RandField ) ){
+          // failed to assign mask, return an error
+          WriteMsg( "Error setting instruction mask for instruction = " +
+                    Insts[i]->GetName() );
+          Errno->SetError( CGERR_ERROR, this->GetName() +
+                          " : Error setting instruction mask for instruction = " +
+                          Insts[i]->GetName() );
+          for( unsigned k=0; k<Insts.size(); k++ ){
+            delete Encs[k];
+          }
+          return false;
+        }
       }
     }
   }// end insts loop
