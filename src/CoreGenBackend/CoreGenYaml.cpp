@@ -2296,6 +2296,12 @@ bool CoreGenYaml::ReadInstYaml(const YAML::Node& InstNodes,
         // currently unused
         int FieldWidth = LFNode["EncodingWidth"].as<int>();
 #endif
+        if( !CheckValidNode(LFNode,"EncodingValue") ){
+          PrintParserError(FNode,
+                            "Encodings",
+                            "EncodingValue");
+          return false;
+        }
         int Value = LFNode["EncodingValue"].as<int>();
         std::string ASPEV = std::to_string(Value);
         ASP += "encFieldValue(" + ASPFieldName + ", " + ASPEV + ").\n";
