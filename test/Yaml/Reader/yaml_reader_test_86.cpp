@@ -1,5 +1,5 @@
 //
-// _YAML_READER_TEST86_CPP_
+// _YAML_READER_TEST85_CPP_
 //
 // Copyright (C) 2017-2018 Tactical Computing Laboratories, LLC
 // All Rights Reserved
@@ -12,10 +12,10 @@
 #include <iostream>
 #include "CoreGen/CoreGenBackend/CoreGenBackend.h"
 
-std::string PROJNAME = "BasicRISC";
+std::string PROJNAME = "TEST85";
 std::string PROJROOT = "./";
 std::string ARCHROOT = "./";
-std::string PROJYAML = "../BasicRISC.yaml";
+std::string PROJYAML = "../TEST85.yaml";
 
 int main( int argc, char **argv ){
   CoreGenBackend *CG = new CoreGenBackend(PROJNAME,

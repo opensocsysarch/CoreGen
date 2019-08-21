@@ -675,18 +675,10 @@ void CoreGenYaml::WritePseudoInstYaml(YAML::Emitter *out,
     }
     *out << YAML::EndSeq;
 
-#if 0
-    // this probably needs to be removed
-    // no reason to have RTL for pseudoinstruction encodings
-    if( PInsts[i]->IsRTL() ){
-      *out << YAML::Key << "RTL";
-      *out << YAML::Value << PInsts[i]->GetRTL();
+    if( PInsts[i]->IsSyntax() ){
+      *out << YAML::Key << "Syntax";
+      *out << YAML::Value << PInsts[i]->GetSyntax();
     }
-    if( PInsts[i]->IsRTLFile() ){
-      *out << YAML::Key << "RTLFile";
-      *out << YAML::Value << PInsts[i]->GetRTLFile();
-    }
-#endif
 
     *out << YAML::EndMap;
   }
@@ -2434,15 +2426,11 @@ bool CoreGenYaml::ReadPseudoInstYaml(const YAML::Node& PInstNodes,
       }
     }
 
-#if 0
-    // this should not be required
-    if( Node["RTL"] ){
-      P->SetRTL( Node["RTL"].as<std::string>());
+    if( Node["Syntax"] ){
+      if( !P->SetSyntax( Node["Syntax"].as<std::string>() ) ){
+        return false;
+      }
     }
-    if( Node["RTLFile"] ){
-      P->SetRTLFile( Node["RTLFile"].as<std::string>());
-    }
-#endif
 
     P->AppendASP(ASP);
 
