@@ -32,9 +32,12 @@
 
 class CoreGenPseudoInst : public CoreGenNode{
 private:
-  std::vector<CoreGenEncoding *> Encodings; ///< Encoding value vector
-  CoreGenInst *Inst;                        ///< Mapping instruction definition
-  CoreGenISA *ISA;                          ///< Instruction set bundle
+  std::string Syntax;                       ///< CoreGenPseudoInst: Instruction printing syntax
+  std::vector<CoreGenEncoding *> Encodings; ///< CoreGenPseudoInst: Encoding value vector
+  CoreGenInst *Inst;                        ///< CoreGenPseudoInst: Mapping instruction definition
+  CoreGenISA *ISA;                          ///< CoreGenPseudoInst: Instruction set bundle
+
+  bool ValidateSyntax(std::string S);        ///< CoreGenPseudoInt: Validates the syntax string
 
 public:
 
@@ -72,6 +75,15 @@ public:
 
   /// Sets the instruction to null
   bool SetNullInst();
+
+  /// Sets the instruction syntax
+  bool SetSyntax(std::string S);
+
+  /// Retrieves the instruction syntax
+  std::string GetSyntax() { return Syntax; }
+
+  /// Determine if the Syntax has been set
+  bool IsSyntax() { if( Syntax.length() > 0 ){ return true; }else{ return false;} }
 };
 
 #endif
