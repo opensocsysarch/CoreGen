@@ -527,7 +527,7 @@ bool CoreGenBackend::DeleteCacheNode(CoreGenCache *C){
       if( TCache->GetSubCache() == C ){
         TCache->SetNullChildCache();
       }
-      if( TCache->GetParentCache() == C ){
+      if( TCache->HasParentCache(C) ){
         TCache->SetNullParentCache();
       }
     }

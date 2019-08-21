@@ -40,7 +40,7 @@ bool CacheLevelPass::Execute(){
     CoreGenCache *C = static_cast<CoreGenCache *>(D1->FindNodeByIndex(i));
     if( C->GetType() == CGCache ){
       // check my parent status
-      if( (C->IsSubLevel()) && (C->GetParentCache() == nullptr) ){
+      if( (C->IsSubLevel()) && (C->GetNumParentCache() == 0) ){
         WriteMsg( "Identified a child cache level with no parent at Index:Name = " +
                 std::to_string(i) + ":" + C->GetName());
         rtn = false;
