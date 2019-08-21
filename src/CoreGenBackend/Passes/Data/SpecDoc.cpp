@@ -236,11 +236,14 @@ bool SpecDoc::WriteRegisterClassTex(CoreGenDAG *DAG, std::ofstream &ofs ){
   for( unsigned i=0; i<DAG->GetDimSize(); i++ ){
     CoreGenNode *N = DAG->FindNodeByIndex(i);
     if( N->GetType() == CGRegC ){
+
       CoreGenRegClass *RC = static_cast<CoreGenRegClass *>(N);
       unsigned count = 0;
+
       for( unsigned j=0; j<RC->GetNumReg(); j++ ){
         count += RC->GetReg(j)->GetNumSubRegs();
       }
+
       if( count > 0 ){
         ofs << std::endl << std::endl;
         ofs << "\\subsection{ " << EscapeUnderscore(RC->GetName()) << " Register Fields" << "}" << std::endl;
@@ -317,8 +320,6 @@ bool SpecDoc::WriteInstFormatDotFile( CoreGenInstFormat *IF ){
   if( !IF )
     return false;
 
-  std::cout << "building dot file for " << IF->GetName() << std::endl;
-
   std::string OFile = this->GetOutputPath() + "/" + CGRemoveDot(IF->GetName()) + ".dot";
   bool PrevFile = false;
 
@@ -337,8 +338,8 @@ bool SpecDoc::WriteInstFormatDotFile( CoreGenInstFormat *IF ){
   dofs << "digraph struct {" << std::endl;
   dofs << "\tnode[shape=record];" << std::endl;
   unsigned NumFields = IF->GetNumFields();
-  for( signed j=NumFields-1; j>=0; j-- ){
-    if( j==(NumFields-1) ){
+  for( signed j=((signed)(NumFields)-1); j>=0; j-- ){
+    if( j==((signed)(NumFields)-1) ){
       dofs << "struct1 [label=\"";
     }else{
       dofs << "|";

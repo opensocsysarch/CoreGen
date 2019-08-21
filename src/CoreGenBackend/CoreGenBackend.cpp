@@ -527,7 +527,7 @@ bool CoreGenBackend::DeleteCacheNode(CoreGenCache *C){
       if( TCache->GetSubCache() == C ){
         TCache->SetNullChildCache();
       }
-      if( TCache->GetParentCache() == C ){
+      if( TCache->HasParentCache(C) ){
         TCache->SetNullParentCache();
       }
     }
@@ -1276,4 +1276,138 @@ void CoreGenBackend::SetASPFiles(std::vector<std::string> Files){
   PassMgr->SetASPFiles(Files);
 }
 
+CoreGenCache* CoreGenBackend::GetCacheNodeByName(std::string Name){
+  for(unsigned int i = 0; i < this->Caches.size(); i++){
+    if(this->Caches[i]->GetName() == Name){
+      return this->Caches[i];
+    }
+  }
+  return NULL;
+}
+
+CoreGenCore* CoreGenBackend::GetCoreNodeByName(std::string Name){
+  for(unsigned int i = 0; i < this->Cores.size(); i++){
+    if(this->Cores[i]->GetName() == Name){
+      return this->Cores[i];
+    }
+  }
+  return NULL;
+}
+
+CoreGenInst* CoreGenBackend::GetInstNodeByName(std::string Name){
+  for(unsigned int i = 0; i < this->Insts.size(); i++){
+    if(this->Insts[i]->GetName() == Name){
+      return this->Insts[i];
+    }
+  }
+  return NULL;
+}
+
+CoreGenPseudoInst* CoreGenBackend::GetPInstNodeByName(std::string Name){
+  for(unsigned int i = 0; i < this->PInsts.size(); i++){
+    if(this->PInsts[i]->GetName() == Name){
+      return this->PInsts[i];
+    }
+  }
+  return NULL;
+}
+
+CoreGenInstFormat* CoreGenBackend::GetInstFormatNodeByName(std::string Name){
+  for(unsigned int i = 0; i < this->Formats.size(); i++){
+    if(this->Formats[i]->GetName() == Name){
+      return this->Formats[i];
+    }
+  }
+  return NULL;
+}
+
+CoreGenReg* CoreGenBackend::GetRegNodeByName(std::string Name){
+  for(unsigned int i = 0; i < this->Regs.size(); i++){
+    if(this->Regs[i]->GetName() == Name){
+      return this->Regs[i];
+    }
+  }
+  return NULL;
+}
+
+CoreGenRegClass* CoreGenBackend::GetRegClassNodeByName(std::string Name){
+  for(unsigned int i = 0; i < this->RegClasses.size(); i++){
+    if(this->RegClasses[i]->GetName() == Name){
+      return this->RegClasses[i];
+    }
+  }
+  return NULL;
+}
+
+CoreGenSoC* CoreGenBackend::GetSoCNodeByName(std::string Name){
+  for(unsigned int i = 0; i < this->Socs.size(); i++){
+    if(this->Socs[i]->GetName() == Name){
+      return this->Socs[i];
+    }
+  }
+  return NULL;
+}
+
+CoreGenISA* CoreGenBackend::GetISANodeByName(std::string Name){
+  for(unsigned int i = 0; i < this->ISAs.size(); i++){
+    if(this->ISAs[i]->GetName() == Name){
+      return this->ISAs[i];
+    }
+  }
+  return NULL;
+}
+
+CoreGenExt* CoreGenBackend::GetExtNodeByName(std::string Name){
+  for(unsigned int i = 0; i < this->Exts.size(); i++){
+    if(this->Exts[i]->GetName() == Name){
+      return this->Exts[i];
+    }
+  }
+  return NULL;
+}
+
+CoreGenComm* CoreGenBackend::GetCommNodeByName(std::string Name){
+  for(unsigned int i = 0; i < this->Comms.size(); i++){
+    if(this->Comms[i]->GetName() == Name){
+      return this->Comms[i];
+    }
+  }
+  return NULL;
+}
+
+CoreGenSpad* CoreGenBackend::GetSpadNodeByName(std::string Name){
+  for(unsigned int i = 0; i < this->Spads.size(); i++){
+    if(this->Spads[i]->GetName() == Name){
+      return this->Spads[i];
+    }
+  }
+  return NULL;
+}
+
+CoreGenMCtrl* CoreGenBackend::GetMCtrlNodeByName(std::string Name){
+  for(unsigned int i = 0; i < this->MCtrls.size(); i++){
+    if(this->MCtrls[i]->GetName() == Name){
+      return this->MCtrls[i];
+    }
+  }
+  return NULL;
+}
+
+CoreGenVTP* CoreGenBackend::GetVTPNodeByName(std::string Name){
+  for(unsigned int i = 0; i < this->VTPs.size(); i++){
+    if(this->VTPs[i]->GetName() == Name){
+      return this->VTPs[i];
+    }
+  }
+  return NULL;
+}
+
+CoreGenPlugin* CoreGenBackend::GetPluginNodeByName(std::string Name){
+  for(unsigned int i = 0; i < this->Plugins.size(); i++){
+    if(this->Plugins[i]->GetName() == Name){
+      return this->Plugins[i];
+    }
+  }
+  return NULL;
+}
 // EOF

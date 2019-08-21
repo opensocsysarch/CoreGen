@@ -17,7 +17,7 @@ fi
 
 DIR=`grep "ProjectRoot" $FILE | awk '{print $2}'`
 
-$CGCLI_PATH/cgcli $OPTS --ir $FILE
+$CGCLI_PATH/cgcli $OPTS --root $DIR --ir $FILE
 retVal=$?
 if [[  "$retVal" -ne 0 ]]; then
   echo "$CGCLI_PATH/cgcli $OPTS --ir $FILE failed with return code = $retVal"

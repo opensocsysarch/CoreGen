@@ -158,6 +158,15 @@ bool CoreGenInst::SetFormat( CoreGenInstFormat *Format ){
   return InsertChild(Node);
 }
 
+CoreGenEncoding *CoreGenInst::GetEncoding(std::string S){
+  for( unsigned i=0; i<Encodings.size(); i++ ){
+    if( Encodings[i]->GetField() == S ){
+      return Encodings[i];
+    }
+  }
+  return nullptr;
+}
+
 CoreGenEncoding *CoreGenInst::GetEncoding( unsigned I ){
   if( I > (Encodings.size()-1) ){
     return nullptr;

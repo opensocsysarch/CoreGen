@@ -22,6 +22,7 @@
 
 #include <iostream>
 #include <string>
+#include <vector>
 
 #include "CoreGen/CoreGenBackend/CoreGenNode.h"
 #include "CoreGen/CoreGenBackend/CoreGenErrno.h"
@@ -33,7 +34,7 @@ private:
   bool SubLevel;        ///< CoreGenCache: Is this a sublevel?
   bool ParentLevel;     ///< CoreGenCache: Is this a parent level?
   CoreGenCache *Child;  ///< CoreGenCache: Child cache level
-  CoreGenCache *Parent; ///< CoreGenCache: Parent cache level
+  std::vector<CoreGenCache *> Parent; ///< CoreGenCache: Vector of parent cache level
 
 public:
 
@@ -78,7 +79,13 @@ public:
   CoreGenCache *GetSubCache();
 
   /// Retrieve a pointer to a cache parent
-  CoreGenCache *GetParentCache();
+  CoreGenCache *GetParentCache(unsigned Idx);
+
+  /// Retrieve the number of parent caches
+  unsigned GetNumParentCache() { return Parent.size(); }
+
+  /// Determines if the target cache level is a parent to this cache
+  bool HasParentCache( CoreGenCache *P );
 
   // Default destructor
   ~CoreGenCache();

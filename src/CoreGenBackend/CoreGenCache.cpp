@@ -12,13 +12,13 @@
 
 CoreGenCache::CoreGenCache(std::string N, CoreGenErrno *E )
   : CoreGenNode(CGCache,E), Sets(0), Ways(0), SubLevel(false),
-    ParentLevel(false), Child(nullptr), Parent(nullptr){
+    ParentLevel(false), Child(nullptr){
 }
 
 CoreGenCache::CoreGenCache(std::string N, unsigned CSets,
                             unsigned CWays, CoreGenErrno *E)
   : CoreGenNode(CGCache,N,E), Sets(CSets), Ways(CWays),
-    SubLevel(false), ParentLevel(false), Child(nullptr), Parent(nullptr){
+    SubLevel(false), ParentLevel(false), Child(nullptr){
 }
 
 CoreGenCache::~CoreGenCache(){
@@ -40,19 +40,43 @@ bool CoreGenCache::SetNullChildCache(){
 }
 
 bool CoreGenCache::SetParentCache( CoreGenCache *P ){
-  Parent = P;
+  if( !P ){
+    Errno->SetError(CGERR_ERROR, "Parent cache cannot be null" );
+    return false;
+  }
+
+  // do not insert duplicates
+  auto it = std::find(Parent.begin(),Parent.end(),P);
+  if( it != Parent.end() ){
+    Parent.push_back(P);
+  }
+
   SubLevel = true;
   return true;
 }
 
 bool CoreGenCache::SetNullParentCache(){
-  Parent = nullptr;
+  Parent.clear();
   SubLevel = false;
   return true;
 }
 
-CoreGenCache *CoreGenCache::GetParentCache(){
-  return Parent;
+CoreGenCache *CoreGenCache::GetParentCache(unsigned Idx){
+  if( Idx > (Parent.size()-1) ){
+    Errno->SetError(CGERR_ERROR, "Parent cache index out of bounds" );
+    return nullptr;
+  }
+
+  return Parent[Idx];
+}
+
+bool CoreGenCache::HasParentCache( CoreGenCache *C ){
+  for( unsigned i=0; i<Parent.size(); i++ ){
+    if( Parent[i] == C ){
+      return true;
+    }
+  }
+  return false;
 }
 
 CoreGenCache *CoreGenCache::GetSubCache(){

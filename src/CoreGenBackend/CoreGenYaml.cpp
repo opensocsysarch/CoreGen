@@ -410,10 +410,6 @@ void CoreGenYaml::WriteSocYaml( YAML::Emitter *out,
 void CoreGenYaml::PrintCache( YAML::Emitter *out,
                               CoreGenCache *Cache,
                               std::vector<std::string> &Printed ){
-  if( Cache->IsParentLevel() ){
-    PrintCache( out, Cache->GetSubCache(), Printed );
-  }
-
   for( unsigned i=0; i<CNames.size(); i++ ){
     if( CNames[i] == Cache->GetName() ){
       // this cache node has already been referenced
@@ -429,6 +425,10 @@ void CoreGenYaml::PrintCache( YAML::Emitter *out,
   }
 
   Printed.push_back(Cache->GetName());
+
+  if( Cache->IsParentLevel() ){
+    PrintCache( out, Cache->GetSubCache(), Printed );
+  }
 
   // this cache node has not yet been referenced, print it
   *out << YAML::BeginMap;
@@ -1486,7 +1486,8 @@ bool CoreGenYaml::ReadProjYaml(const YAML::Node& ProjNodes ){
     return false;
   }
   std::string ProjectRoot = Node["ProjectRoot"].as<std::string>();
-  Proj->SetProjRoot(ProjectRoot);
+  if( Proj->GetProjRoot().length() == 0 )
+    Proj->SetProjRoot(ProjectRoot);
 
   if( !CheckValidNode(Node,"ProjectType") ){
     PrintParserError(Node,"ProjectInfo","ProjectType");
@@ -2295,6 +2296,12 @@ bool CoreGenYaml::ReadInstYaml(const YAML::Node& InstNodes,
         // currently unused
         int FieldWidth = LFNode["EncodingWidth"].as<int>();
 #endif
+        if( !CheckValidNode(LFNode,"EncodingValue") ){
+          PrintParserError(FNode,
+                            "Encodings",
+                            "EncodingValue");
+          return false;
+        }
         int Value = LFNode["EncodingValue"].as<int>();
         std::string ASPEV = std::to_string(Value);
         ASP += "encFieldValue(" + ASPFieldName + ", " + ASPEV + ").\n";
