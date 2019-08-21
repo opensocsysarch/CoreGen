@@ -463,6 +463,7 @@ bool SpecDoc::WriteInstTex(CoreGenDAG *DAG, std::ofstream &ofs ){
         std::string Syntax = INST->GetSyntax();
         Syntax.erase(std::remove(Syntax.begin(), Syntax.end(), '%'), Syntax.end());
         Syntax.erase(std::remove(Syntax.begin(), Syntax.end(), '$'), Syntax.end());
+        ofs << std::endl << std::endl;
         ofs << "\\textbf{Assembly Mnemonic} : " << EscapeUnderscore(Syntax) << std::endl;
       }
 
@@ -535,6 +536,15 @@ bool SpecDoc::WritePseudoInstTex(CoreGenDAG *DAG, std::ofstream &ofs ){
           << EscapeUnderscore(INST->GetISA()->GetName()) << " instruction set.  It is associated with the "
           << EscapeUnderscore(INST->GetInst()->GetName()) << " instruction.  It has the following features:"
           << std::endl;
+
+      // print instruction mnemonic
+      if( INST->IsSyntax() ){
+        std::string Syntax = INST->GetSyntax();
+        Syntax.erase(std::remove(Syntax.begin(), Syntax.end(), '%'), Syntax.end());
+        Syntax.erase(std::remove(Syntax.begin(), Syntax.end(), '$'), Syntax.end());
+        ofs << std::endl << std::endl;
+        ofs << "\\textbf{Assembly Mnemonic} : " << EscapeUnderscore(Syntax) << std::endl;
+      }
 
       // print an instruction table
       ofs << "\\begin{center}" << std::endl;
