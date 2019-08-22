@@ -103,7 +103,7 @@ bool CoreGenInst::ValidateSyntax(std::string S){
                          format->GetName() + "; instruction = " + this->GetName() );
         return false;
       }
-    }else if( tmp[0] == '!'){
+    }else if( tmp[0] == '#'){
       // found a constant immediate value, this is correct
     }else{
       Errno->SetError( CGERR_ERROR,
