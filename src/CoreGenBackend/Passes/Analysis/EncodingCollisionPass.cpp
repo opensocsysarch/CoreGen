@@ -9,6 +9,7 @@
 //
 
 #include "CoreGen/CoreGenBackend/Passes/Analysis/EncodingCollisionPass.h"
+#include <bitset>
 
 EncodingCollisionPass::EncodingCollisionPass(std::ostream *O,
                                              CoreGenDAG *D,
@@ -38,7 +39,7 @@ bool EncodingCollisionPass::Process64bitInsts(std::vector<CoreGenInst *> Insts,
       uint64_t Mask = 0x00ull;
 
       for( unsigned k=0; k<F->GetFieldWidth(F->GetFieldName(j)); k++ ){
-        Mask |= 1 << (uint64_t)(StartBit + k );
+        Mask |= (1 << (uint64_t)(StartBit + k ));
       }
 
       // OR in the encoding
@@ -50,10 +51,17 @@ bool EncodingCollisionPass::Process64bitInsts(std::vector<CoreGenInst *> Insts,
                     Insts[i]->GetName() + "\"");
           return false;
         }
-        Enc |= ((E->GetEncoding()<<StartBit) & Mask);
+#if 0
+        std::cout << "StartBit = " << StartBit << std::endl
+                  << "Mask     = 0b" << std::bitset<64>(Mask) << std::endl
+                  << "Field    = " << E->GetEncoding() << std::endl
+                  << "Enc|     = 0b" << std::bitset<64>(E->GetEncoding()<<StartBit) << std::endl;
+        //Enc |= ((E->GetEncoding()<<StartBit) & Mask);
+#endif
+        Enc |= ((E->GetEncoding()<<StartBit));
       }else{
-        //uint64_t RandField = (uint64_t)(rand()) % Mask;
-        //Enc |= ((RandField<<StartBit) & Mask);
+        uint64_t RandField = (uint64_t)(rand()) % Mask;
+        Enc |= ((RandField<<StartBit) & Mask);
       }
     }
 
