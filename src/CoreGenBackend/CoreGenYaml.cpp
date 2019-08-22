@@ -2258,6 +2258,9 @@ bool CoreGenYaml::ReadInstYaml(const YAML::Node& InstNodes,
       }
     }
     if( IF == nullptr ){
+      Errno->SetError(CGERR_ERROR,
+                      "No InstFormat found to match " + InstFormat +
+                      " for instruction " + Name );
       return false;
     }
     for( unsigned j=0; j<ISAs.size(); j++ ){
@@ -2266,6 +2269,9 @@ bool CoreGenYaml::ReadInstYaml(const YAML::Node& InstNodes,
       }
     }
     if( ISA == nullptr ){
+      Errno->SetError(CGERR_ERROR,
+                      "No ISA found to match " + ISAName +
+                      " for instruction " + Name );
       return false;
     }
 

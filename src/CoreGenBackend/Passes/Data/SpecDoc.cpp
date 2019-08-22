@@ -463,6 +463,7 @@ bool SpecDoc::WriteInstTex(CoreGenDAG *DAG, std::ofstream &ofs ){
         std::string Syntax = INST->GetSyntax();
         Syntax.erase(std::remove(Syntax.begin(), Syntax.end(), '%'), Syntax.end());
         Syntax.erase(std::remove(Syntax.begin(), Syntax.end(), '$'), Syntax.end());
+        Syntax.erase(std::remove(Syntax.begin(), Syntax.end(), '#'), Syntax.end());
         ofs << std::endl << std::endl;
         ofs << "\\textbf{Assembly Mnemonic} : " << EscapeUnderscore(Syntax) << std::endl;
       }
@@ -542,6 +543,7 @@ bool SpecDoc::WritePseudoInstTex(CoreGenDAG *DAG, std::ofstream &ofs ){
         std::string Syntax = INST->GetSyntax();
         Syntax.erase(std::remove(Syntax.begin(), Syntax.end(), '%'), Syntax.end());
         Syntax.erase(std::remove(Syntax.begin(), Syntax.end(), '$'), Syntax.end());
+        Syntax.erase(std::remove(Syntax.begin(), Syntax.end(), '#'), Syntax.end());
         ofs << std::endl << std::endl;
         ofs << "\\textbf{Assembly Mnemonic} : " << EscapeUnderscore(Syntax) << std::endl;
       }
