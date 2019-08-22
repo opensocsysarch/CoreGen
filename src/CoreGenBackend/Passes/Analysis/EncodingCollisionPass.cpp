@@ -52,8 +52,8 @@ bool EncodingCollisionPass::Process64bitInsts(std::vector<CoreGenInst *> Insts,
         }
         Enc |= ((E->GetEncoding()<<StartBit) & Mask);
       }else{
-        uint64_t RandField = (uint64_t)(rand()) % Mask;
-        Enc |= ((RandField<<StartBit) & Mask);
+        //uint64_t RandField = (uint64_t)(rand()) % Mask;
+        //Enc |= ((RandField<<StartBit) & Mask);
       }
     }
 
