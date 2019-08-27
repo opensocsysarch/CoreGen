@@ -1814,6 +1814,11 @@ bool CoreGenYaml::ReadRegisterYaml(const YAML::Node& RegNodes,
       R->SetOverriddenNode(PNode);
     }
 
+    // check for additional node notes
+    if( CheckValidNode(Node,"Notes") ){
+      R->SetNotes( Node["Notes"].as<std::string>() );
+    }
+
     R->AppendASP(ASP);
 
     if( IsDuplicate(Node,
@@ -1915,6 +1920,11 @@ bool CoreGenYaml::ReadRegisterClassYaml(const YAML::Node& RegClassNodes,
       RC->SetOverriddenNode(PNode);
     }
 
+    // check for additional node notes
+    if( CheckValidNode(Node,"Notes") ){
+      RC->SetNotes( Node["Notes"].as<std::string>() );
+    }
+
     RC->AppendASP(ASP);
 
     if( IsDuplicate(Node,
@@ -1974,6 +1984,11 @@ bool CoreGenYaml::ReadISAYaml(const YAML::Node& ISANodes,
         return false;
       }
       ISA->SetOverriddenNode(PNode);
+    }
+
+    // check for additional node notes
+    if( CheckValidNode(Node,"Notes") ){
+      ISA->SetNotes( Node["Notes"].as<std::string>() );
     }
 
     ISA->AppendASP(ASP);
@@ -2207,6 +2222,11 @@ bool CoreGenYaml::ReadInstFormatYaml(const YAML::Node& InstFormatNodes,
       IF->SetOverriddenNode(PNode);
     }
 
+    // check for additional node notes
+    if( CheckValidNode(Node,"Notes") ){
+      IF->SetNotes( Node["Notes"].as<std::string>() );
+    }
+
     IF->AppendASP(ASP);
 
     if( IsDuplicate(Node,
@@ -2343,6 +2363,11 @@ bool CoreGenYaml::ReadInstYaml(const YAML::Node& InstNodes,
       Inst->SetOverriddenNode(PNode);
     }
 
+    // check for additional node notes
+    if( CheckValidNode(Node,"Notes") ){
+      Inst->SetNotes( Node["Notes"].as<std::string>() );
+    }
+
     Inst->AppendASP(ASP);
 
     if( IsDuplicate(Node,
@@ -2438,6 +2463,11 @@ bool CoreGenYaml::ReadPseudoInstYaml(const YAML::Node& PInstNodes,
       }
     }
 
+    // check for additional node notes
+    if( CheckValidNode(Node,"Notes") ){
+      P->SetNotes( Node["Notes"].as<std::string>() );
+    }
+
     P->AppendASP(ASP);
 
     if( IsDuplicate(Node,
@@ -2531,6 +2561,11 @@ bool CoreGenYaml::ReadCacheYaml(const YAML::Node& CacheNodes,
         return false;
       }
       C->SetOverriddenNode(PNode);
+    }
+
+    // check for additional node notes
+    if( CheckValidNode(Node,"Notes") ){
+      C->SetNotes( Node["Notes"].as<std::string>() );
     }
 
     C->AppendASP(ASP);
@@ -2696,6 +2731,11 @@ bool CoreGenYaml::ReadCoreYaml(const YAML::Node& CoreNodes,
       C->SetOverriddenNode(PNode);
     }
 
+    // check for additional node notes
+    if( CheckValidNode(Node,"Notes") ){
+      C->SetNotes( Node["Notes"].as<std::string>() );
+    }
+
     C->AppendASP(ASP);
 
     if( IsDuplicate(Node,
@@ -2777,6 +2817,11 @@ bool CoreGenYaml::ReadSocYaml(const YAML::Node& SocNodes,
         return false;
       }
       S->SetOverriddenNode(PNode);
+    }
+
+    // check for additional node notes
+    if( CheckValidNode(Node,"Notes") ){
+      S->SetNotes( Node["Notes"].as<std::string>() );
     }
 
     S->AppendASP(ASP);
@@ -2867,6 +2912,11 @@ bool CoreGenYaml::ReadSpadYaml(const YAML::Node& SpadNodes,
       S->SetOverriddenNode(PNode);
     }
 
+    // check for additional node notes
+    if( CheckValidNode(Node,"Notes") ){
+      S->SetNotes( Node["Notes"].as<std::string>() );
+    }
+
     S->SetStartAddr( StartAddr );
     S->AppendASP(ASP);
 
@@ -2933,6 +2983,11 @@ bool CoreGenYaml::ReadMCtrlYaml(const YAML::Node& MCtrlNodes,
       M->SetOverriddenNode(PNode);
     }
 
+    // check for additional node notes
+    if( CheckValidNode(Node,"Notes") ){
+      M->SetNotes( Node["Notes"].as<std::string>() );
+    }
+
     M->AppendASP(ASP);
 
     if( IsDuplicate(Node,
@@ -2976,7 +3031,14 @@ bool CoreGenYaml::ReadVTPYaml( const YAML::Node& VTPNodes,
       }
       V->SetOverriddenNode(PNode);
     }
+
+    // check for additional node notes
+    if( CheckValidNode(Node,"Notes") ){
+      V->SetNotes( Node["Notes"].as<std::string>() );
+    }
+
     V->AppendASP(ASP);
+
     if( IsDuplicate(Node,
                     static_cast<CoreGenNode *>(V),
                     std::vector<CoreGenNode *>(VTPs.begin(),VTPs.end()) ) ){
@@ -3030,6 +3092,11 @@ bool CoreGenYaml::ReadPluginYaml(const YAML::Node& PluginNodes,
       Patch = Node["PatchVersion"].as<unsigned>();
     }
 
+    std::string Notes;
+    if( CheckValidNode(Node,"Notes") ){
+      Notes = Node["Notes"].as<std::string>();
+    }
+
     // if the plugin loads, continue parsing
     // otherwise, throw an error
     if( !PluginMgr ){
@@ -3071,6 +3138,10 @@ bool CoreGenYaml::ReadPluginYaml(const YAML::Node& PluginNodes,
       return false;
     }
     Plugins.push_back(NewPlugin);
+
+    if( Notes.length() > 0 ){
+      NewPlugin->SetNotes(Notes);
+    }
 
     // retrieve the features
     if( Node["Features"] ){
@@ -3399,6 +3470,10 @@ bool CoreGenYaml::ReadExtYaml(const YAML::Node& ExtNodes,
       Errno->SetError(CGERR_ERROR,"Failed to set the type for Extension=" +
                                   Name + " to Type=" + Type);
       return false;
+    }
+
+    if( CheckValidNode(Node,"Notes") ){
+      E->SetNotes( Node["Notes"].as<std::string>() );
     }
 
     //-- Registers
@@ -3737,6 +3812,11 @@ bool CoreGenYaml::ReadCommYaml( const YAML::Node& CommNodes,
       }
       Comm->SetOverriddenNode(PNode);
     }
+
+    if( CheckValidNode(Node,"Notes") ){
+      Comm->SetNotes( Node["Notes"].as<std::string>() );
+    }
+
     Comm->AppendASP(ASP);
 
     if( IsDuplicate(Node,
