@@ -354,6 +354,10 @@ void CoreGenYaml::WriteCoreYaml( YAML::Emitter *out,
       *out << YAML::Key << "Override"
            << YAML::Value << Cores[i]->GetPlugin()->GetName();
     }
+    if( Cores[i]->HasNotes() ){
+      *out << YAML::Key << "Notes"
+           << YAML::Value << Cores[i]->GetNotes();
+    }
 
     *out << YAML::EndMap;
   }
@@ -400,6 +404,10 @@ void CoreGenYaml::WriteSocYaml( YAML::Emitter *out,
     if( Socs[i]->IsPlugin() ){
       *out << YAML::Key << "Override"
            << YAML::Value << Socs[i]->GetPlugin()->GetName();
+    }
+    if( Socs[i]->HasNotes() ){
+      *out << YAML::Key << "Notes"
+           << YAML::Value << Socs[i]->GetNotes();
     }
 
     *out << YAML::EndMap;
@@ -459,6 +467,10 @@ void CoreGenYaml::PrintCache( YAML::Emitter *out,
     *out << YAML::Key << "Override"
          << YAML::Value << Cache->GetPlugin()->GetName();
    }
+    if( Cache->HasNotes() ){
+      *out << YAML::Key << "Notes"
+           << YAML::Value << Cache->GetNotes();
+    }
 
   *out << YAML::EndMap;
 }
@@ -501,6 +513,10 @@ void CoreGenYaml::WriteISAYaml(YAML::Emitter *out,
     if( ISAs[i]->IsPlugin() ){
       *out << YAML::Key << "Override"
            << YAML::Value << ISAs[i]->GetPlugin()->GetName();
+    }
+    if( ISAs[i]->HasNotes() ){
+      *out << YAML::Key << "Notes"
+           << YAML::Value << ISAs[i]->GetNotes();
     }
     *out << YAML::EndMap;
   }
@@ -575,6 +591,10 @@ void CoreGenYaml::WriteInstFormatYaml(YAML::Emitter *out,
       *out << YAML::Key << "Override"
            << YAML::Value << Formats[i]->GetPlugin()->GetName();
     }
+    if( Formats[i]->HasNotes() ){
+      *out << YAML::Key << "Notes"
+           << YAML::Value << Formats[i]->GetNotes();
+    }
 
     *out << YAML::EndMap; // End InstFormat->GetName()
   }
@@ -638,6 +658,10 @@ void CoreGenYaml::WriteInstYaml(YAML::Emitter *out,
       *out << YAML::Key << "Override"
            << YAML::Value << Insts[i]->GetPlugin()->GetName();
     }
+    if( Insts[i]->HasNotes() ){
+      *out << YAML::Key << "Notes"
+           << YAML::Value << Insts[i]->GetNotes();
+    }
 
     *out << YAML::EndMap; // individual instruction
   }
@@ -679,6 +703,10 @@ void CoreGenYaml::WritePseudoInstYaml(YAML::Emitter *out,
       *out << YAML::Key << "Syntax";
       *out << YAML::Value << PInsts[i]->GetSyntax();
     }
+    if( PInsts[i]->HasNotes() ){
+      *out << YAML::Key << "Notes"
+           << YAML::Value << PInsts[i]->GetNotes();
+    }
 
     *out << YAML::EndMap;
   }
@@ -716,6 +744,10 @@ void CoreGenYaml::WriteRegClassYaml(YAML::Emitter *out,
     if( RegClasses[i]->IsPlugin() ){
       *out << YAML::Key << "Override"
            << YAML::Value << RegClasses[i]->GetPlugin()->GetName();
+    }
+    if( RegClasses[i]->HasNotes() ){
+      *out << YAML::Key << "Notes"
+           << YAML::Value << RegClasses[i]->GetNotes();
     }
 
     *out << YAML::EndMap;
@@ -856,6 +888,10 @@ void CoreGenYaml::WriteRegYaml(YAML::Emitter *out,
       *out << YAML::Key << "Override"
            << YAML::Value << Regs[i]->GetPlugin()->GetName();
     }
+    if( Regs[i]->HasNotes() ){
+      *out << YAML::Key << "Notes"
+           << YAML::Value << Regs[i]->GetNotes();
+    }
 
     *out << YAML::EndMap;
   }
@@ -915,6 +951,10 @@ void CoreGenYaml::WriteCommYaml( YAML::Emitter *out,
       *out << YAML::Key << "Override"
            << YAML::Value << Comms[i]->GetPlugin()->GetName();
     }
+    if( Comms[i]->HasNotes() ){
+      *out << YAML::Key << "Notes"
+           << YAML::Value << Comms[i]->GetNotes();
+    }
 
     *out << YAML::EndMap;
   }
@@ -954,6 +994,10 @@ void CoreGenYaml::WriteSpadYaml( YAML::Emitter *out,
       *out << YAML::Key << "Override"
            << YAML::Value << Spads[i]->GetPlugin()->GetName();
     }
+    if( Spads[i]->HasNotes() ){
+      *out << YAML::Key << "Notes"
+           << YAML::Value << Spads[i]->GetNotes();
+    }
 
     *out << YAML::EndMap;
   }
@@ -987,6 +1031,10 @@ void CoreGenYaml::WriteMCtrlYaml( YAML::Emitter *out,
       *out << YAML::Key << "Override"
            << YAML::Value << MCtrls[i]->GetPlugin()->GetName();
     }
+    if( MCtrls[i]->HasNotes() ){
+      *out << YAML::Key << "Notes"
+           << YAML::Value << MCtrls[i]->GetNotes();
+    }
 
     *out << YAML::EndMap;
   }
@@ -1004,6 +1052,10 @@ void CoreGenYaml::WriteVTPYaml( YAML::Emitter *out,
     if( VTPs[i]->IsPlugin() ){
       *out << YAML::Key << "Override"
            << YAML::Value << VTPs[i]->GetPlugin()->GetName();
+    }
+    if( VTPs[i]->HasNotes() ){
+      *out << YAML::Key << "Notes"
+           << YAML::Value << VTPs[i]->GetNotes();
     }
     *out << YAML::EndMap;
   }
@@ -1098,6 +1150,10 @@ void CoreGenYaml::WriteExtYaml( YAML::Emitter *out,
       *out << YAML::Value << Exts[i]->GetRTLFile();
       *out << YAML::Key << "RTLType";
       *out << YAML::Value << CGRTLToStr(Exts[i]->GetRTLType());
+    }
+    if( Exts[i]->HasNotes() ){
+      *out << YAML::Key << "Notes"
+           << YAML::Value << Exts[i]->GetNotes();
     }
 
     *out << YAML::EndMap;
@@ -1265,6 +1321,11 @@ void CoreGenYaml::WritePluginYaml( YAML::Emitter *out,
     //-- VtP nodes
     if( Plugins[i]->GetNumVTPs() > 0 ){
       WriteVTPYaml(out, *(Plugins[i]->GetVTPs()) );
+    }
+
+    if( Plugins[i]->HasNotes() ){
+      *out << YAML::Key << "Notes"
+           << YAML::Value << Plugins[i]->GetNotes();
     }
 
     *out << YAML::EndMap;

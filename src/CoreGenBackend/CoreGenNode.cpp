@@ -203,7 +203,7 @@ std::string CoreGenNode::GetNotes(){
   return Notes;
 }
 
-bool CoreGenNode::IsNotes(){
+bool CoreGenNode::HasNotes(){
   if( Notes.length() > 0 )
     return true;
   return false;

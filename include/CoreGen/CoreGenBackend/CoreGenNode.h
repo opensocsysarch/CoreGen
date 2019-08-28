@@ -179,7 +179,7 @@ public:
   std::string GetNotes();
 
   /// Determines if there is a set of valid notes for the target node
-  bool IsNotes();
+  bool HasNotes();
 
   /// Retrieve the current node plugin pointer
   CoreGenNode *GetOverriddenNode();
