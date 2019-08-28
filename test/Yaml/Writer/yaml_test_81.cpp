@@ -12,10 +12,10 @@
 #include <iostream>
 #include "CoreGen/CoreGenBackend/CoreGenBackend.h"
 
-std::string PROJNAME = "TEST79";
+std::string PROJNAME = "TEST81";
 std::string PROJROOT = "./";
 std::string ARCHROOT = "./";
-std::string PROJYAML = "TEST79.yaml";
+std::string PROJYAML = "TEST81.yaml";
 
 unsigned ITER=72;
 unsigned NUM_CORES=4;
