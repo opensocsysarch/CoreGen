@@ -3916,8 +3916,9 @@ bool CoreGenYaml::ReadYaml(  std::vector<CoreGenSoC *>  &Socs,
 
   // load the config file
   YAML::Node IR;
+  std::ifstream fin(FileName.c_str());
   try{
-    IR = YAML::LoadFile(FileName);
+    IR = YAML::Load(fin);
   }catch(YAML::ParserException& e){
     Errno->SetError(CGERR_ERROR, "Error in parsing Yaml IR file: "
                     + std::string(e.what()));
@@ -3932,6 +3933,7 @@ bool CoreGenYaml::ReadYaml(  std::vector<CoreGenSoC *>  &Socs,
   const YAML::Node& ProjNodes = IR["ProjectInfo"];
   if( CheckValidNode(IR,"ProjectInfo") ){
     if( !ReadProjYaml(ProjNodes) ){
+      fin.close();
       return false;
     }
   }
@@ -3939,84 +3941,98 @@ bool CoreGenYaml::ReadYaml(  std::vector<CoreGenSoC *>  &Socs,
   //-- Plugins
   const YAML::Node& PluginNodes = IR["Plugins"];
   if( !ReadPluginYaml(PluginNodes,Plugins) ){
+    fin.close();
     return false;
   }
 
   //-- Registers
   const YAML::Node& RegNodes = IR["Registers"];
   if( !ReadRegisterYaml(RegNodes,Regs) ){
+    fin.close();
     return false;
   }
 
   //-- Register Classes
   const YAML::Node& RegClassNodes = IR["RegClasses"];
   if( !ReadRegisterClassYaml(RegClassNodes,RegClasses,Regs) ){
+    fin.close();
     return false;
   }
 
   //-- ISAs
   const YAML::Node& ISANodes = IR["ISAs"];
   if( !ReadISAYaml(ISANodes,ISAs) ){
+    fin.close();
     return false;
   }
 
   //-- Inst Formats
   const YAML::Node& InstFormatNodes = IR["InstFormats"];
   if( !ReadInstFormatYaml(InstFormatNodes,Formats,ISAs,RegClasses) ){
+    fin.close();
     return false;
   }
 
   //-- Insts
   const YAML::Node& InstNodes = IR["Insts"];
   if( !ReadInstYaml(InstNodes,Insts,Formats,ISAs ) ){
+    fin.close();
     return false;
   }
 
   //-- PseudoInsts
   const YAML::Node& PInstNodes = IR["PseudoInsts"];
   if( !ReadPseudoInstYaml(PInstNodes,PInsts,Insts,ISAs) ){
+    fin.close();
     return false;
   }
 
   //-- Caches
   const YAML::Node& CacheNodes = IR["Caches"];
   if( !ReadCacheYaml(CacheNodes,Caches) ){
+    fin.close();
     return false;
   }
 
   //-- Exts
   const YAML::Node& ExtNodes = IR["Extensions"];
   if( !ReadExtYaml(ExtNodes,Exts) ){
+    fin.close();
     return false;
   }
 
   //-- Cores
   const YAML::Node& CoreNodes = IR["Cores"];
   if( !ReadCoreYaml(CoreNodes,Cores,Caches,ISAs,RegClasses,Exts) ){
+    fin.close();
     return false;
   }
 
   //-- Socs
   const YAML::Node& SocNodes = IR["Socs"];
   if( !ReadSocYaml(SocNodes,Socs,Cores) ){
+    fin.close();
     return false;
   }
 
   //-- Spads
   const YAML::Node& SpadNodes = IR["Scratchpads"];
   if( !ReadSpadYaml(SpadNodes,Spads) ){
+    fin.close();
     return false;
   }
 
   //-- Memory Controllers
   const YAML::Node& MCtrlNodes = IR["MemoryControllers"];
   if( !ReadMCtrlYaml(MCtrlNodes,MCtrls) ){
+    fin.close();
     return false;
   }
 
   // -- Virtual to Physical Units
   const YAML::Node& VTPNodes = IR["VTPControllers"];
   if( !ReadVTPYaml(VTPNodes,VTPs) ){
+    fin.close();
     return false;
   }
 
@@ -4038,8 +4054,11 @@ bool CoreGenYaml::ReadYaml(  std::vector<CoreGenSoC *>  &Socs,
                     VTPs,
                     Exts,
                     Plugins) ){
+    fin.close();
     return false;
   }
+
+  fin.close();
 
   return true;
 }
