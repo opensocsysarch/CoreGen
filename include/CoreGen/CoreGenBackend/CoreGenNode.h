@@ -73,6 +73,7 @@ private:
   std::vector<CGAttr> Attrs;            ///< CoreGenNode: Node attributes
   std::vector<CoreGenNode *> CNodes;    ///< CoreGenNode: Child DAG nodes
   std::string ASP;                      ///< CoreGenNode: ASP representation of the node
+  std::string Notes;                    ///< CoreGenNode: Notes associated with the target node
 
   CoreGenNode *PluginNode;              ///< CoreGenNode: Overridden Plugin Node
 
@@ -101,6 +102,9 @@ public:
 
   /// Determine if the target attribute is set
   bool HasAttr(CGAttr A);
+
+  /// Set the notes for the target node
+  bool SetNotes(std::string S);
 
   /// Set the CoreGen node type
   bool SetType(CGNodeType T);
@@ -170,6 +174,12 @@ public:
 
   /// Is the current node overridden with a plugin?
   bool IsOverridden();
+
+  /// Retrieve the notes for the target node
+  std::string GetNotes();
+
+  /// Determines if there is a set of valid notes for the target node
+  bool HasNotes();
 
   /// Retrieve the current node plugin pointer
   CoreGenNode *GetOverriddenNode();

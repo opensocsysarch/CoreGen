@@ -133,12 +133,10 @@ private:
   bool ExamineISANode(CoreGenDAG *D, unsigned IsaNode );
 
   /// Processes 64bit instructions
-  bool Process64bitInsts(std::vector<CoreGenInst *> Insts,
-                         CoreGenInstFormat *F);
+  bool Process64bitInsts(std::vector<CoreGenInst *> Insts);
 
   /// Processes longer instructions
-  bool ProcessLongInsts(std::vector<CoreGenInst *> Insts,
-                        CoreGenInstFormat *F);
+  bool ProcessLongInsts(std::vector<CoreGenInst *> Insts);
 public:
   /// Default Constructor
   EncodingCollisionPass(std::ostream *O, CoreGenDAG *D, CoreGenErrno *E);

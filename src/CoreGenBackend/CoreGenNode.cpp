@@ -194,4 +194,19 @@ bool CoreGenNode::HasAttr(CGAttr A){
   return false;
 }
 
+bool CoreGenNode::SetNotes(std::string S){
+  Notes = S;
+  return true;
+}
+
+std::string CoreGenNode::GetNotes(){
+  return Notes;
+}
+
+bool CoreGenNode::HasNotes(){
+  if( Notes.length() > 0 )
+    return true;
+  return false;
+}
+
 // EOF

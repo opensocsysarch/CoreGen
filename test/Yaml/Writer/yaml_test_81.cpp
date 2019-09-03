@@ -1,5 +1,5 @@
 //
-// _YAML_TEST80_CPP_
+// _YAML_TEST81_CPP_
 //
 // Copyright (C) 2017-2018 Tactical Computing Laboratories, LLC
 // All Rights Reserved
@@ -12,10 +12,10 @@
 #include <iostream>
 #include "CoreGen/CoreGenBackend/CoreGenBackend.h"
 
-std::string PROJNAME = "TEST80";
+std::string PROJNAME = "TEST81";
 std::string PROJROOT = "./";
 std::string ARCHROOT = "./";
-std::string PROJYAML = "TEST80.yaml";
+std::string PROJYAML = "TEST81.yaml";
 
 unsigned ITER=72;
 unsigned NUM_CORES=4;
@@ -39,6 +39,7 @@ int main( int argc, char **argv ){
                                         1,
                                         1 );
     Spad->SetStartAddr(0x800000000 + ((i+1)*1024));
+    Spad->SetNotes("scratchpad " + PROJNAME + "." + std::to_string(i) + ".spad" );
   }
 
   // add a memory controller
@@ -168,6 +169,7 @@ int main( int argc, char **argv ){
 
   // create new instruction format
   CoreGenInstFormat *IF = CG->InsertInstFormat( PROJNAME + ".if", ISA );
+  IF->SetNotes( "The one and only inst format" );
 
   // insert some instruction fields
   //  RT     RA     RB   OPC

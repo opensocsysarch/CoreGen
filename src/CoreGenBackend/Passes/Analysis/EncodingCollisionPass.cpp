@@ -9,6 +9,7 @@
 //
 
 #include "CoreGen/CoreGenBackend/Passes/Analysis/EncodingCollisionPass.h"
+#include <bitset>
 
 EncodingCollisionPass::EncodingCollisionPass(std::ostream *O,
                                              CoreGenDAG *D,
@@ -21,14 +22,14 @@ EncodingCollisionPass::EncodingCollisionPass(std::ostream *O,
 EncodingCollisionPass::~EncodingCollisionPass(){
 }
 
-bool EncodingCollisionPass::Process64bitInsts(std::vector<CoreGenInst *> Insts,
-                                              CoreGenInstFormat *F){
+bool EncodingCollisionPass::Process64bitInsts(std::vector<CoreGenInst *> Insts){
 
   std::vector<uint64_t> Encs;
   srand(time(NULL));
 
   for( unsigned i=0; i<Insts.size(); i++ ){
     uint64_t Enc = 0x00ull;
+    CoreGenInstFormat *F = Insts[i]->GetFormat();
 
     // get all the required encodings
     // if the field is a code, write the speific code in the encoding mask
@@ -38,7 +39,7 @@ bool EncodingCollisionPass::Process64bitInsts(std::vector<CoreGenInst *> Insts,
       uint64_t Mask = 0x00ull;
 
       for( unsigned k=0; k<F->GetFieldWidth(F->GetFieldName(j)); k++ ){
-        Mask |= 1 << (uint64_t)(StartBit + k );
+        Mask |= (1 << (uint64_t)(StartBit + k ));
       }
 
       // OR in the encoding
@@ -47,10 +48,17 @@ bool EncodingCollisionPass::Process64bitInsts(std::vector<CoreGenInst *> Insts,
         if( !E ){
           WriteMsg( "Failed to retrieve required encoding field \"" +
                     F->GetFieldName(j) + "\" from instruction \"" +
-                    Insts[i]->GetName() + "\"");
+                    Insts[i]->GetName() + "\" from format=\"" + F->GetName() + "\"" );
           return false;
         }
-        Enc |= ((E->GetEncoding()<<StartBit) & Mask);
+#if 0
+        std::cout << "StartBit = " << StartBit << std::endl
+                  << "Mask     = 0b" << std::bitset<64>(Mask) << std::endl
+                  << "Field    = " << E->GetEncoding() << std::endl
+                  << "Enc|     = 0b" << std::bitset<64>(E->GetEncoding()<<StartBit) << std::endl;
+        //Enc |= ((E->GetEncoding()<<StartBit) & Mask);
+#endif
+        Enc |= ((E->GetEncoding()<<StartBit));
       }else{
         uint64_t RandField = (uint64_t)(rand()) % Mask;
         Enc |= ((RandField<<StartBit) & Mask);
@@ -75,18 +83,19 @@ bool EncodingCollisionPass::Process64bitInsts(std::vector<CoreGenInst *> Insts,
   return true;
 }
 
-bool EncodingCollisionPass::ProcessLongInsts(std::vector<CoreGenInst *> Insts,
-                                             CoreGenInstFormat *F){
+bool EncodingCollisionPass::ProcessLongInsts(std::vector<CoreGenInst *> Insts ){
+
   std::vector<ENCLongInt *> Encs;
   srand(time(NULL));
 
-  // get the total width of the instructions
-  unsigned NVals = F->GetFormatWidth()/64;
-  if( (F->GetFormatWidth()%64) > 0 ){
-    NVals++;
-  }
-
   for( unsigned i=0; i<Insts.size(); i++ ){
+    CoreGenInstFormat *F = Insts[i]->GetFormat();
+    // get the total width of the instructions
+    unsigned NVals = F->GetFormatWidth()/64;
+    if( (F->GetFormatWidth()%64) > 0 ){
+      NVals++;
+    }
+
     // create a new encoding
     Encs.push_back( new ENCLongInt(F->GetFormatWidth(),NVals) );
 
@@ -188,11 +197,11 @@ bool EncodingCollisionPass::ExamineISANode(CoreGenDAG *D,
   // process the instruction vector
   if( F->GetFormatWidth() <= 64 ){
     // this is the fast path
-    return Process64bitInsts( Insts, F );
+    return Process64bitInsts( Insts );
   }else{
     // instructions with larger formats are harder to compare
     // use the slow path
-    return ProcessLongInsts( Insts, F );
+    return ProcessLongInsts( Insts );
   }
 
   return true;

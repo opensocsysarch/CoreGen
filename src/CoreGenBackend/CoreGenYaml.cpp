@@ -354,6 +354,10 @@ void CoreGenYaml::WriteCoreYaml( YAML::Emitter *out,
       *out << YAML::Key << "Override"
            << YAML::Value << Cores[i]->GetPlugin()->GetName();
     }
+    if( Cores[i]->HasNotes() ){
+      *out << YAML::Key << "Notes"
+           << YAML::Value << Cores[i]->GetNotes();
+    }
 
     *out << YAML::EndMap;
   }
@@ -400,6 +404,10 @@ void CoreGenYaml::WriteSocYaml( YAML::Emitter *out,
     if( Socs[i]->IsPlugin() ){
       *out << YAML::Key << "Override"
            << YAML::Value << Socs[i]->GetPlugin()->GetName();
+    }
+    if( Socs[i]->HasNotes() ){
+      *out << YAML::Key << "Notes"
+           << YAML::Value << Socs[i]->GetNotes();
     }
 
     *out << YAML::EndMap;
@@ -459,6 +467,10 @@ void CoreGenYaml::PrintCache( YAML::Emitter *out,
     *out << YAML::Key << "Override"
          << YAML::Value << Cache->GetPlugin()->GetName();
    }
+    if( Cache->HasNotes() ){
+      *out << YAML::Key << "Notes"
+           << YAML::Value << Cache->GetNotes();
+    }
 
   *out << YAML::EndMap;
 }
@@ -501,6 +513,10 @@ void CoreGenYaml::WriteISAYaml(YAML::Emitter *out,
     if( ISAs[i]->IsPlugin() ){
       *out << YAML::Key << "Override"
            << YAML::Value << ISAs[i]->GetPlugin()->GetName();
+    }
+    if( ISAs[i]->HasNotes() ){
+      *out << YAML::Key << "Notes"
+           << YAML::Value << ISAs[i]->GetNotes();
     }
     *out << YAML::EndMap;
   }
@@ -575,6 +591,10 @@ void CoreGenYaml::WriteInstFormatYaml(YAML::Emitter *out,
       *out << YAML::Key << "Override"
            << YAML::Value << Formats[i]->GetPlugin()->GetName();
     }
+    if( Formats[i]->HasNotes() ){
+      *out << YAML::Key << "Notes"
+           << YAML::Value << Formats[i]->GetNotes();
+    }
 
     *out << YAML::EndMap; // End InstFormat->GetName()
   }
@@ -638,6 +658,10 @@ void CoreGenYaml::WriteInstYaml(YAML::Emitter *out,
       *out << YAML::Key << "Override"
            << YAML::Value << Insts[i]->GetPlugin()->GetName();
     }
+    if( Insts[i]->HasNotes() ){
+      *out << YAML::Key << "Notes"
+           << YAML::Value << Insts[i]->GetNotes();
+    }
 
     *out << YAML::EndMap; // individual instruction
   }
@@ -679,6 +703,10 @@ void CoreGenYaml::WritePseudoInstYaml(YAML::Emitter *out,
       *out << YAML::Key << "Syntax";
       *out << YAML::Value << PInsts[i]->GetSyntax();
     }
+    if( PInsts[i]->HasNotes() ){
+      *out << YAML::Key << "Notes"
+           << YAML::Value << PInsts[i]->GetNotes();
+    }
 
     *out << YAML::EndMap;
   }
@@ -716,6 +744,10 @@ void CoreGenYaml::WriteRegClassYaml(YAML::Emitter *out,
     if( RegClasses[i]->IsPlugin() ){
       *out << YAML::Key << "Override"
            << YAML::Value << RegClasses[i]->GetPlugin()->GetName();
+    }
+    if( RegClasses[i]->HasNotes() ){
+      *out << YAML::Key << "Notes"
+           << YAML::Value << RegClasses[i]->GetNotes();
     }
 
     *out << YAML::EndMap;
@@ -856,6 +888,10 @@ void CoreGenYaml::WriteRegYaml(YAML::Emitter *out,
       *out << YAML::Key << "Override"
            << YAML::Value << Regs[i]->GetPlugin()->GetName();
     }
+    if( Regs[i]->HasNotes() ){
+      *out << YAML::Key << "Notes"
+           << YAML::Value << Regs[i]->GetNotes();
+    }
 
     *out << YAML::EndMap;
   }
@@ -915,6 +951,10 @@ void CoreGenYaml::WriteCommYaml( YAML::Emitter *out,
       *out << YAML::Key << "Override"
            << YAML::Value << Comms[i]->GetPlugin()->GetName();
     }
+    if( Comms[i]->HasNotes() ){
+      *out << YAML::Key << "Notes"
+           << YAML::Value << Comms[i]->GetNotes();
+    }
 
     *out << YAML::EndMap;
   }
@@ -954,6 +994,10 @@ void CoreGenYaml::WriteSpadYaml( YAML::Emitter *out,
       *out << YAML::Key << "Override"
            << YAML::Value << Spads[i]->GetPlugin()->GetName();
     }
+    if( Spads[i]->HasNotes() ){
+      *out << YAML::Key << "Notes"
+           << YAML::Value << Spads[i]->GetNotes();
+    }
 
     *out << YAML::EndMap;
   }
@@ -987,6 +1031,10 @@ void CoreGenYaml::WriteMCtrlYaml( YAML::Emitter *out,
       *out << YAML::Key << "Override"
            << YAML::Value << MCtrls[i]->GetPlugin()->GetName();
     }
+    if( MCtrls[i]->HasNotes() ){
+      *out << YAML::Key << "Notes"
+           << YAML::Value << MCtrls[i]->GetNotes();
+    }
 
     *out << YAML::EndMap;
   }
@@ -1004,6 +1052,10 @@ void CoreGenYaml::WriteVTPYaml( YAML::Emitter *out,
     if( VTPs[i]->IsPlugin() ){
       *out << YAML::Key << "Override"
            << YAML::Value << VTPs[i]->GetPlugin()->GetName();
+    }
+    if( VTPs[i]->HasNotes() ){
+      *out << YAML::Key << "Notes"
+           << YAML::Value << VTPs[i]->GetNotes();
     }
     *out << YAML::EndMap;
   }
@@ -1098,6 +1150,10 @@ void CoreGenYaml::WriteExtYaml( YAML::Emitter *out,
       *out << YAML::Value << Exts[i]->GetRTLFile();
       *out << YAML::Key << "RTLType";
       *out << YAML::Value << CGRTLToStr(Exts[i]->GetRTLType());
+    }
+    if( Exts[i]->HasNotes() ){
+      *out << YAML::Key << "Notes"
+           << YAML::Value << Exts[i]->GetNotes();
     }
 
     *out << YAML::EndMap;
@@ -1265,6 +1321,11 @@ void CoreGenYaml::WritePluginYaml( YAML::Emitter *out,
     //-- VtP nodes
     if( Plugins[i]->GetNumVTPs() > 0 ){
       WriteVTPYaml(out, *(Plugins[i]->GetVTPs()) );
+    }
+
+    if( Plugins[i]->HasNotes() ){
+      *out << YAML::Key << "Notes"
+           << YAML::Value << Plugins[i]->GetNotes();
     }
 
     *out << YAML::EndMap;
@@ -1814,6 +1875,11 @@ bool CoreGenYaml::ReadRegisterYaml(const YAML::Node& RegNodes,
       R->SetOverriddenNode(PNode);
     }
 
+    // check for additional node notes
+    if( CheckValidNode(Node,"Notes") ){
+      R->SetNotes( Node["Notes"].as<std::string>() );
+    }
+
     R->AppendASP(ASP);
 
     if( IsDuplicate(Node,
@@ -1915,6 +1981,11 @@ bool CoreGenYaml::ReadRegisterClassYaml(const YAML::Node& RegClassNodes,
       RC->SetOverriddenNode(PNode);
     }
 
+    // check for additional node notes
+    if( CheckValidNode(Node,"Notes") ){
+      RC->SetNotes( Node["Notes"].as<std::string>() );
+    }
+
     RC->AppendASP(ASP);
 
     if( IsDuplicate(Node,
@@ -1974,6 +2045,11 @@ bool CoreGenYaml::ReadISAYaml(const YAML::Node& ISANodes,
         return false;
       }
       ISA->SetOverriddenNode(PNode);
+    }
+
+    // check for additional node notes
+    if( CheckValidNode(Node,"Notes") ){
+      ISA->SetNotes( Node["Notes"].as<std::string>() );
     }
 
     ISA->AppendASP(ASP);
@@ -2207,6 +2283,11 @@ bool CoreGenYaml::ReadInstFormatYaml(const YAML::Node& InstFormatNodes,
       IF->SetOverriddenNode(PNode);
     }
 
+    // check for additional node notes
+    if( CheckValidNode(Node,"Notes") ){
+      IF->SetNotes( Node["Notes"].as<std::string>() );
+    }
+
     IF->AppendASP(ASP);
 
     if( IsDuplicate(Node,
@@ -2258,6 +2339,9 @@ bool CoreGenYaml::ReadInstYaml(const YAML::Node& InstNodes,
       }
     }
     if( IF == nullptr ){
+      Errno->SetError(CGERR_ERROR,
+                      "No InstFormat found to match " + InstFormat +
+                      " for instruction " + Name );
       return false;
     }
     for( unsigned j=0; j<ISAs.size(); j++ ){
@@ -2266,6 +2350,9 @@ bool CoreGenYaml::ReadInstYaml(const YAML::Node& InstNodes,
       }
     }
     if( ISA == nullptr ){
+      Errno->SetError(CGERR_ERROR,
+                      "No ISA found to match " + ISAName +
+                      " for instruction " + Name );
       return false;
     }
 
@@ -2335,6 +2422,11 @@ bool CoreGenYaml::ReadInstYaml(const YAML::Node& InstNodes,
         return false;
       }
       Inst->SetOverriddenNode(PNode);
+    }
+
+    // check for additional node notes
+    if( CheckValidNode(Node,"Notes") ){
+      Inst->SetNotes( Node["Notes"].as<std::string>() );
     }
 
     Inst->AppendASP(ASP);
@@ -2432,6 +2524,11 @@ bool CoreGenYaml::ReadPseudoInstYaml(const YAML::Node& PInstNodes,
       }
     }
 
+    // check for additional node notes
+    if( CheckValidNode(Node,"Notes") ){
+      P->SetNotes( Node["Notes"].as<std::string>() );
+    }
+
     P->AppendASP(ASP);
 
     if( IsDuplicate(Node,
@@ -2525,6 +2622,11 @@ bool CoreGenYaml::ReadCacheYaml(const YAML::Node& CacheNodes,
         return false;
       }
       C->SetOverriddenNode(PNode);
+    }
+
+    // check for additional node notes
+    if( CheckValidNode(Node,"Notes") ){
+      C->SetNotes( Node["Notes"].as<std::string>() );
     }
 
     C->AppendASP(ASP);
@@ -2690,6 +2792,11 @@ bool CoreGenYaml::ReadCoreYaml(const YAML::Node& CoreNodes,
       C->SetOverriddenNode(PNode);
     }
 
+    // check for additional node notes
+    if( CheckValidNode(Node,"Notes") ){
+      C->SetNotes( Node["Notes"].as<std::string>() );
+    }
+
     C->AppendASP(ASP);
 
     if( IsDuplicate(Node,
@@ -2771,6 +2878,11 @@ bool CoreGenYaml::ReadSocYaml(const YAML::Node& SocNodes,
         return false;
       }
       S->SetOverriddenNode(PNode);
+    }
+
+    // check for additional node notes
+    if( CheckValidNode(Node,"Notes") ){
+      S->SetNotes( Node["Notes"].as<std::string>() );
     }
 
     S->AppendASP(ASP);
@@ -2861,6 +2973,11 @@ bool CoreGenYaml::ReadSpadYaml(const YAML::Node& SpadNodes,
       S->SetOverriddenNode(PNode);
     }
 
+    // check for additional node notes
+    if( CheckValidNode(Node,"Notes") ){
+      S->SetNotes( Node["Notes"].as<std::string>() );
+    }
+
     S->SetStartAddr( StartAddr );
     S->AppendASP(ASP);
 
@@ -2927,6 +3044,11 @@ bool CoreGenYaml::ReadMCtrlYaml(const YAML::Node& MCtrlNodes,
       M->SetOverriddenNode(PNode);
     }
 
+    // check for additional node notes
+    if( CheckValidNode(Node,"Notes") ){
+      M->SetNotes( Node["Notes"].as<std::string>() );
+    }
+
     M->AppendASP(ASP);
 
     if( IsDuplicate(Node,
@@ -2970,7 +3092,14 @@ bool CoreGenYaml::ReadVTPYaml( const YAML::Node& VTPNodes,
       }
       V->SetOverriddenNode(PNode);
     }
+
+    // check for additional node notes
+    if( CheckValidNode(Node,"Notes") ){
+      V->SetNotes( Node["Notes"].as<std::string>() );
+    }
+
     V->AppendASP(ASP);
+
     if( IsDuplicate(Node,
                     static_cast<CoreGenNode *>(V),
                     std::vector<CoreGenNode *>(VTPs.begin(),VTPs.end()) ) ){
@@ -3024,6 +3153,11 @@ bool CoreGenYaml::ReadPluginYaml(const YAML::Node& PluginNodes,
       Patch = Node["PatchVersion"].as<unsigned>();
     }
 
+    std::string Notes;
+    if( CheckValidNode(Node,"Notes") ){
+      Notes = Node["Notes"].as<std::string>();
+    }
+
     // if the plugin loads, continue parsing
     // otherwise, throw an error
     if( !PluginMgr ){
@@ -3065,6 +3199,10 @@ bool CoreGenYaml::ReadPluginYaml(const YAML::Node& PluginNodes,
       return false;
     }
     Plugins.push_back(NewPlugin);
+
+    if( Notes.length() > 0 ){
+      NewPlugin->SetNotes(Notes);
+    }
 
     // retrieve the features
     if( Node["Features"] ){
@@ -3393,6 +3531,10 @@ bool CoreGenYaml::ReadExtYaml(const YAML::Node& ExtNodes,
       Errno->SetError(CGERR_ERROR,"Failed to set the type for Extension=" +
                                   Name + " to Type=" + Type);
       return false;
+    }
+
+    if( CheckValidNode(Node,"Notes") ){
+      E->SetNotes( Node["Notes"].as<std::string>() );
     }
 
     //-- Registers
@@ -3731,6 +3873,11 @@ bool CoreGenYaml::ReadCommYaml( const YAML::Node& CommNodes,
       }
       Comm->SetOverriddenNode(PNode);
     }
+
+    if( CheckValidNode(Node,"Notes") ){
+      Comm->SetNotes( Node["Notes"].as<std::string>() );
+    }
+
     Comm->AppendASP(ASP);
 
     if( IsDuplicate(Node,
@@ -3769,8 +3916,9 @@ bool CoreGenYaml::ReadYaml(  std::vector<CoreGenSoC *>  &Socs,
 
   // load the config file
   YAML::Node IR;
+  std::ifstream fin(FileName.c_str());
   try{
-    IR = YAML::LoadFile(FileName);
+    IR = YAML::Load(fin);
   }catch(YAML::ParserException& e){
     Errno->SetError(CGERR_ERROR, "Error in parsing Yaml IR file: "
                     + std::string(e.what()));
@@ -3785,6 +3933,7 @@ bool CoreGenYaml::ReadYaml(  std::vector<CoreGenSoC *>  &Socs,
   const YAML::Node& ProjNodes = IR["ProjectInfo"];
   if( CheckValidNode(IR,"ProjectInfo") ){
     if( !ReadProjYaml(ProjNodes) ){
+      fin.close();
       return false;
     }
   }
@@ -3792,84 +3941,98 @@ bool CoreGenYaml::ReadYaml(  std::vector<CoreGenSoC *>  &Socs,
   //-- Plugins
   const YAML::Node& PluginNodes = IR["Plugins"];
   if( !ReadPluginYaml(PluginNodes,Plugins) ){
+    fin.close();
     return false;
   }
 
   //-- Registers
   const YAML::Node& RegNodes = IR["Registers"];
   if( !ReadRegisterYaml(RegNodes,Regs) ){
+    fin.close();
     return false;
   }
 
   //-- Register Classes
   const YAML::Node& RegClassNodes = IR["RegClasses"];
   if( !ReadRegisterClassYaml(RegClassNodes,RegClasses,Regs) ){
+    fin.close();
     return false;
   }
 
   //-- ISAs
   const YAML::Node& ISANodes = IR["ISAs"];
   if( !ReadISAYaml(ISANodes,ISAs) ){
+    fin.close();
     return false;
   }
 
   //-- Inst Formats
   const YAML::Node& InstFormatNodes = IR["InstFormats"];
   if( !ReadInstFormatYaml(InstFormatNodes,Formats,ISAs,RegClasses) ){
+    fin.close();
     return false;
   }
 
   //-- Insts
   const YAML::Node& InstNodes = IR["Insts"];
   if( !ReadInstYaml(InstNodes,Insts,Formats,ISAs ) ){
+    fin.close();
     return false;
   }
 
   //-- PseudoInsts
   const YAML::Node& PInstNodes = IR["PseudoInsts"];
   if( !ReadPseudoInstYaml(PInstNodes,PInsts,Insts,ISAs) ){
+    fin.close();
     return false;
   }
 
   //-- Caches
   const YAML::Node& CacheNodes = IR["Caches"];
   if( !ReadCacheYaml(CacheNodes,Caches) ){
+    fin.close();
     return false;
   }
 
   //-- Exts
   const YAML::Node& ExtNodes = IR["Extensions"];
   if( !ReadExtYaml(ExtNodes,Exts) ){
+    fin.close();
     return false;
   }
 
   //-- Cores
   const YAML::Node& CoreNodes = IR["Cores"];
   if( !ReadCoreYaml(CoreNodes,Cores,Caches,ISAs,RegClasses,Exts) ){
+    fin.close();
     return false;
   }
 
   //-- Socs
   const YAML::Node& SocNodes = IR["Socs"];
   if( !ReadSocYaml(SocNodes,Socs,Cores) ){
+    fin.close();
     return false;
   }
 
   //-- Spads
   const YAML::Node& SpadNodes = IR["Scratchpads"];
   if( !ReadSpadYaml(SpadNodes,Spads) ){
+    fin.close();
     return false;
   }
 
   //-- Memory Controllers
   const YAML::Node& MCtrlNodes = IR["MemoryControllers"];
   if( !ReadMCtrlYaml(MCtrlNodes,MCtrls) ){
+    fin.close();
     return false;
   }
 
   // -- Virtual to Physical Units
   const YAML::Node& VTPNodes = IR["VTPControllers"];
   if( !ReadVTPYaml(VTPNodes,VTPs) ){
+    fin.close();
     return false;
   }
 
@@ -3891,8 +4054,11 @@ bool CoreGenYaml::ReadYaml(  std::vector<CoreGenSoC *>  &Socs,
                     VTPs,
                     Exts,
                     Plugins) ){
+    fin.close();
     return false;
   }
+
+  fin.close();
 
   return true;
 }

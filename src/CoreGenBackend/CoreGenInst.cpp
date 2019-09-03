@@ -73,7 +73,7 @@ bool CoreGenInst::ValidateSyntax(std::string S){
       tmp.erase(std::remove(tmp.begin(), tmp.end(), '%'), tmp.end());
       if( !format->IsValidField(tmp) ){
         Errno->SetError( CGERR_ERROR,
-                         "Syntax structure has a field that does not match the isntruction format; field = " +
+                         "Syntax structure has a field that does not match the instruction format; field = " +
                          tmp + "; instruction format = " + format->GetName() + "; instruction = " + 
                          this->GetName() );
         return false;
@@ -91,7 +91,7 @@ bool CoreGenInst::ValidateSyntax(std::string S){
       tmp.erase(std::remove(tmp.begin(), tmp.end(), '$'), tmp.end());
       if( !format->IsValidField(tmp) ){
         Errno->SetError( CGERR_ERROR,
-                         "Syntax structure has a field that does not match the isntruction format; field = " +
+                         "Syntax structure has a field that does not match the instruction format; field = " +
                          tmp + "; instruction format = " + format->GetName() + "; instruction = " + 
                          this->GetName() );
         return false;
@@ -103,6 +103,8 @@ bool CoreGenInst::ValidateSyntax(std::string S){
                          format->GetName() + "; instruction = " + this->GetName() );
         return false;
       }
+    }else if( tmp[0] == '#'){
+      // found a constant immediate value, this is correct
     }else{
       Errno->SetError( CGERR_ERROR,
                        "Syntax structure has incomplete syntax; variable= " +

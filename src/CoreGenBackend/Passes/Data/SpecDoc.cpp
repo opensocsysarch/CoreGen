@@ -35,7 +35,6 @@ std::string SpecDoc::FixUnderscore( std::string Str ){
   std::string New;
   for( unsigned i=0; i<Str.length(); i++ ){
     if( Str[i] == '_' ){
-      //New += '\\';
       New += "\\string";
     }
     New += Str[i];
@@ -376,6 +375,10 @@ bool SpecDoc::WriteInstFormatTex(CoreGenDAG *DAG, std::ofstream &ofs ){
       ofs << "\\label{sec:" << FixUnderscore(IF->GetName()) << "}" << std::endl;
       ofs << std::endl << std::endl;
 
+      if( IF->HasNotes() ){
+        ofs << std::endl << "Instruction format notes: " << IF->GetNotes() << std::endl << std::endl;
+      }
+
       ofs << "The following diagrams represent the " << EscapeUnderscore(IF->GetName())
           << " instruction format from the " << EscapeUnderscore(IF->GetISA()->GetName())
           << " instruction set architecture." << std::endl;
@@ -463,7 +466,13 @@ bool SpecDoc::WriteInstTex(CoreGenDAG *DAG, std::ofstream &ofs ){
         std::string Syntax = INST->GetSyntax();
         Syntax.erase(std::remove(Syntax.begin(), Syntax.end(), '%'), Syntax.end());
         Syntax.erase(std::remove(Syntax.begin(), Syntax.end(), '$'), Syntax.end());
+        Syntax.erase(std::remove(Syntax.begin(), Syntax.end(), '#'), Syntax.end());
+        ofs << std::endl << std::endl;
         ofs << "\\textbf{Assembly Mnemonic} : " << EscapeUnderscore(Syntax) << std::endl;
+      }
+
+      if( INST->HasNotes() ){
+        ofs << std::endl << "Instruction notes: " << INST->GetNotes() << std::endl << std::endl;
       }
 
       // print an instruction table
@@ -536,6 +545,16 @@ bool SpecDoc::WritePseudoInstTex(CoreGenDAG *DAG, std::ofstream &ofs ){
           << EscapeUnderscore(INST->GetInst()->GetName()) << " instruction.  It has the following features:"
           << std::endl;
 
+      // print instruction mnemonic
+      if( INST->IsSyntax() ){
+        std::string Syntax = INST->GetSyntax();
+        Syntax.erase(std::remove(Syntax.begin(), Syntax.end(), '%'), Syntax.end());
+        Syntax.erase(std::remove(Syntax.begin(), Syntax.end(), '$'), Syntax.end());
+        Syntax.erase(std::remove(Syntax.begin(), Syntax.end(), '#'), Syntax.end());
+        ofs << std::endl << std::endl;
+        ofs << "\\textbf{Assembly Mnemonic} : " << EscapeUnderscore(Syntax) << std::endl;
+      }
+
       // print an instruction table
       ofs << "\\begin{center}" << std::endl;
       ofs << "\\begin{longtable}{c c c}" << std::endl;
@@ -561,6 +580,9 @@ bool SpecDoc::WritePseudoInstTex(CoreGenDAG *DAG, std::ofstream &ofs ){
             << std::hex << "0x" << E->GetEncoding() << std::dec << "\\\\" << std::endl;
       }
 
+      if( INST->HasNotes() ){
+        ofs << std::endl << "Pseudo Instruction notes: " << INST->GetNotes() << std::endl << std::endl;
+      }
 
       ofs << "\\hline" << std::endl;
       ofs << "\\end{longtable}" << std::endl;
