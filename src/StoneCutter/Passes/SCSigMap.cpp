@@ -501,7 +501,8 @@ bool SCSigMap::CheckSigReq( Function &F, Instruction &I ){
     return true;
     break;
   default:
-    this->PrintMsg( L_ERROR, "Failed to decode instruction type" );
+    this->PrintMsg( L_ERROR, "Failed to decode instruction type: "
+                    + std::string(I.getOpcodeName()) );
     return false;
     break;
   }
