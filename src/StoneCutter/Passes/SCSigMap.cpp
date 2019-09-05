@@ -265,6 +265,107 @@ bool SCSigMap::TranslateSelectSig(Function &F, Instruction &I ){
   return Signals->InsertSignal(new SCSig(MUX,1,F.getName().str()));
 }
 
+bool SCSigMap::IsNullBranchTarget(Instruction &I){
+  if( I.getOpcode() == Instruction::Ret )
+    return true;
+  return false;
+}
+
+bool SCSigMap::IsIgnoreInst(Instruction &I){
+  switch( I.getOpcode() ){
+  case Instruction::FPToUI :
+  case Instruction::FPToSI :
+  case Instruction::UIToFP :
+  case Instruction::SIToFP :
+  case Instruction::FPTrunc :
+  case Instruction::FPExt :
+  case Instruction::BitCast :
+  case Instruction::PtrToInt :
+  case Instruction::IntToPtr :
+  case Instruction::ExtractElement :
+  case Instruction::InsertElement :
+  case Instruction::ExtractValue :
+  case Instruction::InsertValue :
+  case Instruction::Trunc :
+  case Instruction::Fence :
+  case Instruction::AtomicCmpXchg :
+  case Instruction::AtomicRMW :
+  case Instruction::ShuffleVector :
+  case Instruction::AddrSpaceCast :
+  case Instruction::CleanupPad :
+  case Instruction::CatchPad :
+  case Instruction::GetElementPtr :
+  case Instruction::Alloca :
+  case Instruction::Ret :
+  case Instruction::PHI :
+  case Instruction::UserOp1 :
+  case Instruction::UserOp2 :
+  case Instruction::VAArg :
+  case Instruction::LandingPad :
+    // ignore these instructions
+    return true;
+    break;
+  default:
+    return false;
+    break;
+  }
+  return false;
+}
+
+signed SCSigMap::GetBranchDistance(Function &F, Instruction &BI, Instruction &Target ){
+  signed SourceID   = 0;
+  signed TargetID   = 0;
+  signed Count      = 0;
+
+  for( auto &BB : F.getBasicBlockList() ){
+    for( auto &Inst : BB.getInstList() ){
+      if( !F.isDeclaration() ){
+        // walk all the instructions
+        for( auto &Inst : BB.getInstList() ){
+          if( Inst.isIdenticalTo( &BI ) )
+            SourceID = Count;
+          else if( Inst.isIdenticalTo( &Target ) )
+            TargetID = Count;
+
+          if( !IsIgnoreInst(Inst) )
+            ++Count;
+        }
+      }
+    }
+  }
+
+  return TargetID - SourceID;
+}
+
+bool SCSigMap::TranslateBranch(Function &F, Instruction &I){
+  auto *BI = dyn_cast<BranchInst>(&I);
+
+  // determine the type of branch so we can calculate the target
+  if( BI->isUnconditional() ){
+    // unconditional branch, calculate the target
+#if 0
+    std::cout << "UNCONDITIONAL NumSuccessors : " << BI->getNumSuccessors() << std::endl;
+    std::cout << "                     TARGET : " << BI->getSuccessor(0)->getName().str() << std::endl;
+#endif
+    // TODO: finish this
+    //signed Distance = GetBranchDistance(F,I,BI->getSuccessor(0)->front());
+    if( !IsNullBranchTarget(BI->getSuccessor(0)->front()) )
+      Signals->InsertSignal(new SCSig(BR_N,1,F.getName().str()));
+  }else{
+#if 0
+    std::cout << "CONDITIONAL NumSuccessors : " << BI->getNumSuccessors() << std::endl;
+    std::cout << "                  TARGET0 : " << BI->getSuccessor(0)->getName().str() << std::endl;
+    std::cout << "                  TARGET1 : " << BI->getSuccessor(1)->getName().str() << std::endl;
+#endif
+    // TODO: finish this
+    //signed Distance0 = GetBranchDistance(F,I,BI->getSuccessor(0)->front());
+    //signed Distance1 = GetBranchDistance(F,I,BI->getSuccessor(1)->front());
+    Signals->InsertSignal(new SCSig(BR_N,1,F.getName().str()));
+  }
+
+  return true;
+}
+
 bool SCSigMap::TranslateCmpOp(Function &F, Instruction &I){
   // Examine the first operand of the compare instruction
   // and extract the appropriate type of signal
@@ -466,6 +567,10 @@ bool SCSigMap::CheckSigReq( Function &F, Instruction &I ){
     break;
   case Instruction::Select :
     if( !TranslateSelectSig(F,I) )
+      return false;
+    break;
+  case Instruction::Br :
+    if( !TranslateBranch(F,I) )
       return false;
     break;
   case Instruction::FPToUI :
