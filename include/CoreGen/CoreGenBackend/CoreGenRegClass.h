@@ -49,6 +49,8 @@ public:
   /// Retrieve a target register
   CoreGenReg *GetReg(unsigned R);
 
+  CoreGenReg *GetRegByName(std::string name);
+
   /// Default Destructor
   ~CoreGenRegClass();
 };

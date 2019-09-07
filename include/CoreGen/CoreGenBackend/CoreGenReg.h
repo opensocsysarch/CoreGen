@@ -127,6 +127,12 @@ public:
                   unsigned &Start,
                   unsigned &End );
 
+  /// Get SubReg name by index
+  std::string GetSubRegNameByIndex(unsigned Idx);
+
+  /// Delete SubReg by index
+  void DeleteSubRegByIndex(unsigned Idx);
+
   /// Retrieve the register pseudo name
   std::string GetPseudoName();
 

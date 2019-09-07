@@ -82,6 +82,9 @@ public:
   /// Deletes the target register class
   bool DeleteRegClass( unsigned C );
 
+  /// Deletes the target Extension
+  bool DeleteExt( unsigned C );
+
   /// Retreive the target extension
   CoreGenNode *GetExt( unsigned E );
 

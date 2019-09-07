@@ -304,6 +304,9 @@ public:
   /// Get a PInst node by name
   CoreGenPseudoInst* GetPInstNodeByName(std::string Name);
 
+  /// Get a PInst node by name
+  CoreGenPseudoInst* GetPInstNodeByInstName(std::string Name);
+
   /// Get an InstFormate node by name
   CoreGenInstFormat* GetInstFormatNodeByName(std::string Name);
 
@@ -336,6 +339,9 @@ public:
 
   /// Get a Plugin node by name
   CoreGenPlugin* GetPluginNodeByName(std::string Name);
+
+  /// Get a Node by name
+  CoreGenNode* GetNodeByName( std::string Name );
 
 };
 

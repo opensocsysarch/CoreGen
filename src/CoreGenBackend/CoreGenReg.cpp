@@ -200,6 +200,19 @@ bool CoreGenReg::GetSubReg( unsigned Idx,
   return true;
 }
 
+std::string CoreGenReg::GetSubRegNameByIndex(unsigned Idx){
+  return std::get<0>(SubRegs[Idx]);
+}
+
+void CoreGenReg::DeleteSubRegByIndex(unsigned Idx){
+  if( Idx > (SubRegs.size()-1) ){
+    Errno->SetError( CGERR_ERROR, "Register class " + std::to_string(Idx)
+              + " out of bounds");
+  }
+
+  SubRegs.erase(SubRegs.begin()+Idx);
+}
+
 bool CoreGenReg::InsertSubReg( std::string Name, unsigned Start, unsigned End ){
   if( Name.length() == 0 ){
     Errno->SetError(CGERR_ERROR,

@@ -29,6 +29,16 @@ CoreGenReg *CoreGenRegClass::GetReg( unsigned R ){
   return static_cast<CoreGenReg *>(GetChild(R));
 }
 
+CoreGenReg *CoreGenRegClass::GetRegByName(std::string Name){
+  for(unsigned i = 0; i < this->GetNumReg(); i++){
+    if(this->GetReg(i)->GetName() == Name){
+      return this->GetReg(i);
+    }
+  }
+
+  return NULL;
+}
+
 unsigned CoreGenRegClass::GetMaxWidth(){
   unsigned max = 0;
   for( unsigned i=0; i<this->GetNumReg(); i++ ){

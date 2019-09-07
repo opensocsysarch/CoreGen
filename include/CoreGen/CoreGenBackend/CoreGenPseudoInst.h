@@ -70,6 +70,9 @@ public:
   /// Sets the ISA to null
   bool SetNullISA() { ISA = nullptr; return true; }
 
+  /// Sets the ISA to null
+  bool SetISA(CoreGenISA *I) { ISA = I; return true; }
+
   /// Get the target instruction mapping
   CoreGenInst *GetInst() { return Inst; }
 
