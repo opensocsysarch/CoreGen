@@ -65,6 +65,9 @@ public:
   /// Set the instruction printing syntax
   bool SetSyntax( std::string S );
 
+  /// clear all encodings
+  void ClearEncodings() { Encodings.clear(); }
+
   /// Retrieve the encoding for the target field
   uint64_t GetEncoding( std::string F, bool *Success );
 
