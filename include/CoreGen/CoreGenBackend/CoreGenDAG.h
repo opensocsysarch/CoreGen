@@ -115,6 +115,7 @@ private:
 
 protected:
   unsigned **AdjMat;                        ///< Adjacency matrix for the DAG
+  unsigned **TransAdjMat;                   ///< Transposed adjacency matrix for the DAG
 
   /// Find the node pointer by the mapped index
   CoreGenNode *FindNodeByIndex( unsigned I );

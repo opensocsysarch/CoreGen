@@ -12,7 +12,8 @@
 
 CoreGenDAG::CoreGenDAG( CoreGenErrno *E )
   : Errno(E), DimSize(0),
-  Level(0), Lower(nullptr), Higher(nullptr), isLower(false), AdjMat(nullptr){
+  Level(0), Lower(nullptr), Higher(nullptr), isLower(false),
+  AdjMat(nullptr), TransAdjMat(nullptr){
 }
 
 CoreGenDAG::CoreGenDAG( CoreGenDAG *D,
@@ -21,7 +22,8 @@ CoreGenDAG::CoreGenDAG( CoreGenDAG *D,
                         std::map<CoreGenNode *,unsigned> const &IMap,
                         CoreGenErrno *E )
   : Errno(E), DimSize(0),
-  Level(D->GetLevel()+1), Lower(nullptr), Higher(D), isLower(false), AdjMat(nullptr) {
+  Level(D->GetLevel()+1), Lower(nullptr), Higher(D), isLower(false),
+  AdjMat(nullptr), TransAdjMat(nullptr) {
   if( Level == 1 ){
     LowerToL1(IMap);
   }else if( Level == 2 ){
@@ -62,6 +64,7 @@ bool CoreGenDAG::GenerateDAG(){
         // we found a valid index
         // insert it at AdjMat[Src][Child]
         AdjMat[it.second][Search->second] = 1;
+        TransAdjMat[Search->second][it.second] = 1;
       }
     }
   }
@@ -73,8 +76,16 @@ bool CoreGenDAG::AllocMat(){
   if( AdjMat != nullptr ){
     return false;
   }
+  if( TransAdjMat != nullptr ){
+    return false;
+  }
+
   AdjMat = new unsigned*[DimSize];
   if( AdjMat == nullptr ){
+    return false;
+  }
+  TransAdjMat = new unsigned*[DimSize];
+  if( TransAdjMat == nullptr ){
     return false;
   }
   for(unsigned i=0; i<DimSize; i++ ){
@@ -82,11 +93,16 @@ bool CoreGenDAG::AllocMat(){
     if( AdjMat[i] == nullptr ){
       return false;
     }
+    TransAdjMat[i] = new unsigned[DimSize];
+    if( TransAdjMat[i] == nullptr ){
+      return false;
+    }
   }
 
   for( unsigned i=0; i<DimSize; i++ ){
     for( unsigned j=0; j<DimSize; j++ ){
       AdjMat[i][j] = 0;
+      TransAdjMat[i][j] = 0;
     }
   }
 
@@ -94,15 +110,24 @@ bool CoreGenDAG::AllocMat(){
 }
 
 bool CoreGenDAG::FreeMat(){
-  if( AdjMat == nullptr ){
+  if( (AdjMat == nullptr) && (TransAdjMat == nullptr) ){
     return true;
   }
 
-  for( unsigned i=0; i<DimSize; i++ ){
-    delete [] AdjMat[i];
+  if( AdjMat != nullptr ){
+    for( unsigned i=0; i<DimSize; i++ ){
+      delete [] AdjMat[i];
+    }
+    delete [] AdjMat;
   }
 
-  delete [] AdjMat;
+  if( TransAdjMat != nullptr ){
+    for( unsigned i=0; i<DimSize; i++ ){
+      delete [] TransAdjMat[i];
+    }
+    delete [] TransAdjMat;
+  }
+
   return true;
 }
 
