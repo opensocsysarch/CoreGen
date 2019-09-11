@@ -10,30 +10,40 @@
 
 #include "CoreGen/CoreGenSigMap/SCSig.h"
 
-SCSig::SCSig(SigType T) : Type(T), SigWidth(0){
+SCSig::SCSig(SigType T) : Type(T), SigWidth(0), Distance(0){
   Name = this->SigTypeToStr();
 }
 
-SCSig::SCSig(SigType T,unsigned W) : Type(T), FType(FOP_UNK), SigWidth(W){
+SCSig::SCSig(SigType T,unsigned W)
+  : Type(T), FType(FOP_UNK), SigWidth(W), Distance(0){
   Name = this->SigTypeToStr();
 }
 
 SCSig::SCSig(SigType T,std::string I)
-  : Type(T), FType(FOP_UNK), SigWidth(0), Inst(I){
+  : Type(T), FType(FOP_UNK), SigWidth(0), Distance(0), Inst(I){
   Name = this->SigTypeToStr();
 }
 
 SCSig::SCSig(SigType T,unsigned W,std::string I)
-  : Type(T), FType(FOP_UNK), SigWidth(W), Inst(I){
+  : Type(T), FType(FOP_UNK), SigWidth(W), Distance(0), Inst(I){
   Name = this->SigTypeToStr();
 }
 
 SCSig::SCSig(SigType T,std::string I,std::string N)
-  : Type(T), FType(FOP_UNK), SigWidth(0), Inst(I), Name(N){
+  : Type(T), FType(FOP_UNK), SigWidth(0), Distance(0), Inst(I), Name(N){
+}
+
+SCSig::SCSig(SigType T,unsigned W,signed D,std::string I)
+  : Type(T), FType(FOP_UNK), SigWidth(W), Distance(D), Inst(I){
+  Name = this->SigTypeToStr();
 }
 
 SCSig::SCSig(SigType T,unsigned W,std::string I,std::string N)
   : Type(T), FType(FOP_UNK), SigWidth(W), Inst(I), Name(N){
+}
+
+SCSig::SCSig(SigType T,unsigned W,signed D,std::string I,std::string N)
+  : Type(T), FType(FOP_UNK), SigWidth(W), Distance(D), Inst(I), Name(N){
 }
 
 SCSig::~SCSig(){
@@ -51,6 +61,11 @@ std::string SCSig::GetInput( unsigned Idx ){
   if( Idx > (Inputs.size()-1) )
     return "";
   return Inputs[Idx];
+}
+
+bool SCSig::SetDistance( signed D ){
+  Distance = D;
+  return true;
 }
 
 bool SCSig::SetFusedType( FusedOpType T ){

@@ -117,6 +117,7 @@ private:
   SigType Type;             ///< SCSig: Signal type
   FusedOpType FType;        ///< SCSig: Fused of type
   unsigned SigWidth;        ///< SCSig: Width of the target signal (in bits)
+  signed Distance;          ///< SCSig: Branch distance (in uOps)
   std::string Inst;         ///< SCSig: Name of the instruction
   std::string Name;         ///< SCSig: Name of the signal
   std::vector<std::string> Inputs; ///< SCSig: vector of required inputs for ALU ops
@@ -138,7 +139,13 @@ public:
   SCSig(SigType T, std::string I, std::string N);
 
   /// Overloaded constructor
+  SCSig(SigType T, unsigned W, signed D, std::string I);
+
+  /// Overloaded constructor
   SCSig(SigType T, unsigned W, std::string I, std::string N);
+
+  /// Overloaded constructor
+  SCSig(SigType T, unsigned W, signed D, std::string I, std::string N );
 
   /// Default destructor
   ~SCSig();
@@ -175,6 +182,12 @@ public:
 
   /// Sets the fused operation type
   bool SetFusedType( FusedOpType Type );
+
+  /// Sets the branch distance (in uOps)
+  bool SetDistance(signed D);
+
+  /// Retrieves the signal branch distance (in uOps)
+  signed GetDistance() { return Distance; }
 
   /// Retrieves the signal type
   SigType GetType() { return Type; }
