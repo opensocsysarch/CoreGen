@@ -266,8 +266,10 @@ bool SCSigMap::TranslateSelectSig(Function &F, Instruction &I ){
 }
 
 bool SCSigMap::IsNullBranchTarget(Instruction &I){
-  if( I.getOpcode() == Instruction::Ret )
+  if( I.getOpcode() == Instruction::Ret ){
+    //std::cout << "Null branch in Inst=" << std::string(I.getOpcodeName()) << std::endl;
     return true;
+  }
   return false;
 }
 
@@ -317,6 +319,9 @@ signed SCSigMap::GetBranchDistance(Function &F, Instruction &BI, Instruction &Ta
   signed TargetID   = 0;
   signed Count      = 0;
 
+  if( BI.isIdenticalTo(&Target) )
+    return 0;
+
   for( auto &BB : F.getBasicBlockList() ){
     for( auto &Inst : BB.getInstList() ){
       if( !F.isDeclaration() ){
@@ -353,6 +358,7 @@ bool SCSigMap::TranslateBranch(Function &F, Instruction &I){
       Signals->InsertSignal(new SCSig(BR_N,
                                       1,
                                       GetBranchDistance(F,I,BI->getSuccessor(0)->front()),
+                                      0, // alternate branch is 0
                                       F.getName().str()));
   }else{
 #if 0
@@ -360,10 +366,39 @@ bool SCSigMap::TranslateBranch(Function &F, Instruction &I){
     std::cout << "                  TARGET0 : " << BI->getSuccessor(0)->getName().str() << std::endl;
     std::cout << "                  TARGET1 : " << BI->getSuccessor(1)->getName().str() << std::endl;
 #endif
-    // TODO: finish this
-    //signed Distance0 = GetBranchDistance(F,I,BI->getSuccessor(0)->front());
-    //signed Distance1 = GetBranchDistance(F,I,BI->getSuccessor(1)->front());
-    Signals->InsertSignal(new SCSig(BR_N,1,F.getName().str()));
+    bool DTNull = IsNullBranchTarget(BI->getSuccessor(0)->front());
+    bool DFNull = IsNullBranchTarget(BI->getSuccessor(1)->front());
+
+    if( !DTNull && !DFNull ){
+      // both branches are not null, generate two-ended branch
+      Signals->InsertSignal(new SCSig(BR_N,
+                                      1,
+                                      GetBranchDistance(F,I,BI->getSuccessor(0)->front()),
+                                      GetBranchDistance(F,I,BI->getSuccessor(1)->front()),
+                                      F.getName().str()));
+    }else if( !DTNull & DFNull ){
+      // alternate branch is null, generate a single ended branch
+      // this is effectively now an unconditional branch
+      Signals->InsertSignal(new SCSig(BR_N,
+                                      1,
+                                      GetBranchDistance(F,I,BI->getSuccessor(0)->front()),
+                                      0,  // alternate branch
+                                      F.getName().str()));
+    }else if( DTNull & !DFNull ){
+      // primary branch is null, generate a single ended branch with alternate as the target
+      // this is effectively now an unconditional branch
+      Signals->InsertSignal(new SCSig(BR_N,
+                                      1,
+                                      GetBranchDistance(F,I,BI->getSuccessor(1)->front()),
+                                      0,  // alternate branch
+                                      F.getName().str()));
+    }else{
+      // both branches are null, return an error
+      this->PrintMsg( L_ERROR, "Primary and alternate branch targets are unused uOps: " + 
+                               BI->getSuccessor(0)->getName().str() + ":" +
+                               BI->getSuccessor(1)->getName().str());
+      return false;
+    }
   }
 
   return true;
