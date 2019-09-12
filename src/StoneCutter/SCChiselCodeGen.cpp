@@ -128,9 +128,9 @@ void SCChiselCodeGen::WriteUCodeTableComment(SCPipeInfo *PInfo){
   }
 
   if( PInfo->GetNumUniqueImmFields() > 0 ){
-    OutFile << "| IMM_SEL | EN_IMM | ALU_OP | EN_ALU | LD_MA | MEM_WR | EN_MEM | uBr_SEL | uBr_TARGET |" << std::endl;
+    OutFile << "| IMM_SEL | EN_IMM | ALU_OP | EN_ALU | LD_MA | MEM_WR | EN_MEM | uBr_SEL | uBr_TARGET | uBr_ALTERNATE |" << std::endl;
   }else{
-    OutFile << "| ALU_OP | EN_ALU | LD_MA | MEM_WR | EN_MEM | uBr_SEL | uBr_TARGET |" << std::endl;
+    OutFile << "| ALU_OP | EN_ALU | LD_MA | MEM_WR | EN_MEM | uBr_SEL | uBr_TARGET | uBr_ALTERNATE |" << std::endl;
   }
   OutFile << "//----------------------------------------------------------------" << std::endl;
   OutFile << "// Descriptions" << std::endl;
@@ -153,6 +153,9 @@ void SCChiselCodeGen::WriteUCodeTableComment(SCPipeInfo *PInfo){
   OutFile << "// - MEM_WR = Determines is operation is read/write" << std::endl;
   OutFile << "// - EN_MEM = Memory enable signal **" << std::endl;
   OutFile << "//----------------------------------------------------------------" << std::endl;
+  OutFile << "// - uBr_TARGET = Primary uOp branch target (next operation)" << std::endl;
+  OutFile << "// - uBr_ALTERNATE = Alternate uOp branch target (only used in branch operations)" << std::endl;
+  OutFile << "//----------------------------------------------------------------" << std::endl;
   OutFile << "// ** - Only one of these signals can be selected within a give uOp" << std::endl;
   OutFile << "//----------------------------------------------------------------" << std::endl;
   OutFile << std::endl << std::endl;
@@ -162,7 +165,7 @@ void SCChiselCodeGen::WriteFETCHUOp(SCPipeInfo *PInfo){
   // LABEL | LD_IR | REG_SEL | REG_WR | EN_REG
   // <LD_regfield,...>
   // <IMM_SEL,EN_IMM>
-  // ALU_OP | EN_ALU | LD_MA | MEM_WR | EN_MEM | uBr_SEL | uBr_Target
+  // ALU_OP | EN_ALU | LD_MA | MEM_WR | EN_MEM | uBr_SEL | uBr_Target | uBr_Alternate
 
   //-- [MA <- PC]
   //-- [A <- PC]
@@ -179,7 +182,7 @@ void SCChiselCodeGen::WriteFETCHUOp(SCPipeInfo *PInfo){
   if( PInfo->GetNumUniqueImmFields() > 0 ){
     OutFile << "IS_X, IEN_0, ";
   }
-  OutFile << "ALU_X, AEN_0, LDMA_1, MWR_X, MEN_0, UBR_N), \"X\")" << std::endl;
+  OutFile << "ALU_X, AEN_0, LDMA_1, MWR_X, MEN_0, UBR_N), \"X\", \"X\")" << std::endl;
 
   //-- [IR <- MEM]
   OutFile << "\t\t\tSignals(Cat(LDIR_1, RS_X, RWR_X, REN_0, ";
@@ -195,7 +198,7 @@ void SCChiselCodeGen::WriteFETCHUOp(SCPipeInfo *PInfo){
   if( PInfo->GetNumUniqueImmFields() > 0 ){
     OutFile << "IS_X, IEN_0, ";
   }
-  OutFile << "ALU_X, AEN_0, LDMA_0, MWR_0, MEN_1, UBR_S), \"X\")" << std::endl;
+  OutFile << "ALU_X, AEN_0, LDMA_0, MWR_0, MEN_1, UBR_S), \"X\", \"X\")" << std::endl;
 
   //-- [PC <- A + 4]
   OutFile << "\t\t\tSignals(Cat(LDIR_0, RS_X, RWR_1, REN_1, ";
@@ -212,14 +215,14 @@ void SCChiselCodeGen::WriteFETCHUOp(SCPipeInfo *PInfo){
     OutFile << "IS_X, IEN_0, ";
   }
   // TODO : need to derive what the width of the instructions are
-  OutFile << "ALU_INC_A_4, AEN_1, LDMA_X, MWR_X, MEN_0, UBR_D), \"X\")" << std::endl;
+  OutFile << "ALU_INC_A_4, AEN_1, LDMA_X, MWR_X, MEN_0, UBR_D), \"X\", \"X\")" << std::endl;
 }
 
 void SCChiselCodeGen::WriteNOPUOp(SCPipeInfo *PInfo){
   // LABEL | LD_IR | REG_SEL | REG_WR | EN_REG
   // <LD_regfield,...>
   // <IMM_SEL,EN_IMM>
-  // ALU_OP | EN_ALU | LD_MA | MEM_WR | EN_MEM | uBr_SEL | uBr_Target
+  // ALU_OP | EN_ALU | LD_MA | MEM_WR | EN_MEM | uBr_SEL | uBr_Target | uBr_Alternate
 
   //-- [uBr to FETCH]
   OutFile << "\t\t,Label(\"U_NOP\"), Signals(Cat(LDIR_0, RS_X, RWR_X, REN_0, ";
@@ -231,14 +234,14 @@ void SCChiselCodeGen::WriteNOPUOp(SCPipeInfo *PInfo){
   if( PInfo->GetNumUniqueImmFields() > 0 ){
     OutFile << "IS_X, IEN_0, ";
   }
-  OutFile << "ALU_X, AEN_0, LDMA_X, MWR_X, MEN_X, UBR_J), \"U_FETCH\")" << std::endl;
+  OutFile << "ALU_X, AEN_0, LDMA_X, MWR_X, MEN_X, UBR_J), \"U_FETCH\", \"X\")" << std::endl;
 }
 
 void SCChiselCodeGen::WriteILLEGALUOp(SCPipeInfo *PInfo){
   // LABEL | LD_IR | REG_SEL | REG_WR | EN_REG
   // <LD_regfield,...>
   // <IMM_SEL,EN_IMM>
-  // ALU_OP | EN_ALU | LD_MA | MEM_WR | EN_MEM | uBr_SEL | uBr_Target
+  // ALU_OP | EN_ALU | LD_MA | MEM_WR | EN_MEM | uBr_SEL | uBr_Target | uBr_Alternate
 
   //-- [uBr to FETCH]
   OutFile << "\t\t,Label(\"U_ILLEGAL\"), Signals(Cat(LDIR_0, RS_X, RWR_X, REN_0, ";
@@ -250,7 +253,7 @@ void SCChiselCodeGen::WriteILLEGALUOp(SCPipeInfo *PInfo){
   if( PInfo->GetNumUniqueImmFields() > 0 ){
     OutFile << "IS_X, IEN_0, ";
   }
-  OutFile << "ALU_X, AEN_0, LDMA_X, MWR_X, MEN_X, UBR_N), \"X\")" << std::endl;
+  OutFile << "ALU_X, AEN_0, LDMA_X, MWR_X, MEN_X, UBR_N), \"X\", \"X\")" << std::endl;
 
   OutFile << "\t\t\tSignals(Cat(LDIR_0, RS_PC, RWR_1, REN_1, ";
   // write out the register selects
@@ -261,14 +264,14 @@ void SCChiselCodeGen::WriteILLEGALUOp(SCPipeInfo *PInfo){
   if( PInfo->GetNumUniqueImmFields() > 0 ){
     OutFile << "IS_X, IEN_0, ";
   }
-  OutFile << "ALU_EVEC, AEN_1, LDMA_X, MWR_X, MEN_0, UBR_J), \"U_FETCH\")" << std::endl;
+  OutFile << "ALU_EVEC, AEN_1, LDMA_X, MWR_X, MEN_0, UBR_J), \"U_FETCH\",\"X\")" << std::endl;
 }
 
 void SCChiselCodeGen::WriteUNIMPLUOp(SCPipeInfo *PInfo){
   // LABEL | LD_IR | REG_SEL | REG_WR | EN_REG
   // <LD_regfield,...>
   // <IMM_SEL,EN_IMM>
-  // ALU_OP | EN_ALU | LD_MA | MEM_WR | EN_MEM | uBr_SEL | uBr_Target
+  // ALU_OP | EN_ALU | LD_MA | MEM_WR | EN_MEM | uBr_SEL | uBr_Target | uBr_Alternate
 
   //-- [uBr to FETCH]
   OutFile << "\t\t,Label(\"U_UNIMP\"), Signals(Cat(LDIR_0, RS_X, RWR_X, REN_0, ";
@@ -280,14 +283,14 @@ void SCChiselCodeGen::WriteUNIMPLUOp(SCPipeInfo *PInfo){
   if( PInfo->GetNumUniqueImmFields() > 0 ){
     OutFile << "IS_X, IEN_0, ";
   }
-  OutFile << "ALU_X, AEN_0, LDMA_X, MWR_X, MEN_X, UBR_J), \"U_FETCH\")" << std::endl;
+  OutFile << "ALU_X, AEN_0, LDMA_X, MWR_X, MEN_X, UBR_J), \"U_FETCH\",\"X\")" << std::endl;
 }
 
 void SCChiselCodeGen::WriteINITPCUOp(SCPipeInfo *PInfo){
   // LABEL | LD_IR | REG_SEL | REG_WR | EN_REG
   // <LD_regfield,...>
   // <IMM_SEL,EN_IMM>
-  // ALU_OP | EN_ALU | LD_MA | MEM_WR | EN_MEM | uBr_SEL | uBr_Target
+  // ALU_OP | EN_ALU | LD_MA | MEM_WR | EN_MEM | uBr_SEL | uBr_Target | uBr_Alternate
 
   //-- [uBr to FETCH]
   OutFile << "\t\t,Label(\"U_INITPC\"), Signals(Cat(LDIR_0, RS_PC, RWR_1, REN_1, ";
@@ -299,7 +302,7 @@ void SCChiselCodeGen::WriteINITPCUOp(SCPipeInfo *PInfo){
   if( PInfo->GetNumUniqueImmFields() > 0 ){
     OutFile << "IS_X, IEN_0, ";
   }
-  OutFile << "ALU_X, AEN_0, LDMA_X, MWR_X, MEN_X, UBR_J), \"U_FETCH\")" << std::endl;
+  OutFile << "ALU_X, AEN_0, LDMA_X, MWR_X, MEN_X, UBR_J), \"U_FETCH\",\"X\")" << std::endl;
 }
 
 std::string SCChiselCodeGen::DecodeRegSlot( std::string &SigStr,
@@ -340,7 +343,7 @@ void SCChiselCodeGen::EmitNOP(SCSig *Sig,
   // LABEL | LD_IR | REG_SEL | REG_WR | EN_REG
   // <LD_regfield,...>
   // <IMM_SEL,EN_IMM>
-  // ALU_OP | EN_ALU | LD_MA | MEM_WR | EN_MEM | uBr_SEL | uBr_Target
+  // ALU_OP | EN_ALU | LD_MA | MEM_WR | EN_MEM | uBr_SEL | uBr_Target | uBr_Alternate
 
   //-- [uBr to FETCH]
   OutFile << "LDIR_0, RS_PC, RWR_1, REN_1, ";
@@ -412,7 +415,7 @@ void SCChiselCodeGen::EmitALU_OP(SCSig *Sig,
   // LABEL | LD_IR | REG_SEL | REG_WR | EN_REG
   // <LD_regfield,...>
   // <IMM_SEL,EN_IMM>
-  // ALU_OP | EN_ALU | LD_MA | MEM_WR | EN_MEM | uBr_SEL | uBr_Target
+  // ALU_OP | EN_ALU | LD_MA | MEM_WR | EN_MEM | uBr_SEL | uBr_Target | uBr_Alternate
 
   // Step 1: Query the inputs and look for any immediate fields and constants
   unsigned Constant = 0;      // unsigned constant integer; integers < 0 are converted to unsigned
@@ -813,6 +816,7 @@ void SCChiselCodeGen::WriteUOp( SCSig *Sig,
 
   // Step 2: decode the target uOp and write out the fields
   std::string BrTarget  = "X";     // the uOp branch target
+  std::string AltTarget = "X";     // the uOp alternate target
   std::string UOpBr     = "UBR_N"; // the uOp branch type
 
   switch( Sig->GetType() ){
@@ -986,7 +990,8 @@ void SCChiselCodeGen::WriteUOp( SCSig *Sig,
   }
 
   // Step 3: write out the uOp branch logic
-  OutFile << UOpBr << "), \"" << BrTarget << "\")" << std::endl;
+  OutFile << UOpBr << "), \"" << BrTarget
+          << "\", \"" << AltTarget << "\")" << std::endl;
 }
 
 bool SCChiselCodeGen::ExecuteUcodeCodegen(){

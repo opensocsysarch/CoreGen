@@ -345,11 +345,9 @@ bool SCSigMap::TranslateBranch(Function &F, Instruction &I){
 
   // determine the type of branch so we can calculate the target
   if( BI->isUnconditional() ){
-    // unconditional branch, calculate the target
-#if 0
-    std::cout << "UNCONDITIONAL NumSuccessors : " << BI->getNumSuccessors() << std::endl;
-    std::cout << "                     TARGET : " << BI->getSuccessor(0)->getName().str() << std::endl;
-#endif
+    //
+    // Unconditional Branch
+    //
     // If the branch is null, then the result will never be used in the instruction
     // implementation.  If its null, ignore the branch.  This is likely an unconditional 
     // branch to a 'ret' instruction (which will be ignored).
@@ -361,11 +359,9 @@ bool SCSigMap::TranslateBranch(Function &F, Instruction &I){
                                       0, // alternate branch is 0
                                       F.getName().str()));
   }else{
-#if 0
-    std::cout << "CONDITIONAL NumSuccessors : " << BI->getNumSuccessors() << std::endl;
-    std::cout << "                  TARGET0 : " << BI->getSuccessor(0)->getName().str() << std::endl;
-    std::cout << "                  TARGET1 : " << BI->getSuccessor(1)->getName().str() << std::endl;
-#endif
+    //
+    // Conditional Branch
+    //
     bool DTNull = IsNullBranchTarget(BI->getSuccessor(0)->front());
     bool DFNull = IsNullBranchTarget(BI->getSuccessor(1)->front());
 
