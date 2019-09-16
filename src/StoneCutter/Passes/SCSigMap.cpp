@@ -351,11 +351,16 @@ bool SCSigMap::TranslateBranch(Function &F, Instruction &I){
     // If the branch is null, then the result will never be used in the instruction
     // implementation.  If its null, ignore the branch.  This is likely an unconditional 
     // branch to a 'ret' instruction (which will be ignored).
-    // If the unconditional branch is not null, then insert a new signal
-    if( !IsNullBranchTarget(BI->getSuccessor(0)->front()) )
+    // If the unconditional branch target distance is +1, then this branch
+    // is unnecessary.
+    // If the unconditional branch is not null and the distance is > 1,
+    // then insert a new signal.
+    signed UncDist = GetBranchDistance(F,I,BI->getSuccessor(0)->front());
+    if( (!IsNullBranchTarget(BI->getSuccessor(0)->front())) &&
+        (UncDist != 1) )
       Signals->InsertSignal(new SCSig(BR_N,
                                       1,
-                                      GetBranchDistance(F,I,BI->getSuccessor(0)->front()),
+                                      UncDist,
                                       0, // alternate branch is 0
                                       F.getName().str()));
   }else{
