@@ -47,7 +47,7 @@ bool CoreGenCache::SetParentCache( CoreGenCache *P ){
 
   // do not insert duplicates
   auto it = std::find(Parent.begin(),Parent.end(),P);
-  if( Parent.begin() == Parent.end() || it != Parent.end() ){
+  if( it == Parent.end() ){
     Parent.push_back(P);
   }
 
