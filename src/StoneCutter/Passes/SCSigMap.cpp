@@ -340,6 +340,80 @@ signed SCSigMap::GetBranchDistance(Function &F, Instruction &BI, Instruction &Ta
   return TargetID - SourceID;
 }
 
+SigType SCSigMap::GetBranchType(Function &F, Instruction &I){
+  SigType Type = BR_N;          // default type
+  Value *V = I.getOperand(0);   // conditional branch var
+
+  for( auto &BB : F.getBasicBlockList() ){
+    if( !F.isDeclaration() ){
+      // walk all the instructions
+      for( auto &Inst : BB.getInstList() ){
+        Value *LHS = cast<Value>(&Inst);
+        if( V == LHS ){
+          std::cout << "V = " << V->getName().str()
+                    << " LHS = " << LHS->getName().str() << std::endl;
+          // found the initial cmp operation
+          auto *CI = dyn_cast<CmpInst>(&Inst);
+
+          switch( CI->getPredicate() ){
+          case CmpInst::FCMP_UNO:
+          case CmpInst::FCMP_ORD:
+          case CmpInst::FCMP_ONE:
+          case CmpInst::FCMP_FALSE:
+          case CmpInst::FCMP_UNE:
+          case CmpInst::ICMP_NE:
+            return BR_NE;
+            break;
+          case CmpInst::FCMP_TRUE:
+          case CmpInst::FCMP_UEQ:
+          case CmpInst::FCMP_OEQ:
+          case CmpInst::ICMP_EQ:
+            return BR_EQ;
+            break;
+          case CmpInst::FCMP_OGT:
+          case CmpInst::ICMP_SGT:
+            return BR_GT;
+            break;
+          case CmpInst::FCMP_OGE:
+          case CmpInst::ICMP_SGE:
+            return BR_GE;
+            break;
+          case CmpInst::FCMP_OLT:
+          case CmpInst::ICMP_SLT:
+            return BR_LT;
+            break;
+          case CmpInst::FCMP_OLE:
+          case CmpInst::ICMP_SLE:
+            return BR_LE;
+            break;
+          case CmpInst::FCMP_UGT:
+          case CmpInst::ICMP_UGT:
+            return BR_GTU;
+            break;
+          case CmpInst::FCMP_UGE:
+          case CmpInst::ICMP_UGE:
+            return BR_GEU;
+            break;
+          case CmpInst::FCMP_ULT:
+          case CmpInst::ICMP_ULT:
+            return BR_LTU;
+            break;
+          case CmpInst::FCMP_ULE:
+          case CmpInst::ICMP_ULE:
+            return BR_LEU;
+            break;
+          default:
+            return BR_N;
+            break;
+          }
+        }
+      }
+    }
+  }
+
+  return Type;
+}
+
 bool SCSigMap::TranslateBranch(Function &F, Instruction &I){
   auto *BI = dyn_cast<BranchInst>(&I);
 
@@ -372,7 +446,7 @@ bool SCSigMap::TranslateBranch(Function &F, Instruction &I){
 
     if( !DTNull && !DFNull ){
       // both branches are not null, generate two-ended branch
-      Signals->InsertSignal(new SCSig(BR_N,
+      Signals->InsertSignal(new SCSig(GetBranchType(F,I),
                                       1,
                                       GetBranchDistance(F,I,BI->getSuccessor(0)->front()),
                                       GetBranchDistance(F,I,BI->getSuccessor(1)->front()),
@@ -380,7 +454,7 @@ bool SCSigMap::TranslateBranch(Function &F, Instruction &I){
     }else if( !DTNull & DFNull ){
       // alternate branch is null, generate a single ended branch
       // this is effectively now an unconditional branch
-      Signals->InsertSignal(new SCSig(BR_N,
+      Signals->InsertSignal(new SCSig(GetBranchType(F,I),
                                       1,
                                       GetBranchDistance(F,I,BI->getSuccessor(0)->front()),
                                       0,  // alternate branch
@@ -388,7 +462,7 @@ bool SCSigMap::TranslateBranch(Function &F, Instruction &I){
     }else if( DTNull & !DFNull ){
       // primary branch is null, generate a single ended branch with alternate as the target
       // this is effectively now an unconditional branch
-      Signals->InsertSignal(new SCSig(BR_N,
+      Signals->InsertSignal(new SCSig(GetBranchType(F,I),
                                       1,
                                       GetBranchDistance(F,I,BI->getSuccessor(1)->front()),
                                       0,  // alternate branch

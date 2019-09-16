@@ -93,6 +93,9 @@ private:
   /// Determines if we need to ignore the instruction
   bool IsIgnoreInst(Instruction &I);
 
+  /// Derives the branch type using def-use chains from a source branch instruction
+  SigType GetBranchType(Function &F, Instruction &I);
+
 public:
   /// Default cosntructor
   SCSigMap(Module *TM, SCOpts *O, SCMsg *M);
