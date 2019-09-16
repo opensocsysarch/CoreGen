@@ -350,8 +350,6 @@ SigType SCSigMap::GetBranchType(Function &F, Instruction &I){
       for( auto &Inst : BB.getInstList() ){
         Value *LHS = cast<Value>(&Inst);
         if( V == LHS ){
-          std::cout << "V = " << V->getName().str()
-                    << " LHS = " << LHS->getName().str() << std::endl;
           // found the initial cmp operation
           auto *CI = dyn_cast<CmpInst>(&Inst);
 
