@@ -129,6 +129,28 @@ bool CoreGenBackend::ExecuteLLVMCodegen(){
   return rtn;
 }
 
+bool CoreGenBackend::IsValidName(std::string N){
+  // YAML Node Name Rules:
+  // - must have a length > 0
+  // - must start with an alpha character
+  // - must only contain alphanumeric characters, except '.'
+
+  if( N.length() == 0 ){
+    return false;
+  }
+  if( !std::isalpha(N[0]) ){
+    return false;
+  }
+  for( unsigned i=0; i<N.length(); i++ ){
+    if( N[i] != '.' ){
+      if( !std::isalnum(N[i]) ){
+        return false;
+      }
+    }
+  }
+  return true;
+}
+
 bool CoreGenBackend::ExecuteChiselCodegen(){
   // Create the codegen object
   CoreGenCodegen *CG = new CoreGenCodegen(Top,
