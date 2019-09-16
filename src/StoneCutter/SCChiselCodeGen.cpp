@@ -505,6 +505,7 @@ void SCChiselCodeGen::EmitBR_NE(SCSig *Sig,
                             unsigned NumSigs,
                             unsigned NSig,
                             std::string &BrTarget,
+                            std::string &AltTarget,
                             std::string &UOpBr,
                             SCPipeInfo *PInfo ){
 }
@@ -513,6 +514,7 @@ void SCChiselCodeGen::EmitBR_EQ(SCSig *Sig,
                             unsigned NumSigs,
                             unsigned NSig,
                             std::string &BrTarget,
+                            std::string &AltTarget,
                             std::string &UOpBr,
                             SCPipeInfo *PInfo ){
 }
@@ -521,6 +523,7 @@ void SCChiselCodeGen::EmitBR_GT(SCSig *Sig,
                             unsigned NumSigs,
                             unsigned NSig,
                             std::string &BrTarget,
+                            std::string &AltTarget,
                             std::string &UOpBr,
                             SCPipeInfo *PInfo ){
 }
@@ -529,6 +532,7 @@ void SCChiselCodeGen::EmitBR_GTU(SCSig *Sig,
                             unsigned NumSigs,
                             unsigned NSig,
                             std::string &BrTarget,
+                            std::string &AltTarget,
                             std::string &UOpBr,
                             SCPipeInfo *PInfo ){
 }
@@ -537,6 +541,7 @@ void SCChiselCodeGen::EmitBR_GE(SCSig *Sig,
                             unsigned NumSigs,
                             unsigned NSig,
                             std::string &BrTarget,
+                            std::string &AltTarget,
                             std::string &UOpBr,
                             SCPipeInfo *PInfo ){
 }
@@ -545,6 +550,7 @@ void SCChiselCodeGen::EmitBR_GEU(SCSig *Sig,
                             unsigned NumSigs,
                             unsigned NSig,
                             std::string &BrTarget,
+                            std::string &AltTarget,
                             std::string &UOpBr,
                             SCPipeInfo *PInfo ){
 }
@@ -553,6 +559,7 @@ void SCChiselCodeGen::EmitBR_LT(SCSig *Sig,
                             unsigned NumSigs,
                             unsigned NSig,
                             std::string &BrTarget,
+                            std::string &AltTarget,
                             std::string &UOpBr,
                             SCPipeInfo *PInfo ){
 }
@@ -561,6 +568,7 @@ void SCChiselCodeGen::EmitBR_LTU(SCSig *Sig,
                             unsigned NumSigs,
                             unsigned NSig,
                             std::string &BrTarget,
+                            std::string &AltTarget,
                             std::string &UOpBr,
                             SCPipeInfo *PInfo ){
 }
@@ -569,6 +577,7 @@ void SCChiselCodeGen::EmitBR_LE(SCSig *Sig,
                             unsigned NumSigs,
                             unsigned NSig,
                             std::string &BrTarget,
+                            std::string &AltTarget,
                             std::string &UOpBr,
                             SCPipeInfo *PInfo ){
 }
@@ -577,6 +586,7 @@ void SCChiselCodeGen::EmitBR_LEU(SCSig *Sig,
                             unsigned NumSigs,
                             unsigned NSig,
                             std::string &BrTarget,
+                            std::string &AltTarget,
                             std::string &UOpBr,
                             SCPipeInfo *PInfo ){
 }
@@ -893,34 +903,34 @@ void SCChiselCodeGen::WriteUOp( SCSig *Sig,
     EmitBR_N(Sig,NumSigs,NSig,BrTarget,UOpBr,PInfo);
     break;
   case BR_NE:
-    EmitBR_NE(Sig,NumSigs,NSig,BrTarget,UOpBr,PInfo);
+    EmitBR_NE(Sig,NumSigs,NSig,BrTarget,AltTarget,UOpBr,PInfo);
     break;
   case BR_EQ:
-    EmitBR_EQ(Sig,NumSigs,NSig,BrTarget,UOpBr,PInfo);
+    EmitBR_EQ(Sig,NumSigs,NSig,BrTarget,AltTarget,UOpBr,PInfo);
     break;
   case BR_GT:
-    EmitBR_GT(Sig,NumSigs,NSig,BrTarget,UOpBr,PInfo);
+    EmitBR_GT(Sig,NumSigs,NSig,BrTarget,AltTarget,UOpBr,PInfo);
     break;
   case BR_GTU:
-    EmitBR_GTU(Sig,NumSigs,NSig,BrTarget,UOpBr,PInfo);
+    EmitBR_GTU(Sig,NumSigs,NSig,BrTarget,AltTarget,UOpBr,PInfo);
     break;
   case BR_GE:
-    EmitBR_GE(Sig,NumSigs,NSig,BrTarget,UOpBr,PInfo);
+    EmitBR_GE(Sig,NumSigs,NSig,BrTarget,AltTarget,UOpBr,PInfo);
     break;
   case BR_GEU:
-    EmitBR_GEU(Sig,NumSigs,NSig,BrTarget,UOpBr,PInfo);
+    EmitBR_GEU(Sig,NumSigs,NSig,BrTarget,AltTarget,UOpBr,PInfo);
     break;
   case BR_LT:
-    EmitBR_LT(Sig,NumSigs,NSig,BrTarget,UOpBr,PInfo);
+    EmitBR_LT(Sig,NumSigs,NSig,BrTarget,AltTarget,UOpBr,PInfo);
     break;
   case BR_LTU:
-    EmitBR_LTU(Sig,NumSigs,NSig,BrTarget,UOpBr,PInfo);
+    EmitBR_LTU(Sig,NumSigs,NSig,BrTarget,AltTarget,UOpBr,PInfo);
     break;
   case BR_LE:
-    EmitBR_LE(Sig,NumSigs,NSig,BrTarget,UOpBr,PInfo);
+    EmitBR_LE(Sig,NumSigs,NSig,BrTarget,AltTarget,UOpBr,PInfo);
     break;
   case BR_LEU:
-    EmitBR_LEU(Sig,NumSigs,NSig,BrTarget,UOpBr,PInfo);
+    EmitBR_LEU(Sig,NumSigs,NSig,BrTarget,AltTarget,UOpBr,PInfo);
     break;
   case BR_J:
     EmitBR_J(Sig,NumSigs,NSig,BrTarget,UOpBr,PInfo);

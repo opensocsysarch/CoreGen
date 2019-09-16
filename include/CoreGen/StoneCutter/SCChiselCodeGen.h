@@ -200,6 +200,7 @@ private:
                 unsigned NumSigs,
                 unsigned NSig,
                 std::string &BrTarget,
+                std::string &AltTarget,
                 std::string &UOpBr,
                 SCPipeInfo *PInfo );
 
@@ -208,6 +209,7 @@ private:
                 unsigned NumSigs,
                 unsigned NSig,
                 std::string &BrTarget,
+                std::string &AltTarget,
                 std::string &UOpBr,
                 SCPipeInfo *PInfo );
 
@@ -216,6 +218,7 @@ private:
                 unsigned NumSigs,
                 unsigned NSig,
                 std::string &BrTarget,
+                std::string &AltTarget,
                 std::string &UOpBr,
                 SCPipeInfo *PInfo );
 
@@ -224,6 +227,7 @@ private:
                 unsigned NumSigs,
                 unsigned NSig,
                 std::string &BrTarget,
+                std::string &AltTarget,
                 std::string &UOpBr,
                 SCPipeInfo *PInfo );
 
@@ -232,6 +236,7 @@ private:
                 unsigned NumSigs,
                 unsigned NSig,
                 std::string &BrTarget,
+                std::string &AltTarget,
                 std::string &UOpBr,
                 SCPipeInfo *PInfo );
 
@@ -240,6 +245,7 @@ private:
                 unsigned NumSigs,
                 unsigned NSig,
                 std::string &BrTarget,
+                std::string &AltTarget,
                 std::string &UOpBr,
                 SCPipeInfo *PInfo );
 
@@ -248,6 +254,7 @@ private:
                 unsigned NumSigs,
                 unsigned NSig,
                 std::string &BrTarget,
+                std::string &AltTarget,
                 std::string &UOpBr,
                 SCPipeInfo *PInfo );
 
@@ -256,6 +263,7 @@ private:
                 unsigned NumSigs,
                 unsigned NSig,
                 std::string &BrTarget,
+                std::string &AltTarget,
                 std::string &UOpBr,
                 SCPipeInfo *PInfo );
 
@@ -264,6 +272,7 @@ private:
                 unsigned NumSigs,
                 unsigned NSig,
                 std::string &BrTarget,
+                std::string &AltTarget,
                 std::string &UOpBr,
                 SCPipeInfo *PInfo );
 
@@ -272,6 +281,7 @@ private:
                 unsigned NumSigs,
                 unsigned NSig,
                 std::string &BrTarget,
+                std::string &AltTarget,
                 std::string &UOpBr,
                 SCPipeInfo *PInfo );
 
