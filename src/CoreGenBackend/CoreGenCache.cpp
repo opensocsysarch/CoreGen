@@ -70,6 +70,22 @@ CoreGenCache *CoreGenCache::GetParentCache(unsigned Idx){
   return Parent[Idx];
 }
 
+void CoreGenCache::DeleteParentCache( CoreGenCache *C ){
+  if( C == nullptr ){
+    Errno->SetError( CGERR_ERROR, "DeleteEndpoint: Node pointer is null" );
+  }
+
+  // make sure the node is a parent, then delete it from
+  // the parent vector
+  std::vector<CoreGenCache *>::iterator it;
+  it = find(Parent.begin(), Parent.end(), C);
+  if( it == Parent.end() ){
+    Errno->SetError( CGERR_ERROR,
+                     "DeleteParentCache: Cannot find target cache in parent cache list" );
+  }
+  Parent.erase(it);
+}
+
 bool CoreGenCache::HasParentCache( CoreGenCache *C ){
   for( unsigned i=0; i<Parent.size(); i++ ){
     if( Parent[i] == C ){

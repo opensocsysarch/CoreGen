@@ -81,6 +81,9 @@ public:
   /// Retrieve a pointer to a cache parent
   CoreGenCache *GetParentCache(unsigned Idx);
 
+  /// Delete a parent cache
+  void DeleteParentCache(CoreGenCache *C);
+
   /// Retrieve the number of parent caches
   unsigned GetNumParentCache() { return Parent.size(); }
 
