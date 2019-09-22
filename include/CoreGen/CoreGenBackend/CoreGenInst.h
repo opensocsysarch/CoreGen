@@ -40,7 +40,7 @@ private:
   std::string Syntax;                       ///< CoreGenInst: Instruction printing syntax
   std::vector<CoreGenEncoding *> Encodings; ///< CoreGenInst: Instruction encodings
 
-  bool ValidateSyntax(std::string S);       ///< CoreGenInst: Validates the syntax string
+  
 
 public:
   /// Default Constructor
@@ -53,6 +53,8 @@ public:
   /// Default Destructor
   ~CoreGenInst();
 
+  bool ValidateSyntax(std::string S);       ///< CoreGenInst: Validates the syntax string
+  
   /// Set the instruction format
   bool SetFormat( CoreGenInstFormat *Format );
 
