@@ -148,6 +148,9 @@ public:
   /// Set the SIMD flag and SIMD lane width
   bool SetSIMD( int width );
 
+  /// Unset the SIMD attributes
+  bool UnsetSIMD();
+
   /// Set the register index
   bool SetIndex( int index );
 

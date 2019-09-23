@@ -29,6 +29,12 @@ bool CoreGenReg::SetSIMD( int width ){
   return true;
 }
 
+bool CoreGenReg::UnsetSIMD(){
+  isSIMD = false;
+  SIMDwidth = 0;
+  return true;
+}
+
 bool CoreGenReg::SetWidth( int W ){
   // TODO: check the fixed values and ensure that the new width
   //       is within bounds
