@@ -61,6 +61,9 @@ public:
   /// Retrieve the target encoding
   CoreGenEncoding *GetEncoding( unsigned I );
 
+  /// clear all encodings
+  void ClearEncodings() { Encodings.clear(); }
+
   /// Set the target instruction
   bool SetTargetInst( CoreGenInst *Inst );
 
