@@ -7,7 +7,7 @@ if [ ! -f $SCCOMP_PATH/sccomp ]; then
   exit -1
 fi
 
-FILE=sigmap.sc
+FILE=./sigmap.sc
 DIR=test.SIGMAP.yaml
 
 $SCCOMP_PATH/sccomp -s $DIR $FILE
