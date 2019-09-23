@@ -29,6 +29,13 @@ bool CoreGenReg::SetSIMD( int width ){
   return true;
 }
 
+bool CoreGenReg::SetWidth( int W ){
+  // TODO: check the fixed values and ensure that the new width
+  //       is within bounds
+  width = W;
+  return true;
+}
+
 bool CoreGenReg::SetIndex( int Index ){
   index = Index;
   isIdxSet = true;

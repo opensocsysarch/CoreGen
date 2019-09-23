@@ -136,6 +136,9 @@ public:
   /// Retrieve the register pseudo name
   std::string GetPseudoName();
 
+  /// Set the register width
+  bool SetWidth(int Width);
+
   /// Set the register attributes
   bool SetAttrs( uint32_t Attr );
 
