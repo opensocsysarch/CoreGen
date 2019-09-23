@@ -7,24 +7,24 @@ if [ ! -f $SCCOMP_PATH/sccomp ]; then
   exit -1
 fi
 
-$SCCOMP_PATH/sccomp -v
+$SCCOMP_PATH/sccomp -V
 retVal=$?
-if [[ "$retval" -ne 0 ]]; then
-  echo "$SCCOMP_PATH/sccomp -v failed with return code = $retVal"
+if [[ "$retVal" -ne 0 ]]; then
+  echo "$SCCOMP_PATH/sccomp -V failed with return code = $retVal"
   exit $retVal
 fi
 
-$SCCOMP_PATH/sccomp -verbose
+$SCCOMP_PATH/sccomp -version
 retVal=$?
-if [[ "$retval" -ne 0 ]]; then
-  echo "$SCCOMP_PATH/sccomp -verbose failed with return code = $retVal"
+if [[ "$retVal" -ne 0 ]]; then
+  echo "$SCCOMP_PATH/sccomp -version failed with return code = $retVal"
   exit $retVal
 fi
 
-$SCCOMP_PATH/sccomp --verbose
+$SCCOMP_PATH/sccomp --version
 retVal=$?
-if [[ "$retval" -ne 0 ]]; then
-  echo "$SCCOMP_PATH/sccomp --verbose failed with return code = $retVal"
+if [[ "$retVal" -ne 0 ]]; then
+  echo "$SCCOMP_PATH/sccomp --version failed with return code = $retVal"
   exit $retVal
 fi
 

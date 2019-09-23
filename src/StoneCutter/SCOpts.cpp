@@ -30,6 +30,15 @@ SCOpts::SCOpts(SCMsg *M, int A, char **C)
 // ------------------------------------------------- DESTRUCTOR
 SCOpts::~SCOpts(){}
 
+// ------------------------------------------------- FIND_DASH
+bool SCOpts::FindDash(const std::string &s){
+  auto pos = s.find('-');
+  if( pos == std::string::npos ){
+    return false;
+  }
+  return true;
+}
+
 // ------------------------------------------------- SPLIT
 void SCOpts::Split(const std::string& s, char delim,
                       std::vector<std::string>& v) {
@@ -200,6 +209,10 @@ bool SCOpts::ParseOpts(bool *isHelp){
       }
       i++;
     }else{
+      if( FindDash(s) ){
+        Msgs->PrintMsg(L_ERROR, "Unknown argument: " + s );
+        return false;
+      }
       // assume this is a file space member
       FileList.push_back(s);
     }
@@ -215,8 +228,12 @@ bool SCOpts::ParseOpts(bool *isHelp){
     return false;
   }
 
+  if(*isHelp){
+    return true;
+  }
+
   // derive the ISA if it wasn't specified
-  if( ISA.length() == 0 ){
+  if( (!isListPass) && (ISA.length() == 0) ){
     ISA = GetISANameFromPath();
   }
 

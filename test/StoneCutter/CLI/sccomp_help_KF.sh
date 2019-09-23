@@ -9,26 +9,29 @@ fi
 
 $SCCOMP_PATH/sccomp -e
 retVal=$?
-if [[ "$retval" -eq 0 ]]; then
-  echo "$SCCOMP_PATH/sccomp -e correctly failed with return code = $retVal"
-else
+if [[ "$retVal" -eq 0 ]]; then
+  echo "$SCCOMP_PATH/sccomp -e was not caught as an error"
   exit 255
+else
+  echo "$SCCOMP_PATH/sccomp -e correctly failed with return code = $retVal"
 fi
 
 $SCCOMP_PATH/sccomp -hlep
 retVal=$?
-if [[ "$retval" -eq 0 ]]; then
-  echo "$SCCOMP_PATH/sccomp -hlep correctly failed with return code = $retVal"
-else
+if [[ "$retVal" -eq 0 ]]; then
+  echo "$SCCOMP_PATH/sccomp -hlep was not caught as an error"
   exit 255
+else
+  echo "$SCCOMP_PATH/sccomp -hlep correctly failed with return code = $retVal"
 fi
 
 $SCCOMP_PATH/sccomp --hepl
 retVal=$?
-if [[ "$retval" -eq 0 ]]; then
-  echo "$SCCOMP_PATH/sccomp --hepl correctly failed with return code = $retVal"
-else
+if [[ "$retVal" -eq 0 ]]; then
+  echo "$SCCOMP_PATH/sccomp --hepl was not caught as an error"
   exit 255
+else
+  echo "$SCCOMP_PATH/sccomp --hepl correctly failed with return code = $retVal"
 fi
 
 exit 0

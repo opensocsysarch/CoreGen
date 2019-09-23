@@ -7,34 +7,27 @@ if [ ! -f $SCCOMP_PATH/sccomp ]; then
   exit -1
 fi
 
-FILE=test.OPT.sc
-touch $FILE
-echo "# this is a stonecutter source file" >> $FILE 2>&1
+FILE=opt.sc
 
 $SCCOMP_PATH/sccomp -O $FILE
 retVal=$?
-if [[ "$retval" -ne 0 ]]; then
+if [[ "$retVal" -ne 0 ]]; then
   echo "$SCCOMP_PATH/sccomp -O $FILE failed with return code = $retVal"
-  rm -Rf $FILE
   exit $retVal
 fi
 
 $SCCOMP_PATH/sccomp -optimize $FILE
 retVal=$?
-if [[ "$retval" -ne 0 ]]; then
+if [[ "$retVal" -ne 0 ]]; then
   echo "$SCCOMP_PATH/sccomp -optimize $FILE failed with return code = $retVal"
-  rm -Rf $FILE
   exit $retVal
 fi
 
 $SCCOMP_PATH/sccomp --optimize $FILE
 retVal=$?
-if [[ "$retval" -ne 0 ]]; then
+if [[ "$retVal" -ne 0 ]]; then
   echo "$SCCOMP_PATH/sccomp --optimize $FILE failed with return code = $retVal"
-  rm -Rf $FILE
   exit $retVal
 fi
-
-rm -Rf $FILE
 
 exit 0

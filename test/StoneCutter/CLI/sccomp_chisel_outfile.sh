@@ -13,7 +13,7 @@ echo "# this is a stonecutter source file" >> $FILE 2>&1
 
 $SCCOMP_PATH/sccomp -c -f $FILE.out $FILE
 retVal=$?
-if [[ "$retval" -ne 0 ]]; then
+if [[ "$retVal" -ne 0 ]]; then
   echo "$SCCOMP_PATH/sccomp -c -f $FILE.out $FILE failed with return code = $retVal"
   rm -Rf $FILE
   exit $retVal
@@ -21,7 +21,7 @@ fi
 
 $SCCOMP_PATH/sccomp -chisel -outfile $FILE.out $FILE
 retVal=$?
-if [[ "$retval" -ne 0 ]]; then
+if [[ "$retVal" -ne 0 ]]; then
   echo "$SCCOMP_PATH/sccomp -chisel -outfile $FILE.out $FILE failed with return code = $retVal"
   rm -Rf $FILE
   exit $retVal
@@ -29,7 +29,7 @@ fi
 
 $SCCOMP_PATH/sccomp --chisel --outfile $FILE.out $FILE
 retVal=$?
-if [[ "$retval" -ne 0 ]]; then
+if [[ "$retVal" -ne 0 ]]; then
   echo "$SCCOMP_PATH/sccomp --chisel --outfile $FILE.out $FILE failed with return code = $retVal"
   rm -Rf $FILE
   exit $retVal

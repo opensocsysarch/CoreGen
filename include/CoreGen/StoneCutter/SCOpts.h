@@ -92,6 +92,9 @@ private:
   void Split(const std::string &s, char delim,
              std::vector<std::string>& v);
 
+  /// Determines if a dash is found in the input name
+  bool FindDash(const std::string &s);
+
   /// Derives the ISA name from the path
   std::string GetISANameFromPath();
 
