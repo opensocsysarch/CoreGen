@@ -34,6 +34,7 @@ bool CoreGenCache::SetChildCache( CoreGenCache *C ){
 }
 
 bool CoreGenCache::SetNullChildCache(){
+  DeleteChild(static_cast<CoreGenNode *>(Child));
   Child = nullptr;
   ParentLevel = false;
   return true;
