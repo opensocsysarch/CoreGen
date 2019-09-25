@@ -499,6 +499,15 @@ void SCChiselCodeGen::EmitBR_N(SCSig *Sig,
                             std::string &BrTarget,
                             std::string &UOpBr,
                             SCPipeInfo *PInfo ){
+  // LABEL | LD_IR | REG_SEL | REG_WR | EN_REG
+  // <LD_regfield,...>
+  // <IMM_SEL,EN_IMM>
+  // ALU_OP | EN_ALU | LD_MA | MEM_WR | EN_MEM | uBr_SEL | uBr_Target | uBr_Alternate
+
+  // emit a nop that includes the branch targets
+  EmitNOP(Sig,NumSigs,NSig,BrTarget,UOpBr,PInfo);
+  BrTarget = Sig->GetInst() + "."
+              + std::to_string(signed(NSig) + Sig->GetDistanceTrue());
 }
 
 void SCChiselCodeGen::EmitBR_NE(SCSig *Sig,
@@ -508,6 +517,17 @@ void SCChiselCodeGen::EmitBR_NE(SCSig *Sig,
                             std::string &AltTarget,
                             std::string &UOpBr,
                             SCPipeInfo *PInfo ){
+  // LABEL | LD_IR | REG_SEL | REG_WR | EN_REG
+  // <LD_regfield,...>
+  // <IMM_SEL,EN_IMM>
+  // ALU_OP | EN_ALU | LD_MA | MEM_WR | EN_MEM | uBr_SEL | uBr_Target | uBr_Alternate
+
+  // emit a nop that includes the branch targets
+  EmitNOP(Sig,NumSigs,NSig,BrTarget,UOpBr,PInfo);
+  BrTarget = Sig->GetInst() + "."
+              + std::to_string(signed(NSig) + Sig->GetDistanceTrue());
+  AltTarget = Sig->GetInst() + "."
+              + std::to_string(signed(NSig) + Sig->GetDistanceFalse());
 }
 
 void SCChiselCodeGen::EmitBR_EQ(SCSig *Sig,
@@ -517,6 +537,17 @@ void SCChiselCodeGen::EmitBR_EQ(SCSig *Sig,
                             std::string &AltTarget,
                             std::string &UOpBr,
                             SCPipeInfo *PInfo ){
+  // LABEL | LD_IR | REG_SEL | REG_WR | EN_REG
+  // <LD_regfield,...>
+  // <IMM_SEL,EN_IMM>
+  // ALU_OP | EN_ALU | LD_MA | MEM_WR | EN_MEM | uBr_SEL | uBr_Target | uBr_Alternate
+
+  // emit a nop that includes the branch targets
+  EmitNOP(Sig,NumSigs,NSig,BrTarget,UOpBr,PInfo);
+  BrTarget = Sig->GetInst() + "."
+              + std::to_string(signed(NSig) + Sig->GetDistanceTrue());
+  AltTarget = Sig->GetInst() + "."
+              + std::to_string(signed(NSig) + Sig->GetDistanceFalse());
 }
 
 void SCChiselCodeGen::EmitBR_GT(SCSig *Sig,
@@ -526,6 +557,17 @@ void SCChiselCodeGen::EmitBR_GT(SCSig *Sig,
                             std::string &AltTarget,
                             std::string &UOpBr,
                             SCPipeInfo *PInfo ){
+  // LABEL | LD_IR | REG_SEL | REG_WR | EN_REG
+  // <LD_regfield,...>
+  // <IMM_SEL,EN_IMM>
+  // ALU_OP | EN_ALU | LD_MA | MEM_WR | EN_MEM | uBr_SEL | uBr_Target | uBr_Alternate
+
+  // emit a nop that includes the branch targets
+  EmitNOP(Sig,NumSigs,NSig,BrTarget,UOpBr,PInfo);
+  BrTarget = Sig->GetInst() + "."
+              + std::to_string(signed(NSig) + Sig->GetDistanceTrue());
+  AltTarget = Sig->GetInst() + "."
+              + std::to_string(signed(NSig) + Sig->GetDistanceFalse());
 }
 
 void SCChiselCodeGen::EmitBR_GTU(SCSig *Sig,
@@ -535,6 +577,17 @@ void SCChiselCodeGen::EmitBR_GTU(SCSig *Sig,
                             std::string &AltTarget,
                             std::string &UOpBr,
                             SCPipeInfo *PInfo ){
+  // LABEL | LD_IR | REG_SEL | REG_WR | EN_REG
+  // <LD_regfield,...>
+  // <IMM_SEL,EN_IMM>
+  // ALU_OP | EN_ALU | LD_MA | MEM_WR | EN_MEM | uBr_SEL | uBr_Target | uBr_Alternate
+
+  // emit a nop that includes the branch targets
+  EmitNOP(Sig,NumSigs,NSig,BrTarget,UOpBr,PInfo);
+  BrTarget = Sig->GetInst() + "."
+              + std::to_string(signed(NSig) + Sig->GetDistanceTrue());
+  AltTarget = Sig->GetInst() + "."
+              + std::to_string(signed(NSig) + Sig->GetDistanceFalse());
 }
 
 void SCChiselCodeGen::EmitBR_GE(SCSig *Sig,
@@ -544,6 +597,17 @@ void SCChiselCodeGen::EmitBR_GE(SCSig *Sig,
                             std::string &AltTarget,
                             std::string &UOpBr,
                             SCPipeInfo *PInfo ){
+  // LABEL | LD_IR | REG_SEL | REG_WR | EN_REG
+  // <LD_regfield,...>
+  // <IMM_SEL,EN_IMM>
+  // ALU_OP | EN_ALU | LD_MA | MEM_WR | EN_MEM | uBr_SEL | uBr_Target | uBr_Alternate
+
+  // emit a nop that includes the branch targets
+  EmitNOP(Sig,NumSigs,NSig,BrTarget,UOpBr,PInfo);
+  BrTarget = Sig->GetInst() + "."
+              + std::to_string(signed(NSig) + Sig->GetDistanceTrue());
+  AltTarget = Sig->GetInst() + "."
+              + std::to_string(signed(NSig) + Sig->GetDistanceFalse());
 }
 
 void SCChiselCodeGen::EmitBR_GEU(SCSig *Sig,
@@ -553,6 +617,17 @@ void SCChiselCodeGen::EmitBR_GEU(SCSig *Sig,
                             std::string &AltTarget,
                             std::string &UOpBr,
                             SCPipeInfo *PInfo ){
+  // LABEL | LD_IR | REG_SEL | REG_WR | EN_REG
+  // <LD_regfield,...>
+  // <IMM_SEL,EN_IMM>
+  // ALU_OP | EN_ALU | LD_MA | MEM_WR | EN_MEM | uBr_SEL | uBr_Target | uBr_Alternate
+
+  // emit a nop that includes the branch targets
+  EmitNOP(Sig,NumSigs,NSig,BrTarget,UOpBr,PInfo);
+  BrTarget = Sig->GetInst() + "."
+              + std::to_string(signed(NSig) + Sig->GetDistanceTrue());
+  AltTarget = Sig->GetInst() + "."
+              + std::to_string(signed(NSig) + Sig->GetDistanceFalse());
 }
 
 void SCChiselCodeGen::EmitBR_LT(SCSig *Sig,
@@ -562,6 +637,17 @@ void SCChiselCodeGen::EmitBR_LT(SCSig *Sig,
                             std::string &AltTarget,
                             std::string &UOpBr,
                             SCPipeInfo *PInfo ){
+  // LABEL | LD_IR | REG_SEL | REG_WR | EN_REG
+  // <LD_regfield,...>
+  // <IMM_SEL,EN_IMM>
+  // ALU_OP | EN_ALU | LD_MA | MEM_WR | EN_MEM | uBr_SEL | uBr_Target | uBr_Alternate
+
+  // emit a nop that includes the branch targets
+  EmitNOP(Sig,NumSigs,NSig,BrTarget,UOpBr,PInfo);
+  BrTarget = Sig->GetInst() + "."
+              + std::to_string(signed(NSig) + Sig->GetDistanceTrue());
+  AltTarget = Sig->GetInst() + "."
+              + std::to_string(signed(NSig) + Sig->GetDistanceFalse());
 }
 
 void SCChiselCodeGen::EmitBR_LTU(SCSig *Sig,
@@ -571,6 +657,17 @@ void SCChiselCodeGen::EmitBR_LTU(SCSig *Sig,
                             std::string &AltTarget,
                             std::string &UOpBr,
                             SCPipeInfo *PInfo ){
+  // LABEL | LD_IR | REG_SEL | REG_WR | EN_REG
+  // <LD_regfield,...>
+  // <IMM_SEL,EN_IMM>
+  // ALU_OP | EN_ALU | LD_MA | MEM_WR | EN_MEM | uBr_SEL | uBr_Target | uBr_Alternate
+
+  // emit a nop that includes the branch targets
+  EmitNOP(Sig,NumSigs,NSig,BrTarget,UOpBr,PInfo);
+  BrTarget = Sig->GetInst() + "."
+              + std::to_string(signed(NSig) + Sig->GetDistanceTrue());
+  AltTarget = Sig->GetInst() + "."
+              + std::to_string(signed(NSig) + Sig->GetDistanceFalse());
 }
 
 void SCChiselCodeGen::EmitBR_LE(SCSig *Sig,
@@ -580,6 +677,17 @@ void SCChiselCodeGen::EmitBR_LE(SCSig *Sig,
                             std::string &AltTarget,
                             std::string &UOpBr,
                             SCPipeInfo *PInfo ){
+  // LABEL | LD_IR | REG_SEL | REG_WR | EN_REG
+  // <LD_regfield,...>
+  // <IMM_SEL,EN_IMM>
+  // ALU_OP | EN_ALU | LD_MA | MEM_WR | EN_MEM | uBr_SEL | uBr_Target | uBr_Alternate
+
+  // emit a nop that includes the branch targets
+  EmitNOP(Sig,NumSigs,NSig,BrTarget,UOpBr,PInfo);
+  BrTarget = Sig->GetInst() + "."
+              + std::to_string(signed(NSig) + Sig->GetDistanceTrue());
+  AltTarget = Sig->GetInst() + "."
+              + std::to_string(signed(NSig) + Sig->GetDistanceFalse());
 }
 
 void SCChiselCodeGen::EmitBR_LEU(SCSig *Sig,
@@ -589,6 +697,17 @@ void SCChiselCodeGen::EmitBR_LEU(SCSig *Sig,
                             std::string &AltTarget,
                             std::string &UOpBr,
                             SCPipeInfo *PInfo ){
+  // LABEL | LD_IR | REG_SEL | REG_WR | EN_REG
+  // <LD_regfield,...>
+  // <IMM_SEL,EN_IMM>
+  // ALU_OP | EN_ALU | LD_MA | MEM_WR | EN_MEM | uBr_SEL | uBr_Target | uBr_Alternate
+
+  // emit a nop that includes the branch targets
+  EmitNOP(Sig,NumSigs,NSig,BrTarget,UOpBr,PInfo);
+  BrTarget = Sig->GetInst() + "."
+              + std::to_string(signed(NSig) + Sig->GetDistanceTrue());
+  AltTarget = Sig->GetInst() + "."
+              + std::to_string(signed(NSig) + Sig->GetDistanceFalse());
 }
 
 void SCChiselCodeGen::EmitBR_J(SCSig *Sig,
@@ -597,6 +716,15 @@ void SCChiselCodeGen::EmitBR_J(SCSig *Sig,
                             std::string &BrTarget,
                             std::string &UOpBr,
                             SCPipeInfo *PInfo ){
+  // LABEL | LD_IR | REG_SEL | REG_WR | EN_REG
+  // <LD_regfield,...>
+  // <IMM_SEL,EN_IMM>
+  // ALU_OP | EN_ALU | LD_MA | MEM_WR | EN_MEM | uBr_SEL | uBr_Target | uBr_Alternate
+
+  // emit a nop that includes the branch targets
+  EmitNOP(Sig,NumSigs,NSig,BrTarget,UOpBr,PInfo);
+  BrTarget = Sig->GetInst() + "."
+              + std::to_string(signed(NSig) + Sig->GetDistanceTrue());
 }
 
 void SCChiselCodeGen::EmitBR_JR(SCSig *Sig,
@@ -605,6 +733,15 @@ void SCChiselCodeGen::EmitBR_JR(SCSig *Sig,
                             std::string &BrTarget,
                             std::string &UOpBr,
                             SCPipeInfo *PInfo ){
+  // LABEL | LD_IR | REG_SEL | REG_WR | EN_REG
+  // <LD_regfield,...>
+  // <IMM_SEL,EN_IMM>
+  // ALU_OP | EN_ALU | LD_MA | MEM_WR | EN_MEM | uBr_SEL | uBr_Target | uBr_Alternate
+
+  // emit a nop that includes the branch targets
+  EmitNOP(Sig,NumSigs,NSig,BrTarget,UOpBr,PInfo);
+  BrTarget = Sig->GetInst() + "."
+              + std::to_string(signed(NSig) + Sig->GetDistanceTrue());
 }
 
 void SCChiselCodeGen::EmitMUX_NE(SCSig *Sig,
@@ -704,7 +841,7 @@ void SCChiselCodeGen::EmitREG_READ(SCSig *Sig,
   // LABEL | LD_IR | REG_SEL | REG_WR | EN_REG
   // <LD_regfield,...>
   // <IMM_SEL,EN_IMM>
-  // ALU_OP | EN_ALU | LD_MA | MEM_WR | EN_MEM | uBr_SEL | uBr_Target
+  // ALU_OP | EN_ALU | LD_MA | MEM_WR | EN_MEM | uBr_SEL | uBr_Target | uBr_Alternate
 
   // decode the register select
   bool IsImm = false;
