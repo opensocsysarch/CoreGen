@@ -15,7 +15,10 @@ CoreGenPseudoInst::CoreGenPseudoInst(std::string N,
                                      CoreGenErrno *E)
   : CoreGenNode(CGPInst,N,E), Inst(I), ISA(nullptr) {
   InsertChild(static_cast<CoreGenNode *>(I));
-  ISA = I->GetISA();
+  if(I) 
+    ISA = I->GetISA();
+  else
+    ISA = nullptr;
   InsertChild(static_cast<CoreGenNode *>(ISA));
 }
 
