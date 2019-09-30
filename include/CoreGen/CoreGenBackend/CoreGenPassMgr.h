@@ -20,12 +20,14 @@
 #ifndef _COREGENPASSMGR_H_
 #define _COREGENPASSMGR_H_
 
+// Standard Headers
 #include <iostream>
 #include <iomanip>
 #include <string>
 #include <vector>
 #include <tuple>
 
+// CoreGen Headers
 #include "CoreGen/CoreGenBackend/CoreGenDAG.h"
 #include "CoreGen/CoreGenBackend/CoreGenProj.h"
 #include "CoreGen/CoreGenBackend/CoreGenErrno.h"

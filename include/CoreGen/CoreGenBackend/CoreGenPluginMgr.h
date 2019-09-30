@@ -35,7 +35,6 @@
 
 #include "CoreGen/CoreGenBackend/CoreGenErrno.h"
 #include "CoreGen/CoreGenBackend/CoreGenPlugin.h"
-//#include "CoreGenPluginTypes.h"
 
 class CoreGenPluginMgr{
 private:

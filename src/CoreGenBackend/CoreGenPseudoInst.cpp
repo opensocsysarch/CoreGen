@@ -14,12 +14,13 @@ CoreGenPseudoInst::CoreGenPseudoInst(std::string N,
                                      CoreGenInst *I,
                                      CoreGenErrno *E)
   : CoreGenNode(CGPInst,N,E), Inst(I), ISA(nullptr) {
-  InsertChild(static_cast<CoreGenNode *>(I));
-  if(I) 
+  if(I){
+    InsertChild(static_cast<CoreGenNode *>(I));
     ISA = I->GetISA();
-  else
+    InsertChild(static_cast<CoreGenNode *>(ISA));
+  }else{
     ISA = nullptr;
-  InsertChild(static_cast<CoreGenNode *>(ISA));
+  }
 }
 
 CoreGenPseudoInst::~CoreGenPseudoInst(){
