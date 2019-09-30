@@ -938,13 +938,13 @@ void CoreGenYaml::WriteCommYaml( YAML::Emitter *out,
     *out << YAML::Key << "Width";
     *out << YAML::Value << Comms[i]->GetWidth();
 
-
-    *out << YAML::Key << "Endpoints" << YAML::Value << YAML::BeginSeq;
-    for( unsigned j=0; j<Comms[i]->GetNumEndpoints(); j++ ){
-      *out << YAML::Key << Comms[i]->GetEndpoint(j)->GetName();
+    if(Comms[i]->GetNumEndpoints() > 0){
+      *out << YAML::Key << "Endpoints" << YAML::Value << YAML::BeginSeq;
+      for( unsigned j=0; j<Comms[i]->GetNumEndpoints(); j++ ){
+        *out << YAML::Key << Comms[i]->GetEndpoint(j)->GetName();
+      }
+      *out << YAML::EndSeq;
     }
-    *out << YAML::EndSeq;
-
 
     if( Comms[i]->IsRTL() ){
       *out << YAML::Key << "RTL";
