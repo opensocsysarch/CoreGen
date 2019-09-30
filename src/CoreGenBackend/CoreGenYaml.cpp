@@ -2698,10 +2698,16 @@ bool CoreGenYaml::ReadCoreYaml(const YAML::Node& CoreNodes,
     ASP += "coreISA(" + ASPName + ", " + ASPISAName + ").\n";
 
     // handle the isa
+    
     CoreGenISA *ISA = nullptr;
-    for( unsigned j=0; j<ISAs.size(); j++ ){
-      if( ISAs[j]->GetName() == ISAName ){
-        ISA = ISAs[j];
+    if(ISAName.size() > 0){
+      for( unsigned j=0; j<ISAs.size(); j++ ){
+        if( ISAs[j]->GetName() == ISAName ){
+          ISA = ISAs[j];
+        }
+      }
+      if( ISA == nullptr ){
+        return false;
       }
     }
 
