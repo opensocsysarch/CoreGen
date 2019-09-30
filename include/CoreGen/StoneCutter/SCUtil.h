@@ -89,6 +89,8 @@ inline bool SCFileExists(const std::string& name) {
 
 // SCUtil: Delete the target file
 inline bool SCDeleteFile(const std::string& name){
+  if( !SCFileExists(name) )
+    return true;
   if( remove(name.c_str()) != 0 ){
     return false;
   }else{

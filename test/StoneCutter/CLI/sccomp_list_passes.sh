@@ -9,7 +9,7 @@ fi
 
 $SCCOMP_PATH/sccomp --list-passes
 retVal=$?
-if [[ "$retval" -ne 0 ]]; then
+if [[ "$retVal" -ne 0 ]]; then
   echo "$SCCOMP_PATH/sccomp --list-passes failed with return code = $retVal"
   rm -Rf $FILE
   exit $retVal

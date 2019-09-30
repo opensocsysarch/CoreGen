@@ -150,7 +150,7 @@ bool CoreGenInst::SetFormat( CoreGenInstFormat *Format ){
 
     for( unsigned i=0; i<Encodings.size(); i++ ){
       DeleteChild(static_cast<CoreGenNode *>(Encodings[i]));
-      delete Encodings[i];
+      //delete Encodings[i];
       Encodings.erase(Encodings.end()-i);
     }
   }

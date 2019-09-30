@@ -29,6 +29,19 @@ bool CoreGenReg::SetSIMD( int width ){
   return true;
 }
 
+bool CoreGenReg::UnsetSIMD(){
+  isSIMD = false;
+  SIMDwidth = 0;
+  return true;
+}
+
+bool CoreGenReg::SetWidth( int W ){
+  // TODO: check the fixed values and ensure that the new width
+  //       is within bounds
+  width = W;
+  return true;
+}
+
 bool CoreGenReg::SetIndex( int Index ){
   index = Index;
   isIdxSet = true;
@@ -198,6 +211,19 @@ bool CoreGenReg::GetSubReg( unsigned Idx,
   End   = std::get<2>(SubRegs[Idx]);
 
   return true;
+}
+
+std::string CoreGenReg::GetSubRegNameByIndex(unsigned Idx){
+  return std::get<0>(SubRegs[Idx]);
+}
+
+void CoreGenReg::DeleteSubRegByIndex(unsigned Idx){
+  if( Idx > (SubRegs.size()-1) ){
+    Errno->SetError( CGERR_ERROR, "Register class " + std::to_string(Idx)
+              + " out of bounds");
+  }
+
+  SubRegs.erase(SubRegs.begin()+Idx);
 }
 
 bool CoreGenReg::InsertSubReg( std::string Name, unsigned Start, unsigned End ){

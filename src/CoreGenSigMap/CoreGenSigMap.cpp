@@ -308,12 +308,26 @@ bool CoreGenSigMap::ReadInstSignals(const YAML::Node& InstNodes){
         }
         unsigned Width = LSNode["Width"].as<unsigned>();
 
+        signed DT = 0;
+        if( CheckValidNode(LSNode,"DistanceTrue") ){
+          // if the node is valid, read it.
+          // otherwise, set the value to zero
+          DT = LSNode["DistanceTrue"].as<signed>();
+        }
+
+        signed DF = 0;
+        if( CheckValidNode(LSNode,"DistanceFalse") ){
+          // if the node is valid, read it.
+          // otherwise, set the value to zero
+          DF = LSNode["DistanceFalse"].as<signed>();
+        }
+
         std::string FusedOp;
         if( CheckValidNode(LSNode,"FusedOp") ){
           FusedOp = LSNode["FusedOp"].as<std::string>();
         }
 
-        Signals.push_back(new SCSig(Type,Width,Name,SigName));
+        Signals.push_back(new SCSig(Type,Width,DT,DF,Name,SigName));
         if( FusedOp.length() > 0 ){
           // write the fused op to the latest signal
           FusedOpType FType = StrToFusedOpType(FusedOp);
@@ -490,6 +504,8 @@ bool CoreGenSigMap::WriteInstSignals(YAML::Emitter *out){
       *out << YAML::Key << "Signal" << YAML::Value << CSigs[j]->GetName();
       *out << YAML::Key << "Type" << YAML::Value << CSigs[j]->SigTypeToStr();
       *out << YAML::Key << "Width" << YAML::Value << CSigs[j]->GetWidth();
+      *out << YAML::Key << "DistanceTrue" << YAML::Value << CSigs[j]->GetDistanceTrue();
+      *out << YAML::Key << "DistanceFalse" << YAML::Value << CSigs[j]->GetDistanceFalse();
       if( CSigs[j]->GetFusedType() != FOP_UNK )
         *out << YAML::Key << "FusedOp" << YAML::Value << CSigs[j]->FusedOpTypeToStr();
 

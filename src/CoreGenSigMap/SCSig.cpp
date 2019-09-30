@@ -10,30 +10,48 @@
 
 #include "CoreGen/CoreGenSigMap/SCSig.h"
 
-SCSig::SCSig(SigType T) : Type(T), SigWidth(0){
+SCSig::SCSig(SigType T)
+  : Type(T), SigWidth(0), DistanceTrue(0), DistanceFalse(0){
   Name = this->SigTypeToStr();
 }
 
-SCSig::SCSig(SigType T,unsigned W) : Type(T), FType(FOP_UNK), SigWidth(W){
+SCSig::SCSig(SigType T,unsigned W)
+  : Type(T), FType(FOP_UNK), SigWidth(W), DistanceTrue(0), DistanceFalse(0){
   Name = this->SigTypeToStr();
 }
 
 SCSig::SCSig(SigType T,std::string I)
-  : Type(T), FType(FOP_UNK), SigWidth(0), Inst(I){
+  : Type(T), FType(FOP_UNK), SigWidth(0),
+    DistanceTrue(0), DistanceFalse(0), Inst(I){
   Name = this->SigTypeToStr();
 }
 
 SCSig::SCSig(SigType T,unsigned W,std::string I)
-  : Type(T), FType(FOP_UNK), SigWidth(W), Inst(I){
+  : Type(T), FType(FOP_UNK), SigWidth(W),
+    DistanceTrue(0), DistanceFalse(0), Inst(I){
   Name = this->SigTypeToStr();
 }
 
 SCSig::SCSig(SigType T,std::string I,std::string N)
-  : Type(T), FType(FOP_UNK), SigWidth(0), Inst(I), Name(N){
+  : Type(T), FType(FOP_UNK), SigWidth(0),
+    DistanceTrue(0), DistanceFalse(0), Inst(I), Name(N){
+}
+
+SCSig::SCSig(SigType T,unsigned W,signed DT,signed DF,std::string I)
+  : Type(T), FType(FOP_UNK), SigWidth(W),
+    DistanceTrue(DT), DistanceFalse(DF), Inst(I){
+  Name = this->SigTypeToStr();
 }
 
 SCSig::SCSig(SigType T,unsigned W,std::string I,std::string N)
-  : Type(T), FType(FOP_UNK), SigWidth(W), Inst(I), Name(N){
+  : Type(T), FType(FOP_UNK), SigWidth(W),
+    DistanceTrue(0), DistanceFalse(0), Inst(I), Name(N){
+}
+
+SCSig::SCSig(SigType T,unsigned W,signed DT,signed DF,
+             std::string I,std::string N)
+  : Type(T), FType(FOP_UNK), SigWidth(W),
+    DistanceTrue(DT), DistanceFalse(DF), Inst(I), Name(N){
 }
 
 SCSig::~SCSig(){
@@ -51,6 +69,16 @@ std::string SCSig::GetInput( unsigned Idx ){
   if( Idx > (Inputs.size()-1) )
     return "";
   return Inputs[Idx];
+}
+
+bool SCSig::SetDistanceTrue( signed D ){
+  DistanceTrue = D;
+  return true;
+}
+
+bool SCSig::SetDistanceFalse( signed D ){
+  DistanceFalse = D;
+  return true;
 }
 
 bool SCSig::SetFusedType( FusedOpType T ){

@@ -7,35 +7,30 @@ if [ ! -f $SCCOMP_PATH/sccomp ]; then
   exit -1
 fi
 
-FILE=test.SIGMAP.sc
+FILE=./sigmap.sc
 DIR=test.SIGMAP.yaml
-touch $FILE
-echo "# this is a stonecutter source file" >> $FILE 2>&1
 
 $SCCOMP_PATH/sccomp -s $DIR $FILE
 retVal=$?
-if [[ "$retval" -ne 0 ]]; then
+if [[ "$retVal" -ne 0 ]]; then
   echo "$SCCOMP_PATH/sccomp -s $DIR $FILE failed with return code = $retVal"
-  rm -Rf $FILE
   exit $retVal
 fi
 
 $SCCOMP_PATH/sccomp -sigmap $DIR $FILE
 retVal=$?
-if [[ "$retval" -ne 0 ]]; then
+if [[ "$retVal" -ne 0 ]]; then
   echo "$SCCOMP_PATH/sccomp -sigmap $DIR $FILE failed with return code = $retVal"
-  rm -Rf $FILE
   exit $retVal
 fi
 
 $SCCOMP_PATH/sccomp --sigmap $DIR $FILE
 retVal=$?
-if [[ "$retval" -ne 0 ]]; then
+if [[ "$retVal" -ne 0 ]]; then
   echo "$SCCOMP_PATH/sccomp --sigmap $DIR $FILE failed with return code = $retVal"
-  rm -Rf $FILE
   exit $retVal
 fi
 
-rm -Rf $FILE $DIR
+rm -Rf $DIR
 
 exit 0

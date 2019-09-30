@@ -37,7 +37,8 @@ void DanglingRegionPass::DFS( CoreGenDAG *D3,
         DFS(D3,DimSize,j,visited);
       }
     }
-    if( D3->AdjMat[j][v] == 1 ){
+
+    if( D3->TransAdjMat[v][j] == 1 ){
       if( !visited[j] ){
         DFS(D3,DimSize,j,visited);
       }

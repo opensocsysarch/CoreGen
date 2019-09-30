@@ -127,8 +127,17 @@ public:
                   unsigned &Start,
                   unsigned &End );
 
+  /// Get SubReg name by index
+  std::string GetSubRegNameByIndex(unsigned Idx);
+
+  /// Delete SubReg by index
+  void DeleteSubRegByIndex(unsigned Idx);
+
   /// Retrieve the register pseudo name
   std::string GetPseudoName();
+
+  /// Set the register width
+  bool SetWidth(int Width);
 
   /// Set the register attributes
   bool SetAttrs( uint32_t Attr );
@@ -138,6 +147,9 @@ public:
 
   /// Set the SIMD flag and SIMD lane width
   bool SetSIMD( int width );
+
+  /// Unset the SIMD attributes
+  bool UnsetSIMD();
 
   /// Set the register index
   bool SetIndex( int index );

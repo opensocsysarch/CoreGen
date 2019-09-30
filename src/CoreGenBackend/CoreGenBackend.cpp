@@ -129,6 +129,28 @@ bool CoreGenBackend::ExecuteLLVMCodegen(){
   return rtn;
 }
 
+bool CoreGenBackend::IsValidName(std::string N){
+  // YAML Node Name Rules:
+  // - must have a length > 0
+  // - must start with an alpha character
+  // - must only contain alphanumeric characters, except '.'
+
+  if( N.length() == 0 ){
+    return false;
+  }
+  if( !std::isalpha(N[0]) ){
+    return false;
+  }
+  for( unsigned i=0; i<N.length(); i++ ){
+    if( N[i] != '.' ){
+      if( !std::isalnum(N[i]) ){
+        return false;
+      }
+    }
+  }
+  return true;
+}
+
 bool CoreGenBackend::ExecuteChiselCodegen(){
   // Create the codegen object
   CoreGenCodegen *CG = new CoreGenCodegen(Top,
@@ -1312,6 +1334,15 @@ CoreGenPseudoInst* CoreGenBackend::GetPInstNodeByName(std::string Name){
   return NULL;
 }
 
+CoreGenPseudoInst* CoreGenBackend::GetPInstNodeByInstName(std::string Name){
+  for(unsigned int i = 0; i < this->PInsts.size(); i++){
+    if(this->PInsts[i]->GetInst()->GetName() == Name){
+      return this->PInsts[i];
+    }
+  }
+  return NULL;
+}
+
 CoreGenInstFormat* CoreGenBackend::GetInstFormatNodeByName(std::string Name){
   for(unsigned int i = 0; i < this->Formats.size(); i++){
     if(this->Formats[i]->GetName() == Name){
@@ -1409,5 +1440,67 @@ CoreGenPlugin* CoreGenBackend::GetPluginNodeByName(std::string Name){
     }
   }
   return NULL;
+}
+
+CoreGenNode* CoreGenBackend::GetNodeByName( std::string Name ){
+
+  // stage 1: Determine what type of node this is
+  //          Certain nodes will require deleting
+  //          child nodes that are encodings.
+  //          Further, we must remove the necessary
+  //          nodes from the Top-level DAG lists
+  CoreGenNode *N;
+  N = GetSoCNodeByName(Name);
+  if(N) return N;
+  N = GetCoreNodeByName(Name);
+  if(N) return N;
+  N = GetInstFormatNodeByName(Name);
+  if(N) return N;
+  N = GetInstNodeByName(Name);
+  if(N) return N;
+  N = GetPInstNodeByName(Name);
+  if(N) return N;
+  N = GetRegClassNodeByName(Name);
+  if(N) return N;
+  N = GetRegNodeByName(Name);
+  if(N) return N;
+  N = GetISANodeByName(Name);
+  if(N) return N;
+  N = GetCacheNodeByName(Name);
+  if(N) return N;
+  /*
+  case CGEnc:
+    Errno->SetError( CGERR_ERROR, "Cannot delete individual encodings" );
+    return nullptr;
+    break;
+  */
+  N = GetExtNodeByName(Name);
+  if(N) return N;
+  N = GetCommNodeByName(Name);
+  if(N) return N;
+  N = GetSpadNodeByName(Name);
+  if(N) return N;
+  N = GetMCtrlNodeByName(Name);
+  if(N) return N;
+  N = GetVTPNodeByName(Name);
+  if(N) return N;
+  N = GetPluginNodeByName(Name);
+  if(N) return N;
+  /*
+  case CGTop:
+    Errno->SetError( CGERR_ERROR, "Top-level DAG nodes cannot be deleted" );
+    return nullptr;
+    break;
+  default:
+    // something went wrong
+    Errno->SetError( CGERR_ERROR, "Unrecognized node type for deletion" );
+    delete N;
+    return nullptr;
+    break;
+  }
+  */
+
+  // if we get here, something went wrong
+  return nullptr;
 }
 // EOF

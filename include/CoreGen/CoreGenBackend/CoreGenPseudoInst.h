@@ -61,6 +61,9 @@ public:
   /// Retrieve the target encoding
   CoreGenEncoding *GetEncoding( unsigned I );
 
+  /// clear all encodings
+  void ClearEncodings() { Encodings.clear(); }
+
   /// Set the target instruction
   bool SetTargetInst( CoreGenInst *Inst );
 
@@ -69,6 +72,9 @@ public:
 
   /// Sets the ISA to null
   bool SetNullISA() { ISA = nullptr; return true; }
+
+  /// Sets the ISA to null
+  bool SetISA(CoreGenISA *I) { ISA = I; return true; }
 
   /// Get the target instruction mapping
   CoreGenInst *GetInst() { return Inst; }

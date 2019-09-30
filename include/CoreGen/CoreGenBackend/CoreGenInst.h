@@ -40,8 +40,6 @@ private:
   std::string Syntax;                       ///< CoreGenInst: Instruction printing syntax
   std::vector<CoreGenEncoding *> Encodings; ///< CoreGenInst: Instruction encodings
 
-  bool ValidateSyntax(std::string S);       ///< CoreGenInst: Validates the syntax string
-
 public:
   /// Default Constructor
   CoreGenInst(CoreGenErrno *E);
@@ -53,55 +51,61 @@ public:
   /// Default Destructor
   ~CoreGenInst();
 
-  /// Set the instruction format
+  /// CoreGenInst: Validates the syntax string
+  bool ValidateSyntax(std::string S);
+
+  /// CoreGenInst: Set the instruction format
   bool SetFormat( CoreGenInstFormat *Format );
 
-  /// Set a field encoding
+  /// CoreGenInst: Set a field encoding
   bool SetEncoding( std::string Field, uint64_t value );
 
-  /// Set the ISA bundle type
+  /// CoreGenInst: Set the ISA bundle type
   bool SetISA( CoreGenISA *ISA );
 
-  /// Set the instruction printing syntax
+  /// CoreGenInst: Set the instruction printing syntax
   bool SetSyntax( std::string S );
 
-  /// Retrieve the encoding for the target field
+  /// CoreGenInst: Clear all encodings
+  void ClearEncodings() { Encodings.clear(); }
+
+  /// CoreGenInst: Retrieve the encoding for the target field
   uint64_t GetEncoding( std::string F, bool *Success );
 
-  /// Retrieve the instruction format
+  /// CoreGenInst: Retrieve the instruction format
   CoreGenInstFormat *GetFormat();
 
-  /// Retrieve the number of encodings
+  /// CoreGenInst: Retrieve the number of encodings
   unsigned GetNumEncodings() { return Encodings.size(); }
 
-  /// Retrieve the target encoding
+  /// CoreGenInst: Retrieve the target encoding
   CoreGenEncoding *GetEncoding(unsigned I);
 
-  /// Retrieve the target encoding by its field name
+  /// CoreGenInst: Retrieve the target encoding by its field name
   CoreGenEncoding *GetEncoding(std::string S);
 
-  /// Retrieve the ISA bundle type
+  /// CoreGenInst: Retrieve the ISA bundle type
   CoreGenISA *GetISA() { return isa; }
 
-  /// Set the StoneCutter implementation logic
+  /// CoreGenInst: Set the StoneCutter implementation logic
   bool SetImpl( std::string I ) { Impl = I; return true; }
 
-  /// Get the StoneCutter implementation logic
+  /// CoreGenInst: Get the StoneCutter implementation logic
   std::string GetImpl() { return Impl; }
 
-  /// Get the instruction syntax
+  /// CoreGenInst: Get the instruction syntax
   std::string GetSyntax() { return Syntax; }
 
-  /// Determine if StoneCutter logic is utilized
+  /// CoreGenInst: Determine if StoneCutter logic is utilized
   bool IsImpl() { if( Impl.length() > 0 ){ return true; }else{ return false;} }
 
-  /// Determine if the Syntax has been set
+  /// CoreGenInst: Determine if the Syntax has been set
   bool IsSyntax() { if( Syntax.length() > 0 ){ return true; }else{ return false;} }
 
-  /// Set a null format for the target instruction
+  /// CoreGenInst: Set a null format for the target instruction
   bool SetNullFormat();
 
-  /// Set a null ISA for the target instruction
+  /// CoreGenInst: Set a null ISA for the target instruction
   bool SetNullISA();
 };
 

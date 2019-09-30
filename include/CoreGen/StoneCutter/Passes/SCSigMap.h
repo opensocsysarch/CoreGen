@@ -81,6 +81,21 @@ private:
   /// Translates the compare operation to the appropriate signals
   bool TranslateCmpOp(Function &F, Instruction &I);
 
+  /// Translates the branch operation to the appropriate signals
+  bool TranslateBranch(Function &F, Instruction &I);
+
+  /// Determines the branch distance in instructions between the branch source and the branch target
+  signed GetBranchDistance(Function &F, Instruction &BI, Instruction &Target);
+
+  /// Determines if the branch target can be ignored
+  bool IsNullBranchTarget(Instruction &I);
+
+  /// Determines if we need to ignore the instruction
+  bool IsIgnoreInst(Instruction &I);
+
+  /// Derives the branch type using def-use chains from a source branch instruction
+  SigType GetBranchType(Function &F, Instruction &I);
+
 public:
   /// Default cosntructor
   SCSigMap(Module *TM, SCOpts *O, SCMsg *M);

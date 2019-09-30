@@ -292,6 +292,9 @@ public:
   /// Set the ASP Files to Test
   void SetASPFiles(std::vector<std::string>);
 
+  /// Checks to see whether the node name is valid
+  bool IsValidName(std::string Name);
+
   /// Get a Cache node by name
   CoreGenCache* GetCacheNodeByName(std::string Name);
 
@@ -303,6 +306,9 @@ public:
 
   /// Get a PInst node by name
   CoreGenPseudoInst* GetPInstNodeByName(std::string Name);
+
+  /// Get a PInst node by name
+  CoreGenPseudoInst* GetPInstNodeByInstName(std::string Name);
 
   /// Get an InstFormate node by name
   CoreGenInstFormat* GetInstFormatNodeByName(std::string Name);
@@ -336,6 +342,9 @@ public:
 
   /// Get a Plugin node by name
   CoreGenPlugin* GetPluginNodeByName(std::string Name);
+
+  /// Get a Node by name
+  CoreGenNode* GetNodeByName( std::string Name );
 
 };
 

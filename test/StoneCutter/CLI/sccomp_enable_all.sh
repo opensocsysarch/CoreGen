@@ -15,7 +15,7 @@ for P in $PASSES;do
   echo "...testing pass=$P"
   $SCCOMP_PATH/sccomp --enable-pass "$P" $FILE
   retVal=$?
-  if [[ "$retval" -ne 0 ]]; then
+  if [[ "$retVal" -ne 0 ]]; then
     echo "$SCCOMP_PATH/sccomp --enable-pass "$P" $FILE failed with return code = $retVal"
     exit $retVal
   fi

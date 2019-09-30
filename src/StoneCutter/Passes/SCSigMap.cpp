@@ -265,6 +265,218 @@ bool SCSigMap::TranslateSelectSig(Function &F, Instruction &I ){
   return Signals->InsertSignal(new SCSig(MUX,1,F.getName().str()));
 }
 
+bool SCSigMap::IsNullBranchTarget(Instruction &I){
+  if( I.getOpcode() == Instruction::Ret ){
+    //std::cout << "Null branch in Inst=" << std::string(I.getOpcodeName()) << std::endl;
+    return true;
+  }
+  return false;
+}
+
+bool SCSigMap::IsIgnoreInst(Instruction &I){
+  switch( I.getOpcode() ){
+  case Instruction::FPToUI :
+  case Instruction::FPToSI :
+  case Instruction::UIToFP :
+  case Instruction::SIToFP :
+  case Instruction::FPTrunc :
+  case Instruction::FPExt :
+  case Instruction::BitCast :
+  case Instruction::PtrToInt :
+  case Instruction::IntToPtr :
+  case Instruction::ExtractElement :
+  case Instruction::InsertElement :
+  case Instruction::ExtractValue :
+  case Instruction::InsertValue :
+  case Instruction::Trunc :
+  case Instruction::Fence :
+  case Instruction::AtomicCmpXchg :
+  case Instruction::AtomicRMW :
+  case Instruction::ShuffleVector :
+  case Instruction::AddrSpaceCast :
+  case Instruction::CleanupPad :
+  case Instruction::CatchPad :
+  case Instruction::GetElementPtr :
+  case Instruction::Alloca :
+  case Instruction::Ret :
+  case Instruction::PHI :
+  case Instruction::UserOp1 :
+  case Instruction::UserOp2 :
+  case Instruction::VAArg :
+  case Instruction::LandingPad :
+    // ignore these instructions
+    return true;
+    break;
+  default:
+    return false;
+    break;
+  }
+  return false;
+}
+
+signed SCSigMap::GetBranchDistance(Function &F, Instruction &BI, Instruction &Target ){
+  signed SourceID   = 0;
+  signed TargetID   = 0;
+  signed Count      = 0;
+
+  if( BI.isIdenticalTo(&Target) )
+    return 0;
+
+  for( auto &BB : F.getBasicBlockList() ){
+    for( auto &Inst : BB.getInstList() ){
+      if( !F.isDeclaration() ){
+        // walk all the instructions
+        if( Inst.isIdenticalTo( &BI ) )
+          SourceID = Count;
+        else if( Inst.isIdenticalTo( &Target ) )
+          TargetID = Count;
+
+        if( !IsIgnoreInst(Inst) )
+          ++Count;
+      }
+    }
+  }
+
+  return TargetID - SourceID;
+}
+
+SigType SCSigMap::GetBranchType(Function &F, Instruction &I){
+  SigType Type = BR_N;          // default type
+  Value *V = I.getOperand(0);   // conditional branch var
+
+  for( auto &BB : F.getBasicBlockList() ){
+    if( !F.isDeclaration() ){
+      // walk all the instructions
+      for( auto &Inst : BB.getInstList() ){
+        Value *LHS = cast<Value>(&Inst);
+        if( V == LHS ){
+          // found the initial cmp operation
+          auto *CI = dyn_cast<CmpInst>(&Inst);
+
+          switch( CI->getPredicate() ){
+          case CmpInst::FCMP_UNO:
+          case CmpInst::FCMP_ORD:
+          case CmpInst::FCMP_ONE:
+          case CmpInst::FCMP_FALSE:
+          case CmpInst::FCMP_UNE:
+          case CmpInst::ICMP_NE:
+            return BR_NE;
+            break;
+          case CmpInst::FCMP_TRUE:
+          case CmpInst::FCMP_UEQ:
+          case CmpInst::FCMP_OEQ:
+          case CmpInst::ICMP_EQ:
+            return BR_EQ;
+            break;
+          case CmpInst::FCMP_OGT:
+          case CmpInst::ICMP_SGT:
+            return BR_GT;
+            break;
+          case CmpInst::FCMP_OGE:
+          case CmpInst::ICMP_SGE:
+            return BR_GE;
+            break;
+          case CmpInst::FCMP_OLT:
+          case CmpInst::ICMP_SLT:
+            return BR_LT;
+            break;
+          case CmpInst::FCMP_OLE:
+          case CmpInst::ICMP_SLE:
+            return BR_LE;
+            break;
+          case CmpInst::FCMP_UGT:
+          case CmpInst::ICMP_UGT:
+            return BR_GTU;
+            break;
+          case CmpInst::FCMP_UGE:
+          case CmpInst::ICMP_UGE:
+            return BR_GEU;
+            break;
+          case CmpInst::FCMP_ULT:
+          case CmpInst::ICMP_ULT:
+            return BR_LTU;
+            break;
+          case CmpInst::FCMP_ULE:
+          case CmpInst::ICMP_ULE:
+            return BR_LEU;
+            break;
+          default:
+            return BR_N;
+            break;
+          }
+        }
+      }
+    }
+  }
+
+  return Type;
+}
+
+bool SCSigMap::TranslateBranch(Function &F, Instruction &I){
+  auto *BI = dyn_cast<BranchInst>(&I);
+
+  // determine the type of branch so we can calculate the target
+  if( BI->isUnconditional() ){
+    //
+    // Unconditional Branch
+    //
+    // If the branch is null, then the result will never be used in the instruction
+    // implementation.  If its null, ignore the branch.  This is likely an unconditional 
+    // branch to a 'ret' instruction (which will be ignored).
+    // If the unconditional branch target distance is +1, then this branch
+    // is unnecessary.
+    // If the unconditional branch is not null and the distance is > 1,
+    // then insert a new signal.
+    signed UncDist = GetBranchDistance(F,I,BI->getSuccessor(0)->front());
+    if( (!IsNullBranchTarget(BI->getSuccessor(0)->front())) &&
+        (UncDist != 1) )
+      Signals->InsertSignal(new SCSig(BR_N,
+                                      1,
+                                      UncDist,
+                                      0, // alternate branch is 0
+                                      F.getName().str()));
+  }else{
+    //
+    // Conditional Branch
+    //
+    bool DTNull = IsNullBranchTarget(BI->getSuccessor(0)->front());
+    bool DFNull = IsNullBranchTarget(BI->getSuccessor(1)->front());
+
+    if( !DTNull && !DFNull ){
+      // both branches are not null, generate two-ended branch
+      Signals->InsertSignal(new SCSig(GetBranchType(F,I),
+                                      1,
+                                      GetBranchDistance(F,I,BI->getSuccessor(0)->front()),
+                                      GetBranchDistance(F,I,BI->getSuccessor(1)->front()),
+                                      F.getName().str()));
+    }else if( !DTNull & DFNull ){
+      // alternate branch is null, generate a single ended branch
+      // this is effectively now an unconditional branch
+      Signals->InsertSignal(new SCSig(GetBranchType(F,I),
+                                      1,
+                                      GetBranchDistance(F,I,BI->getSuccessor(0)->front()),
+                                      0,  // alternate branch
+                                      F.getName().str()));
+    }else if( DTNull & !DFNull ){
+      // primary branch is null, generate a single ended branch with alternate as the target
+      // this is effectively now an unconditional branch
+      Signals->InsertSignal(new SCSig(GetBranchType(F,I),
+                                      1,
+                                      GetBranchDistance(F,I,BI->getSuccessor(1)->front()),
+                                      0,  // alternate branch
+                                      F.getName().str()));
+    }else{
+      // both branches are null, return an error
+      this->PrintMsg( L_ERROR, "Primary and alternate branch targets are unused uOps: " + 
+                               BI->getSuccessor(0)->getName().str() + ":" +
+                               BI->getSuccessor(1)->getName().str());
+      return false;
+    }
+  }
+
+  return true;
+}
+
 bool SCSigMap::TranslateCmpOp(Function &F, Instruction &I){
   // Examine the first operand of the compare instruction
   // and extract the appropriate type of signal
@@ -468,6 +680,10 @@ bool SCSigMap::CheckSigReq( Function &F, Instruction &I ){
     if( !TranslateSelectSig(F,I) )
       return false;
     break;
+  case Instruction::Br :
+    if( !TranslateBranch(F,I) )
+      return false;
+    break;
   case Instruction::FPToUI :
   case Instruction::FPToSI :
   case Instruction::UIToFP :
@@ -501,7 +717,8 @@ bool SCSigMap::CheckSigReq( Function &F, Instruction &I ){
     return true;
     break;
   default:
-    this->PrintMsg( L_ERROR, "Failed to decode instruction type" );
+    this->PrintMsg( L_ERROR, "Failed to decode instruction type: "
+                    + std::string(I.getOpcodeName()) );
     return false;
     break;
   }
