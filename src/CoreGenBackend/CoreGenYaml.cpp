@@ -3820,10 +3820,10 @@ bool CoreGenYaml::ReadCommYaml( const YAML::Node& CommNodes,
     if( Node["Endpoints"] ){
       const YAML::Node& ENode = Node["Endpoints"];
       if( ENode.size() == 0 ){
-        Errno->SetError(CGERR_ERROR,
-                        "Error: No endpoints defined for communication channel " +
+        Errno->SetError(CGERR_WARN,
+                        "Warning: No endpoints defined for communication channel " +
                         Name + " at line " + std::to_string(GetLineNum(ENode)) );
-        return false;
+        // We don't error out, but record a warning
       }
 
       // walk all the endpoints
