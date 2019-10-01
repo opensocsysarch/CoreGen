@@ -612,10 +612,15 @@ void CoreGenYaml::WriteInstYaml(YAML::Emitter *out,
     *out << YAML::Key << "Inst";
     *out << YAML::Value << Insts[i]->GetName();
 
-    *out << YAML::Key << "ISA";
-    *out << YAML::Value << Insts[i]->GetISA()->GetName();
-    *out << YAML::Key << "InstFormat";
-    *out << YAML::Value << Insts[i]->GetFormat()->GetName();
+    if( Insts[i]->GetISA() != nullptr ){
+      *out << YAML::Key << "ISA";
+      *out << YAML::Value << Insts[i]->GetISA()->GetName();
+    }
+
+    if( Insts[i]->GetFormat() != nullptr ){
+      *out << YAML::Key << "InstFormat";
+      *out << YAML::Value << Insts[i]->GetFormat()->GetName();
+    }
 
     // encodings
     *out << YAML::Key << "Encodings" << YAML::Value << YAML::BeginSeq;
@@ -2312,8 +2317,18 @@ bool CoreGenYaml::ReadInstYaml(const YAML::Node& InstNodes,
       Errno->SetError(CGERR_ERROR, "Invalid IR Node Name: " + Name );
       return false;
     }
-    std::string ISAName = Node["ISA"].as<std::string>();
-    std::string InstFormat = Node["InstFormat"].as<std::string>();
+
+
+    std::string ISAName;
+    if( CheckValidNode(Node,"ISA") ){
+      ISAName = Node["ISA"].as<std::string>();
+    }
+
+    std::string InstFormat;
+    if( CheckValidNode(Node,"InstFormat") ){
+      InstFormat = Node["InstFormat"].as<std::string>();
+    }
+
     std::string ASPName = PrepForASP(Name);
     std::string ASPISAName = PrepForASP(ISAName);
     std::string ASPIFName = PrepForASP(InstFormat);
@@ -2331,7 +2346,7 @@ bool CoreGenYaml::ReadInstYaml(const YAML::Node& InstNodes,
         IF = Formats[j];
       }
     }
-    if( IF == nullptr ){
+    if( IF == nullptr && (InstFormat.length() > 0 ) ){
       Errno->SetError(CGERR_ERROR,
                       "No InstFormat found to match " + InstFormat +
                       " for instruction " + Name );
@@ -2342,7 +2357,7 @@ bool CoreGenYaml::ReadInstYaml(const YAML::Node& InstNodes,
         ISA = ISAs[j];
       }
     }
-    if( ISA == nullptr ){
+    if( ISA == nullptr && (ISAName.length() > 0 ) ){
       Errno->SetError(CGERR_ERROR,
                       "No ISA found to match " + ISAName +
                       " for instruction " + Name );
@@ -2364,10 +2379,7 @@ bool CoreGenYaml::ReadInstYaml(const YAML::Node& InstNodes,
 
         std::string ASPFieldName = PrepForASP(FieldName);
         ASP += "encField(" + ASPFieldName + ").\n";
-#if 0
-        // currently unused
-        int FieldWidth = LFNode["EncodingWidth"].as<int>();
-#endif
+
         if( !CheckValidNode(LFNode,"EncodingValue") ){
           PrintParserError(FNode,
                             "Encodings",
