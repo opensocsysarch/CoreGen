@@ -18,8 +18,6 @@ CoreGenPseudoInst::CoreGenPseudoInst(std::string N,
     InsertChild(static_cast<CoreGenNode *>(I));
     ISA = I->GetISA();
     InsertChild(static_cast<CoreGenNode *>(ISA));
-  }else{
-    ISA = nullptr;
   }
 }
 
@@ -32,6 +30,12 @@ CoreGenPseudoInst::~CoreGenPseudoInst(){
 }
 
 bool CoreGenPseudoInst::ValidateSyntax( std::string S ){
+  if( Inst == nullptr ){
+    Errno->SetError( CGERR_ERROR, "Pseudo instruction " +
+                     this->GetName() + " has no backing instruction" );
+    return false;
+  }
+
   // check the first character
   if( (S[0]=='$') || (S[0]=='%') ){
     Errno->SetError( CGERR_ERROR, "Instruction syntax cannot start with '$' or '%' : " +
