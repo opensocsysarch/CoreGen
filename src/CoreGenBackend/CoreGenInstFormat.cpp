@@ -14,7 +14,8 @@ CoreGenInstFormat::CoreGenInstFormat(std::string N,
                                      CoreGenISA *I,
                                      CoreGenErrno *E)
   : CoreGenNode(CGInstF,N,E), ISA(I) {
-    InsertChild(static_cast<CoreGenNode *>(I));
+  if( ISA )
+    InsertChild(static_cast<CoreGenNode *>(ISA));
 }
 
 bool CoreGenInstFormat::InsertField( std::string Name, unsigned StartBit,
@@ -76,7 +77,10 @@ bool CoreGenInstFormat::InsertRegFieldMap( std::string Name,
       // found a match
       RegMap.insert( std::pair<std::string,CoreGenRegClass *>(Name,RClass) );
       CoreGenNode *N = static_cast<CoreGenNode *>(RClass);
-      return InsertChild(N);
+      if( !IsDuplicateNode(N) )
+        return InsertChild(N);
+      else
+        return true;
     }
   }
 

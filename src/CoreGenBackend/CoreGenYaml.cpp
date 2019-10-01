@@ -2100,9 +2100,6 @@ bool CoreGenYaml::ReadInstFormatYaml(const YAML::Node& InstFormatNodes,
     std::string ASPISA = PrepForASP(ISA);
 
     ASP += "instFormatISA(" + ASPName + ", " + ASPISA + ").\n";
-#if 0
-    int FormatWidth = Node["FormatWidth"].as<int>();
-#endif
 
     CoreGenISA *LISA = nullptr;
 
@@ -2167,12 +2164,7 @@ bool CoreGenYaml::ReadInstFormatYaml(const YAML::Node& InstFormatNodes,
 
         ASP += "fieldType(" + ASPFieldName + ", " + PrepForASP(FieldType) + ").\n";
         ASP += "fType(" + PrepForASP(FieldType) + ").\n";
-#if 0
-        // currently unused
-        int FieldWidth = LFNode["FieldWidth"].as<int>();
-        ASP += "fieldWidth(" + ASPFieldName + ", " + std::to_string(FieldWidth) + ").\n";
-        ASP += "int(" + std::to_string(FieldWidth) + ").\n";
-#endif
+
         if( !CheckValidNode(LFNode,"StartBit") ){
           PrintParserError(LFNode,"Fields","StartBit");
           return false;
@@ -2687,9 +2679,6 @@ bool CoreGenYaml::ReadCoreYaml(const YAML::Node& CoreNodes,
       if( ISAs[j]->GetName() == ISAName ){
         ISA = ISAs[j];
       }
-    }
-    if( ISA == nullptr ){
-      return false;
     }
 
     // create the object
