@@ -446,7 +446,8 @@ void CoreGenYaml::PrintCache( YAML::Emitter *out,
   *out << YAML::Value << Cache->GetSets();
   *out << YAML::Key << "Ways";
   *out << YAML::Value << Cache->GetWays();
-  if( Cache->IsParentLevel() ){
+  if( Cache->IsParentLevel() &&
+      (Cache->GetSubCache() != nullptr) ){
     *out << YAML::Key << "SubLevel";
     *out << YAML::Value << Cache->GetSubCache()->GetName();
   }
