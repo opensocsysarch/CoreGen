@@ -1942,10 +1942,9 @@ bool CoreGenYaml::ReadRegisterClassYaml(const YAML::Node& RegClassNodes,
     if( Node["Registers"] ){
       const YAML::Node& RNode = Node["Registers"];
       if( RNode.size() == 0 ){
-        Errno->SetError(CGERR_ERROR,
-                        "Error: No registers defined for RegisterClass " + Name
+        Errno->SetError(CGERR_WARN,
+                        "Warning: No registers defined for RegisterClass " + Name
                         + " at line " + std::to_string(GetLineNum(RNode)) );
-        return false;
       }
       for( unsigned j=0; j<RNode.size(); j++ ){
         // insert each node into the register class
