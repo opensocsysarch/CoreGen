@@ -623,19 +623,21 @@ void CoreGenYaml::WriteInstYaml(YAML::Emitter *out,
     }
 
     // encodings
-    *out << YAML::Key << "Encodings" << YAML::Value << YAML::BeginSeq;
-    for( unsigned j=0; j<Insts[i]->GetNumEncodings(); j++ ){
-      CoreGenEncoding *E = Insts[i]->GetEncoding(j);
-      *out << YAML::BeginMap;
-      *out << YAML::Key << "EncodingField";
-      *out << YAML::Value << E->GetField();
-      *out << YAML::Key << "EncodingWidth";
-      *out << YAML::Value << E->GetLength();
-      *out << YAML::Key << "EncodingValue";
-      *out << YAML::Value << E->GetEncoding();
-      *out << YAML::EndMap;
+    if(Insts[i]->GetNumEncodings() > 0){  
+      *out << YAML::Key << "Encodings" << YAML::Value << YAML::BeginSeq;
+      for( unsigned j=0; j<Insts[i]->GetNumEncodings(); j++ ){
+        CoreGenEncoding *E = Insts[i]->GetEncoding(j);
+        *out << YAML::BeginMap;
+        *out << YAML::Key << "EncodingField";
+        *out << YAML::Value << E->GetField();
+        *out << YAML::Key << "EncodingWidth";
+        *out << YAML::Value << E->GetLength();
+        *out << YAML::Key << "EncodingValue";
+        *out << YAML::Value << E->GetEncoding();
+        *out << YAML::EndMap;
+      }
+      *out << YAML::EndSeq;
     }
-    *out << YAML::EndSeq;
 
     // stonecutter impl
     if( Insts[i]->IsImpl() ){
