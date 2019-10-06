@@ -116,9 +116,8 @@ bool CoreGenPseudoInst::ValidateSyntax( std::string S ){
 
 bool CoreGenPseudoInst::SetSyntax( std::string S ){
   if( S.length() == 0 ){
-    Errno->SetError( CGERR_ERROR, "Syntax string is null: " +
-                     this->GetName() );
-    return false;
+    Syntax = "";
+    return true;
   }
   if( !ValidateSyntax(S) ){
     return false;

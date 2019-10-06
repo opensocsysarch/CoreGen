@@ -698,19 +698,22 @@ void CoreGenYaml::WritePseudoInstYaml(YAML::Emitter *out,
     }
 
     // encodings
-    *out << YAML::Key << "Encodings" << YAML::Value << YAML::BeginSeq;
-    for( unsigned j=0; j<PInsts[i]->GetNumEncodings(); j++ ){
-      CoreGenEncoding *E = PInsts[i]->GetEncoding(j);
-      *out << YAML::BeginMap;
-      *out << YAML::Key << "EncodingField";
-      *out << YAML::Value << E->GetField();
-      *out << YAML::Key << "EncodingWidth";
-      *out << YAML::Value << E->GetLength();
-      *out << YAML::Key << "EncodingValue";
-      *out << YAML::Value << E->GetEncoding();
-      *out << YAML::EndMap;
+    if(PInsts[i]->GetNumEncodings() > 0){
+      *out << YAML::Key << "Encodings" << YAML::Value << YAML::BeginSeq;
+      for( unsigned j=0; j<PInsts[i]->GetNumEncodings(); j++ ){
+        CoreGenEncoding *E = PInsts[i]->GetEncoding(j);
+        *out << YAML::BeginMap;
+        *out << YAML::Key << "EncodingField";
+        *out << YAML::Value << E->GetField();
+        *out << YAML::Key << "EncodingWidth";
+        *out << YAML::Value << E->GetLength();
+        *out << YAML::Key << "EncodingValue";
+        *out << YAML::Value << E->GetEncoding();
+        *out << YAML::EndMap;
+      }
+      *out << YAML::EndSeq;
     }
-    *out << YAML::EndSeq;
+    
 
     if( PInsts[i]->IsSyntax() ){
       *out << YAML::Key << "Syntax";
