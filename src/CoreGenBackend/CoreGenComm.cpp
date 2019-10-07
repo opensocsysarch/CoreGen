@@ -31,6 +31,22 @@ bool CoreGenComm::InsertEndpoint( CoreGenNode *N ){
     Errno->SetError( CGERR_ERROR,
                      "InsertEndpoint: Cannot connect communication channel to communication channel" );
     return false;
+  }else if( N->GetType() == CGInstF ){
+    Errno->SetError( CGERR_ERROR,
+                     "InsertEndpoint: Cannot connect communication channel to instruction format" );
+    return false;
+  }else if( N->GetType() == CGEnc ){
+    Errno->SetError( CGERR_ERROR,
+                     "InsertEndpoint: Cannot connect communication channel to encoding node" );
+    return false;
+  }else if( N->GetType() == CGInst ){
+    Errno->SetError( CGERR_ERROR,
+                     "InsertEndpoint: Cannot connect communication channel to instruction" );
+    return false;
+  }else if( N->GetType() == CGPInst ){
+    Errno->SetError( CGERR_ERROR,
+                     "InsertEndpoint: Cannot connect communication channel to pseudo instruction" );
+    return false;
   }
 
   // insert it into the endpoint vector and make it an official child
