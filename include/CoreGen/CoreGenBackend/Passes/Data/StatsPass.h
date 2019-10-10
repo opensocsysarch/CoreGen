@@ -46,7 +46,6 @@ private:
   unsigned MCtrlNode;       ///< MCtrl node counter
   unsigned VTPNode;         ///< VTP node counter
   unsigned PluginNode;      ///< Plugin node counter
-  unsigned EncNode;         ///< Encoding node counter
 
   /// Decode and record the node type
   void RecordNodeType( CoreGenNode *N );

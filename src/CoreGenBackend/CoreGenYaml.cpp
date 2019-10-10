@@ -446,7 +446,8 @@ void CoreGenYaml::PrintCache( YAML::Emitter *out,
   *out << YAML::Value << Cache->GetSets();
   *out << YAML::Key << "Ways";
   *out << YAML::Value << Cache->GetWays();
-  if( Cache->IsParentLevel() ){
+  if( Cache->IsParentLevel() &&
+      (Cache->GetSubCache() != nullptr) ){
     *out << YAML::Key << "SubLevel";
     *out << YAML::Value << Cache->GetSubCache()->GetName();
   }
@@ -611,25 +612,32 @@ void CoreGenYaml::WriteInstYaml(YAML::Emitter *out,
     *out << YAML::Key << "Inst";
     *out << YAML::Value << Insts[i]->GetName();
 
-    *out << YAML::Key << "ISA";
-    *out << YAML::Value << Insts[i]->GetISA()->GetName();
-    *out << YAML::Key << "InstFormat";
-    *out << YAML::Value << Insts[i]->GetFormat()->GetName();
+    if( Insts[i]->GetISA() != nullptr ){
+      *out << YAML::Key << "ISA";
+      *out << YAML::Value << Insts[i]->GetISA()->GetName();
+    }
+
+    if( Insts[i]->GetFormat() != nullptr ){
+      *out << YAML::Key << "InstFormat";
+      *out << YAML::Value << Insts[i]->GetFormat()->GetName();
+    }
 
     // encodings
-    *out << YAML::Key << "Encodings" << YAML::Value << YAML::BeginSeq;
-    for( unsigned j=0; j<Insts[i]->GetNumEncodings(); j++ ){
-      CoreGenEncoding *E = Insts[i]->GetEncoding(j);
-      *out << YAML::BeginMap;
-      *out << YAML::Key << "EncodingField";
-      *out << YAML::Value << E->GetField();
-      *out << YAML::Key << "EncodingWidth";
-      *out << YAML::Value << E->GetLength();
-      *out << YAML::Key << "EncodingValue";
-      *out << YAML::Value << E->GetEncoding();
-      *out << YAML::EndMap;
+    if(Insts[i]->GetNumEncodings() > 0){  
+      *out << YAML::Key << "Encodings" << YAML::Value << YAML::BeginSeq;
+      for( unsigned j=0; j<Insts[i]->GetNumEncodings(); j++ ){
+        CoreGenEncoding *E = Insts[i]->GetEncoding(j);
+        *out << YAML::BeginMap;
+        *out << YAML::Key << "EncodingField";
+        *out << YAML::Value << E->GetField();
+        *out << YAML::Key << "EncodingWidth";
+        *out << YAML::Value << E->GetLength();
+        *out << YAML::Key << "EncodingValue";
+        *out << YAML::Value << E->GetEncoding();
+        *out << YAML::EndMap;
+      }
+      *out << YAML::EndSeq;
     }
-    *out << YAML::EndSeq;
 
     // stonecutter impl
     if( Insts[i]->IsImpl() ){
@@ -679,25 +687,33 @@ void CoreGenYaml::WritePseudoInstYaml(YAML::Emitter *out,
     *out << YAML::Key << "PseudoInst";
     *out << YAML::Value << PInsts[i]->GetName();
 
-    *out << YAML::Key << "ISA";
-    *out << YAML::Value << PInsts[i]->GetISA()->GetName();
-    *out << YAML::Key << "Inst";
-    *out << YAML::Value << PInsts[i]->GetInst()->GetName();
+    if( PInsts[i]->GetISA() != nullptr ){
+      *out << YAML::Key << "ISA";
+      *out << YAML::Value << PInsts[i]->GetISA()->GetName();
+    }
+
+    if( PInsts[i]->GetInst() != nullptr ){
+      *out << YAML::Key << "Inst";
+      *out << YAML::Value << PInsts[i]->GetInst()->GetName();
+    }
 
     // encodings
-    *out << YAML::Key << "Encodings" << YAML::Value << YAML::BeginSeq;
-    for( unsigned j=0; j<PInsts[i]->GetNumEncodings(); j++ ){
-      CoreGenEncoding *E = PInsts[i]->GetEncoding(j);
-      *out << YAML::BeginMap;
-      *out << YAML::Key << "EncodingField";
-      *out << YAML::Value << E->GetField();
-      *out << YAML::Key << "EncodingWidth";
-      *out << YAML::Value << E->GetLength();
-      *out << YAML::Key << "EncodingValue";
-      *out << YAML::Value << E->GetEncoding();
-      *out << YAML::EndMap;
+    if(PInsts[i]->GetNumEncodings() > 0){
+      *out << YAML::Key << "Encodings" << YAML::Value << YAML::BeginSeq;
+      for( unsigned j=0; j<PInsts[i]->GetNumEncodings(); j++ ){
+        CoreGenEncoding *E = PInsts[i]->GetEncoding(j);
+        *out << YAML::BeginMap;
+        *out << YAML::Key << "EncodingField";
+        *out << YAML::Value << E->GetField();
+        *out << YAML::Key << "EncodingWidth";
+        *out << YAML::Value << E->GetLength();
+        *out << YAML::Key << "EncodingValue";
+        *out << YAML::Value << E->GetEncoding();
+        *out << YAML::EndMap;
+      }
+      *out << YAML::EndSeq;
     }
-    *out << YAML::EndSeq;
+    
 
     if( PInsts[i]->IsSyntax() ){
       *out << YAML::Key << "Syntax";
@@ -927,13 +943,13 @@ void CoreGenYaml::WriteCommYaml( YAML::Emitter *out,
     *out << YAML::Key << "Width";
     *out << YAML::Value << Comms[i]->GetWidth();
 
-
-    *out << YAML::Key << "Endpoints" << YAML::Value << YAML::BeginSeq;
-    for( unsigned j=0; j<Comms[i]->GetNumEndpoints(); j++ ){
-      *out << YAML::Key << Comms[i]->GetEndpoint(j)->GetName();
+    if(Comms[i]->GetNumEndpoints() > 0){
+      *out << YAML::Key << "Endpoints" << YAML::Value << YAML::BeginSeq;
+      for( unsigned j=0; j<Comms[i]->GetNumEndpoints(); j++ ){
+        *out << YAML::Key << Comms[i]->GetEndpoint(j)->GetName();
+      }
+      *out << YAML::EndSeq;
     }
-    *out << YAML::EndSeq;
-
 
     if( Comms[i]->IsRTL() ){
       *out << YAML::Key << "RTL";
@@ -1931,10 +1947,9 @@ bool CoreGenYaml::ReadRegisterClassYaml(const YAML::Node& RegClassNodes,
     if( Node["Registers"] ){
       const YAML::Node& RNode = Node["Registers"];
       if( RNode.size() == 0 ){
-        Errno->SetError(CGERR_ERROR,
-                        "Error: No registers defined for RegisterClass " + Name
+        Errno->SetError(CGERR_WARN,
+                        "Warning: No registers defined for RegisterClass " + Name
                         + " at line " + std::to_string(GetLineNum(RNode)) );
-        return false;
       }
       for( unsigned j=0; j<RNode.size(); j++ ){
         // insert each node into the register class
@@ -2099,9 +2114,6 @@ bool CoreGenYaml::ReadInstFormatYaml(const YAML::Node& InstFormatNodes,
     std::string ASPISA = PrepForASP(ISA);
 
     ASP += "instFormatISA(" + ASPName + ", " + ASPISA + ").\n";
-#if 0
-    int FormatWidth = Node["FormatWidth"].as<int>();
-#endif
 
     CoreGenISA *LISA = nullptr;
 
@@ -2166,12 +2178,7 @@ bool CoreGenYaml::ReadInstFormatYaml(const YAML::Node& InstFormatNodes,
 
         ASP += "fieldType(" + ASPFieldName + ", " + PrepForASP(FieldType) + ").\n";
         ASP += "fType(" + PrepForASP(FieldType) + ").\n";
-#if 0
-        // currently unused
-        int FieldWidth = LFNode["FieldWidth"].as<int>();
-        ASP += "fieldWidth(" + ASPFieldName + ", " + std::to_string(FieldWidth) + ").\n";
-        ASP += "int(" + std::to_string(FieldWidth) + ").\n";
-#endif
+
         if( !CheckValidNode(LFNode,"StartBit") ){
           PrintParserError(LFNode,"Fields","StartBit");
           return false;
@@ -2319,8 +2326,18 @@ bool CoreGenYaml::ReadInstYaml(const YAML::Node& InstNodes,
       Errno->SetError(CGERR_ERROR, "Invalid IR Node Name: " + Name );
       return false;
     }
-    std::string ISAName = Node["ISA"].as<std::string>();
-    std::string InstFormat = Node["InstFormat"].as<std::string>();
+
+
+    std::string ISAName;
+    if( CheckValidNode(Node,"ISA") ){
+      ISAName = Node["ISA"].as<std::string>();
+    }
+
+    std::string InstFormat;
+    if( CheckValidNode(Node,"InstFormat") ){
+      InstFormat = Node["InstFormat"].as<std::string>();
+    }
+
     std::string ASPName = PrepForASP(Name);
     std::string ASPISAName = PrepForASP(ISAName);
     std::string ASPIFName = PrepForASP(InstFormat);
@@ -2338,7 +2355,7 @@ bool CoreGenYaml::ReadInstYaml(const YAML::Node& InstNodes,
         IF = Formats[j];
       }
     }
-    if( IF == nullptr ){
+    if( IF == nullptr && (InstFormat.length() > 0 ) ){
       Errno->SetError(CGERR_ERROR,
                       "No InstFormat found to match " + InstFormat +
                       " for instruction " + Name );
@@ -2349,7 +2366,7 @@ bool CoreGenYaml::ReadInstYaml(const YAML::Node& InstNodes,
         ISA = ISAs[j];
       }
     }
-    if( ISA == nullptr ){
+    if( ISA == nullptr && (ISAName.length() > 0 ) ){
       Errno->SetError(CGERR_ERROR,
                       "No ISA found to match " + ISAName +
                       " for instruction " + Name );
@@ -2371,10 +2388,7 @@ bool CoreGenYaml::ReadInstYaml(const YAML::Node& InstNodes,
 
         std::string ASPFieldName = PrepForASP(FieldName);
         ASP += "encField(" + ASPFieldName + ").\n";
-#if 0
-        // currently unused
-        int FieldWidth = LFNode["EncodingWidth"].as<int>();
-#endif
+
         if( !CheckValidNode(LFNode,"EncodingValue") ){
           PrintParserError(FNode,
                             "Encodings",
@@ -2459,8 +2473,17 @@ bool CoreGenYaml::ReadPseudoInstYaml(const YAML::Node& PInstNodes,
       Errno->SetError(CGERR_ERROR, "Invalid IR Node Name: " + Name );
       return false;
     }
-    std::string ISAName = Node["ISA"].as<std::string>();
-    std::string InstName = Node["Inst"].as<std::string>();
+
+    std::string ISAName;
+    if( CheckValidNode(Node,"ISA") ){
+      ISAName = Node["ISA"].as<std::string>();
+    }
+
+    std::string InstName;
+    if( CheckValidNode(Node,"Inst") ){
+      InstName = Node["Inst"].as<std::string>();
+    }
+
     std::string ASPName = PrepForASP(Name);
     std::string ASPISAName = PrepForASP(ISAName);
     std::string ASPInstName = PrepForASP(InstName);
@@ -2478,7 +2501,8 @@ bool CoreGenYaml::ReadPseudoInstYaml(const YAML::Node& PInstNodes,
         ISA = ISAs[j];
       }
     }
-    if( ISA == nullptr ){
+    if( ISA == nullptr && (ISAName.length() > 0 ) ){
+      Errno->SetError(CGERR_ERROR, "Invalid Node: " + ISAName );
       return false;
     }
     for( unsigned j=0; j<Insts.size(); j++ ){
@@ -2486,12 +2510,14 @@ bool CoreGenYaml::ReadPseudoInstYaml(const YAML::Node& PInstNodes,
         Inst = Insts[j];
       }
     }
-    if( Inst == nullptr ){
+    if( Inst == nullptr && (InstName.length() > 0 ) ){
+      Errno->SetError(CGERR_ERROR, "Invalid Node: " + InstName );
       return false;
     }
 
     CoreGenPseudoInst *P = new CoreGenPseudoInst(Name,Inst,Errno);
     if( P == nullptr ){
+      Errno->SetError(CGERR_ERROR, "Error creating pseudo instruction: " + Name );
       return false;
     }
 
@@ -2503,10 +2529,6 @@ bool CoreGenYaml::ReadPseudoInstYaml(const YAML::Node& PInstNodes,
         std::string FieldName = LFNode["EncodingField"].as<std::string>();
         std::string ASPFieldName = PrepForASP(FieldName);
         ASP += "pEncField(" + ASPFieldName + ").\n";
-#if 0
-        // currently unused
-        int FieldWidth = LFNode["EncodingWidth"].as<int>();
-#endif
         int Value = LFNode["EncodingValue"].as<int>();
         std::string ASPEV = std::to_string(Value);
         ASP += "pEncFieldValue(" + ASPFieldName + ", " + ASPEV + ").\n";
@@ -2681,14 +2703,17 @@ bool CoreGenYaml::ReadCoreYaml(const YAML::Node& CoreNodes,
     ASP += "coreISA(" + ASPName + ", " + ASPISAName + ").\n";
 
     // handle the isa
+    
     CoreGenISA *ISA = nullptr;
-    for( unsigned j=0; j<ISAs.size(); j++ ){
-      if( ISAs[j]->GetName() == ISAName ){
-        ISA = ISAs[j];
+    if(ISAName.size() > 0){
+      for( unsigned j=0; j<ISAs.size(); j++ ){
+        if( ISAs[j]->GetName() == ISAName ){
+          ISA = ISAs[j];
+        }
       }
-    }
-    if( ISA == nullptr ){
-      return false;
+      if( ISA == nullptr ){
+        return false;
+      }
     }
 
     // create the object
@@ -3820,10 +3845,10 @@ bool CoreGenYaml::ReadCommYaml( const YAML::Node& CommNodes,
     if( Node["Endpoints"] ){
       const YAML::Node& ENode = Node["Endpoints"];
       if( ENode.size() == 0 ){
-        Errno->SetError(CGERR_ERROR,
-                        "Error: No endpoints defined for communication channel " +
+        Errno->SetError(CGERR_WARN,
+                        "Warning: No endpoints defined for communication channel " +
                         Name + " at line " + std::to_string(GetLineNum(ENode)) );
-        return false;
+        // We don't error out, but record a warning
       }
 
       // walk all the endpoints

@@ -19,8 +19,10 @@ CoreGenInst::CoreGenInst(std::string N,
                          CoreGenInstFormat *F,
                          CoreGenErrno *E)
   : CoreGenNode(CGInst,N,E), isa(I), format(F){
-  InsertChild(static_cast<CoreGenNode *>(F));
-  InsertChild(static_cast<CoreGenNode *>(I));
+  if( format )
+    InsertChild(static_cast<CoreGenNode *>(format));
+  if( isa )
+    InsertChild(static_cast<CoreGenNode *>(isa));
 }
 
 CoreGenInst::~CoreGenInst(){
@@ -119,9 +121,8 @@ bool CoreGenInst::ValidateSyntax(std::string S){
 
 bool CoreGenInst::SetSyntax( std::string S ){
   if( S.length() == 0 ){
-    Errno->SetError( CGERR_ERROR, "Syntax string is null: " +
-                     this->GetName() );
-    return false;
+    Syntax = "";
+    return true;
   }
   if( !ValidateSyntax(S) ){
     return false;

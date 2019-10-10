@@ -107,7 +107,7 @@ bool CoreGenNode::InsertChild( CoreGenNode *N ){
     if( !N ){ return false; }
     // search for duplicates
     if( IsDuplicateNode(N) ){
-      Errno->SetError(CGERR_WARN, "Duplicate child node found: " +
+      Errno->SetError(CGERR_WARN, this->GetName() + ": Duplicate child node found: " +
                       N->GetName() );
       return true;
     }

@@ -12,7 +12,8 @@
 
 CoreGenCore::CoreGenCore( std::string N, CoreGenISA *I, CoreGenErrno *E)
   : CoreGenNode(CGCore,N,E), Cache(NULL), ISA(I), ThreadUnits(1){
-  InsertChild(static_cast<CoreGenNode *>(ISA));
+  if( ISA )
+    InsertChild(static_cast<CoreGenNode *>(ISA));
 }
 
 CoreGenCore::~CoreGenCore(){

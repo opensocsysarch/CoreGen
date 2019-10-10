@@ -293,7 +293,7 @@ public:
   void SetASPFiles(std::vector<std::string>);
 
   /// Checks to see whether the node name is valid
-  bool IsValidName(std::string Name);
+  static bool IsValidName(std::string Name);
 
   /// Get a Cache node by name
   CoreGenCache* GetCacheNodeByName(std::string Name);
