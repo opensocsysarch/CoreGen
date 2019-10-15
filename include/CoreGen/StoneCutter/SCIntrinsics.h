@@ -43,6 +43,7 @@
 #include "CoreGen/StoneCutter/Intrinsics/SCLss.h"
 #include "CoreGen/StoneCutter/Intrinsics/SCFence.h"
 #include "CoreGen/StoneCutter/Intrinsics/SCBsel.h"
+#include "CoreGen/StoneCutter/Intrinsics/SCNop.h"
 
 #endif
 
