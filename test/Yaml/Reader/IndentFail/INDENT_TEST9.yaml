@@ -1,0 +1,54 @@
+ISAs:
+  - ISAName: TEST9.0.isa
+  - ISAName: TEST9.1.isa
+  - ISAName: TEST9.2.isa
+  - ISAName: TEST9.3.isa
+  - ISAName: TEST9.4.isa
+  - ISAName: TEST9.5.isa
+  - ISAName: TEST9.6.isa
+  - ISAName: TEST9.7.isa
+  - ISAName: TEST9.8.isa
+  - ISAName: TEST9.9.isa
+  - ISAName: TEST9.10.isa
+  - ISAName: TEST9.11.isa
+  - ISAName: TEST9.12.isa
+  - ISAName: TEST9.13.isa
+  - ISAName: TEST9.14.isa
+  - ISAName: TEST9.15.isa
+Cores:
+  - Core: TEST9.0.core
+    ISA: TEST9.0.isa
+  - Core: TEST9.1.core
+    ISA: TEST9.1.isa
+  - Core: TEST9.2.core
+    ISA: TEST9.2.isa
+  - Core: TEST9.3.core
+    ISA: TEST9.3.isa
+  - Core: TEST9.4.core
+    ISA: TEST9.4.isa
+  - Core: TEST9.5.core
+    ISA: TEST9.5.isa
+  - Core: TEST9.6.core
+    ISA: TEST9.6.isa
+  - Core: TEST9.7.core
+    ISA: TEST9.7.isa
+  - Core: TEST9.8.core
+    ISA: TEST9.8.isa
+  - Core: TEST9.9.core
+    ISA: TEST9.9.isa
+  - Core: TEST9.10.core
+    ISA: TEST9.10.isa
+  - Core: TEST9.11.core
+    ISA: TEST9.11.isa
+  - Core: TEST9.12.core
+    ISA: TEST9.12.isa
+  - Core: TEST9.13.core
+    ISA: TEST9.13.isa
+  - Core: TEST9.14.core
+    ISA: TEST9.14.isa
+  - Core: TEST9.15.core
+    ISA: TEST9.15.isa
+Socs:
+ - Soc: TEST9.soc
+    Cores:
+      - Core: TEST9.0.core

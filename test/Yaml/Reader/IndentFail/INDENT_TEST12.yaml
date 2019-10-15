@@ -1,0 +1,26 @@
+Registers:
+ - RegName: TEST12.reg
+    Width: 64
+    Index: 0
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+RegClasses:
+  - RegisterClassName: TEST12.regclass
+    NumRegisters: 1
+    Registers:
+      - TEST12.reg
+ISAs:
+  - ISAName: TEST12.isa
+Cores:
+  - Core: TEST12.core
+    ISA: TEST12.isa
+    RegisterClasses:
+      - RegClass: TEST12.regclass
+Socs:
+  - Soc: TEST12.soc
+    Cores:
+      - Core: TEST12.core

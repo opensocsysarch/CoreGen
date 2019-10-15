@@ -1,0 +1,7 @@
+ISAs:
+  - ISAName: TEST4.isa
+Cores:
+  - Core: TEST4.0.core
+  ISA: TEST4.isa
+- Core: TEST4.1.core
+    ISA: TEST4.isa

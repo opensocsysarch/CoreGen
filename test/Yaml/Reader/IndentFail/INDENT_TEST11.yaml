@@ -1,0 +1,26 @@
+Registers:
+  - RegName: foo
+    Width: 64
+    Index: 0
+    IsFixedValue: false
+    IsSIMD: false
+  RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+RegClasses:
+  - RegisterClassName: TEST11.regclass
+    NumRegisters: 0
+    Registers:
+      - foo
+ISAs:
+  - ISAName: TEST11.isa
+Cores:
+  - Core: TEST11.core
+    ISA: TEST11.isa
+    RegisterClasses:
+      - RegClass: TEST11.regclass
+Socs:
+  - Soc: TEST11.soc
+    Cores:
+      - Core: TEST11.core
