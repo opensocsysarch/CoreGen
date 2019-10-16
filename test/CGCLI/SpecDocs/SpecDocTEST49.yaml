@@ -1,3 +1,9 @@
+ProjectInfo:
+  - ProjectName: TEST49
+    ProjectRoot: ./
+    ProjectType: unknown
+    ChiselMajorVersion: 3
+    ChiselMinorVersion: 0
 Registers:
   - RegName: TEST49.0.reg
     Width: 64
@@ -9,6 +15,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST49.1.reg
     Width: 64
     Index: 1
@@ -19,6 +28,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST49.2.reg
     Width: 64
     Index: 2
@@ -29,6 +41,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST49.3.reg
     Width: 64
     Index: 3
@@ -39,6 +54,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST49.4.reg
     Width: 64
     Index: 4
@@ -49,6 +67,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST49.5.reg
     Width: 64
     Index: 5
@@ -59,6 +80,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST49.6.reg
     Width: 64
     Index: 6
@@ -69,6 +93,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST49.7.reg
     Width: 64
     Index: 7
@@ -79,6 +106,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST49.8.reg
     Width: 64
     Index: 8
@@ -89,6 +119,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST49.9.reg
     Width: 64
     Index: 9
@@ -99,6 +132,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST49.10.reg
     Width: 64
     Index: 10
@@ -109,6 +145,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST49.11.reg
     Width: 64
     Index: 11
@@ -119,6 +158,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST49.12.reg
     Width: 64
     Index: 12
@@ -129,6 +171,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST49.13.reg
     Width: 64
     Index: 13
@@ -139,6 +184,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST49.14.reg
     Width: 64
     Index: 14
@@ -149,6 +197,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST49.15.reg
     Width: 64
     Index: 15
@@ -159,6 +210,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST49.16.reg
     Width: 64
     Index: 16
@@ -169,6 +223,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST49.17.reg
     Width: 64
     Index: 17
@@ -179,6 +236,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST49.18.reg
     Width: 64
     Index: 18
@@ -189,6 +249,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST49.19.reg
     Width: 64
     Index: 19
@@ -199,6 +262,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST49.20.reg
     Width: 64
     Index: 20
@@ -209,6 +275,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST49.21.reg
     Width: 64
     Index: 21
@@ -219,6 +288,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST49.22.reg
     Width: 64
     Index: 22
@@ -229,6 +301,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST49.23.reg
     Width: 64
     Index: 23
@@ -239,6 +314,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST49.24.reg
     Width: 64
     Index: 24
@@ -249,6 +327,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST49.25.reg
     Width: 64
     Index: 25
@@ -259,6 +340,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST49.26.reg
     Width: 64
     Index: 26
@@ -269,6 +353,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST49.27.reg
     Width: 64
     Index: 27
@@ -279,6 +366,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST49.28.reg
     Width: 64
     Index: 28
@@ -289,6 +379,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST49.29.reg
     Width: 64
     Index: 29
@@ -299,6 +392,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST49.30.reg
     Width: 64
     Index: 30
@@ -309,6 +405,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST49.31.reg
     Width: 64
     Index: 31
@@ -319,6 +418,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST49.32.reg
     Width: 64
     Index: 32
@@ -329,6 +431,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST49.33.reg
     Width: 64
     Index: 33
@@ -339,6 +444,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST49.34.reg
     Width: 64
     Index: 34
@@ -349,6 +457,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST49.35.reg
     Width: 64
     Index: 35
@@ -359,6 +470,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST49.36.reg
     Width: 64
     Index: 36
@@ -369,6 +483,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST49.37.reg
     Width: 64
     Index: 37
@@ -379,6 +496,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST49.38.reg
     Width: 64
     Index: 38
@@ -389,6 +509,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST49.39.reg
     Width: 64
     Index: 39
@@ -399,6 +522,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST49.40.reg
     Width: 64
     Index: 40
@@ -409,6 +535,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST49.41.reg
     Width: 64
     Index: 41
@@ -419,6 +548,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST49.42.reg
     Width: 64
     Index: 42
@@ -429,6 +561,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST49.43.reg
     Width: 64
     Index: 43
@@ -439,6 +574,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST49.44.reg
     Width: 64
     Index: 44
@@ -449,6 +587,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST49.45.reg
     Width: 64
     Index: 45
@@ -459,6 +600,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST49.46.reg
     Width: 64
     Index: 46
@@ -469,6 +613,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST49.47.reg
     Width: 64
     Index: 47
@@ -479,6 +626,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST49.48.reg
     Width: 64
     Index: 48
@@ -489,6 +639,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST49.49.reg
     Width: 64
     Index: 49
@@ -499,6 +652,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST49.50.reg
     Width: 64
     Index: 50
@@ -509,6 +665,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST49.51.reg
     Width: 64
     Index: 51
@@ -519,6 +678,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST49.52.reg
     Width: 64
     Index: 52
@@ -529,6 +691,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST49.53.reg
     Width: 64
     Index: 53
@@ -539,6 +704,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST49.54.reg
     Width: 64
     Index: 54
@@ -549,6 +717,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST49.55.reg
     Width: 64
     Index: 55
@@ -559,6 +730,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST49.56.reg
     Width: 64
     Index: 56
@@ -569,6 +743,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST49.57.reg
     Width: 64
     Index: 57
@@ -579,6 +756,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST49.58.reg
     Width: 64
     Index: 58
@@ -589,6 +769,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST49.59.reg
     Width: 64
     Index: 59
@@ -599,6 +782,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST49.60.reg
     Width: 64
     Index: 60
@@ -609,6 +795,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST49.61.reg
     Width: 64
     Index: 61
@@ -619,6 +808,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST49.62.reg
     Width: 64
     Index: 62
@@ -629,6 +821,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST49.63.reg
     Width: 64
     Index: 63
@@ -639,6 +834,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST49.0.csr
     Width: 64
     Index: 0
@@ -649,6 +847,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST49.1.csr
     Width: 64
     Index: 1
@@ -659,6 +860,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST49.2.csr
     Width: 64
     Index: 2
@@ -669,6 +873,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST49.3.csr
     Width: 64
     Index: 3
@@ -679,6 +886,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST49.4.csr
     Width: 64
     Index: 4
@@ -689,6 +899,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST49.5.csr
     Width: 64
     Index: 5
@@ -699,6 +912,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST49.6.csr
     Width: 64
     Index: 6
@@ -709,6 +925,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST49.7.csr
     Width: 64
     Index: 7
@@ -719,6 +938,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST49.8.csr
     Width: 64
     Index: 8
@@ -729,6 +951,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST49.9.csr
     Width: 64
     Index: 9
@@ -739,6 +964,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST49.10.csr
     Width: 64
     Index: 10
@@ -749,6 +977,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST49.11.csr
     Width: 64
     Index: 11
@@ -759,6 +990,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST49.12.csr
     Width: 64
     Index: 12
@@ -769,6 +1003,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST49.13.csr
     Width: 64
     Index: 13
@@ -779,6 +1016,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST49.14.csr
     Width: 64
     Index: 14
@@ -789,6 +1029,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST49.15.csr
     Width: 64
     Index: 15
@@ -799,6 +1042,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST49.16.csr
     Width: 64
     Index: 16
@@ -809,6 +1055,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST49.17.csr
     Width: 64
     Index: 17
@@ -819,6 +1068,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST49.18.csr
     Width: 64
     Index: 18
@@ -829,6 +1081,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST49.19.csr
     Width: 64
     Index: 19
@@ -839,6 +1094,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST49.20.csr
     Width: 64
     Index: 20
@@ -849,6 +1107,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST49.21.csr
     Width: 64
     Index: 21
@@ -859,6 +1120,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST49.22.csr
     Width: 64
     Index: 22
@@ -869,6 +1133,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST49.23.csr
     Width: 64
     Index: 23
@@ -879,6 +1146,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST49.24.csr
     Width: 64
     Index: 24
@@ -889,6 +1159,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST49.25.csr
     Width: 64
     Index: 25
@@ -899,6 +1172,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST49.26.csr
     Width: 64
     Index: 26
@@ -909,6 +1185,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST49.27.csr
     Width: 64
     Index: 27
@@ -919,6 +1198,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST49.28.csr
     Width: 64
     Index: 28
@@ -929,6 +1211,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST49.29.csr
     Width: 64
     Index: 29
@@ -939,6 +1224,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST49.30.csr
     Width: 64
     Index: 30
@@ -949,6 +1237,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST49.31.csr
     Width: 64
     Index: 31
@@ -959,6 +1250,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST49.32.csr
     Width: 64
     Index: 32
@@ -969,6 +1263,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST49.33.csr
     Width: 64
     Index: 33
@@ -979,6 +1276,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST49.34.csr
     Width: 64
     Index: 34
@@ -989,6 +1289,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST49.35.csr
     Width: 64
     Index: 35
@@ -999,6 +1302,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST49.36.csr
     Width: 64
     Index: 36
@@ -1009,6 +1315,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST49.37.csr
     Width: 64
     Index: 37
@@ -1019,6 +1328,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST49.38.csr
     Width: 64
     Index: 38
@@ -1029,6 +1341,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST49.39.csr
     Width: 64
     Index: 39
@@ -1039,6 +1354,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST49.40.csr
     Width: 64
     Index: 40
@@ -1049,6 +1367,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST49.41.csr
     Width: 64
     Index: 41
@@ -1059,6 +1380,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST49.42.csr
     Width: 64
     Index: 42
@@ -1069,6 +1393,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST49.43.csr
     Width: 64
     Index: 43
@@ -1079,6 +1406,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST49.44.csr
     Width: 64
     Index: 44
@@ -1089,6 +1419,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST49.45.csr
     Width: 64
     Index: 45
@@ -1099,6 +1432,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST49.46.csr
     Width: 64
     Index: 46
@@ -1109,6 +1445,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST49.47.csr
     Width: 64
     Index: 47
@@ -1119,6 +1458,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST49.48.csr
     Width: 64
     Index: 48
@@ -1129,6 +1471,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST49.49.csr
     Width: 64
     Index: 49
@@ -1139,6 +1484,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST49.50.csr
     Width: 64
     Index: 50
@@ -1149,6 +1497,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST49.51.csr
     Width: 64
     Index: 51
@@ -1159,6 +1510,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST49.52.csr
     Width: 64
     Index: 52
@@ -1169,6 +1523,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST49.53.csr
     Width: 64
     Index: 53
@@ -1179,6 +1536,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST49.54.csr
     Width: 64
     Index: 54
@@ -1189,6 +1549,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST49.55.csr
     Width: 64
     Index: 55
@@ -1199,6 +1562,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST49.56.csr
     Width: 64
     Index: 56
@@ -1209,6 +1575,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST49.57.csr
     Width: 64
     Index: 57
@@ -1219,6 +1588,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST49.58.csr
     Width: 64
     Index: 58
@@ -1229,6 +1601,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST49.59.csr
     Width: 64
     Index: 59
@@ -1239,6 +1614,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST49.60.csr
     Width: 64
     Index: 60
@@ -1249,6 +1627,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST49.61.csr
     Width: 64
     Index: 61
@@ -1259,6 +1640,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST49.62.csr
     Width: 64
     Index: 62
@@ -1269,6 +1653,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST49.63.csr
     Width: 64
     Index: 63
@@ -1279,9 +1666,11 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
 RegClasses:
   - RegisterClassName: TEST49.regclass
-    NumRegisters: 64
     Registers:
       - TEST49.0.reg
       - TEST49.1.reg
@@ -1348,7 +1737,6 @@ RegClasses:
       - TEST49.62.reg
       - TEST49.63.reg
   - RegisterClassName: TEST49.csrregclass
-    NumRegisters: 64
     Registers:
       - TEST49.0.csr
       - TEST49.1.csr
@@ -2354,124 +2742,69 @@ Caches:
     Sets: 1
     Ways: 1
     SubLevel: TEST49.L2.cache
-  - Cache: TEST49.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST49.core1.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST49.L2.cache
-  - Cache: TEST49.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST49.core2.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST49.L2.cache
-  - Cache: TEST49.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST49.core3.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST49.L2.cache
-  - Cache: TEST49.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST49.core4.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST49.L2.cache
-  - Cache: TEST49.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST49.core5.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST49.L2.cache
-  - Cache: TEST49.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST49.core6.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST49.L2.cache
-  - Cache: TEST49.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST49.core7.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST49.L2.cache
-  - Cache: TEST49.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST49.core8.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST49.L2.cache
-  - Cache: TEST49.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST49.core9.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST49.L2.cache
-  - Cache: TEST49.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST49.core10.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST49.L2.cache
-  - Cache: TEST49.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST49.core11.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST49.L2.cache
-  - Cache: TEST49.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST49.core12.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST49.L2.cache
-  - Cache: TEST49.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST49.core13.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST49.L2.cache
-  - Cache: TEST49.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST49.core14.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST49.L2.cache
-  - Cache: TEST49.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST49.core15.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST49.L2.cache
-  - Cache: TEST49.L2.cache
-    Sets: 2
-    Ways: 8
 Extensions:
   - Extension: TEST49.ext0
-    MajorVersion: 13
-    MinorVersion: 14
     Type: unknown
-    ProjectInfo:
-      - Project: TEST49.ext0
-        Type: unknown
-        ChiselMajorVersion: 3
-        ChiselMinorVersion: 0
     Registers:
       - RegName: TEST49.ext0.reg
         Width: 64
@@ -2482,23 +2815,19 @@ Extensions:
         ROReg: false
         CSRReg: true
         AMSReg: false
+        TUSReg: false
+        PCReg: false
+        Shared: false
     RegClasses:
       - RegisterClassName: TEST49.ext0.regclass
-        NumRegisters: 1
         Registers:
           - TEST49.ext0.reg
     ISAs:
       - ISAName: TEST49.ext0.isa
     RTL: THIS IS RTL FOR EXTENSION TEST49.ext0
+    RTLType: Unknown
   - Extension: TEST49.ext1
-    MajorVersion: 13
-    MinorVersion: 14
     Type: unknown
-    ProjectInfo:
-      - Project: TEST49.ext1
-        Type: unknown
-        ChiselMajorVersion: 3
-        ChiselMinorVersion: 0
     Registers:
       - RegName: TEST49.ext1.reg
         Width: 64
@@ -2509,23 +2838,19 @@ Extensions:
         ROReg: false
         CSRReg: true
         AMSReg: false
+        TUSReg: false
+        PCReg: false
+        Shared: false
     RegClasses:
       - RegisterClassName: TEST49.ext1.regclass
-        NumRegisters: 1
         Registers:
           - TEST49.ext1.reg
     ISAs:
       - ISAName: TEST49.ext1.isa
     RTL: THIS IS RTL FOR EXTENSION TEST49.ext1
+    RTLType: Unknown
   - Extension: TEST49.ext2
-    MajorVersion: 13
-    MinorVersion: 14
     Type: unknown
-    ProjectInfo:
-      - Project: TEST49.ext2
-        Type: unknown
-        ChiselMajorVersion: 3
-        ChiselMinorVersion: 0
     Registers:
       - RegName: TEST49.ext2.reg
         Width: 64
@@ -2536,23 +2861,19 @@ Extensions:
         ROReg: false
         CSRReg: true
         AMSReg: false
+        TUSReg: false
+        PCReg: false
+        Shared: false
     RegClasses:
       - RegisterClassName: TEST49.ext2.regclass
-        NumRegisters: 1
         Registers:
           - TEST49.ext2.reg
     ISAs:
       - ISAName: TEST49.ext2.isa
     RTL: THIS IS RTL FOR EXTENSION TEST49.ext2
+    RTLType: Unknown
   - Extension: TEST49.ext3
-    MajorVersion: 13
-    MinorVersion: 14
     Type: unknown
-    ProjectInfo:
-      - Project: TEST49.ext3
-        Type: unknown
-        ChiselMajorVersion: 3
-        ChiselMinorVersion: 0
     Registers:
       - RegName: TEST49.ext3.reg
         Width: 64
@@ -2563,23 +2884,19 @@ Extensions:
         ROReg: false
         CSRReg: true
         AMSReg: false
+        TUSReg: false
+        PCReg: false
+        Shared: false
     RegClasses:
       - RegisterClassName: TEST49.ext3.regclass
-        NumRegisters: 1
         Registers:
           - TEST49.ext3.reg
     ISAs:
       - ISAName: TEST49.ext3.isa
     RTL: THIS IS RTL FOR EXTENSION TEST49.ext3
+    RTLType: Unknown
   - Extension: TEST49.ext4
-    MajorVersion: 13
-    MinorVersion: 14
     Type: unknown
-    ProjectInfo:
-      - Project: TEST49.ext4
-        Type: unknown
-        ChiselMajorVersion: 3
-        ChiselMinorVersion: 0
     Registers:
       - RegName: TEST49.ext4.reg
         Width: 64
@@ -2590,23 +2907,19 @@ Extensions:
         ROReg: false
         CSRReg: true
         AMSReg: false
+        TUSReg: false
+        PCReg: false
+        Shared: false
     RegClasses:
       - RegisterClassName: TEST49.ext4.regclass
-        NumRegisters: 1
         Registers:
           - TEST49.ext4.reg
     ISAs:
       - ISAName: TEST49.ext4.isa
     RTL: THIS IS RTL FOR EXTENSION TEST49.ext4
+    RTLType: Unknown
   - Extension: TEST49.ext5
-    MajorVersion: 13
-    MinorVersion: 14
     Type: unknown
-    ProjectInfo:
-      - Project: TEST49.ext5
-        Type: unknown
-        ChiselMajorVersion: 3
-        ChiselMinorVersion: 0
     Registers:
       - RegName: TEST49.ext5.reg
         Width: 64
@@ -2617,23 +2930,19 @@ Extensions:
         ROReg: false
         CSRReg: true
         AMSReg: false
+        TUSReg: false
+        PCReg: false
+        Shared: false
     RegClasses:
       - RegisterClassName: TEST49.ext5.regclass
-        NumRegisters: 1
         Registers:
           - TEST49.ext5.reg
     ISAs:
       - ISAName: TEST49.ext5.isa
     RTL: THIS IS RTL FOR EXTENSION TEST49.ext5
+    RTLType: Unknown
   - Extension: TEST49.ext6
-    MajorVersion: 13
-    MinorVersion: 14
     Type: unknown
-    ProjectInfo:
-      - Project: TEST49.ext6
-        Type: unknown
-        ChiselMajorVersion: 3
-        ChiselMinorVersion: 0
     Registers:
       - RegName: TEST49.ext6.reg
         Width: 64
@@ -2644,23 +2953,19 @@ Extensions:
         ROReg: false
         CSRReg: true
         AMSReg: false
+        TUSReg: false
+        PCReg: false
+        Shared: false
     RegClasses:
       - RegisterClassName: TEST49.ext6.regclass
-        NumRegisters: 1
         Registers:
           - TEST49.ext6.reg
     ISAs:
       - ISAName: TEST49.ext6.isa
     RTL: THIS IS RTL FOR EXTENSION TEST49.ext6
+    RTLType: Unknown
   - Extension: TEST49.ext7
-    MajorVersion: 13
-    MinorVersion: 14
     Type: unknown
-    ProjectInfo:
-      - Project: TEST49.ext7
-        Type: unknown
-        ChiselMajorVersion: 3
-        ChiselMinorVersion: 0
     Registers:
       - RegName: TEST49.ext7.reg
         Width: 64
@@ -2671,23 +2976,19 @@ Extensions:
         ROReg: false
         CSRReg: true
         AMSReg: false
+        TUSReg: false
+        PCReg: false
+        Shared: false
     RegClasses:
       - RegisterClassName: TEST49.ext7.regclass
-        NumRegisters: 1
         Registers:
           - TEST49.ext7.reg
     ISAs:
       - ISAName: TEST49.ext7.isa
     RTL: THIS IS RTL FOR EXTENSION TEST49.ext7
+    RTLType: Unknown
   - Extension: TEST49.ext8
-    MajorVersion: 13
-    MinorVersion: 14
     Type: unknown
-    ProjectInfo:
-      - Project: TEST49.ext8
-        Type: unknown
-        ChiselMajorVersion: 3
-        ChiselMinorVersion: 0
     Registers:
       - RegName: TEST49.ext8.reg
         Width: 64
@@ -2698,23 +2999,19 @@ Extensions:
         ROReg: false
         CSRReg: true
         AMSReg: false
+        TUSReg: false
+        PCReg: false
+        Shared: false
     RegClasses:
       - RegisterClassName: TEST49.ext8.regclass
-        NumRegisters: 1
         Registers:
           - TEST49.ext8.reg
     ISAs:
       - ISAName: TEST49.ext8.isa
     RTL: THIS IS RTL FOR EXTENSION TEST49.ext8
+    RTLType: Unknown
   - Extension: TEST49.ext9
-    MajorVersion: 13
-    MinorVersion: 14
     Type: unknown
-    ProjectInfo:
-      - Project: TEST49.ext9
-        Type: unknown
-        ChiselMajorVersion: 3
-        ChiselMinorVersion: 0
     Registers:
       - RegName: TEST49.ext9.reg
         Width: 64
@@ -2725,23 +3022,19 @@ Extensions:
         ROReg: false
         CSRReg: true
         AMSReg: false
+        TUSReg: false
+        PCReg: false
+        Shared: false
     RegClasses:
       - RegisterClassName: TEST49.ext9.regclass
-        NumRegisters: 1
         Registers:
           - TEST49.ext9.reg
     ISAs:
       - ISAName: TEST49.ext9.isa
     RTL: THIS IS RTL FOR EXTENSION TEST49.ext9
+    RTLType: Unknown
   - Extension: TEST49.ext10
-    MajorVersion: 13
-    MinorVersion: 14
     Type: unknown
-    ProjectInfo:
-      - Project: TEST49.ext10
-        Type: unknown
-        ChiselMajorVersion: 3
-        ChiselMinorVersion: 0
     Registers:
       - RegName: TEST49.ext10.reg
         Width: 64
@@ -2752,23 +3045,19 @@ Extensions:
         ROReg: false
         CSRReg: true
         AMSReg: false
+        TUSReg: false
+        PCReg: false
+        Shared: false
     RegClasses:
       - RegisterClassName: TEST49.ext10.regclass
-        NumRegisters: 1
         Registers:
           - TEST49.ext10.reg
     ISAs:
       - ISAName: TEST49.ext10.isa
     RTL: THIS IS RTL FOR EXTENSION TEST49.ext10
+    RTLType: Unknown
   - Extension: TEST49.ext11
-    MajorVersion: 13
-    MinorVersion: 14
     Type: unknown
-    ProjectInfo:
-      - Project: TEST49.ext11
-        Type: unknown
-        ChiselMajorVersion: 3
-        ChiselMinorVersion: 0
     Registers:
       - RegName: TEST49.ext11.reg
         Width: 64
@@ -2779,23 +3068,19 @@ Extensions:
         ROReg: false
         CSRReg: true
         AMSReg: false
+        TUSReg: false
+        PCReg: false
+        Shared: false
     RegClasses:
       - RegisterClassName: TEST49.ext11.regclass
-        NumRegisters: 1
         Registers:
           - TEST49.ext11.reg
     ISAs:
       - ISAName: TEST49.ext11.isa
     RTL: THIS IS RTL FOR EXTENSION TEST49.ext11
+    RTLType: Unknown
   - Extension: TEST49.ext12
-    MajorVersion: 13
-    MinorVersion: 14
     Type: unknown
-    ProjectInfo:
-      - Project: TEST49.ext12
-        Type: unknown
-        ChiselMajorVersion: 3
-        ChiselMinorVersion: 0
     Registers:
       - RegName: TEST49.ext12.reg
         Width: 64
@@ -2806,23 +3091,19 @@ Extensions:
         ROReg: false
         CSRReg: true
         AMSReg: false
+        TUSReg: false
+        PCReg: false
+        Shared: false
     RegClasses:
       - RegisterClassName: TEST49.ext12.regclass
-        NumRegisters: 1
         Registers:
           - TEST49.ext12.reg
     ISAs:
       - ISAName: TEST49.ext12.isa
     RTL: THIS IS RTL FOR EXTENSION TEST49.ext12
+    RTLType: Unknown
   - Extension: TEST49.ext13
-    MajorVersion: 13
-    MinorVersion: 14
     Type: unknown
-    ProjectInfo:
-      - Project: TEST49.ext13
-        Type: unknown
-        ChiselMajorVersion: 3
-        ChiselMinorVersion: 0
     Registers:
       - RegName: TEST49.ext13.reg
         Width: 64
@@ -2833,23 +3114,19 @@ Extensions:
         ROReg: false
         CSRReg: true
         AMSReg: false
+        TUSReg: false
+        PCReg: false
+        Shared: false
     RegClasses:
       - RegisterClassName: TEST49.ext13.regclass
-        NumRegisters: 1
         Registers:
           - TEST49.ext13.reg
     ISAs:
       - ISAName: TEST49.ext13.isa
     RTL: THIS IS RTL FOR EXTENSION TEST49.ext13
+    RTLType: Unknown
   - Extension: TEST49.ext14
-    MajorVersion: 13
-    MinorVersion: 14
     Type: unknown
-    ProjectInfo:
-      - Project: TEST49.ext14
-        Type: unknown
-        ChiselMajorVersion: 3
-        ChiselMinorVersion: 0
     Registers:
       - RegName: TEST49.ext14.reg
         Width: 64
@@ -2860,23 +3137,19 @@ Extensions:
         ROReg: false
         CSRReg: true
         AMSReg: false
+        TUSReg: false
+        PCReg: false
+        Shared: false
     RegClasses:
       - RegisterClassName: TEST49.ext14.regclass
-        NumRegisters: 1
         Registers:
           - TEST49.ext14.reg
     ISAs:
       - ISAName: TEST49.ext14.isa
     RTL: THIS IS RTL FOR EXTENSION TEST49.ext14
+    RTLType: Unknown
   - Extension: TEST49.ext15
-    MajorVersion: 13
-    MinorVersion: 14
     Type: unknown
-    ProjectInfo:
-      - Project: TEST49.ext15
-        Type: unknown
-        ChiselMajorVersion: 3
-        ChiselMinorVersion: 0
     Registers:
       - RegName: TEST49.ext15.reg
         Width: 64
@@ -2887,16 +3160,20 @@ Extensions:
         ROReg: false
         CSRReg: true
         AMSReg: false
+        TUSReg: false
+        PCReg: false
+        Shared: false
     RegClasses:
       - RegisterClassName: TEST49.ext15.regclass
-        NumRegisters: 1
         Registers:
           - TEST49.ext15.reg
     ISAs:
       - ISAName: TEST49.ext15.isa
     RTL: THIS IS RTL FOR EXTENSION TEST49.ext15
+    RTLType: Unknown
 Cores:
   - Core: TEST49.core0
+    ThreadUnits: 1
     Cache: TEST49.core0.L1.cache
     ISA: TEST49.isa
     RegisterClasses:
@@ -2905,6 +3182,7 @@ Cores:
     Extensions:
       - Extension: TEST49.ext0
   - Core: TEST49.core1
+    ThreadUnits: 1
     Cache: TEST49.core1.L1.cache
     ISA: TEST49.isa
     RegisterClasses:
@@ -2913,6 +3191,7 @@ Cores:
     Extensions:
       - Extension: TEST49.ext1
   - Core: TEST49.core2
+    ThreadUnits: 1
     Cache: TEST49.core2.L1.cache
     ISA: TEST49.isa
     RegisterClasses:
@@ -2921,6 +3200,7 @@ Cores:
     Extensions:
       - Extension: TEST49.ext2
   - Core: TEST49.core3
+    ThreadUnits: 1
     Cache: TEST49.core3.L1.cache
     ISA: TEST49.isa
     RegisterClasses:
@@ -2929,6 +3209,7 @@ Cores:
     Extensions:
       - Extension: TEST49.ext3
   - Core: TEST49.core4
+    ThreadUnits: 1
     Cache: TEST49.core4.L1.cache
     ISA: TEST49.isa
     RegisterClasses:
@@ -2937,6 +3218,7 @@ Cores:
     Extensions:
       - Extension: TEST49.ext4
   - Core: TEST49.core5
+    ThreadUnits: 1
     Cache: TEST49.core5.L1.cache
     ISA: TEST49.isa
     RegisterClasses:
@@ -2945,6 +3227,7 @@ Cores:
     Extensions:
       - Extension: TEST49.ext5
   - Core: TEST49.core6
+    ThreadUnits: 1
     Cache: TEST49.core6.L1.cache
     ISA: TEST49.isa
     RegisterClasses:
@@ -2953,6 +3236,7 @@ Cores:
     Extensions:
       - Extension: TEST49.ext6
   - Core: TEST49.core7
+    ThreadUnits: 1
     Cache: TEST49.core7.L1.cache
     ISA: TEST49.isa
     RegisterClasses:
@@ -2961,6 +3245,7 @@ Cores:
     Extensions:
       - Extension: TEST49.ext7
   - Core: TEST49.core8
+    ThreadUnits: 1
     Cache: TEST49.core8.L1.cache
     ISA: TEST49.isa
     RegisterClasses:
@@ -2969,6 +3254,7 @@ Cores:
     Extensions:
       - Extension: TEST49.ext8
   - Core: TEST49.core9
+    ThreadUnits: 1
     Cache: TEST49.core9.L1.cache
     ISA: TEST49.isa
     RegisterClasses:
@@ -2977,6 +3263,7 @@ Cores:
     Extensions:
       - Extension: TEST49.ext9
   - Core: TEST49.core10
+    ThreadUnits: 1
     Cache: TEST49.core10.L1.cache
     ISA: TEST49.isa
     RegisterClasses:
@@ -2985,6 +3272,7 @@ Cores:
     Extensions:
       - Extension: TEST49.ext10
   - Core: TEST49.core11
+    ThreadUnits: 1
     Cache: TEST49.core11.L1.cache
     ISA: TEST49.isa
     RegisterClasses:
@@ -2993,6 +3281,7 @@ Cores:
     Extensions:
       - Extension: TEST49.ext11
   - Core: TEST49.core12
+    ThreadUnits: 1
     Cache: TEST49.core12.L1.cache
     ISA: TEST49.isa
     RegisterClasses:
@@ -3001,6 +3290,7 @@ Cores:
     Extensions:
       - Extension: TEST49.ext12
   - Core: TEST49.core13
+    ThreadUnits: 1
     Cache: TEST49.core13.L1.cache
     ISA: TEST49.isa
     RegisterClasses:
@@ -3009,6 +3299,7 @@ Cores:
     Extensions:
       - Extension: TEST49.ext13
   - Core: TEST49.core14
+    ThreadUnits: 1
     Cache: TEST49.core14.L1.cache
     ISA: TEST49.isa
     RegisterClasses:
@@ -3017,6 +3308,7 @@ Cores:
     Extensions:
       - Extension: TEST49.ext14
   - Core: TEST49.core15
+    ThreadUnits: 1
     Cache: TEST49.core15.L1.cache
     ISA: TEST49.isa
     RegisterClasses:

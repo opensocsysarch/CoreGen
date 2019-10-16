@@ -1,3 +1,9 @@
+ProjectInfo:
+  - ProjectName: TEST36
+    ProjectRoot: ./
+    ProjectType: unknown
+    ChiselMajorVersion: 3
+    ChiselMinorVersion: 0
 Registers:
   - RegName: TEST36.0.reg
     Width: 64
@@ -9,6 +15,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST36.1.reg
     Width: 64
     Index: 1
@@ -19,6 +28,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST36.2.reg
     Width: 64
     Index: 2
@@ -29,6 +41,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST36.3.reg
     Width: 64
     Index: 3
@@ -39,6 +54,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST36.4.reg
     Width: 64
     Index: 4
@@ -49,6 +67,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST36.5.reg
     Width: 64
     Index: 5
@@ -59,6 +80,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST36.6.reg
     Width: 64
     Index: 6
@@ -69,6 +93,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST36.7.reg
     Width: 64
     Index: 7
@@ -79,6 +106,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST36.8.reg
     Width: 64
     Index: 8
@@ -89,6 +119,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST36.9.reg
     Width: 64
     Index: 9
@@ -99,6 +132,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST36.10.reg
     Width: 64
     Index: 10
@@ -109,6 +145,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST36.11.reg
     Width: 64
     Index: 11
@@ -119,6 +158,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST36.12.reg
     Width: 64
     Index: 12
@@ -129,6 +171,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST36.13.reg
     Width: 64
     Index: 13
@@ -139,6 +184,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST36.14.reg
     Width: 64
     Index: 14
@@ -149,6 +197,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST36.15.reg
     Width: 64
     Index: 15
@@ -159,6 +210,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST36.0.csr
     Width: 64
     Index: 0
@@ -169,6 +223,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST36.1.csr
     Width: 64
     Index: 1
@@ -179,6 +236,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST36.2.csr
     Width: 64
     Index: 2
@@ -189,6 +249,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST36.3.csr
     Width: 64
     Index: 3
@@ -199,6 +262,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST36.4.csr
     Width: 64
     Index: 4
@@ -209,6 +275,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST36.5.csr
     Width: 64
     Index: 5
@@ -219,6 +288,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST36.6.csr
     Width: 64
     Index: 6
@@ -229,6 +301,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST36.7.csr
     Width: 64
     Index: 7
@@ -239,6 +314,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST36.8.csr
     Width: 64
     Index: 8
@@ -249,6 +327,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST36.9.csr
     Width: 64
     Index: 9
@@ -259,6 +340,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST36.10.csr
     Width: 64
     Index: 10
@@ -269,6 +353,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST36.11.csr
     Width: 64
     Index: 11
@@ -279,6 +366,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST36.12.csr
     Width: 64
     Index: 12
@@ -289,6 +379,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST36.13.csr
     Width: 64
     Index: 13
@@ -299,6 +392,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST36.14.csr
     Width: 64
     Index: 14
@@ -309,6 +405,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST36.15.csr
     Width: 64
     Index: 15
@@ -319,9 +418,11 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
 RegClasses:
   - RegisterClassName: TEST36.regclass
-    NumRegisters: 16
     Registers:
       - TEST36.0.reg
       - TEST36.1.reg
@@ -340,7 +441,6 @@ RegClasses:
       - TEST36.14.reg
       - TEST36.15.reg
   - RegisterClassName: TEST36.csrregclass
-    NumRegisters: 16
     Registers:
       - TEST36.0.csr
       - TEST36.1.csr
@@ -509,83 +609,51 @@ PseudoInsts:
   - PseudoInst: TEST36.pinst0
     ISA: TEST36.isa
     Inst: TEST36.inst0
-    Encodings:
-      []
   - PseudoInst: TEST36.pinst1
     ISA: TEST36.isa
     Inst: TEST36.inst1
-    Encodings:
-      []
   - PseudoInst: TEST36.pinst2
     ISA: TEST36.isa
     Inst: TEST36.inst2
-    Encodings:
-      []
   - PseudoInst: TEST36.pinst3
     ISA: TEST36.isa
     Inst: TEST36.inst3
-    Encodings:
-      []
   - PseudoInst: TEST36.pinst4
     ISA: TEST36.isa
     Inst: TEST36.inst4
-    Encodings:
-      []
   - PseudoInst: TEST36.pinst5
     ISA: TEST36.isa
     Inst: TEST36.inst5
-    Encodings:
-      []
   - PseudoInst: TEST36.pinst6
     ISA: TEST36.isa
     Inst: TEST36.inst6
-    Encodings:
-      []
   - PseudoInst: TEST36.pinst7
     ISA: TEST36.isa
     Inst: TEST36.inst7
-    Encodings:
-      []
   - PseudoInst: TEST36.pinst8
     ISA: TEST36.isa
     Inst: TEST36.inst8
-    Encodings:
-      []
   - PseudoInst: TEST36.pinst9
     ISA: TEST36.isa
     Inst: TEST36.inst9
-    Encodings:
-      []
   - PseudoInst: TEST36.pinst10
     ISA: TEST36.isa
     Inst: TEST36.inst10
-    Encodings:
-      []
   - PseudoInst: TEST36.pinst11
     ISA: TEST36.isa
     Inst: TEST36.inst11
-    Encodings:
-      []
   - PseudoInst: TEST36.pinst12
     ISA: TEST36.isa
     Inst: TEST36.inst12
-    Encodings:
-      []
   - PseudoInst: TEST36.pinst13
     ISA: TEST36.isa
     Inst: TEST36.inst13
-    Encodings:
-      []
   - PseudoInst: TEST36.pinst14
     ISA: TEST36.isa
     Inst: TEST36.inst14
-    Encodings:
-      []
   - PseudoInst: TEST36.pinst15
     ISA: TEST36.isa
     Inst: TEST36.inst15
-    Encodings:
-      []
 Caches:
   - Cache: TEST36.L2.cache
     Sets: 2
@@ -594,24 +662,20 @@ Caches:
     Sets: 1
     Ways: 1
     SubLevel: TEST36.L2.cache
-  - Cache: TEST36.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST36.core2.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST36.L2.cache
-  - Cache: TEST36.L2.cache
-    Sets: 2
-    Ways: 8
 Cores:
   - Core: TEST36.core1
+    ThreadUnits: 1
     Cache: TEST36.core1.L1.cache
     ISA: TEST36.isa
     RegisterClasses:
       - RegClass: TEST36.regclass
       - RegClass: TEST36.csrregclass
   - Core: TEST36.core2
+    ThreadUnits: 1
     Cache: TEST36.core2.L1.cache
     ISA: TEST36.isa
 Socs:

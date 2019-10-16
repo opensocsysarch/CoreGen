@@ -11,7 +11,8 @@ YAML_OUTPUT=${f1##*/}
 mkdir -p ./Specs/$YAML_OUTPUT
 $CGCLI_PATH/cgcli -i $YAML_INPUT --enable-sys-pass "SpecDoc:./Specs/$YAML_OUTPUT"
 retVal=$?
-if [ ! $? -eq 0 ]; then
+if [[  "$retVal" -ne 0 ]]; then
+#if [ ! $? -eq 0 ]; then
   echo "$CGCLI_PATH/cgcli  failed with return code = $retVal"
   exit $retVal
 fi
@@ -19,7 +20,8 @@ fi
 #-- attempt to build the doc
 cd ./Specs/$YAML_OUTPUT && make clean && make
 retVal=$?
-if [ ! $? -eq 0 ]; then
+if [[  "$retVal" -ne 0 ]]; then
+#if [ ! $? -eq 0 ]; then
   echo "Build of spec doc at ./Specs/$YAML_OUTPUT failed with return code = $retVal"
   exit $retVal
 fi

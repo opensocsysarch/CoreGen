@@ -1,3 +1,9 @@
+ProjectInfo:
+  - ProjectName: TEST47
+    ProjectRoot: ./
+    ProjectType: unknown
+    ChiselMajorVersion: 3
+    ChiselMinorVersion: 0
 Registers:
   - RegName: TEST47.0.reg
     Width: 64
@@ -9,6 +15,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST47.1.reg
     Width: 64
     Index: 1
@@ -19,6 +28,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST47.2.reg
     Width: 64
     Index: 2
@@ -29,6 +41,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST47.3.reg
     Width: 64
     Index: 3
@@ -39,6 +54,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST47.4.reg
     Width: 64
     Index: 4
@@ -49,6 +67,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST47.5.reg
     Width: 64
     Index: 5
@@ -59,6 +80,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST47.6.reg
     Width: 64
     Index: 6
@@ -69,6 +93,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST47.7.reg
     Width: 64
     Index: 7
@@ -79,6 +106,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST47.8.reg
     Width: 64
     Index: 8
@@ -89,6 +119,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST47.9.reg
     Width: 64
     Index: 9
@@ -99,6 +132,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST47.10.reg
     Width: 64
     Index: 10
@@ -109,6 +145,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST47.11.reg
     Width: 64
     Index: 11
@@ -119,6 +158,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST47.12.reg
     Width: 64
     Index: 12
@@ -129,6 +171,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST47.13.reg
     Width: 64
     Index: 13
@@ -139,6 +184,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST47.14.reg
     Width: 64
     Index: 14
@@ -149,6 +197,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST47.15.reg
     Width: 64
     Index: 15
@@ -159,6 +210,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST47.0.csr
     Width: 64
     Index: 0
@@ -169,6 +223,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST47.1.csr
     Width: 64
     Index: 1
@@ -179,6 +236,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST47.2.csr
     Width: 64
     Index: 2
@@ -189,6 +249,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST47.3.csr
     Width: 64
     Index: 3
@@ -199,6 +262,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST47.4.csr
     Width: 64
     Index: 4
@@ -209,6 +275,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST47.5.csr
     Width: 64
     Index: 5
@@ -219,6 +288,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST47.6.csr
     Width: 64
     Index: 6
@@ -229,6 +301,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST47.7.csr
     Width: 64
     Index: 7
@@ -239,6 +314,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST47.8.csr
     Width: 64
     Index: 8
@@ -249,6 +327,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST47.9.csr
     Width: 64
     Index: 9
@@ -259,6 +340,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST47.10.csr
     Width: 64
     Index: 10
@@ -269,6 +353,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST47.11.csr
     Width: 64
     Index: 11
@@ -279,6 +366,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST47.12.csr
     Width: 64
     Index: 12
@@ -289,6 +379,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST47.13.csr
     Width: 64
     Index: 13
@@ -299,6 +392,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST47.14.csr
     Width: 64
     Index: 14
@@ -309,6 +405,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST47.15.csr
     Width: 64
     Index: 15
@@ -319,9 +418,11 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
 RegClasses:
   - RegisterClassName: TEST47.regclass
-    NumRegisters: 16
     Registers:
       - TEST47.0.reg
       - TEST47.1.reg
@@ -340,7 +441,6 @@ RegClasses:
       - TEST47.14.reg
       - TEST47.15.reg
   - RegisterClassName: TEST47.csrregclass
-    NumRegisters: 16
     Registers:
       - TEST47.0.csr
       - TEST47.1.csr
@@ -626,460 +726,261 @@ Caches:
     Sets: 1
     Ways: 1
     SubLevel: TEST47.L2.cache
-  - Cache: TEST47.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST47.core1.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST47.L2.cache
-  - Cache: TEST47.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST47.core2.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST47.L2.cache
-  - Cache: TEST47.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST47.core3.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST47.L2.cache
-  - Cache: TEST47.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST47.core4.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST47.L2.cache
-  - Cache: TEST47.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST47.core5.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST47.L2.cache
-  - Cache: TEST47.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST47.core6.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST47.L2.cache
-  - Cache: TEST47.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST47.core7.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST47.L2.cache
-  - Cache: TEST47.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST47.core8.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST47.L2.cache
-  - Cache: TEST47.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST47.core9.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST47.L2.cache
-  - Cache: TEST47.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST47.core10.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST47.L2.cache
-  - Cache: TEST47.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST47.core11.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST47.L2.cache
-  - Cache: TEST47.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST47.core12.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST47.L2.cache
-  - Cache: TEST47.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST47.core13.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST47.L2.cache
-  - Cache: TEST47.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST47.core14.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST47.L2.cache
-  - Cache: TEST47.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST47.core15.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST47.L2.cache
-  - Cache: TEST47.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST47.core16.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST47.L2.cache
-  - Cache: TEST47.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST47.core17.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST47.L2.cache
-  - Cache: TEST47.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST47.core18.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST47.L2.cache
-  - Cache: TEST47.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST47.core19.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST47.L2.cache
-  - Cache: TEST47.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST47.core20.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST47.L2.cache
-  - Cache: TEST47.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST47.core21.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST47.L2.cache
-  - Cache: TEST47.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST47.core22.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST47.L2.cache
-  - Cache: TEST47.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST47.core23.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST47.L2.cache
-  - Cache: TEST47.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST47.core24.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST47.L2.cache
-  - Cache: TEST47.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST47.core25.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST47.L2.cache
-  - Cache: TEST47.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST47.core26.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST47.L2.cache
-  - Cache: TEST47.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST47.core27.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST47.L2.cache
-  - Cache: TEST47.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST47.core28.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST47.L2.cache
-  - Cache: TEST47.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST47.core29.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST47.L2.cache
-  - Cache: TEST47.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST47.core30.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST47.L2.cache
-  - Cache: TEST47.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST47.core31.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST47.L2.cache
-  - Cache: TEST47.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST47.core32.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST47.L2.cache
-  - Cache: TEST47.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST47.core33.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST47.L2.cache
-  - Cache: TEST47.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST47.core34.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST47.L2.cache
-  - Cache: TEST47.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST47.core35.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST47.L2.cache
-  - Cache: TEST47.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST47.core36.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST47.L2.cache
-  - Cache: TEST47.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST47.core37.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST47.L2.cache
-  - Cache: TEST47.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST47.core38.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST47.L2.cache
-  - Cache: TEST47.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST47.core39.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST47.L2.cache
-  - Cache: TEST47.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST47.core40.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST47.L2.cache
-  - Cache: TEST47.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST47.core41.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST47.L2.cache
-  - Cache: TEST47.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST47.core42.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST47.L2.cache
-  - Cache: TEST47.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST47.core43.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST47.L2.cache
-  - Cache: TEST47.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST47.core44.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST47.L2.cache
-  - Cache: TEST47.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST47.core45.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST47.L2.cache
-  - Cache: TEST47.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST47.core46.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST47.L2.cache
-  - Cache: TEST47.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST47.core47.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST47.L2.cache
-  - Cache: TEST47.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST47.core48.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST47.L2.cache
-  - Cache: TEST47.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST47.core49.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST47.L2.cache
-  - Cache: TEST47.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST47.core50.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST47.L2.cache
-  - Cache: TEST47.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST47.core51.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST47.L2.cache
-  - Cache: TEST47.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST47.core52.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST47.L2.cache
-  - Cache: TEST47.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST47.core53.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST47.L2.cache
-  - Cache: TEST47.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST47.core54.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST47.L2.cache
-  - Cache: TEST47.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST47.core55.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST47.L2.cache
-  - Cache: TEST47.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST47.core56.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST47.L2.cache
-  - Cache: TEST47.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST47.core57.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST47.L2.cache
-  - Cache: TEST47.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST47.core58.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST47.L2.cache
-  - Cache: TEST47.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST47.core59.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST47.L2.cache
-  - Cache: TEST47.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST47.core60.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST47.L2.cache
-  - Cache: TEST47.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST47.core61.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST47.L2.cache
-  - Cache: TEST47.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST47.core62.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST47.L2.cache
-  - Cache: TEST47.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST47.core63.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST47.L2.cache
-  - Cache: TEST47.L2.cache
-    Sets: 2
-    Ways: 8
 Extensions:
   - Extension: TEST47.ext0
-    MajorVersion: 13
-    MinorVersion: 14
     Type: unknown
-    ProjectInfo:
-      - Project: TEST47.ext0
-        Type: unknown
-        ChiselMajorVersion: 3
-        ChiselMinorVersion: 0
     Registers:
       - RegName: TEST47.ext0.reg
         Width: 64
@@ -1090,22 +991,17 @@ Extensions:
         ROReg: false
         CSRReg: true
         AMSReg: false
+        TUSReg: false
+        PCReg: false
+        Shared: false
     RegClasses:
       - RegisterClassName: TEST47.ext0.regclass
-        NumRegisters: 1
         Registers:
           - TEST47.ext0.reg
     ISAs:
       - ISAName: TEST47.ext0.isa
   - Extension: TEST47.ext1
-    MajorVersion: 13
-    MinorVersion: 14
     Type: unknown
-    ProjectInfo:
-      - Project: TEST47.ext1
-        Type: unknown
-        ChiselMajorVersion: 3
-        ChiselMinorVersion: 0
     Registers:
       - RegName: TEST47.ext1.reg
         Width: 64
@@ -1116,22 +1012,17 @@ Extensions:
         ROReg: false
         CSRReg: true
         AMSReg: false
+        TUSReg: false
+        PCReg: false
+        Shared: false
     RegClasses:
       - RegisterClassName: TEST47.ext1.regclass
-        NumRegisters: 1
         Registers:
           - TEST47.ext1.reg
     ISAs:
       - ISAName: TEST47.ext1.isa
   - Extension: TEST47.ext2
-    MajorVersion: 13
-    MinorVersion: 14
     Type: unknown
-    ProjectInfo:
-      - Project: TEST47.ext2
-        Type: unknown
-        ChiselMajorVersion: 3
-        ChiselMinorVersion: 0
     Registers:
       - RegName: TEST47.ext2.reg
         Width: 64
@@ -1142,22 +1033,17 @@ Extensions:
         ROReg: false
         CSRReg: true
         AMSReg: false
+        TUSReg: false
+        PCReg: false
+        Shared: false
     RegClasses:
       - RegisterClassName: TEST47.ext2.regclass
-        NumRegisters: 1
         Registers:
           - TEST47.ext2.reg
     ISAs:
       - ISAName: TEST47.ext2.isa
   - Extension: TEST47.ext3
-    MajorVersion: 13
-    MinorVersion: 14
     Type: unknown
-    ProjectInfo:
-      - Project: TEST47.ext3
-        Type: unknown
-        ChiselMajorVersion: 3
-        ChiselMinorVersion: 0
     Registers:
       - RegName: TEST47.ext3.reg
         Width: 64
@@ -1168,22 +1054,17 @@ Extensions:
         ROReg: false
         CSRReg: true
         AMSReg: false
+        TUSReg: false
+        PCReg: false
+        Shared: false
     RegClasses:
       - RegisterClassName: TEST47.ext3.regclass
-        NumRegisters: 1
         Registers:
           - TEST47.ext3.reg
     ISAs:
       - ISAName: TEST47.ext3.isa
   - Extension: TEST47.ext4
-    MajorVersion: 13
-    MinorVersion: 14
     Type: unknown
-    ProjectInfo:
-      - Project: TEST47.ext4
-        Type: unknown
-        ChiselMajorVersion: 3
-        ChiselMinorVersion: 0
     Registers:
       - RegName: TEST47.ext4.reg
         Width: 64
@@ -1194,22 +1075,17 @@ Extensions:
         ROReg: false
         CSRReg: true
         AMSReg: false
+        TUSReg: false
+        PCReg: false
+        Shared: false
     RegClasses:
       - RegisterClassName: TEST47.ext4.regclass
-        NumRegisters: 1
         Registers:
           - TEST47.ext4.reg
     ISAs:
       - ISAName: TEST47.ext4.isa
   - Extension: TEST47.ext5
-    MajorVersion: 13
-    MinorVersion: 14
     Type: unknown
-    ProjectInfo:
-      - Project: TEST47.ext5
-        Type: unknown
-        ChiselMajorVersion: 3
-        ChiselMinorVersion: 0
     Registers:
       - RegName: TEST47.ext5.reg
         Width: 64
@@ -1220,22 +1096,17 @@ Extensions:
         ROReg: false
         CSRReg: true
         AMSReg: false
+        TUSReg: false
+        PCReg: false
+        Shared: false
     RegClasses:
       - RegisterClassName: TEST47.ext5.regclass
-        NumRegisters: 1
         Registers:
           - TEST47.ext5.reg
     ISAs:
       - ISAName: TEST47.ext5.isa
   - Extension: TEST47.ext6
-    MajorVersion: 13
-    MinorVersion: 14
     Type: unknown
-    ProjectInfo:
-      - Project: TEST47.ext6
-        Type: unknown
-        ChiselMajorVersion: 3
-        ChiselMinorVersion: 0
     Registers:
       - RegName: TEST47.ext6.reg
         Width: 64
@@ -1246,22 +1117,17 @@ Extensions:
         ROReg: false
         CSRReg: true
         AMSReg: false
+        TUSReg: false
+        PCReg: false
+        Shared: false
     RegClasses:
       - RegisterClassName: TEST47.ext6.regclass
-        NumRegisters: 1
         Registers:
           - TEST47.ext6.reg
     ISAs:
       - ISAName: TEST47.ext6.isa
   - Extension: TEST47.ext7
-    MajorVersion: 13
-    MinorVersion: 14
     Type: unknown
-    ProjectInfo:
-      - Project: TEST47.ext7
-        Type: unknown
-        ChiselMajorVersion: 3
-        ChiselMinorVersion: 0
     Registers:
       - RegName: TEST47.ext7.reg
         Width: 64
@@ -1272,22 +1138,17 @@ Extensions:
         ROReg: false
         CSRReg: true
         AMSReg: false
+        TUSReg: false
+        PCReg: false
+        Shared: false
     RegClasses:
       - RegisterClassName: TEST47.ext7.regclass
-        NumRegisters: 1
         Registers:
           - TEST47.ext7.reg
     ISAs:
       - ISAName: TEST47.ext7.isa
   - Extension: TEST47.ext8
-    MajorVersion: 13
-    MinorVersion: 14
     Type: unknown
-    ProjectInfo:
-      - Project: TEST47.ext8
-        Type: unknown
-        ChiselMajorVersion: 3
-        ChiselMinorVersion: 0
     Registers:
       - RegName: TEST47.ext8.reg
         Width: 64
@@ -1298,22 +1159,17 @@ Extensions:
         ROReg: false
         CSRReg: true
         AMSReg: false
+        TUSReg: false
+        PCReg: false
+        Shared: false
     RegClasses:
       - RegisterClassName: TEST47.ext8.regclass
-        NumRegisters: 1
         Registers:
           - TEST47.ext8.reg
     ISAs:
       - ISAName: TEST47.ext8.isa
   - Extension: TEST47.ext9
-    MajorVersion: 13
-    MinorVersion: 14
     Type: unknown
-    ProjectInfo:
-      - Project: TEST47.ext9
-        Type: unknown
-        ChiselMajorVersion: 3
-        ChiselMinorVersion: 0
     Registers:
       - RegName: TEST47.ext9.reg
         Width: 64
@@ -1324,22 +1180,17 @@ Extensions:
         ROReg: false
         CSRReg: true
         AMSReg: false
+        TUSReg: false
+        PCReg: false
+        Shared: false
     RegClasses:
       - RegisterClassName: TEST47.ext9.regclass
-        NumRegisters: 1
         Registers:
           - TEST47.ext9.reg
     ISAs:
       - ISAName: TEST47.ext9.isa
   - Extension: TEST47.ext10
-    MajorVersion: 13
-    MinorVersion: 14
     Type: unknown
-    ProjectInfo:
-      - Project: TEST47.ext10
-        Type: unknown
-        ChiselMajorVersion: 3
-        ChiselMinorVersion: 0
     Registers:
       - RegName: TEST47.ext10.reg
         Width: 64
@@ -1350,22 +1201,17 @@ Extensions:
         ROReg: false
         CSRReg: true
         AMSReg: false
+        TUSReg: false
+        PCReg: false
+        Shared: false
     RegClasses:
       - RegisterClassName: TEST47.ext10.regclass
-        NumRegisters: 1
         Registers:
           - TEST47.ext10.reg
     ISAs:
       - ISAName: TEST47.ext10.isa
   - Extension: TEST47.ext11
-    MajorVersion: 13
-    MinorVersion: 14
     Type: unknown
-    ProjectInfo:
-      - Project: TEST47.ext11
-        Type: unknown
-        ChiselMajorVersion: 3
-        ChiselMinorVersion: 0
     Registers:
       - RegName: TEST47.ext11.reg
         Width: 64
@@ -1376,22 +1222,17 @@ Extensions:
         ROReg: false
         CSRReg: true
         AMSReg: false
+        TUSReg: false
+        PCReg: false
+        Shared: false
     RegClasses:
       - RegisterClassName: TEST47.ext11.regclass
-        NumRegisters: 1
         Registers:
           - TEST47.ext11.reg
     ISAs:
       - ISAName: TEST47.ext11.isa
   - Extension: TEST47.ext12
-    MajorVersion: 13
-    MinorVersion: 14
     Type: unknown
-    ProjectInfo:
-      - Project: TEST47.ext12
-        Type: unknown
-        ChiselMajorVersion: 3
-        ChiselMinorVersion: 0
     Registers:
       - RegName: TEST47.ext12.reg
         Width: 64
@@ -1402,22 +1243,17 @@ Extensions:
         ROReg: false
         CSRReg: true
         AMSReg: false
+        TUSReg: false
+        PCReg: false
+        Shared: false
     RegClasses:
       - RegisterClassName: TEST47.ext12.regclass
-        NumRegisters: 1
         Registers:
           - TEST47.ext12.reg
     ISAs:
       - ISAName: TEST47.ext12.isa
   - Extension: TEST47.ext13
-    MajorVersion: 13
-    MinorVersion: 14
     Type: unknown
-    ProjectInfo:
-      - Project: TEST47.ext13
-        Type: unknown
-        ChiselMajorVersion: 3
-        ChiselMinorVersion: 0
     Registers:
       - RegName: TEST47.ext13.reg
         Width: 64
@@ -1428,22 +1264,17 @@ Extensions:
         ROReg: false
         CSRReg: true
         AMSReg: false
+        TUSReg: false
+        PCReg: false
+        Shared: false
     RegClasses:
       - RegisterClassName: TEST47.ext13.regclass
-        NumRegisters: 1
         Registers:
           - TEST47.ext13.reg
     ISAs:
       - ISAName: TEST47.ext13.isa
   - Extension: TEST47.ext14
-    MajorVersion: 13
-    MinorVersion: 14
     Type: unknown
-    ProjectInfo:
-      - Project: TEST47.ext14
-        Type: unknown
-        ChiselMajorVersion: 3
-        ChiselMinorVersion: 0
     Registers:
       - RegName: TEST47.ext14.reg
         Width: 64
@@ -1454,22 +1285,17 @@ Extensions:
         ROReg: false
         CSRReg: true
         AMSReg: false
+        TUSReg: false
+        PCReg: false
+        Shared: false
     RegClasses:
       - RegisterClassName: TEST47.ext14.regclass
-        NumRegisters: 1
         Registers:
           - TEST47.ext14.reg
     ISAs:
       - ISAName: TEST47.ext14.isa
   - Extension: TEST47.ext15
-    MajorVersion: 13
-    MinorVersion: 14
     Type: unknown
-    ProjectInfo:
-      - Project: TEST47.ext15
-        Type: unknown
-        ChiselMajorVersion: 3
-        ChiselMinorVersion: 0
     Registers:
       - RegName: TEST47.ext15.reg
         Width: 64
@@ -1480,22 +1306,17 @@ Extensions:
         ROReg: false
         CSRReg: true
         AMSReg: false
+        TUSReg: false
+        PCReg: false
+        Shared: false
     RegClasses:
       - RegisterClassName: TEST47.ext15.regclass
-        NumRegisters: 1
         Registers:
           - TEST47.ext15.reg
     ISAs:
       - ISAName: TEST47.ext15.isa
   - Extension: TEST47.ext16
-    MajorVersion: 13
-    MinorVersion: 14
     Type: unknown
-    ProjectInfo:
-      - Project: TEST47.ext16
-        Type: unknown
-        ChiselMajorVersion: 3
-        ChiselMinorVersion: 0
     Registers:
       - RegName: TEST47.ext16.reg
         Width: 64
@@ -1506,22 +1327,17 @@ Extensions:
         ROReg: false
         CSRReg: true
         AMSReg: false
+        TUSReg: false
+        PCReg: false
+        Shared: false
     RegClasses:
       - RegisterClassName: TEST47.ext16.regclass
-        NumRegisters: 1
         Registers:
           - TEST47.ext16.reg
     ISAs:
       - ISAName: TEST47.ext16.isa
   - Extension: TEST47.ext17
-    MajorVersion: 13
-    MinorVersion: 14
     Type: unknown
-    ProjectInfo:
-      - Project: TEST47.ext17
-        Type: unknown
-        ChiselMajorVersion: 3
-        ChiselMinorVersion: 0
     Registers:
       - RegName: TEST47.ext17.reg
         Width: 64
@@ -1532,22 +1348,17 @@ Extensions:
         ROReg: false
         CSRReg: true
         AMSReg: false
+        TUSReg: false
+        PCReg: false
+        Shared: false
     RegClasses:
       - RegisterClassName: TEST47.ext17.regclass
-        NumRegisters: 1
         Registers:
           - TEST47.ext17.reg
     ISAs:
       - ISAName: TEST47.ext17.isa
   - Extension: TEST47.ext18
-    MajorVersion: 13
-    MinorVersion: 14
     Type: unknown
-    ProjectInfo:
-      - Project: TEST47.ext18
-        Type: unknown
-        ChiselMajorVersion: 3
-        ChiselMinorVersion: 0
     Registers:
       - RegName: TEST47.ext18.reg
         Width: 64
@@ -1558,22 +1369,17 @@ Extensions:
         ROReg: false
         CSRReg: true
         AMSReg: false
+        TUSReg: false
+        PCReg: false
+        Shared: false
     RegClasses:
       - RegisterClassName: TEST47.ext18.regclass
-        NumRegisters: 1
         Registers:
           - TEST47.ext18.reg
     ISAs:
       - ISAName: TEST47.ext18.isa
   - Extension: TEST47.ext19
-    MajorVersion: 13
-    MinorVersion: 14
     Type: unknown
-    ProjectInfo:
-      - Project: TEST47.ext19
-        Type: unknown
-        ChiselMajorVersion: 3
-        ChiselMinorVersion: 0
     Registers:
       - RegName: TEST47.ext19.reg
         Width: 64
@@ -1584,22 +1390,17 @@ Extensions:
         ROReg: false
         CSRReg: true
         AMSReg: false
+        TUSReg: false
+        PCReg: false
+        Shared: false
     RegClasses:
       - RegisterClassName: TEST47.ext19.regclass
-        NumRegisters: 1
         Registers:
           - TEST47.ext19.reg
     ISAs:
       - ISAName: TEST47.ext19.isa
   - Extension: TEST47.ext20
-    MajorVersion: 13
-    MinorVersion: 14
     Type: unknown
-    ProjectInfo:
-      - Project: TEST47.ext20
-        Type: unknown
-        ChiselMajorVersion: 3
-        ChiselMinorVersion: 0
     Registers:
       - RegName: TEST47.ext20.reg
         Width: 64
@@ -1610,22 +1411,17 @@ Extensions:
         ROReg: false
         CSRReg: true
         AMSReg: false
+        TUSReg: false
+        PCReg: false
+        Shared: false
     RegClasses:
       - RegisterClassName: TEST47.ext20.regclass
-        NumRegisters: 1
         Registers:
           - TEST47.ext20.reg
     ISAs:
       - ISAName: TEST47.ext20.isa
   - Extension: TEST47.ext21
-    MajorVersion: 13
-    MinorVersion: 14
     Type: unknown
-    ProjectInfo:
-      - Project: TEST47.ext21
-        Type: unknown
-        ChiselMajorVersion: 3
-        ChiselMinorVersion: 0
     Registers:
       - RegName: TEST47.ext21.reg
         Width: 64
@@ -1636,22 +1432,17 @@ Extensions:
         ROReg: false
         CSRReg: true
         AMSReg: false
+        TUSReg: false
+        PCReg: false
+        Shared: false
     RegClasses:
       - RegisterClassName: TEST47.ext21.regclass
-        NumRegisters: 1
         Registers:
           - TEST47.ext21.reg
     ISAs:
       - ISAName: TEST47.ext21.isa
   - Extension: TEST47.ext22
-    MajorVersion: 13
-    MinorVersion: 14
     Type: unknown
-    ProjectInfo:
-      - Project: TEST47.ext22
-        Type: unknown
-        ChiselMajorVersion: 3
-        ChiselMinorVersion: 0
     Registers:
       - RegName: TEST47.ext22.reg
         Width: 64
@@ -1662,22 +1453,17 @@ Extensions:
         ROReg: false
         CSRReg: true
         AMSReg: false
+        TUSReg: false
+        PCReg: false
+        Shared: false
     RegClasses:
       - RegisterClassName: TEST47.ext22.regclass
-        NumRegisters: 1
         Registers:
           - TEST47.ext22.reg
     ISAs:
       - ISAName: TEST47.ext22.isa
   - Extension: TEST47.ext23
-    MajorVersion: 13
-    MinorVersion: 14
     Type: unknown
-    ProjectInfo:
-      - Project: TEST47.ext23
-        Type: unknown
-        ChiselMajorVersion: 3
-        ChiselMinorVersion: 0
     Registers:
       - RegName: TEST47.ext23.reg
         Width: 64
@@ -1688,22 +1474,17 @@ Extensions:
         ROReg: false
         CSRReg: true
         AMSReg: false
+        TUSReg: false
+        PCReg: false
+        Shared: false
     RegClasses:
       - RegisterClassName: TEST47.ext23.regclass
-        NumRegisters: 1
         Registers:
           - TEST47.ext23.reg
     ISAs:
       - ISAName: TEST47.ext23.isa
   - Extension: TEST47.ext24
-    MajorVersion: 13
-    MinorVersion: 14
     Type: unknown
-    ProjectInfo:
-      - Project: TEST47.ext24
-        Type: unknown
-        ChiselMajorVersion: 3
-        ChiselMinorVersion: 0
     Registers:
       - RegName: TEST47.ext24.reg
         Width: 64
@@ -1714,22 +1495,17 @@ Extensions:
         ROReg: false
         CSRReg: true
         AMSReg: false
+        TUSReg: false
+        PCReg: false
+        Shared: false
     RegClasses:
       - RegisterClassName: TEST47.ext24.regclass
-        NumRegisters: 1
         Registers:
           - TEST47.ext24.reg
     ISAs:
       - ISAName: TEST47.ext24.isa
   - Extension: TEST47.ext25
-    MajorVersion: 13
-    MinorVersion: 14
     Type: unknown
-    ProjectInfo:
-      - Project: TEST47.ext25
-        Type: unknown
-        ChiselMajorVersion: 3
-        ChiselMinorVersion: 0
     Registers:
       - RegName: TEST47.ext25.reg
         Width: 64
@@ -1740,22 +1516,17 @@ Extensions:
         ROReg: false
         CSRReg: true
         AMSReg: false
+        TUSReg: false
+        PCReg: false
+        Shared: false
     RegClasses:
       - RegisterClassName: TEST47.ext25.regclass
-        NumRegisters: 1
         Registers:
           - TEST47.ext25.reg
     ISAs:
       - ISAName: TEST47.ext25.isa
   - Extension: TEST47.ext26
-    MajorVersion: 13
-    MinorVersion: 14
     Type: unknown
-    ProjectInfo:
-      - Project: TEST47.ext26
-        Type: unknown
-        ChiselMajorVersion: 3
-        ChiselMinorVersion: 0
     Registers:
       - RegName: TEST47.ext26.reg
         Width: 64
@@ -1766,22 +1537,17 @@ Extensions:
         ROReg: false
         CSRReg: true
         AMSReg: false
+        TUSReg: false
+        PCReg: false
+        Shared: false
     RegClasses:
       - RegisterClassName: TEST47.ext26.regclass
-        NumRegisters: 1
         Registers:
           - TEST47.ext26.reg
     ISAs:
       - ISAName: TEST47.ext26.isa
   - Extension: TEST47.ext27
-    MajorVersion: 13
-    MinorVersion: 14
     Type: unknown
-    ProjectInfo:
-      - Project: TEST47.ext27
-        Type: unknown
-        ChiselMajorVersion: 3
-        ChiselMinorVersion: 0
     Registers:
       - RegName: TEST47.ext27.reg
         Width: 64
@@ -1792,22 +1558,17 @@ Extensions:
         ROReg: false
         CSRReg: true
         AMSReg: false
+        TUSReg: false
+        PCReg: false
+        Shared: false
     RegClasses:
       - RegisterClassName: TEST47.ext27.regclass
-        NumRegisters: 1
         Registers:
           - TEST47.ext27.reg
     ISAs:
       - ISAName: TEST47.ext27.isa
   - Extension: TEST47.ext28
-    MajorVersion: 13
-    MinorVersion: 14
     Type: unknown
-    ProjectInfo:
-      - Project: TEST47.ext28
-        Type: unknown
-        ChiselMajorVersion: 3
-        ChiselMinorVersion: 0
     Registers:
       - RegName: TEST47.ext28.reg
         Width: 64
@@ -1818,22 +1579,17 @@ Extensions:
         ROReg: false
         CSRReg: true
         AMSReg: false
+        TUSReg: false
+        PCReg: false
+        Shared: false
     RegClasses:
       - RegisterClassName: TEST47.ext28.regclass
-        NumRegisters: 1
         Registers:
           - TEST47.ext28.reg
     ISAs:
       - ISAName: TEST47.ext28.isa
   - Extension: TEST47.ext29
-    MajorVersion: 13
-    MinorVersion: 14
     Type: unknown
-    ProjectInfo:
-      - Project: TEST47.ext29
-        Type: unknown
-        ChiselMajorVersion: 3
-        ChiselMinorVersion: 0
     Registers:
       - RegName: TEST47.ext29.reg
         Width: 64
@@ -1844,22 +1600,17 @@ Extensions:
         ROReg: false
         CSRReg: true
         AMSReg: false
+        TUSReg: false
+        PCReg: false
+        Shared: false
     RegClasses:
       - RegisterClassName: TEST47.ext29.regclass
-        NumRegisters: 1
         Registers:
           - TEST47.ext29.reg
     ISAs:
       - ISAName: TEST47.ext29.isa
   - Extension: TEST47.ext30
-    MajorVersion: 13
-    MinorVersion: 14
     Type: unknown
-    ProjectInfo:
-      - Project: TEST47.ext30
-        Type: unknown
-        ChiselMajorVersion: 3
-        ChiselMinorVersion: 0
     Registers:
       - RegName: TEST47.ext30.reg
         Width: 64
@@ -1870,22 +1621,17 @@ Extensions:
         ROReg: false
         CSRReg: true
         AMSReg: false
+        TUSReg: false
+        PCReg: false
+        Shared: false
     RegClasses:
       - RegisterClassName: TEST47.ext30.regclass
-        NumRegisters: 1
         Registers:
           - TEST47.ext30.reg
     ISAs:
       - ISAName: TEST47.ext30.isa
   - Extension: TEST47.ext31
-    MajorVersion: 13
-    MinorVersion: 14
     Type: unknown
-    ProjectInfo:
-      - Project: TEST47.ext31
-        Type: unknown
-        ChiselMajorVersion: 3
-        ChiselMinorVersion: 0
     Registers:
       - RegName: TEST47.ext31.reg
         Width: 64
@@ -1896,22 +1642,17 @@ Extensions:
         ROReg: false
         CSRReg: true
         AMSReg: false
+        TUSReg: false
+        PCReg: false
+        Shared: false
     RegClasses:
       - RegisterClassName: TEST47.ext31.regclass
-        NumRegisters: 1
         Registers:
           - TEST47.ext31.reg
     ISAs:
       - ISAName: TEST47.ext31.isa
   - Extension: TEST47.ext32
-    MajorVersion: 13
-    MinorVersion: 14
     Type: unknown
-    ProjectInfo:
-      - Project: TEST47.ext32
-        Type: unknown
-        ChiselMajorVersion: 3
-        ChiselMinorVersion: 0
     Registers:
       - RegName: TEST47.ext32.reg
         Width: 64
@@ -1922,22 +1663,17 @@ Extensions:
         ROReg: false
         CSRReg: true
         AMSReg: false
+        TUSReg: false
+        PCReg: false
+        Shared: false
     RegClasses:
       - RegisterClassName: TEST47.ext32.regclass
-        NumRegisters: 1
         Registers:
           - TEST47.ext32.reg
     ISAs:
       - ISAName: TEST47.ext32.isa
   - Extension: TEST47.ext33
-    MajorVersion: 13
-    MinorVersion: 14
     Type: unknown
-    ProjectInfo:
-      - Project: TEST47.ext33
-        Type: unknown
-        ChiselMajorVersion: 3
-        ChiselMinorVersion: 0
     Registers:
       - RegName: TEST47.ext33.reg
         Width: 64
@@ -1948,22 +1684,17 @@ Extensions:
         ROReg: false
         CSRReg: true
         AMSReg: false
+        TUSReg: false
+        PCReg: false
+        Shared: false
     RegClasses:
       - RegisterClassName: TEST47.ext33.regclass
-        NumRegisters: 1
         Registers:
           - TEST47.ext33.reg
     ISAs:
       - ISAName: TEST47.ext33.isa
   - Extension: TEST47.ext34
-    MajorVersion: 13
-    MinorVersion: 14
     Type: unknown
-    ProjectInfo:
-      - Project: TEST47.ext34
-        Type: unknown
-        ChiselMajorVersion: 3
-        ChiselMinorVersion: 0
     Registers:
       - RegName: TEST47.ext34.reg
         Width: 64
@@ -1974,22 +1705,17 @@ Extensions:
         ROReg: false
         CSRReg: true
         AMSReg: false
+        TUSReg: false
+        PCReg: false
+        Shared: false
     RegClasses:
       - RegisterClassName: TEST47.ext34.regclass
-        NumRegisters: 1
         Registers:
           - TEST47.ext34.reg
     ISAs:
       - ISAName: TEST47.ext34.isa
   - Extension: TEST47.ext35
-    MajorVersion: 13
-    MinorVersion: 14
     Type: unknown
-    ProjectInfo:
-      - Project: TEST47.ext35
-        Type: unknown
-        ChiselMajorVersion: 3
-        ChiselMinorVersion: 0
     Registers:
       - RegName: TEST47.ext35.reg
         Width: 64
@@ -2000,22 +1726,17 @@ Extensions:
         ROReg: false
         CSRReg: true
         AMSReg: false
+        TUSReg: false
+        PCReg: false
+        Shared: false
     RegClasses:
       - RegisterClassName: TEST47.ext35.regclass
-        NumRegisters: 1
         Registers:
           - TEST47.ext35.reg
     ISAs:
       - ISAName: TEST47.ext35.isa
   - Extension: TEST47.ext36
-    MajorVersion: 13
-    MinorVersion: 14
     Type: unknown
-    ProjectInfo:
-      - Project: TEST47.ext36
-        Type: unknown
-        ChiselMajorVersion: 3
-        ChiselMinorVersion: 0
     Registers:
       - RegName: TEST47.ext36.reg
         Width: 64
@@ -2026,22 +1747,17 @@ Extensions:
         ROReg: false
         CSRReg: true
         AMSReg: false
+        TUSReg: false
+        PCReg: false
+        Shared: false
     RegClasses:
       - RegisterClassName: TEST47.ext36.regclass
-        NumRegisters: 1
         Registers:
           - TEST47.ext36.reg
     ISAs:
       - ISAName: TEST47.ext36.isa
   - Extension: TEST47.ext37
-    MajorVersion: 13
-    MinorVersion: 14
     Type: unknown
-    ProjectInfo:
-      - Project: TEST47.ext37
-        Type: unknown
-        ChiselMajorVersion: 3
-        ChiselMinorVersion: 0
     Registers:
       - RegName: TEST47.ext37.reg
         Width: 64
@@ -2052,22 +1768,17 @@ Extensions:
         ROReg: false
         CSRReg: true
         AMSReg: false
+        TUSReg: false
+        PCReg: false
+        Shared: false
     RegClasses:
       - RegisterClassName: TEST47.ext37.regclass
-        NumRegisters: 1
         Registers:
           - TEST47.ext37.reg
     ISAs:
       - ISAName: TEST47.ext37.isa
   - Extension: TEST47.ext38
-    MajorVersion: 13
-    MinorVersion: 14
     Type: unknown
-    ProjectInfo:
-      - Project: TEST47.ext38
-        Type: unknown
-        ChiselMajorVersion: 3
-        ChiselMinorVersion: 0
     Registers:
       - RegName: TEST47.ext38.reg
         Width: 64
@@ -2078,22 +1789,17 @@ Extensions:
         ROReg: false
         CSRReg: true
         AMSReg: false
+        TUSReg: false
+        PCReg: false
+        Shared: false
     RegClasses:
       - RegisterClassName: TEST47.ext38.regclass
-        NumRegisters: 1
         Registers:
           - TEST47.ext38.reg
     ISAs:
       - ISAName: TEST47.ext38.isa
   - Extension: TEST47.ext39
-    MajorVersion: 13
-    MinorVersion: 14
     Type: unknown
-    ProjectInfo:
-      - Project: TEST47.ext39
-        Type: unknown
-        ChiselMajorVersion: 3
-        ChiselMinorVersion: 0
     Registers:
       - RegName: TEST47.ext39.reg
         Width: 64
@@ -2104,22 +1810,17 @@ Extensions:
         ROReg: false
         CSRReg: true
         AMSReg: false
+        TUSReg: false
+        PCReg: false
+        Shared: false
     RegClasses:
       - RegisterClassName: TEST47.ext39.regclass
-        NumRegisters: 1
         Registers:
           - TEST47.ext39.reg
     ISAs:
       - ISAName: TEST47.ext39.isa
   - Extension: TEST47.ext40
-    MajorVersion: 13
-    MinorVersion: 14
     Type: unknown
-    ProjectInfo:
-      - Project: TEST47.ext40
-        Type: unknown
-        ChiselMajorVersion: 3
-        ChiselMinorVersion: 0
     Registers:
       - RegName: TEST47.ext40.reg
         Width: 64
@@ -2130,22 +1831,17 @@ Extensions:
         ROReg: false
         CSRReg: true
         AMSReg: false
+        TUSReg: false
+        PCReg: false
+        Shared: false
     RegClasses:
       - RegisterClassName: TEST47.ext40.regclass
-        NumRegisters: 1
         Registers:
           - TEST47.ext40.reg
     ISAs:
       - ISAName: TEST47.ext40.isa
   - Extension: TEST47.ext41
-    MajorVersion: 13
-    MinorVersion: 14
     Type: unknown
-    ProjectInfo:
-      - Project: TEST47.ext41
-        Type: unknown
-        ChiselMajorVersion: 3
-        ChiselMinorVersion: 0
     Registers:
       - RegName: TEST47.ext41.reg
         Width: 64
@@ -2156,22 +1852,17 @@ Extensions:
         ROReg: false
         CSRReg: true
         AMSReg: false
+        TUSReg: false
+        PCReg: false
+        Shared: false
     RegClasses:
       - RegisterClassName: TEST47.ext41.regclass
-        NumRegisters: 1
         Registers:
           - TEST47.ext41.reg
     ISAs:
       - ISAName: TEST47.ext41.isa
   - Extension: TEST47.ext42
-    MajorVersion: 13
-    MinorVersion: 14
     Type: unknown
-    ProjectInfo:
-      - Project: TEST47.ext42
-        Type: unknown
-        ChiselMajorVersion: 3
-        ChiselMinorVersion: 0
     Registers:
       - RegName: TEST47.ext42.reg
         Width: 64
@@ -2182,22 +1873,17 @@ Extensions:
         ROReg: false
         CSRReg: true
         AMSReg: false
+        TUSReg: false
+        PCReg: false
+        Shared: false
     RegClasses:
       - RegisterClassName: TEST47.ext42.regclass
-        NumRegisters: 1
         Registers:
           - TEST47.ext42.reg
     ISAs:
       - ISAName: TEST47.ext42.isa
   - Extension: TEST47.ext43
-    MajorVersion: 13
-    MinorVersion: 14
     Type: unknown
-    ProjectInfo:
-      - Project: TEST47.ext43
-        Type: unknown
-        ChiselMajorVersion: 3
-        ChiselMinorVersion: 0
     Registers:
       - RegName: TEST47.ext43.reg
         Width: 64
@@ -2208,22 +1894,17 @@ Extensions:
         ROReg: false
         CSRReg: true
         AMSReg: false
+        TUSReg: false
+        PCReg: false
+        Shared: false
     RegClasses:
       - RegisterClassName: TEST47.ext43.regclass
-        NumRegisters: 1
         Registers:
           - TEST47.ext43.reg
     ISAs:
       - ISAName: TEST47.ext43.isa
   - Extension: TEST47.ext44
-    MajorVersion: 13
-    MinorVersion: 14
     Type: unknown
-    ProjectInfo:
-      - Project: TEST47.ext44
-        Type: unknown
-        ChiselMajorVersion: 3
-        ChiselMinorVersion: 0
     Registers:
       - RegName: TEST47.ext44.reg
         Width: 64
@@ -2234,22 +1915,17 @@ Extensions:
         ROReg: false
         CSRReg: true
         AMSReg: false
+        TUSReg: false
+        PCReg: false
+        Shared: false
     RegClasses:
       - RegisterClassName: TEST47.ext44.regclass
-        NumRegisters: 1
         Registers:
           - TEST47.ext44.reg
     ISAs:
       - ISAName: TEST47.ext44.isa
   - Extension: TEST47.ext45
-    MajorVersion: 13
-    MinorVersion: 14
     Type: unknown
-    ProjectInfo:
-      - Project: TEST47.ext45
-        Type: unknown
-        ChiselMajorVersion: 3
-        ChiselMinorVersion: 0
     Registers:
       - RegName: TEST47.ext45.reg
         Width: 64
@@ -2260,22 +1936,17 @@ Extensions:
         ROReg: false
         CSRReg: true
         AMSReg: false
+        TUSReg: false
+        PCReg: false
+        Shared: false
     RegClasses:
       - RegisterClassName: TEST47.ext45.regclass
-        NumRegisters: 1
         Registers:
           - TEST47.ext45.reg
     ISAs:
       - ISAName: TEST47.ext45.isa
   - Extension: TEST47.ext46
-    MajorVersion: 13
-    MinorVersion: 14
     Type: unknown
-    ProjectInfo:
-      - Project: TEST47.ext46
-        Type: unknown
-        ChiselMajorVersion: 3
-        ChiselMinorVersion: 0
     Registers:
       - RegName: TEST47.ext46.reg
         Width: 64
@@ -2286,22 +1957,17 @@ Extensions:
         ROReg: false
         CSRReg: true
         AMSReg: false
+        TUSReg: false
+        PCReg: false
+        Shared: false
     RegClasses:
       - RegisterClassName: TEST47.ext46.regclass
-        NumRegisters: 1
         Registers:
           - TEST47.ext46.reg
     ISAs:
       - ISAName: TEST47.ext46.isa
   - Extension: TEST47.ext47
-    MajorVersion: 13
-    MinorVersion: 14
     Type: unknown
-    ProjectInfo:
-      - Project: TEST47.ext47
-        Type: unknown
-        ChiselMajorVersion: 3
-        ChiselMinorVersion: 0
     Registers:
       - RegName: TEST47.ext47.reg
         Width: 64
@@ -2312,22 +1978,17 @@ Extensions:
         ROReg: false
         CSRReg: true
         AMSReg: false
+        TUSReg: false
+        PCReg: false
+        Shared: false
     RegClasses:
       - RegisterClassName: TEST47.ext47.regclass
-        NumRegisters: 1
         Registers:
           - TEST47.ext47.reg
     ISAs:
       - ISAName: TEST47.ext47.isa
   - Extension: TEST47.ext48
-    MajorVersion: 13
-    MinorVersion: 14
     Type: unknown
-    ProjectInfo:
-      - Project: TEST47.ext48
-        Type: unknown
-        ChiselMajorVersion: 3
-        ChiselMinorVersion: 0
     Registers:
       - RegName: TEST47.ext48.reg
         Width: 64
@@ -2338,22 +1999,17 @@ Extensions:
         ROReg: false
         CSRReg: true
         AMSReg: false
+        TUSReg: false
+        PCReg: false
+        Shared: false
     RegClasses:
       - RegisterClassName: TEST47.ext48.regclass
-        NumRegisters: 1
         Registers:
           - TEST47.ext48.reg
     ISAs:
       - ISAName: TEST47.ext48.isa
   - Extension: TEST47.ext49
-    MajorVersion: 13
-    MinorVersion: 14
     Type: unknown
-    ProjectInfo:
-      - Project: TEST47.ext49
-        Type: unknown
-        ChiselMajorVersion: 3
-        ChiselMinorVersion: 0
     Registers:
       - RegName: TEST47.ext49.reg
         Width: 64
@@ -2364,22 +2020,17 @@ Extensions:
         ROReg: false
         CSRReg: true
         AMSReg: false
+        TUSReg: false
+        PCReg: false
+        Shared: false
     RegClasses:
       - RegisterClassName: TEST47.ext49.regclass
-        NumRegisters: 1
         Registers:
           - TEST47.ext49.reg
     ISAs:
       - ISAName: TEST47.ext49.isa
   - Extension: TEST47.ext50
-    MajorVersion: 13
-    MinorVersion: 14
     Type: unknown
-    ProjectInfo:
-      - Project: TEST47.ext50
-        Type: unknown
-        ChiselMajorVersion: 3
-        ChiselMinorVersion: 0
     Registers:
       - RegName: TEST47.ext50.reg
         Width: 64
@@ -2390,22 +2041,17 @@ Extensions:
         ROReg: false
         CSRReg: true
         AMSReg: false
+        TUSReg: false
+        PCReg: false
+        Shared: false
     RegClasses:
       - RegisterClassName: TEST47.ext50.regclass
-        NumRegisters: 1
         Registers:
           - TEST47.ext50.reg
     ISAs:
       - ISAName: TEST47.ext50.isa
   - Extension: TEST47.ext51
-    MajorVersion: 13
-    MinorVersion: 14
     Type: unknown
-    ProjectInfo:
-      - Project: TEST47.ext51
-        Type: unknown
-        ChiselMajorVersion: 3
-        ChiselMinorVersion: 0
     Registers:
       - RegName: TEST47.ext51.reg
         Width: 64
@@ -2416,22 +2062,17 @@ Extensions:
         ROReg: false
         CSRReg: true
         AMSReg: false
+        TUSReg: false
+        PCReg: false
+        Shared: false
     RegClasses:
       - RegisterClassName: TEST47.ext51.regclass
-        NumRegisters: 1
         Registers:
           - TEST47.ext51.reg
     ISAs:
       - ISAName: TEST47.ext51.isa
   - Extension: TEST47.ext52
-    MajorVersion: 13
-    MinorVersion: 14
     Type: unknown
-    ProjectInfo:
-      - Project: TEST47.ext52
-        Type: unknown
-        ChiselMajorVersion: 3
-        ChiselMinorVersion: 0
     Registers:
       - RegName: TEST47.ext52.reg
         Width: 64
@@ -2442,22 +2083,17 @@ Extensions:
         ROReg: false
         CSRReg: true
         AMSReg: false
+        TUSReg: false
+        PCReg: false
+        Shared: false
     RegClasses:
       - RegisterClassName: TEST47.ext52.regclass
-        NumRegisters: 1
         Registers:
           - TEST47.ext52.reg
     ISAs:
       - ISAName: TEST47.ext52.isa
   - Extension: TEST47.ext53
-    MajorVersion: 13
-    MinorVersion: 14
     Type: unknown
-    ProjectInfo:
-      - Project: TEST47.ext53
-        Type: unknown
-        ChiselMajorVersion: 3
-        ChiselMinorVersion: 0
     Registers:
       - RegName: TEST47.ext53.reg
         Width: 64
@@ -2468,22 +2104,17 @@ Extensions:
         ROReg: false
         CSRReg: true
         AMSReg: false
+        TUSReg: false
+        PCReg: false
+        Shared: false
     RegClasses:
       - RegisterClassName: TEST47.ext53.regclass
-        NumRegisters: 1
         Registers:
           - TEST47.ext53.reg
     ISAs:
       - ISAName: TEST47.ext53.isa
   - Extension: TEST47.ext54
-    MajorVersion: 13
-    MinorVersion: 14
     Type: unknown
-    ProjectInfo:
-      - Project: TEST47.ext54
-        Type: unknown
-        ChiselMajorVersion: 3
-        ChiselMinorVersion: 0
     Registers:
       - RegName: TEST47.ext54.reg
         Width: 64
@@ -2494,22 +2125,17 @@ Extensions:
         ROReg: false
         CSRReg: true
         AMSReg: false
+        TUSReg: false
+        PCReg: false
+        Shared: false
     RegClasses:
       - RegisterClassName: TEST47.ext54.regclass
-        NumRegisters: 1
         Registers:
           - TEST47.ext54.reg
     ISAs:
       - ISAName: TEST47.ext54.isa
   - Extension: TEST47.ext55
-    MajorVersion: 13
-    MinorVersion: 14
     Type: unknown
-    ProjectInfo:
-      - Project: TEST47.ext55
-        Type: unknown
-        ChiselMajorVersion: 3
-        ChiselMinorVersion: 0
     Registers:
       - RegName: TEST47.ext55.reg
         Width: 64
@@ -2520,22 +2146,17 @@ Extensions:
         ROReg: false
         CSRReg: true
         AMSReg: false
+        TUSReg: false
+        PCReg: false
+        Shared: false
     RegClasses:
       - RegisterClassName: TEST47.ext55.regclass
-        NumRegisters: 1
         Registers:
           - TEST47.ext55.reg
     ISAs:
       - ISAName: TEST47.ext55.isa
   - Extension: TEST47.ext56
-    MajorVersion: 13
-    MinorVersion: 14
     Type: unknown
-    ProjectInfo:
-      - Project: TEST47.ext56
-        Type: unknown
-        ChiselMajorVersion: 3
-        ChiselMinorVersion: 0
     Registers:
       - RegName: TEST47.ext56.reg
         Width: 64
@@ -2546,22 +2167,17 @@ Extensions:
         ROReg: false
         CSRReg: true
         AMSReg: false
+        TUSReg: false
+        PCReg: false
+        Shared: false
     RegClasses:
       - RegisterClassName: TEST47.ext56.regclass
-        NumRegisters: 1
         Registers:
           - TEST47.ext56.reg
     ISAs:
       - ISAName: TEST47.ext56.isa
   - Extension: TEST47.ext57
-    MajorVersion: 13
-    MinorVersion: 14
     Type: unknown
-    ProjectInfo:
-      - Project: TEST47.ext57
-        Type: unknown
-        ChiselMajorVersion: 3
-        ChiselMinorVersion: 0
     Registers:
       - RegName: TEST47.ext57.reg
         Width: 64
@@ -2572,22 +2188,17 @@ Extensions:
         ROReg: false
         CSRReg: true
         AMSReg: false
+        TUSReg: false
+        PCReg: false
+        Shared: false
     RegClasses:
       - RegisterClassName: TEST47.ext57.regclass
-        NumRegisters: 1
         Registers:
           - TEST47.ext57.reg
     ISAs:
       - ISAName: TEST47.ext57.isa
   - Extension: TEST47.ext58
-    MajorVersion: 13
-    MinorVersion: 14
     Type: unknown
-    ProjectInfo:
-      - Project: TEST47.ext58
-        Type: unknown
-        ChiselMajorVersion: 3
-        ChiselMinorVersion: 0
     Registers:
       - RegName: TEST47.ext58.reg
         Width: 64
@@ -2598,22 +2209,17 @@ Extensions:
         ROReg: false
         CSRReg: true
         AMSReg: false
+        TUSReg: false
+        PCReg: false
+        Shared: false
     RegClasses:
       - RegisterClassName: TEST47.ext58.regclass
-        NumRegisters: 1
         Registers:
           - TEST47.ext58.reg
     ISAs:
       - ISAName: TEST47.ext58.isa
   - Extension: TEST47.ext59
-    MajorVersion: 13
-    MinorVersion: 14
     Type: unknown
-    ProjectInfo:
-      - Project: TEST47.ext59
-        Type: unknown
-        ChiselMajorVersion: 3
-        ChiselMinorVersion: 0
     Registers:
       - RegName: TEST47.ext59.reg
         Width: 64
@@ -2624,22 +2230,17 @@ Extensions:
         ROReg: false
         CSRReg: true
         AMSReg: false
+        TUSReg: false
+        PCReg: false
+        Shared: false
     RegClasses:
       - RegisterClassName: TEST47.ext59.regclass
-        NumRegisters: 1
         Registers:
           - TEST47.ext59.reg
     ISAs:
       - ISAName: TEST47.ext59.isa
   - Extension: TEST47.ext60
-    MajorVersion: 13
-    MinorVersion: 14
     Type: unknown
-    ProjectInfo:
-      - Project: TEST47.ext60
-        Type: unknown
-        ChiselMajorVersion: 3
-        ChiselMinorVersion: 0
     Registers:
       - RegName: TEST47.ext60.reg
         Width: 64
@@ -2650,22 +2251,17 @@ Extensions:
         ROReg: false
         CSRReg: true
         AMSReg: false
+        TUSReg: false
+        PCReg: false
+        Shared: false
     RegClasses:
       - RegisterClassName: TEST47.ext60.regclass
-        NumRegisters: 1
         Registers:
           - TEST47.ext60.reg
     ISAs:
       - ISAName: TEST47.ext60.isa
   - Extension: TEST47.ext61
-    MajorVersion: 13
-    MinorVersion: 14
     Type: unknown
-    ProjectInfo:
-      - Project: TEST47.ext61
-        Type: unknown
-        ChiselMajorVersion: 3
-        ChiselMinorVersion: 0
     Registers:
       - RegName: TEST47.ext61.reg
         Width: 64
@@ -2676,22 +2272,17 @@ Extensions:
         ROReg: false
         CSRReg: true
         AMSReg: false
+        TUSReg: false
+        PCReg: false
+        Shared: false
     RegClasses:
       - RegisterClassName: TEST47.ext61.regclass
-        NumRegisters: 1
         Registers:
           - TEST47.ext61.reg
     ISAs:
       - ISAName: TEST47.ext61.isa
   - Extension: TEST47.ext62
-    MajorVersion: 13
-    MinorVersion: 14
     Type: unknown
-    ProjectInfo:
-      - Project: TEST47.ext62
-        Type: unknown
-        ChiselMajorVersion: 3
-        ChiselMinorVersion: 0
     Registers:
       - RegName: TEST47.ext62.reg
         Width: 64
@@ -2702,22 +2293,17 @@ Extensions:
         ROReg: false
         CSRReg: true
         AMSReg: false
+        TUSReg: false
+        PCReg: false
+        Shared: false
     RegClasses:
       - RegisterClassName: TEST47.ext62.regclass
-        NumRegisters: 1
         Registers:
           - TEST47.ext62.reg
     ISAs:
       - ISAName: TEST47.ext62.isa
   - Extension: TEST47.ext63
-    MajorVersion: 13
-    MinorVersion: 14
     Type: unknown
-    ProjectInfo:
-      - Project: TEST47.ext63
-        Type: unknown
-        ChiselMajorVersion: 3
-        ChiselMinorVersion: 0
     Registers:
       - RegName: TEST47.ext63.reg
         Width: 64
@@ -2728,15 +2314,18 @@ Extensions:
         ROReg: false
         CSRReg: true
         AMSReg: false
+        TUSReg: false
+        PCReg: false
+        Shared: false
     RegClasses:
       - RegisterClassName: TEST47.ext63.regclass
-        NumRegisters: 1
         Registers:
           - TEST47.ext63.reg
     ISAs:
       - ISAName: TEST47.ext63.isa
 Cores:
   - Core: TEST47.core0
+    ThreadUnits: 1
     Cache: TEST47.core0.L1.cache
     ISA: TEST47.isa
     RegisterClasses:
@@ -2745,6 +2334,7 @@ Cores:
     Extensions:
       - Extension: TEST47.ext0
   - Core: TEST47.core1
+    ThreadUnits: 1
     Cache: TEST47.core1.L1.cache
     ISA: TEST47.isa
     RegisterClasses:
@@ -2753,6 +2343,7 @@ Cores:
     Extensions:
       - Extension: TEST47.ext1
   - Core: TEST47.core2
+    ThreadUnits: 1
     Cache: TEST47.core2.L1.cache
     ISA: TEST47.isa
     RegisterClasses:
@@ -2761,6 +2352,7 @@ Cores:
     Extensions:
       - Extension: TEST47.ext2
   - Core: TEST47.core3
+    ThreadUnits: 1
     Cache: TEST47.core3.L1.cache
     ISA: TEST47.isa
     RegisterClasses:
@@ -2769,6 +2361,7 @@ Cores:
     Extensions:
       - Extension: TEST47.ext3
   - Core: TEST47.core4
+    ThreadUnits: 1
     Cache: TEST47.core4.L1.cache
     ISA: TEST47.isa
     RegisterClasses:
@@ -2777,6 +2370,7 @@ Cores:
     Extensions:
       - Extension: TEST47.ext4
   - Core: TEST47.core5
+    ThreadUnits: 1
     Cache: TEST47.core5.L1.cache
     ISA: TEST47.isa
     RegisterClasses:
@@ -2785,6 +2379,7 @@ Cores:
     Extensions:
       - Extension: TEST47.ext5
   - Core: TEST47.core6
+    ThreadUnits: 1
     Cache: TEST47.core6.L1.cache
     ISA: TEST47.isa
     RegisterClasses:
@@ -2793,6 +2388,7 @@ Cores:
     Extensions:
       - Extension: TEST47.ext6
   - Core: TEST47.core7
+    ThreadUnits: 1
     Cache: TEST47.core7.L1.cache
     ISA: TEST47.isa
     RegisterClasses:
@@ -2801,6 +2397,7 @@ Cores:
     Extensions:
       - Extension: TEST47.ext7
   - Core: TEST47.core8
+    ThreadUnits: 1
     Cache: TEST47.core8.L1.cache
     ISA: TEST47.isa
     RegisterClasses:
@@ -2809,6 +2406,7 @@ Cores:
     Extensions:
       - Extension: TEST47.ext8
   - Core: TEST47.core9
+    ThreadUnits: 1
     Cache: TEST47.core9.L1.cache
     ISA: TEST47.isa
     RegisterClasses:
@@ -2817,6 +2415,7 @@ Cores:
     Extensions:
       - Extension: TEST47.ext9
   - Core: TEST47.core10
+    ThreadUnits: 1
     Cache: TEST47.core10.L1.cache
     ISA: TEST47.isa
     RegisterClasses:
@@ -2825,6 +2424,7 @@ Cores:
     Extensions:
       - Extension: TEST47.ext10
   - Core: TEST47.core11
+    ThreadUnits: 1
     Cache: TEST47.core11.L1.cache
     ISA: TEST47.isa
     RegisterClasses:
@@ -2833,6 +2433,7 @@ Cores:
     Extensions:
       - Extension: TEST47.ext11
   - Core: TEST47.core12
+    ThreadUnits: 1
     Cache: TEST47.core12.L1.cache
     ISA: TEST47.isa
     RegisterClasses:
@@ -2841,6 +2442,7 @@ Cores:
     Extensions:
       - Extension: TEST47.ext12
   - Core: TEST47.core13
+    ThreadUnits: 1
     Cache: TEST47.core13.L1.cache
     ISA: TEST47.isa
     RegisterClasses:
@@ -2849,6 +2451,7 @@ Cores:
     Extensions:
       - Extension: TEST47.ext13
   - Core: TEST47.core14
+    ThreadUnits: 1
     Cache: TEST47.core14.L1.cache
     ISA: TEST47.isa
     RegisterClasses:
@@ -2857,6 +2460,7 @@ Cores:
     Extensions:
       - Extension: TEST47.ext14
   - Core: TEST47.core15
+    ThreadUnits: 1
     Cache: TEST47.core15.L1.cache
     ISA: TEST47.isa
     RegisterClasses:
@@ -2865,6 +2469,7 @@ Cores:
     Extensions:
       - Extension: TEST47.ext15
   - Core: TEST47.core16
+    ThreadUnits: 1
     Cache: TEST47.core16.L1.cache
     ISA: TEST47.isa
     RegisterClasses:
@@ -2873,6 +2478,7 @@ Cores:
     Extensions:
       - Extension: TEST47.ext16
   - Core: TEST47.core17
+    ThreadUnits: 1
     Cache: TEST47.core17.L1.cache
     ISA: TEST47.isa
     RegisterClasses:
@@ -2881,6 +2487,7 @@ Cores:
     Extensions:
       - Extension: TEST47.ext17
   - Core: TEST47.core18
+    ThreadUnits: 1
     Cache: TEST47.core18.L1.cache
     ISA: TEST47.isa
     RegisterClasses:
@@ -2889,6 +2496,7 @@ Cores:
     Extensions:
       - Extension: TEST47.ext18
   - Core: TEST47.core19
+    ThreadUnits: 1
     Cache: TEST47.core19.L1.cache
     ISA: TEST47.isa
     RegisterClasses:
@@ -2897,6 +2505,7 @@ Cores:
     Extensions:
       - Extension: TEST47.ext19
   - Core: TEST47.core20
+    ThreadUnits: 1
     Cache: TEST47.core20.L1.cache
     ISA: TEST47.isa
     RegisterClasses:
@@ -2905,6 +2514,7 @@ Cores:
     Extensions:
       - Extension: TEST47.ext20
   - Core: TEST47.core21
+    ThreadUnits: 1
     Cache: TEST47.core21.L1.cache
     ISA: TEST47.isa
     RegisterClasses:
@@ -2913,6 +2523,7 @@ Cores:
     Extensions:
       - Extension: TEST47.ext21
   - Core: TEST47.core22
+    ThreadUnits: 1
     Cache: TEST47.core22.L1.cache
     ISA: TEST47.isa
     RegisterClasses:
@@ -2921,6 +2532,7 @@ Cores:
     Extensions:
       - Extension: TEST47.ext22
   - Core: TEST47.core23
+    ThreadUnits: 1
     Cache: TEST47.core23.L1.cache
     ISA: TEST47.isa
     RegisterClasses:
@@ -2929,6 +2541,7 @@ Cores:
     Extensions:
       - Extension: TEST47.ext23
   - Core: TEST47.core24
+    ThreadUnits: 1
     Cache: TEST47.core24.L1.cache
     ISA: TEST47.isa
     RegisterClasses:
@@ -2937,6 +2550,7 @@ Cores:
     Extensions:
       - Extension: TEST47.ext24
   - Core: TEST47.core25
+    ThreadUnits: 1
     Cache: TEST47.core25.L1.cache
     ISA: TEST47.isa
     RegisterClasses:
@@ -2945,6 +2559,7 @@ Cores:
     Extensions:
       - Extension: TEST47.ext25
   - Core: TEST47.core26
+    ThreadUnits: 1
     Cache: TEST47.core26.L1.cache
     ISA: TEST47.isa
     RegisterClasses:
@@ -2953,6 +2568,7 @@ Cores:
     Extensions:
       - Extension: TEST47.ext26
   - Core: TEST47.core27
+    ThreadUnits: 1
     Cache: TEST47.core27.L1.cache
     ISA: TEST47.isa
     RegisterClasses:
@@ -2961,6 +2577,7 @@ Cores:
     Extensions:
       - Extension: TEST47.ext27
   - Core: TEST47.core28
+    ThreadUnits: 1
     Cache: TEST47.core28.L1.cache
     ISA: TEST47.isa
     RegisterClasses:
@@ -2969,6 +2586,7 @@ Cores:
     Extensions:
       - Extension: TEST47.ext28
   - Core: TEST47.core29
+    ThreadUnits: 1
     Cache: TEST47.core29.L1.cache
     ISA: TEST47.isa
     RegisterClasses:
@@ -2977,6 +2595,7 @@ Cores:
     Extensions:
       - Extension: TEST47.ext29
   - Core: TEST47.core30
+    ThreadUnits: 1
     Cache: TEST47.core30.L1.cache
     ISA: TEST47.isa
     RegisterClasses:
@@ -2985,6 +2604,7 @@ Cores:
     Extensions:
       - Extension: TEST47.ext30
   - Core: TEST47.core31
+    ThreadUnits: 1
     Cache: TEST47.core31.L1.cache
     ISA: TEST47.isa
     RegisterClasses:
@@ -2993,6 +2613,7 @@ Cores:
     Extensions:
       - Extension: TEST47.ext31
   - Core: TEST47.core32
+    ThreadUnits: 1
     Cache: TEST47.core32.L1.cache
     ISA: TEST47.isa
     RegisterClasses:
@@ -3001,6 +2622,7 @@ Cores:
     Extensions:
       - Extension: TEST47.ext32
   - Core: TEST47.core33
+    ThreadUnits: 1
     Cache: TEST47.core33.L1.cache
     ISA: TEST47.isa
     RegisterClasses:
@@ -3009,6 +2631,7 @@ Cores:
     Extensions:
       - Extension: TEST47.ext33
   - Core: TEST47.core34
+    ThreadUnits: 1
     Cache: TEST47.core34.L1.cache
     ISA: TEST47.isa
     RegisterClasses:
@@ -3017,6 +2640,7 @@ Cores:
     Extensions:
       - Extension: TEST47.ext34
   - Core: TEST47.core35
+    ThreadUnits: 1
     Cache: TEST47.core35.L1.cache
     ISA: TEST47.isa
     RegisterClasses:
@@ -3025,6 +2649,7 @@ Cores:
     Extensions:
       - Extension: TEST47.ext35
   - Core: TEST47.core36
+    ThreadUnits: 1
     Cache: TEST47.core36.L1.cache
     ISA: TEST47.isa
     RegisterClasses:
@@ -3033,6 +2658,7 @@ Cores:
     Extensions:
       - Extension: TEST47.ext36
   - Core: TEST47.core37
+    ThreadUnits: 1
     Cache: TEST47.core37.L1.cache
     ISA: TEST47.isa
     RegisterClasses:
@@ -3041,6 +2667,7 @@ Cores:
     Extensions:
       - Extension: TEST47.ext37
   - Core: TEST47.core38
+    ThreadUnits: 1
     Cache: TEST47.core38.L1.cache
     ISA: TEST47.isa
     RegisterClasses:
@@ -3049,6 +2676,7 @@ Cores:
     Extensions:
       - Extension: TEST47.ext38
   - Core: TEST47.core39
+    ThreadUnits: 1
     Cache: TEST47.core39.L1.cache
     ISA: TEST47.isa
     RegisterClasses:
@@ -3057,6 +2685,7 @@ Cores:
     Extensions:
       - Extension: TEST47.ext39
   - Core: TEST47.core40
+    ThreadUnits: 1
     Cache: TEST47.core40.L1.cache
     ISA: TEST47.isa
     RegisterClasses:
@@ -3065,6 +2694,7 @@ Cores:
     Extensions:
       - Extension: TEST47.ext40
   - Core: TEST47.core41
+    ThreadUnits: 1
     Cache: TEST47.core41.L1.cache
     ISA: TEST47.isa
     RegisterClasses:
@@ -3073,6 +2703,7 @@ Cores:
     Extensions:
       - Extension: TEST47.ext41
   - Core: TEST47.core42
+    ThreadUnits: 1
     Cache: TEST47.core42.L1.cache
     ISA: TEST47.isa
     RegisterClasses:
@@ -3081,6 +2712,7 @@ Cores:
     Extensions:
       - Extension: TEST47.ext42
   - Core: TEST47.core43
+    ThreadUnits: 1
     Cache: TEST47.core43.L1.cache
     ISA: TEST47.isa
     RegisterClasses:
@@ -3089,6 +2721,7 @@ Cores:
     Extensions:
       - Extension: TEST47.ext43
   - Core: TEST47.core44
+    ThreadUnits: 1
     Cache: TEST47.core44.L1.cache
     ISA: TEST47.isa
     RegisterClasses:
@@ -3097,6 +2730,7 @@ Cores:
     Extensions:
       - Extension: TEST47.ext44
   - Core: TEST47.core45
+    ThreadUnits: 1
     Cache: TEST47.core45.L1.cache
     ISA: TEST47.isa
     RegisterClasses:
@@ -3105,6 +2739,7 @@ Cores:
     Extensions:
       - Extension: TEST47.ext45
   - Core: TEST47.core46
+    ThreadUnits: 1
     Cache: TEST47.core46.L1.cache
     ISA: TEST47.isa
     RegisterClasses:
@@ -3113,6 +2748,7 @@ Cores:
     Extensions:
       - Extension: TEST47.ext46
   - Core: TEST47.core47
+    ThreadUnits: 1
     Cache: TEST47.core47.L1.cache
     ISA: TEST47.isa
     RegisterClasses:
@@ -3121,6 +2757,7 @@ Cores:
     Extensions:
       - Extension: TEST47.ext47
   - Core: TEST47.core48
+    ThreadUnits: 1
     Cache: TEST47.core48.L1.cache
     ISA: TEST47.isa
     RegisterClasses:
@@ -3129,6 +2766,7 @@ Cores:
     Extensions:
       - Extension: TEST47.ext48
   - Core: TEST47.core49
+    ThreadUnits: 1
     Cache: TEST47.core49.L1.cache
     ISA: TEST47.isa
     RegisterClasses:
@@ -3137,6 +2775,7 @@ Cores:
     Extensions:
       - Extension: TEST47.ext49
   - Core: TEST47.core50
+    ThreadUnits: 1
     Cache: TEST47.core50.L1.cache
     ISA: TEST47.isa
     RegisterClasses:
@@ -3145,6 +2784,7 @@ Cores:
     Extensions:
       - Extension: TEST47.ext50
   - Core: TEST47.core51
+    ThreadUnits: 1
     Cache: TEST47.core51.L1.cache
     ISA: TEST47.isa
     RegisterClasses:
@@ -3153,6 +2793,7 @@ Cores:
     Extensions:
       - Extension: TEST47.ext51
   - Core: TEST47.core52
+    ThreadUnits: 1
     Cache: TEST47.core52.L1.cache
     ISA: TEST47.isa
     RegisterClasses:
@@ -3161,6 +2802,7 @@ Cores:
     Extensions:
       - Extension: TEST47.ext52
   - Core: TEST47.core53
+    ThreadUnits: 1
     Cache: TEST47.core53.L1.cache
     ISA: TEST47.isa
     RegisterClasses:
@@ -3169,6 +2811,7 @@ Cores:
     Extensions:
       - Extension: TEST47.ext53
   - Core: TEST47.core54
+    ThreadUnits: 1
     Cache: TEST47.core54.L1.cache
     ISA: TEST47.isa
     RegisterClasses:
@@ -3177,6 +2820,7 @@ Cores:
     Extensions:
       - Extension: TEST47.ext54
   - Core: TEST47.core55
+    ThreadUnits: 1
     Cache: TEST47.core55.L1.cache
     ISA: TEST47.isa
     RegisterClasses:
@@ -3185,6 +2829,7 @@ Cores:
     Extensions:
       - Extension: TEST47.ext55
   - Core: TEST47.core56
+    ThreadUnits: 1
     Cache: TEST47.core56.L1.cache
     ISA: TEST47.isa
     RegisterClasses:
@@ -3193,6 +2838,7 @@ Cores:
     Extensions:
       - Extension: TEST47.ext56
   - Core: TEST47.core57
+    ThreadUnits: 1
     Cache: TEST47.core57.L1.cache
     ISA: TEST47.isa
     RegisterClasses:
@@ -3201,6 +2847,7 @@ Cores:
     Extensions:
       - Extension: TEST47.ext57
   - Core: TEST47.core58
+    ThreadUnits: 1
     Cache: TEST47.core58.L1.cache
     ISA: TEST47.isa
     RegisterClasses:
@@ -3209,6 +2856,7 @@ Cores:
     Extensions:
       - Extension: TEST47.ext58
   - Core: TEST47.core59
+    ThreadUnits: 1
     Cache: TEST47.core59.L1.cache
     ISA: TEST47.isa
     RegisterClasses:
@@ -3217,6 +2865,7 @@ Cores:
     Extensions:
       - Extension: TEST47.ext59
   - Core: TEST47.core60
+    ThreadUnits: 1
     Cache: TEST47.core60.L1.cache
     ISA: TEST47.isa
     RegisterClasses:
@@ -3225,6 +2874,7 @@ Cores:
     Extensions:
       - Extension: TEST47.ext60
   - Core: TEST47.core61
+    ThreadUnits: 1
     Cache: TEST47.core61.L1.cache
     ISA: TEST47.isa
     RegisterClasses:
@@ -3233,6 +2883,7 @@ Cores:
     Extensions:
       - Extension: TEST47.ext61
   - Core: TEST47.core62
+    ThreadUnits: 1
     Cache: TEST47.core62.L1.cache
     ISA: TEST47.isa
     RegisterClasses:
@@ -3241,6 +2892,7 @@ Cores:
     Extensions:
       - Extension: TEST47.ext62
   - Core: TEST47.core63
+    ThreadUnits: 1
     Cache: TEST47.core63.L1.cache
     ISA: TEST47.isa
     RegisterClasses:

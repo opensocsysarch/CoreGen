@@ -2941,30 +2941,18 @@ Caches:
     Sets: 1
     Ways: 1
     SubLevel: TEST72.L2.cache
-  - Cache: TEST72.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST72.core1.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST72.L2.cache
-  - Cache: TEST72.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST72.core2.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST72.L2.cache
-  - Cache: TEST72.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST72.core3.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST72.L2.cache
-  - Cache: TEST72.L2.cache
-    Sets: 2
-    Ways: 8
 Comms:
   - Comm: TEST72.comm
     Type: NOC
