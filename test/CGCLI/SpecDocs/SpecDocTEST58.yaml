@@ -2480,30 +2480,18 @@ Caches:
     Sets: 1
     Ways: 1
     SubLevel: TEST56.L2.cache
-  - Cache: TEST56.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST56.core1.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST56.L2.cache
-  - Cache: TEST56.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST56.core2.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST56.L2.cache
-  - Cache: TEST56.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST56.core3.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST56.L2.cache
-  - Cache: TEST56.L2.cache
-    Sets: 2
-    Ways: 8
 Scratchpads:
   - Scratchpad: TEST56.0.spad
     MemSize: 1024

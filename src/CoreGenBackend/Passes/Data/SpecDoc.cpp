@@ -601,7 +601,42 @@ bool SpecDoc::WriteInstTableTex(CoreGenDAG *DAG, std::ofstream &ofs ){
   ofs << "\% ---------------------------------------------------------------" << std::endl;
   ofs << "\\clearpage" << std::endl;
   ofs << "\\section{Instruction Table}" << std::endl;
-  ofs << "\\label{sec:InstructionTable}" << std::endl;
+  ofs << "\\label{sec:InstructionTable}" << std::endl << std::endl;
+
+  ofs << "\\begin{center}" << std::endl;
+  ofs << "\\begin{longtable}{| l | l | l | l |}" << std::endl;
+  ofs << "\\hline" << std::endl;
+  ofs << "\\textbf{Instruction} & \\textbf{ISA} & \\textbf{Format} & \\textbf{Mnemonic}\\\\" << std::endl;
+  ofs << "\\hline" << std::endl;
+
+  for( unsigned i=0; i<DAG->GetDimSize(); i++ ){
+    CoreGenNode *N = DAG->FindNodeByIndex(i);
+    if( N->GetType() == CGInst ){
+      // print an instruction entry
+      CoreGenInst *INST = static_cast<CoreGenInst *>(N);
+
+      std::string Syntax = "UNKNOWN";
+      if( INST->IsSyntax() ){
+        Syntax = INST->GetSyntax();
+        Syntax.erase(std::remove(Syntax.begin(), Syntax.end(), '%'), Syntax.end());
+        Syntax.erase(std::remove(Syntax.begin(), Syntax.end(), '$'), Syntax.end());
+        Syntax.erase(std::remove(Syntax.begin(), Syntax.end(), '#'), Syntax.end());
+      }
+
+      ofs << "\\textbf{" << EscapeUnderscore(INST->GetName()) << "} & "
+          << EscapeUnderscore(INST->GetISA()->GetName()) << " & "
+          << EscapeUnderscore(INST->GetFormat()->GetName()) << " & "
+          << "\\texttt{" << Syntax << "} \\\\" << std::endl;
+
+      ofs << "\\hline" << std::endl;
+    }
+  }
+
+  ofs << "\\caption{Instruction Set Table}" << std::endl;
+  ofs << "\\label{tab:INSTTABLE}" << std::endl;
+  ofs << "\\end{longtable}" << std::endl;
+  ofs << "\\end{center}" << std::endl;
+  ofs << std::endl << std::endl;
 
   return true;
 }

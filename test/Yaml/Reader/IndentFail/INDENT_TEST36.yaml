@@ -1,0 +1,614 @@
+Registers:
+  - RegName: TEST36.0.reg
+    Width: 64
+    Index: 0
+    PseudoName: pseudoreg.0
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST36.1.reg
+    Width: 64
+    Index: 1
+    PseudoName: pseudoreg.1
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST36.2.reg
+    Width: 64
+    Index: 2
+    PseudoName: pseudoreg.2
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST36.3.reg
+    Width: 64
+    Index: 3
+    PseudoName: pseudoreg.3
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST36.4.reg
+    Width: 64
+    Index: 4
+    PseudoName: pseudoreg.4
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST36.5.reg
+    Width: 64
+    Index: 5
+    PseudoName: pseudoreg.5
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST36.6.reg
+    Width: 64
+    Index: 6
+    PseudoName: pseudoreg.6
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST36.7.reg
+    Width: 64
+    Index: 7
+    PseudoName: pseudoreg.7
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST36.8.reg
+    Width: 64
+    Index: 8
+    PseudoName: pseudoreg.8
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST36.9.reg
+    Width: 64
+    Index: 9
+    PseudoName: pseudoreg.9
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST36.10.reg
+    Width: 64
+    Index: 10
+    PseudoName: pseudoreg.10
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST36.11.reg
+    Width: 64
+    Index: 11
+    PseudoName: pseudoreg.11
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST36.12.reg
+    Width: 64
+    Index: 12
+    PseudoName: pseudoreg.12
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST36.13.reg
+    Width: 64
+    Index: 13
+    PseudoName: pseudoreg.13
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST36.14.reg
+    Width: 64
+    Index: 14
+    PseudoName: pseudoreg.14
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST36.15.reg
+    Width: 64
+    Index: 15
+    PseudoName: pseudoreg.15
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST36.0.csr
+    Width: 64
+    Index: 0
+    PseudoName: csr.0
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST36.1.csr
+    Width: 64
+    Index: 1
+    PseudoName: csr.1
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST36.2.csr
+    Width: 64
+    Index: 2
+    PseudoName: csr.2
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST36.3.csr
+    Width: 64
+    Index: 3
+    PseudoName: csr.3
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST36.4.csr
+    Width: 64
+    Index: 4
+    PseudoName: csr.4
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST36.5.csr
+    Width: 64
+    Index: 5
+    PseudoName: csr.5
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST36.6.csr
+    Width: 64
+    Index: 6
+    PseudoName: csr.6
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST36.7.csr
+    Width: 64
+    Index: 7
+    PseudoName: csr.7
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST36.8.csr
+    Width: 64
+    Index: 8
+    PseudoName: csr.8
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST36.9.csr
+    Width: 64
+    Index: 9
+    PseudoName: csr.9
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST36.10.csr
+    Width: 64
+    Index: 10
+    PseudoName: csr.10
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST36.11.csr
+    Width: 64
+    Index: 11
+    PseudoName: csr.11
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST36.12.csr
+    Width: 64
+    Index: 12
+    PseudoName: csr.12
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST36.13.csr
+    Width: 64
+    Index: 13
+    PseudoName: csr.13
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST36.14.csr
+    Width: 64
+    Index: 14
+    PseudoName: csr.14
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST36.15.csr
+    Width: 64
+    Index: 15
+    PseudoName: csr.15
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+RegClasses:
+  - RegisterClassName: TEST36.regclass
+    NumRegisters: 16
+    Registers:
+      - TEST36.0.reg
+      - TEST36.1.reg
+      - TEST36.2.reg
+      - TEST36.3.reg
+      - TEST36.4.reg
+      - TEST36.5.reg
+      - TEST36.6.reg
+      - TEST36.7.reg
+      - TEST36.8.reg
+      - TEST36.9.reg
+      - TEST36.10.reg
+      - TEST36.11.reg
+      - TEST36.12.reg
+      - TEST36.13.reg
+      - TEST36.14.reg
+      - TEST36.15.reg
+  - RegisterClassName: TEST36.csrregclass
+    NumRegisters: 16
+    Registers:
+      - TEST36.0.csr
+      - TEST36.1.csr
+      - TEST36.2.csr
+      - TEST36.3.csr
+      - TEST36.4.csr
+      - TEST36.5.csr
+      - TEST36.6.csr
+      - TEST36.7.csr
+      - TEST36.8.csr
+      - TEST36.9.csr
+      - TEST36.10.csr
+      - TEST36.11.csr
+      - TEST36.12.csr
+      - TEST36.13.csr
+      - TEST36.14.csr
+      - TEST36.15.csr
+ISAs:
+  - ISAName: TEST36.isa
+InstFormats:
+  - InstFormatName: TEST36.if
+    ISA: TEST36.isa
+    FormatWidth: 32
+    Fields:
+      - FieldName: opcode
+        FieldType: CGInstCode
+        FieldWidth: 8
+        StartBit: 0
+        EndBit: 7
+        MandatoryField: true
+      - FieldName: RB
+        FieldType: CGInstReg
+        FieldWidth: 8
+        StartBit: 8
+        EndBit: 15
+        MandatoryField: false
+        RegClass: TEST36.regclass
+      - FieldName: RA
+        FieldType: CGInstReg
+        FieldWidth: 8
+        StartBit: 16
+        EndBit: 23
+        MandatoryField: false
+        RegClass: TEST36.regclass
+      - FieldName: RT
+        FieldType: CGInstReg
+        FieldWidth: 8
+        StartBit: 24
+        EndBit: 31
+        MandatoryField: false
+        RegClass: TEST36.csrregclass
+Insts:
+  - Inst: TEST36.inst0
+    ISA: TEST36.isa
+    InstFormat: TEST36.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 1
+  - Inst: TEST36.inst1
+    ISA: TEST36.isa
+    InstFormat: TEST36.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 2
+  - Inst: TEST36.inst2
+    ISA: TEST36.isa
+    InstFormat: TEST36.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 3
+  - Inst: TEST36.inst3
+    ISA: TEST36.isa
+    InstFormat: TEST36.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 4
+  - Inst: TEST36.inst4
+    ISA: TEST36.isa
+    InstFormat: TEST36.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 5
+  - Inst: TEST36.inst5
+    ISA: TEST36.isa
+    InstFormat: TEST36.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 6
+  - Inst: TEST36.inst6
+    ISA: TEST36.isa
+    InstFormat: TEST36.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 7
+  - Inst: TEST36.inst7
+    ISA: TEST36.isa
+    InstFormat: TEST36.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 8
+  - Inst: TEST36.inst8
+    ISA: TEST36.isa
+    InstFormat: TEST36.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 9
+  - Inst: TEST36.inst9
+    ISA: TEST36.isa
+    InstFormat: TEST36.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 10
+  - Inst: TEST36.inst10
+    ISA: TEST36.isa
+    InstFormat: TEST36.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 11
+  - Inst: TEST36.inst11
+    ISA: TEST36.isa
+    InstFormat: TEST36.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 12
+  - Inst: TEST36.inst12
+    ISA: TEST36.isa
+    InstFormat: TEST36.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 13
+  - Inst: TEST36.inst13
+    ISA: TEST36.isa
+    InstFormat: TEST36.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 14
+  - Inst: TEST36.inst14
+    ISA: TEST36.isa
+    InstFormat: TEST36.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 15
+  - Inst: TEST36.inst15
+    ISA: TEST36.isa
+    InstFormat: TEST36.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 16
+PseudoInsts:
+  - PseudoInst: TEST36.pinst0
+    ISA: TEST36.isa
+    Inst: TEST36.inst0
+    Encodings:
+      []
+  - PseudoInst: TEST36.pinst1
+    ISA: TEST36.isa
+    Inst: TEST36.inst1
+    Encodings:
+      []
+  - PseudoInst: TEST36.pinst2
+    ISA: TEST36.isa
+    Inst: TEST36.inst2
+    Encodings:
+[]
+  - PseudoInst: TEST36.pinst3
+    ISA: TEST36.isa
+    Inst: TEST36.inst3
+    Encodings:
+      []
+  - PseudoInst: TEST36.pinst4
+    ISA: TEST36.isa
+    Inst: TEST36.inst4
+    Encodings:
+      []
+  - PseudoInst: TEST36.pinst5
+    ISA: TEST36.isa
+    Inst: TEST36.inst5
+    Encodings:
+      []
+  - PseudoInst: TEST36.pinst6
+    ISA: TEST36.isa
+    Inst: TEST36.inst6
+    Encodings:
+      []
+  - PseudoInst: TEST36.pinst7
+    ISA: TEST36.isa
+    Inst: TEST36.inst7
+    Encodings:
+      []
+  - PseudoInst: TEST36.pinst8
+    ISA: TEST36.isa
+    Inst: TEST36.inst8
+    Encodings:
+      []
+  - PseudoInst: TEST36.pinst9
+    ISA: TEST36.isa
+    Inst: TEST36.inst9
+    Encodings:
+      []
+  - PseudoInst: TEST36.pinst10
+    ISA: TEST36.isa
+    Inst: TEST36.inst10
+    Encodings:
+      []
+  - PseudoInst: TEST36.pinst11
+    ISA: TEST36.isa
+    Inst: TEST36.inst11
+    Encodings:
+      []
+  - PseudoInst: TEST36.pinst12
+    ISA: TEST36.isa
+    Inst: TEST36.inst12
+    Encodings:
+      []
+  - PseudoInst: TEST36.pinst13
+    ISA: TEST36.isa
+    Inst: TEST36.inst13
+    Encodings:
+      []
+  - PseudoInst: TEST36.pinst14
+    ISA: TEST36.isa
+    Inst: TEST36.inst14
+    Encodings:
+      []
+  - PseudoInst: TEST36.pinst15
+    ISA: TEST36.isa
+    Inst: TEST36.inst15
+    Encodings:
+      []
+Caches:
+  - Cache: TEST36.L2.cache
+    Sets: 2
+    Ways: 8
+  - Cache: TEST36.core1.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST36.L2.cache
+  - Cache: TEST36.core2.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST36.L2.cache
+Cores:
+  - Core: TEST36.core1
+    Cache: TEST36.core1.L1.cache
+    ISA: TEST36.isa
+    RegisterClasses:
+      - RegClass: TEST36.regclass
+      - RegClass: TEST36.csrregclass
+  - Core: TEST36.core2
+    Cache: TEST36.core2.L1.cache
+    ISA: TEST36.isa
+Socs:
+  - Soc: TEST36.soc
+    Cores:
+      - Core: TEST36.core1

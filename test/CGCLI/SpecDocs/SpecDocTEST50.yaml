@@ -2354,114 +2354,66 @@ Caches:
     Sets: 1
     Ways: 1
     SubLevel: TEST50.L2.cache
-  - Cache: TEST50.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST50.core1.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST50.L2.cache
-  - Cache: TEST50.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST50.core2.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST50.L2.cache
-  - Cache: TEST50.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST50.core3.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST50.L2.cache
-  - Cache: TEST50.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST50.core4.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST50.L2.cache
-  - Cache: TEST50.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST50.core5.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST50.L2.cache
-  - Cache: TEST50.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST50.core6.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST50.L2.cache
-  - Cache: TEST50.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST50.core7.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST50.L2.cache
-  - Cache: TEST50.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST50.core8.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST50.L2.cache
-  - Cache: TEST50.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST50.core9.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST50.L2.cache
-  - Cache: TEST50.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST50.core10.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST50.L2.cache
-  - Cache: TEST50.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST50.core11.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST50.L2.cache
-  - Cache: TEST50.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST50.core12.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST50.L2.cache
-  - Cache: TEST50.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST50.core13.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST50.L2.cache
-  - Cache: TEST50.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST50.core14.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST50.L2.cache
-  - Cache: TEST50.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST50.core15.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST50.L2.cache
-  - Cache: TEST50.L2.cache
-    Sets: 2
-    Ways: 8
 Extensions:
   - Extension: TEST50.ext0
     MajorVersion: 13

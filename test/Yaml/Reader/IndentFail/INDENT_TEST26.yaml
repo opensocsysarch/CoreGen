@@ -1,0 +1,409 @@
+Registers:
+  - RegName: TEST26.0.reg
+    Width: 64
+    Index: 0
+    PseudoName: pseudoreg.0
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST26.1.reg
+    Width: 64
+    Index: 1
+    PseudoName: pseudoreg.1
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST26.2.reg
+    Width: 64
+    Index: 2
+    PseudoName: pseudoreg.2
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST26.3.reg
+    Width: 64
+    Index: 3
+    PseudoName: pseudoreg.3
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST26.4.reg
+    Width: 64
+    Index: 4
+    PseudoName: pseudoreg.4
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST26.5.reg
+    Width: 64
+    Index: 5
+    PseudoName: pseudoreg.5
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST26.6.reg
+    Width: 64
+    Index: 6
+    PseudoName: pseudoreg.6
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST26.7.reg
+    Width: 64
+    Index: 7
+    PseudoName: pseudoreg.7
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST26.8.reg
+    Width: 64
+    Index: 8
+    PseudoName: pseudoreg.8
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST26.9.reg
+    Width: 64
+    Index: 9
+    PseudoName: pseudoreg.9
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST26.10.reg
+    Width: 64
+    Index: 10
+    PseudoName: pseudoreg.10
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST26.11.reg
+    Width: 64
+    Index: 11
+    PseudoName: pseudoreg.11
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST26.12.reg
+    Width: 64
+    Index: 12
+    PseudoName: pseudoreg.12
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST26.13.reg
+    Width: 64
+    Index: 13
+    PseudoName: pseudoreg.13
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST26.14.reg
+    Width: 64
+    Index: 14
+    PseudoName: pseudoreg.14
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST26.15.reg
+    Width: 64
+    Index: 15
+    PseudoName: pseudoreg.15
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST26.0.csr
+    Width: 64
+    Index: 0
+    PseudoName: csr.0
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST26.1.csr
+    Width: 64
+    Index: 1
+    PseudoName: csr.1
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST26.2.csr
+    Width: 64
+    Index: 2
+    PseudoName: csr.2
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST26.3.csr
+    Width: 64
+    Index: 3
+    PseudoName: csr.3
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST26.4.csr
+    Width: 64
+    Index: 4
+    PseudoName: csr.4
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST26.5.csr
+    Width: 64
+    Index: 5
+    PseudoName: csr.5
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST26.6.csr
+    Width: 64
+    Index: 6
+    PseudoName: csr.6
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST26.7.csr
+    Width: 64
+    Index: 7
+    PseudoName: csr.7
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST26.8.csr
+    Width: 64
+    Index: 8
+    PseudoName: csr.8
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST26.9.csr
+    Width: 64
+    Index: 9
+    PseudoName: csr.9
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST26.10.csr
+    Width: 64
+    Index: 10
+    PseudoName: csr.10
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST26.11.csr
+    Width: 64
+    Index: 11
+    PseudoName: csr.11
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST26.12.csr
+    Width: 64
+    Index: 12
+    PseudoName: csr.12
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST26.13.csr
+    Width: 64
+    Index: 13
+    PseudoName: csr.13
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST26.14.csr
+    Width: 64
+    Index: 14
+    PseudoName: csr.14
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST26.15.csr
+    Width: 64
+    Index: 15
+    PseudoName: csr.15
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+RegClasses:
+  - RegisterClassName: TEST26.regclass
+    NumRegisters: 16
+    Registers:
+      - TEST26.0.reg
+      - TEST26.1.reg
+      - TEST26.2.reg
+      - TEST26.3.reg
+      - TEST26.4.reg
+      - TEST26.5.reg
+      - TEST26.6.reg
+      - TEST26.7.reg
+      - TEST26.8.reg
+      - TEST26.9.reg
+      - TEST26.10.reg
+      - TEST26.11.reg
+      - TEST26.12.reg
+      - TEST26.13.reg
+      - TEST26.14.reg
+      - TEST26.15.reg
+  - RegisterClassName: TEST26.csrregclass
+    NumRegisters: 16
+    Registers:
+      - TEST26.0.csr
+      - TEST26.1.csr
+      - TEST26.2.csr
+      - TEST26.3.csr
+      - TEST26.4.csr
+      - TEST26.5.csr
+      - TEST26.6.csr
+      - TEST26.7.csr
+      - TEST26.8.csr
+      - TEST26.9.csr
+      - TEST26.10.csr
+      - TEST26.11.csr
+      - TEST26.12.csr
+      - TEST26.13.csr
+      - TEST26.14.csr
+      - TEST26.15.csr
+ISAs:
+  - ISAName: TEST26.isa
+InstFormats:
+  - InstFormatName: TEST26.if
+    ISA: TEST26.isa
+    FormatWidth: 32
+    Fields:
+      - FieldName: opcode
+        FieldType: CGInstCode
+        FieldWidth: 8
+        StartBit: 0
+        EndBit: 7
+        MandatoryField: true
+      - FieldName: RB
+        FieldType: CGInstReg
+        FieldWidth: 8
+        StartBit: 8
+        EndBit: 15
+        MandatoryField: false
+        RegClass: TEST26.regclass
+      - FieldName: RA
+        FieldType: CGInstReg
+        FieldWidth: 8
+        StartBit: 16
+        EndBit: 23
+        MandatoryField: false
+        RegClass: TEST26.regclass
+      - FieldName: RT
+        FieldType: CGInstReg
+        FieldWidth: 8
+        StartBit: 24
+        EndBit: 31
+        MandatoryField: false
+        RegClass: TEST26.csrregclass
+Caches:
+  - Cache: TEST26.cache
+    Sets: 1
+    Ways: 8
+Cores:
+  - Core: TEST26.core
+    Cache: TEST26.cache
+    ISA: TEST26.isa
+    RegisterClasses:
+      - RegClass: TEST26.regclass
+- RegClass: TEST26.csrregclass
+Socs:
+  - Soc: TEST26.soc
+    Cores:
+      - Core: TEST26.core

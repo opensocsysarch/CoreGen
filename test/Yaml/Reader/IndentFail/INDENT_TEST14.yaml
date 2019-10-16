@@ -1,0 +1,176 @@
+Registers:
+  - RegName: TEST14.0.reg
+    Width: 32
+    Index: 0
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST14.1.reg
+    Width: 32
+    Index: 0
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST14.2.reg
+    Width: 32
+    Index: 0
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST14.3.reg
+    Width: 32
+    Index: 0
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST14.4.reg
+    Width: 32
+    Index: 0
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST14.5.reg
+    Width: 32
+    Index: 0
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST14.6.reg
+    Width: 32
+    Index: 0
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST14.7.reg
+    Width: 32
+    Index: 0
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST14.8.reg
+    Width: 32
+    Index: 0
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST14.9.reg
+    Width: 32
+    Index: 0
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST14.10.reg
+    Width: 32
+    Index: 0
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST14.11.reg
+    Width: 32
+    Index: 0
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST14.12.reg
+    Width: 32
+    Index: 0
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST14.13.reg
+    Width: 32
+    Index: 0
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST14.14.reg
+    Width: 32
+    Index: 0
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST14.15.reg
+    Width: 32
+    Index: 0
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+RegClasses:
+  - RegisterClassName: TEST14.regclass
+    NumRegisters: 16
+    Registers:
+      - TEST14.0.reg
+      - TEST14.1.reg
+      - TEST14.2.reg
+      - TEST14.3.reg
+      - TEST14.4.reg
+      - TEST14.5.reg
+      - TEST14.6.reg
+      - TEST14.7.reg
+      - TEST14.8.reg
+      - TEST14.9.reg
+      - TEST14.10.reg
+      - TEST14.11.reg
+  - TEST14.12.reg
+      - TEST14.13.reg
+      - TEST14.14.reg
+      - TEST14.15.reg
+ISAs:
+  - ISAName: TEST14.isa
+Cores:
+  - Core: TEST14.core
+    ISA: TEST14.isa
+    RegisterClasses:
+      - RegClass: TEST14.regclass
+Socs:
+  - Soc: TEST14.soc
+    Cores:
+      - Core: TEST14.core

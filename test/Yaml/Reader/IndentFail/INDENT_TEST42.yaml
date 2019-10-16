@@ -1,0 +1,1595 @@
+ProjectInfo:
+- ProjectName: TEST42
+    ProjectRoot: ./
+    ProjectType: unknown
+    ChiselMajorVersion: 3
+    ChiselMinorVersion: 0
+Registers:
+  - RegName: TEST42.0.reg
+    Width: 64
+    Index: 0
+    PseudoName: pseudoreg.0
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST42.1.reg
+    Width: 64
+    Index: 1
+    PseudoName: pseudoreg.1
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST42.2.reg
+    Width: 64
+    Index: 2
+    PseudoName: pseudoreg.2
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST42.3.reg
+    Width: 64
+    Index: 3
+    PseudoName: pseudoreg.3
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST42.4.reg
+    Width: 64
+    Index: 4
+    PseudoName: pseudoreg.4
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST42.5.reg
+    Width: 64
+    Index: 5
+    PseudoName: pseudoreg.5
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST42.6.reg
+    Width: 64
+    Index: 6
+    PseudoName: pseudoreg.6
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST42.7.reg
+    Width: 64
+    Index: 7
+    PseudoName: pseudoreg.7
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST42.8.reg
+    Width: 64
+    Index: 8
+    PseudoName: pseudoreg.8
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST42.9.reg
+    Width: 64
+    Index: 9
+    PseudoName: pseudoreg.9
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST42.10.reg
+    Width: 64
+    Index: 10
+    PseudoName: pseudoreg.10
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST42.11.reg
+    Width: 64
+    Index: 11
+    PseudoName: pseudoreg.11
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST42.12.reg
+    Width: 64
+    Index: 12
+    PseudoName: pseudoreg.12
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST42.13.reg
+    Width: 64
+    Index: 13
+    PseudoName: pseudoreg.13
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST42.14.reg
+    Width: 64
+    Index: 14
+    PseudoName: pseudoreg.14
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST42.15.reg
+    Width: 64
+    Index: 15
+    PseudoName: pseudoreg.15
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST42.0.csr
+    Width: 64
+    Index: 0
+    PseudoName: csr.0
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST42.1.csr
+    Width: 64
+    Index: 1
+    PseudoName: csr.1
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST42.2.csr
+    Width: 64
+    Index: 2
+    PseudoName: csr.2
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST42.3.csr
+    Width: 64
+    Index: 3
+    PseudoName: csr.3
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST42.4.csr
+    Width: 64
+    Index: 4
+    PseudoName: csr.4
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST42.5.csr
+    Width: 64
+    Index: 5
+    PseudoName: csr.5
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST42.6.csr
+    Width: 64
+    Index: 6
+    PseudoName: csr.6
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST42.7.csr
+    Width: 64
+    Index: 7
+    PseudoName: csr.7
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST42.8.csr
+    Width: 64
+    Index: 8
+    PseudoName: csr.8
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST42.9.csr
+    Width: 64
+    Index: 9
+    PseudoName: csr.9
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST42.10.csr
+    Width: 64
+    Index: 10
+    PseudoName: csr.10
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST42.11.csr
+    Width: 64
+    Index: 11
+    PseudoName: csr.11
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST42.12.csr
+    Width: 64
+    Index: 12
+    PseudoName: csr.12
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST42.13.csr
+    Width: 64
+    Index: 13
+    PseudoName: csr.13
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST42.14.csr
+    Width: 64
+    Index: 14
+    PseudoName: csr.14
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST42.15.csr
+    Width: 64
+    Index: 15
+    PseudoName: csr.15
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+RegClasses:
+  - RegisterClassName: TEST42.regclass
+    Registers:
+      - TEST42.0.reg
+      - TEST42.1.reg
+      - TEST42.2.reg
+      - TEST42.3.reg
+      - TEST42.4.reg
+      - TEST42.5.reg
+      - TEST42.6.reg
+      - TEST42.7.reg
+      - TEST42.8.reg
+      - TEST42.9.reg
+      - TEST42.10.reg
+      - TEST42.11.reg
+      - TEST42.12.reg
+      - TEST42.13.reg
+      - TEST42.14.reg
+      - TEST42.15.reg
+  - RegisterClassName: TEST42.csrregclass
+    Registers:
+      - TEST42.0.csr
+      - TEST42.1.csr
+      - TEST42.2.csr
+      - TEST42.3.csr
+      - TEST42.4.csr
+      - TEST42.5.csr
+      - TEST42.6.csr
+      - TEST42.7.csr
+      - TEST42.8.csr
+      - TEST42.9.csr
+      - TEST42.10.csr
+      - TEST42.11.csr
+      - TEST42.12.csr
+      - TEST42.13.csr
+      - TEST42.14.csr
+      - TEST42.15.csr
+ISAs:
+  - ISAName: TEST42.isa
+InstFormats:
+  - InstFormatName: TEST42.if
+    ISA: TEST42.isa
+    FormatWidth: 32
+    Fields:
+      - FieldName: opcode
+        FieldType: CGInstCode
+        FieldWidth: 8
+        StartBit: 0
+        EndBit: 7
+        MandatoryField: true
+      - FieldName: RB
+        FieldType: CGInstReg
+        FieldWidth: 8
+        StartBit: 8
+        EndBit: 15
+        MandatoryField: false
+        RegClass: TEST42.regclass
+      - FieldName: RA
+        FieldType: CGInstReg
+        FieldWidth: 8
+        StartBit: 16
+        EndBit: 23
+        MandatoryField: false
+        RegClass: TEST42.regclass
+      - FieldName: RT
+        FieldType: CGInstReg
+        FieldWidth: 8
+        StartBit: 24
+        EndBit: 31
+        MandatoryField: false
+        RegClass: TEST42.csrregclass
+Insts:
+  - Inst: TEST42.inst0
+    ISA: TEST42.isa
+    InstFormat: TEST42.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 1
+  - Inst: TEST42.inst1
+    ISA: TEST42.isa
+    InstFormat: TEST42.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 2
+  - Inst: TEST42.inst2
+    ISA: TEST42.isa
+    InstFormat: TEST42.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 3
+  - Inst: TEST42.inst3
+    ISA: TEST42.isa
+    InstFormat: TEST42.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 4
+  - Inst: TEST42.inst4
+    ISA: TEST42.isa
+    InstFormat: TEST42.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 5
+  - Inst: TEST42.inst5
+    ISA: TEST42.isa
+    InstFormat: TEST42.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 6
+  - Inst: TEST42.inst6
+    ISA: TEST42.isa
+    InstFormat: TEST42.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 7
+  - Inst: TEST42.inst7
+    ISA: TEST42.isa
+    InstFormat: TEST42.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 8
+  - Inst: TEST42.inst8
+    ISA: TEST42.isa
+    InstFormat: TEST42.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 9
+  - Inst: TEST42.inst9
+    ISA: TEST42.isa
+    InstFormat: TEST42.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 10
+  - Inst: TEST42.inst10
+    ISA: TEST42.isa
+    InstFormat: TEST42.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 11
+  - Inst: TEST42.inst11
+    ISA: TEST42.isa
+    InstFormat: TEST42.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 12
+  - Inst: TEST42.inst12
+    ISA: TEST42.isa
+    InstFormat: TEST42.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 13
+  - Inst: TEST42.inst13
+    ISA: TEST42.isa
+    InstFormat: TEST42.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 14
+  - Inst: TEST42.inst14
+    ISA: TEST42.isa
+    InstFormat: TEST42.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 15
+  - Inst: TEST42.inst15
+    ISA: TEST42.isa
+    InstFormat: TEST42.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 16
+PseudoInsts:
+  - PseudoInst: TEST42.pinst0
+    ISA: TEST42.isa
+    Inst: TEST42.inst0
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 0
+  - PseudoInst: TEST42.pinst1
+    ISA: TEST42.isa
+    Inst: TEST42.inst1
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 1
+  - PseudoInst: TEST42.pinst2
+    ISA: TEST42.isa
+    Inst: TEST42.inst2
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 2
+  - PseudoInst: TEST42.pinst3
+    ISA: TEST42.isa
+    Inst: TEST42.inst3
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 3
+  - PseudoInst: TEST42.pinst4
+    ISA: TEST42.isa
+    Inst: TEST42.inst4
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 4
+  - PseudoInst: TEST42.pinst5
+    ISA: TEST42.isa
+    Inst: TEST42.inst5
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 5
+  - PseudoInst: TEST42.pinst6
+    ISA: TEST42.isa
+    Inst: TEST42.inst6
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 6
+  - PseudoInst: TEST42.pinst7
+    ISA: TEST42.isa
+    Inst: TEST42.inst7
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 7
+  - PseudoInst: TEST42.pinst8
+    ISA: TEST42.isa
+    Inst: TEST42.inst8
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 8
+  - PseudoInst: TEST42.pinst9
+    ISA: TEST42.isa
+    Inst: TEST42.inst9
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 9
+  - PseudoInst: TEST42.pinst10
+    ISA: TEST42.isa
+    Inst: TEST42.inst10
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 10
+  - PseudoInst: TEST42.pinst11
+    ISA: TEST42.isa
+    Inst: TEST42.inst11
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 11
+  - PseudoInst: TEST42.pinst12
+    ISA: TEST42.isa
+    Inst: TEST42.inst12
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 12
+  - PseudoInst: TEST42.pinst13
+    ISA: TEST42.isa
+    Inst: TEST42.inst13
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 13
+  - PseudoInst: TEST42.pinst14
+    ISA: TEST42.isa
+    Inst: TEST42.inst14
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 14
+  - PseudoInst: TEST42.pinst15
+    ISA: TEST42.isa
+    Inst: TEST42.inst15
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 15
+Caches:
+  - Cache: TEST42.L2.cache
+    Sets: 2
+    Ways: 8
+  - Cache: TEST42.core0.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST42.L2.cache
+  - Cache: TEST42.core1.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST42.L2.cache
+  - Cache: TEST42.core2.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST42.L2.cache
+  - Cache: TEST42.core3.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST42.L2.cache
+  - Cache: TEST42.core4.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST42.L2.cache
+  - Cache: TEST42.core5.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST42.L2.cache
+  - Cache: TEST42.core6.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST42.L2.cache
+  - Cache: TEST42.core7.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST42.L2.cache
+  - Cache: TEST42.core8.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST42.L2.cache
+  - Cache: TEST42.core9.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST42.L2.cache
+  - Cache: TEST42.core10.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST42.L2.cache
+  - Cache: TEST42.core11.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST42.L2.cache
+  - Cache: TEST42.core12.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST42.L2.cache
+  - Cache: TEST42.core13.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST42.L2.cache
+  - Cache: TEST42.core14.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST42.L2.cache
+  - Cache: TEST42.core15.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST42.L2.cache
+  - Cache: TEST42.core16.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST42.L2.cache
+  - Cache: TEST42.core17.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST42.L2.cache
+  - Cache: TEST42.core18.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST42.L2.cache
+  - Cache: TEST42.core19.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST42.L2.cache
+  - Cache: TEST42.core20.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST42.L2.cache
+  - Cache: TEST42.core21.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST42.L2.cache
+  - Cache: TEST42.core22.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST42.L2.cache
+  - Cache: TEST42.core23.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST42.L2.cache
+  - Cache: TEST42.core24.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST42.L2.cache
+  - Cache: TEST42.core25.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST42.L2.cache
+  - Cache: TEST42.core26.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST42.L2.cache
+  - Cache: TEST42.core27.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST42.L2.cache
+  - Cache: TEST42.core28.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST42.L2.cache
+  - Cache: TEST42.core29.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST42.L2.cache
+  - Cache: TEST42.core30.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST42.L2.cache
+  - Cache: TEST42.core31.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST42.L2.cache
+  - Cache: TEST42.core32.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST42.L2.cache
+  - Cache: TEST42.core33.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST42.L2.cache
+  - Cache: TEST42.core34.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST42.L2.cache
+  - Cache: TEST42.core35.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST42.L2.cache
+  - Cache: TEST42.core36.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST42.L2.cache
+  - Cache: TEST42.core37.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST42.L2.cache
+  - Cache: TEST42.core38.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST42.L2.cache
+  - Cache: TEST42.core39.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST42.L2.cache
+  - Cache: TEST42.core40.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST42.L2.cache
+  - Cache: TEST42.core41.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST42.L2.cache
+  - Cache: TEST42.core42.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST42.L2.cache
+  - Cache: TEST42.core43.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST42.L2.cache
+  - Cache: TEST42.core44.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST42.L2.cache
+  - Cache: TEST42.core45.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST42.L2.cache
+  - Cache: TEST42.core46.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST42.L2.cache
+  - Cache: TEST42.core47.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST42.L2.cache
+  - Cache: TEST42.core48.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST42.L2.cache
+  - Cache: TEST42.core49.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST42.L2.cache
+  - Cache: TEST42.core50.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST42.L2.cache
+  - Cache: TEST42.core51.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST42.L2.cache
+  - Cache: TEST42.core52.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST42.L2.cache
+  - Cache: TEST42.core53.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST42.L2.cache
+  - Cache: TEST42.core54.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST42.L2.cache
+  - Cache: TEST42.core55.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST42.L2.cache
+  - Cache: TEST42.core56.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST42.L2.cache
+  - Cache: TEST42.core57.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST42.L2.cache
+  - Cache: TEST42.core58.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST42.L2.cache
+  - Cache: TEST42.core59.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST42.L2.cache
+  - Cache: TEST42.core60.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST42.L2.cache
+  - Cache: TEST42.core61.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST42.L2.cache
+  - Cache: TEST42.core62.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST42.L2.cache
+  - Cache: TEST42.core63.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST42.L2.cache
+Extensions:
+  - Extension: TEST42.ext
+    Type: unknown
+Cores:
+  - Core: TEST42.core0
+    ThreadUnits: 1
+    Cache: TEST42.core0.L1.cache
+    ISA: TEST42.isa
+    RegisterClasses:
+      - RegClass: TEST42.regclass
+      - RegClass: TEST42.csrregclass
+    Extensions:
+      - Extension: TEST42.ext
+  - Core: TEST42.core1
+    ThreadUnits: 1
+    Cache: TEST42.core1.L1.cache
+    ISA: TEST42.isa
+    RegisterClasses:
+      - RegClass: TEST42.regclass
+      - RegClass: TEST42.csrregclass
+    Extensions:
+      - Extension: TEST42.ext
+  - Core: TEST42.core2
+    ThreadUnits: 1
+    Cache: TEST42.core2.L1.cache
+    ISA: TEST42.isa
+    RegisterClasses:
+      - RegClass: TEST42.regclass
+      - RegClass: TEST42.csrregclass
+    Extensions:
+      - Extension: TEST42.ext
+  - Core: TEST42.core3
+    ThreadUnits: 1
+    Cache: TEST42.core3.L1.cache
+    ISA: TEST42.isa
+    RegisterClasses:
+      - RegClass: TEST42.regclass
+      - RegClass: TEST42.csrregclass
+    Extensions:
+      - Extension: TEST42.ext
+  - Core: TEST42.core4
+    ThreadUnits: 1
+    Cache: TEST42.core4.L1.cache
+    ISA: TEST42.isa
+    RegisterClasses:
+      - RegClass: TEST42.regclass
+      - RegClass: TEST42.csrregclass
+    Extensions:
+      - Extension: TEST42.ext
+  - Core: TEST42.core5
+    ThreadUnits: 1
+    Cache: TEST42.core5.L1.cache
+    ISA: TEST42.isa
+    RegisterClasses:
+      - RegClass: TEST42.regclass
+      - RegClass: TEST42.csrregclass
+    Extensions:
+      - Extension: TEST42.ext
+  - Core: TEST42.core6
+    ThreadUnits: 1
+    Cache: TEST42.core6.L1.cache
+    ISA: TEST42.isa
+    RegisterClasses:
+      - RegClass: TEST42.regclass
+      - RegClass: TEST42.csrregclass
+    Extensions:
+      - Extension: TEST42.ext
+  - Core: TEST42.core7
+    ThreadUnits: 1
+    Cache: TEST42.core7.L1.cache
+    ISA: TEST42.isa
+    RegisterClasses:
+      - RegClass: TEST42.regclass
+      - RegClass: TEST42.csrregclass
+    Extensions:
+      - Extension: TEST42.ext
+  - Core: TEST42.core8
+    ThreadUnits: 1
+    Cache: TEST42.core8.L1.cache
+    ISA: TEST42.isa
+    RegisterClasses:
+      - RegClass: TEST42.regclass
+      - RegClass: TEST42.csrregclass
+    Extensions:
+      - Extension: TEST42.ext
+  - Core: TEST42.core9
+    ThreadUnits: 1
+    Cache: TEST42.core9.L1.cache
+    ISA: TEST42.isa
+    RegisterClasses:
+      - RegClass: TEST42.regclass
+      - RegClass: TEST42.csrregclass
+    Extensions:
+      - Extension: TEST42.ext
+  - Core: TEST42.core10
+    ThreadUnits: 1
+    Cache: TEST42.core10.L1.cache
+    ISA: TEST42.isa
+    RegisterClasses:
+      - RegClass: TEST42.regclass
+      - RegClass: TEST42.csrregclass
+    Extensions:
+      - Extension: TEST42.ext
+  - Core: TEST42.core11
+    ThreadUnits: 1
+    Cache: TEST42.core11.L1.cache
+    ISA: TEST42.isa
+    RegisterClasses:
+      - RegClass: TEST42.regclass
+      - RegClass: TEST42.csrregclass
+    Extensions:
+      - Extension: TEST42.ext
+  - Core: TEST42.core12
+    ThreadUnits: 1
+    Cache: TEST42.core12.L1.cache
+    ISA: TEST42.isa
+    RegisterClasses:
+      - RegClass: TEST42.regclass
+      - RegClass: TEST42.csrregclass
+    Extensions:
+      - Extension: TEST42.ext
+  - Core: TEST42.core13
+    ThreadUnits: 1
+    Cache: TEST42.core13.L1.cache
+    ISA: TEST42.isa
+    RegisterClasses:
+      - RegClass: TEST42.regclass
+      - RegClass: TEST42.csrregclass
+    Extensions:
+      - Extension: TEST42.ext
+  - Core: TEST42.core14
+    ThreadUnits: 1
+    Cache: TEST42.core14.L1.cache
+    ISA: TEST42.isa
+    RegisterClasses:
+      - RegClass: TEST42.regclass
+      - RegClass: TEST42.csrregclass
+    Extensions:
+      - Extension: TEST42.ext
+  - Core: TEST42.core15
+    ThreadUnits: 1
+    Cache: TEST42.core15.L1.cache
+    ISA: TEST42.isa
+    RegisterClasses:
+      - RegClass: TEST42.regclass
+      - RegClass: TEST42.csrregclass
+    Extensions:
+      - Extension: TEST42.ext
+  - Core: TEST42.core16
+    ThreadUnits: 1
+    Cache: TEST42.core16.L1.cache
+    ISA: TEST42.isa
+    RegisterClasses:
+      - RegClass: TEST42.regclass
+      - RegClass: TEST42.csrregclass
+    Extensions:
+      - Extension: TEST42.ext
+  - Core: TEST42.core17
+    ThreadUnits: 1
+    Cache: TEST42.core17.L1.cache
+    ISA: TEST42.isa
+    RegisterClasses:
+      - RegClass: TEST42.regclass
+      - RegClass: TEST42.csrregclass
+    Extensions:
+      - Extension: TEST42.ext
+  - Core: TEST42.core18
+    ThreadUnits: 1
+    Cache: TEST42.core18.L1.cache
+    ISA: TEST42.isa
+    RegisterClasses:
+      - RegClass: TEST42.regclass
+      - RegClass: TEST42.csrregclass
+    Extensions:
+      - Extension: TEST42.ext
+  - Core: TEST42.core19
+    ThreadUnits: 1
+    Cache: TEST42.core19.L1.cache
+    ISA: TEST42.isa
+    RegisterClasses:
+      - RegClass: TEST42.regclass
+      - RegClass: TEST42.csrregclass
+    Extensions:
+      - Extension: TEST42.ext
+  - Core: TEST42.core20
+    ThreadUnits: 1
+    Cache: TEST42.core20.L1.cache
+    ISA: TEST42.isa
+    RegisterClasses:
+      - RegClass: TEST42.regclass
+      - RegClass: TEST42.csrregclass
+    Extensions:
+      - Extension: TEST42.ext
+  - Core: TEST42.core21
+    ThreadUnits: 1
+    Cache: TEST42.core21.L1.cache
+    ISA: TEST42.isa
+    RegisterClasses:
+      - RegClass: TEST42.regclass
+      - RegClass: TEST42.csrregclass
+    Extensions:
+      - Extension: TEST42.ext
+  - Core: TEST42.core22
+    ThreadUnits: 1
+    Cache: TEST42.core22.L1.cache
+    ISA: TEST42.isa
+    RegisterClasses:
+      - RegClass: TEST42.regclass
+      - RegClass: TEST42.csrregclass
+    Extensions:
+      - Extension: TEST42.ext
+  - Core: TEST42.core23
+    ThreadUnits: 1
+    Cache: TEST42.core23.L1.cache
+    ISA: TEST42.isa
+    RegisterClasses:
+      - RegClass: TEST42.regclass
+      - RegClass: TEST42.csrregclass
+    Extensions:
+      - Extension: TEST42.ext
+  - Core: TEST42.core24
+    ThreadUnits: 1
+    Cache: TEST42.core24.L1.cache
+    ISA: TEST42.isa
+    RegisterClasses:
+      - RegClass: TEST42.regclass
+      - RegClass: TEST42.csrregclass
+    Extensions:
+      - Extension: TEST42.ext
+  - Core: TEST42.core25
+    ThreadUnits: 1
+    Cache: TEST42.core25.L1.cache
+    ISA: TEST42.isa
+    RegisterClasses:
+      - RegClass: TEST42.regclass
+      - RegClass: TEST42.csrregclass
+    Extensions:
+      - Extension: TEST42.ext
+  - Core: TEST42.core26
+    ThreadUnits: 1
+    Cache: TEST42.core26.L1.cache
+    ISA: TEST42.isa
+    RegisterClasses:
+      - RegClass: TEST42.regclass
+      - RegClass: TEST42.csrregclass
+    Extensions:
+      - Extension: TEST42.ext
+  - Core: TEST42.core27
+    ThreadUnits: 1
+    Cache: TEST42.core27.L1.cache
+    ISA: TEST42.isa
+    RegisterClasses:
+      - RegClass: TEST42.regclass
+      - RegClass: TEST42.csrregclass
+    Extensions:
+      - Extension: TEST42.ext
+  - Core: TEST42.core28
+    ThreadUnits: 1
+    Cache: TEST42.core28.L1.cache
+    ISA: TEST42.isa
+    RegisterClasses:
+      - RegClass: TEST42.regclass
+      - RegClass: TEST42.csrregclass
+    Extensions:
+      - Extension: TEST42.ext
+  - Core: TEST42.core29
+    ThreadUnits: 1
+    Cache: TEST42.core29.L1.cache
+    ISA: TEST42.isa
+    RegisterClasses:
+      - RegClass: TEST42.regclass
+      - RegClass: TEST42.csrregclass
+    Extensions:
+      - Extension: TEST42.ext
+  - Core: TEST42.core30
+    ThreadUnits: 1
+    Cache: TEST42.core30.L1.cache
+    ISA: TEST42.isa
+    RegisterClasses:
+      - RegClass: TEST42.regclass
+      - RegClass: TEST42.csrregclass
+    Extensions:
+      - Extension: TEST42.ext
+  - Core: TEST42.core31
+    ThreadUnits: 1
+    Cache: TEST42.core31.L1.cache
+    ISA: TEST42.isa
+    RegisterClasses:
+      - RegClass: TEST42.regclass
+      - RegClass: TEST42.csrregclass
+    Extensions:
+      - Extension: TEST42.ext
+  - Core: TEST42.core32
+    ThreadUnits: 1
+    Cache: TEST42.core32.L1.cache
+    ISA: TEST42.isa
+    RegisterClasses:
+      - RegClass: TEST42.regclass
+      - RegClass: TEST42.csrregclass
+    Extensions:
+      - Extension: TEST42.ext
+  - Core: TEST42.core33
+    ThreadUnits: 1
+    Cache: TEST42.core33.L1.cache
+    ISA: TEST42.isa
+    RegisterClasses:
+      - RegClass: TEST42.regclass
+      - RegClass: TEST42.csrregclass
+    Extensions:
+      - Extension: TEST42.ext
+  - Core: TEST42.core34
+    ThreadUnits: 1
+    Cache: TEST42.core34.L1.cache
+    ISA: TEST42.isa
+    RegisterClasses:
+      - RegClass: TEST42.regclass
+      - RegClass: TEST42.csrregclass
+    Extensions:
+      - Extension: TEST42.ext
+  - Core: TEST42.core35
+    ThreadUnits: 1
+    Cache: TEST42.core35.L1.cache
+    ISA: TEST42.isa
+    RegisterClasses:
+      - RegClass: TEST42.regclass
+      - RegClass: TEST42.csrregclass
+    Extensions:
+      - Extension: TEST42.ext
+  - Core: TEST42.core36
+    ThreadUnits: 1
+    Cache: TEST42.core36.L1.cache
+    ISA: TEST42.isa
+    RegisterClasses:
+      - RegClass: TEST42.regclass
+      - RegClass: TEST42.csrregclass
+    Extensions:
+      - Extension: TEST42.ext
+  - Core: TEST42.core37
+    ThreadUnits: 1
+    Cache: TEST42.core37.L1.cache
+    ISA: TEST42.isa
+    RegisterClasses:
+      - RegClass: TEST42.regclass
+      - RegClass: TEST42.csrregclass
+    Extensions:
+      - Extension: TEST42.ext
+  - Core: TEST42.core38
+    ThreadUnits: 1
+    Cache: TEST42.core38.L1.cache
+    ISA: TEST42.isa
+    RegisterClasses:
+      - RegClass: TEST42.regclass
+      - RegClass: TEST42.csrregclass
+    Extensions:
+      - Extension: TEST42.ext
+  - Core: TEST42.core39
+    ThreadUnits: 1
+    Cache: TEST42.core39.L1.cache
+    ISA: TEST42.isa
+    RegisterClasses:
+      - RegClass: TEST42.regclass
+      - RegClass: TEST42.csrregclass
+    Extensions:
+      - Extension: TEST42.ext
+  - Core: TEST42.core40
+    ThreadUnits: 1
+    Cache: TEST42.core40.L1.cache
+    ISA: TEST42.isa
+    RegisterClasses:
+      - RegClass: TEST42.regclass
+      - RegClass: TEST42.csrregclass
+    Extensions:
+      - Extension: TEST42.ext
+  - Core: TEST42.core41
+    ThreadUnits: 1
+    Cache: TEST42.core41.L1.cache
+    ISA: TEST42.isa
+    RegisterClasses:
+      - RegClass: TEST42.regclass
+      - RegClass: TEST42.csrregclass
+    Extensions:
+      - Extension: TEST42.ext
+  - Core: TEST42.core42
+    ThreadUnits: 1
+    Cache: TEST42.core42.L1.cache
+    ISA: TEST42.isa
+    RegisterClasses:
+      - RegClass: TEST42.regclass
+      - RegClass: TEST42.csrregclass
+    Extensions:
+      - Extension: TEST42.ext
+  - Core: TEST42.core43
+    ThreadUnits: 1
+    Cache: TEST42.core43.L1.cache
+    ISA: TEST42.isa
+    RegisterClasses:
+      - RegClass: TEST42.regclass
+      - RegClass: TEST42.csrregclass
+    Extensions:
+      - Extension: TEST42.ext
+  - Core: TEST42.core44
+    ThreadUnits: 1
+    Cache: TEST42.core44.L1.cache
+    ISA: TEST42.isa
+    RegisterClasses:
+      - RegClass: TEST42.regclass
+      - RegClass: TEST42.csrregclass
+    Extensions:
+      - Extension: TEST42.ext
+  - Core: TEST42.core45
+    ThreadUnits: 1
+    Cache: TEST42.core45.L1.cache
+    ISA: TEST42.isa
+    RegisterClasses:
+      - RegClass: TEST42.regclass
+      - RegClass: TEST42.csrregclass
+    Extensions:
+      - Extension: TEST42.ext
+  - Core: TEST42.core46
+    ThreadUnits: 1
+    Cache: TEST42.core46.L1.cache
+    ISA: TEST42.isa
+    RegisterClasses:
+      - RegClass: TEST42.regclass
+      - RegClass: TEST42.csrregclass
+    Extensions:
+      - Extension: TEST42.ext
+  - Core: TEST42.core47
+    ThreadUnits: 1
+    Cache: TEST42.core47.L1.cache
+    ISA: TEST42.isa
+    RegisterClasses:
+      - RegClass: TEST42.regclass
+      - RegClass: TEST42.csrregclass
+    Extensions:
+      - Extension: TEST42.ext
+  - Core: TEST42.core48
+    ThreadUnits: 1
+    Cache: TEST42.core48.L1.cache
+    ISA: TEST42.isa
+    RegisterClasses:
+      - RegClass: TEST42.regclass
+      - RegClass: TEST42.csrregclass
+    Extensions:
+      - Extension: TEST42.ext
+  - Core: TEST42.core49
+    ThreadUnits: 1
+    Cache: TEST42.core49.L1.cache
+    ISA: TEST42.isa
+    RegisterClasses:
+      - RegClass: TEST42.regclass
+      - RegClass: TEST42.csrregclass
+    Extensions:
+      - Extension: TEST42.ext
+  - Core: TEST42.core50
+    ThreadUnits: 1
+    Cache: TEST42.core50.L1.cache
+    ISA: TEST42.isa
+    RegisterClasses:
+      - RegClass: TEST42.regclass
+      - RegClass: TEST42.csrregclass
+    Extensions:
+      - Extension: TEST42.ext
+  - Core: TEST42.core51
+    ThreadUnits: 1
+    Cache: TEST42.core51.L1.cache
+    ISA: TEST42.isa
+    RegisterClasses:
+      - RegClass: TEST42.regclass
+      - RegClass: TEST42.csrregclass
+    Extensions:
+      - Extension: TEST42.ext
+  - Core: TEST42.core52
+    ThreadUnits: 1
+    Cache: TEST42.core52.L1.cache
+    ISA: TEST42.isa
+    RegisterClasses:
+      - RegClass: TEST42.regclass
+      - RegClass: TEST42.csrregclass
+    Extensions:
+      - Extension: TEST42.ext
+  - Core: TEST42.core53
+    ThreadUnits: 1
+    Cache: TEST42.core53.L1.cache
+    ISA: TEST42.isa
+    RegisterClasses:
+      - RegClass: TEST42.regclass
+      - RegClass: TEST42.csrregclass
+    Extensions:
+      - Extension: TEST42.ext
+  - Core: TEST42.core54
+    ThreadUnits: 1
+    Cache: TEST42.core54.L1.cache
+    ISA: TEST42.isa
+    RegisterClasses:
+      - RegClass: TEST42.regclass
+      - RegClass: TEST42.csrregclass
+    Extensions:
+      - Extension: TEST42.ext
+  - Core: TEST42.core55
+    ThreadUnits: 1
+    Cache: TEST42.core55.L1.cache
+    ISA: TEST42.isa
+    RegisterClasses:
+      - RegClass: TEST42.regclass
+      - RegClass: TEST42.csrregclass
+    Extensions:
+      - Extension: TEST42.ext
+  - Core: TEST42.core56
+    ThreadUnits: 1
+    Cache: TEST42.core56.L1.cache
+    ISA: TEST42.isa
+    RegisterClasses:
+      - RegClass: TEST42.regclass
+      - RegClass: TEST42.csrregclass
+    Extensions:
+      - Extension: TEST42.ext
+  - Core: TEST42.core57
+    ThreadUnits: 1
+    Cache: TEST42.core57.L1.cache
+    ISA: TEST42.isa
+    RegisterClasses:
+      - RegClass: TEST42.regclass
+      - RegClass: TEST42.csrregclass
+    Extensions:
+      - Extension: TEST42.ext
+  - Core: TEST42.core58
+    ThreadUnits: 1
+    Cache: TEST42.core58.L1.cache
+    ISA: TEST42.isa
+    RegisterClasses:
+      - RegClass: TEST42.regclass
+      - RegClass: TEST42.csrregclass
+    Extensions:
+      - Extension: TEST42.ext
+  - Core: TEST42.core59
+    ThreadUnits: 1
+    Cache: TEST42.core59.L1.cache
+    ISA: TEST42.isa
+    RegisterClasses:
+      - RegClass: TEST42.regclass
+      - RegClass: TEST42.csrregclass
+    Extensions:
+      - Extension: TEST42.ext
+  - Core: TEST42.core60
+    ThreadUnits: 1
+    Cache: TEST42.core60.L1.cache
+    ISA: TEST42.isa
+    RegisterClasses:
+      - RegClass: TEST42.regclass
+      - RegClass: TEST42.csrregclass
+    Extensions:
+      - Extension: TEST42.ext
+  - Core: TEST42.core61
+    ThreadUnits: 1
+    Cache: TEST42.core61.L1.cache
+    ISA: TEST42.isa
+    RegisterClasses:
+      - RegClass: TEST42.regclass
+      - RegClass: TEST42.csrregclass
+    Extensions:
+      - Extension: TEST42.ext
+  - Core: TEST42.core62
+    ThreadUnits: 1
+    Cache: TEST42.core62.L1.cache
+    ISA: TEST42.isa
+    RegisterClasses:
+      - RegClass: TEST42.regclass
+      - RegClass: TEST42.csrregclass
+    Extensions:
+      - Extension: TEST42.ext
+  - Core: TEST42.core63
+    ThreadUnits: 1
+    Cache: TEST42.core63.L1.cache
+    ISA: TEST42.isa
+    RegisterClasses:
+      - RegClass: TEST42.regclass
+      - RegClass: TEST42.csrregclass
+    Extensions:
+      - Extension: TEST42.ext
+Socs:
+  - Soc: TEST42.soc
+    Cores:
+      - Core: TEST42.core0
+      - Core: TEST42.core1
+      - Core: TEST42.core2
+      - Core: TEST42.core3
+      - Core: TEST42.core4
+      - Core: TEST42.core5
+      - Core: TEST42.core6
+      - Core: TEST42.core7
+      - Core: TEST42.core8
+      - Core: TEST42.core9
+      - Core: TEST42.core10
+      - Core: TEST42.core11
+      - Core: TEST42.core12
+      - Core: TEST42.core13
+      - Core: TEST42.core14
+      - Core: TEST42.core15
+      - Core: TEST42.core16
+      - Core: TEST42.core17
+      - Core: TEST42.core18
+      - Core: TEST42.core19
+      - Core: TEST42.core20
+      - Core: TEST42.core21
+      - Core: TEST42.core22
+      - Core: TEST42.core23
+      - Core: TEST42.core24
+      - Core: TEST42.core25
+      - Core: TEST42.core26
+      - Core: TEST42.core27
+      - Core: TEST42.core28
+      - Core: TEST42.core29
+      - Core: TEST42.core30
+      - Core: TEST42.core31
+      - Core: TEST42.core32
+      - Core: TEST42.core33
+      - Core: TEST42.core34
+      - Core: TEST42.core35
+      - Core: TEST42.core36
+      - Core: TEST42.core37
+      - Core: TEST42.core38
+      - Core: TEST42.core39
+      - Core: TEST42.core40
+      - Core: TEST42.core41
+      - Core: TEST42.core42
+      - Core: TEST42.core43
+      - Core: TEST42.core44
+      - Core: TEST42.core45
+      - Core: TEST42.core46
+      - Core: TEST42.core47
+      - Core: TEST42.core48
+      - Core: TEST42.core49
+      - Core: TEST42.core50
+      - Core: TEST42.core51
+      - Core: TEST42.core52
+      - Core: TEST42.core53
+      - Core: TEST42.core54
+      - Core: TEST42.core55
+      - Core: TEST42.core56
+      - Core: TEST42.core57
+      - Core: TEST42.core58
+      - Core: TEST42.core59
+      - Core: TEST42.core60
+      - Core: TEST42.core61
+      - Core: TEST42.core62
+      - Core: TEST42.core63

@@ -1,3 +1,9 @@
+ProjectInfo:
+  - ProjectName: TEST44
+    ProjectRoot: ./
+    ProjectType: unknown
+    ChiselMajorVersion: 3
+    ChiselMinorVersion: 0
 Registers:
   - RegName: TEST44.0.reg
     Width: 64
@@ -9,6 +15,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST44.1.reg
     Width: 64
     Index: 1
@@ -19,6 +28,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST44.2.reg
     Width: 64
     Index: 2
@@ -29,6 +41,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST44.3.reg
     Width: 64
     Index: 3
@@ -39,6 +54,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST44.4.reg
     Width: 64
     Index: 4
@@ -49,6 +67,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST44.5.reg
     Width: 64
     Index: 5
@@ -59,6 +80,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST44.6.reg
     Width: 64
     Index: 6
@@ -69,6 +93,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST44.7.reg
     Width: 64
     Index: 7
@@ -79,6 +106,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST44.8.reg
     Width: 64
     Index: 8
@@ -89,6 +119,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST44.9.reg
     Width: 64
     Index: 9
@@ -99,6 +132,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST44.10.reg
     Width: 64
     Index: 10
@@ -109,6 +145,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST44.11.reg
     Width: 64
     Index: 11
@@ -119,6 +158,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST44.12.reg
     Width: 64
     Index: 12
@@ -129,6 +171,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST44.13.reg
     Width: 64
     Index: 13
@@ -139,6 +184,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST44.14.reg
     Width: 64
     Index: 14
@@ -149,6 +197,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST44.15.reg
     Width: 64
     Index: 15
@@ -159,6 +210,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST44.0.csr
     Width: 64
     Index: 0
@@ -169,6 +223,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST44.1.csr
     Width: 64
     Index: 1
@@ -179,6 +236,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST44.2.csr
     Width: 64
     Index: 2
@@ -189,6 +249,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST44.3.csr
     Width: 64
     Index: 3
@@ -199,6 +262,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST44.4.csr
     Width: 64
     Index: 4
@@ -209,6 +275,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST44.5.csr
     Width: 64
     Index: 5
@@ -219,6 +288,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST44.6.csr
     Width: 64
     Index: 6
@@ -229,6 +301,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST44.7.csr
     Width: 64
     Index: 7
@@ -239,6 +314,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST44.8.csr
     Width: 64
     Index: 8
@@ -249,6 +327,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST44.9.csr
     Width: 64
     Index: 9
@@ -259,6 +340,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST44.10.csr
     Width: 64
     Index: 10
@@ -269,6 +353,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST44.11.csr
     Width: 64
     Index: 11
@@ -279,6 +366,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST44.12.csr
     Width: 64
     Index: 12
@@ -289,6 +379,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST44.13.csr
     Width: 64
     Index: 13
@@ -299,6 +392,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST44.14.csr
     Width: 64
     Index: 14
@@ -309,6 +405,9 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
   - RegName: TEST44.15.csr
     Width: 64
     Index: 15
@@ -319,9 +418,11 @@ Registers:
     ROReg: false
     CSRReg: true
     AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
 RegClasses:
   - RegisterClassName: TEST44.regclass
-    NumRegisters: 16
     Registers:
       - TEST44.0.reg
       - TEST44.1.reg
@@ -340,7 +441,6 @@ RegClasses:
       - TEST44.14.reg
       - TEST44.15.reg
   - RegisterClassName: TEST44.csrregclass
-    NumRegisters: 16
     Registers:
       - TEST44.0.csr
       - TEST44.1.csr
@@ -626,467 +726,268 @@ Caches:
     Sets: 1
     Ways: 1
     SubLevel: TEST44.L2.cache
-  - Cache: TEST44.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST44.core1.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST44.L2.cache
-  - Cache: TEST44.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST44.core2.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST44.L2.cache
-  - Cache: TEST44.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST44.core3.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST44.L2.cache
-  - Cache: TEST44.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST44.core4.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST44.L2.cache
-  - Cache: TEST44.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST44.core5.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST44.L2.cache
-  - Cache: TEST44.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST44.core6.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST44.L2.cache
-  - Cache: TEST44.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST44.core7.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST44.L2.cache
-  - Cache: TEST44.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST44.core8.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST44.L2.cache
-  - Cache: TEST44.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST44.core9.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST44.L2.cache
-  - Cache: TEST44.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST44.core10.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST44.L2.cache
-  - Cache: TEST44.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST44.core11.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST44.L2.cache
-  - Cache: TEST44.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST44.core12.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST44.L2.cache
-  - Cache: TEST44.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST44.core13.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST44.L2.cache
-  - Cache: TEST44.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST44.core14.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST44.L2.cache
-  - Cache: TEST44.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST44.core15.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST44.L2.cache
-  - Cache: TEST44.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST44.core16.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST44.L2.cache
-  - Cache: TEST44.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST44.core17.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST44.L2.cache
-  - Cache: TEST44.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST44.core18.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST44.L2.cache
-  - Cache: TEST44.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST44.core19.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST44.L2.cache
-  - Cache: TEST44.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST44.core20.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST44.L2.cache
-  - Cache: TEST44.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST44.core21.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST44.L2.cache
-  - Cache: TEST44.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST44.core22.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST44.L2.cache
-  - Cache: TEST44.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST44.core23.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST44.L2.cache
-  - Cache: TEST44.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST44.core24.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST44.L2.cache
-  - Cache: TEST44.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST44.core25.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST44.L2.cache
-  - Cache: TEST44.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST44.core26.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST44.L2.cache
-  - Cache: TEST44.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST44.core27.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST44.L2.cache
-  - Cache: TEST44.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST44.core28.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST44.L2.cache
-  - Cache: TEST44.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST44.core29.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST44.L2.cache
-  - Cache: TEST44.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST44.core30.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST44.L2.cache
-  - Cache: TEST44.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST44.core31.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST44.L2.cache
-  - Cache: TEST44.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST44.core32.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST44.L2.cache
-  - Cache: TEST44.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST44.core33.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST44.L2.cache
-  - Cache: TEST44.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST44.core34.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST44.L2.cache
-  - Cache: TEST44.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST44.core35.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST44.L2.cache
-  - Cache: TEST44.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST44.core36.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST44.L2.cache
-  - Cache: TEST44.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST44.core37.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST44.L2.cache
-  - Cache: TEST44.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST44.core38.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST44.L2.cache
-  - Cache: TEST44.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST44.core39.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST44.L2.cache
-  - Cache: TEST44.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST44.core40.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST44.L2.cache
-  - Cache: TEST44.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST44.core41.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST44.L2.cache
-  - Cache: TEST44.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST44.core42.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST44.L2.cache
-  - Cache: TEST44.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST44.core43.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST44.L2.cache
-  - Cache: TEST44.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST44.core44.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST44.L2.cache
-  - Cache: TEST44.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST44.core45.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST44.L2.cache
-  - Cache: TEST44.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST44.core46.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST44.L2.cache
-  - Cache: TEST44.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST44.core47.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST44.L2.cache
-  - Cache: TEST44.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST44.core48.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST44.L2.cache
-  - Cache: TEST44.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST44.core49.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST44.L2.cache
-  - Cache: TEST44.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST44.core50.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST44.L2.cache
-  - Cache: TEST44.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST44.core51.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST44.L2.cache
-  - Cache: TEST44.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST44.core52.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST44.L2.cache
-  - Cache: TEST44.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST44.core53.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST44.L2.cache
-  - Cache: TEST44.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST44.core54.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST44.L2.cache
-  - Cache: TEST44.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST44.core55.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST44.L2.cache
-  - Cache: TEST44.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST44.core56.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST44.L2.cache
-  - Cache: TEST44.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST44.core57.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST44.L2.cache
-  - Cache: TEST44.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST44.core58.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST44.L2.cache
-  - Cache: TEST44.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST44.core59.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST44.L2.cache
-  - Cache: TEST44.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST44.core60.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST44.L2.cache
-  - Cache: TEST44.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST44.core61.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST44.L2.cache
-  - Cache: TEST44.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST44.core62.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST44.L2.cache
-  - Cache: TEST44.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST44.core63.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST44.L2.cache
-  - Cache: TEST44.L2.cache
-    Sets: 2
-    Ways: 8
 Extensions:
   - Extension: TEST44.ext
-    MajorVersion: 13
-    MinorVersion: 14
     Type: unknown
-    ProjectInfo:
-      - Project: TEST44.ext
-        Type: unknown
-        ChiselMajorVersion: 3
-        ChiselMinorVersion: 0
     RegClasses:
       - RegisterClassName: TEST44.ext.regclass
-        NumRegisters: 0
         Registers:
           []
 Cores:
   - Core: TEST44.core0
+    ThreadUnits: 1
     Cache: TEST44.core0.L1.cache
     ISA: TEST44.isa
     RegisterClasses:
@@ -1095,6 +996,7 @@ Cores:
     Extensions:
       - Extension: TEST44.ext
   - Core: TEST44.core1
+    ThreadUnits: 1
     Cache: TEST44.core1.L1.cache
     ISA: TEST44.isa
     RegisterClasses:
@@ -1103,6 +1005,7 @@ Cores:
     Extensions:
       - Extension: TEST44.ext
   - Core: TEST44.core2
+    ThreadUnits: 1
     Cache: TEST44.core2.L1.cache
     ISA: TEST44.isa
     RegisterClasses:
@@ -1111,6 +1014,7 @@ Cores:
     Extensions:
       - Extension: TEST44.ext
   - Core: TEST44.core3
+    ThreadUnits: 1
     Cache: TEST44.core3.L1.cache
     ISA: TEST44.isa
     RegisterClasses:
@@ -1119,6 +1023,7 @@ Cores:
     Extensions:
       - Extension: TEST44.ext
   - Core: TEST44.core4
+    ThreadUnits: 1
     Cache: TEST44.core4.L1.cache
     ISA: TEST44.isa
     RegisterClasses:
@@ -1127,6 +1032,7 @@ Cores:
     Extensions:
       - Extension: TEST44.ext
   - Core: TEST44.core5
+    ThreadUnits: 1
     Cache: TEST44.core5.L1.cache
     ISA: TEST44.isa
     RegisterClasses:
@@ -1135,6 +1041,7 @@ Cores:
     Extensions:
       - Extension: TEST44.ext
   - Core: TEST44.core6
+    ThreadUnits: 1
     Cache: TEST44.core6.L1.cache
     ISA: TEST44.isa
     RegisterClasses:
@@ -1143,6 +1050,7 @@ Cores:
     Extensions:
       - Extension: TEST44.ext
   - Core: TEST44.core7
+    ThreadUnits: 1
     Cache: TEST44.core7.L1.cache
     ISA: TEST44.isa
     RegisterClasses:
@@ -1151,6 +1059,7 @@ Cores:
     Extensions:
       - Extension: TEST44.ext
   - Core: TEST44.core8
+    ThreadUnits: 1
     Cache: TEST44.core8.L1.cache
     ISA: TEST44.isa
     RegisterClasses:
@@ -1159,6 +1068,7 @@ Cores:
     Extensions:
       - Extension: TEST44.ext
   - Core: TEST44.core9
+    ThreadUnits: 1
     Cache: TEST44.core9.L1.cache
     ISA: TEST44.isa
     RegisterClasses:
@@ -1167,6 +1077,7 @@ Cores:
     Extensions:
       - Extension: TEST44.ext
   - Core: TEST44.core10
+    ThreadUnits: 1
     Cache: TEST44.core10.L1.cache
     ISA: TEST44.isa
     RegisterClasses:
@@ -1175,6 +1086,7 @@ Cores:
     Extensions:
       - Extension: TEST44.ext
   - Core: TEST44.core11
+    ThreadUnits: 1
     Cache: TEST44.core11.L1.cache
     ISA: TEST44.isa
     RegisterClasses:
@@ -1183,6 +1095,7 @@ Cores:
     Extensions:
       - Extension: TEST44.ext
   - Core: TEST44.core12
+    ThreadUnits: 1
     Cache: TEST44.core12.L1.cache
     ISA: TEST44.isa
     RegisterClasses:
@@ -1191,6 +1104,7 @@ Cores:
     Extensions:
       - Extension: TEST44.ext
   - Core: TEST44.core13
+    ThreadUnits: 1
     Cache: TEST44.core13.L1.cache
     ISA: TEST44.isa
     RegisterClasses:
@@ -1199,6 +1113,7 @@ Cores:
     Extensions:
       - Extension: TEST44.ext
   - Core: TEST44.core14
+    ThreadUnits: 1
     Cache: TEST44.core14.L1.cache
     ISA: TEST44.isa
     RegisterClasses:
@@ -1207,6 +1122,7 @@ Cores:
     Extensions:
       - Extension: TEST44.ext
   - Core: TEST44.core15
+    ThreadUnits: 1
     Cache: TEST44.core15.L1.cache
     ISA: TEST44.isa
     RegisterClasses:
@@ -1215,6 +1131,7 @@ Cores:
     Extensions:
       - Extension: TEST44.ext
   - Core: TEST44.core16
+    ThreadUnits: 1
     Cache: TEST44.core16.L1.cache
     ISA: TEST44.isa
     RegisterClasses:
@@ -1223,6 +1140,7 @@ Cores:
     Extensions:
       - Extension: TEST44.ext
   - Core: TEST44.core17
+    ThreadUnits: 1
     Cache: TEST44.core17.L1.cache
     ISA: TEST44.isa
     RegisterClasses:
@@ -1231,6 +1149,7 @@ Cores:
     Extensions:
       - Extension: TEST44.ext
   - Core: TEST44.core18
+    ThreadUnits: 1
     Cache: TEST44.core18.L1.cache
     ISA: TEST44.isa
     RegisterClasses:
@@ -1239,6 +1158,7 @@ Cores:
     Extensions:
       - Extension: TEST44.ext
   - Core: TEST44.core19
+    ThreadUnits: 1
     Cache: TEST44.core19.L1.cache
     ISA: TEST44.isa
     RegisterClasses:
@@ -1247,6 +1167,7 @@ Cores:
     Extensions:
       - Extension: TEST44.ext
   - Core: TEST44.core20
+    ThreadUnits: 1
     Cache: TEST44.core20.L1.cache
     ISA: TEST44.isa
     RegisterClasses:
@@ -1255,6 +1176,7 @@ Cores:
     Extensions:
       - Extension: TEST44.ext
   - Core: TEST44.core21
+    ThreadUnits: 1
     Cache: TEST44.core21.L1.cache
     ISA: TEST44.isa
     RegisterClasses:
@@ -1263,6 +1185,7 @@ Cores:
     Extensions:
       - Extension: TEST44.ext
   - Core: TEST44.core22
+    ThreadUnits: 1
     Cache: TEST44.core22.L1.cache
     ISA: TEST44.isa
     RegisterClasses:
@@ -1271,6 +1194,7 @@ Cores:
     Extensions:
       - Extension: TEST44.ext
   - Core: TEST44.core23
+    ThreadUnits: 1
     Cache: TEST44.core23.L1.cache
     ISA: TEST44.isa
     RegisterClasses:
@@ -1279,6 +1203,7 @@ Cores:
     Extensions:
       - Extension: TEST44.ext
   - Core: TEST44.core24
+    ThreadUnits: 1
     Cache: TEST44.core24.L1.cache
     ISA: TEST44.isa
     RegisterClasses:
@@ -1287,6 +1212,7 @@ Cores:
     Extensions:
       - Extension: TEST44.ext
   - Core: TEST44.core25
+    ThreadUnits: 1
     Cache: TEST44.core25.L1.cache
     ISA: TEST44.isa
     RegisterClasses:
@@ -1295,6 +1221,7 @@ Cores:
     Extensions:
       - Extension: TEST44.ext
   - Core: TEST44.core26
+    ThreadUnits: 1
     Cache: TEST44.core26.L1.cache
     ISA: TEST44.isa
     RegisterClasses:
@@ -1303,6 +1230,7 @@ Cores:
     Extensions:
       - Extension: TEST44.ext
   - Core: TEST44.core27
+    ThreadUnits: 1
     Cache: TEST44.core27.L1.cache
     ISA: TEST44.isa
     RegisterClasses:
@@ -1311,6 +1239,7 @@ Cores:
     Extensions:
       - Extension: TEST44.ext
   - Core: TEST44.core28
+    ThreadUnits: 1
     Cache: TEST44.core28.L1.cache
     ISA: TEST44.isa
     RegisterClasses:
@@ -1319,6 +1248,7 @@ Cores:
     Extensions:
       - Extension: TEST44.ext
   - Core: TEST44.core29
+    ThreadUnits: 1
     Cache: TEST44.core29.L1.cache
     ISA: TEST44.isa
     RegisterClasses:
@@ -1327,6 +1257,7 @@ Cores:
     Extensions:
       - Extension: TEST44.ext
   - Core: TEST44.core30
+    ThreadUnits: 1
     Cache: TEST44.core30.L1.cache
     ISA: TEST44.isa
     RegisterClasses:
@@ -1335,6 +1266,7 @@ Cores:
     Extensions:
       - Extension: TEST44.ext
   - Core: TEST44.core31
+    ThreadUnits: 1
     Cache: TEST44.core31.L1.cache
     ISA: TEST44.isa
     RegisterClasses:
@@ -1343,6 +1275,7 @@ Cores:
     Extensions:
       - Extension: TEST44.ext
   - Core: TEST44.core32
+    ThreadUnits: 1
     Cache: TEST44.core32.L1.cache
     ISA: TEST44.isa
     RegisterClasses:
@@ -1351,6 +1284,7 @@ Cores:
     Extensions:
       - Extension: TEST44.ext
   - Core: TEST44.core33
+    ThreadUnits: 1
     Cache: TEST44.core33.L1.cache
     ISA: TEST44.isa
     RegisterClasses:
@@ -1359,6 +1293,7 @@ Cores:
     Extensions:
       - Extension: TEST44.ext
   - Core: TEST44.core34
+    ThreadUnits: 1
     Cache: TEST44.core34.L1.cache
     ISA: TEST44.isa
     RegisterClasses:
@@ -1367,6 +1302,7 @@ Cores:
     Extensions:
       - Extension: TEST44.ext
   - Core: TEST44.core35
+    ThreadUnits: 1
     Cache: TEST44.core35.L1.cache
     ISA: TEST44.isa
     RegisterClasses:
@@ -1375,6 +1311,7 @@ Cores:
     Extensions:
       - Extension: TEST44.ext
   - Core: TEST44.core36
+    ThreadUnits: 1
     Cache: TEST44.core36.L1.cache
     ISA: TEST44.isa
     RegisterClasses:
@@ -1383,6 +1320,7 @@ Cores:
     Extensions:
       - Extension: TEST44.ext
   - Core: TEST44.core37
+    ThreadUnits: 1
     Cache: TEST44.core37.L1.cache
     ISA: TEST44.isa
     RegisterClasses:
@@ -1391,6 +1329,7 @@ Cores:
     Extensions:
       - Extension: TEST44.ext
   - Core: TEST44.core38
+    ThreadUnits: 1
     Cache: TEST44.core38.L1.cache
     ISA: TEST44.isa
     RegisterClasses:
@@ -1399,6 +1338,7 @@ Cores:
     Extensions:
       - Extension: TEST44.ext
   - Core: TEST44.core39
+    ThreadUnits: 1
     Cache: TEST44.core39.L1.cache
     ISA: TEST44.isa
     RegisterClasses:
@@ -1407,6 +1347,7 @@ Cores:
     Extensions:
       - Extension: TEST44.ext
   - Core: TEST44.core40
+    ThreadUnits: 1
     Cache: TEST44.core40.L1.cache
     ISA: TEST44.isa
     RegisterClasses:
@@ -1415,6 +1356,7 @@ Cores:
     Extensions:
       - Extension: TEST44.ext
   - Core: TEST44.core41
+    ThreadUnits: 1
     Cache: TEST44.core41.L1.cache
     ISA: TEST44.isa
     RegisterClasses:
@@ -1423,6 +1365,7 @@ Cores:
     Extensions:
       - Extension: TEST44.ext
   - Core: TEST44.core42
+    ThreadUnits: 1
     Cache: TEST44.core42.L1.cache
     ISA: TEST44.isa
     RegisterClasses:
@@ -1431,6 +1374,7 @@ Cores:
     Extensions:
       - Extension: TEST44.ext
   - Core: TEST44.core43
+    ThreadUnits: 1
     Cache: TEST44.core43.L1.cache
     ISA: TEST44.isa
     RegisterClasses:
@@ -1439,6 +1383,7 @@ Cores:
     Extensions:
       - Extension: TEST44.ext
   - Core: TEST44.core44
+    ThreadUnits: 1
     Cache: TEST44.core44.L1.cache
     ISA: TEST44.isa
     RegisterClasses:
@@ -1447,6 +1392,7 @@ Cores:
     Extensions:
       - Extension: TEST44.ext
   - Core: TEST44.core45
+    ThreadUnits: 1
     Cache: TEST44.core45.L1.cache
     ISA: TEST44.isa
     RegisterClasses:
@@ -1455,6 +1401,7 @@ Cores:
     Extensions:
       - Extension: TEST44.ext
   - Core: TEST44.core46
+    ThreadUnits: 1
     Cache: TEST44.core46.L1.cache
     ISA: TEST44.isa
     RegisterClasses:
@@ -1463,6 +1410,7 @@ Cores:
     Extensions:
       - Extension: TEST44.ext
   - Core: TEST44.core47
+    ThreadUnits: 1
     Cache: TEST44.core47.L1.cache
     ISA: TEST44.isa
     RegisterClasses:
@@ -1471,6 +1419,7 @@ Cores:
     Extensions:
       - Extension: TEST44.ext
   - Core: TEST44.core48
+    ThreadUnits: 1
     Cache: TEST44.core48.L1.cache
     ISA: TEST44.isa
     RegisterClasses:
@@ -1479,6 +1428,7 @@ Cores:
     Extensions:
       - Extension: TEST44.ext
   - Core: TEST44.core49
+    ThreadUnits: 1
     Cache: TEST44.core49.L1.cache
     ISA: TEST44.isa
     RegisterClasses:
@@ -1487,6 +1437,7 @@ Cores:
     Extensions:
       - Extension: TEST44.ext
   - Core: TEST44.core50
+    ThreadUnits: 1
     Cache: TEST44.core50.L1.cache
     ISA: TEST44.isa
     RegisterClasses:
@@ -1495,6 +1446,7 @@ Cores:
     Extensions:
       - Extension: TEST44.ext
   - Core: TEST44.core51
+    ThreadUnits: 1
     Cache: TEST44.core51.L1.cache
     ISA: TEST44.isa
     RegisterClasses:
@@ -1503,6 +1455,7 @@ Cores:
     Extensions:
       - Extension: TEST44.ext
   - Core: TEST44.core52
+    ThreadUnits: 1
     Cache: TEST44.core52.L1.cache
     ISA: TEST44.isa
     RegisterClasses:
@@ -1511,6 +1464,7 @@ Cores:
     Extensions:
       - Extension: TEST44.ext
   - Core: TEST44.core53
+    ThreadUnits: 1
     Cache: TEST44.core53.L1.cache
     ISA: TEST44.isa
     RegisterClasses:
@@ -1519,6 +1473,7 @@ Cores:
     Extensions:
       - Extension: TEST44.ext
   - Core: TEST44.core54
+    ThreadUnits: 1
     Cache: TEST44.core54.L1.cache
     ISA: TEST44.isa
     RegisterClasses:
@@ -1527,6 +1482,7 @@ Cores:
     Extensions:
       - Extension: TEST44.ext
   - Core: TEST44.core55
+    ThreadUnits: 1
     Cache: TEST44.core55.L1.cache
     ISA: TEST44.isa
     RegisterClasses:
@@ -1535,6 +1491,7 @@ Cores:
     Extensions:
       - Extension: TEST44.ext
   - Core: TEST44.core56
+    ThreadUnits: 1
     Cache: TEST44.core56.L1.cache
     ISA: TEST44.isa
     RegisterClasses:
@@ -1543,6 +1500,7 @@ Cores:
     Extensions:
       - Extension: TEST44.ext
   - Core: TEST44.core57
+    ThreadUnits: 1
     Cache: TEST44.core57.L1.cache
     ISA: TEST44.isa
     RegisterClasses:
@@ -1551,6 +1509,7 @@ Cores:
     Extensions:
       - Extension: TEST44.ext
   - Core: TEST44.core58
+    ThreadUnits: 1
     Cache: TEST44.core58.L1.cache
     ISA: TEST44.isa
     RegisterClasses:
@@ -1559,6 +1518,7 @@ Cores:
     Extensions:
       - Extension: TEST44.ext
   - Core: TEST44.core59
+    ThreadUnits: 1
     Cache: TEST44.core59.L1.cache
     ISA: TEST44.isa
     RegisterClasses:
@@ -1567,6 +1527,7 @@ Cores:
     Extensions:
       - Extension: TEST44.ext
   - Core: TEST44.core60
+    ThreadUnits: 1
     Cache: TEST44.core60.L1.cache
     ISA: TEST44.isa
     RegisterClasses:
@@ -1575,6 +1536,7 @@ Cores:
     Extensions:
       - Extension: TEST44.ext
   - Core: TEST44.core61
+    ThreadUnits: 1
     Cache: TEST44.core61.L1.cache
     ISA: TEST44.isa
     RegisterClasses:
@@ -1583,6 +1545,7 @@ Cores:
     Extensions:
       - Extension: TEST44.ext
   - Core: TEST44.core62
+    ThreadUnits: 1
     Cache: TEST44.core62.L1.cache
     ISA: TEST44.isa
     RegisterClasses:
@@ -1591,6 +1554,7 @@ Cores:
     Extensions:
       - Extension: TEST44.ext
   - Core: TEST44.core63
+    ThreadUnits: 1
     Cache: TEST44.core63.L1.cache
     ISA: TEST44.isa
     RegisterClasses:

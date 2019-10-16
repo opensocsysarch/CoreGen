@@ -1,0 +1,1469 @@
+ProjectInfo:
+  - ProjectName: TEST40
+    ProjectRoot: ./
+    ProjectType: unknown
+    ChiselMajorVersion: 3
+    ChiselMinorVersion: 0
+Registers:
+  - RegName: TEST40.0.reg
+    Width: 64
+    Index: 0
+    PseudoName: pseudoreg.0
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST40.1.reg
+    Width: 64
+    Index: 1
+    PseudoName: pseudoreg.1
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST40.2.reg
+    Width: 64
+    Index: 2
+    PseudoName: pseudoreg.2
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST40.3.reg
+    Width: 64
+    Index: 3
+    PseudoName: pseudoreg.3
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST40.4.reg
+    Width: 64
+    Index: 4
+    PseudoName: pseudoreg.4
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST40.5.reg
+    Width: 64
+    Index: 5
+    PseudoName: pseudoreg.5
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST40.6.reg
+    Width: 64
+    Index: 6
+    PseudoName: pseudoreg.6
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST40.7.reg
+    Width: 64
+    Index: 7
+    PseudoName: pseudoreg.7
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST40.8.reg
+    Width: 64
+    Index: 8
+    PseudoName: pseudoreg.8
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST40.9.reg
+    Width: 64
+    Index: 9
+    PseudoName: pseudoreg.9
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST40.10.reg
+    Width: 64
+    Index: 10
+    PseudoName: pseudoreg.10
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST40.11.reg
+    Width: 64
+    Index: 11
+    PseudoName: pseudoreg.11
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST40.12.reg
+    Width: 64
+    Index: 12
+    PseudoName: pseudoreg.12
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST40.13.reg
+    Width: 64
+    Index: 13
+    PseudoName: pseudoreg.13
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST40.14.reg
+    Width: 64
+    Index: 14
+    PseudoName: pseudoreg.14
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST40.15.reg
+    Width: 64
+    Index: 15
+    PseudoName: pseudoreg.15
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST40.0.csr
+    Width: 64
+    Index: 0
+    PseudoName: csr.0
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST40.1.csr
+    Width: 64
+    Index: 1
+    PseudoName: csr.1
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST40.2.csr
+    Width: 64
+    Index: 2
+    PseudoName: csr.2
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST40.3.csr
+    Width: 64
+    Index: 3
+    PseudoName: csr.3
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST40.4.csr
+    Width: 64
+    Index: 4
+    PseudoName: csr.4
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST40.5.csr
+    Width: 64
+    Index: 5
+    PseudoName: csr.5
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST40.6.csr
+    Width: 64
+    Index: 6
+    PseudoName: csr.6
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST40.7.csr
+    Width: 64
+    Index: 7
+    PseudoName: csr.7
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST40.8.csr
+    Width: 64
+    Index: 8
+    PseudoName: csr.8
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST40.9.csr
+    Width: 64
+    Index: 9
+    PseudoName: csr.9
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST40.10.csr
+    Width: 64
+    Index: 10
+    PseudoName: csr.10
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST40.11.csr
+    Width: 64
+    Index: 11
+    PseudoName: csr.11
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST40.12.csr
+    Width: 64
+    Index: 12
+    PseudoName: csr.12
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST40.13.csr
+    Width: 64
+    Index: 13
+    PseudoName: csr.13
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST40.14.csr
+    Width: 64
+    Index: 14
+    PseudoName: csr.14
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+  - RegName: TEST40.15.csr
+    Width: 64
+    Index: 15
+    PseudoName: csr.15
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    Shared: false
+RegClasses:
+  - RegisterClassName: TEST40.regclass
+    Registers:
+      - TEST40.0.reg
+      - TEST40.1.reg
+      - TEST40.2.reg
+      - TEST40.3.reg
+      - TEST40.4.reg
+      - TEST40.5.reg
+      - TEST40.6.reg
+      - TEST40.7.reg
+      - TEST40.8.reg
+      - TEST40.9.reg
+      - TEST40.10.reg
+      - TEST40.11.reg
+      - TEST40.12.reg
+      - TEST40.13.reg
+      - TEST40.14.reg
+      - TEST40.15.reg
+  - RegisterClassName: TEST40.csrregclass
+    Registers:
+      - TEST40.0.csr
+      - TEST40.1.csr
+      - TEST40.2.csr
+      - TEST40.3.csr
+      - TEST40.4.csr
+      - TEST40.5.csr
+      - TEST40.6.csr
+      - TEST40.7.csr
+      - TEST40.8.csr
+      - TEST40.9.csr
+      - TEST40.10.csr
+      - TEST40.11.csr
+      - TEST40.12.csr
+      - TEST40.13.csr
+      - TEST40.14.csr
+      - TEST40.15.csr
+ISAs:
+  - ISAName: TEST40.isa
+InstFormats:
+  - InstFormatName: TEST40.if
+    ISA: TEST40.isa
+    FormatWidth: 32
+    Fields:
+      - FieldName: opcode
+        FieldType: CGInstCode
+        FieldWidth: 8
+        StartBit: 0
+        EndBit: 7
+        MandatoryField: true
+      - FieldName: RB
+        FieldType: CGInstReg
+        FieldWidth: 8
+        StartBit: 8
+        EndBit: 15
+        MandatoryField: false
+        RegClass: TEST40.regclass
+      - FieldName: RA
+        FieldType: CGInstReg
+        FieldWidth: 8
+        StartBit: 16
+        EndBit: 23
+        MandatoryField: false
+        RegClass: TEST40.regclass
+      - FieldName: RT
+        FieldType: CGInstReg
+        FieldWidth: 8
+        StartBit: 24
+        EndBit: 31
+        MandatoryField: false
+        RegClass: TEST40.csrregclass
+Insts:
+  - Inst: TEST40.inst0
+    ISA: TEST40.isa
+    InstFormat: TEST40.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 1
+  - Inst: TEST40.inst1
+    ISA: TEST40.isa
+    InstFormat: TEST40.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 2
+  - Inst: TEST40.inst2
+    ISA: TEST40.isa
+    InstFormat: TEST40.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 3
+  - Inst: TEST40.inst3
+    ISA: TEST40.isa
+    InstFormat: TEST40.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 4
+  - Inst: TEST40.inst4
+    ISA: TEST40.isa
+    InstFormat: TEST40.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 5
+  - Inst: TEST40.inst5
+    ISA: TEST40.isa
+    InstFormat: TEST40.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 6
+  - Inst: TEST40.inst6
+    ISA: TEST40.isa
+    InstFormat: TEST40.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 7
+  - Inst: TEST40.inst7
+    ISA: TEST40.isa
+    InstFormat: TEST40.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 8
+  - Inst: TEST40.inst8
+    ISA: TEST40.isa
+    InstFormat: TEST40.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 9
+  - Inst: TEST40.inst9
+    ISA: TEST40.isa
+    InstFormat: TEST40.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 10
+  - Inst: TEST40.inst10
+    ISA: TEST40.isa
+    InstFormat: TEST40.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 11
+  - Inst: TEST40.inst11
+    ISA: TEST40.isa
+    InstFormat: TEST40.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 12
+  - Inst: TEST40.inst12
+    ISA: TEST40.isa
+    InstFormat: TEST40.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 13
+  - Inst: TEST40.inst13
+    ISA: TEST40.isa
+    InstFormat: TEST40.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 14
+  - Inst: TEST40.inst14
+    ISA: TEST40.isa
+    InstFormat: TEST40.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 15
+  - Inst: TEST40.inst15
+    ISA: TEST40.isa
+    InstFormat: TEST40.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 16
+PseudoInsts:
+  - PseudoInst: TEST40.pinst0
+    ISA: TEST40.isa
+    Inst: TEST40.inst0
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 0
+  - PseudoInst: TEST40.pinst1
+    ISA: TEST40.isa
+    Inst: TEST40.inst1
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 1
+  - PseudoInst: TEST40.pinst2
+    ISA: TEST40.isa
+    Inst: TEST40.inst2
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 2
+  - PseudoInst: TEST40.pinst3
+    ISA: TEST40.isa
+    Inst: TEST40.inst3
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 3
+  - PseudoInst: TEST40.pinst4
+    ISA: TEST40.isa
+    Inst: TEST40.inst4
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 4
+  - PseudoInst: TEST40.pinst5
+    ISA: TEST40.isa
+    Inst: TEST40.inst5
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 5
+  - PseudoInst: TEST40.pinst6
+    ISA: TEST40.isa
+    Inst: TEST40.inst6
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 6
+  - PseudoInst: TEST40.pinst7
+    ISA: TEST40.isa
+    Inst: TEST40.inst7
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 7
+  - PseudoInst: TEST40.pinst8
+    ISA: TEST40.isa
+    Inst: TEST40.inst8
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 8
+  - PseudoInst: TEST40.pinst9
+    ISA: TEST40.isa
+    Inst: TEST40.inst9
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 9
+  - PseudoInst: TEST40.pinst10
+    ISA: TEST40.isa
+    Inst: TEST40.inst10
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 10
+  - PseudoInst: TEST40.pinst11
+    ISA: TEST40.isa
+    Inst: TEST40.inst11
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 11
+  - PseudoInst: TEST40.pinst12
+    ISA: TEST40.isa
+    Inst: TEST40.inst12
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 12
+  - PseudoInst: TEST40.pinst13
+    ISA: TEST40.isa
+    Inst: TEST40.inst13
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 13
+  - PseudoInst: TEST40.pinst14
+    ISA: TEST40.isa
+    Inst: TEST40.inst14
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 14
+  - PseudoInst: TEST40.pinst15
+    ISA: TEST40.isa
+    Inst: TEST40.inst15
+    Encodings:
+      - EncodingField: RA
+        EncodingWidth: 8
+        EncodingValue: 15
+Caches:
+  - Cache: TEST40.L2.cache
+    Sets: 2
+    Ways: 8
+  - Cache: TEST40.core0.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST40.L2.cache
+  - Cache: TEST40.core1.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST40.L2.cache
+  - Cache: TEST40.core2.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST40.L2.cache
+  - Cache: TEST40.core3.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST40.L2.cache
+  - Cache: TEST40.core4.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST40.L2.cache
+  - Cache: TEST40.core5.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST40.L2.cache
+  - Cache: TEST40.core6.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST40.L2.cache
+  - Cache: TEST40.core7.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST40.L2.cache
+  - Cache: TEST40.core8.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST40.L2.cache
+  - Cache: TEST40.core9.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST40.L2.cache
+  - Cache: TEST40.core10.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST40.L2.cache
+  - Cache: TEST40.core11.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST40.L2.cache
+  - Cache: TEST40.core12.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST40.L2.cache
+  - Cache: TEST40.core13.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST40.L2.cache
+  - Cache: TEST40.core14.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST40.L2.cache
+  - Cache: TEST40.core15.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST40.L2.cache
+  - Cache: TEST40.core16.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST40.L2.cache
+  - Cache: TEST40.core17.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST40.L2.cache
+  - Cache: TEST40.core18.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST40.L2.cache
+  - Cache: TEST40.core19.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST40.L2.cache
+  - Cache: TEST40.core20.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST40.L2.cache
+  - Cache: TEST40.core21.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST40.L2.cache
+  - Cache: TEST40.core22.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST40.L2.cache
+  - Cache: TEST40.core23.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST40.L2.cache
+  - Cache: TEST40.core24.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST40.L2.cache
+  - Cache: TEST40.core25.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST40.L2.cache
+  - Cache: TEST40.core26.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST40.L2.cache
+  - Cache: TEST40.core27.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST40.L2.cache
+  - Cache: TEST40.core28.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST40.L2.cache
+  - Cache: TEST40.core29.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST40.L2.cache
+  - Cache: TEST40.core30.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST40.L2.cache
+  - Cache: TEST40.core31.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST40.L2.cache
+  - Cache: TEST40.core32.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST40.L2.cache
+  - Cache: TEST40.core33.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST40.L2.cache
+  - Cache: TEST40.core34.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST40.L2.cache
+  - Cache: TEST40.core35.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST40.L2.cache
+  - Cache: TEST40.core36.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST40.L2.cache
+  - Cache: TEST40.core37.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST40.L2.cache
+  - Cache: TEST40.core38.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST40.L2.cache
+  - Cache: TEST40.core39.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST40.L2.cache
+  - Cache: TEST40.core40.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST40.L2.cache
+  - Cache: TEST40.core41.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST40.L2.cache
+  - Cache: TEST40.core42.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST40.L2.cache
+  - Cache: TEST40.core43.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST40.L2.cache
+  - Cache: TEST40.core44.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST40.L2.cache
+  - Cache: TEST40.core45.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST40.L2.cache
+  - Cache: TEST40.core46.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST40.L2.cache
+  - Cache: TEST40.core47.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST40.L2.cache
+  - Cache: TEST40.core48.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST40.L2.cache
+  - Cache: TEST40.core49.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST40.L2.cache
+  - Cache: TEST40.core50.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST40.L2.cache
+  - Cache: TEST40.core51.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST40.L2.cache
+  - Cache: TEST40.core52.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST40.L2.cache
+  - Cache: TEST40.core53.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST40.L2.cache
+  - Cache: TEST40.core54.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST40.L2.cache
+  - Cache: TEST40.core55.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST40.L2.cache
+  - Cache: TEST40.core56.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST40.L2.cache
+  - Cache: TEST40.core57.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST40.L2.cache
+  - Cache: TEST40.core58.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST40.L2.cache
+  - Cache: TEST40.core59.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST40.L2.cache
+  - Cache: TEST40.core60.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST40.L2.cache
+  - Cache: TEST40.core61.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST40.L2.cache
+  - Cache: TEST40.core62.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST40.L2.cache
+  - Cache: TEST40.core63.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST40.L2.cache
+Extensions:
+  - Extension: TEST40.ext
+    Type: unknown
+Cores:
+  - Core: TEST40.core0
+    ThreadUnits: 1
+    Cache: TEST40.core0.L1.cache
+    ISA: TEST40.isa
+    RegisterClasses:
+      - RegClass: TEST40.regclass
+      - RegClass: TEST40.csrregclass
+    Extensions:
+      - Extension: TEST40.ext
+  - Core: TEST40.core1
+    ThreadUnits: 1
+    Cache: TEST40.core1.L1.cache
+    ISA: TEST40.isa
+    RegisterClasses:
+      - RegClass: TEST40.regclass
+      - RegClass: TEST40.csrregclass
+  - Core: TEST40.core2
+    ThreadUnits: 1
+    Cache: TEST40.core2.L1.cache
+    ISA: TEST40.isa
+    RegisterClasses:
+      - RegClass: TEST40.regclass
+      - RegClass: TEST40.csrregclass
+  - Core: TEST40.core3
+    ThreadUnits: 1
+    Cache: TEST40.core3.L1.cache
+    ISA: TEST40.isa
+    RegisterClasses:
+      - RegClass: TEST40.regclass
+      - RegClass: TEST40.csrregclass
+  - Core: TEST40.core4
+    ThreadUnits: 1
+    Cache: TEST40.core4.L1.cache
+    ISA: TEST40.isa
+    RegisterClasses:
+      - RegClass: TEST40.regclass
+      - RegClass: TEST40.csrregclass
+  - Core: TEST40.core5
+    ThreadUnits: 1
+    Cache: TEST40.core5.L1.cache
+    ISA: TEST40.isa
+    RegisterClasses:
+      - RegClass: TEST40.regclass
+      - RegClass: TEST40.csrregclass
+  - Core: TEST40.core6
+    ThreadUnits: 1
+    Cache: TEST40.core6.L1.cache
+    ISA: TEST40.isa
+    RegisterClasses:
+      - RegClass: TEST40.regclass
+      - RegClass: TEST40.csrregclass
+  - Core: TEST40.core7
+    ThreadUnits: 1
+    Cache: TEST40.core7.L1.cache
+    ISA: TEST40.isa
+    RegisterClasses:
+      - RegClass: TEST40.regclass
+      - RegClass: TEST40.csrregclass
+  - Core: TEST40.core8
+    ThreadUnits: 1
+    Cache: TEST40.core8.L1.cache
+    ISA: TEST40.isa
+    RegisterClasses:
+      - RegClass: TEST40.regclass
+      - RegClass: TEST40.csrregclass
+  - Core: TEST40.core9
+    ThreadUnits: 1
+    Cache: TEST40.core9.L1.cache
+    ISA: TEST40.isa
+    RegisterClasses:
+      - RegClass: TEST40.regclass
+      - RegClass: TEST40.csrregclass
+  - Core: TEST40.core10
+    ThreadUnits: 1
+    Cache: TEST40.core10.L1.cache
+    ISA: TEST40.isa
+    RegisterClasses:
+      - RegClass: TEST40.regclass
+      - RegClass: TEST40.csrregclass
+  - Core: TEST40.core11
+    ThreadUnits: 1
+    Cache: TEST40.core11.L1.cache
+    ISA: TEST40.isa
+    RegisterClasses:
+      - RegClass: TEST40.regclass
+      - RegClass: TEST40.csrregclass
+  - Core: TEST40.core12
+    ThreadUnits: 1
+    Cache: TEST40.core12.L1.cache
+    ISA: TEST40.isa
+    RegisterClasses:
+      - RegClass: TEST40.regclass
+      - RegClass: TEST40.csrregclass
+  - Core: TEST40.core13
+    ThreadUnits: 1
+    Cache: TEST40.core13.L1.cache
+    ISA: TEST40.isa
+    RegisterClasses:
+      - RegClass: TEST40.regclass
+      - RegClass: TEST40.csrregclass
+  - Core: TEST40.core14
+    ThreadUnits: 1
+    Cache: TEST40.core14.L1.cache
+    ISA: TEST40.isa
+    RegisterClasses:
+      - RegClass: TEST40.regclass
+      - RegClass: TEST40.csrregclass
+  - Core: TEST40.core15
+    ThreadUnits: 1
+    Cache: TEST40.core15.L1.cache
+    ISA: TEST40.isa
+    RegisterClasses:
+      - RegClass: TEST40.regclass
+      - RegClass: TEST40.csrregclass
+  - Core: TEST40.core16
+    ThreadUnits: 1
+    Cache: TEST40.core16.L1.cache
+    ISA: TEST40.isa
+    RegisterClasses:
+      - RegClass: TEST40.regclass
+      - RegClass: TEST40.csrregclass
+  - Core: TEST40.core17
+    ThreadUnits: 1
+    Cache: TEST40.core17.L1.cache
+    ISA: TEST40.isa
+    RegisterClasses:
+      - RegClass: TEST40.regclass
+      - RegClass: TEST40.csrregclass
+  - Core: TEST40.core18
+    ThreadUnits: 1
+    Cache: TEST40.core18.L1.cache
+    ISA: TEST40.isa
+    RegisterClasses:
+      - RegClass: TEST40.regclass
+      - RegClass: TEST40.csrregclass
+  - Core: TEST40.core19
+    ThreadUnits: 1
+    Cache: TEST40.core19.L1.cache
+    ISA: TEST40.isa
+    RegisterClasses:
+      - RegClass: TEST40.regclass
+      - RegClass: TEST40.csrregclass
+  - Core: TEST40.core20
+    ThreadUnits: 1
+    Cache: TEST40.core20.L1.cache
+    ISA: TEST40.isa
+    RegisterClasses:
+      - RegClass: TEST40.regclass
+      - RegClass: TEST40.csrregclass
+  - Core: TEST40.core21
+    ThreadUnits: 1
+    Cache: TEST40.core21.L1.cache
+    ISA: TEST40.isa
+    RegisterClasses:
+      - RegClass: TEST40.regclass
+      - RegClass: TEST40.csrregclass
+  - Core: TEST40.core22
+    ThreadUnits: 1
+    Cache: TEST40.core22.L1.cache
+    ISA: TEST40.isa
+    RegisterClasses:
+      - RegClass: TEST40.regclass
+      - RegClass: TEST40.csrregclass
+  - Core: TEST40.core23
+    ThreadUnits: 1
+    Cache: TEST40.core23.L1.cache
+    ISA: TEST40.isa
+    RegisterClasses:
+      - RegClass: TEST40.regclass
+      - RegClass: TEST40.csrregclass
+  - Core: TEST40.core24
+    ThreadUnits: 1
+    Cache: TEST40.core24.L1.cache
+    ISA: TEST40.isa
+    RegisterClasses:
+      - RegClass: TEST40.regclass
+      - RegClass: TEST40.csrregclass
+  - Core: TEST40.core25
+    ThreadUnits: 1
+    Cache: TEST40.core25.L1.cache
+    ISA: TEST40.isa
+    RegisterClasses:
+      - RegClass: TEST40.regclass
+      - RegClass: TEST40.csrregclass
+  - Core: TEST40.core26
+    ThreadUnits: 1
+    Cache: TEST40.core26.L1.cache
+    ISA: TEST40.isa
+    RegisterClasses:
+      - RegClass: TEST40.regclass
+      - RegClass: TEST40.csrregclass
+  - Core: TEST40.core27
+    ThreadUnits: 1
+    Cache: TEST40.core27.L1.cache
+    ISA: TEST40.isa
+    RegisterClasses:
+      - RegClass: TEST40.regclass
+      - RegClass: TEST40.csrregclass
+  - Core: TEST40.core28
+    ThreadUnits: 1
+    Cache: TEST40.core28.L1.cache
+    ISA: TEST40.isa
+    RegisterClasses:
+      - RegClass: TEST40.regclass
+      - RegClass: TEST40.csrregclass
+  - Core: TEST40.core29
+    ThreadUnits: 1
+    Cache: TEST40.core29.L1.cache
+    ISA: TEST40.isa
+    RegisterClasses:
+      - RegClass: TEST40.regclass
+      - RegClass: TEST40.csrregclass
+  - Core: TEST40.core30
+    ThreadUnits: 1
+    Cache: TEST40.core30.L1.cache
+    ISA: TEST40.isa
+    RegisterClasses:
+      - RegClass: TEST40.regclass
+      - RegClass: TEST40.csrregclass
+  - Core: TEST40.core31
+    ThreadUnits: 1
+    Cache: TEST40.core31.L1.cache
+    ISA: TEST40.isa
+    RegisterClasses:
+      - RegClass: TEST40.regclass
+      - RegClass: TEST40.csrregclass
+  - Core: TEST40.core32
+    ThreadUnits: 1
+    Cache: TEST40.core32.L1.cache
+    ISA: TEST40.isa
+    RegisterClasses:
+      - RegClass: TEST40.regclass
+      - RegClass: TEST40.csrregclass
+  - Core: TEST40.core33
+    ThreadUnits: 1
+    Cache: TEST40.core33.L1.cache
+    ISA: TEST40.isa
+    RegisterClasses:
+      - RegClass: TEST40.regclass
+      - RegClass: TEST40.csrregclass
+  - Core: TEST40.core34
+    ThreadUnits: 1
+    Cache: TEST40.core34.L1.cache
+    ISA: TEST40.isa
+    RegisterClasses:
+      - RegClass: TEST40.regclass
+      - RegClass: TEST40.csrregclass
+  - Core: TEST40.core35
+    ThreadUnits: 1
+    Cache: TEST40.core35.L1.cache
+    ISA: TEST40.isa
+    RegisterClasses:
+      - RegClass: TEST40.regclass
+      - RegClass: TEST40.csrregclass
+  - Core: TEST40.core36
+    ThreadUnits: 1
+    Cache: TEST40.core36.L1.cache
+    ISA: TEST40.isa
+    RegisterClasses:
+      - RegClass: TEST40.regclass
+      - RegClass: TEST40.csrregclass
+  - Core: TEST40.core37
+    ThreadUnits: 1
+    Cache: TEST40.core37.L1.cache
+    ISA: TEST40.isa
+    RegisterClasses:
+      - RegClass: TEST40.regclass
+      - RegClass: TEST40.csrregclass
+  - Core: TEST40.core38
+    ThreadUnits: 1
+    Cache: TEST40.core38.L1.cache
+    ISA: TEST40.isa
+    RegisterClasses:
+      - RegClass: TEST40.regclass
+      - RegClass: TEST40.csrregclass
+  - Core: TEST40.core39
+    ThreadUnits: 1
+    Cache: TEST40.core39.L1.cache
+    ISA: TEST40.isa
+    RegisterClasses:
+      - RegClass: TEST40.regclass
+      - RegClass: TEST40.csrregclass
+  - Core: TEST40.core40
+    ThreadUnits: 1
+    Cache: TEST40.core40.L1.cache
+    ISA: TEST40.isa
+    RegisterClasses:
+      - RegClass: TEST40.regclass
+      - RegClass: TEST40.csrregclass
+  - Core: TEST40.core41
+    ThreadUnits: 1
+    Cache: TEST40.core41.L1.cache
+    ISA: TEST40.isa
+    RegisterClasses:
+      - RegClass: TEST40.regclass
+      - RegClass: TEST40.csrregclass
+  - Core: TEST40.core42
+    ThreadUnits: 1
+    Cache: TEST40.core42.L1.cache
+    ISA: TEST40.isa
+    RegisterClasses:
+      - RegClass: TEST40.regclass
+      - RegClass: TEST40.csrregclass
+  - Core: TEST40.core43
+    ThreadUnits: 1
+    Cache: TEST40.core43.L1.cache
+    ISA: TEST40.isa
+    RegisterClasses:
+      - RegClass: TEST40.regclass
+      - RegClass: TEST40.csrregclass
+  - Core: TEST40.core44
+    ThreadUnits: 1
+    Cache: TEST40.core44.L1.cache
+    ISA: TEST40.isa
+    RegisterClasses:
+      - RegClass: TEST40.regclass
+      - RegClass: TEST40.csrregclass
+  - Core: TEST40.core45
+    ThreadUnits: 1
+    Cache: TEST40.core45.L1.cache
+    ISA: TEST40.isa
+    RegisterClasses:
+      - RegClass: TEST40.regclass
+      - RegClass: TEST40.csrregclass
+  - Core: TEST40.core46
+    ThreadUnits: 1
+    Cache: TEST40.core46.L1.cache
+    ISA: TEST40.isa
+    RegisterClasses:
+      - RegClass: TEST40.regclass
+      - RegClass: TEST40.csrregclass
+  - Core: TEST40.core47
+    ThreadUnits: 1
+    Cache: TEST40.core47.L1.cache
+    ISA: TEST40.isa
+    RegisterClasses:
+      - RegClass: TEST40.regclass
+      - RegClass: TEST40.csrregclass
+  - Core: TEST40.core48
+    ThreadUnits: 1
+    Cache: TEST40.core48.L1.cache
+    ISA: TEST40.isa
+    RegisterClasses:
+      - RegClass: TEST40.regclass
+      - RegClass: TEST40.csrregclass
+  - Core: TEST40.core49
+    ThreadUnits: 1
+    Cache: TEST40.core49.L1.cache
+    ISA: TEST40.isa
+    RegisterClasses:
+      - RegClass: TEST40.regclass
+      - RegClass: TEST40.csrregclass
+  - Core: TEST40.core50
+    ThreadUnits: 1
+    Cache: TEST40.core50.L1.cache
+    ISA: TEST40.isa
+    RegisterClasses:
+      - RegClass: TEST40.regclass
+      - RegClass: TEST40.csrregclass
+  - Core: TEST40.core51
+    ThreadUnits: 1
+    Cache: TEST40.core51.L1.cache
+    ISA: TEST40.isa
+    RegisterClasses:
+      - RegClass: TEST40.regclass
+      - RegClass: TEST40.csrregclass
+  - Core: TEST40.core52
+    ThreadUnits: 1
+    Cache: TEST40.core52.L1.cache
+    ISA: TEST40.isa
+    RegisterClasses:
+      - RegClass: TEST40.regclass
+      - RegClass: TEST40.csrregclass
+  - Core: TEST40.core53
+    ThreadUnits: 1
+    Cache: TEST40.core53.L1.cache
+    ISA: TEST40.isa
+    RegisterClasses:
+      - RegClass: TEST40.regclass
+      - RegClass: TEST40.csrregclass
+  - Core: TEST40.core54
+    ThreadUnits: 1
+    Cache: TEST40.core54.L1.cache
+    ISA: TEST40.isa
+    RegisterClasses:
+      - RegClass: TEST40.regclass
+      - RegClass: TEST40.csrregclass
+  - Core: TEST40.core55
+    ThreadUnits: 1
+    Cache: TEST40.core55.L1.cache
+    ISA: TEST40.isa
+    RegisterClasses:
+      - RegClass: TEST40.regclass
+      - RegClass: TEST40.csrregclass
+  - Core: TEST40.core56
+    ThreadUnits: 1
+    Cache: TEST40.core56.L1.cache
+    ISA: TEST40.isa
+    RegisterClasses:
+      - RegClass: TEST40.regclass
+      - RegClass: TEST40.csrregclass
+  - Core: TEST40.core57
+    ThreadUnits: 1
+    Cache: TEST40.core57.L1.cache
+    ISA: TEST40.isa
+    RegisterClasses:
+      - RegClass: TEST40.regclass
+      - RegClass: TEST40.csrregclass
+  - Core: TEST40.core58
+    ThreadUnits: 1
+    Cache: TEST40.core58.L1.cache
+    ISA: TEST40.isa
+    RegisterClasses:
+      - RegClass: TEST40.regclass
+      - RegClass: TEST40.csrregclass
+  - Core: TEST40.core59
+    ThreadUnits: 1
+    Cache: TEST40.core59.L1.cache
+    ISA: TEST40.isa
+    RegisterClasses:
+      - RegClass: TEST40.regclass
+      - RegClass: TEST40.csrregclass
+  - Core: TEST40.core60
+    ThreadUnits: 1
+    Cache: TEST40.core60.L1.cache
+    ISA: TEST40.isa
+    RegisterClasses:
+      - RegClass: TEST40.regclass
+      - RegClass: TEST40.csrregclass
+  - Core: TEST40.core61
+    ThreadUnits: 1
+    Cache: TEST40.core61.L1.cache
+    ISA: TEST40.isa
+    RegisterClasses:
+      - RegClass: TEST40.regclass
+      - RegClass: TEST40.csrregclass
+  - Core: TEST40.core62
+    ThreadUnits: 1
+    Cache: TEST40.core62.L1.cache
+    ISA: TEST40.isa
+    RegisterClasses:
+      - RegClass: TEST40.regclass
+      - RegClass: TEST40.csrregclass
+  - Core: TEST40.core63
+    ThreadUnits: 1
+    Cache: TEST40.core63.L1.cache
+    ISA: TEST40.isa
+    RegisterClasses:
+      - RegClass: TEST40.regclass
+      - RegClass: TEST40.csrregclass
+Socs:
+  - Soc: TEST40.soc
+    Cores:
+      - Core: TEST40.core0
+      - Core: TEST40.core1
+      - Core: TEST40.core2
+      - Core: TEST40.core3
+      - Core: TEST40.core4
+      - Core: TEST40.core5
+      - Core: TEST40.core6
+      - Core: TEST40.core7
+      - Core: TEST40.core8
+      - Core: TEST40.core9
+     - Core: TEST40.core10
+      - Core: TEST40.core11
+      - Core: TEST40.core12
+      - Core: TEST40.core13
+      - Core: TEST40.core14
+      - Core: TEST40.core15
+      - Core: TEST40.core16
+      - Core: TEST40.core17
+      - Core: TEST40.core18
+      - Core: TEST40.core19
+      - Core: TEST40.core20
+      - Core: TEST40.core21
+      - Core: TEST40.core22
+      - Core: TEST40.core23
+      - Core: TEST40.core24
+      - Core: TEST40.core25
+      - Core: TEST40.core26
+      - Core: TEST40.core27
+      - Core: TEST40.core28
+      - Core: TEST40.core29
+      - Core: TEST40.core30
+      - Core: TEST40.core31
+      - Core: TEST40.core32
+      - Core: TEST40.core33
+      - Core: TEST40.core34
+      - Core: TEST40.core35
+      - Core: TEST40.core36
+      - Core: TEST40.core37
+      - Core: TEST40.core38
+      - Core: TEST40.core39
+      - Core: TEST40.core40
+      - Core: TEST40.core41
+      - Core: TEST40.core42
+      - Core: TEST40.core43
+      - Core: TEST40.core44
+      - Core: TEST40.core45
+      - Core: TEST40.core46
+      - Core: TEST40.core47
+      - Core: TEST40.core48
+      - Core: TEST40.core49
+      - Core: TEST40.core50
+      - Core: TEST40.core51
+      - Core: TEST40.core52
+      - Core: TEST40.core53
+      - Core: TEST40.core54
+      - Core: TEST40.core55
+      - Core: TEST40.core56
+      - Core: TEST40.core57
+      - Core: TEST40.core58
+      - Core: TEST40.core59
+      - Core: TEST40.core60
+      - Core: TEST40.core61
+      - Core: TEST40.core62
+      - Core: TEST40.core63

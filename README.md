@@ -52,25 +52,25 @@ wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
 sudo apt-add-repository "deb http://apt.llvm.org/xenial/ llvm-toolchain-xenial-6.0 main"
 sudo apt-get update
 ```
-1.  Install the system dependencies:
+2.  Install the system dependencies:
 ```
 sudo apt-get install -y libllvm-6.0-ocaml-dev libllvm6.0 llvm-6.0 llvm-6.0-dev llvm-6.0-doc llvm-6.0-examples llvm-6.0-runtime clang-6.0 clang-tools-6.0 clang-6.0-doc libclang-common-6.0-dev libclang-6.0-dev libclang1-6.0 clang-format-6.0 python-clang-6.0 re2c lua5.3 liblua5.3-dev
 ```
-2. Clone the CoreGen repository
+3. Clone the CoreGen repository
 ```
 git clone https://github.com/opensocsysarch/CoreGen.git
 ```
-3. Setup your build tree
+4. Setup your build tree
 ```
 cd CoreGen
 mkdir build
 cd build
 ```
-4. Execute CMake to generate the makefiles
+5. Execute CMake to generate the makefiles
 ```
 cmake -DLLVM_DIR=/usr/lib/llvm-6.0/cmake ../
 ```
-5. Execute the build
+6. Execute the build
 ```
 make
 ```
@@ -123,7 +123,9 @@ sudo yum -y install cmake centos-release-scl texlive texlive-*.noarch llvm-stati
 sudo yum install rpm-build rpmdevtools
 ```
 3. Enable the SCL LLVM environment (this will create a fresh bash shell with the correct paths)
-``scl enable llvm-toolset-7 devtoolset-7 bash``
+``
+scl enable llvm-toolset-7 devtoolset-7 bash
+``
 4. Clone the CoreGen repository
 ```
 git clone https://github.com/opensocsysarch/CoreGen.git
@@ -255,6 +257,7 @@ make
 * -DBUILD\_COREGEN\_YAML\_TESTING=ON : Enable yaml test harness
 * -DBUILD\_COREGEN\_YAML\_READER\_TESTING=ON : Enable yaml reader test harness
 * -DBUILD\_COREGEN\_YAML\_READER\_MISSING\_DATA\_TESTING=ON : Enable yaml reader test harness for yaml with known missing data
+* -DBUILD\_COREGEN\_YAML\_READER\_INDENT\_FAIL\_TESTING=ON : Enable yaml reader test harness for yaml with known issues in indentations
 * -DBUILD\_COREGEN\_YAML\_WRITER\_TESTING=ON : Enable yaml writer test harness
 * -DBUILD\_COREGEN\_STONECUTTER\_TESTING=ON : Enables the StoneCutter test harness
 * -DBUILD\_COREGEN\_STONECUTTER\_CLI\_TESTING=ON : Enables the StoneCutter CLI test harness

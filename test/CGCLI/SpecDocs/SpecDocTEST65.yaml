@@ -2562,30 +2562,18 @@ Caches:
     Sets: 1
     Ways: 1
     SubLevel: TEST66.L2.cache
-  - Cache: TEST66.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST66.core1.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST66.L2.cache
-  - Cache: TEST66.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST66.core2.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST66.L2.cache
-  - Cache: TEST66.L2.cache
-    Sets: 2
-    Ways: 8
   - Cache: TEST66.core3.L1.cache
     Sets: 1
     Ways: 1
     SubLevel: TEST66.L2.cache
-  - Cache: TEST66.L2.cache
-    Sets: 2
-    Ways: 8
 Comms:
   - Comm: TEST66.comm
     Type: NOC
