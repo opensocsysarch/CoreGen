@@ -12,5 +12,5 @@ add_subdirectory(CoreGenPlugin)
 add_subdirectory(CoreGenCodegen)
 add_subdirectory(CoreGenSigMap)
 add_subdirectory(StoneCutter)
-
+add_subdirectory(CoreGenArchive)
 #-- EOF
