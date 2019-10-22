@@ -16,7 +16,7 @@ CGCLIOpts::CGCLIOpts( int argc, char **argv )
     OptPasses(false), ListPasses(false), Verify(false), ExecPass(false),
     CGChisel(false), CGComp(false), CGVersion(false), CheckPlugins(false),
     ListSysPasses(false), ExecSysPass(false), ASPSolver(false), ASPClean(true),
-    ProjName("UNKNOWN"){
+    ArchQuery(false), ArchInit(false), ArchDestroy(false), ProjName("UNKNOWN"){
   // setup default project root
   char PATH[FILENAME_MAX];
   if( getcwd(PATH,sizeof(PATH)) == NULL ){
@@ -67,6 +67,13 @@ void CGCLIOpts::PrintOptions(){
   std::cout << "\t--list-sys-passes                     : List all the system passes" << std::endl;
   std::cout << "\t--asp \"PROG1,PROG2,...\"               : Execute ASP solver with input" << std::endl;
   std::cout << "\t--nocleanasp                          : Clean up the ASP DAG file" << std::endl;
+  std::cout << std::endl;
+  std::cout << " Archive Options:" << std::endl;
+  std::cout << "\t--query archive.yaml                  : Query the target archive file" << std::endl;
+  std::cout << "\t--init archive.yaml                   : Initialize the archive entries" << std::endl;
+  std::cout << "\t--init-entry archive.yaml entry       : Initialize the target entry" << std::endl;
+  std::cout << "\t--destroy archive.yaml                : Destroy the archive entries" << std::endl;
+  std::cout << "\t--destroy-entry archive.yaml entry    : Destroy the target entry" << std::endl;
   std::cout << std::endl;
 }
 
@@ -426,6 +433,55 @@ bool CGCLIOpts::ParseOpts( int argc, char **argv ){
     }else if( s == "--compiler" ){
       CGComp = true;
       Verify = true;
+    }else if( s == "--query" ){
+      if( i+1 > (argc-1) ){
+        std::cout << "Error : --query requires an argument" << std::endl;
+        return false;
+      }
+      std::string P(argv[i+1]);
+      ArchFile = P;
+      ArchQuery = true;
+      i++;
+    }else if( s == "--init" ){
+      if( i+1 > (argc-1) ){
+        std::cout << "Error : --init requires an argument" << std::endl;
+        return false;
+      }
+      std::string P(argv[i+1]);
+      ArchFile = P;
+      ArchInit = true;
+      i++;
+    }else if( s == "--init-entry" ){
+      if( i+2 > (argc-1) ){
+        std::cout << "Error : --init-entry requires two arguments" << std::endl;
+        return false;
+      }
+      std::string P(argv[i+1]);
+      std::string Q(argv[i+2]);
+      ArchFile = P;
+      ArchEntry = Q;
+      ArchInit = true;
+      i+=2;
+    }else if( s == "--destroy" ){
+      if( i+1 > (argc-1) ){
+        std::cout << "Error : --init requires an argument" << std::endl;
+        return false;
+      }
+      std::string P(argv[i+1]);
+      ArchFile = P;
+      ArchDestroy = true;
+      i++;
+    }else if( s == "--destroy-entry" ){
+      if( i+2 > (argc-1) ){
+        std::cout << "Error : --destroy-entry requires two arguments" << std::endl;
+        return false;
+      }
+      std::string P(argv[i+1]);
+      std::string Q(argv[i+2]);
+      ArchFile = P;
+      ArchEntry = Q;
+      ArchDestroy = true;
+      i+=2;
     }else{
       // parsing error
       std::cout << "Error : unknown option : " << s << std::endl;

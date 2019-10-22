@@ -38,6 +38,9 @@ private:
   bool ExecSysPass;     ///< CGCLIOpts: Execute a system pass
   bool ASPSolver;       ///< CGCLIOpts: Execute the ASP Solver
   bool ASPClean;        ///< CGCLIOpts: Clean up the ASP DAG file
+  bool ArchQuery;       ///< CGCLIOpts: Query the archive
+  bool ArchInit;        ///< CGCLIOpts: Init the archive
+  bool ArchDestroy;     ///< CGCLIOpts: Destroy the archive
 
   std::string IRFile;   ///< CGCLIOpts: Input IR File
   std::string OutFile;  ///< CGCLIOpts: Output IR File
@@ -45,6 +48,8 @@ private:
   std::string ProjName; ///< CGCLIOpts: Project Name
   std::string ProjRoot; ///< CGCLIOpts: Project Root
   std::string Archive;  ///< CGCLIOpts: Archive Path
+  std::string ArchFile; ///< CGCLIOpts: Archive File
+  std::string ArchEntry;///< CGCLIOpts: Archive Entry
 
   std::vector<std::string> EnablePass;  ///< CGCLIOpts: Manually enabled passes
   std::vector<std::string> DisablePass; ///< CGCLIOpts: Manually disabled passes
