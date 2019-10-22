@@ -147,6 +147,15 @@ public:
   /// Check to see if the check plugins option is enabled
   bool IsCheckPluginsEnabled() { return CheckPlugins; }
 
+  /// Check to see if the archive query option is enabled
+  bool IsArchiveQueryEnabled() { return ArchQuery; }
+
+  /// Check to see if the archive init option is enabled
+  bool IsArchInitEnabled() { return ArchInit; }
+
+  /// Check to see if the archive destory option is enabled
+  bool IsArchDestroyEnabled() { return ArchDestroy; }
+
   /// Check if ASP DAG needs to bee cleaned up
   bool CleanASP() { return ASPClean; }
 
@@ -200,6 +209,12 @@ public:
 
   /// Retrieve the project archive path
   std::string GetArchivePath() { return Archive; }
+
+  /// Retrieve the archive file
+  std::string GetArchiveFile() { return ArchFile; }
+
+  /// Retrieve the archive entry
+  std::string GetArchiveEntry() { return ArchEntry; }
 };
 
 // EOF
