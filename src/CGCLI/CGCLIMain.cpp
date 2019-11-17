@@ -14,6 +14,7 @@
 #include <sys/param.h>
 #include "CGCLIOpts.h"
 #include "CoreGen/CoreGenBackend/CoreGenBackend.h"
+#include "CoreGen/CoreGenArchive/CoreGenArchive.h"
 
 std::string get_working_dir(){
   char buff[MAXPATHLEN];
@@ -24,6 +25,65 @@ std::string get_working_dir(){
   }
   std::string cwd( buff );
   return cwd;
+}
+
+void QueryArchive(CoreGenArchive *Archive,
+                  CGCLIOpts* Opts){
+  std::cout << "---------------------------------------------------------" << std::endl;
+  std::cout << " CoreGen Archive Contents: " << Opts->GetArchiveFile() << std::endl;
+  std::cout << "---------------------------------------------------------" << std::endl;
+  for( unsigned i=0; i<Archive->GetNumEntries(); i++ ){
+    CoreGenArchEntry *AE = Archive->GetEntry(i);
+    std::cout << std::endl;
+    std::cout << "Name        : " << AE->GetName() << std::endl;
+    std::cout << "Directory   : " << AE->GetDirectory() << std::endl;
+    std::cout << "Version     : " << AE->GetVersion() << std::endl;
+    if( AE->IsLatest() ){
+      std::cout << "Latest      : true" << std::endl;
+    }else{
+      std::cout << "Latest      : false" << std::endl;
+    }
+    std::cout << "Type        : " << AE->GetEntryTypeStr() << std::endl;
+    std::cout << "Source Type : " << AE->GetSrcTypeStr() << std::endl;
+    std::cout << "URL         : " << AE->GetURL() << std::endl;
+    std::cout << "Postscript  : " << AE->GetPostscript() << std::endl;
+    std::cout << std::endl;
+    std::cout << "---------------------------------------------------------" << std::endl;
+  }
+}
+
+void InitArchive(CoreGenArchive *Archive,
+                 CGCLIOpts *Opts){
+}
+
+void DestroyArchive(CoreGenArchive *Archive,
+                    CGCLIOpts *Opts){
+}
+
+int HandleArchive( CGCLIOpts *Opts ){
+  CoreGenArchive *Archive = new CoreGenArchive( Opts->GetArchivePath() );
+  if( Archive == nullptr ){
+    std::cout << "Error : Could not create CoreGenArchive object" << std::endl;
+    return -1;
+  }
+
+  // read in the archive file
+  if( !Archive->ReadYaml(Opts->GetArchiveFile()) ){
+    std::cout << "Error : " << Archive->GetErrStr() << std::endl;
+    delete Archive;
+    return -1;
+  }
+
+  if( Opts->IsArchiveQueryEnabled() ){
+    QueryArchive(Archive,Opts);
+  }else if( Opts->IsArchiveInitEnabled() ){
+    InitArchive(Archive,Opts);
+  }else if( Opts->IsArchiveDestroyEnabled() ) {
+    DestroyArchive(Archive,Opts);
+  }
+
+  delete Archive;
+  return 0;
 }
 
 int ExecuteCoregen( CGCLIOpts *Opts ){
@@ -474,6 +534,15 @@ int main( int argc, char **argv ){
     ListSysPasses();
     delete Opts;
     return 0;
+  }
+
+  // check to see if we need to handle the archive
+  if( Opts->IsArchiveQueryEnabled() ||
+      Opts->IsArchiveInitEnabled() ||
+      Opts->IsArchiveDestroyEnabled() ){
+    int rtn = HandleArchive(Opts);
+    delete Opts;
+    return rtn;
   }
 
   // check to see if we just need to examine some plugins

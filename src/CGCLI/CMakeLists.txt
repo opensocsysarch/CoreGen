@@ -37,6 +37,6 @@ include_directories(${CLINGO_PATH}/libclingo)
 include_directories(${CLINGO_PATH}/libgringo)
 include_directories(${CLINGO_PATH}/libluaclingo)
 
-target_link_libraries(cgcli SCComp CoreGenBackend yaml-cpp
+target_link_libraries(cgcli SCComp CoreGenBackend CoreGenArchive yaml-cpp
                       ${COREGEN_LINK_LIBS})
 install(TARGETS cgcli DESTINATION bin)

@@ -222,7 +222,86 @@ bool CoreGenArchive::Init(){
   return true;
 }
 
+bool CoreGenArchive::CGAMkDir(const std::string& dir){
+#if defined(_WIN32)
+  if( _mkdir(dir.c_str()) != 0 ){
+    return false;
+  }
+  return true;
+#else
+  if( mkdir(dir.c_str(), 0777) == -1 ){
+    Error = "Could not create directory: " + dir;
+    return false;
+  }
+  return true;
+#endif
+}
+
+bool CoreGenArchive::CGADirExists(const char *path){
+  struct stat info;
+
+  if(stat( path, &info ) != 0)
+    return false;
+  else if(info.st_mode & S_IFDIR)
+    return true;
+  else
+    return false;
+}
+
+bool CoreGenArchive::IsInit( CoreGenArchEntry *E ){
+
+  // build the directory structure
+  std::string FullDir = BaseDir + "/" + E->GetDirectory();
+
+  return CGADirExists(FullDir.c_str());
+}
+
+bool CoreGenArchive::InitZipArchive(CoreGenArchEntry *E){
+  return true;
+}
+
+bool CoreGenArchive::InitTgzArchive(CoreGenArchEntry *E){
+  return true;
+}
+
+bool CoreGenArchive::InitGitArchive(CoreGenArchEntry *E){
+  return true;
+}
+
+bool CoreGenArchive::InitUnkArchive(CoreGenArchEntry *E){
+  std::string FullDir = BaseDir + "/" + E->GetDirectory();
+  return CGAMkDir(FullDir);
+}
+
 bool CoreGenArchive::Init( unsigned Entry ){
+  CoreGenArchEntry *E = GetEntry(Entry);
+  if( !E ){
+    return false;
+  }
+
+  // check to see if the entry is initialized
+  if( IsInit(E) ){
+    // previously initialized
+    return true;
+  }
+
+  // initialize the entry
+  switch( E->GetSrcType() ){
+  case CGA_SRC_ZIP:
+    return InitZipArchive(E);
+    break;
+  case CGA_SRC_TGZ:
+    return InitTgzArchive(E);
+    break;
+  case CGA_SRC_GIT:
+    return InitGitArchive(E);
+    break;
+  case CGA_SRC_UNK:
+  default:
+    return InitUnkArchive(E);
+    break;
+  }
+
   return true;
 }
 

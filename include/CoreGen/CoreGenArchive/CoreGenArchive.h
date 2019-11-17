@@ -16,6 +16,23 @@
 #include <string>
 #include <fstream>
 #include <algorithm>
+#include <sys/stat.h>
+#include <sys/time.h>
+#include <cerrno>
+#include <time.h>
+#include <unistd.h>
+#include <stdio.h>
+#include <string>
+#include <iostream>
+#include <sstream>
+#include <ctime>
+#include <vector>
+#include <sstream>
+#include <cstring>
+#include <cassert>
+
+// Zlib headers
+#include "zlib.h"
 
 // YAML headers
 #include "yaml-cpp/yaml.h"
@@ -94,6 +111,48 @@ public:
 
   /// CoreGenArchEntry: retrieve the source type
   CGASrcType GetSrcType() { return SrcType; }
+
+  /// CoreGenArchEntry: retrieve the entry type as a std::string
+  std::string GetEntryTypeStr() {
+    std::string Out;
+    switch(EntryType){
+    case CGA_COMPILER:
+      Out = "COMPILER";
+      break;
+    case CGA_RTL:
+      Out = "RTL";
+      break;
+    case CGA_PLUGIN:
+      Out = "PLUGIN";
+      break;
+    case CGA_UNK:
+    default:
+      Out = "UNKNOWN";
+      break;
+    }
+    return Out;
+  }
+
+  /// CoreGenArchEntry: retrieve the source type as a std::string
+  std::string GetSrcTypeStr() {
+    std::string Out;
+    switch(SrcType){
+    case CGA_SRC_ZIP:
+      Out = "ZIP";
+      break;
+    case CGA_SRC_TGZ:
+      Out = "TGZ";
+      break;
+    case CGA_SRC_GIT:
+      Out = "GIT";
+      break;
+    case CGA_SRC_UNK:
+    default:
+      Out = "UNKNOWN";
+      break;
+    }
+    return Out;
+  }
 };
 
 /**
@@ -134,6 +193,27 @@ private:
 
   /// CoreGenArchive: converts string to CGAEntryType
   bool StrToType( std::string Input, CGAEntryType &T );
+
+  /// CoreGenArchive: determines if the target entry has been initialized
+  bool IsInit(CoreGenArchEntry *Entry);
+
+  /// CoreGenArchive: determines if the directory exists
+  bool CGADirExists(const char *path);
+
+  /// CoreGenArchive: create a new directory
+  bool CGAMkDir(const std::string& dir);
+
+  /// CoreGenArchive: initialize zip archive
+  bool InitZipArchive(CoreGenArchEntry *Entry);
+
+  /// CoreGenArchive: initialize tgz archive
+  bool InitTgzArchive(CoreGenArchEntry *Entry);
+
+  /// CoreGenArchive: initialize git archive
+  bool InitGitArchive(CoreGenArchEntry *Entry);
+
+  /// CoreGenArchive: initialize generic archive
+  bool InitUnkArchive(CoreGenArchEntry *Entry);
 
 public:
 

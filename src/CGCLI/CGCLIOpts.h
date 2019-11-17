@@ -151,10 +151,10 @@ public:
   bool IsArchiveQueryEnabled() { return ArchQuery; }
 
   /// Check to see if the archive init option is enabled
-  bool IsArchInitEnabled() { return ArchInit; }
+  bool IsArchiveInitEnabled() { return ArchInit; }
 
   /// Check to see if the archive destory option is enabled
-  bool IsArchDestroyEnabled() { return ArchDestroy; }
+  bool IsArchiveDestroyEnabled() { return ArchDestroy; }
 
   /// Check if ASP DAG needs to bee cleaned up
   bool CleanASP() { return ASPClean; }
