@@ -47,7 +47,7 @@ link_directories(${CMAKE_ARCHIVE_OUTPUT_DIRECTORY})
 add_library(CoreGenBackend ${CoreGenSrcs} $<TARGET_OBJECTS:DataPassObjs>
                                           $<TARGET_OBJECTS:AnalysisPassObjs>
                                           $<TARGET_OBJECTS:OptPassObjs>)
-target_link_libraries(CoreGenBackend CoreGenPluginImpl CoreGenCodegen yaml-cpp libclingo libpyclingo libluaclingo ${COREGEN_LINK_LIBS})
+target_link_libraries(CoreGenBackend CoreGenPluginImpl CoreGenCodegen yaml-cpp libclingo libluaclingo ${COREGEN_LINK_LIBS})
 target_compile_options(CoreGenBackend PRIVATE -fPIC)
 
 install(TARGETS CoreGenBackend DESTINATION lib)
