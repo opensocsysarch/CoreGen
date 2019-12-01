@@ -222,6 +222,14 @@ bool CoreGenArchive::Init(){
   return true;
 }
 
+bool CoreGenArchive::CGADeleteFile(const std::string& name){
+  if( remove(name.c_str()) != 0 ){
+    return false;
+  }else{
+    return true;
+  }
+}
+
 bool CoreGenArchive::CGAMkDir(const std::string& dir){
 #if defined(_WIN32)
   if( _mkdir(dir.c_str()) != 0 ){
@@ -248,6 +256,54 @@ bool CoreGenArchive::CGADirExists(const char *path){
     return false;
 }
 
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+static size_t WriteData(void *ptr, size_t size, size_t nmemb, void *stream){
+  size_t written = fwrite(ptr, size, nmemb, (FILE *)stream);
+  return written;
+}
+#ifdef __cplusplus
+} // extern "C"
+#endif
+
+std::string CoreGenArchive::DownloadFile( std::string URL ){
+  CURL *curl;
+  CURLcode res;
+  FILE *pagefile;
+  std::string TmpFile = std::tmpnam(nullptr);
+
+  curl_global_init(CURL_GLOBAL_DEFAULT);
+
+  curl = curl_easy_init();
+  if( curl ){
+    curl_easy_setopt(curl, CURLOPT_URL, URL);
+    curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
+    curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
+    curl_easy_setopt(curl, CURLOPT_NOPROGRESS, 1L);
+    curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteData);
+
+    pagefile = fopen(TmpFile.c_str(),"wb");
+    curl_easy_setopt(curl, CURLOPT_WRITEDATA, pagefile);
+
+    res = curl_easy_perform(curl);
+    if(res != CURLE_OK){
+      Error = "Failed to download file from URL="+
+              URL+" : "+
+              std::string(curl_easy_strerror(res));
+      CGADeleteFile(TmpFile);
+      TmpFile = "";
+    }
+    fclose( pagefile );
+    curl_easy_cleanup(curl);
+  }
+
+  curl_global_cleanup();
+
+  return TmpFile;
+}
+
 bool CoreGenArchive::IsInit( CoreGenArchEntry *E ){
 
   // build the directory structure
@@ -256,11 +312,18 @@ bool CoreGenArchive::IsInit( CoreGenArchEntry *E ){
   return CGADirExists(FullDir.c_str());
 }
 
-bool CoreGenArchive::InitZipArchive(CoreGenArchEntry *E){
-  return true;
-}
+bool CoreGenArchive::InitCompressedArchive(CoreGenArchEntry *E){
 
-bool CoreGenArchive::InitTgzArchive(CoreGenArchEntry *E){
+  if( E->GetURL().length() == 0 ){
+    Error = "No URL present for archive entry " + E->GetName();
+    return false;
+  }
+
+  std::string TmpFile = DownloadFile(E->GetURL());
+  if( TmpFile.length() == 0 ){
+    return false;
+  }
+
   return true;
 }
 
@@ -288,10 +351,8 @@ bool CoreGenArchive::Init( unsigned Entry ){
   // initialize the entry
   switch( E->GetSrcType() ){
   case CGA_SRC_ZIP:
-    return InitZipArchive(E);
-    break;
   case CGA_SRC_TGZ:
-    return InitTgzArchive(E);
+    return InitCompressedArchive(E);
     break;
   case CGA_SRC_GIT:
     return InitGitArchive(E);

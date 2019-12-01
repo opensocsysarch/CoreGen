@@ -34,8 +34,14 @@
 // Zlib headers
 #include "zlib.h"
 
+// Curl headers
+#include <curl/curl.h>
+
 // YAML headers
 #include "yaml-cpp/yaml.h"
+
+#define CHUNK 16384
+#define SET_BINARY_MODE(file)
 
 typedef enum{
   CGA_UNK       = 0,    ///< CGAEntryType: unknown archive type
@@ -50,6 +56,18 @@ typedef enum{
   CGA_SRC_TGZ   = 2,    ///< CGASrcType: TGZ source file
   CGA_SRC_GIT   = 3     ///< CGASrcType: GIT source URL
 }CGASrcType;
+
+
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+/// CoreGenArchive: Curl file writer function
+static size_t WriteData(void *ptr, size_t size, size_t nmemb, void *stream);
+#ifdef __cplusplus
+} // extern "C"
+#endif
+
 
 /**
  * \class CoreGenArchEntry
@@ -203,17 +221,20 @@ private:
   /// CoreGenArchive: create a new directory
   bool CGAMkDir(const std::string& dir);
 
-  /// CoreGenArchive: initialize zip archive
-  bool InitZipArchive(CoreGenArchEntry *Entry);
+  /// CoreGenArchive: delete a file
+  bool CGADeleteFile(const std::string& name);
 
-  /// CoreGenArchive: initialize tgz archive
-  bool InitTgzArchive(CoreGenArchEntry *Entry);
+  /// CoreGenArchive: initialize compressed tgz/zip archive
+  bool InitCompressedArchive(CoreGenArchEntry *Entry);
 
   /// CoreGenArchive: initialize git archive
   bool InitGitArchive(CoreGenArchEntry *Entry);
 
   /// CoreGenArchive: initialize generic archive
   bool InitUnkArchive(CoreGenArchEntry *Entry);
+
+  /// CoreGenArchive: Download the target file
+  std::string DownloadFile( std::string URL );
 
 public:
 
