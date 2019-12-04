@@ -15,7 +15,7 @@ include_directories(${YAML_PATH}/include)
 include_directories(${COREGEN_INCLUDE_PATH})
 
 add_library(CoreGenArchive ${ArchiveSrcs})
-target_link_libraries(CoreGenArchive yaml-cpp curl)
+target_link_libraries(CoreGenArchive yaml-cpp curl git2 z)
 
 install(TARGETS CoreGenArchive DESTINATION lib)
 # EOF

@@ -159,6 +159,7 @@ brew install cmake
 brew install llvm@5
 brew install re2c
 brew install lua
+brew install libgit2
 ```
 2. Clone the CoreGen repository
 ```

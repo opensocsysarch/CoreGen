@@ -278,7 +278,7 @@ std::string CoreGenArchive::DownloadFile( std::string URL ){
 
   curl = curl_easy_init();
   if( curl ){
-    curl_easy_setopt(curl, CURLOPT_URL, URL);
+    curl_easy_setopt(curl, CURLOPT_URL, URL.c_str());
     curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
     curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
     curl_easy_setopt(curl, CURLOPT_NOPROGRESS, 1L);
@@ -306,29 +306,65 @@ std::string CoreGenArchive::DownloadFile( std::string URL ){
 
 bool CoreGenArchive::IsInit( CoreGenArchEntry *E ){
 
-  // build the directory structure
-  std::string FullDir = BaseDir + "/" + E->GetDirectory();
+  return CGADirExists(GetFullPath(E).c_str());
+}
 
-  return CGADirExists(FullDir.c_str());
+std::string CoreGenArchive::GetFullPath(CoreGenArchEntry *E){
+  std::string FullDir = BaseDir + "/" + E->GetDirectory();
+  return FullDir;
 }
 
 bool CoreGenArchive::InitCompressedArchive(CoreGenArchEntry *E){
 
+  // check to see if the URL is valid
   if( E->GetURL().length() == 0 ){
     Error = "No URL present for archive entry " + E->GetName();
     return false;
   }
 
+  // download the file
   std::string TmpFile = DownloadFile(E->GetURL());
   if( TmpFile.length() == 0 ){
     return false;
   }
 
+  // uncompress it
+
+  // delete the tmp file
+  CGADeleteFile(TmpFile);
+
   return true;
 }
 
 bool CoreGenArchive::InitGitArchive(CoreGenArchEntry *E){
-  return true;
+
+  // check to see if the URL is valid
+  if( E->GetURL().length() == 0 ){
+    Error = "No URL present for archive entry " + E->GetName();
+    return false;
+  }
+
+  // init the git2 library
+  git_libgit2_init();
+
+  // pull the repo
+  bool rtn = true;
+  git_repository *repo = NULL;
+  const git_error *e;
+  int error = git_clone(&repo,
+                        E->GetURL().c_str(),
+                        GetFullPath(E).c_str(),
+                        NULL);
+  if( error < 0 ){
+    e = giterr_last();
+    Error = std::string(e->message);
+    rtn = false;
+  }
+
+  // shutdown the git2 library
+  git_libgit2_shutdown();
+
+  return rtn;
 }
 
 bool CoreGenArchive::InitUnkArchive(CoreGenArchEntry *E){

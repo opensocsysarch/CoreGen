@@ -37,6 +37,9 @@
 // Curl headers
 #include <curl/curl.h>
 
+// Git2 headers
+#include <git2.h>
+
 // YAML headers
 #include "yaml-cpp/yaml.h"
 
@@ -56,17 +59,6 @@ typedef enum{
   CGA_SRC_TGZ   = 2,    ///< CGASrcType: TGZ source file
   CGA_SRC_GIT   = 3     ///< CGASrcType: GIT source URL
 }CGASrcType;
-
-
-#ifdef __cplusplus
-extern "C"
-{
-#endif
-/// CoreGenArchive: Curl file writer function
-static size_t WriteData(void *ptr, size_t size, size_t nmemb, void *stream);
-#ifdef __cplusplus
-} // extern "C"
-#endif
 
 
 /**
@@ -235,6 +227,9 @@ private:
 
   /// CoreGenArchive: Download the target file
   std::string DownloadFile( std::string URL );
+
+  /// CoreGenArchive: Retrieve the full path to the archive entry
+  std::string GetFullPath(CoreGenArchEntry *E);
 
 public:
 
