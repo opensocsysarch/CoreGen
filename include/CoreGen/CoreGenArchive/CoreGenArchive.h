@@ -31,9 +31,6 @@
 #include <cstring>
 #include <cassert>
 
-// Zlib headers
-#include "zlib.h"
-
 // Curl headers
 #include <curl/curl.h>
 
@@ -227,6 +224,9 @@ private:
 
   /// CoreGenArchive: Download the target file
   std::string DownloadFile( std::string URL );
+
+  /// CoreGenArchive: Uncompress the target archive
+  bool UncompressFile( std::string TmpFile );
 
   /// CoreGenArchive: Retrieve the full path to the archive entry
   std::string GetFullPath(CoreGenArchEntry *E);

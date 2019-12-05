@@ -272,7 +272,8 @@ std::string CoreGenArchive::DownloadFile( std::string URL ){
   CURL *curl;
   CURLcode res;
   FILE *pagefile;
-  std::string TmpFile = std::tmpnam(nullptr);
+  srand(time(NULL));
+  std::string TmpFile = BaseDir + "/tmp" + std::to_string(rand());
 
   curl_global_init(CURL_GLOBAL_DEFAULT);
 
@@ -314,6 +315,16 @@ std::string CoreGenArchive::GetFullPath(CoreGenArchEntry *E){
   return FullDir;
 }
 
+bool CoreGenArchive::UncompressFile( std::string TmpFile ){
+  std::string UncStr = "tar -zxvf " + TmpFile;
+  if( system( UncStr.c_str() ) )
+    return true;
+  else{
+    Error = "Failed to uncompress file " + TmpFile;
+    return false;
+  }
+}
+
 bool CoreGenArchive::InitCompressedArchive(CoreGenArchEntry *E){
 
   // check to see if the URL is valid
@@ -329,11 +340,15 @@ bool CoreGenArchive::InitCompressedArchive(CoreGenArchEntry *E){
   }
 
   // uncompress it
+  bool rtn = true;
+  if( !UncompressFile(TmpFile) ){
+    rtn = false;
+  }
 
   // delete the tmp file
   CGADeleteFile(TmpFile);
 
-  return true;
+  return rtn;
 }
 
 bool CoreGenArchive::InitGitArchive(CoreGenArchEntry *E){
