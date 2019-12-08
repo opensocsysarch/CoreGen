@@ -11,6 +11,8 @@
 * C++11 Compiler (LLVM/Clang and GCC are tested)
 * CMake 3.4.3+
 * LLVM 5.X
+* LibGit2
+* Curl
 
 ## Building
 

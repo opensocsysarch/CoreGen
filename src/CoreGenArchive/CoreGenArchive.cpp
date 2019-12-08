@@ -137,6 +137,16 @@ bool CoreGenArchive::ReadEntries(const YAML::Node& Entries){
 
     std::string Version = Node["Version"].as<std::string>();
 
+    // url
+    std::string URL;
+    if( CheckValidNode( Node, "URL") ){
+      URL = Node["URL"].as<std::string>();
+    }else if( SrcType == CGA_SRC_GIT ){
+      // git entries must have a url
+      Error = "Git entries must specify a URL";
+      return false;
+    }
+
     // postscript [optional]
     std::string PS;
     if( CheckValidNode( Node,"Postscript") ){
@@ -147,16 +157,6 @@ bool CoreGenArchive::ReadEntries(const YAML::Node& Entries){
     bool Latest = false;
     if( CheckValidNode( Node,"Latest") ){
       Latest = Node["Latest"].as<bool>();
-    }
-
-    // url [optional, unless SrcType == GIT ]
-    std::string URL;
-    if( CheckValidNode( Node, "URL") ){
-      URL = Node["URL"].as<std::string>();
-    }else if( SrcType == CGA_SRC_GIT ){
-      // git entries must have a url
-      Error = "Git entries must specify a URL";
-      return false;
     }
 
     // read everything, create a new entry
