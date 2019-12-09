@@ -1,6 +1,6 @@
 Entries:
   - Entry: TEST1
-    Directory: TESTENTRY1
+    Directory: CoreGen-master
     SrcType: ZIP
     Type: COMPILER
     Version: 1.0

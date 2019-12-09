@@ -88,7 +88,7 @@ sudo apt-get update
 ```
 2.  Install the system dependencies:
 ```
-sudo apt-get install -y clang-6.0 lldb-6.0 lld-6.0 libllvm6.0 llvm-6.0 llvm-6.0-dev llvm-6.0-doc llvm-6.0-examples llvm-6.0-runtime re2c lua5.3 liblua5.3-dev python-dev
+sudo apt-get install -y clang-6.0 lldb-6.0 lld-6.0 libllvm6.0 llvm-6.0 llvm-6.0-dev llvm-6.0-doc llvm-6.0-examples llvm-6.0-runtime re2c lua5.3 liblua5.3-dev python-dev libcurl4 libcurl4-gnutls-dev libgit2-dev
 ```
 3. Clone the CoreGen repository
 ```

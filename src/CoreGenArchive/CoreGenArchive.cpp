@@ -319,6 +319,31 @@ bool CoreGenArchive::CGAMkDir(const std::string& dir){
 #endif
 }
 
+bool CoreGenArchive::CGAMkDirP(const std::string& dir){
+  // build up a vector of directory names
+  std::vector<std::string> tokens;
+  std::string token;
+  std::istringstream tokenStream(dir);
+  char delim = '/';
+  while (std::getline(tokenStream, token, delim)){
+    tokens.push_back(token);
+  }
+
+  // iteratively build the directory structure
+  std::string newDir;
+  for( unsigned i=0; i<tokens.size(); i++ ){
+    newDir += (tokens[i] + "/");
+    if( !CGADirExists(newDir.c_str()) ){
+      // make a new directory
+      if( !CGAMkDir(newDir) ){
+        return false;
+      }
+    }
+  }
+
+  return true;
+}
+
 bool CoreGenArchive::CGADirExists(const char *path){
   struct stat info;
 
@@ -347,9 +372,18 @@ std::string CoreGenArchive::DownloadFile( CoreGenArchEntry *E ){
   CURLcode res;
   FILE *pagefile;
   srand(time(NULL));
+  std::string TmpDir = BaseDir + "/" + TypeToStr(E->GetEntryType());
   std::string TmpFile = BaseDir + "/" + TypeToStr(E->GetEntryType()) +
                         "/tmp" + std::to_string(rand());
   std::string URL = E->GetURL();
+
+  if( !CGADirExists(TmpDir.c_str()) ){
+    if( !CGAMkDirP(TmpDir) ){
+      Error = "Could not create directory : " + TmpDir;
+      TmpFile = "";
+      return TmpFile;
+    }
+  }
 
   curl_global_init(CURL_GLOBAL_DEFAULT);
 
@@ -392,8 +426,21 @@ std::string CoreGenArchive::GetFullPath(CoreGenArchEntry *E){
   return FullDir;
 }
 
-bool CoreGenArchive::UncompressFile( std::string TmpFile ){
-  std::string UncStr = "tar -zxvf " + TmpFile;
+bool CoreGenArchive::UncompressZipFile( std::string TmpFile,
+                                        std::string TmpDir ){
+  std::string UncStr = "unzip " + TmpFile + " -d " + TmpDir;
+  std::cout << "command : " << UncStr << std::endl;
+  if( system( UncStr.c_str() ) == 0 )
+    return true;
+  else{
+    Error = "Failed to uncompress file " + TmpFile;
+    return false;
+  }
+}
+
+bool CoreGenArchive::UncompressTgzFile( std::string TmpFile ){
+  std::string UncStr = "tar xzvf " + TmpFile;
+  std::cout << "command : " << UncStr << std::endl;
   if( system( UncStr.c_str() ) )
     return true;
   else{
@@ -416,10 +463,16 @@ bool CoreGenArchive::InitCompressedArchive(CoreGenArchEntry *E){
     return false;
   }
 
+  std::string TmpDir = BaseDir + "/" + TypeToStr(E->GetEntryType());
+
   // uncompress it
   bool rtn = true;
-  if( !UncompressFile(TmpFile) ){
-    rtn = false;
+  if( E->GetSrcType() == CGA_SRC_ZIP ){
+    if( !UncompressZipFile(TmpFile,TmpDir) )
+      rtn = false;
+  }else{
+    if( !UncompressTgzFile(TmpFile) )
+      rtn = false;
   }
 
   // delete the tmp file

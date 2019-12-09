@@ -215,6 +215,9 @@ private:
   /// CoreGenArchive: create a new directory
   bool CGAMkDir(const std::string& dir);
 
+  /// CoreGenArchive: recursively create a new directory
+  bool CGAMkDirP(const std::string& dir);
+
   /// CoreGenArchive: delete a file
   bool CGADeleteFile(const std::string& name);
 
@@ -233,8 +236,11 @@ private:
   /// CoreGenArchive: Download the target file
   std::string DownloadFile( CoreGenArchEntry *E );
 
-  /// CoreGenArchive: Uncompress the target archive
-  bool UncompressFile( std::string TmpFile );
+  /// CoreGenArchive: Uncompress the target zip archive
+  bool UncompressZipFile( std::string TmpFile, std::string TmpDir );
+
+  /// CoreGenArchive: Uncompress the target Tgz archive
+  bool UncompressTgzFile( std::string TmpFile );
 
   /// CoreGenArchive: Retrieve the full path to the archive entry
   std::string GetFullPath(CoreGenArchEntry *E);
