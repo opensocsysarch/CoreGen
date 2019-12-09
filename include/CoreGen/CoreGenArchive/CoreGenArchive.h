@@ -240,7 +240,7 @@ private:
   bool UncompressZipFile( std::string TmpFile, std::string TmpDir );
 
   /// CoreGenArchive: Uncompress the target Tgz archive
-  bool UncompressTgzFile( std::string TmpFile );
+  bool UncompressTgzFile( std::string TmpFile, std::string TmpDir );
 
   /// CoreGenArchive: Retrieve the full path to the archive entry
   std::string GetFullPath(CoreGenArchEntry *E);

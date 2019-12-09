@@ -438,10 +438,11 @@ bool CoreGenArchive::UncompressZipFile( std::string TmpFile,
   }
 }
 
-bool CoreGenArchive::UncompressTgzFile( std::string TmpFile ){
-  std::string UncStr = "tar xzvf " + TmpFile;
+bool CoreGenArchive::UncompressTgzFile( std::string TmpFile,
+                                        std::string TmpDir ){
+  std::string UncStr = "tar xzvf " + TmpFile + " -C " + TmpDir;
   std::cout << "command : " << UncStr << std::endl;
-  if( system( UncStr.c_str() ) )
+  if( system( UncStr.c_str() ) == 0 )
     return true;
   else{
     Error = "Failed to uncompress file " + TmpFile;
@@ -471,7 +472,7 @@ bool CoreGenArchive::InitCompressedArchive(CoreGenArchEntry *E){
     if( !UncompressZipFile(TmpFile,TmpDir) )
       rtn = false;
   }else{
-    if( !UncompressTgzFile(TmpFile) )
+    if( !UncompressTgzFile(TmpFile,TmpDir) )
       rtn = false;
   }
 
