@@ -18,6 +18,8 @@
 #include <algorithm>
 #include <sys/stat.h>
 #include <sys/time.h>
+#include <sys/types.h>
+#include <dirent.h>
 #include <cerrno>
 #include <time.h>
 #include <unistd.h>
@@ -201,6 +203,9 @@ private:
   /// CoreGenArchive: converts string to CGAEntryType
   bool StrToType( std::string Input, CGAEntryType &T );
 
+  /// CoreGenArchive: converts CGAEntryType to string
+  std::string TypeToStr(CGAEntryType Type);
+
   /// CoreGenArchive: determines if the target entry has been initialized
   bool IsInit(CoreGenArchEntry *Entry);
 
@@ -212,6 +217,9 @@ private:
 
   /// CoreGenArchive: delete a file
   bool CGADeleteFile(const std::string& name);
+
+  /// CoreGenArchive: delete a directory
+  bool CGADeleteDir(const std::string& path);
 
   /// CoreGenArchive: initialize compressed tgz/zip archive
   bool InitCompressedArchive(CoreGenArchEntry *Entry);

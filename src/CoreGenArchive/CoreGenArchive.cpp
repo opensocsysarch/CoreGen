@@ -61,6 +61,24 @@ bool CoreGenArchive::StrToSrcType( std::string Input,
   return false;
 }
 
+std::string CoreGenArchive::TypeToStr(CGAEntryType Type){
+  switch( Type ){
+  case CGA_COMPILER:
+    return "COMPILER";
+    break;
+  case CGA_RTL:
+    return "RTL";
+    break;
+  case CGA_PLUGIN:
+    return "PLUGIN";
+    break;
+  case CGA_UNK:
+  default:
+    return "UNKNOWN";
+    break;
+  }
+}
+
 bool CoreGenArchive::StrToType( std::string Input,
                                 CGAEntryType &T ){
   if( Input == "UNKNOWN" ){
@@ -222,12 +240,68 @@ bool CoreGenArchive::Init(){
   return true;
 }
 
+bool CoreGenArchive::CGADeleteDir(const std::string& path){
+  DIR *d = opendir(path.c_str());
+  size_t path_len = strlen(path.c_str());
+  int r = -1;
+
+  if (d){
+    struct dirent *p;
+    r = 0;
+
+    while (!r && (p=readdir(d))){
+      int r2 = -1;
+      char *buf;
+      size_t len;
+
+      /* Skip the names "." and ".." as we don't want to recurse on them. */
+      if (!strcmp(p->d_name, ".") || !strcmp(p->d_name, "..")){
+        continue;
+      }
+
+      len = path_len + strlen(p->d_name) + 2;
+      buf = (char *)(malloc(len));
+
+      if (buf){
+        struct stat statbuf;
+
+        snprintf(buf, len, "%s/%s", path.c_str(), p->d_name);
+
+        if (!stat(buf, &statbuf)){
+          if (S_ISDIR(statbuf.st_mode)){
+            if( CGADeleteDir(std::string(buf)) )
+              r2 = 0;
+            else
+              r2 = -1;
+          }else{
+            r2 = unlink(buf);
+          }
+        }
+
+        free(buf);
+      }
+      r = r2;
+    }
+
+    closedir(d);
+  }
+
+   if (!r){
+      r = rmdir(path.c_str());
+   }
+
+   if( r == 0 )
+     return true;
+   else
+     return false;
+}
+
 bool CoreGenArchive::CGADeleteFile(const std::string& name){
   if( remove(name.c_str()) != 0 ){
+    Error = "Could not delete file : " + name;
     return false;
-  }else{
+  }else
     return true;
-  }
 }
 
 bool CoreGenArchive::CGAMkDir(const std::string& dir){
@@ -311,7 +385,8 @@ bool CoreGenArchive::IsInit( CoreGenArchEntry *E ){
 }
 
 std::string CoreGenArchive::GetFullPath(CoreGenArchEntry *E){
-  std::string FullDir = BaseDir + "/" + E->GetDirectory();
+  std::string FullDir = BaseDir + "/" + TypeToStr(E->GetEntryType()) +
+                        "/" + E->GetDirectory();
   return FullDir;
 }
 
@@ -386,8 +461,7 @@ bool CoreGenArchive::InitGitArchive(CoreGenArchEntry *E){
 }
 
 bool CoreGenArchive::InitUnkArchive(CoreGenArchEntry *E){
-  std::string FullDir = BaseDir + "/" + E->GetDirectory();
-  return CGAMkDir(FullDir);
+  return CGAMkDir(GetFullPath(E));
 }
 
 bool CoreGenArchive::Init( unsigned Entry ){
@@ -420,15 +494,6 @@ bool CoreGenArchive::Init( unsigned Entry ){
   return true;
 }
 
-bool CoreGenArchive::Destroy(){
-  for( unsigned i=0; i<Arch.size(); i++ ){
-    if( !Destroy(i) ){
-      return false;
-    }
-  }
-  return true;
-}
-
 bool CoreGenArchive::GetEntryNum( std::string Entry, unsigned &Num ){
   for( unsigned i=0; i<Arch.size(); i++ ){
     if( Arch[i]->GetName() == Entry ){
@@ -439,8 +504,29 @@ bool CoreGenArchive::GetEntryNum( std::string Entry, unsigned &Num ){
   return false;
 }
 
-bool CoreGenArchive::Destroy( unsigned Entry ){
+bool CoreGenArchive::Destroy(){
+  for( unsigned i=0; i<Arch.size(); i++ ){
+    if( !Destroy(i) ){
+      return false;
+    }
+  }
   return true;
+}
+
+bool CoreGenArchive::Destroy( unsigned Entry ){
+  CoreGenArchEntry *E = GetEntry(Entry);
+  if( !E ){
+    Error = "No entry found to delete for entry " + std::to_string(Entry);
+    return false;
+  }
+
+  // check to see if the entry is initialized
+  if( !IsInit(E) ){
+    // previously destroyed
+    return true;
+  }
+
+  return CGADeleteDir(GetFullPath(E));
 }
 
 bool CoreGenArchive::ExecPostscript( unsigned Entry ){
