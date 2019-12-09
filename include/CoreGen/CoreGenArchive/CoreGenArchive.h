@@ -231,7 +231,7 @@ private:
   bool InitUnkArchive(CoreGenArchEntry *Entry);
 
   /// CoreGenArchive: Download the target file
-  std::string DownloadFile( std::string URL );
+  std::string DownloadFile( CoreGenArchEntry *E );
 
   /// CoreGenArchive: Uncompress the target archive
   bool UncompressFile( std::string TmpFile );

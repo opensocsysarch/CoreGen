@@ -342,12 +342,14 @@ static size_t WriteData(void *ptr, size_t size, size_t nmemb, void *stream){
 } // extern "C"
 #endif
 
-std::string CoreGenArchive::DownloadFile( std::string URL ){
+std::string CoreGenArchive::DownloadFile( CoreGenArchEntry *E ){
   CURL *curl;
   CURLcode res;
   FILE *pagefile;
   srand(time(NULL));
-  std::string TmpFile = BaseDir + "/tmp" + std::to_string(rand());
+  std::string TmpFile = BaseDir + "/" + TypeToStr(E->GetEntryType()) +
+                        "/tmp" + std::to_string(rand());
+  std::string URL = E->GetURL();
 
   curl_global_init(CURL_GLOBAL_DEFAULT);
 
@@ -409,7 +411,7 @@ bool CoreGenArchive::InitCompressedArchive(CoreGenArchEntry *E){
   }
 
   // download the file
-  std::string TmpFile = DownloadFile(E->GetURL());
+  std::string TmpFile = DownloadFile(E);
   if( TmpFile.length() == 0 ){
     return false;
   }
