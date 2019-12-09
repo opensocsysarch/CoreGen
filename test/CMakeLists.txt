@@ -20,6 +20,7 @@ if(BUILD_ALL_TESTING)
   set(BUILD_COREGEN_PLUGIN_TESTING "ON")
   set(BUILD_COREGEN_STONECUTTER_TESTING "ON")
   set(BUILD_COREGEN_CODEGEN_TESTING "ON")
+  set(BUILD_COREGEN_ARCHIVE_TESTING "ON")
 endif()
 
 add_subdirectory(Yaml)
@@ -28,5 +29,6 @@ add_subdirectory(CGCLI)
 add_subdirectory(Plugins)
 add_subdirectory(StoneCutter)
 add_subdirectory(CodeGen)
+add_subdirectory(Archive)
 
 #-- EOF

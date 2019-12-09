@@ -263,6 +263,9 @@ public:
   /// CoreGenArchive: retrieve the target archive entry
   CoreGenArchEntry *GetEntry( unsigned Entry );
 
+  /// CoreGenArchive: retrieve the entry number
+  bool GetEntryNum( std::string Entry, unsigned &Num );
+
   /// CoreGenArchive: retrieve the number of entries
   unsigned GetNumEntries() { return Arch.size(); }
 };

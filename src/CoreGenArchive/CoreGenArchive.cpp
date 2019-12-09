@@ -376,6 +376,9 @@ bool CoreGenArchive::InitGitArchive(CoreGenArchEntry *E){
     rtn = false;
   }
 
+  // free the object
+  git_repository_free(repo);
+
   // shutdown the git2 library
   git_libgit2_shutdown();
 
@@ -424,6 +427,16 @@ bool CoreGenArchive::Destroy(){
     }
   }
   return true;
+}
+
+bool CoreGenArchive::GetEntryNum( std::string Entry, unsigned &Num ){
+  for( unsigned i=0; i<Arch.size(); i++ ){
+    if( Arch[i]->GetName() == Entry ){
+      Num = i;
+      return true;
+    }
+  }
+  return false;
 }
 
 bool CoreGenArchive::Destroy( unsigned Entry ){

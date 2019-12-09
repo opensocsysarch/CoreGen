@@ -27,7 +27,7 @@ std::string get_working_dir(){
   return cwd;
 }
 
-void QueryArchive(CoreGenArchive *Archive,
+int QueryArchive(CoreGenArchive *Archive,
                   CGCLIOpts* Opts){
   std::cout << "---------------------------------------------------------" << std::endl;
   std::cout << " CoreGen Archive Contents: " << Opts->GetArchiveFile() << std::endl;
@@ -50,14 +50,57 @@ void QueryArchive(CoreGenArchive *Archive,
     std::cout << std::endl;
     std::cout << "---------------------------------------------------------" << std::endl;
   }
+  return 0;
 }
 
-void InitArchive(CoreGenArchive *Archive,
-                 CGCLIOpts *Opts){
+int InitArchive(CoreGenArchive *Archive,
+                CGCLIOpts *Opts){
+  int rtn = 0;
+  if( Opts->GetArchiveEntry().length() > 0 ){
+    // init an individual entry
+    unsigned Entry = 0;
+    if( !Archive->GetEntryNum(Opts->GetArchiveEntry(),
+                              Entry) ){
+      std::cout << "Error : no archive entry for "
+                << Opts->GetArchiveEntry() << std::endl;
+      return -1;
+    }
+    if( !Archive->Init(Entry) )
+      std::cout << "Error : " << Archive->GetErrStr();
+      rtn = -1;
+  }else{
+    // init all the entries
+    if( !Archive->Init() )
+      std::cout << "Error : " << Archive->GetErrStr();
+      rtn = -1;
+  }
+
+  return rtn;
 }
 
-void DestroyArchive(CoreGenArchive *Archive,
-                    CGCLIOpts *Opts){
+int DestroyArchive(CoreGenArchive *Archive,
+                   CGCLIOpts *Opts){
+  int rtn = 0;
+  if( Opts->GetArchiveEntry().length() > 0 ){
+    // destroy an individual entry
+    unsigned Entry = 0;
+    if( !Archive->GetEntryNum(Opts->GetArchiveEntry(),
+                              Entry) ){
+      std::cout << "Error : no archive entry for "
+                << Opts->GetArchiveEntry() << std::endl;
+      return -1;
+    }
+    if( !Archive->Destroy(Entry) )
+      std::cout << "Error : " << Archive->GetErrStr();
+      rtn = -1;
+  }else{
+    // init all the entries
+    if( !Archive->Destroy() )
+      std::cout << "Error : " << Archive->GetErrStr();
+      rtn = -1;
+  }
+
+  return rtn;
 }
 
 int HandleArchive( CGCLIOpts *Opts ){
@@ -74,16 +117,18 @@ int HandleArchive( CGCLIOpts *Opts ){
     return -1;
   }
 
+  int rtn = 0;
+
   if( Opts->IsArchiveQueryEnabled() ){
-    QueryArchive(Archive,Opts);
+    rtn = QueryArchive(Archive,Opts);
   }else if( Opts->IsArchiveInitEnabled() ){
-    InitArchive(Archive,Opts);
+    rtn = InitArchive(Archive,Opts);
   }else if( Opts->IsArchiveDestroyEnabled() ) {
-    DestroyArchive(Archive,Opts);
+    rtn = DestroyArchive(Archive,Opts);
   }
 
   delete Archive;
-  return 0;
+  return rtn;
 }
 
 int ExecuteCoregen( CGCLIOpts *Opts ){
