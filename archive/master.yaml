@@ -1,0 +1,9 @@
+Entries:
+  - Entry: LLVM-9.0.0
+    Directory: llvm-9.0.0
+    SrcType: GIT
+    Type: COMPILER
+    Version: 9.0.0
+    URL: https://github.com/opensocsysarch/CoreGen.git
+    Latest: true
+

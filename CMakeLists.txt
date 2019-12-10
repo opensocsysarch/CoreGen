@@ -240,6 +240,7 @@ endif()
 # Add subdirectories
 add_subdirectory(src)
 add_subdirectory(include)
+add_subdirectory(archive)
 add_subdirectory(test)
 
 # EOF
