@@ -429,7 +429,6 @@ std::string CoreGenArchive::GetFullPath(CoreGenArchEntry *E){
 bool CoreGenArchive::UncompressZipFile( std::string TmpFile,
                                         std::string TmpDir ){
   std::string UncStr = "unzip " + TmpFile + " -d " + TmpDir;
-  std::cout << "command : " << UncStr << std::endl;
   if( system( UncStr.c_str() ) == 0 )
     return true;
   else{
@@ -441,7 +440,6 @@ bool CoreGenArchive::UncompressZipFile( std::string TmpFile,
 bool CoreGenArchive::UncompressTgzFile( std::string TmpFile,
                                         std::string TmpDir ){
   std::string UncStr = "tar xzvf " + TmpFile + " -C " + TmpDir;
-  std::cout << "command : " << UncStr << std::endl;
   if( system( UncStr.c_str() ) == 0 )
     return true;
   else{
@@ -547,6 +545,11 @@ bool CoreGenArchive::Init( unsigned Entry ){
     break;
   }
 
+  // determine if we need to execute a post installation script
+  if( E->GetPostscript().length() > 0 ){
+    return ExecPostscript(Entry);
+  }
+
   return true;
 }
 
@@ -586,6 +589,22 @@ bool CoreGenArchive::Destroy( unsigned Entry ){
 }
 
 bool CoreGenArchive::ExecPostscript( unsigned Entry ){
+  CoreGenArchEntry *E = GetEntry(Entry);
+  if( !E ){
+    Error = "No entry found to delete for entry " + std::to_string(Entry);
+    return false;
+  }
+
+  std::string UncStr = GetFullPath(E) + "/" +
+                       E->GetPostscript() +
+                       " " + GetFullPath(E);
+
+  if( system( UncStr.c_str() ) == 0 )
+    return true;
+  else{
+    Error = "Failed to execute post installation script" + UncStr;
+    return false;
+  }
   return true;
 }
 
