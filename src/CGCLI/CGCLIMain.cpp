@@ -65,14 +65,16 @@ int InitArchive(CoreGenArchive *Archive,
                 << Opts->GetArchiveEntry() << std::endl;
       return -1;
     }
-    if( !Archive->Init(Entry) )
+    if( !Archive->Init(Entry) ){
       std::cout << "Error : " << Archive->GetErrStr() << std::endl;
       rtn = -1;
+    }
   }else{
     // init all the entries
-    if( !Archive->Init() )
+    if( !Archive->Init() ){
       std::cout << "Error : " << Archive->GetErrStr() << std::endl;
       rtn = -1;
+    }
   }
 
   return rtn;
@@ -90,14 +92,16 @@ int DestroyArchive(CoreGenArchive *Archive,
                 << Opts->GetArchiveEntry() << std::endl;
       return -1;
     }
-    if( !Archive->Destroy(Entry) )
+    if( !Archive->Destroy(Entry) ){
       std::cout << "Error : " << Archive->GetErrStr() << std::endl;
       rtn = -1;
+    }
   }else{
     // init all the entries
-    if( !Archive->Destroy() )
+    if( !Archive->Destroy() ){
       std::cout << "Error : " << Archive->GetErrStr() << std::endl;
       rtn = -1;
+    }
   }
 
   return rtn;
