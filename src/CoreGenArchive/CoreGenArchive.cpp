@@ -530,20 +530,25 @@ bool CoreGenArchive::Init( unsigned Entry ){
     return true;
   }
 
+  bool rtn = true;
+
   // initialize the entry
   switch( E->GetSrcType() ){
   case CGA_SRC_ZIP:
   case CGA_SRC_TGZ:
-    return InitCompressedArchive(E);
+    rtn = InitCompressedArchive(E);
     break;
   case CGA_SRC_GIT:
-    return InitGitArchive(E);
+    rtn = InitGitArchive(E);
     break;
   case CGA_SRC_UNK:
   default:
-    return InitUnkArchive(E);
+    rtn = InitUnkArchive(E);
     break;
   }
+
+  if( !rtn )
+    return rtn;
 
   // determine if we need to execute a post installation script
   if( E->GetPostscript().length() > 0 ){
@@ -598,6 +603,8 @@ bool CoreGenArchive::ExecPostscript( unsigned Entry ){
   std::string UncStr = GetFullPath(E) + "/" +
                        E->GetPostscript() +
                        " " + GetFullPath(E);
+
+  std::cout << "executing : " << UncStr << std::endl;
 
   if( system( UncStr.c_str() ) == 0 )
     return true;
