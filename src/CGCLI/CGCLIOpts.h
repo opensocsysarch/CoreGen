@@ -1,7 +1,7 @@
 //
 // _CGCLIOpts_h_
 //
-// Copyright (C) 2017-2019 Tactical Computing Laboratories, LLC
+// Copyright (C) 2017-2020 Tactical Computing Laboratories, LLC
 // All Rights Reserved
 // contact@tactcomplabs.com
 //
@@ -38,6 +38,9 @@ private:
   bool ExecSysPass;     ///< CGCLIOpts: Execute a system pass
   bool ASPSolver;       ///< CGCLIOpts: Execute the ASP Solver
   bool ASPClean;        ///< CGCLIOpts: Clean up the ASP DAG file
+  bool ArchQuery;       ///< CGCLIOpts: Query the archive
+  bool ArchInit;        ///< CGCLIOpts: Init the archive
+  bool ArchDestroy;     ///< CGCLIOpts: Destroy the archive
 
   std::string IRFile;   ///< CGCLIOpts: Input IR File
   std::string OutFile;  ///< CGCLIOpts: Output IR File
@@ -45,6 +48,8 @@ private:
   std::string ProjName; ///< CGCLIOpts: Project Name
   std::string ProjRoot; ///< CGCLIOpts: Project Root
   std::string Archive;  ///< CGCLIOpts: Archive Path
+  std::string ArchFile; ///< CGCLIOpts: Archive File
+  std::string ArchEntry;///< CGCLIOpts: Archive Entry
 
   std::vector<std::string> EnablePass;  ///< CGCLIOpts: Manually enabled passes
   std::vector<std::string> DisablePass; ///< CGCLIOpts: Manually disabled passes
@@ -142,6 +147,15 @@ public:
   /// Check to see if the check plugins option is enabled
   bool IsCheckPluginsEnabled() { return CheckPlugins; }
 
+  /// Check to see if the archive query option is enabled
+  bool IsArchiveQueryEnabled() { return ArchQuery; }
+
+  /// Check to see if the archive init option is enabled
+  bool IsArchiveInitEnabled() { return ArchInit; }
+
+  /// Check to see if the archive destory option is enabled
+  bool IsArchiveDestroyEnabled() { return ArchDestroy; }
+
   /// Check if ASP DAG needs to bee cleaned up
   bool CleanASP() { return ASPClean; }
 
@@ -195,6 +209,12 @@ public:
 
   /// Retrieve the project archive path
   std::string GetArchivePath() { return Archive; }
+
+  /// Retrieve the archive file
+  std::string GetArchiveFile() { return ArchFile; }
+
+  /// Retrieve the archive entry
+  std::string GetArchiveEntry() { return ArchEntry; }
 };
 
 // EOF

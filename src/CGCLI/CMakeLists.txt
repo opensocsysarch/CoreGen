@@ -1,6 +1,6 @@
 # CGCLI CMakeLists.txt
 #
-# Copyright (C) 2017-2019 Tactical Computing Laboratories, LLC
+# Copyright (C) 2017-2020 Tactical Computing Laboratories, LLC
 # All Rights Reserved
 # contact@tactcomplabs.com
 #
@@ -37,6 +37,6 @@ include_directories(${CLINGO_PATH}/libclingo)
 include_directories(${CLINGO_PATH}/libgringo)
 include_directories(${CLINGO_PATH}/libluaclingo)
 
-target_link_libraries(cgcli SCComp CoreGenBackend yaml-cpp
+target_link_libraries(cgcli SCComp CoreGenBackend CoreGenArchive yaml-cpp
                       ${COREGEN_LINK_LIBS})
 install(TARGETS cgcli DESTINATION bin)
