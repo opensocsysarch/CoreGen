@@ -604,8 +604,6 @@ bool CoreGenArchive::ExecPostscript( unsigned Entry ){
                        E->GetPostscript() +
                        " " + GetFullPath(E);
 
-  std::cout << "executing : " << UncStr << std::endl;
-
   if( system( UncStr.c_str() ) == 0 )
     return true;
   else{
