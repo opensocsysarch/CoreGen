@@ -241,59 +241,14 @@ bool CoreGenArchive::Init(){
 }
 
 bool CoreGenArchive::CGADeleteDir(const std::string& path){
-  DIR *d = opendir(path.c_str());
-  size_t path_len = strlen(path.c_str());
-  int r = -1;
 
-  if (d){
-    struct dirent *p;
-    r = 0;
-
-    while (!r && (p=readdir(d))){
-      int r2 = -1;
-      char *buf;
-      size_t len;
-
-      /* Skip the names "." and ".." as we don't want to recurse on them. */
-      if (!strcmp(p->d_name, ".") || !strcmp(p->d_name, "..")){
-        continue;
-      }
-
-      len = path_len + strlen(p->d_name) + 2;
-      buf = (char *)(malloc(len));
-
-      if (buf){
-        struct stat statbuf;
-
-        snprintf(buf, len, "%s/%s", path.c_str(), p->d_name);
-
-        if (!stat(buf, &statbuf)){
-          if (S_ISDIR(statbuf.st_mode)){
-            if( CGADeleteDir(std::string(buf)) )
-              r2 = 0;
-            else
-              r2 = -1;
-          }else{
-            r2 = unlink(buf);
-          }
-        }
-
-        free(buf);
-      }
-      r = r2;
-    }
-
-    closedir(d);
+  std::string UncStr = "rm -Rf " + path;
+  if( system( UncStr.c_str() ) == 0 )
+    return true;
+  else{
+    Error = "Failed to delete directory " + path;
+    return false;
   }
-
-   if (!r){
-      r = rmdir(path.c_str());
-   }
-
-   if( r == 0 )
-     return true;
-   else
-     return false;
 }
 
 bool CoreGenArchive::CGADeleteFile(const std::string& name){
@@ -589,6 +544,8 @@ bool CoreGenArchive::Destroy( unsigned Entry ){
     // previously destroyed
     return true;
   }
+
+  std::cout << "starting the processing of deleting " << GetFullPath(E) << std::endl;
 
   return CGADeleteDir(GetFullPath(E));
 }
