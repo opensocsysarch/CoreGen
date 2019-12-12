@@ -1,0 +1,9 @@
+Entries:
+  - Entry: TEST1
+    Directory: ArchiveScriptTest1
+    SrcType: TGZ
+    Type: PLUGIN
+    Version: 1.0
+    Postscript: PostInstall.sh
+    URL: https://github.com/opensocsysarch/CoreGen/raw/archive_devel/test/Archive/ArchiveScriptTest1.tgz
+

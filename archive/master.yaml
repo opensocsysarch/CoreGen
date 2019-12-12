@@ -1,0 +1,35 @@
+#
+# master.yaml
+#
+# Master CoreGen Archive Source
+#
+# Copyright (C) 2017-2020 Tactical Computing Laboratories, LLC
+# All Rights Reserved
+# contact@tactcomplabs.com
+#
+# See LICENSE in the top level directory for licensing details
+#
+
+Entries:
+  - Entry: LLVM-8.0.1
+    Directory: llvmproject-8.0.1
+    SrcType: ZIP
+    Type: COMPILER
+    Version: 8.0.1
+    URL: https://github.com/llvm/llvm-project/archive/llvmorg-8.0.1.zip
+    Latest: true
+  - Entry: LLVM-7.1.0
+    Directory: llvmproject-7.1.0
+    SrcType: ZIP
+    Type: COMPILER
+    Version: 7.1.0
+    URL: https://github.com/llvm/llvm-project/archive/llvmorg-7.1.0.zip
+    Latest: false
+  - Entry: LLVM-Master
+    Directory: llvmproject
+    SrcType: GIT
+    Type: COMPILER
+    Version: master
+    URL: https://github.com/llvm/llvm-project.git
+    Latest: false
+

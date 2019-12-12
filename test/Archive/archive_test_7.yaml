@@ -1,0 +1,20 @@
+Entries:
+  - Entry: TEST1
+    Directory: TESTENTRY1
+    SrcType: GIT
+    Type: COMPILER
+    Version: 1.0
+    URL: https://github.com/opensocsysarch/CoreGen.git
+  - Entry: TEST2
+    Directory: TESTENTRY1
+    SrcType: GIT
+    Type: RTL
+    Version: 1.0
+    URL: https://github.com/opensocsysarch/CoreGen.git
+  - Entry: TEST3
+    Directory: TESTENTRY1
+    SrcType: GIT
+    Type: PLUGIN
+    Version: 1.0
+    URL: https://github.com/opensocsysarch/CoreGen.git
+

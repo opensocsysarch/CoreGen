@@ -11,6 +11,8 @@
 * C++11 Compiler (LLVM/Clang and GCC are tested)
 * CMake 3.4.3+
 * LLVM 5.X
+* LibGit2
+* Curl
 
 ## Building
 
@@ -54,7 +56,7 @@ sudo apt-get update
 ```
 2.  Install the system dependencies:
 ```
-sudo apt-get install -y libllvm-6.0-ocaml-dev libllvm6.0 llvm-6.0 llvm-6.0-dev llvm-6.0-doc llvm-6.0-examples llvm-6.0-runtime clang-6.0 clang-tools-6.0 clang-6.0-doc libclang-common-6.0-dev libclang-6.0-dev libclang1-6.0 clang-format-6.0 python-clang-6.0 re2c lua5.3 liblua5.3-dev zlib1g zlib1g-dev bison
+sudo apt-get install -y libllvm-6.0-ocaml-dev libllvm6.0 llvm-6.0 llvm-6.0-dev llvm-6.0-doc llvm-6.0-examples llvm-6.0-runtime clang-6.0 clang-tools-6.0 clang-6.0-doc libclang-common-6.0-dev libclang-6.0-dev libclang1-6.0 clang-format-6.0 python-clang-6.0 re2c lua5.3 liblua5.3-dev zlib1g zlib1g-dev bison libcurl4-gnutls-dev libgit2-dev
 ```
 3. Clone the CoreGen repository
 ```
@@ -86,7 +88,7 @@ sudo apt-get update
 ```
 2.  Install the system dependencies:
 ```
-sudo apt-get install -y clang-6.0 lldb-6.0 lld-6.0 libllvm6.0 llvm-6.0 llvm-6.0-dev llvm-6.0-doc llvm-6.0-examples llvm-6.0-runtime re2c lua5.3 liblua5.3-dev python-dev
+sudo apt-get install -y clang-6.0 lldb-6.0 lld-6.0 libllvm6.0 llvm-6.0 llvm-6.0-dev llvm-6.0-doc llvm-6.0-examples llvm-6.0-runtime re2c lua5.3 liblua5.3-dev python-dev libcurl4 libcurl4-gnutls-dev libgit2-dev
 ```
 3. Clone the CoreGen repository
 ```
@@ -159,6 +161,7 @@ brew install cmake
 brew install llvm@5
 brew install re2c
 brew install lua
+brew install libgit2
 ```
 2. Clone the CoreGen repository
 ```
@@ -273,6 +276,7 @@ make
 * -DBUILD\_COREGEN\_STONECUTTER\_SCSIGV\_KNOWNFAIL\_TESTING=ON : Enables SCSigV sigmap knowfail test harness
 * -DBUILD\_COREGEN\_CODEGEN\_TESTING=ON : Enables the CodeGen test harness
 * -DBUILD\_COREGEN\_CODEGEN\_STONECUTTERIMPL\_TESTING=ON : Enables the CodeGen StoneCutter implementation test harness
+* -DBUILD\_COREGEN\_ARCHIVE\_TESTING=ON : Enables teh archive library test harness
 
 ## Contributing
 We welcome outside contributions from corporate, acaddemic and individual developers.  However, 
@@ -317,6 +321,7 @@ UIUC, BSD-style license.
 ## Authors
 * *John Leidel* - *Chief Scientist* - [Tactical Computing Labs](http://www.tactcomplabs.com)
 * *Frank Conlon* - *Research Engineer* - [Tactical Computing Labs](http://www.tactcomplabs.com)
+* *David Donofrio* - *Chief Hardware Architect* - [Tactical Computing Labs](http://www.tactcomplabs.com)
 
 ## Acknowledgements
 * None at this time

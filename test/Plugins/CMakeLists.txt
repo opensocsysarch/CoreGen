@@ -1,5 +1,5 @@
 # CoreGen test Plugins CMakeLists.txt
-# Copyright (C) 2017-2019 Tactical Computing Laboratories, LLC
+# Copyright (C) 2017-2020 Tactical Computing Laboratories, LLC
 # All Rights Reserved
 # contact@tactcomplabs.com
 #
@@ -21,7 +21,7 @@ else()
   set(COREGEN_TEST_PLUGIN "libSamplePlugin.so")
 endif()
 
-message(STATUS "COREGEN_TEST_PLUGIN SET TO ${COREGEN_TEST_PLUGIN}")
+message(STATUS "COREGEN_TEST_PLUGIN set to ${COREGEN_TEST_PLUGIN}")
 
 if(BUILD_COREGEN_PLUGIN_TESTING)
 foreach(testSrc ${TEST_SRCS})

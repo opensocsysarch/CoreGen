@@ -100,6 +100,7 @@ brew install sbt verilator
 ## Authors
 * *John Leidel* - *Chief Scientist* - [Tactical Computing Labs](http://www.tactcomplabs.com)
 * *Frank Conlon* - *Research Engineer* - [Tactical Computing Labs](http://www.tactcomplabs.com)
+* *David Donofrio* - *Chief Hardware Architect* - [Tactical Computing Labs](http://www.tactcomplabs.com)
 
 ## Acknowledgements
 * These instructions are derived from the Chisel installation guide located at: https://github.com/freechipsproject/chisel3/#installation
