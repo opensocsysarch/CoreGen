@@ -436,7 +436,15 @@ bool CoreGenArchive::InitCompressedArchive(CoreGenArchEntry *E){
 }
 
 bool CoreGenArchive::InitGitArchive(CoreGenArchEntry *E){
-
+  std::string UncStr = "git clone " + E->GetURL() + " " + GetFullPath(E);
+  if( system( UncStr.c_str() ) == 0 )
+    return true;
+  else{
+    Error = "Failed to checkout git repo " + E->GetURL();
+    return false;
+  }
+#if 0
+  // TODO: Ubuntu 16.04 has issues with the default libtgit2 install and https
   // check to see if the URL is valid
   if( E->GetURL().length() == 0 ){
     Error = "No URL present for archive entry " + E->GetName();
@@ -450,10 +458,12 @@ bool CoreGenArchive::InitGitArchive(CoreGenArchEntry *E){
   bool rtn = true;
   git_repository *repo = NULL;
   const git_error *e;
+  git_clone_options clone_opts = GIT_CLONE_OPTIONS_INIT;
+  clone_opts.checkout_opts.checkout_strategy = GIT_CHECKOUT_FORCE;
   int error = git_clone(&repo,
                         E->GetURL().c_str(),
                         GetFullPath(E).c_str(),
-                        NULL);
+                        &clone_opts);
   if( error < 0 ){
     e = giterr_last();
     Error = std::string(e->message);
@@ -467,6 +477,7 @@ bool CoreGenArchive::InitGitArchive(CoreGenArchEntry *E){
   git_libgit2_shutdown();
 
   return rtn;
+#endif
 }
 
 bool CoreGenArchive::InitUnkArchive(CoreGenArchEntry *E){
