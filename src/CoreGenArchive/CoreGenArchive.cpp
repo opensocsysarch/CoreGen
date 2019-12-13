@@ -556,8 +556,6 @@ bool CoreGenArchive::Destroy( unsigned Entry ){
     return true;
   }
 
-  std::cout << "starting the processing of deleting " << GetFullPath(E) << std::endl;
-
   return CGADeleteDir(GetFullPath(E));
 }
 
