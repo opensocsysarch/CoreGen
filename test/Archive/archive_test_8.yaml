@@ -5,5 +5,5 @@ Entries:
     Type: PLUGIN
     Version: 1.0
     Postscript: PostInstall.sh
-    URL: https://github.com/opensocsysarch/CoreGen/raw/archive_devel/test/Archive/ArchiveScriptTest1.tgz
+    URL: https://github.com/opensocsysarch/CoreGen/raw/master/test/Archive/ArchiveScriptTest1.tgz
 
