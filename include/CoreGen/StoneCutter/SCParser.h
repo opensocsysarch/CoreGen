@@ -58,6 +58,11 @@
 #include "llvm/Transforms/Scalar.h"
 #include "llvm/Transforms/Scalar/GVN.h"
 
+#include "llvm/Transforms/Utils/Mem2Reg.h"
+#include "llvm/Transforms/Utils.h"
+#include "llvm/Transforms/Utils/PromoteMemToReg.h"
+#include "llvm/Transforms/InstCombine/InstCombine.h"
+
 using namespace llvm;
 
 /** SCDyad: enumerated types to describe dyadic operators */

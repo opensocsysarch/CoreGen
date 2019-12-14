@@ -8,9 +8,9 @@
 ## Getting Started
 
 ## Prerequisites
-* C++11 Compiler (LLVM/Clang and GCC are tested)
+* C++14 Compiler (LLVM/Clang and GCC are tested)
 * CMake 3.4.3+
-* LLVM 5.X
+* LLVM 7.X
 * LibGit2
 * Curl
 
@@ -158,7 +158,7 @@ the ``HomeBrew`` package manager in order to fulfill these dependencies.
 ```
 brew cask install mactex
 brew install cmake
-brew install llvm@5
+brew install llvm@7
 brew install re2c
 brew install lua
 brew install libgit2
@@ -175,7 +175,7 @@ cd build
 ```
 4. Execute CMake to generate the makefiles
 ```
-cmake -DLLVM_DIR=/usr/local/opt/llvm\@5/lib/cmake/llvm ../
+cmake -DLLVM_DIR=/usr/local/opt/llvm\@7/lib/cmake/llvm ../
 ```
 5. Execute the build
 ```
