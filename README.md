@@ -10,7 +10,7 @@
 ## Prerequisites
 * C++14 Compiler (LLVM/Clang and GCC are tested)
 * CMake 3.4.3+
-* LLVM 7.X
+* LLVM 7.X or LLVM 8.X
 * LibGit2
 * Curl
 
@@ -51,12 +51,12 @@ versions, we do not currently test these scenarios.
 1.  Install the necessary apt repositories
 ```
 wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
-sudo apt-add-repository "deb http://apt.llvm.org/xenial/ llvm-toolchain-xenial-6.0 main"
+sudo apt-add-repository "deb http://apt.llvm.org/xenial/ llvm-toolchain-xenial-8 main"
 sudo apt-get update
 ```
 2.  Install the system dependencies:
 ```
-sudo apt-get install -y libllvm-6.0-ocaml-dev libllvm6.0 llvm-6.0 llvm-6.0-dev llvm-6.0-doc llvm-6.0-examples llvm-6.0-runtime clang-6.0 clang-tools-6.0 clang-6.0-doc libclang-common-6.0-dev libclang-6.0-dev libclang1-6.0 clang-format-6.0 python-clang-6.0 re2c lua5.3 liblua5.3-dev zlib1g zlib1g-dev bison libcurl4-gnutls-dev libgit2-dev
+sudo apt-get install -y libllvm-8-ocaml-dev libllvm8 llvm-8 llvm-8-dev llvm-8-doc llvm-8-examples llvm-8-runtime clang-8 clang-tools-8 clang-8-doc libclang-common-8-dev libclang-8-dev libclang1-8 clang-format-8 python-clang-8 re2c lua5.3 liblua5.3-dev zlib1g zlib1g-dev bison libcurl4-gnutls-dev libgit2-dev
 ```
 3. Clone the CoreGen repository
 ```
@@ -70,7 +70,7 @@ cd build
 ```
 5. Execute CMake to generate the makefiles
 ```
-cmake -DLLVM_DIR=/usr/lib/llvm-6.0/cmake ../
+cmake -DLLVM_DIR=/usr/lib/llvm-8/cmake ../
 ```
 6. Execute the build
 ```
@@ -83,12 +83,12 @@ make
 1.  Install the necessary apt repositories
 ```
 wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
-sudo apt-add-repository "deb http://apt.llvm.org/bionic/ llvm-toolchain-bionic-6.0 main"
+sudo apt-add-repository "deb http://apt.llvm.org/bionic/ llvm-toolchain-bionic-8.0 main"
 sudo apt-get update
 ```
 2.  Install the system dependencies:
 ```
-sudo apt-get install -y clang-7 lldb-7 lld-7 libllvm7 llvm-7 llvm-7-dev llvm-7-doc llvm-7-examples llvm-7-runtime re2c lua5.3 liblua5.3-dev python-dev libcurl4 libcurl4-gnutls-dev libgit2-dev
+sudo apt-get install -y clang-8 lldb-8 lld-8 libllvm8 llvm-8 llvm-8-dev llvm-8-doc llvm-8-examples llvm-8-runtime re2c lua5.3 liblua5.3-dev python-dev libcurl4 libcurl4-gnutls-dev libgit2-dev
 ```
 3. Clone the CoreGen repository
 ```
@@ -102,7 +102,7 @@ cd build
 ```
 5. Execute CMake to generate the makefiles
 ```
-cmake -DLLVM_DIR=/usr/lib/llvm-6.0/cmake ../
+cmake -DLLVM_DIR=/usr/lib/llvm-8/cmake ../
 ```
 6. Execute the build
 ```
@@ -126,7 +126,7 @@ sudo yum install rpm-build rpmdevtools
 ```
 3. Enable the SCL LLVM environment (this will create a fresh bash shell with the correct paths)
 ``
-scl enable llvm-toolset-7 devtoolset-7 bash
+scl enable llvm-toolset-7 devtoolset-8 bash
 ``
 4. Clone the CoreGen repository
 ```
@@ -158,7 +158,7 @@ the ``HomeBrew`` package manager in order to fulfill these dependencies.
 ```
 brew cask install mactex
 brew install cmake
-brew install llvm@7
+brew install llvm@8
 brew install re2c
 brew install lua
 brew install libgit2
@@ -175,7 +175,7 @@ cd build
 ```
 4. Execute CMake to generate the makefiles
 ```
-cmake -DLLVM_DIR=/usr/local/opt/llvm\@7/lib/cmake/llvm ../
+cmake -DLLVM_DIR=/usr/local/opt/llvm\@8/lib/cmake/llvm ../
 ```
 5. Execute the build
 ```
