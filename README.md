@@ -137,10 +137,11 @@ git clone https://github.com/opensocsysarch/CoreGen.git
 cd CoreGen
 mkdir build
 cd build
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/rh/llvm-toolset-7.0/root/lib64/
 ```
 6. Execute CMake to generate the makefiles
 ```
-cmake -DLLVM_DIR=/opt/rh/llvm-toolset-7/root/usr/lib64/cmake/llvm ../
+cmake -DLLVM_DIR=/opt/rh/llvm-toolset-7.0/root/usr/lib64/cmake/llvm ../
 ```
 7. Execute the build
 ```
