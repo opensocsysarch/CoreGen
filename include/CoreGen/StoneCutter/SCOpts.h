@@ -42,7 +42,7 @@
 #endif
 
 #ifndef SC_PATCH_VERSION
-#define SC_PATCH_VERSION 0
+#define SC_PATCH_VERSION 1
 #endif
 
 class SCOpts{
