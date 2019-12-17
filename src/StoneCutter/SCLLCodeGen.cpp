@@ -84,7 +84,12 @@ bool SCLLCodeGen::GenerateObjFile(){
 
   legacy::PassManager pass;
   auto FileType = TargetMachine::CGFT_ObjectFile;
-  if (TheTargetMachine->addPassesToEmitFile(pass, dest, FileType)) {
+  if (TheTargetMachine->addPassesToEmitFile(pass,
+                                            dest,
+                                            nullptr,
+                                            FileType,
+                                            true,
+                                            nullptr)) {
     Msgs->PrintMsg( L_ERROR, "Could not emit a file of this type" );
     return false;
   }
