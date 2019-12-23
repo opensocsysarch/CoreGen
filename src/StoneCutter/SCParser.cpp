@@ -17,8 +17,10 @@ std::unique_ptr<legacy::FunctionPassManager> SCParser::TheFPM;
 std::map<std::string, std::unique_ptr<PrototypeAST>> SCParser::FunctionProtos;
 std::map<std::string, AllocaInst*> SCParser::NamedValues;
 std::map<std::string, GlobalVariable*> SCParser::GlobalNamedValues;
+std::map<std::string, unsigned> SCParser::PipeInstances;
 unsigned SCParser::LabelIncr;
 bool SCParser::IsOpt = false;
+bool SCParser::IsPipe = false;
 SCMsg *SCParser::GMsgs = nullptr;
 
 SCParser::SCParser(std::string B, std::string F, SCOpts *O, SCMsg *M)
@@ -766,6 +768,8 @@ std::unique_ptr<ExprAST> SCParser::ParsePrimary() {
     return ParseDoWhileExpr();
   case tok_var:
     return ParseVarExpr();
+  case tok_pipe:
+    return ParsePipeExpr();
   }
 }
 
@@ -950,6 +954,55 @@ std::unique_ptr<ExprAST> SCParser::ParseWhileExpr(){
   GetNextToken(); // eat the '}'
 
   return llvm::make_unique<WhileExprAST>(std::move(Cond),std::move(BodyExpr));
+}
+
+std::unique_ptr<ExprAST> SCParser::ParsePipeExpr() {
+  if( IsPipe )
+    return LogError("Nested pipes are not supported");
+
+  GetNextToken(); // eat the 'pipe'
+
+  if (CurTok != tok_identifier)
+    return LogError("expected identifier after pipe");
+
+  std::string PipeName = Lex->GetIdentifierStr();
+  GetNextToken();  // eat identifier.
+
+  if (CurTok != '{' )
+    return LogError("expected '{' for while loop control statement");
+
+  GetNextToken(); // eat the '{'
+
+  IsPipe = true;  // mark the fact that we're inside a pipe expression
+
+  // get the instance of the current pipe
+  unsigned Instance = 0;
+  std::map<std::string,unsigned>::iterator it = PipeInstances.find(PipeName);
+  if( it != PipeInstances.end() ){
+    // increment the instance count
+    it->second++;
+    Instance = it->second;
+  }else{
+    // first instance of the pipe
+    PipeInstances.insert(std::make_pair(PipeName,0));
+  }
+
+  std::vector<std::unique_ptr<ExprAST>> BodyExpr;
+  while( CurTok != '}' ){
+    auto Body = ParseExpression();
+    if( !Body )
+      return nullptr;
+    BodyExpr.push_back(std::move(Body));
+  }
+
+  // handle close bracket
+  if( CurTok != '}' )
+    return LogError("expected '}' for do while loop control body");
+
+  GetNextToken(); // eat the '}'
+  IsPipe = false;
+
+  return llvm::make_unique<PipeExprAST>(PipeName,Instance,std::move(BodyExpr));
 }
 
 std::unique_ptr<ExprAST> SCParser::ParseForExpr() {
@@ -1517,6 +1570,33 @@ Function *getFunction(std::string Name ){
 
 Value *NumberExprAST::codegen() {
   return ConstantInt::get(SCParser::TheContext, APInt(64,Val,false));
+}
+
+Value *PipeExprAST::codegen() {
+
+  // Emit the body of the pipe stage
+  if( BodyExpr.size() == 0 ) return nullptr;
+
+  // Walk all the body instructions, emit them and tag each
+  // instruction with the appropriate metadata
+  for( unsigned i=0; i<BodyExpr.size(); i++ ){
+    Value *BVal = BodyExpr[i]->codegen();
+    if( isa<Instruction>(*BVal) ){
+      MDNode *N = MDNode::get(SCParser::TheContext,
+                              MDString::get(SCParser::TheContext,PipeName));
+      MDNode *TmpPI = MDNode::get(SCParser::TheContext,
+                                  ConstantAsMetadata::get(ConstantInt::get(
+                                      SCParser::TheContext,
+                                      llvm::APInt(64, Instance, false))));
+      MDNode *PI = MDNode::get(SCParser::TheContext, TmpPI);
+      Instruction *Inst = cast<Instruction>(BVal);
+      Inst->setMetadata("pipe.pipeName",N);
+      Inst->setMetadata("pipe.pipeInstance",PI);
+    }
+  }
+
+  // pipe expr
+  return Constant::getNullValue(Type::getIntNTy(SCParser::TheContext,64));
 }
 
 Value *DoWhileExprAST::codegen() {
