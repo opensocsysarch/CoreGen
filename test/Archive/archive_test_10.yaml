@@ -1,0 +1,9 @@
+Entries:
+  - Entry: TEST1
+    Directory: TESTENTRY1
+    SrcType: GIT
+    Type: RTL
+    Version: 1.0
+    Hash: 759fa6573fbdf86869fe4fbabdc72b2037e2dfd9
+    URL: https://github.com/opensocsysarch/CoreGen.git
+

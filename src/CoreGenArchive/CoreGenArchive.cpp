@@ -177,9 +177,22 @@ bool CoreGenArchive::ReadEntries(const YAML::Node& Entries){
       Latest = Node["Latest"].as<bool>();
     }
 
+    // hash [optional]
+    std::string Hash;
+    if( CheckValidNode( Node,"Hash") ){
+      Hash = Node["Hash"].as<std::string>();
+    }
+
+    // branch [optional]
+    std::string Branch;
+    if( CheckValidNode( Node,"Branch") ){
+      Hash = Node["Branch"].as<std::string>();
+    }
+
     // read everything, create a new entry
     Arch.push_back(new CoreGenArchEntry(Name,Dir,PS,Version,
-                                        URL,Latest,Type,SrcType));
+                                        URL,Hash,Branch,Latest,
+                                        Type,SrcType));
   }
 
   return true;
@@ -437,12 +450,36 @@ bool CoreGenArchive::InitCompressedArchive(CoreGenArchEntry *E){
 
 bool CoreGenArchive::InitGitArchive(CoreGenArchEntry *E){
   std::string UncStr = "git clone " + E->GetURL() + " " + GetFullPath(E);
+  bool rtn = true;
   if( system( UncStr.c_str() ) == 0 )
-    return true;
+    rtn = true;
   else{
     Error = "Failed to checkout git repo " + E->GetURL();
     return false;
   }
+
+  if( E->GetBranch().length() > 0 ){
+    UncStr = "cd " + GetFullPath(E) + " && git checkout " + E->GetBranch();
+    if( system( UncStr.c_str() ) == 0 ){
+      rtn = true;
+    }else{
+      Error = "Failed to checkout branch: " + E->GetBranch();
+      return false;
+    }
+  }
+
+  if( E->GetHash().length() > 0 ){
+    UncStr = "cd " + GetFullPath(E) + " && git checkout " + E->GetHash();
+    if( system( UncStr.c_str() ) == 0 ){
+      rtn = true;
+    }else{
+      Error = "Failed to checkout hash: " + E->GetHash();
+      return false;
+    }
+  }
+
+  return rtn;
+
 #if 0
   // TODO: Ubuntu 16.04 has issues with the default libtgit2 install and https
   // check to see if the URL is valid

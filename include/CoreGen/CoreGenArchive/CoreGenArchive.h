@@ -75,6 +75,8 @@ private:
   std::string Postscript;   ///< CoreGenArchEntry: post init script
   std::string Version;      ///< CoreGenArchEntry: version info
   std::string URL;          ///< CoreGenArchEntry: entry url
+  std::string Hash;         ///< CoreGenArchEntry: git hash
+  std::string Branch;       ///< CoreGenArchEntry: git branch
 
   bool Latest;              ///< CoreGenArchEntry: latest version of the entry
 
@@ -88,11 +90,14 @@ public:
                     std::string Script,
                     std::string Ver,
                     std::string URL,
+                    std::string Hash,
+                    std::string Branch,
                     bool L,
                     CGAEntryType Type,
                     CGASrcType Src )
     : Name(N), Directory(Dir), Postscript(Script), Version(Ver),
-      URL(URL), Latest(L), EntryType(Type), SrcType(Src) {}
+      URL(URL), Hash(Hash), Branch(Branch), Latest(L),
+      EntryType(Type), SrcType(Src) {}
 
   /// CoreGenArchEntry: default destructor
   ~CoreGenArchEntry() {}
@@ -111,6 +116,12 @@ public:
 
   /// CoreGenArchEntry: retrieve the archive URL
   std::string GetURL() { return URL; }
+
+  /// CoreGenArchEntry: retrieve the git hash
+  std::string GetHash() { return Hash; }
+
+  /// CoreGenArchEntry: retrieve the git branch
+  std::string GetBranch() { return Branch; }
 
   /// CoreGenArchEntry: is this entry the latest version?
   bool IsLatest() { return Latest; }
