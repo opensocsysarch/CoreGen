@@ -36,8 +36,10 @@
 // Curl headers
 #include <curl/curl.h>
 
+#if 0
 // Git2 headers
 #include <git2.h>
+#endif
 
 // YAML headers
 #include "yaml-cpp/yaml.h"

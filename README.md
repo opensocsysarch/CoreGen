@@ -11,7 +11,6 @@
 * C++14 Compiler (LLVM/Clang and GCC are tested)
 * CMake 3.4.3+
 * LLVM 7.X or LLVM 8.X
-* LibGit2
 * Curl
 
 ## Building
