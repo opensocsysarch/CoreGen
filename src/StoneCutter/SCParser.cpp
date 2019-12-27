@@ -1595,7 +1595,7 @@ Value *PipeExprAST::codegen() {
   MDNode *TmpPI = MDNode::get(SCParser::TheContext,
                               ConstantAsMetadata::get(ConstantInt::get(
                                 SCParser::TheContext,
-                                llvm::APInt(64, Instance, false))));
+                                llvm::APInt(64, (uint64_t)(Instance), false))));
   MDNode *PI = MDNode::get(SCParser::TheContext, TmpPI);
 
   // assign to the global copies such that the other codegen
