@@ -402,6 +402,8 @@ public:
   static bool IsOpt;                                                                    ///< Are optimizations enabled?
   static bool IsPipe;                                                                   ///< Are we within a pipeline?
   static SCMsg *GMsgs;                                                                  ///< Global message handler
+  static MDNode *NameMDNode;                                                            ///< Pipe name metadata node
+  static MDNode *InstanceMDNode;                                                        ///< Pipe instance metadata node
 
 private:
 

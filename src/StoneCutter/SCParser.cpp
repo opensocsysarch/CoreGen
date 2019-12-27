@@ -22,6 +22,8 @@ unsigned SCParser::LabelIncr;
 bool SCParser::IsOpt = false;
 bool SCParser::IsPipe = false;
 SCMsg *SCParser::GMsgs = nullptr;
+MDNode *SCParser::NameMDNode = nullptr;
+MDNode *SCParser::InstanceMDNode = nullptr;
 
 SCParser::SCParser(std::string B, std::string F, SCOpts *O, SCMsg *M)
   : CurTok(-1), InBuf(B), FileName(F), Opts(O), Msgs(M), Lex(new SCLexer()),
@@ -1534,11 +1536,21 @@ static AllocaInst *CreateEntryBlockAllocaAttr(Function *TheFunction,
                  TheFunction->getEntryBlock().begin());
 
   if( Attr.defFloat ){
-    return TmpB.CreateAlloca(Type::getDoubleTy(SCParser::TheContext), 0,
+    AllocaInst *AI = TmpB.CreateAlloca(Type::getDoubleTy(SCParser::TheContext), 0,
                              VarName.c_str());
+    if( SCParser::NameMDNode ){
+      AI->setMetadata("pipe.pipeName",SCParser::NameMDNode);
+      AI->setMetadata("pipe.pipeInstance",SCParser::InstanceMDNode);
+    }
+    return AI;
   }else{
-    return TmpB.CreateAlloca(Type::getIntNTy(SCParser::TheContext,Attr.width), 0,
+    AllocaInst *AI = TmpB.CreateAlloca(Type::getIntNTy(SCParser::TheContext,Attr.width), 0,
                              VarName.c_str());
+    if( SCParser::NameMDNode ){
+      AI->setMetadata("pipe.pipeName",SCParser::NameMDNode);
+      AI->setMetadata("pipe.pipeInstance",SCParser::InstanceMDNode);
+    }
+    return AI;
   }
 }
 
@@ -1577,23 +1589,34 @@ Value *PipeExprAST::codegen() {
   // Emit the body of the pipe stage
   if( BodyExpr.size() == 0 ) return nullptr;
 
+  // build the metadata
+  MDNode *N = MDNode::get(SCParser::TheContext,
+                          MDString::get(SCParser::TheContext,PipeName));
+  MDNode *TmpPI = MDNode::get(SCParser::TheContext,
+                              ConstantAsMetadata::get(ConstantInt::get(
+                                SCParser::TheContext,
+                                llvm::APInt(64, Instance, false))));
+  MDNode *PI = MDNode::get(SCParser::TheContext, TmpPI);
+
+  // assign to the global copies such that the other codegen
+  // functions can pick up the necessary MDNode's
+  SCParser::NameMDNode = N;
+  SCParser::InstanceMDNode = PI;
+
   // Walk all the body instructions, emit them and tag each
   // instruction with the appropriate metadata
   for( unsigned i=0; i<BodyExpr.size(); i++ ){
     Value *BVal = BodyExpr[i]->codegen();
     if( isa<Instruction>(*BVal) ){
-      MDNode *N = MDNode::get(SCParser::TheContext,
-                              MDString::get(SCParser::TheContext,PipeName));
-      MDNode *TmpPI = MDNode::get(SCParser::TheContext,
-                                  ConstantAsMetadata::get(ConstantInt::get(
-                                      SCParser::TheContext,
-                                      llvm::APInt(64, Instance, false))));
-      MDNode *PI = MDNode::get(SCParser::TheContext, TmpPI);
       Instruction *Inst = cast<Instruction>(BVal);
       Inst->setMetadata("pipe.pipeName",N);
       Inst->setMetadata("pipe.pipeInstance",PI);
     }
   }
+
+  // exit the pipe codegen block
+  SCParser::NameMDNode = nullptr;
+  SCParser::InstanceMDNode = nullptr;
 
   // pipe expr
   return Constant::getNullValue(Type::getIntNTy(SCParser::TheContext,64));
@@ -1640,7 +1663,11 @@ Value *DoWhileExprAST::codegen() {
                          TheFunction);
 
   // Insert the conditional branch for the initial state
-  Builder.CreateCondBr(CondV,LoopBB,AfterBB);
+  BranchInst *BI = Builder.CreateCondBr(CondV,LoopBB,AfterBB);
+  if( SCParser::NameMDNode ){
+    BI->setMetadata("pipe.pipeName",SCParser::NameMDNode);
+    BI->setMetadata("pipe.pipeInstance",SCParser::InstanceMDNode);
+  }
 
   // Anything new is inserted after the while exit
   Builder.SetInsertPoint(AfterBB);
@@ -1664,7 +1691,11 @@ Value *WhileExprAST::codegen() {
                                           TheFunction);
 
   // Insert an explicit fall through from the current block to the LoopBB.
-  Builder.CreateBr(LoopBB);
+  BranchInst *BI = Builder.CreateBr(LoopBB);
+  if( SCParser::NameMDNode ){
+    BI->setMetadata("pipe.pipeName",SCParser::NameMDNode);
+    BI->setMetadata("pipe.pipeInstance",SCParser::InstanceMDNode);
+  }
 
   // loop body block
   BasicBlock *EntryBB = BasicBlock::Create(SCParser::TheContext,
@@ -1699,7 +1730,11 @@ Value *WhileExprAST::codegen() {
   }
 
   // Insert the conditional branch for the initial state
-  Builder.CreateCondBr(CondV,EntryBB,AfterBB);
+  BI = Builder.CreateCondBr(CondV,EntryBB,AfterBB);
+  if( SCParser::NameMDNode ){
+    BI->setMetadata("pipe.pipeName",SCParser::NameMDNode);
+    BI->setMetadata("pipe.pipeInstance",SCParser::InstanceMDNode);
+  }
 
   // Anything new is inserted after the while exit
   Builder.SetInsertPoint(AfterBB);
@@ -1720,7 +1755,11 @@ Value *ForExprAST::codegen() {
     return nullptr;
 
   // Store the value into an alloca
-  SCParser::Builder.CreateStore(StartVal,Alloca);
+  StoreInst *SI = SCParser::Builder.CreateStore(StartVal,Alloca);
+  if( SCParser::NameMDNode ){
+    SI->setMetadata("pipe.pipeName",SCParser::NameMDNode);
+    SI->setMetadata("pipe.pipeInstance",SCParser::InstanceMDNode);
+  }
 
   unsigned LocalLabel = GetLocalLabel();
 
@@ -1731,7 +1770,12 @@ Value *ForExprAST::codegen() {
                                           TheFunction);
 
   // Insert an explicit fall through from the current block to the LoopBB.
-  Builder.CreateBr(LoopBB);
+  BranchInst *BI = Builder.CreateBr(LoopBB);
+  if( SCParser::NameMDNode ){
+    BI->setMetadata("pipe.pipeName",SCParser::NameMDNode);
+    BI->setMetadata("pipe.pipeInstance",SCParser::InstanceMDNode);
+  }
+
 
   // Start insertion in LoopBB.
   Builder.SetInsertPoint(LoopBB);
@@ -1771,7 +1815,16 @@ Value *ForExprAST::codegen() {
   Value *NextVar = Builder.CreateAdd(CurVar,
                                       StepVal,
                                       "nextvar" + std::to_string(LocalLabel));
-  Builder.CreateStore(NextVar,Alloca);
+  SI = Builder.CreateStore(NextVar,Alloca);
+  if( SCParser::NameMDNode ){
+    cast<LoadInst>(CurVar)->setMetadata("pipe.pipeName",SCParser::NameMDNode);
+    cast<LoadInst>(CurVar)->setMetadata("pipe.pipeInstance",SCParser::InstanceMDNode);
+    cast<Instruction>(NextVar)->setMetadata("pipe.pipeName",SCParser::NameMDNode);
+    cast<Instruction>(NextVar)->setMetadata("pipe.pipeInstance",SCParser::InstanceMDNode);
+    SI->setMetadata("pipe.pipeName",SCParser::NameMDNode);
+    SI->setMetadata("pipe.pipeInstance",SCParser::InstanceMDNode);
+  }
+
 
   // Convert condition to a bool by comparing non-equal to 0.0.
   //EndCond = Builder.CreateFCmpONE(
@@ -1782,6 +1835,10 @@ Value *ForExprAST::codegen() {
       EndCond, ConstantInt::get(SCParser::TheContext,
                                APInt(1,0,false)),
                                "loopcond" + std::to_string(LocalLabel));
+  if( SCParser::NameMDNode ){
+    cast<Instruction>(EndCond)->setMetadata("pipe.pipeName",SCParser::NameMDNode);
+    cast<Instruction>(EndCond)->setMetadata("pipe.pipeInstance",SCParser::InstanceMDNode);
+  }
 
   // Create the "after loop" block and insert it.
   BasicBlock *AfterBB =
@@ -1790,7 +1847,11 @@ Value *ForExprAST::codegen() {
                          TheFunction);
 
   // Insert the conditional branch into the end of LoopEndBB.
-  Builder.CreateCondBr(EndCond, LoopBB, AfterBB);
+  BI = Builder.CreateCondBr(EndCond, LoopBB, AfterBB);
+  if( SCParser::NameMDNode ){
+    BI->setMetadata("pipe.pipeName",SCParser::NameMDNode);
+    BI->setMetadata("pipe.pipeInstance",SCParser::InstanceMDNode);
+  }
 
   // Any new code will be inserted in AfterBB.
   Builder.SetInsertPoint(AfterBB);
@@ -1818,7 +1879,12 @@ Value *VariableExprAST::codegen() {
     }
   }
 
-  return SCParser::Builder.CreateLoad(V,Name.c_str());
+  Value *LI = SCParser::Builder.CreateLoad(V,Name.c_str());
+  if( SCParser::NameMDNode ){
+    cast<LoadInst>(LI)->setMetadata("pipe.pipeName",SCParser::NameMDNode);
+    cast<LoadInst>(LI)->setMetadata("pipe.pipeInstance",SCParser::InstanceMDNode);
+  }
+  return LI;
 }
 
 Value *VarExprAST::codegen() {
@@ -1857,7 +1923,11 @@ Value *VarExprAST::codegen() {
     AllocaInst *Alloca = CreateEntryBlockAllocaAttr(TheFunction,
                                                     VarName,
                                                     Attrs[i]);
-    Builder.CreateStore(InitVal, Alloca);
+    StoreInst *SI = Builder.CreateStore(InitVal, Alloca);
+    if( SCParser::NameMDNode ){
+      SI->setMetadata("pipe.pipeName",SCParser::NameMDNode);
+      SI->setMetadata("pipe.pipeInstance",SCParser::InstanceMDNode);
+    }
 
     OldBindings.push_back(SCParser::NamedValues[VarName]);
     SCParser::NamedValues[VarName] = Alloca;
@@ -1903,7 +1973,12 @@ Value *BinaryExprAST::codegen() {
       }
     }
 
-    Builder.CreateStore(Val, Variable);
+    StoreInst *SI = Builder.CreateStore(Val, Variable);
+    if( SCParser::NameMDNode ){
+      SI->setMetadata("pipe.pipeName",SCParser::NameMDNode);
+      SI->setMetadata("pipe.pipeInstance",SCParser::InstanceMDNode);
+    }
+
     return Val;
   }
 
@@ -1924,15 +1999,27 @@ Value *BinaryExprAST::codegen() {
     if( LT->isFloatingPointTy() ){
       // LHS is the float
       R = SCParser::Builder.CreateUIToFP(R,LT,"uitofptmp");
+      if( SCParser::NameMDNode ){
+        cast<Instruction>(R)->setMetadata("pipe.pipeName",SCParser::NameMDNode);
+        cast<Instruction>(R)->setMetadata("pipe.pipeInstance",SCParser::InstanceMDNode);
+      }
     }else{
       // RHS is the float
       R = SCParser::Builder.CreateFPToUI(R,LT,"fptouitmp");
+      if( SCParser::NameMDNode ){
+        cast<Instruction>(R)->setMetadata("pipe.pipeName",SCParser::NameMDNode);
+        cast<Instruction>(R)->setMetadata("pipe.pipeInstance",SCParser::InstanceMDNode);
+      }
     }
   }else if( LT->getIntegerBitWidth() != RT->getIntegerBitWidth() ){
     // integer type mismatch, mutate the size of the RHS
     // TODO: print a warning message
     //R->mutateType(LT);
     R = SCParser::Builder.CreateIntCast(R,LT,true);
+    if( SCParser::NameMDNode ){
+      cast<Instruction>(R)->setMetadata("pipe.pipeName",SCParser::NameMDNode);
+      cast<Instruction>(R)->setMetadata("pipe.pipeInstance",SCParser::InstanceMDNode);
+    }
   }
 
   if( LT->isFloatingPointTy() ){
@@ -2044,7 +2131,12 @@ Value *CallExprAST::codegen() {
       return nullptr;
   }
 
-  return SCParser::Builder.CreateCall(CalleeF, ArgsV, "calltmp");
+  Value *CI = SCParser::Builder.CreateCall(CalleeF, ArgsV, "calltmp");
+  if( SCParser::NameMDNode ){
+    cast<Instruction>(CI)->setMetadata("pipe.pipeName",SCParser::NameMDNode);
+    cast<Instruction>(CI)->setMetadata("pipe.pipeInstance",SCParser::InstanceMDNode);
+  }
+  return CI;
 }
 
 Function *PrototypeAST::codegen() {
@@ -2332,6 +2424,10 @@ Value *IfExprAST::codegen() {
   CondV = Builder.CreateICmpNE(
         CondV, ConstantInt::get(SCParser::TheContext, APInt(1,0,false)),
         "ifcond."+std::to_string(LocalLabel));
+  if( SCParser::NameMDNode ){
+    cast<Instruction>(CondV)->setMetadata("pipe.pipeName",SCParser::NameMDNode);
+    cast<Instruction>(CondV)->setMetadata("pipe.pipeInstance",SCParser::InstanceMDNode);
+  }
 
   Function *TheFunction = Builder.GetInsertBlock()->getParent();
 
@@ -2345,7 +2441,11 @@ Value *IfExprAST::codegen() {
   BasicBlock *MergeBB = BasicBlock::Create(SCParser::TheContext,
                                            "ifcont."+std::to_string(LocalLabel));
 
-  Builder.CreateCondBr(CondV, ThenBB, ElseBB);
+  BranchInst *BI = Builder.CreateCondBr(CondV, ThenBB, ElseBB);
+  if( SCParser::NameMDNode ){
+    BI->setMetadata("pipe.pipeName",SCParser::NameMDNode);
+    BI->setMetadata("pipe.pipeInstance",SCParser::InstanceMDNode);
+  }
 
   // Emit then value.
   Builder.SetInsertPoint(ThenBB);
@@ -2359,7 +2459,12 @@ Value *IfExprAST::codegen() {
       return nullptr;
   }
 
-  Builder.CreateBr(MergeBB);
+  BI = Builder.CreateBr(MergeBB);
+  if( SCParser::NameMDNode ){
+    BI->setMetadata("pipe.pipeName",SCParser::NameMDNode);
+    BI->setMetadata("pipe.pipeInstance",SCParser::InstanceMDNode);
+  }
+
   // Codegen of 'Then' can change the current block, update ThenBB for the PHI.
   ThenBB = Builder.GetInsertBlock();
 
@@ -2375,7 +2480,12 @@ Value *IfExprAST::codegen() {
       return nullptr;
   }
 
-  Builder.CreateBr(MergeBB);
+  BI = Builder.CreateBr(MergeBB);
+  if( SCParser::NameMDNode ){
+    BI->setMetadata("pipe.pipeName",SCParser::NameMDNode);
+    BI->setMetadata("pipe.pipeInstance",SCParser::InstanceMDNode);
+  }
+
   // Codegen of 'Else' can change the current block, update ElseBB for the PHI.
   ElseBB = Builder.GetInsertBlock();
 
@@ -2387,9 +2497,17 @@ Value *IfExprAST::codegen() {
   if( TV->getType()->isFloatingPointTy() ){
     PN = Builder.CreatePHI(TV->getType(),
                                     2, "iftmp."+std::to_string(LocalLabel));
+    if( SCParser::NameMDNode ){
+      PN->setMetadata("pipe.pipeName",SCParser::NameMDNode);
+      PN->setMetadata("pipe.pipeInstance",SCParser::InstanceMDNode);
+    }
   }else{
     PN = Builder.CreatePHI(TV->getType(),
                                     2, "iftmp."+std::to_string(LocalLabel));
+    if( SCParser::NameMDNode ){
+      PN->setMetadata("pipe.pipeName",SCParser::NameMDNode);
+      PN->setMetadata("pipe.pipeInstance",SCParser::InstanceMDNode);
+    }
   }
 
   PN->addIncoming(TV, ThenBB);
