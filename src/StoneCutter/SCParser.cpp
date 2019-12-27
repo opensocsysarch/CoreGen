@@ -1589,6 +1589,19 @@ Value *PipeExprAST::codegen() {
   // Emit the body of the pipe stage
   if( BodyExpr.size() == 0 ) return nullptr;
 
+  // Retrieve the function so we can add the necessary attributes
+  // Pipeline attribute names are monotonically numbered from 0->N
+  // This allows us to have a single attribute with a list of pipeline stages
+  // included therein
+  Function *TheFunction = Builder.GetInsertBlock()->getParent();
+  AttributeSet AttrSet = TheFunction->getAttributes().getFnAttributes();
+  unsigned AttrVal = 0;
+  while( AttrSet.hasAttribute("pipename"+std::to_string(AttrVal)) ){
+    AttrVal = AttrVal + 1;
+  }
+
+  TheFunction->addFnAttr("pipename" + std::to_string(AttrVal),PipeName);
+
   // build the metadata
   MDNode *N = MDNode::get(SCParser::TheContext,
                           MDString::get(SCParser::TheContext,PipeName));
