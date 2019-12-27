@@ -2427,7 +2427,11 @@ Function *FunctionAST::codegen() {
     AllocaInst *Alloca = CreateEntryBlockAlloca(TheFunction,Arg.getName());
 
     // store the initial value into the alloca
-    Builder.CreateStore(&Arg, Alloca);
+    StoreInst *SI = Builder.CreateStore(&Arg, Alloca);
+    if( SCParser::NameMDNode ){
+      SI->setMetadata("pipe.pipeName",SCParser::NameMDNode);
+      SI->setMetadata("pipe.pipeInstance",SCParser::InstanceMDNode);
+    }
 
     // add arguments to the variable symbol table
     SCParser::NamedValues[Arg.getName()] = Alloca;
@@ -2492,7 +2496,6 @@ Value *IfExprAST::codegen() {
 
   // Emit then value.
   Builder.SetInsertPoint(ThenBB);
-
 
   // Emit all the Then body values
   Value *TV = nullptr;
