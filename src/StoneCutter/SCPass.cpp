@@ -297,6 +297,23 @@ std::vector<std::string> SCPass::GetPipeStages(Function &F){
   return Vect;
 }
 
+bool SCPass::GetPipeStage(Instruction &I, std::string &Stage){
+  if (MDNode* N = I.getMetadata("pipe.pipeName")){
+    Stage = cast<MDString>(N->getOperand(0))->getString().str();
+    return true;
+  }
+  return false;
+}
+
+bool SCPass::GetPipeStageInstance(Instruction &I, unsigned &Instance){
+  if (MDNode* N = I.getMetadata("pipe.pipeInstance")){
+    Instance = (unsigned)(std::stoi(cast<MDString>(N->getOperand(0))->getString().str(),
+                                    nullptr,0));
+    return true;
+  }
+  return false;
+}
+
 std::string SCPass::StrToUpper(std::string S){
   for( unsigned i=0; i<S.length(); i++ ){
     S[i] = toupper(S[i]);

@@ -125,11 +125,6 @@ public:
   /// Retrieves the set of register classes for fields that match the instruction format
   std::vector<std::string> GetRegClassInstTypes(std::string InstFormat);
 
-  /// Traces the target operand back to its origin and returns the original name
-  std::string TraceOperand( Function &F, Value *V,
-                            bool &isPredef, bool &isImm,
-                            unsigned &Width );
-
   /// Retrieves the number of pipeline stages contained within the target function
   unsigned GetNumPipeStages(Function &F);
 
@@ -138,6 +133,17 @@ public:
 
   /// Retrieve a vector of all teh pipe stage names
   std::vector<std::string> GetPipeStages(Function &F);
+
+  /// Retrieve the pipe stage name associated with the target instruction
+  bool GetPipeStage(Instruction &Inst, std::string &Stage );
+
+  /// Retrieve the pipe stage instance associated with the target instruction
+  bool GetPipeStageInstance(Instruction &Inst, unsigned &Instance );
+
+  /// Traces the target operand back to its origin and returns the original name
+  std::string TraceOperand( Function &F, Value *V,
+                            bool &isPredef, bool &isImm,
+                            unsigned &Width );
 
   /// Executes the target code generation pass
   virtual bool Execute() = 0;
