@@ -130,6 +130,15 @@ public:
                             bool &isPredef, bool &isImm,
                             unsigned &Width );
 
+  /// Retrieves the number of pipeline stages contained within the target function
+  unsigned GetNumPipeStages(Function &F);
+
+  /// Retrieves the name of the target pipe stage
+  bool GetPipeStageName(Function &F, unsigned N, std::string& PipeName );
+
+  /// Retrieve a vector of all teh pipe stage names
+  std::vector<std::string> GetPipeStages(Function &F);
+
   /// Executes the target code generation pass
   virtual bool Execute() = 0;
 

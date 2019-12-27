@@ -262,12 +262,48 @@ unsigned SCPass::GetNumRegClasses( std::string Var ){
   return 0;
 }
 
+unsigned SCPass::GetNumPipeStages(Function &F){
+  unsigned Val = 0;
+  AttributeSet AttrSet = F.getAttributes().getFnAttributes();
+  while( AttrSet.hasAttribute("pipename"+std::to_string(Val)) ){
+    Val = Val + 1;
+  }
+  return Val;
+}
+
+bool SCPass::GetPipeStageName(Function &F, unsigned N, std::string& PipeName){
+  if( (N-1) > GetNumPipeStages(F) )
+    return false;
+
+  AttributeSet AttrSet = F.getAttributes().getFnAttributes();
+  if( AttrSet.hasAttribute("pipename"+std::to_string(N)) ){
+    PipeName = AttrSet.getAttribute("pipename"+std::to_string(N)).getValueAsString().str();
+    return true;
+  }else{
+    return false;
+  }
+}
+
+std::vector<std::string> SCPass::GetPipeStages(Function &F){
+  std::vector<std::string> Vect;
+
+  AttributeSet AttrSet = F.getAttributes().getFnAttributes();
+  unsigned Val = 0;
+  while( AttrSet.hasAttribute("pipename"+std::to_string(Val)) ){
+    Vect.push_back(AttrSet.getAttribute("pipename"+std::to_string(Val)).getValueAsString().str());
+    Val = Val + 1;
+  }
+
+  return Vect;
+}
+
 std::string SCPass::StrToUpper(std::string S){
   for( unsigned i=0; i<S.length(); i++ ){
     S[i] = toupper(S[i]);
   }
   return S;
 }
+
 
 std::string SCPass::TraceOperand( Function &F, Value *V,
                                   bool &isPredef, bool &isImm,
