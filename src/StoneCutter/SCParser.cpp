@@ -2012,9 +2012,7 @@ Value *BinaryExprAST::codegen() {
       }
     }
   }else if( LT->getIntegerBitWidth() != RT->getIntegerBitWidth() ){
-    // integer type mismatch, mutate the size of the RHS
-    // TODO: print a warning message
-    //R->mutateType(LT);
+    // integer type mismatch, cast to the size of the RHS
     R = SCParser::Builder.CreateIntCast(R,LT,true);
     if( SCParser::NameMDNode ){
       cast<Instruction>(R)->setMetadata("pipe.pipeName",SCParser::NameMDNode);
@@ -2022,46 +2020,66 @@ Value *BinaryExprAST::codegen() {
     }
   }
 
+  Value *VI = nullptr;
+
   if( LT->isFloatingPointTy() ){
     // float ops
     switch (Op) {
     case '+':
-      return SCParser::Builder.CreateFAdd(L, R, "addtmp");
+      VI = SCParser::Builder.CreateFAdd(L, R, "addtmp");
+      break;
     case '-':
-      return SCParser::Builder.CreateFSub(L, R, "subtmp");
+      VI = SCParser::Builder.CreateFSub(L, R, "subtmp");
+      break;
     case '*':
-      return SCParser::Builder.CreateFMul(L, R, "multmp");
+      VI = SCParser::Builder.CreateFMul(L, R, "multmp");
+      break;
     case '<':
-      return SCParser::Builder.CreateFCmpULT(L, R, "cmptmp");
+      VI = SCParser::Builder.CreateFCmpULT(L, R, "cmptmp");
+      break;
     case '>':
-      return SCParser::Builder.CreateFCmpUGT(L, R, "cmptmp");
+      VI = SCParser::Builder.CreateFCmpUGT(L, R, "cmptmp");
+      break;
     case '%':
-      return SCParser::Builder.CreateFRem(L, R, "modtmp");
+      VI = SCParser::Builder.CreateFRem(L, R, "modtmp");
+      break;
     case '/':
-      return SCParser::Builder.CreateFDiv(L, R, "divtmp", nullptr);
+      VI = SCParser::Builder.CreateFDiv(L, R, "divtmp", nullptr);
+      break;
     case '&':
-      return SCParser::Builder.CreateAnd(L, R, "andtmp" );
+      VI = SCParser::Builder.CreateAnd(L, R, "andtmp" );
+      break;
     case '|':
-      return SCParser::Builder.CreateOr(L, R, "ortmp" );
+      VI = SCParser::Builder.CreateOr(L, R, "ortmp" );
+      break;
     case '^':
-      return SCParser::Builder.CreateXor(L, R, "xortmp" );
+      VI = SCParser::Builder.CreateXor(L, R, "xortmp" );
+      break;
     case dyad_shfl:
       L = SCParser::Builder.CreateShl(L, R, "shfltmp", false, false );
-      return SCParser::Builder.CreateUIToFP(L, R->getType(), "booltmp");
+      VI = SCParser::Builder.CreateUIToFP(L, R->getType(), "booltmp");
+      break;
     case dyad_shfr:
-      return SCParser::Builder.CreateLShr(L, R, "lshfrtmp", false );
+      VI = SCParser::Builder.CreateLShr(L, R, "lshfrtmp", false );
+      break;
     case dyad_eqeq:
-      return SCParser::Builder.CreateFCmpUEQ(L, R, "cmpeq" );
+      VI = SCParser::Builder.CreateFCmpUEQ(L, R, "cmpeq" );
+      break;
     case dyad_noteq:
-      return SCParser::Builder.CreateFCmpUNE(L, R, "cmpeq" );
+      VI = SCParser::Builder.CreateFCmpUNE(L, R, "cmpeq" );
+      break;
     case dyad_logand:
-      return SCParser::Builder.CreateAnd(L, R, "andtmp" );
+      VI = SCParser::Builder.CreateAnd(L, R, "andtmp" );
+      break;
     case dyad_logor:
-      return SCParser::Builder.CreateOr(L, R, "ortmp" );
+      VI = SCParser::Builder.CreateOr(L, R, "ortmp" );
+      break;
     case dyad_gte:
-      return SCParser::Builder.CreateFCmpUGE(L, R, "cmptmp");
+      VI = SCParser::Builder.CreateFCmpUGE(L, R, "cmptmp");
+      break;
     case dyad_lte:
-      return SCParser::Builder.CreateFCmpULE(L, R, "cmptmp");
+      VI = SCParser::Builder.CreateFCmpULE(L, R, "cmptmp");
+      break;
     default:
       return LogErrorV("invalid binary operator");
     }
@@ -2069,45 +2087,70 @@ Value *BinaryExprAST::codegen() {
     // integer ops
     switch (Op) {
     case '+':
-      return SCParser::Builder.CreateAdd(L, R, "addtmp");
+      VI = SCParser::Builder.CreateAdd(L, R, "addtmp");
+      break;
     case '-':
-      return SCParser::Builder.CreateSub(L, R, "subtmp");
+      VI = SCParser::Builder.CreateSub(L, R, "subtmp");
+      break;
     case '*':
-      return SCParser::Builder.CreateMul(L, R, "multmp");
+      VI = SCParser::Builder.CreateMul(L, R, "multmp");
+      break;
     case '<':
-      return SCParser::Builder.CreateICmpULT(L, R, "cmptmp");
+      VI = SCParser::Builder.CreateICmpULT(L, R, "cmptmp");
+      break;
     case '>':
-      return SCParser::Builder.CreateICmpUGT(L, R, "cmptmp");
+      VI = SCParser::Builder.CreateICmpUGT(L, R, "cmptmp");
+      break;
     case '%':
-      return SCParser::Builder.CreateURem(L, R, "modtmp");
+      VI = SCParser::Builder.CreateURem(L, R, "modtmp");
+      break;
     case '/':
-      return SCParser::Builder.CreateUDiv(L, R, "divtmp", true);
+      VI = SCParser::Builder.CreateUDiv(L, R, "divtmp", true);
+      break;
     case '&':
-      return SCParser::Builder.CreateAnd(L, R, "andtmp" );
+      VI = SCParser::Builder.CreateAnd(L, R, "andtmp" );
+      break;
     case '|':
-      return SCParser::Builder.CreateOr(L, R, "ortmp" );
+      VI = SCParser::Builder.CreateOr(L, R, "ortmp" );
+      break;
     case '^':
-      return SCParser::Builder.CreateXor(L, R, "xortmp" );
+      VI = SCParser::Builder.CreateXor(L, R, "xortmp" );
+      break;
     case dyad_shfl:
-      return SCParser::Builder.CreateShl(L, R, "shfltmp", false, false );
+      VI = SCParser::Builder.CreateShl(L, R, "shfltmp", false, false );
+      break;
     case dyad_shfr:
-      return SCParser::Builder.CreateLShr(L, R, "lshfrtmp", false );
+      VI = SCParser::Builder.CreateLShr(L, R, "lshfrtmp", false );
+      break;
     case dyad_eqeq:
-      return SCParser::Builder.CreateICmpEQ(L, R, "cmpeq" );
+      VI = SCParser::Builder.CreateICmpEQ(L, R, "cmpeq" );
+      break;
     case dyad_noteq:
-      return SCParser::Builder.CreateICmpNE(L, R, "cmpne" );
+      VI = SCParser::Builder.CreateICmpNE(L, R, "cmpne" );
+      break;
     case dyad_logand:
-      return SCParser::Builder.CreateAnd(L, R, "andtmp" );
+      VI = SCParser::Builder.CreateAnd(L, R, "andtmp" );
+      break;
     case dyad_logor:
-      return SCParser::Builder.CreateOr(L, R, "ortmp" );
+      VI = SCParser::Builder.CreateOr(L, R, "ortmp" );
+      break;
     case dyad_gte:
-      return SCParser::Builder.CreateICmpUGE(L, R, "cmptmp");
+      VI = SCParser::Builder.CreateICmpUGE(L, R, "cmptmp");
+      break;
     case dyad_lte:
-      return SCParser::Builder.CreateICmpULE(L, R, "cmptmp");
+      VI = SCParser::Builder.CreateICmpULE(L, R, "cmptmp");
+      break;
     default:
       return LogErrorV("invalid binary operator");
     }
   }
+
+  if( SCParser::NameMDNode ){
+    cast<Instruction>(VI)->setMetadata("pipe.pipeName",SCParser::NameMDNode);
+    cast<Instruction>(VI)->setMetadata("pipe.pipeInstance",SCParser::InstanceMDNode);
+  }
+
+  return VI;
 
   // we don't currently support user-defined binary operators, so just return here
   // see chapter 6 in the llvm frontend tutorial
