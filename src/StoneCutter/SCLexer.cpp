@@ -204,6 +204,8 @@ int SCLexer::GetTok(){
       return tok_var;
     if( IsIntrinsic() )
       return tok_intrin;
+    if( IdentifierStr == "pipe" )
+      return tok_pipe;
 
     // the identifier
     return tok_identifier;
