@@ -125,6 +125,9 @@ public:
   /// Retrieves the set of register classes for fields that match the instruction format
   std::vector<std::string> GetRegClassInstTypes(std::string InstFormat);
 
+  /// Retrieves the instruction width field for the target instruction format and the target field
+  bool GetInstFieldWidth(std::string InstFormat, std::string Field, unsigned& Width );
+
   /// Retrieves the number of pipeline stages contained within the target function
   unsigned GetNumPipeStages(Function &F);
 
