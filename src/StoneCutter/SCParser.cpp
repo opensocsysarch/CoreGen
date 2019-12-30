@@ -1278,13 +1278,13 @@ std::unique_ptr<RegClassAST> SCParser::ParseRegClassDef(){
     ArgAttrs.push_back(VAttr);
     ArgNames.push_back(RegName);
 
-    // Look for the comma or subregister
+    // Look for the an attribute list, subregister list or comma
     GetNextToken();
 
-    if( CurTok == ',' ){
-      // eat the comma
-      GetNextToken();
-    }else if( CurTok == '[' ){
+    // --
+    // Parse a brace, if a brace exists, parse an attribute list
+    // --
+    if( CurTok == '[' ){
       // attempt to parse the attribute field
       // eat the [
       GetNextToken();
@@ -1335,14 +1335,12 @@ std::unique_ptr<RegClassAST> SCParser::ParseRegClassDef(){
           return LogErrorR("Expected ',' or closing brace ']' in register attribute list for register=" + RegName);
         }
       }
+    }
 
-      if( CurTok == ',' ){
-        // eat the comma
-        GetNextToken();
-      }else{
-        break;
-      }
-    }else if( CurTok == '(' ){
+    // --
+    // Parse an open paren, if an open paren exists, parse a subregister list
+    // --
+    if( CurTok == '(' ){
       // attempt to parse the sub registers
 
       // eat the (
@@ -1381,18 +1379,19 @@ std::unique_ptr<RegClassAST> SCParser::ParseRegClassDef(){
           return LogErrorR("Expected ',' or ')' in subregister list");
         }
       }
+    }
 
-      // handle the next comma or ending paren
-      if( CurTok == ',' ){
-        // eat the comma
-        GetNextToken();
-      }else{
-        break;
-      }
+    // --
+    // Parse a comma, if a comma exist, move to the next register
+    // --
+    if( CurTok == ',' ){
+      // eat the comma
+      GetNextToken();
     }else{
       break;
     }
-  }
+
+  } //while (CurTok == tok_var)
 
   if (CurTok != ')')
     return LogErrorR("Expected ')' in regclass prototype");
