@@ -327,8 +327,8 @@ public:
   /// RegClassASTContainer - This class represents a register class definition
   ///               which captures the name and the associated registers
   class RegClassASTContainer {
-    std::string Name;     ///< Name of the register class
-    std::string PC;       ///< Name of the PC register
+    std::string Name;               ///< Name of the register class
+    std::string PC;                 ///< Name of the PC register
     std::vector<std::string> Args;  ///< Register vector
     std::vector<VarAttrs> Attrs;    ///< Register attribute vector
     std::vector<std::tuple<std::string,std::string,VarAttrs>> SubRegs;  ///< Subregister vector
