@@ -305,14 +305,16 @@ public:
     std::string Name;   ///< Name of the instruction format
     std::vector<std::tuple<std::string,
                            SCInstField,
-                           std::string>> Fields; ///< Field vector
+                           std::string,
+                           unsigned>> Fields; ///< Field vector
 
   public:
     /// InstFormatASTContainer default constructor
     InstFormatASTContainer(const std::string &Name,
                            std::vector<std::tuple<std::string,
                                                   SCInstField,
-                                                  std::string>> Fields)
+                                                  std::string,
+                                                  unsigned>> Fields)
       : Name(Name), Fields(std::move(Fields)) {}
 
     /// InstFormatASTContainer: Retrieve the name of an instruction format

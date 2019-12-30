@@ -516,13 +516,16 @@ bool CoreGenCodegen::BuildISAChisel( CoreGenISA *ISA,
           MOutFile << "reg["
                    << IF[i]->GetFieldRegClass(IF[i]->GetFieldName(j))->GetName()
                    << "] "
-                   << IF[i]->GetFieldName(j);
+                   << IF[i]->GetFieldName(j)
+                   << ":" << IF[i]->GetFieldWidth(IF[i]->GetFieldName(j));
           break;
         case CoreGenInstFormat::CGInstCode:
-          MOutFile << "enc " << IF[i]->GetFieldName(j);
+          MOutFile << "enc " << IF[i]->GetFieldName(j)
+                   << ":" << IF[i]->GetFieldWidth(IF[i]->GetFieldName(j));
           break;
         case CoreGenInstFormat::CGInstImm:
-          MOutFile << "imm " << IF[i]->GetFieldName(j);
+          MOutFile << "imm " << IF[i]->GetFieldName(j)
+                   << ":" << IF[i]->GetFieldWidth(IF[i]->GetFieldName(j));
           break;
         default:
           Errno->SetError(CGERR_ERROR,

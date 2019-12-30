@@ -97,6 +97,35 @@ std::vector<std::string> SCPass::GetInstFields(std::string InstFormat){
   return Fields;
 }
 
+bool SCPass::GetInstFieldWidth( std::string InstFormat,
+                                std::string Field,
+                                unsigned& Width ){
+
+  for( auto &Global : TheModule->getGlobalList() ){
+    AttributeSet AttrSet = Global.getAttributes();
+    if( AttrSet.hasAttribute("fieldtype") ){
+      if( AttrSet.getAttribute("field_name").getValueAsString().str() == Field ){
+        unsigned Idx = 0;
+        while( AttrSet.hasAttribute("instformat"+std::to_string(Idx)) ){
+          if( AttrSet.getAttribute("instformat"+std::to_string(Idx)).getValueAsString().str() ==
+              InstFormat ){
+            // found the inst format at Index=Idx
+            if( AttrSet.hasAttribute("instwidth"+std::to_string(Idx)) ){
+              // found the target width
+              std::string TW = AttrSet.getAttribute("instwidth"+std::to_string(Idx)).getValueAsString().str();
+              Width = std::stoi(TW,nullptr,0);
+              return true;
+            }
+          }
+          Idx++;
+        }
+      }
+    }
+  }
+
+  return false;
+}
+
 std::vector<std::string> SCPass::GetRegClassInstFields(std::string InstFormat){
   std::vector<std::string> Fields;
 
@@ -185,8 +214,6 @@ std::vector<std::string> SCPass::GetRegClassInstTypes(std::string InstFormat){
   Fields.erase( std::unique(Fields.begin(),Fields.end()), Fields.end() );
   return Fields;
 }
-
-
 
 std::string SCPass::GetGlobalAttribute( std::string Var,
                                         std::string Attribute ){

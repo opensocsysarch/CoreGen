@@ -1158,7 +1158,8 @@ std::unique_ptr<InstFormatAST> SCParser::ParseInstFormatDef(){
 
   std::vector<std::tuple<std::string,
                            SCInstField,
-                           std::string>> Fields; // vector of field tuples
+                           std::string,
+                           unsigned>> Fields; // vector of field tuples
 
   // try to pull the next identifier
   GetNextToken();
@@ -1195,12 +1196,27 @@ std::unique_ptr<InstFormatAST> SCParser::ParseInstFormatDef(){
 
     std::string FieldName = Lex->GetIdentifierStr();
 
+    // look for the optional width specifier
+    unsigned Width = 0;
+    GetNextToken();
+    if( CurTok == ':' ){
+      // eat the colon
+      GetNextToken();
+
+      // parse a numeric value
+      if( CurTok != tok_number ){
+        return LogErrorIF("Expected numeric identifier in field width defintition: " + FName );
+      }
+
+      Width = (unsigned)(Lex->GetNumVal());
+      GetNextToken();
+    }
+
     // add it to the vector
-    Fields.push_back(std::tuple<std::string,SCInstField,std::string>
-                     (FieldName,FieldType,RegType));
+    Fields.push_back(std::tuple<std::string,SCInstField,std::string,unsigned>
+                     (FieldName,FieldType,RegType,Width));
 
     // look for commas and the end of the definition
-    GetNextToken();
     if( CurTok == ',' ){
       // eat the comma
       GetNextToken();
@@ -2225,12 +2241,13 @@ Function *PrototypeAST::codegen() {
 Value *InstFormatAST::codegen(){
   // instruction fields
   Type *VType = Type::getIntNTy(SCParser::TheContext,64); // create a generic uint64_t
-  std::vector<std::tuple<std::string,SCInstField,std::string>>::iterator it;
+  std::vector<std::tuple<std::string,SCInstField,std::string,unsigned>>::iterator it;
 
   for( it=Fields.begin(); it != Fields.end(); ++it ){
     std::string FName = std::get<0>(*it);
     SCInstField FT = std::get<1>(*it);
     std::string RClass = std::get<2>(*it);
+    unsigned Width = std::get<3>(*it);
 
     // search the GlobalNamedValues map for the target variable name
     // if its not found, then create an entry
@@ -2261,6 +2278,9 @@ Value *InstFormatAST::codegen(){
 
       // add an attribute to track the value to the instruction format
       val->addAttribute("instformat0",Name);
+
+      // add an attribute to track the value of the instruction field width
+      val->addAttribute("instwidth0",std::to_string(Width));
 
       // add attributes for the field type
       switch( FT ){
@@ -2318,6 +2338,9 @@ Value *InstFormatAST::codegen(){
 
       // insert the new instruction format
       GVit->second->addAttribute("instformat"+std::to_string(NextIF),Name);
+
+      // insert the new instruction width
+      GVit->second->addAttribute("instwidth"+std::to_string(NextIF),std::to_string(Width));
 
       // insert a new register class type if required
       if( FT == field_reg ){
