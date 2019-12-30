@@ -19,6 +19,44 @@ CoreGenCodegen::CoreGenCodegen(CoreGenNode *T,
 CoreGenCodegen::~CoreGenCodegen(){
 }
 
+std::string CoreGenCodegen::GetRegAttrStr(CoreGenReg *REG){
+  std::string AttrStr = "[";
+  std::string Comma = ",";
+
+  if( REG->IsRWAttr() ){
+    AttrStr += "RW";
+  }
+
+  if( REG->IsROAttr() ){
+    AttrStr += "RO";
+  }
+
+  if( REG->IsCSRAttr() ){
+    AttrStr = AttrStr + Comma + "CSR";
+  }
+
+  if( REG->IsAMSAttr() ){
+    AttrStr = AttrStr + Comma + "AMS";
+  }
+
+  if( REG->IsTUSAttr() ){
+    AttrStr = AttrStr + Comma + "TUS";
+  }
+
+  if( REG->IsPCAttr() ){
+    AttrStr = AttrStr + Comma + "PC";
+  }
+
+  if( REG->IsShared() ){
+    AttrStr = AttrStr + Comma + "Shared";
+  }
+
+  // closing brace
+  AttrStr += "]";
+
+  return AttrStr;
+}
+
 bool CoreGenCodegen::BuildProjMakefile(){
   if( !Proj ){
     Errno->SetError(CGERR_ERROR, "Cannot derive Chisel directory; Project is null" );
@@ -555,12 +593,15 @@ bool CoreGenCodegen::BuildISAChisel( CoreGenISA *ISA,
 
       CoreGenReg *REG = static_cast<CoreGenReg *>(RC[i]->GetReg(j));
 
-      std::string REGNAME;
+      // build the register attribute list
+      std::string REGNAME = REG->GetName() + GetRegAttrStr(REG);
+#if 0
       if( REG->IsPCAttr() ){
         REGNAME = REG->GetName() + "[PC]";
       }else{
         REGNAME = REG->GetName();
       }
+#endif
 
       if( REG->GetNumSubRegs() > 0 ){
         // write out the register with the subregs

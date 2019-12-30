@@ -96,6 +96,9 @@ private:
   /// Init the internal StoneCutter intrinsics
   void InitIntrinsics();
 
+  /// Retrieve a StoneCutter syntax string of register attributes
+  std::string GetRegAttrStr(CoreGenReg *Reg);
+
 public:
   /// Default constructor
   CoreGenCodegen(CoreGenNode *T, CoreGenProj *P, CoreGenErrno *E);
