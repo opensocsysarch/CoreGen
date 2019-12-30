@@ -1331,6 +1331,8 @@ std::unique_ptr<RegClassAST> SCParser::ParseRegClassDef(){
           // eat the closing brace
           GetNextToken();
           break;
+        }else{
+          return LogErrorR("Expected ',' or closing brace ']' in register attribute list for register=" + RegName);
         }
       }
 
