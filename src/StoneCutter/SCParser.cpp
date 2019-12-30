@@ -1266,6 +1266,14 @@ std::unique_ptr<RegClassAST> SCParser::ParseRegClassDef(){
 
     std::string RegName = Lex->GetIdentifierStr();
 
+    // init the register attrs
+    VAttr.defReadOnly   = false;
+    VAttr.defReadWrite  = true;  // default to true
+    VAttr.defCSR        = false;
+    VAttr.defAMS        = false;
+    VAttr.defTUS        = false;
+    VAttr.defShared     = false;
+
     // add them to our vector
     ArgAttrs.push_back(VAttr);
     ArgNames.push_back(RegName);
@@ -1281,24 +1289,49 @@ std::unique_ptr<RegClassAST> SCParser::ParseRegClassDef(){
       // eat the [
       GetNextToken();
 
+      unsigned L_VAttr = ArgAttrs.size()-1;
+
       if( CurTok != tok_identifier ){
         return LogErrorR("Expected register attribute in [..]");
       }
 
-      // examine the attribute
-      if( Lex->GetIdentifierStr() == "PC" ){
-        PCName = RegName;
-      }
+      while( CurTok == tok_identifier ){
+        std::string LA = Lex->GetIdentifierStr();
+        if( LA == "PC" ){
+          PCName = RegName;
+        }else if( LA == "RO" ){
+          ArgAttrs[L_VAttr].defReadOnly = true;
+          ArgAttrs[L_VAttr].defReadWrite = false;
+        }else if( LA == "RW" ){
+          ArgAttrs[L_VAttr].defReadWrite = true;
+          ArgAttrs[L_VAttr].defReadOnly = false;
+        }else if( LA == "CSR" ){
+          ArgAttrs[L_VAttr].defCSR = true;
+        }else if( LA == "AMS" ){
+          ArgAttrs[L_VAttr].defAMS = true;
+        }else if( LA == "TUS" ){
+          ArgAttrs[L_VAttr].defTUS = true;
+        }else if( (LA == "Shared") || (LA == "SHARED") ){
+          ArgAttrs[L_VAttr].defShared = true;
+        }else{
+          return LogErrorR("Unknown register attribute type: " + LA);
+        }
 
-      // eat the identifier
-      GetNextToken();
+        if( ArgAttrs[L_VAttr].defReadOnly && ArgAttrs[L_VAttr].defReadWrite ){
+          return LogErrorR("Cannot set Read-Only and Read-Write attributes on register=" + RegName );
+        }
 
-      if( CurTok == ']' ){
-        // eat the )
+        // eat the identifier
         GetNextToken();
-      }else{
-        // flag an error
-        return LogErrorR("Expected ']' in register attribute list");
+
+        if( CurTok == ',' ){
+          // eat the comma
+          GetNextToken();
+        }else if( CurTok == ']' ){
+          // eat the closing brace
+          GetNextToken();
+          break;
+        }
       }
 
       if( CurTok == ',' ){
@@ -1307,7 +1340,6 @@ std::unique_ptr<RegClassAST> SCParser::ParseRegClassDef(){
       }else{
         break;
       }
-
     }else if( CurTok == '(' ){
       // attempt to parse the sub registers
 
@@ -2389,6 +2421,24 @@ Value *RegClassAST::codegen(){
 
       if( PC == Args[i] ){
         val->addAttribute("pc", "true");
+      }
+      if( Attrs[i].defReadOnly ){
+        val->addAttribute("readOnly", "true");
+      }
+      if( Attrs[i].defReadWrite ){
+        val->addAttribute("readWrite", "true");
+      }
+      if( Attrs[i].defCSR ){
+        val->addAttribute("csr", "true");
+      }
+      if( Attrs[i].defAMS ){
+        val->addAttribute("ams", "true");
+      }
+      if( Attrs[i].defTUS ){
+        val->addAttribute("tus", "true");
+      }
+      if( Attrs[i].defShared ){
+        val->addAttribute("shared", "true");
       }
     }else{
       // this is a register class

@@ -46,6 +46,12 @@ typedef struct{
   bool defVector;   ///< VarAttrs: is the variable a vector (elems > 1)
   bool defFloat;    ///< VarAttrs: is the variable a floating point variable
   bool defRegClass; ///< VarAttrs: does the variable represent a register class
+  bool defReadOnly; ///< VarAttrs: read-only register
+  bool defReadWrite;///< VarAttrs: read-write register
+  bool defCSR;      ///< VarAttrs: CSR register
+  bool defAMS;      ///< VarAttrs: AMS register
+  bool defTUS;      ///< VarAttrs: Thread unit shared register
+  bool defShared;   ///< VarAttrs: Shared register
 }VarAttrs;
 
 /** VarAttrEntry struct: contains a single element for the VarAttrEntryTable */
