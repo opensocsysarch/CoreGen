@@ -211,8 +211,6 @@ CoreGenInstFormat::CGInstField CoreGenInstFormat::GetFieldType( std::string Name
 }
 
 bool CoreGenInstFormat::SetNullField( std::string Name ){
-  std::vector<std::tuple<std::string,unsigned,unsigned,CGInstField,bool>>::iterator it;
-
   // nullify the field
   if( !this->SetFieldType(Name,CoreGenInstFormat::CGInstUnk) )
     return false;
