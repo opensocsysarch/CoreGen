@@ -38,6 +38,9 @@ private:
   /// Checks the address collisions across scratchpads
   bool TestAddressCollisions();
 
+  /// Checks the scratchpad port continuity
+  bool TestPortConfigs();
+
 public:
   /// Default constructor
   SpadSafetyPass(std::ostream *O, CoreGenDAG *D, CoreGenErrno *E);
