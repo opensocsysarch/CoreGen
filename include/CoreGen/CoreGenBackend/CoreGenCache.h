@@ -31,6 +31,7 @@ class CoreGenCache : public CoreGenNode{
 private:
   unsigned Sets;        ///< CoreGenCache: Number of sets
   unsigned Ways;        ///< CoreGenCache: Number of ways
+  unsigned LineSize;    ///< CoreGenCache: Size of each cache line in bytes
   bool SubLevel;        ///< CoreGenCache: Is this a sublevel?
   bool ParentLevel;     ///< CoreGenCache: Is this a parent level?
   CoreGenCache *Child;  ///< CoreGenCache: Child cache level
@@ -50,6 +51,12 @@ public:
 
   /// Retrieve the number of ways
   unsigned GetWays() { return Ways; }
+
+  /// Retrieve the size of each cache line
+  unsigned GetLineSize() { return LineSize; }
+
+  /// Sets the size of each cache line in bytes
+  bool SetLineSize(unsigned S) { LineSize = S; return true; }
 
   /// Set the number of sets
   bool SetSets( unsigned S ) { Sets = S; return true; }

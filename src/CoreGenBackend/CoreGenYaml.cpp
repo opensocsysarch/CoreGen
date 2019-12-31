@@ -446,6 +446,8 @@ void CoreGenYaml::PrintCache( YAML::Emitter *out,
   *out << YAML::Value << Cache->GetSets();
   *out << YAML::Key << "Ways";
   *out << YAML::Value << Cache->GetWays();
+  *out << YAML::Key << "LineSize";
+  *out << YAML::Value << Cache->GetLineSize();
   if( Cache->IsParentLevel() &&
       (Cache->GetSubCache() != nullptr) ){
     *out << YAML::Key << "SubLevel";
@@ -2587,6 +2589,11 @@ bool CoreGenYaml::ReadCacheYaml(const YAML::Node& CacheNodes,
 
     int Sets = Node["Sets"].as<int>();
     int Ways = Node["Ways"].as<int>();
+    unsigned LineSize = 64;
+
+    if( CheckValidNode(Node,"LineSize") ){
+      LineSize = Node["LineSize"].as<unsigned>();
+    }
 
     ASP += "cache(" + ASPName + ").\n";
     ASP += "cacheSets(" + ASPName + ", " + std::to_string(Sets) + ").\n";
