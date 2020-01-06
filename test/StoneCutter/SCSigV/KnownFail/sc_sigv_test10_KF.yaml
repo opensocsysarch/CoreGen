@@ -1,0 +1,1002 @@
+SignalTop:
+  - Signal: ALUTMP0_64_READ
+  - Signal: ALUTMP0_64_WRITE
+  - Signal: ALUTMP1_64_READ
+  - Signal: ALUTMP1_64_WRITE
+  - Signal: ALUTMP2_64_WRITE
+  - Signal: ALU_ADD
+  - Signal: ALU_AND
+  - Signal: ALU_DIV
+  - Signal: ALU_MUL
+  - Signal: ALU_OR
+  - Signal: ALU_SLL
+  - Signal: ALU_SRL
+  - Signal: ALU_SUB
+  - Signal: ALU_XOR
+  - Signal: MEM_READ
+  - Signal: MEM_WRITE
+  - Signal: MUX
+  - Signal: MUX_EQ
+  - Signal: MUX_GTU
+  - Signal: MUX_LTU
+  - Signal: PC_BRJMP
+  - Signal: PC_INCR
+  - Signal: imm_READ
+  - Signal: pc_CTRL_READ
+  - Signal: pc_CTRL_WRITE
+  - Signal: ra_GPR_READ
+  - Signal: rb_GPR_READ
+  - Signal: rt_GPR_READ
+  - Signal: rt_GPR_WRITE
+  - Signal: SIGUNK
+  - Signal: SIGINSTF
+  - Signal: ALU_SLT
+  - Signal: ALU_SLTU
+  - Signal: ALU_COPY
+  - Signal: ALU_REM
+  - Signal: ALU_FADD
+  - Signal: ALU_FSUB
+  - Signal: ALU_FMUL
+  - Signal: ALU_FDIV
+  - Signal: ALU_FREM
+  - Signal: PC_JALR
+  - Signal: BR_N
+  - Signal: BR_NE
+  - Signal: BR_EQ
+  - Signal: BR_GT
+  - Signal: BR_GTU
+  - Signal: BR_GE
+  - Signal: BR_GEU
+  - Signal: BR_LT
+  - Signal: BR_LE
+  - Signal: BR_LEU
+  - Signal: BR_J
+  - Signal: BR_JR
+  - Signal: MUX_NE
+  - Signal: MUX_EQ
+  - Signal: MUX_GT
+  - Signal: MUX_GTU
+  - Signal: MUX_GE
+  - Signal: MUX_GEU
+  - Signal: MUX_LT
+  - Signal: MUX_LTU
+  - Signal: MUX_LE
+  - Signal: MUX_LEU
+  - Signal: MUX
+  - Signal: FENCE
+Instructions:
+  - Inst: copy
+    Signals:
+      - Signal: ra_GPR_READ
+        Type: REG_READ
+        Width: 0
+      - Signal: rt_GPR_WRITE
+        Type: REG_WRITE
+        Width: 0
+      - Signal: PC_INCR
+        Type: PC_INCR
+        Width: 0
+  - Inst: add
+    Signals:
+      - Signal: ra_GPR_READ
+        Type: REG_READ
+        Width: 0
+      - Signal: rb_GPR_READ
+        Type: REG_READ
+        Width: 0
+      - Signal: ALU_ADD
+        Type: ALU_ADD
+        Width: 0
+      - Signal: rt_GPR_WRITE
+        Type: REG_WRITE
+        Width: 0
+      - Signal: PC_INCR
+        Type: PC_INCR
+        Width: 0
+  - Inst: sub
+    Signals:
+      - Signal: ra_GPR_READ
+        Type: REG_READ
+        Width: 0
+      - Signal: rb_GPR_READ
+        Type: REG_READ
+        Width: 0
+      - Signal: ALU_SUB
+        Type: ALU_SUB
+        Width: 0
+      - Signal: rt_GPR_WRITE
+        Type: REG_WRITE
+        Width: 0
+      - Signal: PC_INCR
+        Type: PC_INCR
+        Width: 0
+  - Inst: mul
+    Signals:
+      - Signal: ra_GPR_READ
+        Type: REG_READ
+        Width: 0
+      - Signal: rb_GPR_READ
+        Type: REG_READ
+        Width: 0
+      - Signal: ALU_MUL
+        Type: ALU_MUL
+        Width: 0
+      - Signal: rt_GPR_WRITE
+        Type: REG_WRITE
+        Width: 0
+      - Signal: PC_INCR
+        Type: PC_INCR
+        Width: 0
+  - Inst: div
+    Signals:
+      - Signal: ra_GPR_READ
+        Type: REG_READ
+        Width: 0
+      - Signal: rb_GPR_READ
+        Type: REG_READ
+        Width: 0
+      - Signal: ALU_DIV
+        Type: ALU_DIV
+        Width: 0
+      - Signal: rt_GPR_WRITE
+        Type: REG_WRITE
+        Width: 0
+      - Signal: PC_INCR
+        Type: PC_INCR
+        Width: 0
+  - Inst: divu
+    Signals:
+      - Signal: ra_GPR_READ
+        Type: REG_READ
+        Width: 0
+      - Signal: rb_GPR_READ
+        Type: REG_READ
+        Width: 0
+      - Signal: ALU_DIV
+        Type: ALU_DIV
+        Width: 0
+      - Signal: rt_GPR_WRITE
+        Type: REG_WRITE
+        Width: 0
+      - Signal: PC_INCR
+        Type: PC_INCR
+        Width: 0
+  - Inst: sll
+    Signals:
+      - Signal: ra_GPR_READ
+        Type: REG_READ
+        Width: 0
+      - Signal: rb_GPR_READ
+        Type: REG_READ
+        Width: 0
+      - Signal: ALU_SLL
+        Type: ALU_SLL
+        Width: 0
+      - Signal: rt_GPR_WRITE
+        Type: REG_WRITE
+        Width: 0
+      - Signal: PC_INCR
+        Type: PC_INCR
+        Width: 0
+  - Inst: srl
+    Signals:
+      - Signal: ra_GPR_READ
+        Type: REG_READ
+        Width: 0
+      - Signal: rb_GPR_READ
+        Type: REG_READ
+        Width: 0
+      - Signal: ALU_SRL
+        Type: ALU_SRL
+        Width: 0
+      - Signal: rt_GPR_WRITE
+        Type: REG_WRITE
+        Width: 0
+      - Signal: PC_INCR
+        Type: PC_INCR
+        Width: 0
+  - Inst: sra
+    Signals:
+      - Signal: ra_GPR_READ
+        Type: REG_READ
+        Width: 0
+      - Signal: rb_GPR_READ
+        Type: REG_READ
+        Width: 0
+      - Signal: ALU_SRL
+        Type: ALU_SRL
+        Width: 0
+      - Signal: rt_GPR_WRITE
+        Type: REG_WRITE
+        Width: 0
+      - Signal: PC_INCR
+        Type: PC_INCR
+        Width: 0
+  - Inst: and
+    Signals:
+      - Signal: ra_GPR_READ
+        Type: REG_READ
+        Width: 0
+      - Signal: rb_GPR_READ
+        Type: REG_READ
+        Width: 0
+      - Signal: ALU_AND
+        Type: ALU_AND
+        Width: 0
+      - Signal: rt_GPR_WRITE
+        Type: REG_WRITE
+        Width: 0
+      - Signal: PC_INCR
+        Type: PC_INCR
+        Width: 0
+  - Inst: or
+    Signals:
+      - Signal: ra_GPR_READ
+        Type: REG_READ
+        Width: 0
+      - Signal: rb_GPR_READ
+        Type: REG_READ
+        Width: 0
+      - Signal: ALU_OR
+        Type: ALU_OR
+        Width: 0
+      - Signal: rt_GPR_WRITE
+        Type: REG_WRITE
+        Width: 0
+      - Signal: PC_INCR
+        Type: PC_INCR
+        Width: 0
+  - Inst: nand
+    Signals:
+      - Signal: ra_GPR_READ
+        Type: REG_READ
+        Width: 0
+      - Signal: rb_GPR_READ
+        Type: REG_READ
+        Width: 0
+      - Signal: ALU_AND
+        Type: ALU_AND
+        Width: 0
+      - Signal: rt_GPR_WRITE
+        Type: REG_WRITE
+        Width: 0
+      - Signal: rt_GPR_READ
+        Type: REG_READ
+        Width: 0
+      - Signal: PC_INCR
+        Type: PC_INCR
+        Width: 0
+  - Inst: nor
+    Signals:
+      - Signal: ra_GPR_READ
+        Type: REG_READ
+        Width: 0
+      - Signal: rb_GPR_READ
+        Type: REG_READ
+        Width: 0
+      - Signal: ALU_OR
+        Type: ALU_OR
+        Width: 0
+      - Signal: rt_GPR_WRITE
+        Type: REG_WRITE
+        Width: 0
+      - Signal: rt_GPR_READ
+        Type: REG_READ
+        Width: 0
+      - Signal: PC_INCR
+        Type: PC_INCR
+        Width: 0
+  - Inst: xor
+    Signals:
+      - Signal: ra_GPR_READ
+        Type: REG_READ
+        Width: 0
+      - Signal: rb_GPR_READ
+        Type: REG_READ
+        Width: 0
+      - Signal: ALU_XOR
+        Type: ALU_XOR
+        Width: 0
+      - Signal: rt_GPR_WRITE
+        Type: REG_WRITE
+        Width: 0
+      - Signal: PC_INCR
+        Type: PC_INCR
+        Width: 0
+  - Inst: cmp.ne
+    Signals:
+      - Signal: ra_GPR_READ
+        Type: REG_READ
+        Width: 0
+      - Signal: rb_GPR_READ
+        Type: REG_READ
+        Width: 0
+      - Signal: MUX_EQ
+        Type: MUX_EQ
+        Width: 0
+      - Signal: MUX
+        Type: MUX
+        Width: 0
+      - Signal: rt_GPR_WRITE
+        Type: REG_WRITE
+        Width: 0
+      - Signal: PC_INCR
+        Type: PC_INCR
+        Width: 0
+  - Inst: cmp.eq
+    Signals:
+      - Signal: ra_GPR_READ
+        Type: REG_READ
+        Width: 0
+      - Signal: rb_GPR_READ
+        Type: REG_READ
+        Width: 0
+      - Signal: MUX_EQ
+        Type: MUX_EQ
+        Width: 0
+      - Signal: MUX
+        Type: MUX
+        Width: 0
+      - Signal: rt_GPR_WRITE
+        Type: REG_WRITE
+        Width: 0
+      - Signal: PC_INCR
+        Type: PC_INCR
+        Width: 0
+  - Inst: cmp.gt
+    Signals:
+      - Signal: ra_GPR_READ
+        Type: REG_READ
+        Width: 0
+      - Signal: rb_GPR_READ
+        Type: REG_READ
+        Width: 0
+      - Signal: MUX_GTU
+        Type: MUX_GTU
+        Width: 0
+      - Signal: MUX
+        Type: MUX
+        Width: 0
+      - Signal: rt_GPR_WRITE
+        Type: REG_WRITE
+        Width: 0
+      - Signal: PC_INCR
+        Type: PC_INCR
+        Width: 0
+  - Inst: cmp.lt
+    Signals:
+      - Signal: ra_GPR_READ
+        Type: REG_READ
+        Width: 0
+      - Signal: rb_GPR_READ
+        Type: REG_READ
+        Width: 0
+      - Signal: MUX_LTU
+        Type: MUX_LTU
+        Width: 0
+      - Signal: MUX
+        Type: MUX
+        Width: 0
+      - Signal: rt_GPR_WRITE
+        Type: REG_WRITE
+        Width: 0
+      - Signal: PC_INCR
+        Type: PC_INCR
+        Width: 0
+  - Inst: cmp.gte
+    Signals:
+      - Signal: BR_J
+        Type: BR_J
+        Width: 0
+        DistanceTrue: -1
+      - Signal: ra_GPR_READ
+        Type: REG_READ
+        Width: 0
+      - Signal: rb_GPR_READ
+        Type: REG_READ
+        Width: 0
+      - Signal: MUX_LTU
+        Type: MUX_LTU
+        Width: 0
+      - Signal: MUX
+        Type: MUX
+        Width: 0
+      - Signal: rt_GPR_WRITE
+        Type: REG_WRITE
+        Width: 0
+      - Signal: PC_INCR
+        Type: PC_INCR
+        Width: 0
+  - Inst: cmp.lte
+    Signals:
+      - Signal: ra_GPR_READ
+        Type: REG_READ
+        Width: 0
+      - Signal: rb_GPR_READ
+        Type: REG_READ
+        Width: 0
+      - Signal: MUX_GTU
+        Type: MUX_GTU
+        Width: 0
+      - Signal: MUX
+        Type: MUX
+        Width: 0
+      - Signal: rt_GPR_WRITE
+        Type: REG_WRITE
+        Width: 0
+      - Signal: PC_INCR
+        Type: PC_INCR
+        Width: 0
+  - Inst: lb
+    Signals:
+      - Signal: ra_GPR_READ
+        Type: REG_READ
+        Width: 0
+      - Signal: imm_READ
+        Type: REG_READ
+        Width: 0
+      - Signal: ALU_ADD
+        Type: ALU_ADD
+        Width: 0
+      - Signal: rt_GPR_WRITE
+        Type: REG_WRITE
+        Width: 0
+      - Signal: rt_GPR_READ
+        Type: REG_READ
+        Width: 0
+      - Signal: MEM_READ
+        Type: MEM_READ
+        Width: 8
+      - Signal: PC_INCR
+        Type: PC_INCR
+        Width: 0
+  - Inst: lh
+    Signals:
+      - Signal: ra_GPR_READ
+        Type: REG_READ
+        Width: 0
+      - Signal: imm_READ
+        Type: REG_READ
+        Width: 0
+      - Signal: ALU_ADD
+        Type: ALU_ADD
+        Width: 0
+      - Signal: rt_GPR_WRITE
+        Type: REG_WRITE
+        Width: 0
+      - Signal: rt_GPR_READ
+        Type: REG_READ
+        Width: 0
+      - Signal: MEM_READ
+        Type: MEM_READ
+        Width: 16
+      - Signal: PC_INCR
+        Type: PC_INCR
+        Width: 0
+  - Inst: lw
+    Signals:
+      - Signal: ra_GPR_READ
+        Type: REG_READ
+        Width: 0
+      - Signal: imm_READ
+        Type: REG_READ
+        Width: 0
+      - Signal: ALU_ADD
+        Type: ALU_ADD
+        Width: 0
+      - Signal: rt_GPR_WRITE
+        Type: REG_WRITE
+        Width: 0
+      - Signal: rt_GPR_READ
+        Type: REG_READ
+        Width: 0
+      - Signal: MEM_READ
+        Type: MEM_READ
+        Width: 32
+      - Signal: PC_INCR
+        Type: PC_INCR
+        Width: 0
+  - Inst: ld
+    Signals:
+      - Signal: ra_GPR_READ
+        Type: REG_READ
+        Width: 0
+      - Signal: imm_READ
+        Type: REG_READ
+        Width: 0
+      - Signal: ALU_ADD
+        Type: ALU_ADD
+        Width: 0
+      - Signal: rt_GPR_WRITE
+        Type: REG_WRITE
+        Width: 0
+      - Signal: rt_GPR_READ
+        Type: REG_READ
+        Width: 0
+      - Signal: MEM_READ
+        Type: MEM_READ
+        Width: 64
+      - Signal: PC_INCR
+        Type: PC_INCR
+        Width: 0
+  - Inst: sb
+    Signals:
+      - Signal: ra_GPR_READ
+        Type: REG_READ
+        Width: 0
+      - Signal: rt_GPR_READ
+        Type: REG_READ
+        Width: 0
+      - Signal: imm_READ
+        Type: REG_READ
+        Width: 0
+      - Signal: ALU_ADD
+        Type: ALU_ADD
+        Width: 0
+      - Signal: ALUTMP0_64_WRITE
+        Type: AREG_WRITE
+        Width: 0
+      - Signal: ALUTMP0_64_READ
+        Type: AREG_READ
+        Width: 0
+      - Signal: MEM_WRITE
+        Type: MEM_WRITE
+        Width: 8
+      - Signal: ALUTMP1_64_WRITE
+        Type: AREG_WRITE
+        Width: 0
+      - Signal: PC_INCR
+        Type: PC_INCR
+        Width: 0
+  - Inst: sh
+    Signals:
+      - Signal: ra_GPR_READ
+        Type: REG_READ
+        Width: 0
+      - Signal: ALUTMP1_64_WRITE
+        Type: AREG_WRITE
+        Width: 0
+      - Signal: rt_GPR_READ
+        Type: REG_READ
+        Width: 0
+      - Signal: imm_READ
+        Type: REG_READ
+        Width: 0
+      - Signal: ALU_ADD
+        Type: ALU_ADD
+        Width: 0
+      - Signal: ALUTMP0_64_WRITE
+        Type: AREG_WRITE
+        Width: 0
+      - Signal: ALUTMP1_64_READ
+        Type: AREG_READ
+        Width: 0
+      - Signal: ALUTMP0_64_READ
+        Type: AREG_READ
+        Width: 0
+      - Signal: MEM_WRITE
+        Type: MEM_WRITE
+        Width: 16
+      - Signal: ALUTMP2_64_WRITE
+        Type: AREG_WRITE
+        Width: 0
+      - Signal: PC_INCR
+        Type: PC_INCR
+        Width: 0
+  - Inst: sw
+    Signals:
+      - Signal: ra_GPR_READ
+        Type: REG_READ
+        Width: 0
+      - Signal: ALUTMP1_64_WRITE
+        Type: AREG_WRITE
+        Width: 0
+      - Signal: rt_GPR_READ
+        Type: REG_READ
+        Width: 0
+      - Signal: imm_READ
+        Type: REG_READ
+        Width: 0
+      - Signal: ALU_ADD
+        Type: ALU_ADD
+        Width: 0
+      - Signal: ALUTMP0_64_WRITE
+        Type: AREG_WRITE
+        Width: 0
+      - Signal: ALUTMP1_64_READ
+        Type: AREG_READ
+        Width: 0
+      - Signal: ALUTMP0_64_READ
+        Type: AREG_READ
+        Width: 0
+      - Signal: MEM_WRITE
+        Type: MEM_WRITE
+        Width: 32
+      - Signal: ALUTMP2_64_WRITE
+        Type: AREG_WRITE
+        Width: 0
+      - Signal: PC_INCR
+        Type: PC_INCR
+        Width: 0
+  - Inst: sd
+    Signals:
+      - Signal: ra_GPR_READ
+        Type: REG_READ
+        Width: 0
+      - Signal: rt_GPR_READ
+        Type: REG_READ
+        Width: 0
+      - Signal: imm_READ
+        Type: REG_READ
+        Width: 0
+      - Signal: ALU_ADD
+        Type: ALU_ADD
+        Width: 0
+      - Signal: ALUTMP0_64_WRITE
+        Type: AREG_WRITE
+        Width: 0
+      - Signal: ALUTMP0_64_READ
+        Type: AREG_READ
+        Width: 0
+      - Signal: MEM_WRITE
+        Type: MEM_WRITE
+        Width: 64
+      - Signal: ALUTMP1_64_WRITE
+        Type: AREG_WRITE
+        Width: 0
+      - Signal: PC_INCR
+        Type: PC_INCR
+        Width: 0
+  - Inst: lbu
+    Signals:
+      - Signal: ra_GPR_READ
+        Type: REG_READ
+        Width: 0
+      - Signal: imm_READ
+        Type: REG_READ
+        Width: 0
+      - Signal: ALU_ADD
+        Type: ALU_ADD
+        Width: 0
+      - Signal: rt_GPR_WRITE
+        Type: REG_WRITE
+        Width: 0
+      - Signal: rt_GPR_READ
+        Type: REG_READ
+        Width: 0
+      - Signal: MEM_READ
+        Type: MEM_READ
+        Width: 8
+      - Signal: PC_INCR
+        Type: PC_INCR
+        Width: 0
+  - Inst: lhu
+    Signals:
+      - Signal: ra_GPR_READ
+        Type: REG_READ
+        Width: 0
+      - Signal: imm_READ
+        Type: REG_READ
+        Width: 0
+      - Signal: ALU_ADD
+        Type: ALU_ADD
+        Width: 0
+      - Signal: rt_GPR_WRITE
+        Type: REG_WRITE
+        Width: 0
+      - Signal: rt_GPR_READ
+        Type: REG_READ
+        Width: 0
+      - Signal: MEM_READ
+        Type: MEM_READ
+        Width: 16
+      - Signal: PC_INCR
+        Type: PC_INCR
+        Width: 0
+  - Inst: lwu
+    Signals:
+      - Signal: ra_GPR_READ
+        Type: REG_READ
+        Width: 0
+      - Signal: imm_READ
+        Type: REG_READ
+        Width: 0
+      - Signal: ALU_ADD
+        Type: ALU_ADD
+        Width: 0
+      - Signal: rt_GPR_WRITE
+        Type: REG_WRITE
+        Width: 0
+      - Signal: rt_GPR_READ
+        Type: REG_READ
+        Width: 0
+      - Signal: MEM_READ
+        Type: MEM_READ
+        Width: 32
+      - Signal: PC_INCR
+        Type: PC_INCR
+        Width: 0
+  - Inst: sbu
+    Signals:
+      - Signal: ra_GPR_READ
+        Type: REG_READ
+        Width: 0
+      - Signal: ALUTMP1_64_WRITE
+        Type: AREG_WRITE
+        Width: 0
+      - Signal: rt_GPR_READ
+        Type: REG_READ
+        Width: 0
+      - Signal: imm_READ
+        Type: REG_READ
+        Width: 0
+      - Signal: ALU_ADD
+        Type: ALU_ADD
+        Width: 0
+      - Signal: ALUTMP0_64_WRITE
+        Type: AREG_WRITE
+        Width: 0
+      - Signal: ALUTMP1_64_READ
+        Type: AREG_READ
+        Width: 0
+      - Signal: ALUTMP0_64_READ
+        Type: AREG_READ
+        Width: 0
+      - Signal: MEM_WRITE
+        Type: MEM_WRITE
+        Width: 8
+      - Signal: ALUTMP2_64_WRITE
+        Type: AREG_WRITE
+        Width: 0
+      - Signal: PC_INCR
+        Type: PC_INCR
+        Width: 0
+  - Inst: shu
+    Signals:
+      - Signal: ra_GPR_READ
+        Type: REG_READ
+        Width: 0
+      - Signal: ALUTMP1_64_WRITE
+        Type: AREG_WRITE
+        Width: 0
+      - Signal: rt_GPR_READ
+        Type: REG_READ
+        Width: 0
+      - Signal: imm_READ
+        Type: REG_READ
+        Width: 0
+      - Signal: ALU_ADD
+        Type: ALU_ADD
+        Width: 0
+      - Signal: ALUTMP0_64_WRITE
+        Type: AREG_WRITE
+        Width: 0
+      - Signal: ALUTMP1_64_READ
+        Type: AREG_READ
+        Width: 0
+      - Signal: ALUTMP0_64_READ
+        Type: AREG_READ
+        Width: 0
+      - Signal: MEM_WRITE
+        Type: MEM_WRITE
+        Width: 16
+      - Signal: ALUTMP2_64_WRITE
+        Type: AREG_WRITE
+        Width: 0
+      - Signal: PC_INCR
+        Type: PC_INCR
+        Width: 0
+  - Inst: swu
+    Signals:
+      - Signal: ra_GPR_READ
+        Type: REG_READ
+        Width: 0
+      - Signal: ALUTMP1_64_WRITE
+        Type: AREG_WRITE
+        Width: 0
+      - Signal: rt_GPR_READ
+        Type: REG_READ
+        Width: 0
+      - Signal: imm_READ
+        Type: REG_READ
+        Width: 0
+      - Signal: ALU_ADD
+        Type: ALU_ADD
+        Width: 0
+      - Signal: ALUTMP0_64_WRITE
+        Type: AREG_WRITE
+        Width: 0
+      - Signal: ALUTMP1_64_READ
+        Type: AREG_READ
+        Width: 0
+      - Signal: ALUTMP0_64_READ
+        Type: AREG_READ
+        Width: 0
+      - Signal: MEM_WRITE
+        Type: MEM_WRITE
+        Width: 32
+      - Signal: ALUTMP2_64_WRITE
+        Type: AREG_WRITE
+        Width: 0
+      - Signal: PC_INCR
+        Type: PC_INCR
+        Width: 0
+  - Inst: not
+    Signals:
+      - Signal: ra_GPR_READ
+        Type: REG_READ
+        Width: 0
+      - Signal: rt_GPR_WRITE
+        Type: REG_WRITE
+        Width: 0
+      - Signal: PC_INCR
+        Type: PC_INCR
+        Width: 0
+  - Inst: bra
+    Signals:
+      - Signal: rt_GPR_READ
+        Type: REG_READ
+        Width: 0
+      - Signal: pc_CTRL_WRITE
+        Type: REG_WRITE
+        Width: 0
+      - Signal: PC_BRJMP
+        Type: PC_BRJMP
+        Width: 0
+  - Inst: br
+    Signals:
+      - Signal: pc_CTRL_READ
+        Type: REG_READ
+        Width: 0
+      - Signal: rt_GPR_READ
+        Type: REG_READ
+        Width: 0
+      - Signal: ALU_ADD
+        Type: ALU_ADD
+        Width: 0
+      - Signal: pc_CTRL_WRITE
+        Type: REG_WRITE
+        Width: 0
+      - Signal: PC_BRJMP
+        Type: PC_BRJMP
+        Width: 0
+  - Inst: cadd
+    Signals:
+      - Signal: ra_GPR_READ
+        Type: REG_READ
+        Width: 0
+      - Signal: rb_GPR_READ
+        Type: REG_READ
+        Width: 0
+      - Signal: ALU_ADD
+        Type: ALU_ADD
+        Width: 0
+      - Signal: rt_GPR_WRITE
+        Type: REG_WRITE
+        Width: 0
+      - Signal: PC_INCR
+        Type: PC_INCR
+        Width: 0
+  - Inst: brac
+    Signals:
+      - Signal: ra_GPR_READ
+        Type: REG_READ
+        Width: 0
+      - Signal: rb_GPR_READ
+        Type: REG_READ
+        Width: 0
+      - Signal: MUX_EQ
+        Type: MUX_EQ
+        Width: 0
+      - Signal: rt_GPR_READ
+        Type: REG_READ
+        Width: 0
+      - Signal: pc_CTRL_READ
+        Type: REG_READ
+        Width: 0
+      - Signal: ALU_ADD
+        Type: ALU_ADD
+        Width: 0
+      - Signal: pc_CTRL_WRITE
+        Type: REG_WRITE
+        Width: 0
+      - Signal: MUX
+        Type: MUX
+        Width: 0
+      - Signal: PC_BRJMP
+        Type: PC_BRJMP
+        Width: 0
+  - Inst: brc
+    Signals:
+      - Signal: ra_GPR_READ
+        Type: REG_READ
+        Width: 0
+      - Signal: rb_GPR_READ
+        Type: REG_READ
+        Width: 0
+      - Signal: MUX_EQ
+        Type: MUX_EQ
+        Width: 0
+      - Signal: pc_CTRL_READ
+        Type: REG_READ
+        Width: 0
+      - Signal: rt_GPR_READ
+        Type: REG_READ
+        Width: 0
+      - Signal: ALU_ADD
+        Type: ALU_ADD
+        Width: 0
+      - Signal: pc_CTRL_WRITE
+        Type: REG_WRITE
+        Width: 0
+      - Signal: MUX
+        Type: MUX
+        Width: 0
+      - Signal: PC_BRJMP
+        Type: PC_BRJMP
+        Width: 0
+  - Inst: ladd
+    Signals:
+      - Signal: ra_GPR_READ
+        Type: REG_READ
+        Width: 0
+      - Signal: rb_GPR_READ
+        Type: REG_READ
+        Width: 0
+      - Signal: ALU_ADD
+        Type: ALU_ADD
+        Width: 0
+      - Signal: rt_GPR_WRITE
+        Type: REG_WRITE
+        Width: 0
+      - Signal: PC_INCR
+        Type: PC_INCR
+        Width: 0
+Temps:
+  - Temp: ALUTMP0_64
+    Width: 64
+    Mappings:
+      - Map: sb
+        IRName: addtmp
+      - Map: sh
+        IRName: addtmp
+      - Map: sw
+        IRName: addtmp
+      - Map: sd
+        IRName: addtmp
+      - Map: sbu
+        IRName: addtmp
+      - Map: shu
+        IRName: addtmp
+      - Map: swu
+        IRName: addtmp
+  - Temp: ALUTMP1_64
+    Width: 64
+    Mappings:
+      - Map: sb
+        IRName: calltmp
+      - Map: sh
+        IRName: calltmp
+      - Map: sw
+        IRName: calltmp
+      - Map: sd
+        IRName: calltmp
+      - Map: sbu
+        IRName: calltmp
+      - Map: shu
+        IRName: calltmp
+      - Map: swu
+        IRName: calltmp
+  - Temp: ALUTMP2_64
+    Width: 64
+    Mappings:
+      - Map: sh
+        IRName: calltmp1
+      - Map: sw
+        IRName: calltmp1
+      - Map: sbu
+        IRName: calltmp1
+      - Map: shu
+        IRName: calltmp1
+      - Map: swu
+        IRName: calltmp1

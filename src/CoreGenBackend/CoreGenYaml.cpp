@@ -2612,6 +2612,7 @@ bool CoreGenYaml::ReadCacheYaml(const YAML::Node& CacheNodes,
     if( C == nullptr ){
       return false;
     }
+    C->SetLineSize(LineSize);
 
     // get the sublevel
     if( SubLevel.length() > 0 ){
