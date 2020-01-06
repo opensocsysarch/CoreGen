@@ -44,11 +44,14 @@ public:
   SMPass(std::string N,
          std::vector<SCSig *> SigVect,
          std::vector<SCTmp *> TempVect,
-         std::Vector<SigType> TopVect)
+         std::vector<SigType> TopVect)
     : Name(N), Signals(SigVect), TempRegs(TempVect), TopSigs(TopVect) {}
 
   /// Default destructor
-  virtual ~SMPass();
+  virtual ~SMPass() {}
+
+  /// Set the error string
+  void SetErrorStr(std::string E) { Error = E; }
 
   /// Retrieve the name of the pass
   std::string GetName() { return Name; }

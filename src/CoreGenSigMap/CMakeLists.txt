@@ -18,7 +18,7 @@ add_subdirectory(Passes)
 include_directories(${YAML_PATH}/include)
 include_directories(${COREGEN_INCLUDE_PATH})
 
-add_library(CoreGenSigMap ${SigMapSrcs} $<TARGET_OBJETS:SMPassObjs>)
+add_library(CoreGenSigMap ${SigMapSrcs} $<TARGET_OBJECTS:SMPassObjs>)
 target_link_libraries(CoreGenSigMap yaml-cpp)
 
 install(TARGETS CoreGenSigMap DESTINATION lib)

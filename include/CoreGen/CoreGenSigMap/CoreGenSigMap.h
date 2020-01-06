@@ -120,6 +120,9 @@ public:
 
   /// Retrieve the existing mapping for the Inst:IRName pair
   std::string GetTempMap( std::string Inst, std::string IRName );
+
+  /// Execute all the signal map passes
+  bool ExecutePasses();
 };
 
 #endif

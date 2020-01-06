@@ -12,6 +12,7 @@
 #define _COREGENSIGMAP_SMPASSES_H_
 
 // SigMap passes
+#include "CoreGen/CoreGenSigMap/Passes/SMLegalizeSigMap.h"
 
 #endif
 
