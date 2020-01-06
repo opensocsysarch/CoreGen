@@ -31,15 +31,16 @@
 // CoreGen headers
 #include "CoreGen/CoreGenSigMap/SCSig.h"
 #include "CoreGen/CoreGenSigMap/SCTmp.h"
+#include "CoreGen/CoreGenSigMap/SMPasses.h"
 
 class CoreGenSigMap{
 private:
   // private variables
-  std::vector<SCSig *> Signals;
+  std::vector<SCSig *> Signals;   ///< CoreGenSigMap: signal vector
 
-  std::vector<SCTmp *> TempRegs;
+  std::vector<SCTmp *> TempRegs;  ///< CoreGenSigMap: temporary register vector
 
-  std::vector<SigType> TopSigs;
+  std::vector<SigType> TopSigs;   ///< CoreGenSigMap: top-level signals
 
   unsigned TmpIdx;
 

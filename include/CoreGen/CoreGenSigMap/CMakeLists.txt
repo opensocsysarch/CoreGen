@@ -7,6 +7,8 @@
 # See LICENSE in the top level directory for licensing details
 #
 
+add_subdirectory(Passes)
+
 install(DIRECTORY "."
         DESTINATION "include/CoreGen/CoreGenSigMap"
         FILES_MATCHING
