@@ -1033,6 +1033,22 @@ void CoreGenYaml::WriteMCtrlYaml( YAML::Emitter *out,
     *out << YAML::Key << "Ports";
     *out << YAML::Value << MCtrls[i]->GetNumInputPorts();
 
+    switch( MCtrls[i]->GetMemOrder() ){
+    default:
+    case CGWeak:
+      *out << YAML::Key << "MemoryOrder";
+      *out << YAML::Value << "Weak";
+      break;
+    case CGTSO:
+      *out << YAML::Key << "MemoryOrder";
+      *out << YAML::Value << "TSO";
+      break;
+    case CGStrong:
+      *out << YAML::Key << "MemoryOrder";
+      *out << YAML::Value << "Strong";
+      break;
+    }
+
     if( MCtrls[i]->IsRTL() ){
       *out << YAML::Key << "RTL";
       *out << YAML::Value << MCtrls[i]->GetRTL();
@@ -3051,9 +3067,26 @@ bool CoreGenYaml::ReadMCtrlYaml(const YAML::Node& MCtrlNodes,
       Ports = Node["Ports"].as<unsigned>();
     }
 
+    std::string OrderStr;
+    CGMemOrder Order = CGWeak;
+
+    if( CheckValidNode(Node,"MemoryOrder") ){
+      OrderStr = Node["MemoryOrder"].as<std::string>();
+      if( OrderStr == "Weak" ){
+        Order = CGWeak;
+      }else if( OrderStr == "TSO" ){
+        Order = CGTSO;
+      }else if( OrderStr == "Strong" ){
+        Order = CGStrong;
+      }else{
+        Errno->SetError(CGERR_ERROR, "Invalid Memory Order Type: " + OrderStr );
+        return false;
+      }
+    }
+
     ASP += "memCtrlPorts(" + ASPName + ", " + std::to_string(Ports) + ").\n";
     ASP += "int(" + std::to_string(Ports) + ").\n";
-    CoreGenMCtrl *M = new CoreGenMCtrl(Name,Errno,Ports);
+    CoreGenMCtrl *M = new CoreGenMCtrl(Name,Errno,Ports,Order);
 
     if( Node["RTL"] ){
       M->SetRTL( Node["RTL"].as<std::string>());
