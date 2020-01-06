@@ -115,6 +115,7 @@ private:
   bool IsInteger(std::string Str);                            ///< Determines if the target string is an integer constant
   bool IsRegEnabled(SCSig *Sig, std::string Field);           ///< Determines if the target Field is enabled as an input
 
+
   ///< Emit the NOP uOP
   void EmitNOP(SCSig *Sig,
                unsigned NumSigs,
@@ -458,6 +459,9 @@ public:
 
   /// Generate the signal map using the StoneCutter input
   bool GenerateSignalMap(std::string);
+
+  /// Retrieves a vector of the Chisel codegen passes
+  std::vector<std::string> GetPassList();
 };
 
 #endif

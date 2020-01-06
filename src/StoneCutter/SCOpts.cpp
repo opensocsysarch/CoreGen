@@ -15,16 +15,16 @@ SCOpts::SCOpts(SCMsg *M)
   : argc(0), argv(NULL),
   isKeep(false), isParse(true), isIR(true),
   isOptimize(true), isChisel(true), isCG(false), isVerbose(false),
-  isDisable(false), isEnable(false), isListPass(false), isSigMap(false),
-  isPassRun(false), isPerf(false),
+  isDisable(false), isEnable(false), isListPass(false), isListSCPass(false),
+  isSigMap(false), isPassRun(false), isPerf(false),
   Msgs(M) {}
 
 SCOpts::SCOpts(SCMsg *M, int A, char **C)
   : argc(A), argv(C),
   isKeep(false), isParse(true), isIR(true),
   isOptimize(true), isChisel(true), isCG(false), isVerbose(false),
-  isDisable(false), isEnable(false), isListPass(false), isSigMap(false),
-  isPassRun(false), isPerf(false),
+  isDisable(false), isEnable(false), isListPass(false), isListSCPass(false),
+  isSigMap(false), isPassRun(false), isPerf(false),
   Msgs(M) {}
 
 // ------------------------------------------------- DESTRUCTOR
@@ -176,6 +176,8 @@ bool SCOpts::ParseOpts(bool *isHelp){
       *isHelp = true;
     }else if( s=="--list-passes"){
       isListPass = true;
+    }else if( s=="--list-sc-passes"){
+      isListSCPass = true;
     }else if( s=="--enable-pass"){
       if( i+1 > (argc-1) ){
         Msgs->PrintMsg(L_ERROR, "--enable-pass requires an argument");
@@ -223,7 +225,7 @@ bool SCOpts::ParseOpts(bool *isHelp){
     isCG = true;
   }
 
-  if( (!*isHelp) && (FileList.size() == 0) && (!isListPass) ){
+  if( (!*isHelp) && (FileList.size() == 0) && (!isListPass) && (!isListSCPass) ){
     Msgs->PrintMsg( L_ERROR, "No input files found" );
     return false;
   }
@@ -233,7 +235,7 @@ bool SCOpts::ParseOpts(bool *isHelp){
   }
 
   // derive the ISA if it wasn't specified
-  if( (!isListPass) && (ISA.length() == 0) ){
+  if( (!isListPass) && (!isListSCPass) && (ISA.length() == 0) ){
     ISA = GetISANameFromPath();
   }
 
@@ -290,8 +292,9 @@ void SCOpts::PrintHelp(){
   Msgs->PrintRawMsg(" ");
   Msgs->PrintRawMsg("Optimization Pass Options:");
   Msgs->PrintRawMsg("     --list-passes                       : Lists all the LLVM passes");
-  Msgs->PrintRawMsg("     --enable-pass \"PASS1,PASS2\"         : Enables individual passes");
-  Msgs->PrintRawMsg("     --disable-pass \"PASS1,PASS2\"        : Disables individual passes");
+  Msgs->PrintRawMsg("     --list-sc-passes                    : Lists all the StoneCutter passes");
+  Msgs->PrintRawMsg("     --enable-pass \"PASS1,PASS2\"         : Enables individual LLVM passes");
+  Msgs->PrintRawMsg("     --disable-pass \"PASS1,PASS2\"        : Disables individual LLVM passes");
   Msgs->PrintRawMsg(" ");
   Msgs->PrintRawMsg("Chisel Output Options:");
   Msgs->PrintRawMsg("     -a|-package|--package PACKAGE       : Sets the Chisel package name");

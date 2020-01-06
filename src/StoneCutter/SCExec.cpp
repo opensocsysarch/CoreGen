@@ -19,6 +19,36 @@ SCExec::SCExec( SCOpts *O, SCMsg *M )
 SCExec::~SCExec(){}
 
 
+// ------------------------------------------------- PRINTSCPASSLIST
+bool SCExec::PrintSCPassList(){
+  std::string TmpFile = ".parsetmp";
+  std::ifstream t(TmpFile);
+  std::string Buf( (std::istreambuf_iterator<char>(t)),
+                   (std::istreambuf_iterator<char>()));
+
+  Parser = new SCParser(Buf,TmpFile,Opts,Msgs);
+  if( !Parser ){
+    Msgs->PrintMsg( L_ERROR, "Failed to initiate the StoneCutter parser" );
+    return false;
+  }
+
+  SCChiselCodeGen *CCG = new SCChiselCodeGen(Parser,Opts,Msgs,TmpFile );
+  if( !CCG ){
+    Msgs->PrintMsg( L_ERROR, "Failed to initiate the StoneCutter Chisel codegen" );
+    return false;
+  }
+  std::vector<std::string> P = CCG->GetPassList();
+  Msgs->PrintRawMsg( " StoneCutter Optimization Passes" );
+  Msgs->PrintRawMsg( "--------------------------------------------------------------------------------" );
+  for( unsigned i=0; i<P.size(); i++ ){
+    Msgs->PrintRawMsg( " -\t" + P[i] );
+  }
+  Msgs->PrintRawMsg( "--------------------------------------------------------------------------------" );
+  delete CCG;
+  delete Parser;
+  return true;
+}
+
 // ------------------------------------------------- PRINTPASSLIST
 bool SCExec::PrintPassList(){
   std::string TmpFile = ".parsetmp";
@@ -31,6 +61,7 @@ bool SCExec::PrintPassList(){
     Msgs->PrintMsg( L_ERROR, "Failed to initiate the StoneCutter parser" );
     return false;
   }
+
 
   std::vector<std::string> P = Parser->GetPassList();
   Msgs->PrintRawMsg( " StoneCutter LLVM Optimization Passes" );
@@ -46,9 +77,13 @@ bool SCExec::PrintPassList(){
 // ------------------------------------------------- EXEC
 bool SCExec::Exec(){
 
-  // Do we want to list the passes and immediately exit?
+  // Do we want to list the either set of passes and immediately exit?
   if( Opts->IsListPass() ){
     return PrintPassList();
+  }
+
+  if( Opts->IsListSCPass() ){
+    return PrintSCPassList();
   }
 
   std::string LTmpFile; //tmp input

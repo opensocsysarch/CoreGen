@@ -89,6 +89,17 @@ void SCChiselCodeGen::WriteChiselHeader(){
   OutFile << "//" << std::endl << std::endl;
 }
 
+std::vector<std::string> SCChiselCodeGen::GetPassList(){
+  std::vector<std::string> NameVect;
+  std::vector<SCPass *>::iterator it;
+  for( it=Passes.begin(); it != Passes.end(); ++it ){
+    SCPass *P = (*it);
+    NameVect.push_back(P->GetName());
+  }
+
+  return NameVect;
+}
+
 bool SCChiselCodeGen::ExecutePasses(){
   bool rtn = true;
 

@@ -61,6 +61,7 @@ private:
   bool isDisable;   ///< SCOpts: Manually disabled passes flag
   bool isEnable;    ///< SCOpts: Manually disabled passes flag
   bool isListPass;  ///< SCOpts: User selected pass listing flag
+  bool isListSCPass;///< SCOpts: User selected StoneCutter pass listing flag
   bool isSigMap;    ///< SCOpts: Signal map selected
   bool isPassRun;   ///< SCOpts: Have the passes been executed?
   bool isPerf;      ///< SCOpts: Are the performance stats enabled?
@@ -138,8 +139,11 @@ public:
   /// SCOpts: Do we have manually enabled passes
   bool IsEnablePass() { return isEnable; }
 
-  /// SCOpts: Do we need to list the passes
+  /// SCOpts: Do we need to list the LLVM passes
   bool IsListPass() { return isListPass; }
+
+  /// SCOpts: Do we need to list the StoneCutter passes
+  bool IsListSCPass() { return isListSCPass; }
 
   /// SCOpts: Do we execute the optimizer
   bool IsOptimize() { return isOptimize; }
