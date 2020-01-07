@@ -31,6 +31,11 @@ void SCPass::PrintRawMsg( const std::string M ){
   Msgs->PrintRawMsg( this->GetName() + " : " + M );
 }
 
+bool SCPass::SetExecOpts( std::string E ){
+  ExecOpts = E;
+  return true;
+}
+
 bool SCPass::IsGlobal( std::string Var ){
   for( auto &Global : TheModule->getGlobalList() ){
     if( Global.getName().str() == Var ){

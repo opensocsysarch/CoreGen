@@ -24,6 +24,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <map>
 #include <streambuf>
 
 #include <fstream>
@@ -82,6 +83,8 @@ private:
   std::vector<std::string> EnableSCPass;  ///< SCOpts: List of enabled StoneCutter passes
   std::vector<std::string> DisableSCPass; ///< SCOpts: List of disabled StoneCutter passes
 
+  std::map<std::string,std::string> SCPassOpts; ///< SCOpts: Map of StoneCutter pass to respective options
+
   SCMsg *Msgs;    ///< SCOpts: Message handlers
 
   // private functions
@@ -93,6 +96,9 @@ private:
 
   /// Parse the pass options and split them into a vector
   std::vector<std::string> ParsePasses(std::string P);
+
+  /// Parse the StoneCutter pass name:options strings and split them into a map
+  std::map<std::string,std::string> ParsePassOpts(std::string P);
 
   /// Split the options list by commas
   void Split(const std::string &s, char delim,
@@ -156,6 +162,9 @@ public:
   /// SCOpts: Do we need to list the StoneCutter passes
   bool IsListSCPass() { return isListSCPass; }
 
+  /// SCOpts: Do we have StoneCutter pass-specific options
+  bool IsSCPassOpt() { return !SCPassOpts.empty(); }
+
   /// SCOpts: Do we execute the optimizer
   bool IsOptimize() { return isOptimize; }
 
@@ -182,6 +191,9 @@ public:
 
   /// SCOpts: Rerieve the list of enabled StoneCutter passes
   std::vector<std::string> GetEnableSCPass() { return EnableSCPass; }
+
+  /// SCOpts: Retrieve a map of StoneCutter pass options
+  std::map<std::string,std::string> GetSCPassOptions() { return SCPassOpts; }
 
   /// SCOpts: Retrieve the output file name
   std::string GetOutputFile() { return OutFile; }

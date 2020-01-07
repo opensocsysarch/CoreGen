@@ -58,6 +58,7 @@ class SCPass{
 private:
   std::string Name;                   ///< Name of the StoneCutter pass
   std::string Options;                ///< Options string for the pass
+  std::string ExecOpts;               ///< Execution options string
   SCMsg *Msgs;                        ///< StoneCutter messages output
 
   /// Convert a string to upper case
@@ -84,6 +85,9 @@ public:
 
   /// Retrieve the options string for the pass
   std::string GetOptions() { return Options; }
+
+  /// Retreive the execution options string for the pass
+  std::string GetExecOpts() { return ExecOpts; }
 
   /// Prints a message to the message stream
   void PrintMsg( MSG_LEVEL L, const std::string M );
@@ -155,6 +159,9 @@ public:
 
   /// Executes the target code generation pass
   virtual bool Execute() = 0;
+
+  /// Set the execution options for the pass
+  virtual bool SetExecOpts( std::string E );
 
 };
 

@@ -84,6 +84,36 @@ std::string SCOpts::GetISANameFromPath(){
   return "";
 }
 
+// ------------------------------------------------- PARSEPASSOPTS
+std::map<std::string,std::string> SCOpts::ParsePassOpts(std::string P){
+  std::map<std::string,std::string> TM;
+  std::vector<std::string> V;
+
+  // exit if the string is null
+  if( P.length() == 0 ){
+    Msgs->PrintMsg(L_WARN, "Warning: No pas options found for pass argument");
+    return TM;
+  }
+
+  std::string Str = P;  // local parsing string
+
+  // break the string into tokens
+  Split( Str, ',', V );
+
+  // now for each vector element, split into "PASS:OPTIONS"
+  for( unsigned i=0; i<V.size(); i++ ){
+    std::vector<std::string> TV;
+    Split(V[i],':',TV);
+    if( TV.size() != 2 ){
+      Msgs->PrintMsg(L_WARN, "Warning: --sc-pass-opts at " + V[i] + " contains erroneous data" );
+      return TM;
+    }
+    TM.insert(std::pair<std::string,std::string>(TV[0],TV[1]));
+  }
+
+  return TM;
+}
+
 // ------------------------------------------------- PARSEPASSES
 std::vector<std::string> SCOpts::ParsePasses( std::string P ){
   std::vector<std::string> V;
@@ -243,6 +273,15 @@ bool SCOpts::ParseOpts(bool *isHelp){
         Msgs->PrintMsg(L_ERROR, "--disable-sc-pass requires an argument");
         return false;
       }
+      i++;
+    }else if( s=="--sc-pass-opts"){
+      if( i+1 > (argc-1) ){
+        Msgs->PrintMsg(L_ERROR, "--sc-pass-opts requires an argument");
+        return false;
+      }
+      std::string P(argv[i+1]);
+      std::map<std::string,std::string> TempMap = ParsePassOpts(P);
+      SCPassOpts.insert(TempMap.begin(),TempMap.end());
       i++;
     }else{
       if( FindDash(s) ){
