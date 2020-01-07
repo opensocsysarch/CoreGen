@@ -57,6 +57,7 @@ using namespace llvm;
 class SCPass{
 private:
   std::string Name;                   ///< Name of the StoneCutter pass
+  std::string Options;                ///< Options string for the pass
   SCMsg *Msgs;                        ///< StoneCutter messages output
 
   /// Convert a string to upper case
@@ -70,6 +71,7 @@ public:
 
   /// Default constructor
   SCPass(std::string N,
+         std::string Opt,
          Module *TM,
          SCOpts *O,
          SCMsg *M);
@@ -79,6 +81,9 @@ public:
 
   /// Retrieve the name of the pass
   std::string GetName() { return Name; }
+
+  /// Retrieve the options string for the pass
+  std::string GetOptions() { return Options; }
 
   /// Prints a message to the message stream
   void PrintMsg( MSG_LEVEL L, const std::string M );

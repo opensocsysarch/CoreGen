@@ -13,7 +13,7 @@
 SCInstArg::SCInstArg(Module *TM,
                      SCOpts *O,
                      SCMsg *M)
-  : SCPass("InstArg",TM,O,M) {
+  : SCPass("InstArg","",TM,O,M) {
 }
 
 SCInstArg::~SCInstArg(){

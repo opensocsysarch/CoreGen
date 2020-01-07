@@ -11,10 +11,11 @@
 #include "CoreGen/StoneCutter/SCPass.h"
 
 SCPass::SCPass(std::string N,
+               std::string Opt,
                Module *TM,
                SCOpts *O,
                SCMsg *M)
-  : Name(N), Msgs(M), Opts(O), TheModule(TM) {
+  : Name(N), Options(Opt), Msgs(M), Opts(O), TheModule(TM) {
   if( Opts->IsVerbose() )
     Msgs->PrintRawMsg( "Executing Pass: " + this->GetName() );
 }

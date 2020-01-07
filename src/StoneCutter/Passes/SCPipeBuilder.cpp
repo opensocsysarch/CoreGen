@@ -13,7 +13,7 @@
 SCPipeBuilder::SCPipeBuilder(Module *TM,
                              SCOpts *O,
                              SCMsg *M)
-  : SCPass("PipeBuilder",TM,O,M) {
+  : SCPass("PipeBuilder","",TM,O,M) {
 }
 
 SCPipeBuilder::~SCPipeBuilder(){
