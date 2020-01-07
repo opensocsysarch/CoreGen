@@ -384,6 +384,7 @@ Registers:
     IsSIMD: false
     RWReg: false
     ROReg: true
+    PCReg: true
     CSRReg: false
     AMSReg: false
     TUSReg: false
