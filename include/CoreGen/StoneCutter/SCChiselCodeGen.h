@@ -462,6 +462,9 @@ public:
 
   /// Retrieves a vector of the Chisel codegen passes
   std::vector<std::string> GetPassList();
+
+  /// Retrieves a vector of the Chisel codegen pass options
+  std::vector<std::string> GetOptsList();
 };
 
 #endif

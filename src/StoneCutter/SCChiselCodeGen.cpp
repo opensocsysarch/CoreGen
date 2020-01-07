@@ -100,6 +100,17 @@ std::vector<std::string> SCChiselCodeGen::GetPassList(){
   return NameVect;
 }
 
+std::vector<std::string> SCChiselCodeGen::GetOptsList(){
+  std::vector<std::string> OptsVect;
+  std::vector<SCPass *>::iterator it;
+  for( it=Passes.begin(); it != Passes.end(); ++it ){
+    SCPass *P = (*it);
+    OptsVect.push_back(P->GetOptions());
+  }
+
+  return OptsVect;
+}
+
 bool SCChiselCodeGen::ExecutePasses(){
   bool rtn = true;
 

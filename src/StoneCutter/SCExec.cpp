@@ -38,10 +38,12 @@ bool SCExec::PrintSCPassList(){
     return false;
   }
   std::vector<std::string> P = CCG->GetPassList();
+  std::vector<std::string> O = CCG->GetOptsList();
   Msgs->PrintRawMsg( " StoneCutter Optimization Passes" );
+  Msgs->PrintRawMsg( " -\t PASS:OPTIONS" );
   Msgs->PrintRawMsg( "--------------------------------------------------------------------------------" );
   for( unsigned i=0; i<P.size(); i++ ){
-    Msgs->PrintRawMsg( " -\t" + P[i] );
+    Msgs->PrintRawMsg( " -\t" + P[i] + ":" + O[i] );
   }
   Msgs->PrintRawMsg( "--------------------------------------------------------------------------------" );
   delete CCG;
