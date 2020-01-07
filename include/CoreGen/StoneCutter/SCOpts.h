@@ -59,12 +59,14 @@ private:
   bool isCG;        ///< SCOpts: Execute the object codegen
   bool isVerbose;   ///< SCOpts: Enable verbosity
   bool isDisable;   ///< SCOpts: Manually disabled passes flag
-  bool isEnable;    ///< SCOpts: Manually disabled passes flag
+  bool isEnable;    ///< SCOpts: Manually enabled  passes flag
   bool isListPass;  ///< SCOpts: User selected pass listing flag
   bool isListSCPass;///< SCOpts: User selected StoneCutter pass listing flag
   bool isSigMap;    ///< SCOpts: Signal map selected
   bool isPassRun;   ///< SCOpts: Have the passes been executed?
   bool isPerf;      ///< SCOpts: Are the performance stats enabled?
+  bool isSCDisable; ///< SCOpts: Manually disabled StoneCutter passes flag
+  bool isSCEnable;  ///< SCOpts: Manually enabled StoneCutter passes flag
 
   std::string OutFile;  ///< SCOpts: Output file designator
   std::string SigMap;   ///< SCOpts: Signal map output file
@@ -72,10 +74,13 @@ private:
   std::string Package;  ///< SCOpts: Chisel package name
   std::string ISA;      ///< SCOpts: Chisel ISA name
 
-  std::vector<std::string> FileList;  ///< SCOpts: List of files to compile
+  std::vector<std::string> FileList;      ///< SCOpts: List of files to compile
 
-  std::vector<std::string> EnablePass;  ///< SCOpts: List of enabled passes
-  std::vector<std::string> DisablePass; ///< SCOpts: List of disabled passes
+  std::vector<std::string> EnablePass;    ///< SCOpts: List of enabled passes
+  std::vector<std::string> DisablePass;   ///< SCOpts: List of disabled passes
+
+  std::vector<std::string> EnableSCPass;  ///< SCOpts: List of enabled StoneCutter passes
+  std::vector<std::string> DisableSCPass; ///< SCOpts: List of disabled StoneCutter passes
 
   SCMsg *Msgs;    ///< SCOpts: Message handlers
 
@@ -139,6 +144,12 @@ public:
   /// SCOpts: Do we have manually enabled passes
   bool IsEnablePass() { return isEnable; }
 
+  /// SCOpts: Do we have manually disabled StoneCutter passes
+  bool IsDisableSCPass() { return isSCDisable; }
+
+  /// SCOpts: Do we have manually enabled StoneCutter passes
+  bool IsEnableSCPass() { return isSCEnable; }
+
   /// SCOpts: Do we need to list the LLVM passes
   bool IsListPass() { return isListPass; }
 
@@ -165,6 +176,12 @@ public:
 
   /// SCOpts: Rerieve the list of enabled passes
   std::vector<std::string> GetEnablePass() { return EnablePass; }
+
+  /// SCOpts: Retrieve the list of disabled StoneCutter passes
+  std::vector<std::string> GetDisabledSCPass() { return DisableSCPass; }
+
+  /// SCOpts: Rerieve the list of enabled StoneCutter passes
+  std::vector<std::string> GetEnableSCPass() { return EnableSCPass; }
 
   /// SCOpts: Retrieve the output file name
   std::string GetOutputFile() { return OutFile; }

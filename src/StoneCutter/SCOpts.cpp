@@ -17,6 +17,7 @@ SCOpts::SCOpts(SCMsg *M)
   isOptimize(true), isChisel(true), isCG(false), isVerbose(false),
   isDisable(false), isEnable(false), isListPass(false), isListSCPass(false),
   isSigMap(false), isPassRun(false), isPerf(false),
+  isSCDisable(false),isSCEnable(false),
   Msgs(M) {}
 
 SCOpts::SCOpts(SCMsg *M, int A, char **C)
@@ -25,6 +26,7 @@ SCOpts::SCOpts(SCMsg *M, int A, char **C)
   isOptimize(true), isChisel(true), isCG(false), isVerbose(false),
   isDisable(false), isEnable(false), isListPass(false), isListSCPass(false),
   isSigMap(false), isPassRun(false), isPerf(false),
+  isSCDisable(false),isSCEnable(false),
   Msgs(M) {}
 
 // ------------------------------------------------- DESTRUCTOR
@@ -210,6 +212,38 @@ bool SCOpts::ParseOpts(bool *isHelp){
         return false;
       }
       i++;
+    }else if( s=="--enable-sc-pass"){
+      if( i+1 > (argc-1) ){
+        Msgs->PrintMsg(L_ERROR, "--enable-sc-pass requires an argument");
+        return false;
+      }
+      std::string P(argv[i+1]);
+      std::vector<std::string> tmpV1 = ParsePasses(P);
+      EnableSCPass.insert(EnableSCPass.end(),tmpV1.begin(),tmpV1.end());
+      if( tmpV1.size() > 0 ){
+        isSCEnable = true;
+        isSCDisable = false;
+      }else{
+        Msgs->PrintMsg(L_ERROR, "--enable-sc-pass requires an argument");
+        return false;
+      }
+      i++;
+    }else if( s=="--disable-sc-pass"){
+      if( i+1 > (argc-1) ){
+        Msgs->PrintMsg(L_ERROR, "--disable-sc-pass requires an argument");
+        return false;
+      }
+      std::string P(argv[i+1]);
+      std::vector<std::string> tmpV2 = ParsePasses(P);
+      DisableSCPass.insert(DisableSCPass.end(),tmpV2.begin(),tmpV2.end());
+      if( tmpV2.size() > 0 ){
+        isSCEnable = false;
+        isSCDisable = true;
+      }else{
+        Msgs->PrintMsg(L_ERROR, "--disable-sc-pass requires an argument");
+        return false;
+      }
+      i++;
     }else{
       if( FindDash(s) ){
         Msgs->PrintMsg(L_ERROR, "Unknown argument: " + s );
@@ -295,6 +329,9 @@ void SCOpts::PrintHelp(){
   Msgs->PrintRawMsg("     --list-sc-passes                    : Lists all the StoneCutter passes");
   Msgs->PrintRawMsg("     --enable-pass \"PASS1,PASS2\"         : Enables individual LLVM passes");
   Msgs->PrintRawMsg("     --disable-pass \"PASS1,PASS2\"        : Disables individual LLVM passes");
+  Msgs->PrintRawMsg("     --enable-sc-pass \"PASS1,PASS2\"      : Enables individual StoneCutter passes");
+  Msgs->PrintRawMsg("     --disable-sc-pass \"PASS1,PASS2\"     : Disables individual StoneCutter passes");
+  Msgs->PrintRawMsg("     --sc-pass-opts \"PASS1:OPTS\"         : Set StoneCutter pass-specific optiosn");
   Msgs->PrintRawMsg(" ");
   Msgs->PrintRawMsg("Chisel Output Options:");
   Msgs->PrintRawMsg("     -a|-package|--package PACKAGE       : Sets the Chisel package name");
