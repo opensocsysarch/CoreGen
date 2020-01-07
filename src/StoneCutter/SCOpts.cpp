@@ -15,16 +15,18 @@ SCOpts::SCOpts(SCMsg *M)
   : argc(0), argv(NULL),
   isKeep(false), isParse(true), isIR(true),
   isOptimize(true), isChisel(true), isCG(false), isVerbose(false),
-  isDisable(false), isEnable(false), isListPass(false), isSigMap(false),
-  isPassRun(false), isPerf(false),
+  isDisable(false), isEnable(false), isListPass(false), isListSCPass(false),
+  isSigMap(false), isPassRun(false), isPerf(false),
+  isSCDisable(false),isSCEnable(false),
   Msgs(M) {}
 
 SCOpts::SCOpts(SCMsg *M, int A, char **C)
   : argc(A), argv(C),
   isKeep(false), isParse(true), isIR(true),
   isOptimize(true), isChisel(true), isCG(false), isVerbose(false),
-  isDisable(false), isEnable(false), isListPass(false), isSigMap(false),
-  isPassRun(false), isPerf(false),
+  isDisable(false), isEnable(false), isListPass(false), isListSCPass(false),
+  isSigMap(false), isPassRun(false), isPerf(false),
+  isSCDisable(false),isSCEnable(false),
   Msgs(M) {}
 
 // ------------------------------------------------- DESTRUCTOR
@@ -80,6 +82,36 @@ std::string SCOpts::GetISANameFromPath(){
                             FilePath.size() - (withExtension || dotPos != std::string::npos ? 1 : dotPos) ));
   }
   return "";
+}
+
+// ------------------------------------------------- PARSEPASSOPTS
+std::map<std::string,std::string> SCOpts::ParsePassOpts(std::string P){
+  std::map<std::string,std::string> TM;
+  std::vector<std::string> V;
+
+  // exit if the string is null
+  if( P.length() == 0 ){
+    Msgs->PrintMsg(L_WARN, "Warning: No pas options found for pass argument");
+    return TM;
+  }
+
+  std::string Str = P;  // local parsing string
+
+  // break the string into tokens
+  Split( Str, ',', V );
+
+  // now for each vector element, split into "PASS:OPTIONS"
+  for( unsigned i=0; i<V.size(); i++ ){
+    std::vector<std::string> TV;
+    Split(V[i],':',TV);
+    if( TV.size() != 2 ){
+      Msgs->PrintMsg(L_WARN, "Warning: --sc-pass-opts at " + V[i] + " contains erroneous data" );
+      return TM;
+    }
+    TM.insert(std::pair<std::string,std::string>(TV[0],TV[1]));
+  }
+
+  return TM;
 }
 
 // ------------------------------------------------- PARSEPASSES
@@ -176,6 +208,8 @@ bool SCOpts::ParseOpts(bool *isHelp){
       *isHelp = true;
     }else if( s=="--list-passes"){
       isListPass = true;
+    }else if( s=="--list-sc-passes"){
+      isListSCPass = true;
     }else if( s=="--enable-pass"){
       if( i+1 > (argc-1) ){
         Msgs->PrintMsg(L_ERROR, "--enable-pass requires an argument");
@@ -208,6 +242,47 @@ bool SCOpts::ParseOpts(bool *isHelp){
         return false;
       }
       i++;
+    }else if( s=="--enable-sc-pass"){
+      if( i+1 > (argc-1) ){
+        Msgs->PrintMsg(L_ERROR, "--enable-sc-pass requires an argument");
+        return false;
+      }
+      std::string P(argv[i+1]);
+      std::vector<std::string> tmpV1 = ParsePasses(P);
+      EnableSCPass.insert(EnableSCPass.end(),tmpV1.begin(),tmpV1.end());
+      if( tmpV1.size() > 0 ){
+        isSCEnable = true;
+        isSCDisable = false;
+      }else{
+        Msgs->PrintMsg(L_ERROR, "--enable-sc-pass requires an argument");
+        return false;
+      }
+      i++;
+    }else if( s=="--disable-sc-pass"){
+      if( i+1 > (argc-1) ){
+        Msgs->PrintMsg(L_ERROR, "--disable-sc-pass requires an argument");
+        return false;
+      }
+      std::string P(argv[i+1]);
+      std::vector<std::string> tmpV2 = ParsePasses(P);
+      DisableSCPass.insert(DisableSCPass.end(),tmpV2.begin(),tmpV2.end());
+      if( tmpV2.size() > 0 ){
+        isSCEnable = false;
+        isSCDisable = true;
+      }else{
+        Msgs->PrintMsg(L_ERROR, "--disable-sc-pass requires an argument");
+        return false;
+      }
+      i++;
+    }else if( s=="--sc-pass-opts"){
+      if( i+1 > (argc-1) ){
+        Msgs->PrintMsg(L_ERROR, "--sc-pass-opts requires an argument");
+        return false;
+      }
+      std::string P(argv[i+1]);
+      std::map<std::string,std::string> TempMap = ParsePassOpts(P);
+      SCPassOpts.insert(TempMap.begin(),TempMap.end());
+      i++;
     }else{
       if( FindDash(s) ){
         Msgs->PrintMsg(L_ERROR, "Unknown argument: " + s );
@@ -223,7 +298,7 @@ bool SCOpts::ParseOpts(bool *isHelp){
     isCG = true;
   }
 
-  if( (!*isHelp) && (FileList.size() == 0) && (!isListPass) ){
+  if( (!*isHelp) && (FileList.size() == 0) && (!isListPass) && (!isListSCPass) ){
     Msgs->PrintMsg( L_ERROR, "No input files found" );
     return false;
   }
@@ -233,7 +308,7 @@ bool SCOpts::ParseOpts(bool *isHelp){
   }
 
   // derive the ISA if it wasn't specified
-  if( (!isListPass) && (ISA.length() == 0) ){
+  if( (!isListPass) && (!isListSCPass) && (ISA.length() == 0) ){
     ISA = GetISANameFromPath();
   }
 
@@ -290,8 +365,12 @@ void SCOpts::PrintHelp(){
   Msgs->PrintRawMsg(" ");
   Msgs->PrintRawMsg("Optimization Pass Options:");
   Msgs->PrintRawMsg("     --list-passes                       : Lists all the LLVM passes");
-  Msgs->PrintRawMsg("     --enable-pass \"PASS1,PASS2\"         : Enables individual passes");
-  Msgs->PrintRawMsg("     --disable-pass \"PASS1,PASS2\"        : Disables individual passes");
+  Msgs->PrintRawMsg("     --list-sc-passes                    : Lists all the StoneCutter passes");
+  Msgs->PrintRawMsg("     --enable-pass \"PASS1,PASS2\"         : Enables individual LLVM passes");
+  Msgs->PrintRawMsg("     --disable-pass \"PASS1,PASS2\"        : Disables individual LLVM passes");
+  Msgs->PrintRawMsg("     --enable-sc-pass \"PASS1,PASS2\"      : Enables individual StoneCutter passes");
+  Msgs->PrintRawMsg("     --disable-sc-pass \"PASS1,PASS2\"     : Disables individual StoneCutter passes");
+  Msgs->PrintRawMsg("     --sc-pass-opts \"PASS1:OPTS\"         : Set StoneCutter pass-specific optiosn");
   Msgs->PrintRawMsg(" ");
   Msgs->PrintRawMsg("Chisel Output Options:");
   Msgs->PrintRawMsg("     -a|-package|--package PACKAGE       : Sets the Chisel package name");

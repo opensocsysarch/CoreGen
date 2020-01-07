@@ -13,7 +13,7 @@
 SCInstFormat::SCInstFormat(Module *TM,
                            SCOpts *O,
                            SCMsg *M)
-  : SCPass("InstFormat",TM,O,M) {
+  : SCPass("InstFormat","",TM,O,M) {
 }
 
 SCInstFormat::~SCInstFormat(){

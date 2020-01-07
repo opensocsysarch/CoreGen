@@ -89,14 +89,86 @@ void SCChiselCodeGen::WriteChiselHeader(){
   OutFile << "//" << std::endl << std::endl;
 }
 
-bool SCChiselCodeGen::ExecutePasses(){
-  bool rtn = true;
-
+std::vector<std::string> SCChiselCodeGen::GetPassList(){
+  std::vector<std::string> NameVect;
   std::vector<SCPass *>::iterator it;
   for( it=Passes.begin(); it != Passes.end(); ++it ){
     SCPass *P = (*it);
-    if( !P->Execute() ){
-      rtn = false;
+    NameVect.push_back(P->GetName());
+  }
+
+  return NameVect;
+}
+
+std::vector<std::string> SCChiselCodeGen::GetOptsList(){
+  std::vector<std::string> OptsVect;
+  std::vector<SCPass *>::iterator it;
+  for( it=Passes.begin(); it != Passes.end(); ++it ){
+    SCPass *P = (*it);
+    OptsVect.push_back(P->GetOptions());
+  }
+
+  return OptsVect;
+}
+
+bool SCChiselCodeGen::ExecutePasses(){
+  bool rtn = true;
+
+  std::map<std::string,std::string> PassOpts = Opts->GetSCPassOptions();
+  std::map<std::string,std::string>::iterator mit;
+
+  if( !Opts->IsDisableSCPass() && !Opts->IsEnableSCPass() ){
+    // execute all the passes
+    std::vector<SCPass *>::iterator it;
+    for( it=Passes.begin(); it != Passes.end(); ++it ){
+      SCPass *P = (*it);
+
+      // set the pass options
+      mit = PassOpts.find(P->GetName());
+      if( mit != PassOpts.end() )
+        P->SetExecOpts(mit->second);
+
+      if( !P->Execute() ){
+        rtn = false;
+      }
+    }
+  }else if( Opts->IsEnableSCPass() ){
+    // manually enabled passes
+    std::vector<std::string> E = Opts->GetEnableSCPass();
+    std::vector<SCPass *>::iterator it;
+    std::vector<std::string>::iterator str;
+    for( it=Passes.begin(); it != Passes.end(); ++it ){
+      SCPass *P = (*it);
+
+      // set the pass options
+      mit = PassOpts.find(P->GetName());
+      if( mit != PassOpts.end() )
+        P->SetExecOpts(mit->second);
+
+      // check to see if the current pass is in our vector
+      str = std::find(E.begin(),E.end(),P->GetName());
+      if( str != E.end() ){
+        // it resides in our list, execute it
+        if( !P->Execute() ){
+          rtn = false;
+        }
+      }
+    }
+  }else if( Opts->IsDisableSCPass() ){
+    // manually disabled passes
+    std::vector<std::string> D = Opts->GetDisabledSCPass();
+    std::vector<SCPass *>::iterator it;
+    std::vector<std::string>::iterator str;
+    for( it=Passes.begin(); it != Passes.end(); ++it ){
+      SCPass *P = (*it);
+      // check to see if the current pass is in our vector
+      str = std::find(D.begin(),D.end(),P->GetName());
+      if( str == D.end() ){
+        // it doesn't reside in our list, execute it
+        if( !P->Execute() ){
+          rtn = false;
+        }
+      }
     }
   }
 

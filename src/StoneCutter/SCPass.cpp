@@ -11,10 +11,11 @@
 #include "CoreGen/StoneCutter/SCPass.h"
 
 SCPass::SCPass(std::string N,
+               std::string Opt,
                Module *TM,
                SCOpts *O,
                SCMsg *M)
-  : Name(N), Msgs(M), Opts(O), TheModule(TM) {
+  : Name(N), Options(Opt), Msgs(M), Opts(O), TheModule(TM) {
   if( Opts->IsVerbose() )
     Msgs->PrintRawMsg( "Executing Pass: " + this->GetName() );
 }
@@ -28,6 +29,11 @@ void SCPass::PrintMsg( MSG_LEVEL L, const std::string M ){
 
 void SCPass::PrintRawMsg( const std::string M ){
   Msgs->PrintRawMsg( this->GetName() + " : " + M );
+}
+
+bool SCPass::SetExecOpts( std::string E ){
+  ExecOpts = E;
+  return true;
 }
 
 bool SCPass::IsGlobal( std::string Var ){

@@ -13,7 +13,7 @@
 SCSigMap::SCSigMap(Module *TM,
                            SCOpts *O,
                            SCMsg *M)
-  : SCPass("SigMap",TM,O,M) {
+  : SCPass("SigMap","",TM,O,M) {
 }
 
 SCSigMap::~SCSigMap(){

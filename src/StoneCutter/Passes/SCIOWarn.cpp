@@ -13,7 +13,7 @@
 SCIOWarn::SCIOWarn(Module *TM,
                      SCOpts *O,
                      SCMsg *M)
-  : SCPass("IOWarn",TM,O,M) {
+  : SCPass("IOWarn","",TM,O,M) {
 }
 
 SCIOWarn::~SCIOWarn(){
