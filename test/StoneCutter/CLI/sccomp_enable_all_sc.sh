@@ -9,7 +9,7 @@ fi
 
 FILE=./sccomp_enable_all_sc.sc
 
-PASSES=`$SCCOMP_PATH/sccomp --list-sc-passes | grep "Pass" | grep "-" | awk '{print $2}'`
+PASSES="InstArg InstFormat PipeBuilder IOWarn FieldIO"
 
 for P in $PASSES;do
   echo "...testing pass=$P"
