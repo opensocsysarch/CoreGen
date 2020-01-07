@@ -161,6 +161,12 @@ bool SCChiselCodeGen::ExecutePasses(){
     std::vector<std::string>::iterator str;
     for( it=Passes.begin(); it != Passes.end(); ++it ){
       SCPass *P = (*it);
+
+      // set the pass options
+      mit = PassOpts.find(P->GetName());
+      if( mit != PassOpts.end() )
+        P->SetExecOpts(mit->second);
+
       // check to see if the current pass is in our vector
       str = std::find(D.begin(),D.end(),P->GetName());
       if( str == D.end() ){
