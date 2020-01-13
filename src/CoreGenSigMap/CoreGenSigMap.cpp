@@ -18,6 +18,31 @@ CoreGenSigMap::~CoreGenSigMap(){
   Signals.clear();
 }
 
+bool CoreGenSigMap::ExecutePasses(){
+  bool rtn = true;
+
+  //
+  // LegalizeSigMap Pass
+  //
+  SMLegalizeSigMap *LegalizeSigMap = new SMLegalizeSigMap("LegalizeSigMap",
+                                                          Signals,
+                                                          TempRegs,
+                                                          TopSigs);
+
+  if( !LegalizeSigMap ){
+    Error = "Could not create LegalizeSigMap object";
+    return false;
+  }
+  if( !LegalizeSigMap->Execute() ){
+    Error = LegalizeSigMap->GetErrorStr();
+    rtn = false;
+  }
+  delete LegalizeSigMap;
+
+
+  return rtn;
+}
+
 bool CoreGenSigMap::CheckValidNode(const YAML::Node Node,
                                    std::string Token){
   if( !Node[Token] || Node[Token].IsNull() )

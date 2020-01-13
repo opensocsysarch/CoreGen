@@ -13,7 +13,7 @@
 SCSigMap::SCSigMap(Module *TM,
                            SCOpts *O,
                            SCMsg *M)
-  : SCPass("SigMap",TM,O,M) {
+  : SCPass("SigMap","",TM,O,M) {
 }
 
 SCSigMap::~SCSigMap(){
@@ -821,10 +821,17 @@ bool SCSigMap::Execute(){
     return false;
   }
 
-  // Stage 3: write the signal map out to a yaml file
-  if( !Signals->WriteSigMap(SigMap) ){
+  // Stage 3: execute all the signal map passes
+  if( !Signals->ExecutePasses() ){
+    this->PrintMsg( L_ERROR, "Failed to execute signal map passes: " + Signals->GetErrStr() );
     delete Signals;
-    this->PrintMsg( L_ERROR, "Failed to write the signal map to a file" );
+    return false;
+  }
+
+  // Stage 4: write the signal map out to a yaml file
+  if( !Signals->WriteSigMap(SigMap) ){
+    this->PrintMsg( L_ERROR, "Failed to write the signal map to a file: " + Signals->GetErrStr() );
+    delete Signals;
     return false;
   }
 

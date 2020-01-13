@@ -11,11 +11,15 @@
 #include "CoreGen/CoreGenBackend/CoreGenMCtrl.h"
 
 CoreGenMCtrl::CoreGenMCtrl(std::string N, CoreGenErrno *E)
-  : CoreGenNode(CGMCtrl,N,E), InputPorts(0) {
+  : CoreGenNode(CGMCtrl,N,E), InputPorts(0), Order(CGWeak) {
 }
 
 CoreGenMCtrl::CoreGenMCtrl(std::string N, CoreGenErrno *E, unsigned P)
-  : CoreGenNode(CGMCtrl,N,E), InputPorts(P) {
+  : CoreGenNode(CGMCtrl,N,E), InputPorts(P), Order(CGWeak) {
+}
+
+CoreGenMCtrl::CoreGenMCtrl(std::string N, CoreGenErrno *E, unsigned P, CGMemOrder O)
+  : CoreGenNode(CGMCtrl,N,E), InputPorts(P), Order(O) {
 }
 
 CoreGenMCtrl::~CoreGenMCtrl(){
@@ -29,3 +33,10 @@ bool CoreGenMCtrl::SetNumInputPorts(unsigned P){
 unsigned CoreGenMCtrl::GetNumInputPorts(){
   return InputPorts;
 }
+
+bool CoreGenMCtrl::SetMemOrder(CGMemOrder O){
+  Order = O;
+  return true;
+}
+
+// EOF

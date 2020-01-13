@@ -79,7 +79,10 @@ enum SCToken {
   tok_dyad        = -20,
 
   // intrinsics
-  tok_intrin      = -30
+  tok_intrin      = -30,
+
+  // pipes
+  tok_pipe        = -40
 };
 
 

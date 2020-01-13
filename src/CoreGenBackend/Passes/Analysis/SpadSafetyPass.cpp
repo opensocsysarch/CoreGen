@@ -21,6 +21,24 @@ SpadSafetyPass::SpadSafetyPass(std::ostream *O,
 SpadSafetyPass::~SpadSafetyPass(){
 }
 
+bool SpadSafetyPass::TestPortConfigs(){
+  bool rtn = true;
+
+  for( unsigned i=0; i<Spads.size(); i++ ){
+    if( Spads[i]->GetRqstPorts() == 0 ){
+      WriteMsg( "Identified a scratchpad with no request ports: " +
+                Spads[i]->GetName() );
+      rtn = false;
+    }
+    if( Spads[i]->GetRspPorts() == 0 ){
+      WriteMsg( "Identified a scratchpad with no resonse ports: " +
+                Spads[i]->GetName() );
+      rtn = false;
+    }
+  }
+  return rtn;
+}
+
 bool SpadSafetyPass::TestAddressCollisions(){
 
   bool rtn = true;
@@ -85,6 +103,11 @@ bool SpadSafetyPass::Execute(){
 
   // check the scratchpad collisions
   if( !TestAddressCollisions() ){
+    return false;
+  }
+
+  // check the scratchpad port continuity
+  if( !TestPortConfigs() ){
     return false;
   }
 

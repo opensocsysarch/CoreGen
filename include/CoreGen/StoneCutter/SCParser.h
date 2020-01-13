@@ -145,6 +145,23 @@ public:
     Value *codegen() override;
   };
 
+  /// PipeExprAST - Expression class for pipe regions
+  class PipeExprASTContainer : public ExprASTContainer {
+    std::string PipeName;                                     ///< Name of the target pipe stage
+    unsigned Instance;                                        ///< Instance of the pipe stage
+    std::vector<std::unique_ptr<ExprASTContainer>> BodyExpr;  ///< Vector of body expressions
+
+  public:
+    /// PipExprASTContainer default constructor
+    PipeExprASTContainer(std::string PipeName,
+                         unsigned Instance,
+                         std::vector<std::unique_ptr<ExprASTContainer>> BodyExpr)
+      : PipeName(PipeName), Instance(Instance), BodyExpr(std::move(BodyExpr)) {}
+
+    /// PipeExprASTContainer code generation driver
+    Value *codegen() override;
+  };
+
   /// WhileExprAST - Expression class for while loops
   class WhileExprASTContainer : public ExprASTContainer {
     std::unique_ptr<ExprASTContainer> Cond;         ///< Conditional expression body
@@ -288,14 +305,16 @@ public:
     std::string Name;   ///< Name of the instruction format
     std::vector<std::tuple<std::string,
                            SCInstField,
-                           std::string>> Fields; ///< Field vector
+                           std::string,
+                           unsigned>> Fields; ///< Field vector
 
   public:
     /// InstFormatASTContainer default constructor
     InstFormatASTContainer(const std::string &Name,
                            std::vector<std::tuple<std::string,
                                                   SCInstField,
-                                                  std::string>> Fields)
+                                                  std::string,
+                                                  unsigned>> Fields)
       : Name(Name), Fields(std::move(Fields)) {}
 
     /// InstFormatASTContainer: Retrieve the name of an instruction format
@@ -308,8 +327,8 @@ public:
   /// RegClassASTContainer - This class represents a register class definition
   ///               which captures the name and the associated registers
   class RegClassASTContainer {
-    std::string Name;     ///< Name of the register class
-    std::string PC;       ///< Name of the PC register
+    std::string Name;               ///< Name of the register class
+    std::string PC;                 ///< Name of the PC register
     std::vector<std::string> Args;  ///< Register vector
     std::vector<VarAttrs> Attrs;    ///< Register attribute vector
     std::vector<std::tuple<std::string,std::string,VarAttrs>> SubRegs;  ///< Subregister vector
@@ -373,16 +392,20 @@ public:
   };
 
   // LLVM CodeGen Variables
-  static LLVMContext TheContext;        ///< LLVM context
-  static IRBuilder<> Builder;           ///< LLVM IR Builder
-  static std::unique_ptr<Module> TheModule; ///< LLVM top-level Module
-  static std::map<std::string, AllocaInst*> NamedValues;  ///< Map of named values in scope
-  static std::map<std::string, GlobalVariable*> GlobalNamedValues;  ///< map of global values always in scope
+  static LLVMContext TheContext;                                                        ///< LLVM context
+  static IRBuilder<> Builder;                                                           ///< LLVM IR Builder
+  static std::unique_ptr<Module> TheModule;                                             ///< LLVM top-level Module
+  static std::map<std::string, AllocaInst*> NamedValues;                                ///< Map of named values in scope
+  static std::map<std::string, GlobalVariable*> GlobalNamedValues;                      ///< map of global values always in scope
   static std::map<std::string, std::unique_ptr<PrototypeASTContainer>> FunctionProtos;  ///< map of function prototypes
-  static std::unique_ptr<legacy::FunctionPassManager> TheFPM; ///< LLVM function pass manager
-  static unsigned LabelIncr;  ///< Label incrementer
-  static bool IsOpt;          ///< Are optimizations enabled?
-  static SCMsg *GMsgs;        ///< Global message handler
+  static std::map<std::string,unsigned> PipeInstances;                                  ///< Pipe stage instance numbers
+  static std::unique_ptr<legacy::FunctionPassManager> TheFPM;                           ///< LLVM function pass manager
+  static unsigned LabelIncr;                                                            ///< Label incrementer
+  static bool IsOpt;                                                                    ///< Are optimizations enabled?
+  static bool IsPipe;                                                                   ///< Are we within a pipeline?
+  static SCMsg *GMsgs;                                                                  ///< Global message handler
+  static MDNode *NameMDNode;                                                            ///< Pipe name metadata node
+  static MDNode *InstanceMDNode;                                                        ///< Pipe instance metadata node
 
 private:
 
@@ -512,6 +535,9 @@ private:
   /// Parse a variable expression
   std::unique_ptr<ExprASTContainer> ParseVarExpr();
 
+  /// Parse a pipe expression
+  std::unique_ptr<ExprASTContainer> ParsePipeExpr();
+
   /// Parse the closing of a function body
   bool ParseCloseBracket();
 
@@ -585,6 +611,8 @@ typedef SCParser::WhileExprASTContainer WhileExprAST;
 typedef SCParser::ForExprASTContainer ForExprAST;
 /** Typedef for VarExprASTContainer */
 typedef SCParser::VarExprASTContainer VarExprAST;
+/** Typedef for PipeExprASTContainer */
+typedef SCParser::PipeExprASTContainer PipeExprAST;
 
 #endif
 

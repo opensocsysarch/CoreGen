@@ -17,9 +17,13 @@ std::unique_ptr<legacy::FunctionPassManager> SCParser::TheFPM;
 std::map<std::string, std::unique_ptr<PrototypeAST>> SCParser::FunctionProtos;
 std::map<std::string, AllocaInst*> SCParser::NamedValues;
 std::map<std::string, GlobalVariable*> SCParser::GlobalNamedValues;
+std::map<std::string, unsigned> SCParser::PipeInstances;
 unsigned SCParser::LabelIncr;
 bool SCParser::IsOpt = false;
+bool SCParser::IsPipe = false;
 SCMsg *SCParser::GMsgs = nullptr;
+MDNode *SCParser::NameMDNode = nullptr;
+MDNode *SCParser::InstanceMDNode = nullptr;
 
 SCParser::SCParser(std::string B, std::string F, SCOpts *O, SCMsg *M)
   : CurTok(-1), InBuf(B), FileName(F), Opts(O), Msgs(M), Lex(new SCLexer()),
@@ -766,6 +770,8 @@ std::unique_ptr<ExprAST> SCParser::ParsePrimary() {
     return ParseDoWhileExpr();
   case tok_var:
     return ParseVarExpr();
+  case tok_pipe:
+    return ParsePipeExpr();
   }
 }
 
@@ -952,6 +958,55 @@ std::unique_ptr<ExprAST> SCParser::ParseWhileExpr(){
   return llvm::make_unique<WhileExprAST>(std::move(Cond),std::move(BodyExpr));
 }
 
+std::unique_ptr<ExprAST> SCParser::ParsePipeExpr() {
+  if( IsPipe )
+    return LogError("Nested pipes are not supported");
+
+  GetNextToken(); // eat the 'pipe'
+
+  if (CurTok != tok_identifier)
+    return LogError("expected identifier after pipe");
+
+  std::string PipeName = Lex->GetIdentifierStr();
+  GetNextToken();  // eat identifier.
+
+  if (CurTok != '{' )
+    return LogError("expected '{' for while loop control statement");
+
+  GetNextToken(); // eat the '{'
+
+  IsPipe = true;  // mark the fact that we're inside a pipe expression
+
+  // get the instance of the current pipe
+  unsigned Instance = 0;
+  std::map<std::string,unsigned>::iterator it = PipeInstances.find(PipeName);
+  if( it != PipeInstances.end() ){
+    // increment the instance count
+    it->second++;
+    Instance = it->second;
+  }else{
+    // first instance of the pipe
+    PipeInstances.insert(std::make_pair(PipeName,0));
+  }
+
+  std::vector<std::unique_ptr<ExprAST>> BodyExpr;
+  while( CurTok != '}' ){
+    auto Body = ParseExpression();
+    if( !Body )
+      return nullptr;
+    BodyExpr.push_back(std::move(Body));
+  }
+
+  // handle close bracket
+  if( CurTok != '}' )
+    return LogError("expected '}' for do while loop control body");
+
+  GetNextToken(); // eat the '}'
+  IsPipe = false;
+
+  return llvm::make_unique<PipeExprAST>(PipeName,Instance,std::move(BodyExpr));
+}
+
 std::unique_ptr<ExprAST> SCParser::ParseForExpr() {
   GetNextToken();  // eat the for.
 
@@ -1103,7 +1158,8 @@ std::unique_ptr<InstFormatAST> SCParser::ParseInstFormatDef(){
 
   std::vector<std::tuple<std::string,
                            SCInstField,
-                           std::string>> Fields; // vector of field tuples
+                           std::string,
+                           unsigned>> Fields; // vector of field tuples
 
   // try to pull the next identifier
   GetNextToken();
@@ -1140,12 +1196,27 @@ std::unique_ptr<InstFormatAST> SCParser::ParseInstFormatDef(){
 
     std::string FieldName = Lex->GetIdentifierStr();
 
+    // look for the optional width specifier
+    unsigned Width = 0;
+    GetNextToken();
+    if( CurTok == ':' ){
+      // eat the colon
+      GetNextToken();
+
+      // parse a numeric value
+      if( CurTok != tok_number ){
+        return LogErrorIF("Expected numeric identifier in field width defintition: " + FName );
+      }
+
+      Width = (unsigned)(Lex->GetNumVal());
+      GetNextToken();
+    }
+
     // add it to the vector
-    Fields.push_back(std::tuple<std::string,SCInstField,std::string>
-                     (FieldName,FieldType,RegType));
+    Fields.push_back(std::tuple<std::string,SCInstField,std::string,unsigned>
+                     (FieldName,FieldType,RegType,Width));
 
     // look for commas and the end of the definition
-    GetNextToken();
     if( CurTok == ',' ){
       // eat the comma
       GetNextToken();
@@ -1195,49 +1266,81 @@ std::unique_ptr<RegClassAST> SCParser::ParseRegClassDef(){
 
     std::string RegName = Lex->GetIdentifierStr();
 
+    // init the register attrs
+    VAttr.defReadOnly   = false;
+    VAttr.defReadWrite  = true;  // default to true
+    VAttr.defCSR        = false;
+    VAttr.defAMS        = false;
+    VAttr.defTUS        = false;
+    VAttr.defShared     = false;
+
     // add them to our vector
     ArgAttrs.push_back(VAttr);
     ArgNames.push_back(RegName);
 
-    // Look for the comma or subregister
+    // Look for the an attribute list, subregister list or comma
     GetNextToken();
 
-    if( CurTok == ',' ){
-      // eat the comma
-      GetNextToken();
-    }else if( CurTok == '[' ){
+    // --
+    // Parse a brace, if a brace exists, parse an attribute list
+    // --
+    if( CurTok == '[' ){
       // attempt to parse the attribute field
       // eat the [
       GetNextToken();
+
+      unsigned L_VAttr = ArgAttrs.size()-1;
 
       if( CurTok != tok_identifier ){
         return LogErrorR("Expected register attribute in [..]");
       }
 
-      // examine the attribute
-      if( Lex->GetIdentifierStr() == "PC" ){
-        PCName = RegName;
-      }
+      while( CurTok == tok_identifier ){
+        std::string LA = Lex->GetIdentifierStr();
+        if( LA == "PC" ){
+          PCName = RegName;
+        }else if( LA == "RO" ){
+          ArgAttrs[L_VAttr].defReadOnly = true;
+          ArgAttrs[L_VAttr].defReadWrite = false;
+        }else if( LA == "RW" ){
+          ArgAttrs[L_VAttr].defReadWrite = true;
+          ArgAttrs[L_VAttr].defReadOnly = false;
+        }else if( LA == "CSR" ){
+          ArgAttrs[L_VAttr].defCSR = true;
+        }else if( LA == "AMS" ){
+          ArgAttrs[L_VAttr].defAMS = true;
+        }else if( LA == "TUS" ){
+          ArgAttrs[L_VAttr].defTUS = true;
+        }else if( (LA == "Shared") || (LA == "SHARED") ){
+          ArgAttrs[L_VAttr].defShared = true;
+        }else{
+          return LogErrorR("Unknown register attribute type: " + LA);
+        }
 
-      // eat the identifier
-      GetNextToken();
+        if( ArgAttrs[L_VAttr].defReadOnly && ArgAttrs[L_VAttr].defReadWrite ){
+          return LogErrorR("Cannot set Read-Only and Read-Write attributes on register=" + RegName );
+        }
 
-      if( CurTok == ']' ){
-        // eat the )
+        // eat the identifier
         GetNextToken();
-      }else{
-        // flag an error
-        return LogErrorR("Expected ']' in register attribute list");
-      }
 
-      if( CurTok == ',' ){
-        // eat the comma
-        GetNextToken();
-      }else{
-        break;
+        if( CurTok == ',' ){
+          // eat the comma
+          GetNextToken();
+        }else if( CurTok == ']' ){
+          // eat the closing brace
+          GetNextToken();
+          break;
+        }else{
+          return LogErrorR("Expected ',' or closing brace ']' in register attribute list for register=" + RegName);
+        }
       }
+    }
 
-    }else if( CurTok == '(' ){
+    // --
+    // Parse an open paren, if an open paren exists, parse a subregister list
+    // --
+    if( CurTok == '(' ){
       // attempt to parse the sub registers
 
       // eat the (
@@ -1276,18 +1379,19 @@ std::unique_ptr<RegClassAST> SCParser::ParseRegClassDef(){
           return LogErrorR("Expected ',' or ')' in subregister list");
         }
       }
+    }
 
-      // handle the next comma or ending paren
-      if( CurTok == ',' ){
-        // eat the comma
-        GetNextToken();
-      }else{
-        break;
-      }
+    // --
+    // Parse a comma, if a comma exist, move to the next register
+    // --
+    if( CurTok == ',' ){
+      // eat the comma
+      GetNextToken();
     }else{
       break;
     }
-  }
+
+  } //while (CurTok == tok_var)
 
   if (CurTok != ')')
     return LogErrorR("Expected ')' in regclass prototype");
@@ -1481,11 +1585,21 @@ static AllocaInst *CreateEntryBlockAllocaAttr(Function *TheFunction,
                  TheFunction->getEntryBlock().begin());
 
   if( Attr.defFloat ){
-    return TmpB.CreateAlloca(Type::getDoubleTy(SCParser::TheContext), 0,
+    AllocaInst *AI = TmpB.CreateAlloca(Type::getDoubleTy(SCParser::TheContext), 0,
                              VarName.c_str());
+    if( SCParser::NameMDNode ){
+      AI->setMetadata("pipe.pipeName",SCParser::NameMDNode);
+      AI->setMetadata("pipe.pipeInstance",SCParser::InstanceMDNode);
+    }
+    return AI;
   }else{
-    return TmpB.CreateAlloca(Type::getIntNTy(SCParser::TheContext,Attr.width), 0,
+    AllocaInst *AI = TmpB.CreateAlloca(Type::getIntNTy(SCParser::TheContext,Attr.width), 0,
                              VarName.c_str());
+    if( SCParser::NameMDNode ){
+      AI->setMetadata("pipe.pipeName",SCParser::NameMDNode);
+      AI->setMetadata("pipe.pipeInstance",SCParser::InstanceMDNode);
+    }
+    return AI;
   }
 }
 
@@ -1517,6 +1631,57 @@ Function *getFunction(std::string Name ){
 
 Value *NumberExprAST::codegen() {
   return ConstantInt::get(SCParser::TheContext, APInt(64,Val,false));
+}
+
+Value *PipeExprAST::codegen() {
+
+  // Emit the body of the pipe stage
+  if( BodyExpr.size() == 0 ) return nullptr;
+
+  // Retrieve the function so we can add the necessary attributes
+  // Pipeline attribute names are monotonically numbered from 0->N
+  // This allows us to have a single attribute with a list of pipeline stages
+  // included therein
+  Function *TheFunction = Builder.GetInsertBlock()->getParent();
+  AttributeSet AttrSet = TheFunction->getAttributes().getFnAttributes();
+  unsigned AttrVal = 0;
+  while( AttrSet.hasAttribute("pipename"+std::to_string(AttrVal)) ){
+    AttrVal = AttrVal + 1;
+  }
+
+  TheFunction->addFnAttr("pipename" + std::to_string(AttrVal),PipeName);
+
+  // build the metadata
+  MDNode *N = MDNode::get(SCParser::TheContext,
+                          MDString::get(SCParser::TheContext,PipeName));
+  MDNode *TmpPI = MDNode::get(SCParser::TheContext,
+                              ConstantAsMetadata::get(ConstantInt::get(
+                                SCParser::TheContext,
+                                llvm::APInt(64, (uint64_t)(Instance), false))));
+  MDNode *PI = MDNode::get(SCParser::TheContext, TmpPI);
+
+  // assign to the global copies such that the other codegen
+  // functions can pick up the necessary MDNode's
+  SCParser::NameMDNode = N;
+  SCParser::InstanceMDNode = PI;
+
+  // Walk all the body instructions, emit them and tag each
+  // instruction with the appropriate metadata
+  for( unsigned i=0; i<BodyExpr.size(); i++ ){
+    Value *BVal = BodyExpr[i]->codegen();
+    if( isa<Instruction>(*BVal) ){
+      Instruction *Inst = cast<Instruction>(BVal);
+      Inst->setMetadata("pipe.pipeName",N);
+      Inst->setMetadata("pipe.pipeInstance",PI);
+    }
+  }
+
+  // exit the pipe codegen block
+  SCParser::NameMDNode = nullptr;
+  SCParser::InstanceMDNode = nullptr;
+
+  // pipe expr
+  return Constant::getNullValue(Type::getIntNTy(SCParser::TheContext,64));
 }
 
 Value *DoWhileExprAST::codegen() {
@@ -1560,7 +1725,11 @@ Value *DoWhileExprAST::codegen() {
                          TheFunction);
 
   // Insert the conditional branch for the initial state
-  Builder.CreateCondBr(CondV,LoopBB,AfterBB);
+  BranchInst *BI = Builder.CreateCondBr(CondV,LoopBB,AfterBB);
+  if( SCParser::NameMDNode ){
+    BI->setMetadata("pipe.pipeName",SCParser::NameMDNode);
+    BI->setMetadata("pipe.pipeInstance",SCParser::InstanceMDNode);
+  }
 
   // Anything new is inserted after the while exit
   Builder.SetInsertPoint(AfterBB);
@@ -1584,7 +1753,11 @@ Value *WhileExprAST::codegen() {
                                           TheFunction);
 
   // Insert an explicit fall through from the current block to the LoopBB.
-  Builder.CreateBr(LoopBB);
+  BranchInst *BI = Builder.CreateBr(LoopBB);
+  if( SCParser::NameMDNode ){
+    BI->setMetadata("pipe.pipeName",SCParser::NameMDNode);
+    BI->setMetadata("pipe.pipeInstance",SCParser::InstanceMDNode);
+  }
 
   // loop body block
   BasicBlock *EntryBB = BasicBlock::Create(SCParser::TheContext,
@@ -1619,7 +1792,11 @@ Value *WhileExprAST::codegen() {
   }
 
   // Insert the conditional branch for the initial state
-  Builder.CreateCondBr(CondV,EntryBB,AfterBB);
+  BI = Builder.CreateCondBr(CondV,EntryBB,AfterBB);
+  if( SCParser::NameMDNode ){
+    BI->setMetadata("pipe.pipeName",SCParser::NameMDNode);
+    BI->setMetadata("pipe.pipeInstance",SCParser::InstanceMDNode);
+  }
 
   // Anything new is inserted after the while exit
   Builder.SetInsertPoint(AfterBB);
@@ -1640,7 +1817,11 @@ Value *ForExprAST::codegen() {
     return nullptr;
 
   // Store the value into an alloca
-  SCParser::Builder.CreateStore(StartVal,Alloca);
+  StoreInst *SI = SCParser::Builder.CreateStore(StartVal,Alloca);
+  if( SCParser::NameMDNode ){
+    SI->setMetadata("pipe.pipeName",SCParser::NameMDNode);
+    SI->setMetadata("pipe.pipeInstance",SCParser::InstanceMDNode);
+  }
 
   unsigned LocalLabel = GetLocalLabel();
 
@@ -1651,7 +1832,12 @@ Value *ForExprAST::codegen() {
                                           TheFunction);
 
   // Insert an explicit fall through from the current block to the LoopBB.
-  Builder.CreateBr(LoopBB);
+  BranchInst *BI = Builder.CreateBr(LoopBB);
+  if( SCParser::NameMDNode ){
+    BI->setMetadata("pipe.pipeName",SCParser::NameMDNode);
+    BI->setMetadata("pipe.pipeInstance",SCParser::InstanceMDNode);
+  }
+
 
   // Start insertion in LoopBB.
   Builder.SetInsertPoint(LoopBB);
@@ -1691,7 +1877,16 @@ Value *ForExprAST::codegen() {
   Value *NextVar = Builder.CreateAdd(CurVar,
                                       StepVal,
                                       "nextvar" + std::to_string(LocalLabel));
-  Builder.CreateStore(NextVar,Alloca);
+  SI = Builder.CreateStore(NextVar,Alloca);
+  if( SCParser::NameMDNode ){
+    cast<LoadInst>(CurVar)->setMetadata("pipe.pipeName",SCParser::NameMDNode);
+    cast<LoadInst>(CurVar)->setMetadata("pipe.pipeInstance",SCParser::InstanceMDNode);
+    cast<Instruction>(NextVar)->setMetadata("pipe.pipeName",SCParser::NameMDNode);
+    cast<Instruction>(NextVar)->setMetadata("pipe.pipeInstance",SCParser::InstanceMDNode);
+    SI->setMetadata("pipe.pipeName",SCParser::NameMDNode);
+    SI->setMetadata("pipe.pipeInstance",SCParser::InstanceMDNode);
+  }
+
 
   // Convert condition to a bool by comparing non-equal to 0.0.
   //EndCond = Builder.CreateFCmpONE(
@@ -1702,6 +1897,10 @@ Value *ForExprAST::codegen() {
       EndCond, ConstantInt::get(SCParser::TheContext,
                                APInt(1,0,false)),
                                "loopcond" + std::to_string(LocalLabel));
+  if( SCParser::NameMDNode ){
+    cast<Instruction>(EndCond)->setMetadata("pipe.pipeName",SCParser::NameMDNode);
+    cast<Instruction>(EndCond)->setMetadata("pipe.pipeInstance",SCParser::InstanceMDNode);
+  }
 
   // Create the "after loop" block and insert it.
   BasicBlock *AfterBB =
@@ -1710,7 +1909,11 @@ Value *ForExprAST::codegen() {
                          TheFunction);
 
   // Insert the conditional branch into the end of LoopEndBB.
-  Builder.CreateCondBr(EndCond, LoopBB, AfterBB);
+  BI = Builder.CreateCondBr(EndCond, LoopBB, AfterBB);
+  if( SCParser::NameMDNode ){
+    BI->setMetadata("pipe.pipeName",SCParser::NameMDNode);
+    BI->setMetadata("pipe.pipeInstance",SCParser::InstanceMDNode);
+  }
 
   // Any new code will be inserted in AfterBB.
   Builder.SetInsertPoint(AfterBB);
@@ -1738,7 +1941,12 @@ Value *VariableExprAST::codegen() {
     }
   }
 
-  return SCParser::Builder.CreateLoad(V,Name.c_str());
+  Value *LI = SCParser::Builder.CreateLoad(V,Name.c_str());
+  if( SCParser::NameMDNode ){
+    cast<LoadInst>(LI)->setMetadata("pipe.pipeName",SCParser::NameMDNode);
+    cast<LoadInst>(LI)->setMetadata("pipe.pipeInstance",SCParser::InstanceMDNode);
+  }
+  return LI;
 }
 
 Value *VarExprAST::codegen() {
@@ -1777,7 +1985,11 @@ Value *VarExprAST::codegen() {
     AllocaInst *Alloca = CreateEntryBlockAllocaAttr(TheFunction,
                                                     VarName,
                                                     Attrs[i]);
-    Builder.CreateStore(InitVal, Alloca);
+    StoreInst *SI = Builder.CreateStore(InitVal, Alloca);
+    if( SCParser::NameMDNode ){
+      SI->setMetadata("pipe.pipeName",SCParser::NameMDNode);
+      SI->setMetadata("pipe.pipeInstance",SCParser::InstanceMDNode);
+    }
 
     OldBindings.push_back(SCParser::NamedValues[VarName]);
     SCParser::NamedValues[VarName] = Alloca;
@@ -1823,7 +2035,12 @@ Value *BinaryExprAST::codegen() {
       }
     }
 
-    Builder.CreateStore(Val, Variable);
+    StoreInst *SI = Builder.CreateStore(Val, Variable);
+    if( SCParser::NameMDNode ){
+      SI->setMetadata("pipe.pipeName",SCParser::NameMDNode);
+      SI->setMetadata("pipe.pipeInstance",SCParser::InstanceMDNode);
+    }
+
     return Val;
   }
 
@@ -1844,57 +2061,87 @@ Value *BinaryExprAST::codegen() {
     if( LT->isFloatingPointTy() ){
       // LHS is the float
       R = SCParser::Builder.CreateUIToFP(R,LT,"uitofptmp");
+      if( SCParser::NameMDNode ){
+        cast<Instruction>(R)->setMetadata("pipe.pipeName",SCParser::NameMDNode);
+        cast<Instruction>(R)->setMetadata("pipe.pipeInstance",SCParser::InstanceMDNode);
+      }
     }else{
       // RHS is the float
       R = SCParser::Builder.CreateFPToUI(R,LT,"fptouitmp");
+      if( SCParser::NameMDNode ){
+        cast<Instruction>(R)->setMetadata("pipe.pipeName",SCParser::NameMDNode);
+        cast<Instruction>(R)->setMetadata("pipe.pipeInstance",SCParser::InstanceMDNode);
+      }
     }
   }else if( LT->getIntegerBitWidth() != RT->getIntegerBitWidth() ){
-    // integer type mismatch, mutate the size of the RHS
-    // TODO: print a warning message
-    //R->mutateType(LT);
+    // integer type mismatch, cast to the size of the RHS
     R = SCParser::Builder.CreateIntCast(R,LT,true);
+    if( SCParser::NameMDNode ){
+      cast<Instruction>(R)->setMetadata("pipe.pipeName",SCParser::NameMDNode);
+      cast<Instruction>(R)->setMetadata("pipe.pipeInstance",SCParser::InstanceMDNode);
+    }
   }
+
+  Value *VI = nullptr;
 
   if( LT->isFloatingPointTy() ){
     // float ops
     switch (Op) {
     case '+':
-      return SCParser::Builder.CreateFAdd(L, R, "addtmp");
+      VI = SCParser::Builder.CreateFAdd(L, R, "addtmp");
+      break;
     case '-':
-      return SCParser::Builder.CreateFSub(L, R, "subtmp");
+      VI = SCParser::Builder.CreateFSub(L, R, "subtmp");
+      break;
     case '*':
-      return SCParser::Builder.CreateFMul(L, R, "multmp");
+      VI = SCParser::Builder.CreateFMul(L, R, "multmp");
+      break;
     case '<':
-      return SCParser::Builder.CreateFCmpULT(L, R, "cmptmp");
+      VI = SCParser::Builder.CreateFCmpULT(L, R, "cmptmp");
+      break;
     case '>':
-      return SCParser::Builder.CreateFCmpUGT(L, R, "cmptmp");
+      VI = SCParser::Builder.CreateFCmpUGT(L, R, "cmptmp");
+      break;
     case '%':
-      return SCParser::Builder.CreateFRem(L, R, "modtmp");
+      VI = SCParser::Builder.CreateFRem(L, R, "modtmp");
+      break;
     case '/':
-      return SCParser::Builder.CreateFDiv(L, R, "divtmp", nullptr);
+      VI = SCParser::Builder.CreateFDiv(L, R, "divtmp", nullptr);
+      break;
     case '&':
-      return SCParser::Builder.CreateAnd(L, R, "andtmp" );
+      VI = SCParser::Builder.CreateAnd(L, R, "andtmp" );
+      break;
     case '|':
-      return SCParser::Builder.CreateOr(L, R, "ortmp" );
+      VI = SCParser::Builder.CreateOr(L, R, "ortmp" );
+      break;
     case '^':
-      return SCParser::Builder.CreateXor(L, R, "xortmp" );
+      VI = SCParser::Builder.CreateXor(L, R, "xortmp" );
+      break;
     case dyad_shfl:
       L = SCParser::Builder.CreateShl(L, R, "shfltmp", false, false );
-      return SCParser::Builder.CreateUIToFP(L, R->getType(), "booltmp");
+      VI = SCParser::Builder.CreateUIToFP(L, R->getType(), "booltmp");
+      break;
     case dyad_shfr:
-      return SCParser::Builder.CreateLShr(L, R, "lshfrtmp", false );
+      VI = SCParser::Builder.CreateLShr(L, R, "lshfrtmp", false );
+      break;
     case dyad_eqeq:
-      return SCParser::Builder.CreateFCmpUEQ(L, R, "cmpeq" );
+      VI = SCParser::Builder.CreateFCmpUEQ(L, R, "cmpeq" );
+      break;
     case dyad_noteq:
-      return SCParser::Builder.CreateFCmpUNE(L, R, "cmpeq" );
+      VI = SCParser::Builder.CreateFCmpUNE(L, R, "cmpeq" );
+      break;
     case dyad_logand:
-      return SCParser::Builder.CreateAnd(L, R, "andtmp" );
+      VI = SCParser::Builder.CreateAnd(L, R, "andtmp" );
+      break;
     case dyad_logor:
-      return SCParser::Builder.CreateOr(L, R, "ortmp" );
+      VI = SCParser::Builder.CreateOr(L, R, "ortmp" );
+      break;
     case dyad_gte:
-      return SCParser::Builder.CreateFCmpUGE(L, R, "cmptmp");
+      VI = SCParser::Builder.CreateFCmpUGE(L, R, "cmptmp");
+      break;
     case dyad_lte:
-      return SCParser::Builder.CreateFCmpULE(L, R, "cmptmp");
+      VI = SCParser::Builder.CreateFCmpULE(L, R, "cmptmp");
+      break;
     default:
       return LogErrorV("invalid binary operator");
     }
@@ -1902,45 +2149,70 @@ Value *BinaryExprAST::codegen() {
     // integer ops
     switch (Op) {
     case '+':
-      return SCParser::Builder.CreateAdd(L, R, "addtmp");
+      VI = SCParser::Builder.CreateAdd(L, R, "addtmp");
+      break;
     case '-':
-      return SCParser::Builder.CreateSub(L, R, "subtmp");
+      VI = SCParser::Builder.CreateSub(L, R, "subtmp");
+      break;
     case '*':
-      return SCParser::Builder.CreateMul(L, R, "multmp");
+      VI = SCParser::Builder.CreateMul(L, R, "multmp");
+      break;
     case '<':
-      return SCParser::Builder.CreateICmpULT(L, R, "cmptmp");
+      VI = SCParser::Builder.CreateICmpULT(L, R, "cmptmp");
+      break;
     case '>':
-      return SCParser::Builder.CreateICmpUGT(L, R, "cmptmp");
+      VI = SCParser::Builder.CreateICmpUGT(L, R, "cmptmp");
+      break;
     case '%':
-      return SCParser::Builder.CreateURem(L, R, "modtmp");
+      VI = SCParser::Builder.CreateURem(L, R, "modtmp");
+      break;
     case '/':
-      return SCParser::Builder.CreateUDiv(L, R, "divtmp", true);
+      VI = SCParser::Builder.CreateUDiv(L, R, "divtmp", true);
+      break;
     case '&':
-      return SCParser::Builder.CreateAnd(L, R, "andtmp" );
+      VI = SCParser::Builder.CreateAnd(L, R, "andtmp" );
+      break;
     case '|':
-      return SCParser::Builder.CreateOr(L, R, "ortmp" );
+      VI = SCParser::Builder.CreateOr(L, R, "ortmp" );
+      break;
     case '^':
-      return SCParser::Builder.CreateXor(L, R, "xortmp" );
+      VI = SCParser::Builder.CreateXor(L, R, "xortmp" );
+      break;
     case dyad_shfl:
-      return SCParser::Builder.CreateShl(L, R, "shfltmp", false, false );
+      VI = SCParser::Builder.CreateShl(L, R, "shfltmp", false, false );
+      break;
     case dyad_shfr:
-      return SCParser::Builder.CreateLShr(L, R, "lshfrtmp", false );
+      VI = SCParser::Builder.CreateLShr(L, R, "lshfrtmp", false );
+      break;
     case dyad_eqeq:
-      return SCParser::Builder.CreateICmpEQ(L, R, "cmpeq" );
+      VI = SCParser::Builder.CreateICmpEQ(L, R, "cmpeq" );
+      break;
     case dyad_noteq:
-      return SCParser::Builder.CreateICmpNE(L, R, "cmpne" );
+      VI = SCParser::Builder.CreateICmpNE(L, R, "cmpne" );
+      break;
     case dyad_logand:
-      return SCParser::Builder.CreateAnd(L, R, "andtmp" );
+      VI = SCParser::Builder.CreateAnd(L, R, "andtmp" );
+      break;
     case dyad_logor:
-      return SCParser::Builder.CreateOr(L, R, "ortmp" );
+      VI = SCParser::Builder.CreateOr(L, R, "ortmp" );
+      break;
     case dyad_gte:
-      return SCParser::Builder.CreateICmpUGE(L, R, "cmptmp");
+      VI = SCParser::Builder.CreateICmpUGE(L, R, "cmptmp");
+      break;
     case dyad_lte:
-      return SCParser::Builder.CreateICmpULE(L, R, "cmptmp");
+      VI = SCParser::Builder.CreateICmpULE(L, R, "cmptmp");
+      break;
     default:
       return LogErrorV("invalid binary operator");
     }
   }
+
+  if( SCParser::NameMDNode ){
+    cast<Instruction>(VI)->setMetadata("pipe.pipeName",SCParser::NameMDNode);
+    cast<Instruction>(VI)->setMetadata("pipe.pipeInstance",SCParser::InstanceMDNode);
+  }
+
+  return VI;
 
   // we don't currently support user-defined binary operators, so just return here
   // see chapter 6 in the llvm frontend tutorial
@@ -1964,7 +2236,12 @@ Value *CallExprAST::codegen() {
       return nullptr;
   }
 
-  return SCParser::Builder.CreateCall(CalleeF, ArgsV, "calltmp");
+  Value *CI = SCParser::Builder.CreateCall(CalleeF, ArgsV, "calltmp");
+  if( SCParser::NameMDNode ){
+    cast<Instruction>(CI)->setMetadata("pipe.pipeName",SCParser::NameMDNode);
+    cast<Instruction>(CI)->setMetadata("pipe.pipeInstance",SCParser::InstanceMDNode);
+  }
+  return CI;
 }
 
 Function *PrototypeAST::codegen() {
@@ -1997,12 +2274,13 @@ Function *PrototypeAST::codegen() {
 Value *InstFormatAST::codegen(){
   // instruction fields
   Type *VType = Type::getIntNTy(SCParser::TheContext,64); // create a generic uint64_t
-  std::vector<std::tuple<std::string,SCInstField,std::string>>::iterator it;
+  std::vector<std::tuple<std::string,SCInstField,std::string,unsigned>>::iterator it;
 
   for( it=Fields.begin(); it != Fields.end(); ++it ){
     std::string FName = std::get<0>(*it);
     SCInstField FT = std::get<1>(*it);
     std::string RClass = std::get<2>(*it);
+    unsigned Width = std::get<3>(*it);
 
     // search the GlobalNamedValues map for the target variable name
     // if its not found, then create an entry
@@ -2033,6 +2311,9 @@ Value *InstFormatAST::codegen(){
 
       // add an attribute to track the value to the instruction format
       val->addAttribute("instformat0",Name);
+
+      // add an attribute to track the value of the instruction field width
+      val->addAttribute("instwidth0",std::to_string(Width));
 
       // add attributes for the field type
       switch( FT ){
@@ -2091,6 +2372,9 @@ Value *InstFormatAST::codegen(){
       // insert the new instruction format
       GVit->second->addAttribute("instformat"+std::to_string(NextIF),Name);
 
+      // insert the new instruction width
+      GVit->second->addAttribute("instwidth"+std::to_string(NextIF),std::to_string(Width));
+
       // insert a new register class type if required
       if( FT == field_reg ){
         GVit->second->addAttribute("regclasscontainer"+std::to_string(NextIF),RClass);
@@ -2138,6 +2422,24 @@ Value *RegClassAST::codegen(){
 
       if( PC == Args[i] ){
         val->addAttribute("pc", "true");
+      }
+      if( Attrs[i].defReadOnly ){
+        val->addAttribute("readOnly", "true");
+      }
+      if( Attrs[i].defReadWrite ){
+        val->addAttribute("readWrite", "true");
+      }
+      if( Attrs[i].defCSR ){
+        val->addAttribute("csr", "true");
+      }
+      if( Attrs[i].defAMS ){
+        val->addAttribute("ams", "true");
+      }
+      if( Attrs[i].defTUS ){
+        val->addAttribute("tus", "true");
+      }
+      if( Attrs[i].defShared ){
+        val->addAttribute("shared", "true");
       }
     }else{
       // this is a register class
@@ -2212,7 +2514,11 @@ Function *FunctionAST::codegen() {
     AllocaInst *Alloca = CreateEntryBlockAlloca(TheFunction,Arg.getName());
 
     // store the initial value into the alloca
-    Builder.CreateStore(&Arg, Alloca);
+    StoreInst *SI = Builder.CreateStore(&Arg, Alloca);
+    if( SCParser::NameMDNode ){
+      SI->setMetadata("pipe.pipeName",SCParser::NameMDNode);
+      SI->setMetadata("pipe.pipeInstance",SCParser::InstanceMDNode);
+    }
 
     // add arguments to the variable symbol table
     SCParser::NamedValues[Arg.getName()] = Alloca;
@@ -2252,6 +2558,10 @@ Value *IfExprAST::codegen() {
   CondV = Builder.CreateICmpNE(
         CondV, ConstantInt::get(SCParser::TheContext, APInt(1,0,false)),
         "ifcond."+std::to_string(LocalLabel));
+  if( SCParser::NameMDNode ){
+    cast<Instruction>(CondV)->setMetadata("pipe.pipeName",SCParser::NameMDNode);
+    cast<Instruction>(CondV)->setMetadata("pipe.pipeInstance",SCParser::InstanceMDNode);
+  }
 
   Function *TheFunction = Builder.GetInsertBlock()->getParent();
 
@@ -2265,11 +2575,14 @@ Value *IfExprAST::codegen() {
   BasicBlock *MergeBB = BasicBlock::Create(SCParser::TheContext,
                                            "ifcont."+std::to_string(LocalLabel));
 
-  Builder.CreateCondBr(CondV, ThenBB, ElseBB);
+  BranchInst *BI = Builder.CreateCondBr(CondV, ThenBB, ElseBB);
+  if( SCParser::NameMDNode ){
+    BI->setMetadata("pipe.pipeName",SCParser::NameMDNode);
+    BI->setMetadata("pipe.pipeInstance",SCParser::InstanceMDNode);
+  }
 
   // Emit then value.
   Builder.SetInsertPoint(ThenBB);
-
 
   // Emit all the Then body values
   Value *TV = nullptr;
@@ -2279,7 +2592,12 @@ Value *IfExprAST::codegen() {
       return nullptr;
   }
 
-  Builder.CreateBr(MergeBB);
+  BI = Builder.CreateBr(MergeBB);
+  if( SCParser::NameMDNode ){
+    BI->setMetadata("pipe.pipeName",SCParser::NameMDNode);
+    BI->setMetadata("pipe.pipeInstance",SCParser::InstanceMDNode);
+  }
+
   // Codegen of 'Then' can change the current block, update ThenBB for the PHI.
   ThenBB = Builder.GetInsertBlock();
 
@@ -2295,7 +2613,12 @@ Value *IfExprAST::codegen() {
       return nullptr;
   }
 
-  Builder.CreateBr(MergeBB);
+  BI = Builder.CreateBr(MergeBB);
+  if( SCParser::NameMDNode ){
+    BI->setMetadata("pipe.pipeName",SCParser::NameMDNode);
+    BI->setMetadata("pipe.pipeInstance",SCParser::InstanceMDNode);
+  }
+
   // Codegen of 'Else' can change the current block, update ElseBB for the PHI.
   ElseBB = Builder.GetInsertBlock();
 
@@ -2307,9 +2630,17 @@ Value *IfExprAST::codegen() {
   if( TV->getType()->isFloatingPointTy() ){
     PN = Builder.CreatePHI(TV->getType(),
                                     2, "iftmp."+std::to_string(LocalLabel));
+    if( SCParser::NameMDNode ){
+      PN->setMetadata("pipe.pipeName",SCParser::NameMDNode);
+      PN->setMetadata("pipe.pipeInstance",SCParser::InstanceMDNode);
+    }
   }else{
     PN = Builder.CreatePHI(TV->getType(),
                                     2, "iftmp."+std::to_string(LocalLabel));
+    if( SCParser::NameMDNode ){
+      PN->setMetadata("pipe.pipeName",SCParser::NameMDNode);
+      PN->setMetadata("pipe.pipeInstance",SCParser::InstanceMDNode);
+    }
   }
 
   PN->addIncoming(TV, ThenBB);

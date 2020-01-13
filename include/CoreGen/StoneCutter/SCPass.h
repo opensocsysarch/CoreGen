@@ -57,6 +57,8 @@ using namespace llvm;
 class SCPass{
 private:
   std::string Name;                   ///< Name of the StoneCutter pass
+  std::string Options;                ///< Options string for the pass
+  std::string ExecOpts;               ///< Execution options string
   SCMsg *Msgs;                        ///< StoneCutter messages output
 
   /// Convert a string to upper case
@@ -70,6 +72,7 @@ public:
 
   /// Default constructor
   SCPass(std::string N,
+         std::string Opt,
          Module *TM,
          SCOpts *O,
          SCMsg *M);
@@ -79,6 +82,12 @@ public:
 
   /// Retrieve the name of the pass
   std::string GetName() { return Name; }
+
+  /// Retrieve the options string for the pass
+  std::string GetOptions() { return Options; }
+
+  /// Retreive the execution options string for the pass
+  std::string GetExecOpts() { return ExecOpts; }
 
   /// Prints a message to the message stream
   void PrintMsg( MSG_LEVEL L, const std::string M );
@@ -125,6 +134,24 @@ public:
   /// Retrieves the set of register classes for fields that match the instruction format
   std::vector<std::string> GetRegClassInstTypes(std::string InstFormat);
 
+  /// Retrieves the instruction width field for the target instruction format and the target field
+  bool GetInstFieldWidth(std::string InstFormat, std::string Field, unsigned& Width );
+
+  /// Retrieves the number of pipeline stages contained within the target function
+  unsigned GetNumPipeStages(Function &F);
+
+  /// Retrieves the name of the target pipe stage
+  bool GetPipeStageName(Function &F, unsigned N, std::string& PipeName );
+
+  /// Retrieve a vector of all teh pipe stage names
+  std::vector<std::string> GetPipeStages(Function &F);
+
+  /// Retrieve the pipe stage name associated with the target instruction
+  bool GetPipeStage(Instruction &Inst, std::string &Stage );
+
+  /// Retrieve the pipe stage instance associated with the target instruction
+  bool GetPipeStageInstance(Instruction &Inst, unsigned &Instance );
+
   /// Traces the target operand back to its origin and returns the original name
   std::string TraceOperand( Function &F, Value *V,
                             bool &isPredef, bool &isImm,
@@ -132,6 +159,9 @@ public:
 
   /// Executes the target code generation pass
   virtual bool Execute() = 0;
+
+  /// Set the execution options for the pass
+  virtual bool SetExecOpts( std::string E );
 
 };
 

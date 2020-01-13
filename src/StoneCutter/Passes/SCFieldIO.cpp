@@ -13,7 +13,7 @@
 SCFieldIO::SCFieldIO(Module *TM,
                            SCOpts *O,
                            SCMsg *M)
-  : SCPass("FieldIO",TM,O,M) {
+  : SCPass("FieldIO","",TM,O,M) {
 }
 
 SCFieldIO::~SCFieldIO(){

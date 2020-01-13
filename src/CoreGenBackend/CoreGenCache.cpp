@@ -11,13 +11,13 @@
 #include "CoreGen/CoreGenBackend/CoreGenCache.h"
 
 CoreGenCache::CoreGenCache(std::string N, CoreGenErrno *E )
-  : CoreGenNode(CGCache,E), Sets(0), Ways(0), SubLevel(false),
-    ParentLevel(false), Child(nullptr){
+  : CoreGenNode(CGCache,E), Sets(0), Ways(0), LineSize(64),
+    SubLevel(false), ParentLevel(false), Child(nullptr){
 }
 
 CoreGenCache::CoreGenCache(std::string N, unsigned CSets,
                             unsigned CWays, CoreGenErrno *E)
-  : CoreGenNode(CGCache,N,E), Sets(CSets), Ways(CWays),
+  : CoreGenNode(CGCache,N,E), Sets(CSets), Ways(CWays), LineSize(64),
     SubLevel(false), ParentLevel(false), Child(nullptr){
 }
 

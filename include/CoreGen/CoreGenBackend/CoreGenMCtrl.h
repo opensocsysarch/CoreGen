@@ -26,9 +26,16 @@
 #include "CoreGen/CoreGenBackend/CoreGenErrno.h"
 #include "CoreGen/CoreGenBackend/CoreGenNode.h"
 
+typedef enum{
+  CGWeak    = 0,            ///< CGMemOrder: Weak memory ordering
+  CGTSO     = 1,            ///< CGMemOrder: Total store ordering
+  CGStrong  = 2             ///< CGMemOrder: Strong memory ordering
+}CGMemOrder;                ///< CoreGenMCtrl: Memory ordering types
+
 class CoreGenMCtrl : public CoreGenNode{
 private:
   unsigned InputPorts;        ///< CoreGenMCtrl: input ports
+  CGMemOrder Order;           ///< CoreGenMCtrl: memory ordering
 
 public:
 
@@ -38,6 +45,9 @@ public:
   /// Overloaded constructor
   CoreGenMCtrl(std::string Name, CoreGenErrno *Errno, unsigned Ports);
 
+  /// Overloaded constructor
+  CoreGenMCtrl(std::string Name, CoreGenErrno *Errno, unsigned Ports, CGMemOrder Order);
+
   /// Defeault destructor
   ~CoreGenMCtrl();
 
@@ -46,6 +56,12 @@ public:
 
   /// Retrieve the number of input ports
   unsigned GetNumInputPorts();
+
+  /// Retrieve the memory ordering
+  CGMemOrder GetMemOrder() { return Order; }
+
+  /// Set the memory ordering
+  bool SetMemOrder( CGMemOrder O );
 };
 
 #endif

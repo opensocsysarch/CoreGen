@@ -122,6 +122,13 @@ int main( int argc, char **argv ){
     std::cout << "Verified signal map: " << FName << std::endl;
   }
 
+  if( !SM->ExecutePasses() ){
+    std::cout << "Failed to read signal map: " << FName << std::endl;
+    std::cout << "Failed to execute signal map passes: " << SM->GetErrStr() << std::endl;
+    delete SM;
+    return -1;
+  }
+
   if( stats ){
     PrintStats(SM);
   }
