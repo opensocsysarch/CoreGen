@@ -119,7 +119,6 @@ void CoreGenPassMgr::InitExtPasses(std::ostream *O){
 
 void CoreGenPassMgr::InitSysPasses(std::ostream *O){
   SysPasses.push_back(static_cast<CoreGenPass *>(new SafeDeletePass(O,DAG,Errno)));
-  SysPasses.push_back(static_cast<CoreGenPass *>(new ASPSolverPass(O,DAG,Errno)));
   SysPasses.push_back(static_cast<CoreGenPass *>(new SpecDoc(O,DAG,Errno)));
 }
 
@@ -394,11 +393,6 @@ bool CoreGenPassMgr::PrintSysPassInfo(){
     P->PrintPassInfo();
   }
   return true;
-}
-
-void CoreGenPassMgr::SetASPFiles(std::vector<std::string> Files){
-  ASPSolverPass *A = (ASPSolverPass *)SysPasses[1];
-  A->SetFiles(Files);
 }
 
 // EOF

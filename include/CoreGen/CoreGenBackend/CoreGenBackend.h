@@ -289,9 +289,6 @@ public:
   /// Retrieve an object pointer to the target plugin
   CoreGenPlugin *GetPlugin( std::string Plugin );
 
-  /// Set the ASP Files to Test
-  void SetASPFiles(std::vector<std::string>);
-
   /// Checks to see whether the node name is valid
   static bool IsValidName(std::string Name);
 

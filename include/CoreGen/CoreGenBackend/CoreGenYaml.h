@@ -150,9 +150,6 @@ private:
   /// Write Yaml: Project
   void WriteProjYaml(YAML::Emitter *out, CoreGenProj *Proj);
 
-  ///Remove all instances of . from a String
-  std::string PrepForASP(std::string RemStr);
-
   /// Read Yaml: Registers
   bool ReadRegisterYaml(const YAML::Node& RegNodes,
                         std::vector<CoreGenReg *> &Regs);
