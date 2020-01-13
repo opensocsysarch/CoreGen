@@ -1294,10 +1294,6 @@ CoreGenPlugin *CoreGenBackend::GetPlugin( std::string Plugin ){
   return PluginMgr->GetPlugin(Plugin);
 }
 
-void CoreGenBackend::SetASPFiles(std::vector<std::string> Files){
-  PassMgr->SetASPFiles(Files);
-}
-
 CoreGenCache* CoreGenBackend::GetCacheNodeByName(std::string Name){
   for(unsigned int i = 0; i < this->Caches.size(); i++){
     if(this->Caches[i]->GetName() == Name){

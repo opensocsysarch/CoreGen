@@ -9,10 +9,6 @@
 include_directories(${COREGEN_INCLUDE_PATH})
 include_directories(${YAML_PATH}/include)
 
-include_directories(${CLINGO_PATH}/libclingo)
-include_directories(${CLINGO_PATH}/libgringo)
-include_directories(${CLINGO_PATH}/libluaclingo)
-
 file(GLOB TEST_SRCS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} *.cpp)
 
 if(BUILD_COREGEN_DAG_INDIVIDUALPASS_KNOWNFAIL_TESTING)
@@ -39,4 +35,4 @@ foreach(testSrc ${TEST_SRCS})
 endforeach(testSrc)
 endif()
 
-add_subdirectory(ASP)
+# EOF

@@ -36,8 +36,6 @@ private:
   bool CheckPlugins;    ///< CGCLIOpts: Check the plugin options
   bool ListSysPasses;   ///< CGCLIOpts: Did the user request to list the sys passes
   bool ExecSysPass;     ///< CGCLIOpts: Execute a system pass
-  bool ASPSolver;       ///< CGCLIOpts: Execute the ASP Solver
-  bool ASPClean;        ///< CGCLIOpts: Clean up the ASP DAG file
   bool ArchQuery;       ///< CGCLIOpts: Query the archive
   bool ArchInit;        ///< CGCLIOpts: Init the archive
   bool ArchDestroy;     ///< CGCLIOpts: Destroy the archive
@@ -54,7 +52,6 @@ private:
   std::vector<std::string> EnablePass;  ///< CGCLIOpts: Manually enabled passes
   std::vector<std::string> DisablePass; ///< CGCLIOpts: Manually disabled passes
   std::vector<std::string> Plugins;     ///< CGCLIOpts: Plugins for checking
-  std::vector<std::string> ASPFiles;
 
   std::vector<std::tuple<std::string,bool,std::string>> EnableSysPass; ///< CGCLIOpts: Enabled System Passes
 
@@ -129,9 +126,6 @@ public:
   /// Check to see if system passes are enabled
   bool IsSysPassEnabled() { return ExecSysPass; }
 
-  // Check to see if the ASP pass is enabled
-  bool IsASPEnabled() { return ASPSolver; }
-
   /// Check to see if the group passes are enabled
   bool IsGroupPasses() { return GroupPasses; }
 
@@ -156,14 +150,8 @@ public:
   /// Check to see if the archive destory option is enabled
   bool IsArchiveDestroyEnabled() { return ArchDestroy; }
 
-  /// Check if ASP DAG needs to bee cleaned up
-  bool CleanASP() { return ASPClean; }
-
   /// Retrieve the number of selected plugins
   unsigned GetNumPlugins() { return Plugins.size(); }
-
-  /// Retrieve the ASP input string
-  std::vector<std::string> GetASPFiles() { return ASPFiles; }
 
   /// Retrieve the target plugin name
   std::string GetPlugin(unsigned P){
