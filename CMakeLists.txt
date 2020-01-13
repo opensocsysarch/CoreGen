@@ -27,20 +27,9 @@ execute_process(COMMAND lsb_release -cs
     OUTPUT_STRIP_TRAILING_WHITESPACE
 )
 
-#------------------------------------------------------------------------
-#-- CLINGO OPTIONS
-#------------------------------------------------------------------------
-set(CLINGO_BUILD_STATIC ON CACHE BOOL "Forcing Clingo to build static libs")
-set(CLINGO_MANAGE_RPATH OFF CACHE BOOL "Disable Clingo management of RPATH")
-set(CLINGO_BUILD_APPS OFF CACHE BOOL "Disabling Clingo Apps")
-set(LIB_POTASSCO_INSTALL_LIB ON CACHE BOOL "Forcing Potassco install")
-set(CLASP_INSTALL_LIB ON CACHE BOOL "Forcing Clasp install")
-
-#------------------------------------------------------------------------
 #-- COMPILER MACROS
 #------------------------------------------------------------------------
-set(CLINGO_COMPILER_MACROS "-DCLINGO_WITH_LUA") 
-set(COREGEN_COMPILER_MACROS "-DCGIPREFIX=${CMAKE_INSTALL_PREFIX} ${CLINGO_COMPILER_MACROS}")
+set(COREGEN_COMPILER_MACROS "-DCGIPREFIX=${CMAKE_INSTALL_PREFIX}")
 
 #------------------------------------------------------------------------
 #-- COMPILER OPTIONS
@@ -74,9 +63,6 @@ if( (${CMAKE_SYSTEM_NAME} EQUAL "Darwin") OR (${CMAKE_SYSTEM_NAME} EQUAL "Linux"
 else()
   set(COREGEN_LINK_LIBS "")
 endif()
-
-# Set the clingo build options
-set(CLINGO_BUILD_STATIC ON)
 
 #------------------------------------------------------------------------
 #-- FIND PACKAGES
@@ -129,11 +115,6 @@ endif()
 if(NOT YAML_PATH)
   set(YAML_PATH "${CMAKE_CURRENT_SOURCE_DIR}/src/thirdparty/yaml/yaml-cpp-0.6.2")
   message(STATUS "YAML_PATH set to ${YAML_PATH}")
-endif()
-
-if(NOT CLINGO_PATH)
-  set(CLINGO_PATH "${CMAKE_CURRENT_SOURCE_DIR}/src/thirdparty/clingo/clingo-5.3.0")
-  message(STATUS "CLINGO_PATH set to ${CLINGO_PATH}")
 endif()
 
 #------------------------------------------------------------------------

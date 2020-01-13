@@ -15,7 +15,7 @@ CGCLIOpts::CGCLIOpts( int argc, char **argv )
     GroupPasses(false), DataPasses(false), AnalysisPasses(false),
     OptPasses(false), ListPasses(false), Verify(false), ExecPass(false),
     CGChisel(false), CGComp(false), CGVersion(false), CheckPlugins(false),
-    ListSysPasses(false), ExecSysPass(false), ASPSolver(false), ASPClean(true),
+    ListSysPasses(false), ExecSysPass(false),
     ArchQuery(false), ArchInit(false), ArchDestroy(false), ProjName("UNKNOWN"){
   // setup default project root
   char PATH[FILENAME_MAX];
@@ -65,8 +65,6 @@ void CGCLIOpts::PrintOptions(){
   std::cout << "\t--enable-opt-passes                   : Enable all optimization passes" << std::endl;
   std::cout << "\t--list-passes                         : List all the passes and return" << std::endl;
   std::cout << "\t--list-sys-passes                     : List all the system passes" << std::endl;
-  std::cout << "\t--asp \"PROG1,PROG2,...\"               : Execute ASP solver with input" << std::endl;
-  std::cout << "\t--nocleanasp                          : Clean up the ASP DAG file" << std::endl;
   std::cout << std::endl;
   std::cout << " Archive Options:" << std::endl;
   std::cout << "\t--query archive.yaml                  : Query the target archive file" << std::endl;
@@ -380,24 +378,6 @@ bool CGCLIOpts::ParseOpts( int argc, char **argv ){
       }
       ExecSysPass = true;
       Verify = true;
-      i++;
-    }else if( s == "--asp" || s == "-asp" ){
-      // ASP pass selection
-      if( i+1 > (argc-1) ){
-        std::cout << "Error : --asp requires an argument" << std::endl;
-        return false;
-      }
-      std::string P(argv[i+1]);
-      ASPFiles = ParsePasses(P);
-      if( ASPFiles.size() == 0 ){
-        std::cout << "Error : ASP string must be non null" << std::endl;
-        return false;
-      }
-      Verify    = true;
-      ASPSolver = true;
-      i++;
-    }else if ( s == "--nocleanasp" || s == "-nocleanasp"){
-      ASPClean = false;
       i++;
     }else if( s == "--disable-all-passes" ){
       ManualPasses = true;

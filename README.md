@@ -55,7 +55,7 @@ sudo apt-get update
 ```
 2.  Install the system dependencies:
 ```
-sudo apt-get install -y libllvm-8-ocaml-dev libllvm8 llvm-8 llvm-8-dev llvm-8-doc llvm-8-examples llvm-8-runtime clang-8 clang-tools-8 clang-8-doc libclang-common-8-dev libclang-8-dev libclang1-8 clang-format-8 python-clang-8 re2c lua5.3 liblua5.3-dev zlib1g zlib1g-dev bison libcurl4-gnutls-dev libgit2-dev
+sudo apt-get install -y libllvm-8-ocaml-dev libllvm8 llvm-8 llvm-8-dev llvm-8-doc llvm-8-examples llvm-8-runtime clang-8 clang-tools-8 clang-8-doc libclang-common-8-dev libclang-8-dev libclang1-8 clang-format-8 python-clang-8 zlib1g zlib1g-dev bison libcurl4-gnutls-dev 
 ```
 3. Clone the CoreGen repository
 ```
@@ -87,7 +87,7 @@ sudo apt-get update
 ```
 2.  Install the system dependencies:
 ```
-sudo apt-get install -y clang-8 lldb-8 lld-8 libllvm8 llvm-8 llvm-8-dev llvm-8-doc llvm-8-examples llvm-8-runtime re2c lua5.3 liblua5.3-dev python-dev libcurl4 libcurl4-gnutls-dev libgit2-dev
+sudo apt-get install -y clang-8 lldb-8 lld-8 libllvm8 llvm-8 llvm-8-dev llvm-8-doc llvm-8-examples llvm-8-runtime python-dev libcurl4 libcurl4-gnutls-dev
 ```
 3. Clone the CoreGen repository
 ```
@@ -117,7 +117,7 @@ steps on vanilla CentOS 7.4 systems.
 
 1.  Install the system dependencies:
 ```
-sudo yum -y install cmake centos-release-scl texlive texlive-*.noarch llvm-static llvm-toolset-7-llvm-devel llvm-toolset-7-build llvm-toolset-7-cmake llvm-toolset-7-lldb-devel llvm-toolset-7-libomp-devel llvm-toolset-7-clang-devel llvm-toolset-7-llvm-static zlib-devel re2c lua lua-devel devtoolset-8 python-devel bison libcurl-devel libgit2-devel
+sudo yum -y install cmake centos-release-scl texlive texlive-*.noarch llvm-static llvm-toolset-7-llvm-devel llvm-toolset-7-build llvm-toolset-7-cmake llvm-toolset-7-lldb-devel llvm-toolset-7-libomp-devel llvm-toolset-7-clang-devel llvm-toolset-7-llvm-static zlib-devel devtoolset-8 python-devel bison libcurl-devel
 ```
 2. [Optional] For those wishing to build CentOS7 RPMS, you also need the following packages.
 ```
@@ -159,9 +159,6 @@ the ``HomeBrew`` package manager in order to fulfill these dependencies.
 brew cask install mactex
 brew install cmake
 brew install llvm@8
-brew install re2c
-brew install lua
-brew install libgit2
 ```
 2. Clone the CoreGen repository
 ```

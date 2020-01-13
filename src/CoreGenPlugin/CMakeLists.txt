@@ -14,10 +14,6 @@ CoreGenPluginImpl.cpp
 include_directories(${YAML_PATH}/include)
 include_directories(${COREGEN_INCLUDE_PATH})
 
-include_directories(${CLINGO_PATH}/libclingo)
-include_directories(${CLINGO_PATH}/libgringo)
-include_directories(${CLINGO_PATH}/libluaclingo)
-
 add_library(CoreGenPluginImpl ${PluginSrcs})
 
 target_link_libraries(CoreGenPluginImpl CoreGenBackend CoreGenCodegen yaml-cpp)

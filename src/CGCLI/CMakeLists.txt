@@ -27,15 +27,7 @@ CGCLIMain.cpp
 add_executable(cgcli ${CGCLISrcs})
 include_directories(${COREGEN_INCLUDE_PATH})
 include_directories("${PROJECT_BINARY_DIR}")
-#include_directories(${COREGEN_PATH})
-#include_directories(${COREGEN_PATH}/Passes)
-#include_directories(${COREGEN_PLUGIN_PATH})
-#include_directories(${STONECUTTER_PATH})
 include_directories(${YAML_PATH}/include)
-
-include_directories(${CLINGO_PATH}/libclingo)
-include_directories(${CLINGO_PATH}/libgringo)
-include_directories(${CLINGO_PATH}/libluaclingo)
 
 target_link_libraries(cgcli SCComp CoreGenBackend CoreGenArchive yaml-cpp
                       ${COREGEN_LINK_LIBS})
