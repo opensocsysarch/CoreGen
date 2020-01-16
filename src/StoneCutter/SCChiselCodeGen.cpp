@@ -80,13 +80,14 @@ void SCChiselCodeGen::InitPasses(){
                                                        Msgs)));
 }
 
-void SCChiselCodeGen::WriteChiselHeader(){
-  OutFile << "//" << std::endl;
-  OutFile << "// " << ChiselFile << std::endl;
-  OutFile << "//" << std::endl;
-  OutFile << "// Chisel generated from StoneCutter input source" << std::endl;
-  OutFile << "// " << SCCurrentDateTime();
-  OutFile << "//" << std::endl << std::endl;
+void SCChiselCodeGen::WriteChiselHeader(std::ofstream &out,
+                                        std::string FName ){
+  out << "//" << std::endl;
+  out << "// " << FName << std::endl;
+  out << "//" << std::endl;
+  out << "// Chisel generated from StoneCutter input source" << std::endl;
+  out << "// " << SCCurrentDateTime();
+  out << "//" << std::endl << std::endl;
 }
 
 std::vector<std::string> SCChiselCodeGen::GetPassList(){
@@ -1297,6 +1298,10 @@ bool SCChiselCodeGen::ExecuteUcodeCodegen(){
 
   delete PInfo;
 
+  // Build the microcode compiler
+  if( !WriteUCodeCompiler() )
+    rtn = false;
+
   return rtn;
 }
 
@@ -1318,6 +1323,184 @@ bool SCChiselCodeGen::ExecuteManualCodegen(){
       }
     }
   }
+
+  return true;
+}
+
+bool SCChiselCodeGen::DeriveBitPat(std::string &BP){
+  std::string CompFile = ChiselFile.substr(0,ChiselFile.find_last_of("\\/")) +
+                          "/instructions.chisel";
+
+  std::string token;
+  std::ifstream BPStream(CompFile);
+  if( !BPStream.is_open() ){
+    Msgs->PrintMsg( L_ERROR, "Failed to open Chisel instructions file " + CompFile );
+    return false;
+  }
+
+  while(std::getline(BPStream,token)){
+    std::size_t pos = token.find("BitPat");
+    if( pos != std::string::npos ){
+      // found a potential match
+      std::string token2 = token.substr(pos+8);
+      BP = token2.substr(0,token2.length()-2);
+      return true;
+    }
+  }
+
+  BPStream.close();
+  return false;
+}
+
+bool SCChiselCodeGen::WriteUCodeCompiler(){
+
+  // top-level details
+  std::string Package = Opts->GetPackage();
+  std::string ISA = Opts->GetISA();
+
+  if( Package.length() == 0 ){
+    Package = ISA;
+  }
+
+  // construct the output file name
+  std::string CompFile = ChiselFile.substr(0,ChiselFile.find_last_of("\\/")) +
+                          "/microcodecompiler.scala";
+
+  // open the output file
+  std::ofstream LOutFile;
+  LOutFile.open(CompFile, std::ios::trunc);
+  if( !OutFile.is_open() ){
+    Msgs->PrintMsg( L_ERROR, "Failed to open Chisel output file " + CompFile );
+    return false;
+  }
+
+  // write out the file header
+  WriteChiselHeader(LOutFile,CompFile);
+
+  // write out the package includes
+  LOutFile << "package " << Package << std::endl;
+  LOutFile << "{" << std::endl << std::endl;
+
+  LOutFile << "import chisel3._" << std::endl;
+  LOutFile << "import chisel3.util._" << std::endl << std::endl;
+
+  LOutFile << "import Common.Instructions._" << std::endl;
+  LOutFile << "import scala.collection.mutable.ArrayBuffer" << std::endl << std::endl;
+
+  LOutFile << "abstract class MicroOp()" << std::endl;
+  LOutFile << "case class Label(name: String) extends MicroOp" << std::endl;
+  LOutFile << "case class Signals(ctrl_bits: Bits, label: String = \"X\") extends MicroOp" << std::endl << std::endl;
+
+  // write out the MicrocodeCompiler block
+  // -- class block
+  LOutFile << "object MicrocodeCompiler" << std::endl << "{" << std::endl << std::endl;
+
+  // -- generateInstructionList
+  std::string BitPat;
+  if( !DeriveBitPat(BitPat) )
+    return false;
+  LOutFile << "\tdef generateInstructionList (): Map[String, BitPat] =" << std::endl;
+  LOutFile << "\t{" << std::endl;
+  LOutFile << "\t\tvar inst_list = Map[String, BitPat]()" << std::endl;
+  LOutFile << "\t\tval instClass = Common.Instructions.getClass()" << std::endl;
+  LOutFile << "\t\tval b = BitPat(\"" << BitPat << "\")" << std::endl;
+  LOutFile << "\t\tval bitsClass = b.getClass()" << std::endl << std::endl;
+  LOutFile << "\t\tfor (m <- instClass.getMethods())" << std::endl;
+  LOutFile << "\t\t{" << std::endl;
+  LOutFile << "\t\t\tval name = m.getName()" << std::endl;
+  LOutFile << "\t\t\tval rtype = m.getReturnType()" << std::endl;
+  LOutFile << "\t\t\tif (rtype == bitsClass)" << std::endl;
+  LOutFile << "\t\t\t{" << std::endl;
+  LOutFile << "\t\t\t\tval i = m.invoke(Common.Instructions)" << std::endl;
+  LOutFile << "\t\t\t\tinst_list += ((name, i.asInstanceOf[BitPat]))" << std::endl;
+  LOutFile << "\t\t\t}" << std::endl;
+  LOutFile << "\t\t}" << std::endl << std::endl;
+  LOutFile << "\t\treturn inst_list" << std::endl;
+  LOutFile << "\t}" << std::endl << std::endl;
+
+  // -- generateDispatchTable
+  LOutFile << "\tdef generateDispatchTable (labelTargets: Map[String,Int]): "
+           << "Array[(BitPat, UInt)]=" << std::endl;
+  LOutFile << "\t{" << std::endl;
+  LOutFile << "\t\tprintln(\"Generating Opcode Dispatch Table for ISA="
+           << ISA << "\")" << std::endl;
+  LOutFile << "\t\tvar dispatch_targets = ArrayBuffer[(BitPat, UInt)]()" << std::endl;
+  LOutFile << "\t\tval inst_list        = generateInstructionList()" << std::endl << std::endl;
+  LOutFile << "\t\tfor ((inst_str, inst_bits) <- inst_list)" << std::endl;
+  LOutFile << "\t\t{" << std::endl;
+  LOutFile << "\t\t\tif (labelTargets.contains(inst_str))" << std::endl;
+  LOutFile << "\t\t\t{" << std::endl;
+  LOutFile << "\t\t\t\tdispatch_targets += ((inst_bits -> labelTargets(inst_str).U))" << std::endl;
+  LOutFile << "\t\t\t}" << std::endl;
+  LOutFile << "\t\t}" << std::endl << std::endl;
+  LOutFile << "\t\tvar unused_targets   = ArrayBuffer[String]()" << std::endl;
+  LOutFile << "\t\tfor ((label_str, addr) <- labelTargets)" << std::endl;
+  LOutFile << "\t\t{" << std::endl;
+  LOutFile << "\t\t\tif (!inst_list.contains(label_str))" << std::endl;
+  LOutFile << "\t\t\t\tunused_targets += label_str" << std::endl;
+  LOutFile << "\t\t}" << std::endl << std::endl;
+  LOutFile << "\t\tprintln(\"\")" << std::endl;
+  LOutFile << "\t\tprintln(\"Unused Labels for Dispatching:\")" << std::endl;
+  LOutFile << "\t\tprintln(\"    (Verify no instruction labels made it here by accident)\")" << std::endl;
+  LOutFile << "\t\tprintln(\"\")" << std::endl;
+  LOutFile << "\t\tprintln(\"    \" + unused_targets)" << std::endl;
+  LOutFile << "\t\tprintln(\"\")" << std::endl << std::endl;
+  LOutFile << "\t\treturn dispatch_targets.toArray" << std::endl;
+  LOutFile << "\t}" << std::endl << std::endl;
+
+  // -- contructLabelTargetMap
+  LOutFile << "\tdef constructLabelTargetMap(uop_insts: Array[MicroOp]): (Map[String,Int], Int)  =" << std::endl;
+  LOutFile << "\t{" << std::endl;
+  LOutFile << "\t\tprintln(\"Building Microcode labelTargetMap for "
+           << ISA
+           << "\")" << std::endl;
+  LOutFile << "\t\tvar label_map = Map[String,Int]()" << std::endl;
+  LOutFile << "\t\tvar uaddr = 0" << std::endl;
+  LOutFile << "\t\tfor (uop_inst <- uop_insts)" << std::endl;
+  LOutFile << "\t\t{" << std::endl;
+  LOutFile << "\t\t\tuop_inst match" << std::endl;
+  LOutFile << "\t\t\t{" << std::endl;
+  LOutFile << "\t\t\t\tcase Label(name)       => label_map += ((name, uaddr))" << std::endl;
+  LOutFile << "\t\t\t\tcase Signals(code,str) => uaddr += 1" << std::endl;
+  LOutFile << "\t\t\t}" << std::endl;
+  LOutFile << "\t\t}" << std::endl << std::endl;
+  LOutFile << "\t\tprintln(\"Label Map \" + label_map)" << std::endl;
+  LOutFile << "\t\tprintln(\" MicroROM size     : \" + (uaddr-1) + \" lines\")" << std::endl;
+  LOutFile << "\t\tprintln(\" Bitwidth of uAddr : \" + log2Ceil(uaddr-1) + \" bits\")" << std::endl;
+  LOutFile << "\t\tprintln(\"\")" << std::endl;
+  LOutFile << "\t\treturn (label_map, log2Ceil(uaddr-1))" << std::endl;
+  LOutFile << "\t}" << std::endl << std::endl;
+
+  // -- emitRomBits
+  LOutFile << "\tdef emitRomBits(uop_lines: Array[MicroOp], labelTargets: "
+           << "Map[String,Int], label_sz: Int): Array[Bits] =" << std::endl;
+  LOutFile << "\t{" << std::endl;
+  LOutFile << "\t\tvar buf = ArrayBuffer[Bits]()" << std::endl << std::endl;
+  LOutFile << "\t\tfor (uop_line <- uop_lines)" << std::endl;
+  LOutFile << "\t\t{" << std::endl;
+  LOutFile << "\t\t\tuop_line match" << std::endl;
+  LOutFile << "\t\t\t{" << std::endl;
+  LOutFile << "\t\t\t\tcase Label(name) =>" << std::endl;
+  LOutFile << "\t\t\t\tcase Signals(ctrl_bits, \"X\") =>" << std::endl;
+  LOutFile << "\t\t\t\t\tval line = Cat(ctrl_bits, 0.U(label_sz.W))" << std::endl;
+  LOutFile << "\t\t\t\t\tbuf += (line)" << std::endl << std::endl;
+  LOutFile << "\t\t\t\tcase Signals(ctrl_bits, label) =>" << std::endl;
+  LOutFile << "\t\t\t\t\tval line = Cat(ctrl_bits, labelTargets(label).U(label_sz.W))" << std::endl;
+  LOutFile << "\t\t\t\t\tbuf += (line)" << std::endl;
+  LOutFile << "\t\t\t}" << std::endl;
+  LOutFile << "\t\t}" << std::endl;
+  LOutFile << "\t\tprintln(\"\")" << std::endl;
+  LOutFile << "\t\treturn buf.toArray" << std::endl;
+  LOutFile << "\t}" << std::endl;
+
+  // close the MicrocodeCompiler block
+  LOutFile << std::endl << "}" << std::endl;
+
+  // closing brace
+  LOutFile << std::endl << "}" << std::endl;
+
+  // close the output file
+  LOutFile.close();
 
   return true;
 }
@@ -1427,7 +1610,7 @@ bool SCChiselCodeGen::GenerateChisel(){
   }
 
   // write the chisel header
-  WriteChiselHeader();
+  WriteChiselHeader(OutFile,ChiselFile);
 
   // Execute the codegen
   if( !ExecuteCodegen() ){

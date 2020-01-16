@@ -113,6 +113,9 @@ private:
   /// Removes any dots in the ISA name
   std::string SCRemoveDot(std::string);
 
+  /// Removes the extension from the ISA name
+  std::string SCRemoveExtension(std::string filname);
+
 public:
   /// SCOpts: Constructor
   SCOpts(SCMsg *);
