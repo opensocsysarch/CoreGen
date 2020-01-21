@@ -207,7 +207,7 @@ std::vector<std::string> SCPass::GetRegClassInstTypes(std::string InstFormat){
       if( AttrSet.getAttribute("fieldtype").getValueAsString().str() == "register" ){
         unsigned Idx = 0;
         while( AttrSet.hasAttribute("instformat"+std::to_string(Idx)) ){
-          if( AttrSet.getAttribute("Instformat"+std::to_string(Idx)).getValueAsString().str() ==
+          if( AttrSet.getAttribute("instformat"+std::to_string(Idx)).getValueAsString().str() ==
               InstFormat )
             Fields.push_back(
               AttrSet.getAttribute("regclasscontainer"+std::to_string(Idx)).getValueAsString().str() );
