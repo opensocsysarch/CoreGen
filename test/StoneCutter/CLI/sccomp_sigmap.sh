@@ -10,24 +10,24 @@ fi
 FILE=./sigmap.sc
 DIR=test.SIGMAP.yaml
 
-$SCCOMP_PATH/sccomp -s $DIR $FILE
+$SCCOMP_PATH/sccomp -D -s $DIR $FILE
 retVal=$?
 if [[ "$retVal" -ne 0 ]]; then
-  echo "$SCCOMP_PATH/sccomp -s $DIR $FILE failed with return code = $retVal"
+  echo "$SCCOMP_PATH/sccomp -D -s $DIR $FILE failed with return code = $retVal"
   exit $retVal
 fi
 
-$SCCOMP_PATH/sccomp -sigmap $DIR $FILE
+$SCCOMP_PATH/sccomp -disable-chisel -sigmap $DIR $FILE
 retVal=$?
 if [[ "$retVal" -ne 0 ]]; then
-  echo "$SCCOMP_PATH/sccomp -sigmap $DIR $FILE failed with return code = $retVal"
+  echo "$SCCOMP_PATH/sccomp -disable-chisel -sigmap $DIR $FILE failed with return code = $retVal"
   exit $retVal
 fi
 
-$SCCOMP_PATH/sccomp --sigmap $DIR $FILE
+$SCCOMP_PATH/sccomp --disable-chisel --sigmap $DIR $FILE
 retVal=$?
 if [[ "$retVal" -ne 0 ]]; then
-  echo "$SCCOMP_PATH/sccomp --sigmap $DIR $FILE failed with return code = $retVal"
+  echo "$SCCOMP_PATH/sccomp --disable-chisel --sigmap $DIR $FILE failed with return code = $retVal"
   exit $retVal
 fi
 

@@ -89,7 +89,6 @@ private:
   std::vector<SCPass *> Passes;               ///< StoneCutter CodeGen passes
 
   // private functions
-  void WriteChiselHeader();                   ///< Writes a header to the chisel output file
   bool ExecuteCodegen();                      ///< Generates chisel from the LLVM IR
   void InitIntrinsics();                      ///< Init the intrinsics vector
   void InitPasses();                          ///< Init the pass vector
@@ -97,6 +96,10 @@ private:
   bool ExecuteSignalMap();                    ///< Executes the signal map generator
   bool ExecuteUcodeCodegen();                 ///< Executes a microcode codegen using sigmaps
   bool ExecuteManualCodegen();                ///< Executes a manual codegen
+
+  void WriteChiselHeader(std::ofstream &out, std::string FName ); ///< Writes a header to the chisel output file
+  bool DeriveBitPat(std::string &BP);         ///< Derives the bit pattern for the microcode generator
+  bool WriteUCodeCompiler();                  ///< Writes the microcode compiler
 
   void WriteUCodeTableComment(SCPipeInfo *P); ///< Writes the microcode table comment to the Chisel file
   void WriteFETCHUOp(SCPipeInfo *PInfo);      ///< Writes the Fetch micro op

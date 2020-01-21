@@ -9,10 +9,10 @@ if [ ! -f $SCCOMP_PATH/sccomp ]; then
 fi
 
 
-$SCCOMP_PATH/sccomp -s $FILE.yaml $FILE
+$SCCOMP_PATH/sccomp -D -s $FILE.yaml $FILE
 retVal=$?
 if [[  "$retVal" -ne 0 ]]; then
-  echo "$SCCOMP_PATH/sccomp -s $FILE.yaml $FILE failed with return code = $retVal"
+  echo "$SCCOMP_PATH/sccomp -D -s $FILE.yaml $FILE failed with return code = $retVal"
   exit $retVal
 fi
 

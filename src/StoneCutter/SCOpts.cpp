@@ -65,6 +65,14 @@ std::string SCOpts::SCRemoveDot( std::string in ){
   out.erase(std::remove(out.begin(),out.end(),'.'),out.end());
   return out;
 }
+
+// ------------------------------------------------- SCREMOVEEXTENSION
+std::string SCOpts::SCRemoveExtension(std::string in){
+  std::size_t lastdot = in.find_last_of(".");
+  if( lastdot == std::string::npos ) return in;
+  return in.substr(0, lastdot);
+}
+
 // ------------------------------------------------- GETISANAME
 std::string SCOpts::GetISANameFromPath(){
   std::string FilePath = FileList[0];

@@ -53,6 +53,7 @@ void SCIOWarn::CheckPrototypeIO( Function &F, Instruction &I ){
         }
       }
 
+
       // Arg doesn't appear in the prototype list, look up the instruction
       // format and make sure that the arg appears in one of the instformat
       // registerclasses
@@ -63,13 +64,11 @@ void SCIOWarn::CheckPrototypeIO( Function &F, Instruction &I ){
 
         // get a list of regclass types the  for the target instruction format
         std::vector<std::string> Fields = this->GetRegClassInstTypes(InstFormat);
-
         for( unsigned i=0; i<Fields.size(); i++ ){
           if( Fields[i] == RegClass )
             return ;
         }
       }
-
     }
 
     // Argument does not appear in normal register classes,
