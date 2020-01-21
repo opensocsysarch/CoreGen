@@ -179,30 +179,6 @@ cmake -DLLVM_DIR=/usr/local/opt/llvm\@8/lib/cmake/llvm ../
 make
 ```
 
-#### Arch Linux
-
-1.  Install the system dependencies:
-```
-sudo pacman -S git cmake make llvm6 llvm6-libs clang
-```
-2. Clone the CoreGen repository
-```
-git clone https://github.com/opensocsysarch/CoreGen.git
-```
-3. Setup your build tree
-```
-cd CoreGen
-mkdir build
-cd build
-```
-4. Execute CMake to generate the makefiles
-```
-cmake -DLLVM_DIR=/usr/lib/cmake/llvm ../
-```
-5. Execute the build
-```
-make
-```
 ## CMake Build Options
 
 ### Standard Build Options
