@@ -439,6 +439,8 @@ std::string SCPass::TraceOperand( Function &F, Value *V,
           // and see if it exists as a global
           return TraceOperand(F,Inst->getOperand(0),isPredef,isImm,Width);
         }
+      }else if( (Inst->getOpcode() == Instruction::PHI) ){
+        // we want to ignore the Phi nodes
       }else if( (Inst->getOpcode() != Instruction::Load) && Inst->hasName() ){
         // else, examine the target of the instruction
         Value *LHS = cast<Value>(Inst);

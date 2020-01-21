@@ -26,7 +26,7 @@ bool SMLegalizeSigMap::CheckForwardBr(){
     std::vector<SCSig *> Sigs = GetSigVect(SigNames[i]);
     // check the last uOp for a forward branch
     SCSig *BrSig = Sigs[Sigs.size()-1];
-    if( (BrSig->GetType() >= BR_N) && (BrSig->GetType() <= BR_JR) ){
+    if( BrSig->isBranchSig() ){
       // this is a branch signal
       if( (BrSig->GetDistanceTrue() > 0) || (BrSig->GetDistanceFalse() > 0) ){
         SetErrorStr( "Final uOp in instruction " + SigNames[i] + " contains a forward branch");
@@ -43,7 +43,7 @@ bool SMLegalizeSigMap::CheckBackwardBr(){
     std::vector<SCSig *> Sigs = GetSigVect(SigNames[i]);
     // check the first uOp for a backward branch
     SCSig *BrSig = Sigs[0];
-    if( (BrSig->GetType() >= BR_N) && (BrSig->GetType() <= BR_JR) ){
+    if( BrSig->isBranchSig() ){
       // this is a branch signal
       if( (BrSig->GetDistanceTrue() < 0) || (BrSig->GetDistanceFalse() < 0) ){
         SetErrorStr( "First uOp in instruction " + SigNames[i] + " contains a backward branch");
@@ -60,16 +60,22 @@ bool SMLegalizeSigMap::CheckLegalBr(){
     std::vector<SCSig *> Sigs = GetSigVect(SigNames[i]);
     for( unsigned j=0; j<Sigs.size(); j++ ){
       SCSig *LSig = Sigs[j];
-      if( (LSig->GetType() >= BR_N) && (LSig->GetType() <= BR_JR) ){
+      if( LSig->isBranchSig() ){
         // found a branch signal
         signed TargetTrue = LSig->GetDistanceTrue() + j;
         signed TargetFalse = LSig->GetDistanceFalse() + j;
         if( (TargetTrue<0) || (TargetTrue>((signed)(Sigs.size()-1))) ){
-          SetErrorStr( "Branch uOp falls outside uOp block in instruction " + SigNames[i] );
+          SetErrorStr( "Branch uOp falls outside uOp block in instruction " +
+                       SigNames[i] +
+                       " at operation = " +
+                       LSig->SigTypeToStr() );
           rtn = false;
         }
         if( (TargetFalse<0) || (TargetFalse>((signed)(Sigs.size()-1))) ){
-          SetErrorStr( "Branch uOp falls outside uOp block in instruction " + SigNames[i] );
+          SetErrorStr( "Branch uOp falls outside uOp block in instruction " +
+                       SigNames[i] +
+                       " at operation = " +
+                       LSig->SigTypeToStr() );
           rtn = false;
         }
       }
