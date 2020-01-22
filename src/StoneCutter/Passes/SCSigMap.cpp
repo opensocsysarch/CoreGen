@@ -319,6 +319,11 @@ signed SCSigMap::GetBranchDistance(Function &F, Instruction &BI, Instruction &Ta
   signed TargetID   = 0;
   signed Count      = 0;
 
+#if 0
+  std::cout << "Source Instruction = " << BI.getOpcodeName() << std::endl;
+  std::cout << "Target Instruction = " << Target.getOpcodeName() << std::endl;
+#endif
+
   if( BI.isIdenticalTo(&Target) )
     return 0;
 
@@ -326,16 +331,18 @@ signed SCSigMap::GetBranchDistance(Function &F, Instruction &BI, Instruction &Ta
     for( auto &Inst : BB.getInstList() ){
       if( !F.isDeclaration() ){
         // walk all the instructions
-        if( Inst.isIdenticalTo( &BI ) )
+        if( Inst.isIdenticalTo( &BI )  && (&BI == &Inst) ){
           SourceID = Count;
-        else if( Inst.isIdenticalTo( &Target ) )
+        }else if( Inst.isIdenticalTo( &Target ) && (&Target == &Inst) ){
           TargetID = Count;
+        }
 
         if( !IsIgnoreInst(Inst) )
           ++Count;
       }
     }
   }
+
 
   return TargetID - SourceID;
 }
@@ -408,7 +415,6 @@ SigType SCSigMap::GetBranchType(Function &F, Instruction &I){
       }
     }
   }
-
   return Type;
 }
 

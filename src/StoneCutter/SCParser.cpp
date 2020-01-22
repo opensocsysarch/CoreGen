@@ -1044,6 +1044,8 @@ std::unique_ptr<ExprAST> SCParser::ParseForExpr() {
     Step = ParseExpression();
     if (!Step)
       return nullptr;
+  }else{
+    return LogError("expected ';' for loop control step statement");
   }
 
   if (CurTok != ')')
@@ -1863,20 +1865,26 @@ Value *ForExprAST::codegen() {
       return nullptr;
   } else {
     // If not specified, use u64(0)
-    //StepVal = ConstantFP::get(SCParser::TheContext, APFloat(1.0));
     StepVal = ConstantInt::get(SCParser::TheContext, APInt(64,0,false));
   }
 
+#if 0
+  Value *CurVar  = Builder.CreateLoad(Alloca,VarName.c_str());
+  Value *NextVar = Builder.CreateAdd(CurVar,
+                                      StepVal,
+                                      "nextvar" + std::to_string(LocalLabel));
+#endif
   // Compute the end condition.
   Value *EndCond = End->codegen();
   if (!EndCond)
     return nullptr;
 
+  // reload and incrememnt the alloca
   Value *CurVar  = Builder.CreateLoad(Alloca,VarName.c_str());
-  //Value *NextVar = Builder.CreateFAdd(CurVar,
   Value *NextVar = Builder.CreateAdd(CurVar,
                                       StepVal,
                                       "nextvar" + std::to_string(LocalLabel));
+
   SI = Builder.CreateStore(NextVar,Alloca);
   if( SCParser::NameMDNode ){
     cast<LoadInst>(CurVar)->setMetadata("pipe.pipeName",SCParser::NameMDNode);
@@ -1891,9 +1899,6 @@ Value *ForExprAST::codegen() {
   // Convert condition to a bool by comparing non-equal to 0.0.
   //EndCond = Builder.CreateFCmpONE(
   EndCond = Builder.CreateICmpNE(
-      //EndCond, ConstantFP::get(SCParser::TheContext,
-      //                         APFloat(0.0)),
-      //                         "loopcond" + std::to_string(LocalLabel));
       EndCond, ConstantInt::get(SCParser::TheContext,
                                APInt(1,0,false)),
                                "loopcond" + std::to_string(LocalLabel));
@@ -1917,8 +1922,6 @@ Value *ForExprAST::codegen() {
 
   // Any new code will be inserted in AfterBB.
   Builder.SetInsertPoint(AfterBB);
-
-  // Add a new entry to the PHI node for the backedge.
 
   // Restore the unshadowed variable.
   if (OldVal)
