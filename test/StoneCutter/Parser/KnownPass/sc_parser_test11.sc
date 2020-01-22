@@ -9,8 +9,8 @@ regclass bar( float f1, double d2, bool b3, u7 i4,
 
 
 def foo(n p){
-  for ( i = 1; i < n ){
-    for ( j = 0; j < p ){
+  for ( i = 1; i < n; 1 ){
+    for ( j = 0; j < p; 1 ){
       n = i+j
     }
   }
