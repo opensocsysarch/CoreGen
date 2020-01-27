@@ -12,9 +12,10 @@
 
 CoreGenLLVMCodegen::CoreGenLLVMCodegen( CoreGenNode *T,
                                         CoreGenProj *P,
+                                        CoreGenArchEntry *EN,
                                         std::string R,
                                         CoreGenErrno *E )
-  : Top(T), Proj(P), LLVMRoot(R), Errno(E) {
+  : Top(T), Proj(P), Entry(EN), LLVMRoot(R), Errno(E) {
 }
 
 CoreGenLLVMCodegen::~CoreGenLLVMCodegen(){

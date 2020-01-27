@@ -43,6 +43,7 @@
 
 // Codegen Headers
 #include "CoreGen/CoreGenCodegen/CoreGenChiselCodegen.h"
+#include "CoreGen/CoreGenCodegen/CoreGenLLVMCodegen.h"
 
 
 class CoreGenCodegen
@@ -53,6 +54,7 @@ private:
   CoreGenEnv *Env;            ///< CoreGen environment
   CoreGenErrno *Errno;        ///< CoreGen Errno Structure
   CoreGenArchive *Archive;    ///< CoreGen Archive Object
+  CoreGenArchEntry *LLEntry;  ///< CoreGen LLVM archive entry
 
   std::string ChiselDir;      ///< CoreGen Chisel output directory
   std::string LLVMDir;        ///< CoreGen LLVM output directory
