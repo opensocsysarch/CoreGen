@@ -78,6 +78,53 @@ bool CoreGenLLVMCodegen::TIGenerateMCTargetDesc(){
 }
 
 bool CoreGenLLVMCodegen::TIGenerateTargetInfo(){
+
+  // Stage 1: generate the target info file
+  std::string OutFile = LLVMRoot + "/TargetInfo/" + TargetName + "TargetInfo.cpp";
+  std::ofstream OutStream;
+  OutStream.open(OutFile,std::ios::trunc);
+  if( !OutStream.is_open() ){
+    Errno->SetError(CGERR_ERROR, "Could not open target info file: " + OutFile );
+    return false;
+  }
+
+  OutStream.close();
+
+  // Stage 2: generate the cmake driver
+  OutFile = LLVMRoot + "/TargetInfo/CMakeLists.txt";
+  OutStream.open(OutFile,std::ios::trunc);
+  if( !OutStream.is_open() ){
+    Errno->SetError(CGERR_ERROR, "Could not open target info CMakeLists: " + OutFile );
+    return false;
+  }
+
+  OutStream << "add_llvm_library(LLVM" << TargetName << "Info" << std::endl
+            << " " << TargetName << "TargetInfo.cpp" << std::endl
+            << " )" << std::endl;
+
+  OutStream.close();
+
+  // Stage 3: generate the LLVMBuild driver
+  OutFile = LLVMRoot + "/TargetInfo/LLVMBuild.txt";
+  OutStream.open(OutFile,std::ios::trunc);
+  if( !OutStream.is_open() ){
+    Errno->SetError(CGERR_ERROR, "Could not open target info LLVMBuild: " + OutFile );
+    return false;
+  }
+
+  OutStream << ";===- ./lib/Target/"
+            << TargetName
+            << "/TargetInfo/LLVMBuild.txt --------------*- Conf -*--===;"
+            << std::endl;
+  OutStream << "[component_0]" << std::endl
+            << "type = Library" << std::endl
+            << "name = " << TargetName << "Info" << std::endl
+            << "parent = " << TargetName << std::endl
+            << "required_libraries = Support" << std::endl
+            << "add_to_library_groups = " << TargetName << std::endl;
+
+  OutStream.close();
+
   return true;
 }
 
@@ -159,7 +206,8 @@ bool CoreGenLLVMCodegen::GenerateTargetDir(){
     return false;
   }
 
-  std::string TargetDir = LLVMRoot + "/llvm/lib/Target/" + SocNode->GetName();
+  TargetName = SocNode->GetName();
+  std::string TargetDir = LLVMRoot + "/llvm/lib/Target/" + TargetName;
 
   // generate the top-level target directory
   if( !CGMkDir(TargetDir) ){

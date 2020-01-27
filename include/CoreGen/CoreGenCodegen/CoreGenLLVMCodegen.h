@@ -42,6 +42,8 @@ private:
   std::string LLVMRoot;             ///< Root directory for LLVM output
   CoreGenErrno *Errno;              ///< CoreGen Errno Structure
 
+  std::string TargetName;           ///< Name of the compiler target
+
   /// Generate the directory structure for the new target
   bool GenerateTargetDir();
 
