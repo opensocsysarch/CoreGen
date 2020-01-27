@@ -1853,11 +1853,6 @@ bool CoreGenYaml::ReadRegisterClassYaml(const YAML::Node& RegClassNodes,
       return false;
     }
 
-#if 0
-    // currently unused
-    int NumRegs = Node["NumRegisters"].as<int>();
-#endif
-
     CoreGenRegClass *RC = new CoreGenRegClass( Name, Errno );
     if( RC == nullptr ){
       Errno->SetError(CGERR_ERROR, "Error creating new register class for " + Name );

@@ -15,7 +15,7 @@ CoreGenRegClass::CoreGenRegClass(CoreGenErrno *E)
 }
 
 CoreGenRegClass::CoreGenRegClass(std::string N,CoreGenErrno *E)
-  : CoreGenNode(CGRegC,N,E){
+  : CoreGenNode(CGRegC,N,E), ReadPorts(2), WritePorts(1) {
 }
 
 CoreGenRegClass::~CoreGenRegClass(){
