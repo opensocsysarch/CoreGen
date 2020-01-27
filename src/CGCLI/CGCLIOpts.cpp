@@ -16,7 +16,8 @@ CGCLIOpts::CGCLIOpts( int argc, char **argv )
     OptPasses(false), ListPasses(false), Verify(false), ExecPass(false),
     CGChisel(false), CGComp(false), CGVersion(false), CheckPlugins(false),
     ListSysPasses(false), ExecSysPass(false),
-    ArchQuery(false), ArchInit(false), ArchDestroy(false), ProjName("UNKNOWN"){
+    ArchQuery(false), ArchInit(false), ArchDestroy(false),
+    ProjName("UNKNOWN"), CompVer(""){
   // setup default project root
   char PATH[FILENAME_MAX];
   if( getcwd(PATH,sizeof(PATH)) == NULL ){
@@ -45,7 +46,7 @@ void CGCLIOpts::PrintOptions(){
   std::cout << "\t--verify                              : Verify the IR and exit" << std::endl;
   std::cout << "\t--pass                                : Run some or all of the IR passes" << std::endl;
   std::cout << "\t--chisel                              : Run the Chisel codegen" << std::endl;
-  std::cout << "\t--compiler                            : Run the compiler codegen" << std::endl;
+  std::cout << "\t--compiler [Optional Version]         : Run the compiler codegen" << std::endl;
   std::cout << std::endl;
   std::cout << " Project Options:" << std::endl;
   std::cout << "\t-p|-project|--project ProjectName     : Set the project name" << std::endl;
@@ -411,6 +412,13 @@ bool CGCLIOpts::ParseOpts( int argc, char **argv ){
       CGChisel = true;
       Verify = true;
     }else if( s == "--compiler" ){
+      if( i+1 <= (argc+1) ){
+        std::string V(argv[+1]);
+        if( V[0] != '-' ){
+          CompVer = V;
+          i++;
+        }
+      }
       CGComp = true;
       Verify = true;
     }else if( s == "--query" ){

@@ -126,6 +126,28 @@ inline bool CGDeleteFile(const std::string& name){
   }
 }
 
+/// CoreGenUtil: Recursively copy from the src directory to the target
+inline bool CGCopyR(const std::string &src,
+                    const std::string &target ){
+  std::string UncStr = "cp -R " + src + "/* " + target + "/";
+  if( system( UncStr.c_str() ) == 0 )
+    return true;
+  else{
+    return false;
+  }
+}
+
+/// CoreGenUtil: Delete the target directory
+inline bool CGDeleteDir(const std::string& path){
+
+  std::string UncStr = "rm -Rf " + path;
+  if( system( UncStr.c_str() ) == 0 )
+    return true;
+  else{
+    return false;
+  }
+}
+
 /// CoreGenUtil: Record the current wallclock time
 inline double CGGetWallTime(){
   struct timeval tp;
