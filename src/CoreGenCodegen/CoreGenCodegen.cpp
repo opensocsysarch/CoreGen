@@ -19,7 +19,8 @@ CoreGenCodegen::CoreGenCodegen(CoreGenNode *T,
 }
 
 CoreGenCodegen::~CoreGenCodegen(){
-  delete Archive;
+  if( Archive )
+    delete Archive;
 }
 
 std::string CoreGenCodegen::GetRegAttrStr(CoreGenReg *REG){
@@ -230,6 +231,9 @@ bool CoreGenCodegen::InitLLVMSrc(std::string CompVer){
     }
   }
 
+  // save off the entry for future use
+  LLEntry = Entry;
+
   // Stage 2: check to see if there already exists a compiler in the target
   //          build directory; if so, delete it then create a new directory
   std::string FullCompPath = LLVMDir + "/" + Entry->GetName();
@@ -257,6 +261,9 @@ bool CoreGenCodegen::InitLLVMSrc(std::string CompVer){
     return false;
   }
 
+  // reset the LLVMDir to the new source directory
+  LLVMDir = FullCompPath;
+
   return true;
 }
 
@@ -281,6 +288,18 @@ bool CoreGenCodegen::ExecuteLLVMCodegen(std::string CompVer){
   }
 
   // Stage 4: Execute the codegen
+  CoreGenLLVMCodegen *CG = new CoreGenLLVMCodegen(Top,
+                                                  Proj,
+                                                  LLEntry,
+                                                  LLVMDir,
+                                                  Errno);
+
+  if( !CG->Execute() ){
+    delete CG;
+    return false;
+  }
+
+  delete CG;
 
   return true;
 }

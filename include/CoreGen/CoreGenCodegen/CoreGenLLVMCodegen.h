@@ -31,12 +31,14 @@
 // CoreGen Headers
 #include "CoreGen/CoreGenBackend/CoreGenBackend.h"
 #include "CoreGen/CoreGenBackend/CoreGenUtil.h"
+#include "CoreGen/CoreGenArchive/CoreGenArchive.h"
 
 class CoreGenLLVMCodegen
 {
 private:
   CoreGenNode *Top;                 ///< Top-level coregen node
   CoreGenProj *Proj;                ///< CoreGen Project Info
+  CoreGenArchEntry *Entry;          ///< CoreGenArchEntry for the target LLVM version
   std::string LLVMRoot;             ///< Root directory for chisel output
   CoreGenErrno *Errno;              ///< CoreGen Errno Structure
 
@@ -44,6 +46,7 @@ public:
   /// Default constructor
   CoreGenLLVMCodegen(CoreGenNode *T,
                      CoreGenProj *P,
+                     CoreGenArchEntry *EN,
                      std::string R,
                      CoreGenErrno *E);
 
