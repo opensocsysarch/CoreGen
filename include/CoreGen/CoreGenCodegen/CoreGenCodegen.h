@@ -39,6 +39,7 @@
 // CoreGen Headers
 #include "CoreGen/CoreGenBackend/CoreGenBackend.h"
 #include "CoreGen/CoreGenBackend/CoreGenUtil.h"
+#include "CoreGen/CoreGenArchive/CoreGenArchive.h"
 
 // Codegen Headers
 #include "CoreGen/CoreGenCodegen/CoreGenChiselCodegen.h"
@@ -49,7 +50,9 @@ class CoreGenCodegen
 private:
   CoreGenNode *Top;           ///< Top-level coregen node
   CoreGenProj *Proj;          ///< CoreGen Project Info
+  CoreGenEnv *Env;            ///< CoreGen environment
   CoreGenErrno *Errno;        ///< CoreGen Errno Structure
+  CoreGenArchive *Archive;    ///< CoreGen Archive Object
 
   std::string ChiselDir;      ///< CoreGen Chisel output directory
   std::string LLVMDir;        ///< CoreGen LLVM output directory
@@ -80,6 +83,9 @@ private:
   /// Builds the compiler directory structure
   bool BuildLLVMDir();
 
+  /// Initializes the LLVM source
+  bool InitLLVMSrc(std::string CompVer);
+
   /// Builds the stonecutter dierctory structure
   bool BuildStoneCutterDir();
 
@@ -101,13 +107,13 @@ private:
 
 public:
   /// Default constructor
-  CoreGenCodegen(CoreGenNode *T, CoreGenProj *P, CoreGenErrno *E);
+  CoreGenCodegen(CoreGenNode *T, CoreGenProj *P, CoreGenEnv *V, CoreGenErrno *E);
 
   /// Default destructor
   ~CoreGenCodegen();
 
   /// Execute the LLVM codegen
-  bool ExecuteLLVMCodegen();
+  bool ExecuteLLVMCodegen(std::string CompVer);
 
   /// Execute the Chisel codegen
   bool ExecuteChiselCodegen();

@@ -110,10 +110,11 @@ CoreGenBackend::~CoreGenBackend(){
   delete Errno;
 }
 
-bool CoreGenBackend::ExecuteLLVMCodegen(){
+bool CoreGenBackend::ExecuteLLVMCodegen(std::string CompVer){
   // Create the codegen object
   CoreGenCodegen *CG = new CoreGenCodegen(Top,
                                           Proj,
+                                          Env,
                                           Errno);
 
   if( CG == nullptr ){
@@ -122,7 +123,7 @@ bool CoreGenBackend::ExecuteLLVMCodegen(){
   }
 
   // Execute it
-  bool rtn = CG->ExecuteLLVMCodegen();
+  bool rtn = CG->ExecuteLLVMCodegen(CompVer);
 
   // delete and clean everything up
   delete CG;
@@ -155,6 +156,7 @@ bool CoreGenBackend::ExecuteChiselCodegen(){
   // Create the codegen object
   CoreGenCodegen *CG = new CoreGenCodegen(Top,
                                           Proj,
+                                          Env,
                                           Errno);
 
   if( CG == nullptr ){
@@ -174,6 +176,7 @@ bool CoreGenBackend::ExecuteCodegen(){
   // Create the codegen object
   CoreGenCodegen *CG = new CoreGenCodegen(Top,
                                           Proj,
+                                          Env,
                                           Errno);
 
   if( CG == nullptr ){
