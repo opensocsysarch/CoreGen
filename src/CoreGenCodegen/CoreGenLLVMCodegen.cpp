@@ -21,7 +21,210 @@ CoreGenLLVMCodegen::CoreGenLLVMCodegen( CoreGenNode *T,
 CoreGenLLVMCodegen::~CoreGenLLVMCodegen(){
 }
 
+bool CoreGenLLVMCodegen::GenerateBuildImpl(){
+  return true;
+}
+
+bool CoreGenLLVMCodegen::GenerateCPUDriver(){
+  return true;
+}
+
+bool CoreGenLLVMCodegen::TIGenerateTablegen(){
+  return true;
+}
+
+bool CoreGenLLVMCodegen::TIGenerateISelDag(){
+  return true;
+}
+
+bool CoreGenLLVMCodegen::TIGenerateMachInfo(){
+  return true;
+}
+
+bool CoreGenLLVMCodegen::TIGenerateInstLowering(){
+  return true;
+}
+
+bool CoreGenLLVMCodegen::TIGenerateRegInfo(){
+  return true;
+}
+
+bool CoreGenLLVMCodegen::TIGenerateSubtargetInfo(){
+  return true;
+}
+
+bool CoreGenLLVMCodegen::TIGenerateTargetMach(){
+  return true;
+}
+
+bool CoreGenLLVMCodegen::TIGenerateTargetObj(){
+  return true;
+}
+
+bool CoreGenLLVMCodegen::TIGenerateAsmParser(){
+  return true;
+}
+
+bool CoreGenLLVMCodegen::TIGenerateDisass(){
+  return true;
+}
+
+bool CoreGenLLVMCodegen::TIGenerateInstPrinter(){
+  return true;
+}
+
+bool CoreGenLLVMCodegen::TIGenerateMCTargetDesc(){
+  return true;
+}
+
+bool CoreGenLLVMCodegen::TIGenerateTargetInfo(){
+  return true;
+}
+
+bool CoreGenLLVMCodegen::TIGenerateCmake(){
+  return true;
+}
+
+bool CoreGenLLVMCodegen::GenerateTargetImpl(){
+
+  // Stage 1: Create the tablegen infrastructure
+  if( !TIGenerateTablegen() )
+    return false;
+
+  // Stage 2: Create the ISelDagToDag template
+  if( !TIGenerateISelDag() )
+    return false;
+
+  // Stage 3: Create the machine function info
+  if( !TIGenerateMachInfo() )
+    return false;
+
+  // Stage 4: Create the instruction lowering template
+  if( !TIGenerateInstLowering() )
+    return false;
+
+  // Stage 5: Create the register info template
+  if( !TIGenerateRegInfo() )
+    return false;
+
+  // Stage 6: Create the subtarget info template
+  if( !TIGenerateSubtargetInfo() )
+    return false;
+
+  // Stage 7: Create the target machine template
+  if( !TIGenerateTargetMach() )
+    return false;
+
+  // Stage 8: Create the target object file template
+  if( !TIGenerateTargetObj() )
+    return false;
+
+  // Stage 9: Create the AsmParser
+  if( !TIGenerateAsmParser() )
+    return false;
+
+  // Stage 10: Create the Disassembler
+  if( !TIGenerateDisass() )
+    return false;
+
+  // Stage 11: Create the InstPrinter
+  if( !TIGenerateInstPrinter() )
+    return false;
+
+  // Stage 12: Create the MCTargetDesc
+  if( !TIGenerateMCTargetDesc() )
+    return false;
+
+  // Stage 13: Create the TargetInfo
+  if( !TIGenerateTargetInfo() )
+    return false;
+
+  // Stage 14: Create the top-level CMake script
+  if( !TIGenerateCmake() )
+    return false;
+
+  return true;
+}
+
+bool CoreGenLLVMCodegen::GenerateTargetDir(){
+  CoreGenNode *SocNode = nullptr;
+
+  for( unsigned i=0; i<Top->GetNumChild(); i++ ){
+    if( Top->GetChild(i)->GetType() == CGSoc )
+      SocNode = Top->GetChild(i);
+  }
+
+  if( !SocNode ){
+    Errno->SetError(CGERR_ERROR, "No SoC node found in the project" );
+    return false;
+  }
+
+  std::string TargetDir = LLVMRoot + "/llvm/lib/Target/" + SocNode->GetName();
+
+  // generate the top-level target directory
+  if( !CGMkDir(TargetDir) ){
+    Errno->SetError(CGERR_ERROR, "Could not create LLVM target directory: " +
+                    TargetDir );
+    return false;
+  }
+
+  // generate all the subdirectories
+  // -- AsmParser
+  if( !CGMkDir(TargetDir + "/AsmParser") ){
+    Errno->SetError(CGERR_ERROR, "Could not create LLVM AsmParser directory: " +
+                    TargetDir + "/AsmParser" );
+    return false;
+  }
+
+  // -- Disassembler
+  if( !CGMkDir(TargetDir + "/Disassembler") ){
+    Errno->SetError(CGERR_ERROR, "Could not create LLVM Disassembler directory: " +
+                    TargetDir + "/Disassembler" );
+    return false;
+  }
+
+  // -- InstPrinter
+  if( !CGMkDir(TargetDir + "/InstPrinter") ){
+    Errno->SetError(CGERR_ERROR, "Could not create LLVM InstPrinter directory: " +
+                    TargetDir + "/InstPrinter" );
+    return false;
+  }
+
+  // -- MCTargetDesc
+  if( !CGMkDir(TargetDir + "/MCTargetDesc") ){
+    Errno->SetError(CGERR_ERROR, "Could not create LLVM MCTargetDesc directory: " +
+                    TargetDir + "/MCTargetDesc" );
+    return false;
+  }
+
+  // -- TargetInfo
+  if( !CGMkDir(TargetDir + "/TargetInfo") ){
+    Errno->SetError(CGERR_ERROR, "Could not create LLVM TargetInfo directory: " +
+                    TargetDir + "/TargetInfo" );
+    return false;
+  }
+
+  return true;
+}
+
 bool CoreGenLLVMCodegen::Execute(){
+
+  // Stage 1: generate the directory structure for the new target
+  if( !GenerateTargetDir() )
+    return false;
+
+  // Stage 2: generate the codegen blocks for each ISA
+  if( !GenerateTargetImpl() )
+    return false;
+
+  // Stage 3: generate the CPU driver
+  if( !GenerateCPUDriver() )
+    return false;
+
+  // Stage 4: generate the build infrastructure
+  if( !GenerateBuildImpl() )
+    return false;
+
   return true;
 }
 

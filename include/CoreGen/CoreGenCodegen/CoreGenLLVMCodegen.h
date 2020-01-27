@@ -39,8 +39,64 @@ private:
   CoreGenNode *Top;                 ///< Top-level coregen node
   CoreGenProj *Proj;                ///< CoreGen Project Info
   CoreGenArchEntry *Entry;          ///< CoreGenArchEntry for the target LLVM version
-  std::string LLVMRoot;             ///< Root directory for chisel output
+  std::string LLVMRoot;             ///< Root directory for LLVM output
   CoreGenErrno *Errno;              ///< CoreGen Errno Structure
+
+  /// Generate the directory structure for the new target
+  bool GenerateTargetDir();
+
+  /// Generate the target implementation for the new target
+  bool GenerateTargetImpl();
+
+  /// Generate the target CPU drive
+  bool GenerateCPUDriver();
+
+  /// Generate the build infrastructure
+  bool GenerateBuildImpl();
+
+  // TargetImpl Drivers
+
+  /// Generate the TableGen info
+  bool TIGenerateTablegen();
+
+  /// Generate the ISel Dag info
+  bool TIGenerateISelDag();
+
+  /// Generate the machine function info
+  bool TIGenerateMachInfo();
+
+  /// Generate the intruction lowering
+  bool TIGenerateInstLowering();
+
+  /// Generate the register info template
+  bool TIGenerateRegInfo();
+
+  /// Generate the subtarget info
+  bool TIGenerateSubtargetInfo();
+
+  /// Generate the target machine template
+  bool TIGenerateTargetMach();
+
+  /// Generate the target object file template
+  bool TIGenerateTargetObj();
+
+  /// Generate the target asm parser
+  bool TIGenerateAsmParser();
+
+  /// Generate the target disassembler
+  bool TIGenerateDisass();
+
+  /// Generate the target instruction printer
+  bool TIGenerateInstPrinter();
+
+  /// Generate the target MCTargetDesc
+  bool TIGenerateMCTargetDesc();
+
+  /// Generate the TargetInfo
+  bool TIGenerateTargetInfo();
+
+  /// Generate the top-level CMake scripts
+  bool TIGenerateCmake();
 
 public:
   /// Default constructor
