@@ -715,7 +715,6 @@ void CoreGenYaml::WritePseudoInstYaml(YAML::Emitter *out,
       }
       *out << YAML::EndSeq;
     }
-    
 
     if( PInsts[i]->IsSyntax() ){
       *out << YAML::Key << "Syntax";
@@ -746,6 +745,9 @@ void CoreGenYaml::WriteRegClassYaml(YAML::Emitter *out,
       *out << YAML::Key << RegClasses[i]->GetReg(j)->GetName();
     }
     *out << YAML::EndSeq;
+
+    *out << YAML::Key << "ReadPorts" << YAML::Value << RegClasses[i]->GetReadPorts();
+    *out << YAML::Key << "WritePorts" << YAML::Value << RegClasses[i]->GetWritePorts();
 
     if( RegClasses[i]->IsRTL() ){
       *out << YAML::Key << "RTL";
@@ -1851,11 +1853,6 @@ bool CoreGenYaml::ReadRegisterClassYaml(const YAML::Node& RegClassNodes,
       return false;
     }
 
-#if 0
-    // currently unused
-    int NumRegs = Node["NumRegisters"].as<int>();
-#endif
-
     CoreGenRegClass *RC = new CoreGenRegClass( Name, Errno );
     if( RC == nullptr ){
       Errno->SetError(CGERR_ERROR, "Error creating new register class for " + Name );
@@ -1889,6 +1886,14 @@ bool CoreGenYaml::ReadRegisterClassYaml(const YAML::Node& RegClassNodes,
         }// end if
       } // end unsigned j
     } // end if
+
+    if( CheckValidNode(Node,"ReadPorts") ){
+      RC->SetReadPorts(Node["ReadPorts"].as<unsigned>());
+    }
+
+    if( CheckValidNode(Node,"WritePorts") ){
+      RC->SetWritePorts(Node["WritePorts"].as<unsigned>());
+    }
 
     if( CheckValidNode(Node,"RTL") ){
       RC->SetRTL( Node["RTL"].as<std::string>());

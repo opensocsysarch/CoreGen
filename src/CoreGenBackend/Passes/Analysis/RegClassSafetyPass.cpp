@@ -87,6 +87,34 @@ bool RegClassSafetyPass::PseudoNameCollision(CoreGenNode *N){
   return true;
 }
 
+bool RegClassSafetyPass::ReadWritePortTest( CoreGenNode *N ){
+  CoreGenRegClass *R = static_cast<CoreGenRegClass *>(N);
+  bool RW = false;
+  bool rtn = true;
+  for( unsigned i=0; i<R->GetNumReg(); i++ ){
+    if( R->GetReg(i)->IsRWAttr() )
+      RW = true;
+  }
+
+  // Read ports must be > 0
+  if( R->GetReadPorts() == 0 ){
+    WriteMsg("Register class must have at least one read port; RegisterClass=" +
+             R->GetName() );
+    rtn = false;
+  }
+
+  // if there are any RW registers, then we must have a write port
+  if( RW ){
+    if( R->GetWritePorts() == 0 ){
+      WriteMsg("Register classes with RW I/O must have at least write port; RegisterClass=" +
+             R->GetName() );
+      rtn = false;
+    }
+  }
+
+  return rtn;
+}
+
 bool RegClassSafetyPass::Execute(){
   // Get the correct DAG level: 1
   CoreGenDAG *D1 = DAG->GetDAGFromLevel(this->GetLevel());
@@ -118,6 +146,10 @@ bool RegClassSafetyPass::Execute(){
       }
       // register size inefficiencies
       if( !RegSizeTest( D1->FindNodeByIndex(i) ) ){
+        rtn = false;
+      }
+      // register class read/write port tests
+      if( !ReadWritePortTest( D1->FindNodeByIndex(i) ) ){
         rtn = false;
       }
     }
