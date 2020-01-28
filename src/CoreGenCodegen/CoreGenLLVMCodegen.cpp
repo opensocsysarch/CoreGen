@@ -88,6 +88,28 @@ bool CoreGenLLVMCodegen::TIGenerateTargetInfo(){
     return false;
   }
 
+  OutStream << "#include \"llvm/Support/TargetRegistry.h\"" << std::endl;
+  OutStream << "using namespace llvm;" << std::endl << std::endl;
+
+  OutStream << "namespace llvm{" << std::endl;
+  for( unsigned i=0; i<Subtargets.size(); i++ ){
+    OutStream << "Target &getThe" << TargetName << Subtargets[i] << "Target() {" << std::endl;
+    OutStream << "  static Target The" << TargetName << Subtargets[i] << "Target;" << std::endl;
+    OutStream << "  return The" << TargetName << Subtargets[i] << "Target;" << std::endl;
+    OutStream << "}" << std::endl << std::endl;
+  }
+  OutStream << "}" << std::endl;
+
+  OutStream << "extern \"C\" void LLVMInitialize" << TargetName << "TargetInfo() {" << std::endl;
+  for( unsigned i=0; i<Subtargets.size(); i++ ){
+    OutStream << "  RegisterTarget<Triple::" << Subtargets[i]
+              << "> X(getThe" << TargetName << Subtargets[i] << "Target(), \""
+              << TargetName << Subtargets[i] << "\", \""
+              << TargetName << " " << Subtargets[i] << " subtarget\","
+              << "\"" << TargetName << "\");" << std::endl;
+  }
+  OutStream << "}" << std::endl;
+
   OutStream.close();
 
   // Stage 2: generate the cmake driver
@@ -255,21 +277,33 @@ bool CoreGenLLVMCodegen::GenerateTargetDir(){
   return true;
 }
 
+bool CoreGenLLVMCodegen::GenerateSubtargets(){
+  for( unsigned i=0; i<Top->GetNumChild(); i++ ){
+    if( Top->GetChild(i)->GetType() == CGISA )
+      Subtargets.push_back(Top->GetChild(i)->GetName());
+  }
+  return true;
+}
+
 bool CoreGenLLVMCodegen::Execute(){
 
-  // Stage 1: generate the directory structure for the new target
+  // Stage 1: generate subtargets
+  if( !GenerateSubtargets() )
+    return false;
+
+  // Stage 2: generate the directory structure for the new target
   if( !GenerateTargetDir() )
     return false;
 
-  // Stage 2: generate the codegen blocks for each ISA
+  // Stage 3: generate the codegen blocks for each ISA
   if( !GenerateTargetImpl() )
     return false;
 
-  // Stage 3: generate the CPU driver
+  // Stage 4: generate the CPU driver
   if( !GenerateCPUDriver() )
     return false;
 
-  // Stage 4: generate the build infrastructure
+  // Stage 5: generate the build infrastructure
   if( !GenerateBuildImpl() )
     return false;
 
