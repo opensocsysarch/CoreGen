@@ -27,6 +27,7 @@
 #include <sys/stat.h>
 #include <cerrno>
 #include <cstdlib>
+#include <vector>
 
 // CoreGen Headers
 #include "CoreGen/CoreGenBackend/CoreGenBackend.h"
@@ -43,6 +44,11 @@ private:
   CoreGenErrno *Errno;              ///< CoreGen Errno Structure
 
   std::string TargetName;           ///< Name of the compiler target
+
+  std::vector<std::string> Subtargets;  ///< vector of subtarget ISAs
+
+  /// Generate the vector of subtarget nodes
+  bool GenerateSubtargets();
 
   /// Generate the directory structure for the new target
   bool GenerateTargetDir();
