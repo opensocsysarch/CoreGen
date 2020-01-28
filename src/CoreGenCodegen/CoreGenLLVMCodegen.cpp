@@ -50,6 +50,73 @@ bool CoreGenLLVMCodegen::TIGenerateRegInfo(){
 }
 
 bool CoreGenLLVMCodegen::TIGenerateSubtargetInfo(){
+  // Stage 1: Generate the header file
+  std::string OutFile = LLVMRoot + "/" + TargetName + "Subtarget.h";
+  std::ofstream OutStream;
+  OutStream.open(OutFile,std::ios::trunc);
+  if( !OutStream.is_open() ){
+    Errno->SetError(CGERR_ERROR, "Could not open the Subtarget info file: " + OutFile );
+    return false;
+  }
+
+  OutStream << "//===-- " << TargetName
+            << "Subtarget.h - Define Subtarget for the " << TargetName
+            << " -------*- C++ -*-===//" << std::endl << std::endl;
+
+  OutStream << "#ifndef LLVM_LIB_TARGET_" << TargetName << "_"
+            << TargetName << "SUBTARGET_H" << std::endl;
+  OutStream << "#define LLVM_LIB_TARGET_" << TargetName << "_"
+            << TargetName << "SUBTARGET_H" << std::endl << std::endl;
+
+  // print the headers
+  OutStream << "#include \"" << TargetName << "FrameLowering.h\"" << std::endl;
+  OutStream << "#include \"" << TargetName << "ISelLowering.h\"" << std::endl;
+  OutStream << "#include \"" << TargetName << "InstrInfo.h\"" << std::endl;
+  OutStream << "#include \"llvm/CodeGen/SelectionDAGTargetInfo.h\"" << std::endl;
+  OutStream << "#include \"llvm/CodeGen/TargetSubtargetInfo.h\"" << std::endl;
+  OutStream << "#include \"llvm/IR/DataLayout.h\"" << std::endl;
+  OutStream << "#include \"llvm/Target/TargetMachine.h\"" << std::endl << std::endl;
+
+  OutStream << "#define GET_SUBTARGETINFO_HEADER" << std::endl;
+  OutStream << "#include \"" << TargetName << "GenSubtargetInfo.inc\""
+            << std::endl << std::endl;
+
+  OutStream << "namespace llvm {" << std::endl;
+  OutStream << "class StringRef;" << std::endl << std::endl;
+
+  OutStream << "class " << TargetName << "Subtarget : public "
+            << TargetName << "GenSubtargetInfo {" << std::endl;
+
+  // output the body of the class
+  OutStream << "  virtual void anchor()" << std::endl;
+  for( unsigned i=0; i<Subtargets.size(); i++ ){
+    OutStream << "  bool Has" << Subtargets[i] << " = false; " << std::endl;
+  }
+  OutStream << "  bool EnableLinkerRelax = false;" << std::endl;
+  OutStream << "  MVT XLenVT = MVT::i32;" << std::endl; // TODO: derive this
+  OutStream << "  " << TargetName << "FrameLowering FrameLowering;" << std::endl;
+  OutStream << "  " << TargetName << "InstrInfo InstrInfo;" << std::endl;
+  OutStream << "  " << TargetName << "RegisterInfo RegInfo;" << std::endl;
+  OutStream << "  " << TargetName << "TargetLowering TLInfo;" << std::endl;
+  OutStream << "  SelectionDAGTargetInfo TSInfo;" << std::endl << std::endl;
+
+  OutStream << "  " << TargetName << "Subtarget &initializeSubtargetDependencies("
+            << "StringRef CPU, StringRef FS, bool Is64Bit);" << std::endl << std::endl;
+
+  OutStream << "public: " << std::endl << std::endl;
+
+  OutStream << "  " << TargetName << "Subtarget(const Triple &TT, const std::string &CPU,"
+            << " const std::string &FS, const TargetMachine &TM);" << std::endl << std::endl;
+
+  OutStream << "  void ParseSubtargetFeatures(StringRef CPU, StringRef FS);" << std::endl << std::endl;
+
+  OutStream << "};" << std::endl;
+
+  OutStream << "} # End LLVM namespace" << std::endl;
+  OutStream << "#endif" << std::endl;
+
+  OutStream.close();
+
   return true;
 }
 
