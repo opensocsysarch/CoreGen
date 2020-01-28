@@ -103,6 +103,9 @@ private:
   /// Generate the TargetInfo
   bool TIGenerateTargetInfo();
 
+  /// Generate the top-level header
+  bool TIGenerateTargetHeader();
+
   /// Generate the top-level CMake scripts
   bool TIGenerateCmake();
 

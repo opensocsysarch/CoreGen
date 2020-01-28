@@ -298,6 +298,43 @@ bool CoreGenLLVMCodegen::TIGenerateTargetInfo(){
   return true;
 }
 
+bool CoreGenLLVMCodegen::TIGenerateTargetHeader(){
+  std::string OutFile = LLVMRoot + "/" + TargetName + ".h";
+  std::ofstream OutStream;
+  OutStream.open(OutFile,std::ios::trunc);
+  if( !OutStream.is_open() ){
+    Errno->SetError(CGERR_ERROR, "Could not open top-level header file: " + OutFile );
+    return false;
+  }
+
+  OutStream << "//===-- " << TargetName
+            << ".h - Top-level interface for " << TargetName
+            << " -------*- C++ -*-===//" << std::endl << std::endl;
+
+  OutStream << "#ifndef LLVM_LIB_TARGET_" << TargetName << "_" << TargetName << "_H" << std::endl;
+  OutStream << "#define LLVM_LIB_TARGET_" << TargetName << "_" << TargetName << "_H" << std::endl;
+  OutStream << std::endl;
+  OutStream << "#include \"llvm/Target/TargetMachine.h\"" << std::endl << std::endl;
+  OutStream << "namespace llvm {" << std::endl;
+
+  OutStream << "void Lower" << TargetName
+            << "MachineInstrToMCInst(const MachineInstr *MI, MCInst &OutMI,"
+            << std::endl
+            << "                      const AsmPrinter &AP);" << std::endl;
+  OutStream << "bool Lower" << TargetName
+            << "MachineOperandToMCOperand(const MachineOperand &MO,"
+            << "                      MCOperand &MCOp, const AsmPrinter &AP);"
+            << std::endl;
+  OutStream << "FunctionPass *create" << TargetName << "ISelDag("
+            << TargetName << "TargetMachine &TM);" << std::endl;
+
+  OutStream << "} // end LLVM namespace" << std::endl;
+  OutStream << "#endif" << std::endl;
+  OutStream.close();
+
+  return true;
+}
+
 bool CoreGenLLVMCodegen::TIGenerateCmake(){
   return true;
 }
@@ -324,7 +361,7 @@ bool CoreGenLLVMCodegen::GenerateTargetImpl(){
   if( !TIGenerateRegInfo() )
     return false;
 
-  // Stage 6: Create the subtarget info template
+  // Stage 6: Create the subtarget info template: done;
   if( !TIGenerateSubtargetInfo() )
     return false;
 
@@ -352,11 +389,15 @@ bool CoreGenLLVMCodegen::GenerateTargetImpl(){
   if( !TIGenerateMCTargetDesc() )
     return false;
 
-  // Stage 13: Create the TargetInfo
+  // Stage 13: Create the TargetInfo; done;
   if( !TIGenerateTargetInfo() )
     return false;
 
-  // Stage 14: Create the top-level CMake script
+  // Stage 14: Create the top-level header interface
+  if( !TIGenerateTargetHeader() )
+    return false;
+
+  // Stage 15: Create the top-level CMake script
   if( !TIGenerateCmake() )
     return false;
 
