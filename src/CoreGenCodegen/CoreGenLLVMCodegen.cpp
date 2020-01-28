@@ -515,6 +515,54 @@ bool CoreGenLLVMCodegen::TIGenerateTargetHeader(){
 }
 
 bool CoreGenLLVMCodegen::TIGenerateCmake(){
+  std::string OutFile = LLVMRoot + "/CMakeLists.txt;";
+  std::ofstream OutStream;
+  OutStream.open(OutFile,std::ios::trunc);
+  if( !OutStream.is_open() ){
+    Errno->SetError(CGERR_ERROR, "Could not open top-level CMakeLists: " + OutFile );
+    return false;
+  }
+
+  OutStream << "set(LLVM_TARGET_DEFINITIONS " << TargetName << ".td)" << std::endl << std::endl;
+
+  OutStream << "tablegen(LLVM " << TargetName << "GenAsmMatcher.inc -gen-asm-matcher)" << std::endl;
+  OutStream << "tablegen(LLVM " << TargetName << "GenAsmWriter.inc -gen-asm-writer)" << std::endl;
+  OutStream << "tablegen(LLVM " << TargetName << "GenCompressInstEmitter.inc -gen-compress-inst-emitter)" << std::endl;
+  OutStream << "tablegen(LLVM " << TargetName << "GenDAGISel.inc -gen-dag-isel)" << std::endl;
+  OutStream << "tablegen(LLVM " << TargetName << "GenDisassemblerTables.inc -gen-disassembler)" << std::endl;
+  OutStream << "tablegen(LLVM " << TargetName << "GenInstrInfo.inc -gen-instr-info)" << std::endl;
+  OutStream << "tablegen(LLVM " << TargetName << "GenMCCodeEmitter.inc -gen-emitter)" << std::endl;
+  OutStream << "tablegen(LLVM " << TargetName << "GenMCPseudoLowering.inc -gen-pseudo-lowering)" << std::endl;
+  OutStream << "tablegen(LLVM " << TargetName << "GenRegisterInfo.inc -gen-register-info)" << std::endl;
+  OutStream << "tablegen(LLVM " << TargetName << "GenSubtargetInfo.inc -gen-subtarget)" << std::endl;
+  OutStream << "tablegen(LLVM " << TargetName << "GenSystemOperands.inc -gen-searchable-tables)" << std::endl << std::endl;
+
+  OutStream << "add_public_tablegen_target(" << TargetName << "CommonTableGen)" << std::endl << std::endl;
+
+  OutStream << "add_llvm_target(" << TargetName << "CodeGen" << std::endl
+            << " " << TargetName << "AsmPrinter.cpp" << std::endl
+            << " " << TargetName << "ExpandPseudoInsts.cpp" << std::endl
+            << " " << TargetName << "FrameLowering.cpp" << std::endl
+            << " " << TargetName << "InstrInfo.cpp" << std::endl
+            << " " << TargetName << "ISelDAGToDAG.cpp" << std::endl
+            << " " << TargetName << "ISelLowering.cpp" << std::endl
+            << " " << TargetName << "MCInstLower.cpp" << std::endl
+            << " " << TargetName << "MergeBaseOffset.cpp" << std::endl
+            << " " << TargetName << "RegisterInfo.cpp" << std::endl
+            << " " << TargetName << "Subtarget.cpp" << std::endl
+            << " " << TargetName << "TargetMachine.cpp" << std::endl
+            << " " << TargetName << "TargetObjectFile.cpp" << std::endl
+            << ")" << std::endl << std::endl;
+
+  OutStream << "add_subdirectory(AsmParser)" << std::endl;
+  OutStream << "add_subdirectory(Disassembler)" << std::endl;
+  OutStream << "add_subdirectory(InstPrinter)" << std::endl;
+  OutStream << "add_subdirectory(MCTargetDesc)" << std::endl;
+  OutStream << "add_subdirectory(TargetInfo)" << std::endl;
+  OutStream << "add_subdirectory(Utils)" << std::endl;
+
+  OutStream.close();
+
   return true;
 }
 
