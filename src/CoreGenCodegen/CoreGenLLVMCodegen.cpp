@@ -50,12 +50,13 @@ bool CoreGenLLVMCodegen::TIGenerateRegInfo(){
 }
 
 bool CoreGenLLVMCodegen::TIGenerateSubtargetInfo(){
+
   // Stage 1: Generate the header file
   std::string OutFile = LLVMRoot + "/" + TargetName + "Subtarget.h";
   std::ofstream OutStream;
   OutStream.open(OutFile,std::ios::trunc);
   if( !OutStream.is_open() ){
-    Errno->SetError(CGERR_ERROR, "Could not open the Subtarget info file: " + OutFile );
+    Errno->SetError(CGERR_ERROR, "Could not open the Subtarget header file: " + OutFile );
     return false;
   }
 
@@ -93,7 +94,9 @@ bool CoreGenLLVMCodegen::TIGenerateSubtargetInfo(){
     OutStream << "  bool Has" << Subtargets[i] << " = false; " << std::endl;
   }
   OutStream << "  bool EnableLinkerRelax = false;" << std::endl;
-  OutStream << "  MVT XLenVT = MVT::i32;" << std::endl; // TODO: derive this
+  // TODO: derive the MVT type
+  //       see reference here: https://llvm.org/doxygen/classllvm_1_1MVT.html
+  OutStream << "  MVT XLenVT = MVT::i32;" << std::endl;
   OutStream << "  " << TargetName << "FrameLowering FrameLowering;" << std::endl;
   OutStream << "  " << TargetName << "InstrInfo InstrInfo;" << std::endl;
   OutStream << "  " << TargetName << "RegisterInfo RegInfo;" << std::endl;
@@ -110,10 +113,88 @@ bool CoreGenLLVMCodegen::TIGenerateSubtargetInfo(){
 
   OutStream << "  void ParseSubtargetFeatures(StringRef CPU, StringRef FS);" << std::endl << std::endl;
 
+  OutStream << "  const " << TargetName << "FrameLowering *getFrameLowering() const override {" << std::endl;
+  OutStream << "    return &FrameLowering;" << std::endl;
+  OutStream << "  }" << std::endl;
+  OutStream << "  const " << TargetName << "InstrInfo *getInstrInfo() const override { return &InstrInfo; }" << std::endl;
+  OutStream << "  const " << TargetName << "RegisterInfo *getRegisterInfo() const override {" << std::endl;
+  OutStream << "    return &RegInfo;" << std::endl;
+  OutStream << "  }" << std::endl;
+  OutStream << "  const " << TargetName << "TargetLowering *getTargetLowering() const override {" << std::endl;
+  OutStream << "    return &TSInfo;" << std::endl;
+  OutStream << "  }" << std::endl;
+  OutStream << "  const SelectionDAGTargetInfo *getSelectionDAGInfo() const override {" << std::endl;
+  OutStream << "    return &TSinfo;" << std::endl;
+  OutStream << "  }" << std::endl << std::endl;
+
+  for( unsigned i=0; i<Subtargets.size(); i++ ){
+    OutStream << "  bool has" << Subtargets[i] << "() const { return Has"
+              << Subtargets[i] << "; }" << std::endl;
+  }
+
+  OutStream << std::endl;
+
+  OutStream << "  bool enableLinkerRelax() const { return EnableLinkerRelax; }" << std::endl;
+  OutStream << "  MVT getXLenVT() const { return XLenVT; }" << std::endl;
+
   OutStream << "};" << std::endl;
 
   OutStream << "} # End LLVM namespace" << std::endl;
   OutStream << "#endif" << std::endl;
+
+  OutStream.close();
+
+  // Stage 2: generate the cpp file
+  OutFile = LLVMRoot + "/" + TargetName + "Subtarget.cpp";
+  OutStream.open(OutFile,std::ios::trunc);
+  if( !OutStream.is_open() ){
+    Errno->SetError(CGERR_ERROR, "Could not open the Subtarget implementation file: " + OutFile );
+    return false;
+  }
+
+  OutStream << "//===-- " << TargetName
+            << "Subtarget.cpp - " << TargetName << " Subtarget Information "
+            << "------------------===//" << std::endl;
+
+  OutStream << "#include \"" << TargetName << "Subtarget.h\"" << std::endl;
+  OutStream << "#include \"" << TargetName << ".h\"" << std::endl;
+  OutStream << "#include \"" << TargetName << "FrameLowering.h\"" << std::endl;
+  OutStream << "#include \"llvm/Support/TargetRegistry.h\"" << std::endl << std::endl;
+
+  OutStream << "using namespace llvm;" << std::endl << std::endl;
+
+  OutStream << "#define DEBUG_TYPE \"" << TargetName << "-subtarget\"" << std::endl << std::endl;
+
+  OutStream << "#define GET_SUBTARGETINFO_TARGET_DESC" << std::endl;
+  OutStream << "#define GET_SUBTARGETINFO_CTOR" << std::endl;
+  OutStream << "#include \"" << TargetName << "SubtargetInfo.inc\"" << std::endl << std::endl;
+
+  OutStream << "void " << TargetName << "Subtarget::anchor() {}" << std::endl << std::endl;
+
+  OutStream << TargetName << "Subtarget &" << TargetName
+            << "Subtarget::::initializeSubtargetDependencies(StringRef CPU,"
+            << std::endl
+            << "                                             StringRef FS) {"
+            << std::endl
+            << "  std::string CPUName = CPU;" << std::endl
+            << "  if( CPUName.empty() )  CPUName = \"generic-" << TargetName << "\";"
+            << std::endl
+            << "  ParseSubtargetFeatures(CPUName, FS);"
+            << std::endl
+            << "  return *this;" << std::endl
+            << "}" << std::endl << std::endl;
+
+  OutStream << TargetName << "Subtarget::" << TargetName << "Subtarget("
+            << "          const Triple &TT, const std::string &CPU,"
+            << std::endl
+            << "          const std::string &FS, const TargetMachine &TM)"
+            << std::endl
+            << "     : " << TargetName << "GenSubtargetInfo(TT, CPU, FS),"
+            << std::endl
+            << "       FrameLowering(initializeSubtargetDependencies(CPU, FS, TT.isArch64Bit())),"
+            << std::endl
+            << "       InstrInfo(), RegInfo(getHwMode()), TLInfo(TM, *this) {}"
+            << std::endl << std::endl;
 
   OutStream.close();
 
