@@ -34,14 +34,12 @@ bool CoreGenLLVMCodegen::TIGenerateTablegen(){
 }
 
 bool CoreGenLLVMCodegen::TIGenerateISelDag(){
-  return true;
-}
-
-bool CoreGenLLVMCodegen::TIGenerateMachInfo(){
+  // <TargetName>ISelDAGToDAG.cpp
   return true;
 }
 
 bool CoreGenLLVMCodegen::TIGenerateInstLowering(){
+  // <TargetName>ISelLowering.{h,cpp}
   return true;
 }
 
@@ -202,6 +200,187 @@ bool CoreGenLLVMCodegen::TIGenerateSubtargetInfo(){
 }
 
 bool CoreGenLLVMCodegen::TIGenerateTargetMach(){
+  // <TargetName>TargetMachine.{h,cpp}
+  std::string OutFile = LLVMRoot + "/" + TargetName + "TargetMachine.h";
+  std::ofstream OutStream;
+  OutStream.open(OutFile,std::ios::trunc);
+  if( !OutStream.is_open() ){
+    Errno->SetError(CGERR_ERROR, "Could not open the target machine header file: " + OutFile );
+    return false;
+  }
+
+  OutStream << "//===-- " << TargetName
+            << "TargetMachine.h - Define TargetMachine for " << TargetName
+            << " -------*- C++ -*-===//" << std::endl << std::endl;
+
+  OutStream << "#ifndef LLVM_LIB_TARGET_" << TargetName << "_"
+            << TargetName << "TARGETMACHINE_H" << std::endl;
+  OutStream << "#define LLVM_LIB_TARGET_" << TargetName << "_"
+            << TargetName << "TARGETMACHINE_H" << std::endl << std::endl;
+
+  OutStream << "#include \"MCTargetDesc/" << TargetName << "MCTargetDesc.h\"" << std::endl;
+  OutStream << "#include \"" << TargetName << "Subtarget.h\"" << std::endl;
+  OutStream << "#include \"llvm/CodeGen/SelectionDAGTargetInfo.h\"" << std::endl;
+  OutStream << "#include \"llvm/IR/DataLayout.h\"" << std::endl;
+  OutStream << "#include \"llvm/Target/TargetMachine.h\"" << std::endl << std::endl;
+
+  OutStream << "namespace llvm{" << std::endl;
+  OutStream << "class " << TargetName << "TargetMachine : public LLVMTargetMachine {" << std::endl;
+  OutStream << "  std::unique_ptr<TargetLoweringObjectFile> TLOF;" << std::endl;
+  OutStream << "  " << TargetName << "Subtarget Subtarget;" << std::endl;
+  OutStream << "public:" << std::endl;
+  OutStream << "  " << TargetName << "TargetMachine(const Target &T, const Triple &TT, StringRef CPU,"
+            << std::endl
+            << "                     StringRef FS, const TargetOptions &Options,"
+            << std::endl
+            << "                     Optional<Reloc::Model> RM, Optional<CodeModel::Model> CM,"
+            << std::endl
+            << "                     CodeGenOpt::Level OL, bool JIT);" << std::endl;
+  OutStream << "  const " << TargetName << "Subtarget *getSubtargetImpl(const Function &) const override {"
+            << std::endl
+            << "  return &Subtarget;"
+            << std::endl
+            << "}" << std::endl << std::endl;
+  OutStream << "  TargetPassConfig *createPassConfig(PassManagerBase &PM) override;" << std::endl;
+  OutStream << "  TargetLoweringObjectFile *getObjFileLowering() const override {"
+            << "    return TLOF.get();"
+            << std::endl
+            << "}"
+            << std::endl;
+  OutStream << "};" << std::endl;
+  OutStream << "}" << std::endl;
+  OutStream << "#endif" << std::endl;
+
+  OutStream.close();
+
+  OutFile = LLVMRoot + "/" + TargetName + "TargetMachine.cpp";
+  OutStream.open(OutFile,std::ios::trunc);
+  if( !OutStream.is_open() ){
+    Errno->SetError(CGERR_ERROR, "Could not open the target machine implementation file: " + OutFile );
+    return false;
+  }
+
+  OutStream << "//===-- " << TargetName
+            << "TargetMachine.cpp - Define TargetMachine for " << TargetName
+            << " -----------===//" << std::endl << std::endl;
+
+  OutStream << "#include \"" << TargetName << ".h\"" << std::endl;
+  OutStream << "#include \"" << TargetName << "TargetMachine.h\"" << std::endl;
+  OutStream << "#include \"" << TargetName << "TargetObjectFile.h\"" << std::endl;
+  OutStream << "#include \"llvm/ADT/STLExtras.h\"" << std::endl;
+  OutStream << "#include \"llvm/CodeGen/Passes.h\"" << std::endl;
+  OutStream << "#include \"llvm/CodeGen/TargetLoweringObjectFileImpl.h\"" << std::endl;
+  OutStream << "#include \"llvm/CodeGen/TargetPassConfig.h\"" << std::endl;
+  OutStream << "#include \"llvm/IR/LegacyPassManager.h\"" << std::endl;
+  OutStream << "#include \"llvm/Support/FormattedStream.h\"" << std::endl;
+  OutStream << "#include \"llvm/Support/TargetRegistry.h\"" << std::endl;
+  OutStream << "#include \"llvm/Target/TargetOptions.h\"" << std::endl << std::endl;
+
+  OutStream << "using namespace llvm;" << std::endl;
+
+  OutStream << "extern \"C\" void LLVMInitialize" << TargetName << "Target() {"
+            << "  RegisterTargetmachine<" << TargetName
+            << "TargetMachine> X(getThe" << TargetName << "Target());"
+            << std::endl
+            << "  auto PR = PassRegistry::getPassRegistry();"
+            << std::endl
+            << "  initialize" << TargetName << "ExpandPseudoPass(*PR);"
+            << std::endl
+            << "}" << std::endl << std::endl;
+
+  OutStream << "static std::string computeDataLayout(const Triple &TT) {"
+            << std::endl
+            // TODO : calculate this based upon the derived memory model
+            << "  return \"e-m:e-p:64:64-i64:64-i128:128-n64-S128\""
+            << std::endl
+            << "}" << std::endl << std::endl;
+
+  OutStream << "static Reloc::Model getEffectiveRelocModel(const Triple &TT,"
+            << "                                           Optional<Reloc::Model> RM) {"
+            << std::endl
+            << "  if (!RM.hasValue() )"
+            << std::endl
+            << "    return Reloc::Static;"
+            << std::endl
+            << "  return *RM;"
+            << std::endl << std::endl;
+
+  OutStream << TargetName << "TargetMachine::" << TargetName << "TargetMachine("
+            << "     const Target &T, const Triple &TT,"
+            << std::endl
+            << "     StringRef CPU, StringRef FS,"
+            << std::endl
+            << "     const TargetOptions &Options,"
+            << std::endl
+            << "     Optional<Reloc::Model> RM,"
+            << std::endl
+            << "     Optional<CodeModel::Model> CM,"
+            << std::endl
+            << "     CodeGenOpt::Level OL, bool JIT)"
+            << std::endl
+            << "   : LLVMTargetMachine(T, computeDataLayout(TT), TT, CPU, FS, Options,"
+            << std::endl
+            << "                 getEffectiveRelocModel(TT, RM),"
+            << std::endl
+            << "                 getEffectiveCodeModel(CM, CodeModel::Small), OL),"
+            << "     TLOF(make_unique<RISCVELFTargetObjectFile>()),"
+            << "     Subtarget(TT, CPU, FS, *this) {"
+            << "  initAsmInfo();"
+            << std::endl
+            << "}" << std::endl << std::endl;
+
+  OutStream << "namespace {" << std::endl;
+  OutStream << "class " << TargetName << "PassConfig ; public TargetPassConfig {"
+            << std::endl
+            << "public:"
+            << std::endl
+            << "  " << TargetName << "PassConfig(" << TargetName
+            << "TargetMachine &TM, PassManagerBase &PM)" << std::endl
+            << "       : TargetPassConfig(TM, PM) {}"
+            << std::endl << std::endl
+            << TargetName << "TargetMachine &get" << TargetName << "TargetMachine() const {"
+            << std::endl
+            << "    return getTM<" << TargetName << "TargetMachine>();"
+            << std::endl
+            << "  }" << std::endl << std::endl
+            << "  void addIRPasses() override;" << std::endl
+            << "  void addInstSelector() override;" << std::endl
+            << "  void addPreEmitPass() override;" << std::endl
+            << "  void addPreEmitPass2() override;" << std::endl
+            << "  void addPreRegAlloc() override;" << std::endl
+            << "};"<< std::endl << "}" << std::endl << std::endl;
+
+  OutStream << "TargetPassConfig *" << TargetName
+            << "TargetMachine::createPassConfig(PassManagerBase &PM) {"
+            << "  return new " << TargetName << "PassConfig(*this, PM);" << std::endl
+            << "}" << std::endl << std::endl;
+
+  OutStream << "void " << TargetName << "PassConfig::addIRPasses() {"
+            << std::endl
+            << "  TargetPassConfig::addIRPasses();"
+            << std::endl
+            << "}"
+            << std::endl << std::endl;
+
+  OutStream << "bool " << TargetName << "PassConfig::addInstSelector() {"
+            << std::endl
+            << "  addPass(create" << TargetName << "ISelDag(get"
+            << TargetName << "TargetMachine()));"
+            << std::endl
+            << "  return false;"
+            << std::endl
+            << "}" << std::endl << std::endl;
+
+  OutStream << "void " << TargetName << "PassConfig::addPreEmitPass() { }"
+            << std::endl << std::endl;
+
+  OutStream << "void " << TargetName << "PassConfig::addPreEmitPass2() { }"
+            << std::endl << std::endl;
+
+  OutStream << "void " << TargetName << "PassConfig::addPreRegAlloc() {"
+            << std::endl
+            << "}" << std::endl << std::endl;
+
   return true;
 }
 
@@ -349,8 +528,8 @@ bool CoreGenLLVMCodegen::GenerateTargetImpl(){
   if( !TIGenerateISelDag() )
     return false;
 
-  // Stage 3: Create the machine function info
-  if( !TIGenerateMachInfo() )
+  // Stage 3: Create the top-level header; done;
+  if( !TIGenerateTargetHeader() )
     return false;
 
   // Stage 4: Create the instruction lowering template
@@ -365,7 +544,7 @@ bool CoreGenLLVMCodegen::GenerateTargetImpl(){
   if( !TIGenerateSubtargetInfo() )
     return false;
 
-  // Stage 7: Create the target machine template
+  // Stage 7: Create the target machine template: done;
   if( !TIGenerateTargetMach() )
     return false;
 
@@ -393,11 +572,7 @@ bool CoreGenLLVMCodegen::GenerateTargetImpl(){
   if( !TIGenerateTargetInfo() )
     return false;
 
-  // Stage 14: Create the top-level header interface
-  if( !TIGenerateTargetHeader() )
-    return false;
-
-  // Stage 15: Create the top-level CMake script
+  // Stage 14: Create the top-level CMake script
   if( !TIGenerateCmake() )
     return false;
 

@@ -70,9 +70,6 @@ private:
   /// Generate the ISel Dag info
   bool TIGenerateISelDag();
 
-  /// Generate the machine function info
-  bool TIGenerateMachInfo();
-
   /// Generate the intruction lowering
   bool TIGenerateInstLowering();
 
