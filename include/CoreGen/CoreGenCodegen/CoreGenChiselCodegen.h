@@ -69,6 +69,9 @@ private:
   /// Execute the ISA code generator
   bool ExecISACodegen(CoreGenNode *N);
 
+  /// Execute the DataPath code generator
+  bool ExecDataPathCodegen(CoreGenNode *N);
+
   /// Execute the target plugin codegen instead of the default
   bool ExecPluginCodegen(CoreGenNode *N);
 

@@ -71,6 +71,32 @@ bool CoreGenChiselCodegen::ExecSpadCodegen(CoreGenNode *N){
   return rtn;
 }
 
+bool CoreGenChiselCodegen::ExecDataPathCodegen(CoreGenNode *N){
+
+  std::string Package = Proj->GetProjName();
+  std::string FullPath = ChiselRoot;
+
+  FullPath += ("/" + N->GetName());
+
+  if( !CGMkDirP(FullPath) ){
+    Errno->SetError(CGERR_ERROR, "Could not construct DataPath directory: "
+                      + FullPath );
+    return false;
+  }
+
+  FullPath += "/DataPath.chisel";
+
+  DPathCG *CG = new DPathCG(N,Proj,Package,FullPath,false,Errno);
+  bool rtn = true;
+  if( !CG->Execute() ){
+    rtn = false;
+  }
+
+  delete CG;
+
+  return rtn;
+    
+}
 bool CoreGenChiselCodegen::ExecISACodegen(CoreGenNode *N){
   // build a vector of all the instructions contained within the ISA
   std::vector<CoreGenInst *> Insts;
@@ -364,6 +390,11 @@ bool CoreGenChiselCodegen::Execute(){
       }
       break;
     case CGCache:
+      break;
+    case CGDPath:
+        if( !ExecDataPathCodegen(Top->GetChild(i) )){
+         rtn = false;
+        }
       break;
 #if 0
     case CGEnc:
