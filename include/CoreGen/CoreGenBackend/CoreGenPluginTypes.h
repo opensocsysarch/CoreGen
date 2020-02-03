@@ -29,7 +29,7 @@
  *  Function pointer type defintion for the CoreGenPluginImpl
  *  create function.
  */
-typedef CoreGenPluginImpl* create_t(CoreGenErrno *E);
+typedef CoreGenPluginImpl* create_t(CoreGenEnv *EV, CoreGenErrno *E);
 
 /*! \typedef destroy_t
  *  \brief Function pointer to CoreGenPluginImpl destroy function

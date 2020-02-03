@@ -15,8 +15,8 @@
 // -------------------------------------
 // Constructor Wrapper
 // -------------------------------------
-extern "C" CoreGenPluginImpl* __create(CoreGenErrno *E){
-  return new SamplePlugin(E);
+extern "C" CoreGenPluginImpl* __create(CoreGenEnv *EV, CoreGenErrno *E){
+  return new SamplePlugin(EV,E);
 }
 
 // -------------------------------------
@@ -43,7 +43,7 @@ extern "C" char *__getname(){
 // with all the necessary version and configuration
 // information.
 //
-SamplePlugin::SamplePlugin(CoreGenErrno *E)
+SamplePlugin::SamplePlugin(CoreGenEnv *EV, CoreGenErrno *E)
   : CoreGenPluginImpl(std::string(__PLUGIN_NAME),   // Name of the plugin
                       CGPNode,                      // Type of the plugin
                       __PLUGIN_HAS_HDL_CODEGEN,     // Is there an overloaded HPL codegen?
@@ -51,6 +51,7 @@ SamplePlugin::SamplePlugin(CoreGenErrno *E)
                       __PLUGIN_MAJOR_VERSION,       // Major version
                       __PLUGIN_MINOR_VERSION,       // Minor version
                       __PLUGIN_PATCH_VERSION,       // Patch version
+                      EV,                           // Environment structure
                       E) {                          // Errno structure
     //
     // This is where we can initialize default values for

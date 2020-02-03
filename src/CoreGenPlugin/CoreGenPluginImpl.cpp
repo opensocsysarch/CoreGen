@@ -17,10 +17,11 @@ CoreGenPluginImpl::CoreGenPluginImpl(std::string N,
                                      unsigned MaV,
                                      unsigned MiV,
                                      unsigned PaV,
+                                     CoreGenEnv *EV,
                                      CoreGenErrno *E)
   : Name(N), Type(T), NumFeatures(0), HDLCodegen(HDL), LLVMCodegen(LLVM),
     MajorVersion(MaV), MinorVersion(MiV), PatchVersion(PaV),
-    Errno(E),Top(new CoreGenNode(CGTop,Errno)) {
+    Env(EV), Errno(E),Top(new CoreGenNode(CGTop,Errno)) {
 }
 
 CoreGenPluginImpl::~CoreGenPluginImpl(){
