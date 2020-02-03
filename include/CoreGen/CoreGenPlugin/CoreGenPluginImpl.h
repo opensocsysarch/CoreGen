@@ -32,6 +32,7 @@
 #include <cstdint>
 #include <vector>
 
+#include "CoreGen/CoreGenBackend/CoreGenEnv.h"
 #include "CoreGen/CoreGenBackend/CoreGenErrno.h"
 #include "CoreGen/CoreGenBackend/CoreGenCache.h"
 #include "CoreGen/CoreGenBackend/CoreGenCore.h"
@@ -152,6 +153,7 @@ private:
   std::vector<CoreGenVTP *> VTPs;           ///< CoreGenImpl: Virtual to Physical Controllers
 
 protected:
+  CoreGenEnv *Env;        ///< CoreGenPluginImpl: Environment structure
   CoreGenErrno *Errno;    ///< CoreGenPluginImpl: Errno structure
   CoreGenNode *Top;       ///< CoreGenPluginImpl: Top-level component node
 
@@ -165,6 +167,7 @@ public:
                     unsigned MajorVersion,
                     unsigned MinorVersion,
                     unsigned PatchVersion,
+                    CoreGenEnv *EV,
                     CoreGenErrno *E);
 
   /// Retrieve the cache data

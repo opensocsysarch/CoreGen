@@ -10,10 +10,13 @@
 
 #include "CoreGen/CoreGenBackend/CoreGenPlugin.h"
 
-CoreGenPlugin::CoreGenPlugin(std::string N, CGPluginFunc F, CoreGenErrno *E)
-  : CoreGenNode(CGPlugin,N,E), Funcs(F), Impl(nullptr) {
+CoreGenPlugin::CoreGenPlugin(std::string N,
+                             CGPluginFunc F,
+                             CoreGenEnv *Env,
+                             CoreGenErrno *E)
+  : CoreGenNode(CGPlugin,N,E), Funcs(F), Env(Env), Impl(nullptr) {
   create_t *create = Funcs.create;
-  Impl = create(E);
+  Impl = create(Env,E);
 }
 
 CoreGenPlugin::~CoreGenPlugin(){
@@ -65,6 +68,7 @@ CGPluginFunc CoreGenPlugin::GetFunctionInfo(){
 CoreGenPlugin *CoreGenPlugin::ClonePlugin(std::string NewName){
   return new CoreGenPlugin(NewName,
                            this->GetFunctionInfo(),
+                           Env,
                            Errno);
 }
 
