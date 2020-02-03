@@ -620,7 +620,7 @@ bool CoreGenLLVMCodegen::GenerateTargetImpl(){
   if( !TIGenerateTargetInfo() )
     return false;
 
-  // Stage 14: Create the top-level CMake script
+  // Stage 14: Create the top-level CMake script; done;
   if( !TIGenerateCmake() )
     return false;
 
