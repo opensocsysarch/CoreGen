@@ -137,12 +137,12 @@ int main( int argc, char **argv ){
 
   // print the plugin string
   if( plugin ){
-    std::cout << "-lCoreGenPluginImpl" << std::endl;
+    std::cout << "-lCoreGenPluginImpl -lCoreGenBackend" << std::endl;
   }
 
   // print the raw plugin lib
   if( raw_plugin ){
-    std::cout << "CoreGenPluginImpl" << std::endl;
+    std::cout << "CoreGenPluginImpl CoreGenBackend" << std::endl;
   }
 
   return 0;
