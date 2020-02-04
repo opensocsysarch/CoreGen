@@ -21,9 +21,13 @@ void PrintHelp(){
   std::cout << "      -h|-help|--help          : Print the help menu" << std::endl;
   std::cout << "      -c|-compile|--compile    : Print the compilation string" << std::endl;
   std::cout << "      -i|-include|--include    : Print the include string" << std::endl;
+  std::cout << "      -I|-INCLUDE|--INCLUDE    : Prints the raw include path" << std::endl;
   std::cout << "      -l|-libs|--libs          : Print the library string" << std::endl;
-  std::cout << "      -L|-linkpath|--linkpath  : Print the linker path" << std::endl;
+  std::cout << "      -L|-LIBS|--LIBS          : Prints the raw set of libs" << std::endl;
+  std::cout << "      -k|-linkpath|--linkpath  : Print the linker path" << std::endl;
+  std::cout << "      -K|-LINKPATH|--LINKPATH  : Print the raw linker path" << std::endl;
   std::cout << "      -p|-plugin|--plugin      : Print the plugin library string" << std::endl;
+  std::cout << "      -P|-PLUGIN|--PLUGIN      : Print the raw plugin library" << std::endl;
 }
 
 // ------------------------------------------------- InstallPrefix
@@ -34,8 +38,10 @@ std::string InstallPrefix(){
 // ------------------------------------------------- ParseCommandLineOpts
 bool ParseCommandLineOpts( int argc, char **argv,
                            bool &help, bool &compile,
-                           bool &include, bool &libs,
-                           bool &path, bool &plugin ){
+                           bool &include, bool &raw_include,
+                           bool &libs, bool &raw_libs,
+                           bool &path, bool &raw_path,
+                           bool &plugin, bool &raw_plugin ){
   if( argc == 1 )
     return true;
 
@@ -47,12 +53,20 @@ bool ParseCommandLineOpts( int argc, char **argv,
       compile = true;
     }else if( (s=="-i") || (s=="-include") || (s=="--include") ){
       include = true;
+    }else if( (s=="-I") || (s=="-INCLUDE") || (s=="--INCLUDE") ){
+      raw_include = true;
     }else if( (s=="-l") || (s=="-libs") || (s=="--libs") ){
       libs = true;
-    }else if( (s=="-L") || (s=="-linkpath") || (s=="--linkpath") ){
+    }else if( (s=="-L") || (s=="-LIBS") || (s=="--LIBS") ){
+      raw_libs = true;
+    }else if( (s=="-k") || (s=="-linkpath") || (s=="--linkpath") ){
       path = true;
+    }else if( (s=="-K") || (s=="-LINKPATH") || (s=="--LINKPATH") ){
+      raw_path = true;
     }else if( (s=="-p") || (s=="-plugin") || (s=="--plugin") ){
       plugin = true;
+    }else if( (s=="-P") || (s=="-PLUGIN") || (s=="--PLUGIN") ){
+      raw_plugin = true;
     }
   }
 
@@ -64,13 +78,17 @@ int main( int argc, char **argv ){
   bool help = false;
   bool compile = false;
   bool include = false;
+  bool raw_include = false;
   bool libs = false;
+  bool raw_libs = false;
   bool path = false;
+  bool raw_path = false;
   bool plugin = false;
+  bool raw_plugin = false;
 
   if( !ParseCommandLineOpts(argc,argv,
-                            help,compile,include,
-                            libs,path,plugin) )
+                            help,compile,include,raw_include,
+                            libs,raw_libs,path,raw_path,plugin,raw_plugin) )
     return -1;
 
   // print the help menu
@@ -92,9 +110,19 @@ int main( int argc, char **argv ){
     std::cout << "-I" << InstallPrefix() << "/include" << std::endl;
   }
 
+  // print the raw include path
+  if( raw_include ){
+    std::cout << InstallPrefix() << "/include" << std::endl;
+  }
+
   // print the libs string
   if( libs ){
     std::cout << "-lSCComp -lCoreGenBackend -lCoreGenArchive -lyaml-cpp" << std::endl;
+  }
+
+  // print the raw libs string
+  if( raw_libs ){
+    std::cout << "SCComp CoreGenBackend CoreGenArchive yaml-cpp" << std::endl;
   }
 
   // print the path string
@@ -102,9 +130,19 @@ int main( int argc, char **argv ){
     std::cout << "-L" << InstallPrefix() << "/lib" << std::endl;
   }
 
+  // print the raw path string
+  if( raw_path ){
+    std::cout << InstallPrefix() << "/lib" << std::endl;
+  }
+
   // print the plugin string
   if( plugin ){
     std::cout << "-lCoreGenPluginImpl" << std::endl;
+  }
+
+  // print the raw plugin lib
+  if( raw_plugin ){
+    std::cout << "CoreGenPluginImpl" << std::endl;
   }
 
   return 0;
