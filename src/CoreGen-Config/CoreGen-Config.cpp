@@ -89,7 +89,7 @@ int main( int argc, char **argv ){
 
   // print the include string
   if( include ){
-    std::cout << "-I" << InstallPrefix() << std::endl;
+    std::cout << "-I" << InstallPrefix() << "/include" << std::endl;
   }
 
   // print the libs string
