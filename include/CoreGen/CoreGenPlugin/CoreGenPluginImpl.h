@@ -157,15 +157,6 @@ private:
 
   // private functions
 
-  /// CoreGenPluginImpl: Perform a keyword match codegen
-  bool CodegenKeyword( std::string File, std::string Key, std::string Output );
-
-  /// CoreGenPluginImpl: Perform a full file codegen
-  bool CodegenFile( std::string File, std::string Output );
-
-  /// CoreGenPluginImpl: Peform a deep copy from the archive to the target project path
-  bool CopyPluginSrc( std::string Archive, std::string Path );
-
   /// CoreGenPluginImpl: Determines if the target line is comment
   bool IsCommentLine(std::string line);
 
@@ -174,7 +165,6 @@ protected:
   CoreGenErrno *Errno;    ///< CoreGenPluginImpl: Errno structure
   CoreGenNode *Top;       ///< CoreGenPluginImpl: Top-level component node
   std::string Path;       ///< CoreGenPluginImpl: Codegen path
-
 
 public:
   /// Default Constructor
@@ -415,6 +405,15 @@ public:
 
   /// Retrieve the type of the target plugin
   CGPluginType GetPluginType();
+
+  /// CoreGenPluginImpl: Perform a keyword match codegen
+  bool CodegenKeyword( std::string File, std::string Key, std::string Output );
+
+  /// CoreGenPluginImpl: Perform a full file codegen
+  bool CodegenFile( std::string File, std::string Output );
+
+  /// CoreGenPluginImpl: Peform a deep copy from the archive to the target project path
+  bool CopyPluginSrc( std::string Archive, std::string Path );
 
   // -- virtual methods --
 
