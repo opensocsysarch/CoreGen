@@ -50,7 +50,7 @@ private:
 public:
 
   /// Default constructor
-  SamplePlugin(CoreGenErrno *E);
+  SamplePlugin(CoreGenEnv *EV, CoreGenErrno *E);
 
   /// Default destructor
   ~SamplePlugin();

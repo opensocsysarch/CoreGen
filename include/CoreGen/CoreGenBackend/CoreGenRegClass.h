@@ -29,6 +29,8 @@
 
 class CoreGenRegClass : public CoreGenNode{
 private:
+  unsigned ReadPorts;       ///< CoreGenRegClass: read ports
+  unsigned WritePorts;      ///< CoreGenRegCLass: write ports
 
 public:
   /// Default Constructor
@@ -51,6 +53,18 @@ public:
 
   /// Retrieve the register object by its name
   CoreGenReg *GetRegByName(std::string name);
+
+  /// Sets the number of read ports
+  bool SetReadPorts( unsigned R ) { ReadPorts = R; return true; }
+
+  /// Sets the number of write ports
+  bool SetWritePorts( unsigned W ) { WritePorts = W; return true; }
+
+  /// Retrieves the number of read ports
+  unsigned GetReadPorts() { return ReadPorts; }
+
+  /// Retreives the number of write ports
+  unsigned GetWritePorts() { return WritePorts; }
 
   /// Default Destructor
   ~CoreGenRegClass();

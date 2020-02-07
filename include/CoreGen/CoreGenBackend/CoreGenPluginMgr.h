@@ -33,11 +33,13 @@
 // Win64 headers
 #endif
 
+#include "CoreGen/CoreGenBackend/CoreGenEnv.h"
 #include "CoreGen/CoreGenBackend/CoreGenErrno.h"
 #include "CoreGen/CoreGenBackend/CoreGenPlugin.h"
 
 class CoreGenPluginMgr{
 private:
+  CoreGenEnv *Env;                        ///< CoreGenPluginMgr: Environment handler
   CoreGenErrno *Errno;                    ///< CoreGenPluginMgr: Errno handler
   std::vector<CoreGenPlugin *> Plugins;   ///< CoreGenPluginMgr: Vector of loaded plugins
   std::vector<CGPluginFunc> FuncPtrs;     ///< CoreGenPluginMgr: Vector of plugin function pointers
@@ -57,7 +59,7 @@ private:
 public:
 
   /// Default constructor
-  CoreGenPluginMgr(CoreGenErrno *E);
+  CoreGenPluginMgr(CoreGenEnv *EV, CoreGenErrno *E);
 
   /// Default destructor
   ~CoreGenPluginMgr();

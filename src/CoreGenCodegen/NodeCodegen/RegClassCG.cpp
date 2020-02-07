@@ -20,23 +20,30 @@ RegClassCG::~RegClassCG(){
 }
 
 bool RegClassCG::WriteRegClass(std::ofstream &O ){
+  CoreGenRegClass *R = static_cast<CoreGenRegClass *>(Node);
+
   // write the comment
   O << "//-- " << Node->GetName() << " Register Class " << std::endl;
   O << "class " << CGRemoveDot(Node->GetName()) << "RFileIO(implicit val conf: "
     << CGRemoveDot(Proj->GetProjName()) << "Configuration) extends Bundle()" << std::endl
-    << "{" << std::endl
-    << "\tval rs1_addr = Input(UInt(5.W))" << std::endl
-    << "\tval rs1_data = Output(UInt(conf.max_width.W))" << std::endl
-    << "\tval rs2_addr = Input(UInt(5.W))" << std::endl
-    << "\tval rs2_data = Output(UInt(conf.max_width.W))" << std::endl
-    << "\tval dm_addr = Input(UInt(5.W))" << std::endl
+    << "{" << std::endl;
+
+  for( unsigned i=0; i<R->GetReadPorts(); i++ ){
+    O << "\tval rs" << i+1 << "_addr = Input(UInt(5.W))" << std::endl
+      << "\tval rs" << i+1 << "_data = Output(UInt(conf.max_width.W))" << std::endl;
+  }
+
+  O << "\tval dm_addr = Input(UInt(5.W))" << std::endl
     << "\tval dm_rdata = Output(UInt(conf.max_width.W))" << std::endl
     << "\tval dm_wdata = Input(UInt(conf.max_width.W))" << std::endl
-    << "\tval dm_en = Input(Bool())" << std::endl
-    << "\tval waddr    = Input(UInt(5.W))" << std::endl
-    << "\tval wdata    = Input(UInt(conf.max_width.W))" << std::endl
-    << "\tval wen      = Input(Bool())" << std::endl
-    << "}" << std::endl << std::endl;
+    << "\tval dm_en = Input(Bool())" << std::endl;
+
+  for( unsigned i=0; i<R->GetWritePorts(); i++ ){
+    O << "\tval waddr"<< i+1 << "    = Input(UInt(5.W))" << std::endl
+      << "\tval wdata"<< i+1 << "    = Input(UInt(conf.max_width.W))" << std::endl
+      << "\tval wen"  << i+1 << "      = Input(Bool())" << std::endl;
+  }
+  O << "}" << std::endl << std::endl;
 
   O << "class " << CGRemoveDot(Node->GetName()) << "(implicit val conf: "
     << CGRemoveDot(Proj->GetProjName()) << "Configuration) extends Module" << std::endl
@@ -51,11 +58,15 @@ bool RegClassCG::WriteRegClass(std::ofstream &O ){
     << "\twhen (io.dm_en && (io.dm_addr =/= 0.U))" << std::endl
     << "\t{" << std::endl
     << "\t\tregfile(io.dm_addr) := io.dm_wdata" << std::endl
-    << "\t}" << std::endl << std::endl
-    << "\tio.rs1_data := Mux((io.rs1_addr =/= 0.U), regfile(io.rs1_addr), 0.U)" << std::endl
-    << "\tio.rs2_data := Mux((io.rs2_addr =/= 0.U), regfile(io.rs2_addr), 0.U)" << std::endl
-    << "\tio.dm_rdata := Mux((io.dm_addr =/= 0.U), regfile(io.dm_addr), 0.U)" << std::endl
+    << "\t}" << std::endl << std::endl;
+
+  for( unsigned i=0; i<R->GetReadPorts(); i++ ){
+    O << "\tio.rs" << i+1 << "_data := Mux((io.rs" << i+1
+      << "_addr =/= 0.U), regfile(io.rs" << i+1 << "_addr), 0.U)" << std::endl;
+  }
+  O << "\tio.dm_rdata := Mux((io.dm_addr =/= 0.U), regfile(io.dm_addr), 0.U)" << std::endl
     << "}" << std::endl << std::endl;
+
   return true;
 }
 

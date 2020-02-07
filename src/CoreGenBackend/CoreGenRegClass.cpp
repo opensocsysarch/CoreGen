@@ -11,11 +11,11 @@
 #include "CoreGen/CoreGenBackend/CoreGenRegClass.h"
 
 CoreGenRegClass::CoreGenRegClass(CoreGenErrno *E)
-  : CoreGenNode(CGRegC,E){
+  : CoreGenNode(CGRegC,E), ReadPorts(2), WritePorts(1) {
 }
 
 CoreGenRegClass::CoreGenRegClass(std::string N,CoreGenErrno *E)
-  : CoreGenNode(CGRegC,N,E){
+  : CoreGenNode(CGRegC,N,E), ReadPorts(2), WritePorts(1) {
 }
 
 CoreGenRegClass::~CoreGenRegClass(){

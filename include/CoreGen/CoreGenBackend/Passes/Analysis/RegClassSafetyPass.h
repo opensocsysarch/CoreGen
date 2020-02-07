@@ -44,6 +44,9 @@ private:
   /// Determines if the register class has inefficient register sizes
   bool RegSizeTest( CoreGenNode *N );
 
+  /// Determines if the register class has sufficient read and write ports
+  bool ReadWritePortTest( CoreGenNode *N );
+
 public:
   /// Default Constructor
   RegClassSafetyPass(std::ostream *O, CoreGenDAG *D, CoreGenErrno *E);

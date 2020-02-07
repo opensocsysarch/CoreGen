@@ -10,7 +10,8 @@
 
 #include "CoreGen/CoreGenBackend/CoreGenPluginMgr.h"
 
-CoreGenPluginMgr::CoreGenPluginMgr( CoreGenErrno *E ) : Errno(E){
+CoreGenPluginMgr::CoreGenPluginMgr( CoreGenEnv *EV, CoreGenErrno *E )
+  : Env(EV), Errno(E){
 }
 
 CoreGenPluginMgr::~CoreGenPluginMgr(){
@@ -47,7 +48,7 @@ bool CoreGenPluginMgr::LoadNixPlugin( std::string Path ){
 
   Funcs.destroy = (destroy_t*)(dlsym(handle,"__destroy"));
   if( !Funcs.destroy ){
-    Errno->SetError(CGERR_ERROR,"Could not load create_t function pointer" );
+    Errno->SetError(CGERR_ERROR,"Could not load destroy_t function pointer" );
     Handles.pop_back();
     dlclose(handle);
     return false;
@@ -65,7 +66,7 @@ bool CoreGenPluginMgr::LoadNixPlugin( std::string Path ){
 
   // create the new plugin
   getname_t *GN = Funcs.getname;
-  CoreGenPlugin *CGP = new CoreGenPlugin(std::string(GN()), Funcs, Errno);
+  CoreGenPlugin *CGP = new CoreGenPlugin(std::string(GN()), Funcs, Env, Errno);
   Plugins.push_back(CGP);
 
   return true;
