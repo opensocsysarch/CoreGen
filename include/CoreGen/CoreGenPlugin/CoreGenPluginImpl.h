@@ -424,7 +424,8 @@ public:
   virtual bool Init(std::string P) { Path=P; return true; }
 
   /// Execute the HDL Codegen
-  virtual bool ExecuteHDLCodegen() { return false; }
+  virtual bool ExecuteHDLCodegen(CoreGenNode *Top,
+                                 CoreGenNode *Parent) { return false; }
 
   /// Execute the LLVM Codegen
   virtual bool ExecuteLLVMCodegen() { return false; }

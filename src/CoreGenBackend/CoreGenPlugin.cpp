@@ -129,11 +129,12 @@ bool CoreGenPlugin::SetFeatureValue( unsigned Idx,
   return Impl->SetFeatureValue( Idx, Val );
 }
 
-bool CoreGenPlugin::ExecuteHDLCodegen(){
+bool CoreGenPlugin::ExecuteHDLCodegen(CoreGenNode *TopNode,
+                                      CoreGenNode *Parent){
   if( !Impl ){
     return false;
   }
-  return Impl->ExecuteHDLCodegen();
+  return Impl->ExecuteHDLCodegen(TopNode,Parent);
 }
 
 bool CoreGenPlugin::ExecuteLLVMCodegen(){
