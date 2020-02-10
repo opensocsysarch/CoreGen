@@ -29,7 +29,116 @@ bool CoreGenLLVMCodegen::GenerateCPUDriver(){
   return true;
 }
 
+bool CoreGenLLVMCodegen::TIGenerateTopLevelTablegen(){
+
+  std::string OutFile = LLVMRoot + "/" + TargetName + ".td";
+  std::ofstream OutStream;
+  OutStream.open(OutFile,std::ios::trunc);
+  if( !OutStream.is_open() ){
+    Errno->SetError(CGERR_ERROR, "Could not open the top-level tablegen file: " + OutFile );
+    return false;
+  }
+
+  OutStream << "//===-- " << TargetName << ".td - Describe the " << TargetName
+          << " Machine -------*- tablegen -*-===//" << std::endl;
+  OutStream << "//===----------------------------------------------------------------------===//" << std::endl << std::endl;
+
+  OutStream << "include \"llvm/Target/Target.td\"" << std::endl << std::endl;
+
+  // print out all the subtargets
+  OutStream << "//===----------------------------------------------------------------------===//" << std::endl;
+  OutStream << "// " << TargetName << " subtarget features and instructon predicates" << std::endl;
+  OutStream << "//===----------------------------------------------------------------------===//" << std::endl;
+  for( unsigned i=0; i<Subtargets.size(); i++ ){
+    OutStream << "def Feature" << Subtargets[i] << std::endl
+              << "    : SubtargetFeature<\"" << Subtargets[i]
+              << "\", \"Has\"" << Subtargets[i] << "\", \"true\", \"Subtarget "
+              << Subtargets[i] << "\">;" << std::endl;
+    OutStream << "def Has" << Subtargets[i] << " : Predicate<\"Subtarget->has"
+              << Subtargets[i] << "()\">, AssemblerPredicate<\"Feature"
+              << Subtargets[i] << "\">;" << std::endl;
+  }
+
+  // registers, calling concentions and instruction descriptions
+  OutStream << "//===----------------------------------------------------------------------===//" << std::endl;
+  OutStream << "// " << TargetName << " registers, calling conventions and instruction descriptions" << std::endl;
+  OutStream << "//===----------------------------------------------------------------------===//" << std::endl;
+  OutStream << "include \"" << TargetName << "RegisterInfo.td\"" << std::endl;
+  // TBD: OutStream << "include \"" << TargetName << "CallingConv.td\"" << std::endl;
+  OutStream << "include \"" << TargetName << "InstrInfo.td\"" << std::endl;
+
+  // processors supported
+  OutStream << "//===----------------------------------------------------------------------===//" << std::endl;
+  OutStream << "// " << TargetName << " supported processors" << std::endl;
+  OutStream << "//===----------------------------------------------------------------------===//" << std::endl;
+
+  OutStream << "def : ProcesorModel<\"generic-" << TargetName
+            << "\", NoSchedModel, []>;" << std::endl;
+
+  // define the target
+  OutStream << "//===----------------------------------------------------------------------===//" << std::endl;
+  OutStream << "// " << TargetName << " target definitions" << std::endl;
+  OutStream << "//===----------------------------------------------------------------------===//" << std::endl;
+  OutStream << "def " << TargetName << "InstrInfo : InstrInfo {" << std::endl;
+  OutStream << "  let guessInstructionProperties = 0;" << std::endl;
+  OutStream << "}" << std::endl << std::endl;
+
+  OutStream << TargetName << "AsmParser : AsmParser {" << std::endl;
+  OutStream << "  let ShouldEmitMatchRegisterAltName = 1;" << std::endl;
+  OutStream << "  let AllowDuplicateRegisterNames = 1;" << std::endl;
+  OutStream << "}" << std::endl << std::endl;
+
+  OutStream << TargetName << "AsmWriter : AsmWriter {" << std::endl;
+  OutStream << "  let PassSubtarget = 1;" << std::endl;
+  OutStream << "}" << std::endl << std::endl;
+
+  OutStream << TargetName << " : Target {" << std::endl;
+  OutStream << "  let InstructionSet = " << TargetName << "InstrInfo;" << std::endl;
+  OutStream << "  let AssemblyParsers = [" << TargetName << "AsmParser];" << std::endl;
+  OutStream << "  let AssemblyWriters = [" << TargetName << "AsmWriter];" << std::endl;
+  OutStream << "  let AllowRegisterRenaming = 1;" << std::endl;
+  OutStream << "}" << std::endl;
+
+  // close the file
+  OutStream.close();
+
+  return true;
+}
+
+bool CoreGenLLVMCodegen::TIGenerateISATablegen(){
+  return true;
+}
+
+bool CoreGenLLVMCodegen::TIGenerateRegisterTablegen(){
+  return true;
+}
+
+bool CoreGenLLVMCodegen::TIGenerateInstTablegen(){
+  return true;
+}
+
 bool CoreGenLLVMCodegen::TIGenerateTablegen(){
+
+  // Stage 1: generate the top-level SoC tablegen file: done;
+  if( !TIGenerateTopLevelTablegen() )
+    return false;
+
+  // Stage 2: generate format tablegens for each ISA
+  if( !TIGenerateISATablegen() )
+    return false;
+
+  // Stage 3: generate register info tablegen
+  if( !TIGenerateRegisterTablegen() )
+    return false;
+
+  // Stage 4: generate instruction info tablegen
+  if( !TIGenerateInstTablegen() )
+    return false;
+
+  // Stage 5: generate system operands tablegen???
+
+  // Stage 6: generate calling convention tablegen?
+
   return true;
 }
 

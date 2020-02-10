@@ -64,6 +64,18 @@ private:
 
   // TargetImpl Drivers
 
+  /// Generate the top-level TableGen file
+  bool TIGenerateTopLevelTablegen();
+
+  /// Generate the individual instructon type tablegen files
+  bool TIGenerateISATablegen();
+
+  /// Generate the register tablegen
+  bool TIGenerateRegisterTablegen();
+
+  /// Generate the individual instruction tablegen files
+  bool TIGenerateInstTablegen();
+
   /// Generate the TableGen info
   bool TIGenerateTablegen();
 
