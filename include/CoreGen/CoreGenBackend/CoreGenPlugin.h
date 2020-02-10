@@ -100,7 +100,7 @@ public:
   bool SetFeatureValue( unsigned Idx, CGFeatureVal Val );
 
   /// Execute the HDL Codegen
-  bool ExecuteHDLCodegen();
+  bool ExecuteHDLCodegen(CoreGenNode *TopNode, CoreGenNode *Parent);
 
   /// Execute the LLVM Codegen
   bool ExecuteLLVMCodegen();

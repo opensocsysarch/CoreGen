@@ -47,6 +47,89 @@ bool CoreGenPluginImpl::IsCommentLine(std::string line){
   return false;
 }
 
+bool CoreGenPluginImpl::CodegenChiselImport(std::string File,
+                                            std::vector<std::string> Imports){
+  // Stage 1: copy the target file to a temporary
+  std::string TmpFile = File + ".tmp";
+
+  if( !CGFileCopy( File, TmpFile ) ){
+    Errno->SetError(CGERR_ERROR,
+                    this->GetName() + ":Could not copy file to temporary: " + File );
+    return false;
+  }
+
+  // Stage 2: open the TmpFile
+  std::ifstream InFile(TmpFile);
+  if( !InFile.is_open() ){
+    Errno->SetError(CGERR_ERROR,
+                    this->GetName() + ":Failed to open temporary source file: " + TmpFile );
+    return false;
+  }
+
+  // Stage 3: walk the file and find the line number of the last import statement
+  std::string line;
+  unsigned lineNum = 0;
+  unsigned foundLine = 0;
+  while( std::getline(InFile,line) ){
+    if( !IsCommentLine(line) ){
+      // not a comment line, look for the keyword
+      std::size_t found = line.find("import");
+      if( found != std::string::npos ){
+        foundLine = lineNum;
+      }
+    }
+    lineNum++;
+  }
+
+  // Stage 4: reset the input file pointer
+  InFile.seekg(std::ios_base::beg);
+
+  // Stage 5: Delete the original file
+  if( !CGDeleteFile(File) ){
+    Errno->SetError(CGERR_ERROR,
+                    this->GetName() + ":Failed to remove original source file: " + File );
+    InFile.close();
+    CGDeleteFile(TmpFile);
+    return false;
+  }
+
+  // Stage 6: open the original file
+  std::ofstream OutStream;
+  OutStream.open(File,std::ios::trunc);
+  if( !OutStream.is_open() ){
+    Errno->SetError(CGERR_ERROR,
+                    this->GetName() + ":Failed to open target source file: " + File );
+    InFile.close();
+    CGDeleteFile(TmpFile);
+    return false;
+  }
+
+  // Stage 7: iterate across the TmpFile and copy until we hit "foundLine"
+  //          then insert the vector of import statements and continue copying
+  lineNum = 0;
+  while( std::getline(InFile,line) ){
+    if( lineNum == foundLine ){
+      // output the last import statement
+      OutStream << line;
+
+      // output the set of imports from the user
+      for( unsigned i=0; i<Imports.size(); i++ ){
+        OutStream << Imports[i] << std::endl;
+      }
+    }else{
+      OutStream << line;
+    }
+    lineNum++;
+  }
+
+  // Stage 8: close all the files and delete the tmp
+  InFile.close();
+  OutStream.close();
+  CGDeleteFile(TmpFile);
+
+  return true;
+}
+
 bool CoreGenPluginImpl::CodegenKeyword(std::string File,
                                        std::string Key,
                                        std::string Output){

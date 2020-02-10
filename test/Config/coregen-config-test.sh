@@ -65,6 +65,27 @@ if [[ "$retVal" -ne 0 ]]; then
   exit $retVal
 fi
 
+$CONFIG_PATH/coregen-config -I
+retVal=$?
+if [[ "$retVal" -ne 0 ]]; then
+  echo "$CONFIG_PATH/coregen-config -I failed with return code = $retVal"
+  exit $retVal
+fi
+
+$CONFIG_PATH/coregen-config -INCLUDE
+retVal=$?
+if [[ "$retVal" -ne 0 ]]; then
+  echo "$CONFIG_PATH/coregen-config -INCLUDE failed with return code = $retVal"
+  exit $retVal
+fi
+
+$CONFIG_PATH/coregen-config --INCLUDE
+retVal=$?
+if [[ "$retVal" -ne 0 ]]; then
+  echo "$CONFIG_PATH/coregen-config --INCLUDE failed with return code = $retVal"
+  exit $retVal
+fi
+
 $CONFIG_PATH/coregen-config -l
 retVal=$?
 if [[ "$retVal" -ne 0 ]]; then
@@ -93,6 +114,27 @@ if [[ "$retVal" -ne 0 ]]; then
   exit $retVal
 fi
 
+$CONFIG_PATH/coregen-config -LIBS
+retVal=$?
+if [[ "$retVal" -ne 0 ]]; then
+  echo "$CONFIG_PATH/coregen-config -LIBS failed with return code = $retVal"
+  exit $retVal
+fi
+
+$CONFIG_PATH/coregen-config --LIBS
+retVal=$?
+if [[ "$retVal" -ne 0 ]]; then
+  echo "$CONFIG_PATH/coregen-config --LIBS failed with return code = $retVal"
+  exit $retVal
+fi
+
+$CONFIG_PATH/coregen-config -k
+retVal=$?
+if [[ "$retVal" -ne 0 ]]; then
+  echo "$CONFIG_PATH/coregen-config -L failed with return code = $retVal"
+  exit $retVal
+fi
+
 $CONFIG_PATH/coregen-config -linkpath
 retVal=$?
 if [[ "$retVal" -ne 0 ]]; then
@@ -104,6 +146,27 @@ $CONFIG_PATH/coregen-config --linkpath
 retVal=$?
 if [[ "$retVal" -ne 0 ]]; then
   echo "$CONFIG_PATH/coregen-config --linkpath failed with return code = $retVal"
+  exit $retVal
+fi
+
+$CONFIG_PATH/coregen-config -K
+retVal=$?
+if [[ "$retVal" -ne 0 ]]; then
+  echo "$CONFIG_PATH/coregen-config -K failed with return code = $retVal"
+  exit $retVal
+fi
+
+$CONFIG_PATH/coregen-config -LINKPATH
+retVal=$?
+if [[ "$retVal" -ne 0 ]]; then
+  echo "$CONFIG_PATH/coregen-config -LINKPATH failed with return code = $retVal"
+  exit $retVal
+fi
+
+$CONFIG_PATH/coregen-config --LINKPATH
+retVal=$?
+if [[ "$retVal" -ne 0 ]]; then
+  echo "$CONFIG_PATH/coregen-config --LINKPATH failed with return code = $retVal"
   exit $retVal
 fi
 
@@ -125,6 +188,27 @@ $CONFIG_PATH/coregen-config --plugin
 retVal=$?
 if [[ "$retVal" -ne 0 ]]; then
   echo "$CONFIG_PATH/coregen-config --plugin failed with return code = $retVal"
+  exit $retVal
+fi
+
+$CONFIG_PATH/coregen-config -P
+retVal=$?
+if [[ "$retVal" -ne 0 ]]; then
+  echo "$CONFIG_PATH/coregen-config -P failed with return code = $retVal"
+  exit $retVal
+fi
+
+$CONFIG_PATH/coregen-config -PLUGIN
+retVal=$?
+if [[ "$retVal" -ne 0 ]]; then
+  echo "$CONFIG_PATH/coregen-config -PLUGIN failed with return code = $retVal"
+  exit $retVal
+fi
+
+$CONFIG_PATH/coregen-config --PLUGIN
+retVal=$?
+if [[ "$retVal" -ne 0 ]]; then
+  echo "$CONFIG_PATH/coregen-config --PLUGIN failed with return code = $retVal"
   exit $retVal
 fi
 
