@@ -412,6 +412,10 @@ public:
   /// CoreGenPluginImpl: Perform a full file codegen
   bool CodegenFile( std::string File, std::string Output );
 
+  /// CoreGenPluginImpl: Insert a set of Chisel import statements in the target file
+  bool CodegenChiselImport(std::string File,
+                           std::vector<std::string> Imports);
+
   /// CoreGenPluginImpl: Peform a deep copy from the archive to the target project path
   bool CopyPluginSrc( std::string Archive, std::string Path );
 
