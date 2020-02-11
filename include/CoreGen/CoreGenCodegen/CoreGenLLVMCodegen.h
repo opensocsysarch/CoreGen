@@ -85,6 +85,9 @@ private:
 
   // TargetImpl Drivers
 
+  /// Generate a vector of tuples that represent the unique immediate fields
+  std::map<std::string,unsigned> TIGenerateImmFieldVector();
+
   /// Generate the instruction format input args using the instruction fields
   std::string TIGenerateInstArgsFields(CoreGenInstFormat *Format);
 
