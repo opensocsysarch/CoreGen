@@ -49,7 +49,9 @@ private:
 
   std::vector<std::string> Subtargets;        ///< vector of subtarget ISAs
   std::vector<CoreGenInstFormat *> Formats;   ///< vector of instruction formats
-  std::vector<CoreGenRegClass *> RegClasses;  ///< vecotr of register classes
+  std::vector<CoreGenRegClass *> RegClasses;  ///< vector of register classes
+  std::vector<CoreGenInst *> Insts;           ///< vector of instructions
+  std::vector<CoreGenPseudoInst *> PInsts;    ///< vector of pseudo instructions
 
   /// Generate the vector of subtarget nodes
   bool GenerateSubtargets();
@@ -59,6 +61,12 @@ private:
 
   /// Generate the vector of register class nodes
   bool GenerateRegClasses();
+
+  /// Generate the vector of instruction nodes
+  bool GenerateInsts();
+
+  /// Generates the vector of pseudo instruction nodes
+  bool GeneratePInsts();
 
   /// Generate the directory structure for the new target
   bool GenerateTargetDir();

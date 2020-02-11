@@ -312,6 +312,28 @@ bool CoreGenLLVMCodegen::TIGenerateRegisterTablegen(){
 }
 
 bool CoreGenLLVMCodegen::TIGenerateInstTablegen(){
+
+  std::string OutFile = LLVMRoot + "/" + TargetName + "InstrInfo.td";
+  std::ofstream OutStream;
+  OutStream.open(OutFile,std::ios::trunc);
+  if( !OutStream.is_open() ){
+    Errno->SetError(CGERR_ERROR, "Could not open the InstrInfo tablegen file: " + OutFile );
+    return false;
+  }
+
+  OutStream << "//===-- " << TargetName << "InstrInfo.td - " << TargetName
+            << "Instruction Definitions ---*- tablegen -*-===//" << std::endl;
+
+  // Stage 1: write out operand fields & bare symbols
+
+  // Stage 2: write out the instruction class templates
+
+  // Stage 3: write out all the pseudo instructions
+
+  // Stage 3: write out all the instructions
+
+  OutStream.close();
+
   return true;
 }
 
@@ -325,7 +347,7 @@ bool CoreGenLLVMCodegen::TIGenerateTablegen(){
   if( !TIGenerateISATablegen() )
     return false;
 
-  // Stage 3: generate register info tablegen
+  // Stage 3: generate register info tablegen: done;
   if( !TIGenerateRegisterTablegen() )
     return false;
 
@@ -1020,6 +1042,22 @@ bool CoreGenLLVMCodegen::GenerateRegClasses(){
   return true;
 }
 
+bool CoreGenLLVMCodegen::GenerateInsts(){
+  for( unsigned i=0; i<Top->GetNumChild(); i++ ){
+    if( Top->GetChild(i)->GetType() == CGInst )
+      Insts.push_back(static_cast<CoreGenInst *>(Top->GetChild(i)));
+  }
+  return true;
+}
+
+bool CoreGenLLVMCodegen::GeneratePInsts(){
+  for( unsigned i=0; i<Top->GetNumChild(); i++ ){
+    if( Top->GetChild(i)->GetType() == CGPInst )
+      PInsts.push_back(static_cast<CoreGenPseudoInst *>(Top->GetChild(i)));
+  }
+  return true;
+}
+
 bool CoreGenLLVMCodegen::Execute(){
 
   // Stage 1: generate subtargets
@@ -1034,19 +1072,27 @@ bool CoreGenLLVMCodegen::Execute(){
   if( !GenerateRegClasses() )
     return false;
 
-  // Stage 4: generate the directory structure for the new target
+  /// Stage 4: generate the vector instructions
+  if( !GenerateInsts() )
+    return false;
+
+  /// Stage 5: generate the vector pseudo instructions
+  if( !GeneratePInsts() )
+    return false;
+
+  // Stage 5: generate the directory structure for the new target
   if( !GenerateTargetDir() )
     return false;
 
-  // Stage 5: generate the codegen blocks for each ISA
+  // Stage 6: generate the codegen blocks for each ISA
   if( !GenerateTargetImpl() )
     return false;
 
-  // Stage 6: generate the CPU driver
+  // Stage 7: generate the CPU driver
   if( !GenerateCPUDriver() )
     return false;
 
-  // Stage 7: generate the build infrastructure
+  // Stage 8: generate the build infrastructure
   if( !GenerateBuildImpl() )
     return false;
 
