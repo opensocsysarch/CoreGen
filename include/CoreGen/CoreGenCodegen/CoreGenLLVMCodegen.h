@@ -29,6 +29,7 @@
 #include <cstdlib>
 #include <vector>
 #include <cmath>
+#include <locale>
 
 // CoreGen Headers
 #include "CoreGen/CoreGenBackend/CoreGenBackend.h"
@@ -46,14 +47,18 @@ private:
 
   std::string TargetName;           ///< Name of the compiler target
 
-  std::vector<std::string> Subtargets;  ///< vector of subtarget ISAs
-  std::vector<CoreGenInstFormat *> Formats; ///< vector of instruction formats
+  std::vector<std::string> Subtargets;        ///< vector of subtarget ISAs
+  std::vector<CoreGenInstFormat *> Formats;   ///< vector of instruction formats
+  std::vector<CoreGenRegClass *> RegClasses;  ///< vecotr of register classes
 
   /// Generate the vector of subtarget nodes
   bool GenerateSubtargets();
 
   /// Generate the vector of instruction format nodes
   bool GenerateInstFormats();
+
+  /// Generate the vector of register class nodes
+  bool GenerateRegClasses();
 
   /// Generate the directory structure for the new target
   bool GenerateTargetDir();
@@ -66,6 +71,9 @@ private:
 
   /// Generate the build infrastructure
   bool GenerateBuildImpl();
+
+  /// Convert a string to upper case
+  std::string UpperCase(std::string Str);
 
   // TargetImpl Drivers
 
