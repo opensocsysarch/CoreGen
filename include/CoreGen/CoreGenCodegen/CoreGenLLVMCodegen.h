@@ -28,6 +28,7 @@
 #include <cerrno>
 #include <cstdlib>
 #include <vector>
+#include <cmath>
 
 // CoreGen Headers
 #include "CoreGen/CoreGenBackend/CoreGenBackend.h"
@@ -46,9 +47,13 @@ private:
   std::string TargetName;           ///< Name of the compiler target
 
   std::vector<std::string> Subtargets;  ///< vector of subtarget ISAs
+  std::vector<CoreGenInstFormat *> Formats; ///< vector of instruction formats
 
   /// Generate the vector of subtarget nodes
   bool GenerateSubtargets();
+
+  /// Generate the vector of instruction format nodes
+  bool GenerateInstFormats();
 
   /// Generate the directory structure for the new target
   bool GenerateTargetDir();
@@ -63,6 +68,12 @@ private:
   bool GenerateBuildImpl();
 
   // TargetImpl Drivers
+
+  /// Generate the instruction format input args using the instruction fields
+  std::string TIGenerateInstArgsFields(CoreGenInstFormat *Format);
+
+  /// Generate the number of bits required to store the instruction format
+  unsigned TIGenerateInstFormatBits(unsigned NumFormats);
 
   /// Generate the top-level TableGen file
   bool TIGenerateTopLevelTablegen();

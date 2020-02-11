@@ -105,7 +105,124 @@ bool CoreGenLLVMCodegen::TIGenerateTopLevelTablegen(){
   return true;
 }
 
+unsigned CoreGenLLVMCodegen::TIGenerateInstFormatBits(unsigned NumFormats){
+  unsigned NBits = 0;
+
+  NBits = (unsigned)(log2f((float)(NumFormats))/log2f(2.));
+
+  return NBits;
+}
+
+std::string CoreGenLLVMCodegen::TIGenerateInstArgsFields(CoreGenInstFormat *Format){
+  std::string Str;
+  bool first = true;
+
+  for( unsigned i=0; i<Format->GetNumFields(); i++ ){
+    if( Format->GetFieldType(Format->GetFieldName(i)) ==
+        CoreGenInstFormat::CGInstCode ){
+      // found an encoding field
+      if( first ){
+        first = false;
+      }else{
+        Str += ",";
+      }
+      Str += ("bits<" + std::to_string(Format->GetFieldWidth(Format->GetFieldName(i))) +
+              "> " + Format->GetFieldName(i) );
+      if( first ){
+        first = false;
+      }
+    }
+  }
+
+  return Str;
+}
+
 bool CoreGenLLVMCodegen::TIGenerateISATablegen(){
+
+  std::string OutFile = LLVMRoot + "/" + TargetName + "InstrFormats.td";
+  std::ofstream OutStream;
+  OutStream.open(OutFile,std::ios::trunc);
+  if( !OutStream.is_open() ){
+    Errno->SetError(CGERR_ERROR, "Could not open the InstrFormats tablegen file: " + OutFile );
+    return false;
+  }
+
+  OutStream << "//===-- " << TargetName << "InstrFormats.td - " << TargetName
+            << "Instruction Formats ---*- tablegen -*-===//" << std::endl;
+
+  // output the instformat definition
+  unsigned NBits = TIGenerateInstFormatBits(Formats.size());
+  OutStream << "class InstFormat<bits<" << NBits << "> val> {" << std::endl;
+  OutStream << "  bits<" << NBits << "> Value = val;" << std::endl;
+  OutStream << "}" << std::endl << std::endl;
+
+  // output all the instruction format in numeric order
+  for( unsigned i=0; i<Formats.size(); i++ ){
+    OutStream << "def InstFormat" << Formats[i]->GetName()
+              << " : InstFormat<" << i << ">;" << std::endl;
+  }
+  OutStream << std::endl << std::endl;
+
+  // output each instruction format
+  for( unsigned i=0; i<Formats.size(); i++ ){
+    // emit the definition
+    OutStream << "class " << Formats[i]
+              << "<dag outs, dat ins, string opcodestr, string argstr," << std::endl
+              << "    list<dag> pattern, InstFormat format," << std::endl
+              << "    " << TIGenerateInstArgsFields(Formats[i]) << ">" << std::endl
+              << "  : Instruction {" << std::endl;
+
+    // emit the body
+    // -- size of the instruction
+    OutStream << "  field bits<" << Formats[i]->GetFormatWidth() << "> SoftFail = 0;" << std::endl;
+    OutStream << "  let Size = " << Formats[i]->GetFormatWidth()/8 << ";" << std::endl << std::endl;
+    OutStream << "  let Namespace = \"" << TargetName << "\";" << std::endl << std::endl;
+
+    // -- output all the register or immediate args
+    for( unsigned j=0; j<Formats[i]->GetNumFields(); j++ ){
+      CoreGenInstFormat::CGInstField IF = Formats[i]->GetFieldType(Formats[i]->GetFieldName(j));
+      if( (IF==CoreGenInstFormat::CGInstReg) ||
+          (IF==CoreGenInstFormat::CGInstImm) ){
+        OutStream << "  bits<" << Formats[i]->GetFieldWidth(Formats[i]->GetFieldName(j))
+                  << "> " << Formats[i]->GetFieldName(j) << ";" << std::endl;
+      }
+    }
+
+    // -- assign all the encodings
+    for( unsigned j=0; j<Formats[i]->GetNumFields(); j++ ){
+      std::string FName = Formats[i]->GetFieldName(j);
+      CoreGenInstFormat::CGInstField IF = Formats[i]->GetFieldType(FName);
+
+      // only assign the known values
+      if( IF != CoreGenInstFormat::CGInstUnk ){
+        if( Formats[i]->GetFieldWidth(FName) == 1 ){
+          // single bit field
+          OutStream << "  let Inst{" << Formats[i]->GetStartBit(FName)
+                    << "} = " << FName << ";" << std::endl;
+        }else{
+          // multi-bit field
+          OutStream << "  let Inst{" << Formats[i]->GetEndBit(FName) << "-"
+                    << Formats[i]->GetStartBit(FName)
+                    << "} = " << FName << ";" << std::endl;
+        }
+      }
+    }
+
+    // -- assign all the dag nodes
+    OutStream << "  dag OutOperandList = outs;" << std::endl
+              << "  dag InOperandList = ins; " << std::endl
+              << "  let AsmString = opcodestr # \"\\t\" # argstr;" << std::endl
+              << "  let Pattern = pattern;" << std::endl << std::endl;
+
+
+    OutStream << "  let TSFlags{4-0} = format.Value;" << std::endl;
+
+    // emit the closing brace
+    OutStream << "}" << std::endl << std::endl;
+  }
+
+  OutStream.close();
+
   return true;
 }
 
@@ -806,25 +923,37 @@ bool CoreGenLLVMCodegen::GenerateSubtargets(){
   return true;
 }
 
+bool CoreGenLLVMCodegen::GenerateInstFormats(){
+  for( unsigned i=0; i<Top->GetNumChild(); i++ ){
+    if( Top->GetChild(i)->GetType() == CGInstF )
+      Formats.push_back(static_cast<CoreGenInstFormat *>(Top->GetChild(i)));
+  }
+  return true;
+}
+
 bool CoreGenLLVMCodegen::Execute(){
 
   // Stage 1: generate subtargets
   if( !GenerateSubtargets() )
     return false;
 
-  // Stage 2: generate the directory structure for the new target
+  /// Stage 2: generate the vector of instruction formats
+  if( !GenerateInstFormats() )
+    return false;
+
+  // Stage 3: generate the directory structure for the new target
   if( !GenerateTargetDir() )
     return false;
 
-  // Stage 3: generate the codegen blocks for each ISA
+  // Stage 4: generate the codegen blocks for each ISA
   if( !GenerateTargetImpl() )
     return false;
 
-  // Stage 4: generate the CPU driver
+  // Stage 5: generate the CPU driver
   if( !GenerateCPUDriver() )
     return false;
 
-  // Stage 5: generate the build infrastructure
+  // Stage 6: generate the build infrastructure
   if( !GenerateBuildImpl() )
     return false;
 
