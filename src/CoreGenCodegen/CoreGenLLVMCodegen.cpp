@@ -29,6 +29,15 @@ bool CoreGenLLVMCodegen::GenerateCPUDriver(){
   return true;
 }
 
+std::string CoreGenLLVMCodegen::UpperCase(std::string Str){
+  std::locale loc;
+  std::string Tmp;
+  for( unsigned i=0; i<Str.length(); i++ ){
+    Tmp += std::toupper(Str[i],loc);
+  }
+  return Tmp;
+}
+
 bool CoreGenLLVMCodegen::TIGenerateTopLevelTablegen(){
 
   std::string OutFile = LLVMRoot + "/" + TargetName + ".td";
@@ -227,6 +236,78 @@ bool CoreGenLLVMCodegen::TIGenerateISATablegen(){
 }
 
 bool CoreGenLLVMCodegen::TIGenerateRegisterTablegen(){
+
+  std::string OutFile = LLVMRoot + "/" + TargetName + "RegisterInfo.td";
+  std::ofstream OutStream;
+  OutStream.open(OutFile,std::ios::trunc);
+  if( !OutStream.is_open() ){
+    Errno->SetError(CGERR_ERROR, "Could not open the RegisterInfo tablegen file: " + OutFile );
+    return false;
+  }
+
+  OutStream << "//===-- " << TargetName << "RegisterInfo.td - " << TargetName
+            << "Register Definitions ---*- tablegen -*-===//" << std::endl;
+
+  OutStream << "let Namespace = \"" << TargetName << "\" in {" << std::endl;
+
+  // stage 1: walk all the register classes and generate the top-level class defs
+  for( unsigned i=0; i<RegClasses.size(); i++ ){
+    OutStream << "class " << TargetName << RegClasses[i]->GetName()
+              << "<bits<" << TIGenerateInstFormatBits(RegClasses[i]->GetMaxWidth())
+              << "> Enc, string n, list<string> alt = []> : Register<n> {" << std::endl;
+    OutStream << "  let HWEncoding{"
+              << TIGenerateInstFormatBits(RegClasses[i]->GetMaxWidth())-1
+              << "-0} = Enc;" << std::endl;
+    OutStream << "  let AltNames = alt;" << std::endl;
+    OutStream << "}" << std::endl;
+  }
+
+  OutStream << "def ABIRegAltname : RegAltNameIndex;" << std::endl;
+  OutStream << "}" << std::endl << std::endl; // end the namespace
+
+  // stage 2: output the sequence of registers from each register class
+  //          track the global dwarf number
+  unsigned DwarfNum = 0;
+  CoreGenReg *Reg = nullptr;
+  for( unsigned i=0; i<RegClasses.size(); i++ ){
+    OutStream << "let RegAltNameIndices = [ABIRegAltName] in {" << std::endl;
+    for( unsigned j=0; j<RegClasses[i]->GetNumReg(); j++ ){
+      Reg = RegClasses[i]->GetReg(j);
+
+      OutStream << "  def " << UpperCase(Reg->GetName())
+                << " : " << TargetName << RegClasses[i]->GetName()
+                << "<" << Reg->GetIndex()
+                << ",\"" << Reg->GetName() << "\", [\""
+                << Reg->GetName() << "\"]>, DwarfRegNum<["
+                << DwarfNum << "]>;" << std::endl;
+      DwarfNum++;
+    }
+    OutStream << "}" << std::endl << std::endl;
+  }
+
+  // Stage 3: output each of the register class definitions
+  for( unsigned i=0; i<RegClasses.size(); i++ ){
+    OutStream << "def " << UpperCase(RegClasses[i]->GetName())
+              << " : RegisterClass<\"" << TargetName
+              << "\", [i32], " << RegClasses[i]->GetMaxWidth()  //TODO: we need to fix this based upon the memory model
+              << ", (add" << std::endl;
+    for( unsigned j=0; j<RegClasses[i]->GetNumReg(); j++ ){
+      OutStream << "    " << UpperCase(RegClasses[i]->GetReg(j)->GetName());
+      if( j != RegClasses[i]->GetNumReg()-1 )
+        OutStream << ",";
+      OutStream << std::endl;
+    }
+    // TODO: this needs to be fixed based upon the
+    unsigned MW = RegClasses[i]->GetMaxWidth();
+    OutStream << "  )> {" << std::endl;
+    OutStream << "  let RegInfos = RegInfoByHwMode<[DefaultMode]," << std::endl
+              << "                                 RegInfo<"
+              << MW << "," << MW << "," << MW << ">]>;" << std::endl;
+    OutStream << "}" << std::endl << std::endl;
+  }
+
+  OutStream.close();
+
   return true;
 }
 
@@ -240,7 +321,7 @@ bool CoreGenLLVMCodegen::TIGenerateTablegen(){
   if( !TIGenerateTopLevelTablegen() )
     return false;
 
-  // Stage 2: generate format tablegens for each ISA
+  // Stage 2: generate format tablegens for each ISA: done;
   if( !TIGenerateISATablegen() )
     return false;
 
@@ -931,6 +1012,14 @@ bool CoreGenLLVMCodegen::GenerateInstFormats(){
   return true;
 }
 
+bool CoreGenLLVMCodegen::GenerateRegClasses(){
+  for( unsigned i=0; i<Top->GetNumChild(); i++ ){
+    if( Top->GetChild(i)->GetType() == CGRegC )
+      RegClasses.push_back(static_cast<CoreGenRegClass *>(Top->GetChild(i)));
+  }
+  return true;
+}
+
 bool CoreGenLLVMCodegen::Execute(){
 
   // Stage 1: generate subtargets
@@ -941,19 +1030,23 @@ bool CoreGenLLVMCodegen::Execute(){
   if( !GenerateInstFormats() )
     return false;
 
-  // Stage 3: generate the directory structure for the new target
+  /// Stage 3: generate the vector of register classes
+  if( !GenerateRegClasses() )
+    return false;
+
+  // Stage 4: generate the directory structure for the new target
   if( !GenerateTargetDir() )
     return false;
 
-  // Stage 4: generate the codegen blocks for each ISA
+  // Stage 5: generate the codegen blocks for each ISA
   if( !GenerateTargetImpl() )
     return false;
 
-  // Stage 5: generate the CPU driver
+  // Stage 6: generate the CPU driver
   if( !GenerateCPUDriver() )
     return false;
 
-  // Stage 6: generate the build infrastructure
+  // Stage 7: generate the build infrastructure
   if( !GenerateBuildImpl() )
     return false;
 
