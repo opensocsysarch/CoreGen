@@ -311,6 +311,25 @@ bool CoreGenLLVMCodegen::TIGenerateRegisterTablegen(){
   return true;
 }
 
+std::map<std::string,unsigned> CoreGenLLVMCodegen::TIGenerateImmFieldVector(){
+  std::map<std::string,unsigned> Imms;
+  // walk all the instruction formats and find all the immediate fields
+  std::string FieldName;
+  unsigned Width;
+  for( unsigned i=0; i<Formats.size(); i++ ){
+    for( unsigned j=0; j<Formats[i]->GetNumFields(); j++ ){
+      FieldName = Formats[i]->GetFieldName(j);
+      if( Formats[i]->GetFieldType(FieldName) == CoreGenInstFormat::CGInstImm ){
+        // found an immediate field
+        Width = Formats[i]->GetFieldWidth(FieldName);
+        Imms.insert( std::pair<std::string,unsigned>("imm" + std::to_string(Width),
+                                                     Width) );
+      }
+    }
+  }
+  return Imms;
+}
+
 bool CoreGenLLVMCodegen::TIGenerateInstTablegen(){
 
   std::string OutFile = LLVMRoot + "/" + TargetName + "InstrInfo.td";
@@ -325,6 +344,23 @@ bool CoreGenLLVMCodegen::TIGenerateInstTablegen(){
             << "Instruction Definitions ---*- tablegen -*-===//" << std::endl;
 
   // Stage 1: write out operand fields & bare symbols
+  std::map<std::string, unsigned> ImmFields = TIGenerateImmFieldVector();
+  std::map<std::string,unsigned>::iterator it;
+  for( it = ImmFields.begin(); it != ImmFields.end(); ++it ){
+    OutStream << "def " << it->first
+              << " : Operand<i32>, ImmLeaf<i32, [{return isiUInt<"
+              << it->second << ">(Imm);}]> {" << std::endl;
+    OutStream << "  let ParserMatchClass = UImmAsmOperand<5>;" << std::endl;
+    OutStream << "  let DecoderMethod =\"decodeUImmOperand<"
+              << it->second << ">\";" << std::endl;
+    OutStream << "}" << std::endl << std::endl;
+  }
+
+  OutStream << "def BareSymbol : AsmOperandClass {" << std::endl
+            << "  let Name = \"BareSymbol\";" << std::endl
+            << "  let RenderMethod = \"addImmOperands\";" << std::endl
+            << "  let DiagnosticType = \"InvalidBareSymbol\";" << std::endl
+            << "  let ParserMethod = \"parseBareSymbol\";" << std::endl << std::endl;
 
   // Stage 2: write out the instruction class templates
 
