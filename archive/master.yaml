@@ -12,7 +12,7 @@
 
 Entries:
   - Entry: LLVM-8.0.1
-    Directory: llvmproject-8.0.1
+    Directory: llvm-project-llvmorg-8.0.1
     SrcType: ZIP
     Type: COMPILER
     Version: 8.0.1

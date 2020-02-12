@@ -272,7 +272,7 @@ public:
   bool ExecuteCodegen();
 
   /// Execute the LLVM codegen
-  bool ExecuteLLVMCodegen();
+  bool ExecuteLLVMCodegen(std::string CompVer);
 
   /// Execute the Chisel codegen
   bool ExecuteChiselCodegen();

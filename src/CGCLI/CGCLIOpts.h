@@ -48,6 +48,7 @@ private:
   std::string Archive;  ///< CGCLIOpts: Archive Path
   std::string ArchFile; ///< CGCLIOpts: Archive File
   std::string ArchEntry;///< CGCLIOpts: Archive Entry
+  std::string CompVer;  ///< CGCLIOpts: Compiler version
 
   std::vector<std::string> EnablePass;  ///< CGCLIOpts: Manually enabled passes
   std::vector<std::string> DisablePass; ///< CGCLIOpts: Manually disabled passes
@@ -203,6 +204,9 @@ public:
 
   /// Retrieve the archive entry
   std::string GetArchiveEntry() { return ArchEntry; }
+
+  /// Retrieve the target compiler version
+  std::string GetCompilerVersion() { return CompVer; }
 };
 
 // EOF

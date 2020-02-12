@@ -293,7 +293,7 @@ int ExecuteCoregen( CGCLIOpts *Opts ){
     }
   }else if( Opts->IsCompilerEnabled() ){
     // run the compiler codegen
-    if( !CG->ExecuteLLVMCodegen() ){
+    if( !CG->ExecuteLLVMCodegen(Opts->GetCompilerVersion()) ){
       std::cout << "Error executing the LLVM codegen: "
                 << CG->GetErrStr() << std::endl;
       delete CG;

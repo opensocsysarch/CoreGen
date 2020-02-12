@@ -219,9 +219,6 @@ private:
   /// CoreGenArchive: converts CGAEntryType to string
   std::string TypeToStr(CGAEntryType Type);
 
-  /// CoreGenArchive: determines if the target entry has been initialized
-  bool IsInit(CoreGenArchEntry *Entry);
-
   /// CoreGenArchive: determines if the directory exists
   bool CGADirExists(const char *path);
 
@@ -292,6 +289,9 @@ public:
 
   /// CoreGenArchive: retrieve the entry number
   bool GetEntryNum( std::string Entry, unsigned &Num );
+
+  /// CoreGenArchive: determines if the target entry has been initialized
+  bool IsInit(CoreGenArchEntry *Entry);
 
   /// CoreGenArchive: retrieve the number of entries
   unsigned GetNumEntries() { return Arch.size(); }
