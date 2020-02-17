@@ -122,8 +122,47 @@ bool CoreGenBackend::ExecuteLLVMCodegen(std::string CompVer){
     return false;
   }
 
+  std::string TmpCompVer = CompVer;
+
+  // check the state of the compiler version
+  // if we have a null string, then attempt to derive
+  // the latest version of llvm by default
+  if( TmpCompVer.length() == 0 ){
+    CoreGenArchive *Archive = new CoreGenArchive( CGInstallPrefix() + "/archive" );
+    if( !Archive ){
+      Errno->SetError(CGERR_ERROR, "Could not create CoreGenArchive object" );
+      return false;
+    }
+
+    if( !Archive->ReadYaml( CGInstallPrefix() + "/archive/master.yaml" ) ){
+      Errno->SetError(CGERR_ERROR, "Could not read archive yaml : "
+                      + CGInstallPrefix() + "/archive/master.yaml" );
+      delete Archive;
+      return false;
+    }
+
+    for( unsigned i=0; i<Archive->GetNumEntries(); i++ ){
+      CoreGenArchEntry *E = Archive->GetEntry(i);
+      if( (E->GetEntryType() == CGA_COMPILER) &&
+          (E->IsLatest()) ){
+        if( !Archive->IsInit(E) ){
+          Errno->SetError(CGERR_ERROR, "Found a default latest compiler at: "
+                          + E->GetName() + " : but the entry is not initialized" );
+          delete Archive;
+          return false;
+        }
+
+        // found a good entry and the entry is initialized
+        TmpCompVer = E->GetName();
+        break;
+      }
+    }
+
+    delete Archive;
+  }
+
   // Execute it
-  bool rtn = CG->ExecuteLLVMCodegen(CompVer);
+  bool rtn = CG->ExecuteLLVMCodegen(TmpCompVer);
 
   // delete and clean everything up
   delete CG;

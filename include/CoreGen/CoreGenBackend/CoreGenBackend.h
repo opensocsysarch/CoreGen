@@ -66,6 +66,8 @@
 // Codegen Headers
 #include "CoreGen/CoreGenCodegen/CoreGenCodegen.h"
 
+// Archive Headers
+#include "CoreGen/CoreGenArchive/CoreGenArchive.h"
 
 class CoreGenBackend
 {
