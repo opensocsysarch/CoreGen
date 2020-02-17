@@ -2544,7 +2544,15 @@ bool CoreGenYaml::ReadPseudoInstYaml(const YAML::Node& PInstNodes,
       for( unsigned k=0; k<FNode.size(); k++ ){
         const YAML::Node& LFNode = FNode[k];
         std::string FieldName = LFNode["EncodingField"].as<std::string>();
-        int Value = LFNode["EncodingValue"].as<int>();
+        int Value = 0;
+        try{
+          Value = LFNode["EncodingValue"].as<int>();
+        }catch(YAML::BadConversion& e){
+          Errno->SetError(CGERR_ERROR, "Error in parsing pseudo instruction EncodingValue: "
+                          + std::string(e.what()));
+          delete P;
+          return false;
+        }
 
         if( !P->SetEncoding(FieldName,Value) ){
           return false;
@@ -2592,12 +2600,33 @@ bool CoreGenYaml::ReadCacheYaml(const YAML::Node& CacheNodes,
       return false;
     }
 
-    int Sets = Node["Sets"].as<int>();
-    int Ways = Node["Ways"].as<int>();
+    int Sets = 0;
+    try{
+      Sets = Node["Sets"].as<int>();
+    }catch(YAML::BadConversion& e){
+      Errno->SetError(CGERR_ERROR, "Error in parsing cache Sets: "
+                      + std::string(e.what()));
+      return false;
+    }
+
+    int Ways = 0;
+    try {
+      Ways = Node["Ways"].as<int>();
+    }catch(YAML::BadConversion& e){
+      Errno->SetError(CGERR_ERROR, "Error in parsing cache Ways: "
+                      + std::string(e.what()));
+      return false;
+    }
     unsigned LineSize = 64;
 
     if( CheckValidNode(Node,"LineSize") ){
-      LineSize = Node["LineSize"].as<unsigned>();
+      try{
+        LineSize = Node["LineSize"].as<unsigned>();
+      }catch(YAML::BadConversion& e){
+        Errno->SetError(CGERR_ERROR, "Error in parsing cache LineSize: "
+                        + std::string(e.what()));
+        return false;
+      }
     }
 
     std::string SubLevel;
@@ -2718,8 +2747,15 @@ bool CoreGenYaml::ReadCoreYaml(const YAML::Node& CoreNodes,
       if( !CheckValidNode(Node,"ThreadUnits") ){
         return false;
       }
-      ThreadUnits = Node["ThreadUnits"].as<unsigned>();
-      std::string TU = Node["ThreadUnits"].as<std::string>();
+
+      try{
+        ThreadUnits = Node["ThreadUnits"].as<unsigned>();
+      }catch(YAML::BadConversion& e){
+        Errno->SetError(CGERR_ERROR, "Error in parsing core ThreadUnits: "
+                        + std::string(e.what()));
+        return false;
+      }
+
       if( !C->SetNumThreadUnits(ThreadUnits) ){
         return false;
       }
@@ -2918,16 +2954,40 @@ bool CoreGenYaml::ReadSpadYaml(const YAML::Node& SpadNodes,
     unsigned RspPorts = 0;
     uint64_t StartAddr = 0x00ull;
     if( Node["MemSize"] ){
-      MemSize = Node["MemSize"].as<unsigned>();
+      try{
+        MemSize = Node["MemSize"].as<unsigned>();
+      }catch(YAML::BadConversion& e){
+        Errno->SetError(CGERR_ERROR, "Error in parsing spad MemSize: "
+                        + std::string(e.what()));
+        return false;
+      }
     }
     if( Node["RqstPorts"] ){
-      RqstPorts = Node["RqstPorts"].as<unsigned>();
+      try{
+        RqstPorts = Node["RqstPorts"].as<unsigned>();
+      }catch(YAML::BadConversion& e){
+        Errno->SetError(CGERR_ERROR, "Error in parsing spad RqstPorts: "
+                        + std::string(e.what()));
+        return false;
+      }
     }
     if( Node["RspPorts"] ){
-      RspPorts = Node["RspPorts"].as<unsigned>();
+      try{
+        RspPorts = Node["RspPorts"].as<unsigned>();
+      }catch(YAML::BadConversion& e){
+        Errno->SetError(CGERR_ERROR, "Error in parsing spad RspPorts: "
+                        + std::string(e.what()));
+        return false;
+      }
     }
     if( Node["StartAddr"] ){
-      StartAddr = Node["StartAddr"].as<uint64_t>();
+      try{
+        StartAddr = Node["StartAddr"].as<uint64_t>();
+      }catch(YAML::BadConversion& e){
+        Errno->SetError(CGERR_ERROR, "Error in parsing spad StartAddr: "
+                        + std::string(e.what()));
+        return false;
+      }
     }
 
     CoreGenSpad *S = new CoreGenSpad(Name,Errno,MemSize,
@@ -3124,13 +3184,31 @@ bool CoreGenYaml::ReadPluginYaml(const YAML::Node& PluginNodes,
     unsigned Minor = 0;
     unsigned Patch = 0;
     if( Node["MajorVersion"] ){
-      Major = Node["MajorVersion"].as<unsigned>();
+      try{
+        Major = Node["MajorVersion"].as<unsigned>();
+      }catch(YAML::BadConversion& e){
+        Errno->SetError(CGERR_ERROR, "Error in parsing plugin MajorVersion: "
+                        + std::string(e.what()));
+        return false;
+      }
     }
     if( Node["MinorVersion"] ){
-      Minor = Node["MinorVersion"].as<unsigned>();
+      try{
+        Minor = Node["MinorVersion"].as<unsigned>();
+      }catch(YAML::BadConversion& e){
+        Errno->SetError(CGERR_ERROR, "Error in parsing plugin MinorVersion: "
+                        + std::string(e.what()));
+        return false;
+      }
     }
     if( Node["PatchVersion"] ){
-      Patch = Node["PatchVersion"].as<unsigned>();
+      try{
+        Patch = Node["PatchVersion"].as<unsigned>();
+      }catch(YAML::BadConversion& e){
+        Errno->SetError(CGERR_ERROR, "Error in parsing plugin PatchVersion: "
+                        + std::string(e.what()));
+        return false;
+      }
     }
 
     std::string Notes;
@@ -3649,7 +3727,13 @@ bool CoreGenYaml::ReadCommYaml( const YAML::Node& CommNodes,
     // width
     unsigned Width = 0;
     if( Node["Width"] ){
-      Width = Node["Width"].as<unsigned>();
+      try{
+        Width = Node["Width"].as<unsigned>();
+      }catch(YAML::BadConversion& e){
+        Errno->SetError(CGERR_ERROR, "Error in parsing comm Width: "
+                        + std::string(e.what()));
+        return false;
+      }
     }
 
     CoreGenComm *Comm = new CoreGenComm(Name,FullType,Width,Errno);
