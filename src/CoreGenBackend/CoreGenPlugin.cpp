@@ -76,6 +76,10 @@ std::string CoreGenPlugin::GetPluginName(){
   return Impl->GetName();
 }
 
+bool CoreGenPlugin::ProcessFeatures(){
+  return Impl->ProcessFeatures();
+}
+
 CGFeatureType CoreGenPlugin::GetFeatureType( std::string Feature ){
   if( !Impl ){
     return CGFUnknown;
