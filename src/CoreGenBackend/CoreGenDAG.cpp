@@ -133,6 +133,9 @@ bool CoreGenDAG::FreeMat(){
 
 bool CoreGenDAG::BuildDAG( CoreGenNode *Top ){
 
+  // Walk all the nodes and determine if we have any
+  // plugins for which we need to process features
+
   // Walk all the child nodes and build the index mapping.
   // Note that the TOP node is not included in the index map.
   // The TOP node is only a placeholder.
