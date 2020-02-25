@@ -1244,6 +1244,12 @@ CoreGenISA *CoreGenBackend::InsertISA(std::string Name){
   return I;
 }
 
+CoreGenDataPath *CoreGenBackend::InsertDPath(std::string Name){
+  CoreGenDataPath *D = new CoreGenDataPath(Name,Errno);
+  DataPaths.push_back(D);
+  return D;
+}
+
 CoreGenComm *CoreGenBackend::InsertComm(std::string Name){
   CoreGenComm *C = new CoreGenComm(Name,Errno);
   Comms.push_back(C);
