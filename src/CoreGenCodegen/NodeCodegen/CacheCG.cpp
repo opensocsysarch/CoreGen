@@ -20,10 +20,72 @@ CacheCG::~CacheCG(){
 }
 
 bool CacheCG::ExecutePlugin(){
+  // open the output file
+  std::ofstream OutFile;
+  OutFile.open(Path,std::ios::trunc);
+  if(!OutFile.is_open()){
+    Errno->SetError(CGERR_ERROR, "Could not open chisel file for Cache:" +
+                    Path );
+    return false;
+  }
+
+  // write the header
+  OutFile << "// -- " << Node->GetName()
+          << " Chisel Output" << std::endl << std::endl;
+
+  // write the package info
+  if( !WritePackageInfo(OutFile) ){
+    Errno->SetError(CGERR_ERROR, "Could not write standard package info to file : " +
+                    Path );
+    OutFile.close();
+    return false;
+  }
+
+  if( !WriteStdFooter(OutFile) ){
+    Errno->SetError(CGERR_ERROR, "Could not write standard Chisel footer to file : " +
+                    Path );
+    OutFile.close();
+    return false;
+  }
+
+  // close the output file
+  OutFile.close();
+
   return true;
 }
 
 bool CacheCG::Execute(){
+
+  // open the output file
+  std::ofstream OutFile;
+  OutFile.open(Path,std::ios::trunc);
+  if(!OutFile.is_open()){
+    Errno->SetError(CGERR_ERROR, "Could not open chisel file for Cache:" +
+                    Path );
+    return false;
+  }
+
+  // write the header
+  OutFile << "// -- " << Node->GetName()
+          << " Chisel Output" << std::endl << std::endl;
+
+  // write the package info
+  if( !WritePackageInfo(OutFile) ){
+    Errno->SetError(CGERR_ERROR, "Could not write standard package info to file : " +
+                    Path );
+    OutFile.close();
+    return false;
+  }
+
+  if( !WriteStdFooter(OutFile) ){
+    Errno->SetError(CGERR_ERROR, "Could not write standard Chisel footer to file : " +
+                    Path );
+    OutFile.close();
+    return false;
+  }
+
+  // close the output file
+  OutFile.close();
 
   return true;
 }
