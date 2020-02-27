@@ -347,7 +347,6 @@ bool CoreGenChiselCodegen::Execute(){
     return false;
   }
 
-  std::cout << "Generating Chisel... " << std::endl;
   CoreGenNode *SocNode = nullptr;
 
   for( unsigned i=0; i<Top->GetNumChild(); i++ ){

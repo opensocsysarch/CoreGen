@@ -255,6 +255,12 @@ CoreGenISA *CoreGenPluginImpl::InsertISA(std::string Name){
   return I;
 }
 
+CoreGenDataPath *CoreGenPluginImpl::InsertDataPath(std::string Name, std::string Style){
+  CoreGenDataPath *D = new CoreGenDataPath(Name,Style, Errno);
+  DataPaths.push_back(D);
+  return D;
+}
+
 CoreGenComm *CoreGenPluginImpl::InsertComm(std::string Name){
   CoreGenComm *C = new CoreGenComm(Name,Errno);
   Comms.push_back(C);

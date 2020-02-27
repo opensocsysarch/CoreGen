@@ -3181,13 +3181,12 @@ bool CoreGenYaml::ReadPluginYaml(const YAML::Node& PluginNodes,
     }
 
     //-- DataPaths
-    // TODO: Fix this for the plugin infrastructure
-   // if( Node["DataPaths"] ){
-   //   const YAML::Node& DataPathNodes = Node["DataPaths"];
-   //   if( !ReadDataPathYaml(DataPathNodes,NewPlugin->GetDataPathsVect()) ){
-   //     return false;
-   //   }
-   // }
+    if( Node["DataPaths"] ){
+      const YAML::Node& DataPathNodes = Node["DataPaths"];
+      if( !ReadDataPathYaml(DataPathNodes,NewPlugin->GetDataPathVect()) ){
+        return false;
+      }
+    }
 
     //-- Cores
     if( Node["Cores"] ){
