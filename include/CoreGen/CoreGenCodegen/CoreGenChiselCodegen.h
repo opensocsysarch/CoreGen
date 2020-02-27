@@ -57,7 +57,7 @@ private:
   /// Writes the core configuration data
   bool WriteCoreConfig(std::ofstream &O);
 
-  ///Execute the SoC code generator
+  /// Execute the SoC code generator
   bool ExecSocCodegen(CoreGenNode *N);
 
   /// Execute the register class code generator
@@ -69,8 +69,17 @@ private:
   /// Execute the ISA code generator
   bool ExecISACodegen(CoreGenNode *N);
 
+  /// Execute teh cache code generator
+  bool ExecCacheCodegen(CoreGenNode *N);
+
+  /// Execute the cache template code generator
+  bool ExecCacheTemplateCodegen(CoreGenNode *N);
+
   /// Execute the target plugin codegen instead of the default
   bool ExecPluginCodegen(CoreGenNode *N);
+
+  /// Executes the target node plugin template codegen instead of the default
+  bool ExecPluginTemplateCodegen(CoreGenNode *N);
 
   /// Retrieve the appropriate ISA node from the register class
   CoreGenNode *GetRegClassISANode(CoreGenNode *N);

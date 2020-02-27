@@ -99,6 +99,9 @@ public:
   /// Set the feature value
   bool SetFeatureValue( unsigned Idx, CGFeatureVal Val );
 
+  /// Process the internal plugin features
+  bool ProcessFeatures();
+
   /// Execute the HDL Codegen
   bool ExecuteHDLCodegen(CoreGenNode *TopNode, CoreGenNode *Parent);
 

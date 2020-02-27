@@ -529,6 +529,7 @@ bool CoreGenBackend::BuildDAG(){
   }
   for( unsigned i=0; i<Plugins.size(); i++ ){
     Top->InsertChild(static_cast<CoreGenNode *>(Plugins[i]));
+    Plugins[i]->ProcessFeatures();
     Plugins[i]->BuildDAG();
   }
 
