@@ -62,6 +62,7 @@
 #include "CoreGen/CoreGenBackend/CoreGenMCtrl.h"
 #include "CoreGen/CoreGenBackend/CoreGenVTP.h"
 #include "CoreGen/CoreGenBackend/CoreGenPlugin.h"
+#include "CoreGen/CoreGenBackend/CoreGenDataPath.h"
 
 // Codegen Headers
 #include "CoreGen/CoreGenCodegen/CoreGenCodegen.h"
@@ -211,7 +212,7 @@ public:
   CoreGenISA *InsertISA( std::string Name );
 
   /// Insert a new Data Path node TODO:Specify a type, arch, etc.  depending on RISC, OOO, SS, etc
-  CoreGenDataPath *InserDPath( std::string Name );
+  CoreGenDataPath *InsertDPath( std::string Name, std::string Style );
 
   /// Insert a new VTP node
   CoreGenVTP *InsertVTP( std::string Name );

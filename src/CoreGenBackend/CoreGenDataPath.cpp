@@ -11,11 +11,12 @@
 #include "CoreGen/CoreGenBackend/CoreGenDataPath.h"
 
 CoreGenDataPath::CoreGenDataPath(CoreGenErrno *E)
-  : CoreGenNode(CGDPath,E) {
+  : CoreGenNode(CGDPath,E), Style("unknown"){
 }
 
-CoreGenDataPath::CoreGenDataPath(std::string N, CoreGenErrno *E)
-  : CoreGenNode(CGDPath,N,E){
+CoreGenDataPath::CoreGenDataPath(std::string Name, std::string S, CoreGenErrno *E)
+  : CoreGenNode(CGDPath,Name,E){
+    Style = S;
 }
 
 CoreGenDataPath::~CoreGenDataPath(){

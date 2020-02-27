@@ -284,7 +284,7 @@ bool CoreGenBackend::ReadIR( std::string FileName ){
 
   if( !IR->ReadYaml( Socs, Cores, Caches, ISAs, Formats, Insts,
                       PInsts, RegClasses, Regs, Comms, Spads,
-                      MCtrls, VTPs, Exts, Plugins) ){
+                      MCtrls, VTPs, Exts, DataPaths, Plugins) ){
     delete IR;
     return false;
   }
@@ -445,6 +445,9 @@ bool CoreGenBackend::BuildDAG(){
   // add all the subnodes
   for( unsigned i=0; i<Caches.size(); i++ ){
     Top->InsertChild(static_cast<CoreGenNode *>(Caches[i]));
+  }
+  for( unsigned i=0; i<DataPaths.size(); i++ ){
+    Top->InsertChild(static_cast<CoreGenNode *>(DataPaths[i]));
   }
   for( unsigned i=0; i<Cores.size(); i++ ){
     Top->InsertChild(static_cast<CoreGenNode *>(Cores[i]));
@@ -1244,8 +1247,8 @@ CoreGenISA *CoreGenBackend::InsertISA(std::string Name){
   return I;
 }
 
-CoreGenDataPath *CoreGenBackend::InsertDPath(std::string Name){
-  CoreGenDataPath *D = new CoreGenDataPath(Name,Errno);
+CoreGenDataPath *CoreGenBackend::InsertDPath(std::string Name, std::string Style){
+  CoreGenDataPath *D = new CoreGenDataPath(Name,Style, Errno);
   DataPaths.push_back(D);
   return D;
 }

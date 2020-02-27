@@ -347,6 +347,7 @@ bool CoreGenChiselCodegen::Execute(){
     return false;
   }
 
+  std::cout << "Generating Chisel... " << std::endl;
   CoreGenNode *SocNode = nullptr;
 
   for( unsigned i=0; i<Top->GetNumChild(); i++ ){
@@ -392,6 +393,7 @@ bool CoreGenChiselCodegen::Execute(){
     case CGCache:
       break;
     case CGDPath:
+      std::cout << "Generating Datapath... " << std::endl;
         if( !ExecDataPathCodegen(Top->GetChild(i) )){
          rtn = false;
         }

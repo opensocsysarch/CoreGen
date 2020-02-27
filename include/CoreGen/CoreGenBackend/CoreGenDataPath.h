@@ -29,12 +29,14 @@
 
 class CoreGenDataPath : public CoreGenNode{
 private:
+  std::string PathName;
+  std::string Style;
 public:
   /// Default Constructor
   CoreGenDataPath(CoreGenErrno *Errno);
 
   /// Overloaded Constructor
-  CoreGenDataPath( std::string Name, CoreGenErrno *Errno );
+  CoreGenDataPath( std::string Name, std::string Style,CoreGenErrno *Errno );
 
   /// Default Destructor
   ~CoreGenDataPath();

@@ -1345,6 +1345,13 @@ Caches:
     Ways: 8
 
 # -------------------------------------------------------
+# DataPath Section
+# -------------------------------------------------------
+DataPaths:
+  - Pipeline: Core0.Datapipe
+    Style: In-Order
+
+# -------------------------------------------------------
 # Core Section
 # -------------------------------------------------------
 Cores:
@@ -1352,6 +1359,7 @@ Cores:
     ThreadUnits: 1
     Cache: Core0.L1.cache
     ISA: BasicRISC.ISA
+    Datapath: Core0.Datapipe
     RegisterClasses:
       - RegClass: GPR
       - RegClass: CTRL
