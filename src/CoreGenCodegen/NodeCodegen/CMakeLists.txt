@@ -13,6 +13,7 @@ SpadCG.cpp
 SocCG.cpp
 ISACG.cpp
 PluginCG.cpp
+CacheCG.cpp
 )
 
 include_directories(${YAML_PATH}/include)
