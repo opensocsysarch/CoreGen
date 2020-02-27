@@ -185,6 +185,16 @@ CoreGenISA *CoreGenExt::InsertISA( std::string Name ){
   return I;
 }
 
+CoreGenDataPath *CoreGenExt::InsertDataPath( std::string Name, std::string Style ){
+  CoreGenDataPath *D = new CoreGenDataPath(Name, Style, Errno);
+  DataPaths.push_back(D);
+  CoreGenNode *N = static_cast<CoreGenNode *>(D);
+  if( !this->InsertChild(N) ){
+    return nullptr;
+  }
+  return D;
+}
+
 bool CoreGenExt::InsertRegClass( CoreGenRegClass *R ){
   if( !R ){
     return false;
@@ -272,6 +282,15 @@ bool CoreGenExt::InsertExt( CoreGenExt *E ){
   }
   Exts.push_back(E);
   CoreGenNode *N = static_cast<CoreGenNode *>(E);
+  return this->InsertChild(N);
+}
+
+bool CoreGenExt::InsertDataPath( CoreGenDataPath *D ){
+  if( !D ){
+    return false;
+  }
+  DataPaths.push_back(D);
+  CoreGenNode *N = static_cast<CoreGenNode *>(D);
   return this->InsertChild(N);
 }
 
