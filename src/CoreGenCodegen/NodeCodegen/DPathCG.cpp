@@ -21,15 +21,10 @@ DPathCG::DPathCG( CoreGenNode *N, CoreGenProj *P,
 
 bool DPathCG::GenSharedBus(std::ofstream &O){
 
-  // open the output file
- /* std::ofstream OutFile;
-  OutFile.open(Path,std::ios::trunc);
-  if(!OutFile.is_open()){
-    Errno->SetError(CGERR_ERROR, "Could not open chisel file for DataPath:" +
-                    Path );
+  if( !O.is_open() )
     return false;
-  }*/
-   /* Reference Chisel:
+   O << "/* Reference Chisel: " << std::endl;
+   /*
    // The Bus
    // (this is a bus-based RISCV implementation, so all data movement goes
    // across this wire)
@@ -56,7 +51,7 @@ bool DPathCG::GenSharedBus(std::ofstream &O){
     // This will need to be updated as we add pipelining, multi-cycle fubs, etc
     
 
-    
+   return true; 
 
 }
 
@@ -92,13 +87,13 @@ bool DPathCG::Execute( ){
     return false;
   }
 
-/*  // write out the package block
-  if( !WriteISA(OutFile,Insts,InstFormats) ){
-    Errno->SetError(CGERR_ERROR, "Could not write ISA block to file : " +
+  // write out the pipeline
+  if( !GenSharedBus(OutFile) ){
+    Errno->SetError(CGERR_ERROR, "Could not Shared Bus block to file : " +
                     Path );
     OutFile.close();
     return false;
-  }*/
+  }
 
   if( !WriteStdFooter(OutFile) ){
     Errno->SetError(CGERR_ERROR, "Could not write standard Chisel footer to file : " + 
