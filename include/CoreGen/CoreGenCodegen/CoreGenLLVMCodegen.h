@@ -85,11 +85,23 @@ private:
 
   // TargetImpl Drivers
 
+  /// Generate a string for the target pseudo instruction
+  std::string TIDerivePseudoInstArgs(CoreGenPseudoInst *PInst);
+
   /// Generate a vector of tuples that represent the unique immediate fields
   std::map<std::string,unsigned> TIGenerateImmFieldVector();
 
+  /// Generate the instruction input args using the instruction fields
+  std::string TIGenerateInstFields(CoreGenInstFormat *Format);
+
   /// Generate the instruction format input args using the instruction fields
   std::string TIGenerateInstArgsFields(CoreGenInstFormat *Format);
+
+  /// Generate the instruction argument list with the associated register classes
+  std::string TIGenerateRegClassImmList(CoreGenInstFormat *Format);
+
+  /// Generate the instruction argument list without the associated register classes
+  std::string TIGenerateRegImmList(CoreGenInstFormat *Format);
 
   /// Generate the number of bits required to store the instruction format
   unsigned TIGenerateInstFormatBits(unsigned NumFormats);

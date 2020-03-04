@@ -122,6 +122,86 @@ unsigned CoreGenLLVMCodegen::TIGenerateInstFormatBits(unsigned NumFormats){
   return NBits;
 }
 
+std::string CoreGenLLVMCodegen::TIGenerateRegClassImmList(CoreGenInstFormat *Format){
+  std::string Str;
+  bool first = true;
+
+  for( unsigned i=0; i<Format->GetNumFields(); i++ ){
+    if( Format->GetFieldType(Format->GetFieldName(i)) == CoreGenInstFormat::CGInstReg ){
+      if( first ){
+        first = false;
+      }else{
+        Str += ",";
+      }
+      Str += (Format->GetFieldRegClass(Format->GetFieldName(i))->GetName() +
+              ":$" +
+              Format->GetFieldName(i));
+    }else if( Format->GetFieldType(Format->GetFieldName(i)) == CoreGenInstFormat::CGInstImm ){
+      if( first ){
+        first = false;
+      }else{
+        Str += ",";
+      }
+      Str += ("imm" +
+              std::to_string(Format->GetFieldWidth(Format->GetFieldName(i))) +
+              ":$" +
+              Format->GetFieldName(i));
+    }
+  }
+
+  return Str;
+}
+
+std::string CoreGenLLVMCodegen::TIGenerateRegImmList(CoreGenInstFormat *Format){
+  std::string Str;
+  bool first = true;
+
+  for( unsigned i=0; i<Format->GetNumFields(); i++ ){
+    if( Format->GetFieldType(Format->GetFieldName(i)) == CoreGenInstFormat::CGInstReg ){
+      if( first ){
+        first = false;
+      }else{
+        Str += ",";
+      }
+      Str += ("$" +
+              Format->GetFieldName(i));
+    }else if( Format->GetFieldType(Format->GetFieldName(i)) == CoreGenInstFormat::CGInstImm ){
+      if( first ){
+        first = false;
+      }else{
+        Str += ",";
+      }
+      Str += ("$" +
+              Format->GetFieldName(i));
+    }
+  }
+
+  return Str;
+}
+
+std::string CoreGenLLVMCodegen::TIGenerateInstFields(CoreGenInstFormat *Format){
+  std::string Str;
+  bool first = true;
+
+  for( unsigned i=0; i<Format->GetNumFields(); i++ ){
+    if( Format->GetFieldType(Format->GetFieldName(i)) ==
+        CoreGenInstFormat::CGInstCode ){
+      // found an encoding field
+      if( first ){
+        first = false;
+      }else{
+        Str += ",";
+      }
+      Str += Format->GetFieldName(i);
+      if( first ){
+        first = false;
+      }
+    }
+  }
+
+  return Str;
+}
+
 std::string CoreGenLLVMCodegen::TIGenerateInstArgsFields(CoreGenInstFormat *Format){
   std::string Str;
   bool first = true;
@@ -139,6 +219,72 @@ std::string CoreGenLLVMCodegen::TIGenerateInstArgsFields(CoreGenInstFormat *Form
               "> " + Format->GetFieldName(i) );
       if( first ){
         first = false;
+      }
+    }
+  }
+
+  return Str;
+}
+
+std::string CoreGenLLVMCodegen::TIDerivePseudoInstArgs(CoreGenPseudoInst *PInst){
+  std::string Str;
+  bool first = true;
+
+  CoreGenInstFormat *F = PInst->GetInst()->GetFormat();
+
+  for( unsigned i=0; i<F->GetNumFields(); i++ ){
+    if( F->GetFieldType(F->GetFieldName(i)) == CoreGenInstFormat::CGInstReg ){
+      if( first ){
+        first = false;
+      }else{
+        Str += ",";
+      }
+
+      bool isEnc = false;
+      uint64_t Enc = 0x00ull;
+
+      for( unsigned j=0; j<PInst->GetNumEncodings(); j++ ){
+        if( PInst->GetEncoding(j)->GetField() ==
+            F->GetFieldName(i) ){
+          isEnc = true;
+          Enc = PInst->GetEncoding(j)->GetEncoding();
+        }
+      }
+
+      if( isEnc ){
+        // find the register name that matches 'Enc'
+        CoreGenRegClass *RC = F->GetFieldRegClass(F->GetFieldName(i));
+        Str += RC->GetRegByIndex((unsigned)(Enc))->GetName();
+      }else{
+        Str += (F->GetFieldRegClass(F->GetFieldName(i))->GetName() + ":$" +
+                F->GetFieldName(i));
+      }
+
+    }else if( F->GetFieldType(F->GetFieldName(i)) == CoreGenInstFormat::CGInstImm ){
+      if( first ){
+        first = false;
+      }else{
+        Str += ",";
+      }
+
+      bool isEnc = false;
+      uint64_t Enc = 0x00ull;
+
+      for( unsigned j=0; j<PInst->GetNumEncodings(); j++ ){
+        if( PInst->GetEncoding(j)->GetField() ==
+            F->GetFieldName(i) ){
+          isEnc = true;
+          Enc = PInst->GetEncoding(j)->GetEncoding();
+        }
+      }
+
+      if( isEnc ){
+        Str += (std::to_string(Enc));
+      }else{
+        Str += ("imm" +
+              std::to_string(F->GetFieldWidth(F->GetFieldName(i))) +
+              ":$" +
+              F->GetFieldName(i));
       }
     }
   }
@@ -310,7 +456,7 @@ bool CoreGenLLVMCodegen::TIGenerateRegisterTablegen(){
         OutStream << ",";
       OutStream << std::endl;
     }
-    // TODO: this needs to be fixed based upon the
+    // TODO: this needs to be fixed based upon the memory model
     unsigned MW = RegClasses[i]->GetMaxWidth();
     OutStream << "  )> {" << std::endl;
     OutStream << "  let RegInfos = RegInfoByHwMode<[DefaultMode]," << std::endl
@@ -361,7 +507,7 @@ bool CoreGenLLVMCodegen::TIGenerateInstTablegen(){
   std::map<std::string,unsigned>::iterator it;
   for( it = ImmFields.begin(); it != ImmFields.end(); ++it ){
     OutStream << "def " << it->first
-              << " : Operand<i32>, ImmLeaf<i32, [{return isiUInt<"
+              << " : Operand<i32>, ImmLeaf<i32, [{return isUInt<"
               << it->second << ">(Imm);}]> {" << std::endl;
     OutStream << "  let ParserMatchClass = UImmAsmOperand<5>;" << std::endl;
     OutStream << "  let DecoderMethod =\"decodeUImmOperand<"
@@ -387,6 +533,15 @@ bool CoreGenLLVMCodegen::TIGenerateInstTablegen(){
   OutStream << "//===----------------------------------------------------------------------===//" << std::endl;
 
   for( unsigned i=0; i<Formats.size(); i++ ){
+    OutStream << "let hasSideEffects = 0, mayLoad = 0, mayStore = 0 in" << std::endl;
+    OutStream << "class " << Formats[i]->GetName() << "Impl<"
+              << TIGenerateInstArgsFields(Formats[i]) << ", string opcodestr>"
+              << std::endl
+              << "    : " << Formats[i]->GetName() << "<"
+              << TIGenerateInstFields(Formats[i])
+              << ",(outs), (ins " << TIGenerateRegClassImmList(Formats[i])
+              << "), opcodestr, \"" << TIGenerateRegImmList(Formats[i])
+              << "\">;" << std::endl << std::endl;
   }
 
   // Stage 4: write out all the instructions
@@ -395,6 +550,23 @@ bool CoreGenLLVMCodegen::TIGenerateInstTablegen(){
   OutStream << "//===----------------------------------------------------------------------===//" << std::endl;
 
   for( unsigned i=0; i<Insts.size(); i++ ){
+    CoreGenInstFormat *F = Insts[i]->GetFormat();
+    bool first = true;
+    OutStream << "def " << Insts[i]->GetName() << " : "
+              << F->GetName() + "Impl<";
+    for( unsigned j=0; j<F->GetNumFields(); j++ ){
+      if( F->GetFieldType(F->GetFieldName(j)) == CoreGenInstFormat::CGInstCode ){
+        // found an encoding field, output it
+        if( first ){
+          first = false;
+        }else{
+          OutStream << ",";
+        }
+        OutStream << Insts[i]->GetEncoding(F->GetFieldName(j));
+      }
+    }
+    OutStream << "\"" << Insts[i]->GetName() << "\"";
+    OutStream << ">;" << std::endl;
   }
 
   // Stage 5: write out all the pseudo instructions
@@ -403,6 +575,11 @@ bool CoreGenLLVMCodegen::TIGenerateInstTablegen(){
   OutStream << "//===----------------------------------------------------------------------===//" << std::endl;
 
   for( unsigned i=0; i<PInsts.size(); i++ ){
+    OutStream << "def : InstAlias<\""
+              << PInsts[i]->GetName() << "\",("
+              << PInsts[i]->GetInst()->GetName() << " "
+              << TIDerivePseudoInstArgs(PInsts[i])
+              << ")>;" << std::endl;
   }
 
   OutStream.close();
@@ -424,7 +601,7 @@ bool CoreGenLLVMCodegen::TIGenerateTablegen(){
   if( !TIGenerateRegisterTablegen() )
     return false;
 
-  // Stage 4: generate instruction info tablegen
+  // Stage 4: generate instruction info tablegen: done;
   if( !TIGenerateInstTablegen() )
     return false;
 
