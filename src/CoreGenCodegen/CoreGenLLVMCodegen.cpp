@@ -172,13 +172,12 @@ bool CoreGenLLVMCodegen::TIGenerateISATablegen(){
   }
   OutStream << std::endl << std::endl;
 
-  // output each instruction format
+  // output each instruction format template
   for( unsigned i=0; i<Formats.size(); i++ ){
     // emit the definition
-    OutStream << "class " << Formats[i]
+    OutStream << "class " << Formats[i]->GetName() << "Inst"
               << "<dag outs, dat ins, string opcodestr, string argstr," << std::endl
               << "    list<dag> pattern, InstFormat format," << std::endl
-              << "    " << TIGenerateInstArgsFields(Formats[i]) << ">" << std::endl
               << "  : Instruction {" << std::endl;
 
     // emit the body
@@ -186,6 +185,29 @@ bool CoreGenLLVMCodegen::TIGenerateISATablegen(){
     OutStream << "  field bits<" << Formats[i]->GetFormatWidth() << "> SoftFail = 0;" << std::endl;
     OutStream << "  let Size = " << Formats[i]->GetFormatWidth()/8 << ";" << std::endl << std::endl;
     OutStream << "  let Namespace = \"" << TargetName << "\";" << std::endl << std::endl;
+
+    // -- assign all the dag nodes
+    OutStream << "  dag OutOperandList = outs;" << std::endl
+              << "  dag InOperandList = ins; " << std::endl
+              << "  let AsmString = opcodestr # \"\\t\" # argstr;" << std::endl
+              << "  let Pattern = pattern;" << std::endl << std::endl;
+
+
+    OutStream << "  let TSFlags{4-0} = format.Value;" << std::endl;
+
+    // emit the closing brace
+    OutStream << "}" << std::endl << std::endl;
+  }
+
+  // emit each template
+  for( unsigned i=0; i<Formats.size(); i++ ){
+    OutStream << "class " << Formats[i]->GetName()
+              << "<" << TIGenerateInstArgsFields(Formats[i])
+              << ",dag outs, dat ins, string opcodestr, string argstr>"
+              << std::endl
+              << "    : " << Formats[i]->GetName()
+              << "Inst<out, ins, opcodestr, argstr, [], "
+              << "InstFormat" << Formats[i]->GetName() << "> {" << std::endl;
 
     // -- output all the register or immediate args
     for( unsigned j=0; j<Formats[i]->GetNumFields(); j++ ){
@@ -217,16 +239,7 @@ bool CoreGenLLVMCodegen::TIGenerateISATablegen(){
       }
     }
 
-    // -- assign all the dag nodes
-    OutStream << "  dag OutOperandList = outs;" << std::endl
-              << "  dag InOperandList = ins; " << std::endl
-              << "  let AsmString = opcodestr # \"\\t\" # argstr;" << std::endl
-              << "  let Pattern = pattern;" << std::endl << std::endl;
-
-
-    OutStream << "  let TSFlags{4-0} = format.Value;" << std::endl;
-
-    // emit the closing brace
+    // -- close the class
     OutStream << "}" << std::endl << std::endl;
   }
 
@@ -362,11 +375,35 @@ bool CoreGenLLVMCodegen::TIGenerateInstTablegen(){
             << "  let DiagnosticType = \"InvalidBareSymbol\";" << std::endl
             << "  let ParserMethod = \"parseBareSymbol\";" << std::endl << std::endl;
 
-  // Stage 2: write out the instruction class templates
+  // Stage 2: write out the instruction format includes
+  OutStream << "//===----------------------------------------------------------------------===//" << std::endl;
+  OutStream << "//===-- Instruction Formats" << std::endl;
+  OutStream << "//===----------------------------------------------------------------------===//" << std::endl;
+  OutStream << "include \"" << TargetName << "InstrFormats.td\"" << std::endl << std::endl;
 
-  // Stage 3: write out all the pseudo instructions
+  // Stage 3: write out the instruction class templates
+  OutStream << "//===----------------------------------------------------------------------===//" << std::endl;
+  OutStream << "//===-- Instruction Class Templates" << std::endl;
+  OutStream << "//===----------------------------------------------------------------------===//" << std::endl;
 
-  // Stage 3: write out all the instructions
+  for( unsigned i=0; i<Formats.size(); i++ ){
+  }
+
+  // Stage 4: write out all the instructions
+  OutStream << "//===----------------------------------------------------------------------===//" << std::endl;
+  OutStream << "//===-- Instructions" << std::endl;
+  OutStream << "//===----------------------------------------------------------------------===//" << std::endl;
+
+  for( unsigned i=0; i<Insts.size(); i++ ){
+  }
+
+  // Stage 5: write out all the pseudo instructions
+  OutStream << "//===----------------------------------------------------------------------===//" << std::endl;
+  OutStream << "//===-- Pseudo Instructions" << std::endl;
+  OutStream << "//===----------------------------------------------------------------------===//" << std::endl;
+
+  for( unsigned i=0; i<PInsts.size(); i++ ){
+  }
 
   OutStream.close();
 
