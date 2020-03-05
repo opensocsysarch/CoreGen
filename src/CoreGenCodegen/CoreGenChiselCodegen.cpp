@@ -14,10 +14,12 @@ CoreGenChiselCodegen::CoreGenChiselCodegen( CoreGenNode *T,
                                             CoreGenProj *P,
                                             std::string R,
                                             CoreGenErrno *E )
-  : Top(T), Proj(P), ChiselRoot(R), Errno(E) {
+  : Top(T), Proj(P), ChiselRoot(R), Errno(E)  {
+    Parms = new CoreGenChiselParms<std::string, std::string>(E);
 }
 
 CoreGenChiselCodegen::~CoreGenChiselCodegen(){
+  if(Parms) { delete Parms; }
 }
 
 CoreGenNode *CoreGenChiselCodegen::GetRegClassISANode(CoreGenNode *N){
