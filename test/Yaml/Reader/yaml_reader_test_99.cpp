@@ -15,7 +15,7 @@
 std::string PROJNAME = "BasicRISC";
 std::string PROJROOT = "./";
 std::string ARCHROOT = "./";
-std::string PROJYAML = "../TEST98.yaml";
+std::string PROJYAML = "../TEST99.yaml";
 
 int main( int argc, char **argv ){
   CoreGenBackend *CG = new CoreGenBackend(PROJNAME,

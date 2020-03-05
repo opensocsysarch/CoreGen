@@ -12,6 +12,7 @@ CoreGenCodegen.cpp
 CoreGenChiselCodegen.cpp
 CoreGenLLVMCodegen.cpp
 CoreGenNodeCodegen.cpp
+CoreGenChiselParms.cpp
 )
 
 add_subdirectory(NodeCodegen)

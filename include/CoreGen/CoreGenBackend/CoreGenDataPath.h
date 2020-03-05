@@ -29,7 +29,6 @@
 
 class CoreGenDataPath : public CoreGenNode{
 private:
-  std::string PathName;
   std::string Style;
 public:
   /// Default Constructor

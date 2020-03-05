@@ -392,7 +392,6 @@ bool CoreGenChiselCodegen::Execute(){
     case CGCache:
       break;
     case CGDPath:
-      std::cout << "Generating Datapath... " << std::endl;
         if( !ExecDataPathCodegen(Top->GetChild(i) )){
          rtn = false;
         }

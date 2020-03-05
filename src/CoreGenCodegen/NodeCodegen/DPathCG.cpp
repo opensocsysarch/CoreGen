@@ -14,16 +14,41 @@
 DPathCG::DPathCG( CoreGenNode *N, CoreGenProj *P,
                 std::string Pack, std::string Path,
                 bool Comm, CoreGenErrno *E )
-  : CoreGenNodeCodegen(N,P,Pack,Path,Comm,E) {
+  : CoreGenNodeCodegen(N,P,Pack,Path,Comm,E)
+    {
+      
+  if(Proj == nullptr){
+    Errno->SetError(CGERR_ERROR, "No ISA containing register class: " +
+                    N->GetName() );
+  }
+    
 }
 
 
 
 bool DPathCG::GenSharedBus(std::ofstream &O){
 
-  if( !O.is_open() )
+  if( !O.is_open() ){
     return false;
-   O << "/* Reference Chisel: " << std::endl;
+  }
+
+  //Create the class declaration  
+  O << " class DataPath(implicit val conf: " << CGRemoveDot(Proj->GetProjName()) <<"Configuration ) extends Module { " << std::endl;
+  
+
+
+  //Generate the shared bus that handles data movement between FUBs
+  
+  O << "val bus = MuxCase(0.U, Array( "                                                 << std::endl;
+  O << "\t(io.ctl.en_imm)                  -> imm(conf.xprlen-1,0), "                   << std::endl;
+  O << "\t(io.ctl.en_alu)                  -> alu(conf.xprlen-1,0), "                   << std::endl;
+  O << "\t(io.ctl.en_reg & ~io.ctl.reg_wr  & "                                          << std::endl;
+  O << "\t(io.ctl.reg_sel =/= RS_CR))      -> reg_rdata(conf.xprlen-1,0), "             << std::endl;
+  O << "\t(io.ctl.en_mem & ~io.ctl.mem_wr) -> io.mem.resp.bits.data(conf.xprlen-1,0), " << std::endl;
+  O << "\t(io.ctl.en_reg & ~io.ctl.reg_wr  & "                                          << std::endl;
+  O << "\t(io.ctl.reg_sel === RS_CR))      -> csr_rdata "                               << std::endl;
+
+  O << ")) " << std::endl;
    /*
    // The Bus
    // (this is a bus-based RISCV implementation, so all data movement goes

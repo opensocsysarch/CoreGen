@@ -24,15 +24,17 @@
 #define _DPATHCG_H_
 
 #include "CoreGen/CoreGenCodegen/CoreGenNodeCodegen.h"
+#include "CoreGen/CoreGenBackend/CoreGenUtil.h"
 
 class DPathCG : public CoreGenNodeCodegen {
 private:
     
-    bool    GenSharedBus(std::ofstream &O);
+    bool          GenSharedBus(std::ofstream &O);
 
-    bool    GenInstDispatch(std::ofstream &O ) { return false;};
+    bool          GenInstDispatch(std::ofstream &O ) { return false;};
 
-    bool    GenALU(std::ofstream &O ){return false; };
+    bool          GenALU(std::ofstream &O ){return false; };
+
 
 public:
 
@@ -48,3 +50,4 @@ public:
 };
 
 #endif
+
