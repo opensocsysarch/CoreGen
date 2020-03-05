@@ -32,18 +32,18 @@
 #include <locale>
 
 // CoreGen Headers
-#include "CoreGen/CoreGenBackend/CoreGenBackend.h"
+#include "CoreGen/CoreGenBackend/CoreGenNodes.h"
 #include "CoreGen/CoreGenBackend/CoreGenUtil.h"
 #include "CoreGen/CoreGenArchive/CoreGenArchive.h"
 
-class CoreGenLLVMCodegen
-{
-private:
+class CoreGenLLVMCodegen {
+protected:
   CoreGenNode *Top;                 ///< Top-level coregen node
   CoreGenProj *Proj;                ///< CoreGen Project Info
   CoreGenArchEntry *Entry;          ///< CoreGenArchEntry for the target LLVM version
   std::string LLVMRoot;             ///< Root directory for LLVM output
   CoreGenErrno *Errno;              ///< CoreGen Errno Structure
+  std::string Version;              ///< LLVM Version Number
 
   std::string TargetName;           ///< Name of the compiler target
 
@@ -68,97 +68,8 @@ private:
   /// Generates the vector of pseudo instruction nodes
   bool GeneratePInsts();
 
-  /// Generate the directory structure for the new target
-  bool GenerateTargetDir();
-
-  /// Generate the target implementation for the new target
-  bool GenerateTargetImpl();
-
-  /// Generate the target CPU drive
-  bool GenerateCPUDriver();
-
-  /// Generate the build infrastructure
-  bool GenerateBuildImpl();
-
   /// Convert a string to upper case
   std::string UpperCase(std::string Str);
-
-  // TargetImpl Drivers
-
-  /// Generate a string for the target pseudo instruction
-  std::string TIDerivePseudoInstArgs(CoreGenPseudoInst *PInst);
-
-  /// Generate a vector of tuples that represent the unique immediate fields
-  std::map<std::string,unsigned> TIGenerateImmFieldVector();
-
-  /// Generate the instruction input args using the instruction fields
-  std::string TIGenerateInstFields(CoreGenInstFormat *Format);
-
-  /// Generate the instruction format input args using the instruction fields
-  std::string TIGenerateInstArgsFields(CoreGenInstFormat *Format);
-
-  /// Generate the instruction argument list with the associated register classes
-  std::string TIGenerateRegClassImmList(CoreGenInstFormat *Format);
-
-  /// Generate the instruction argument list without the associated register classes
-  std::string TIGenerateRegImmList(CoreGenInstFormat *Format);
-
-  /// Generate the number of bits required to store the instruction format
-  unsigned TIGenerateInstFormatBits(unsigned NumFormats);
-
-  /// Generate the top-level TableGen file
-  bool TIGenerateTopLevelTablegen();
-
-  /// Generate the individual instructon type tablegen files
-  bool TIGenerateISATablegen();
-
-  /// Generate the register tablegen
-  bool TIGenerateRegisterTablegen();
-
-  /// Generate the individual instruction tablegen files
-  bool TIGenerateInstTablegen();
-
-  /// Generate the TableGen info
-  bool TIGenerateTablegen();
-
-  /// Generate the ISel Dag info
-  bool TIGenerateISelDag();
-
-  /// Generate the intruction lowering
-  bool TIGenerateInstLowering();
-
-  /// Generate the register info template
-  bool TIGenerateRegInfo();
-
-  /// Generate the subtarget info
-  bool TIGenerateSubtargetInfo();
-
-  /// Generate the target machine template
-  bool TIGenerateTargetMach();
-
-  /// Generate the target object file template
-  bool TIGenerateTargetObj();
-
-  /// Generate the target asm parser
-  bool TIGenerateAsmParser();
-
-  /// Generate the target disassembler
-  bool TIGenerateDisass();
-
-  /// Generate the target instruction printer
-  bool TIGenerateInstPrinter();
-
-  /// Generate the target MCTargetDesc
-  bool TIGenerateMCTargetDesc();
-
-  /// Generate the TargetInfo
-  bool TIGenerateTargetInfo();
-
-  /// Generate the top-level header
-  bool TIGenerateTargetHeader();
-
-  /// Generate the top-level CMake scripts
-  bool TIGenerateCmake();
 
 public:
   /// Default constructor
@@ -166,13 +77,20 @@ public:
                      CoreGenProj *P,
                      CoreGenArchEntry *EN,
                      std::string R,
-                     CoreGenErrno *E);
+                     CoreGenErrno *E,
+                     std::string Ver);
 
   /// Default destructor
-  ~CoreGenLLVMCodegen();
+  virtual ~CoreGenLLVMCodegen();
 
   /// Execute the LLVM codegen
-  bool Execute();
+  virtual bool Execute() { return false; }
+
+  /// Execute the backend LLVM codegen
+  bool ExecuteBackend();
+
+  /// Retrieve the version info
+  std::string GetVersion() { return Version; }
 
 };
 

@@ -8,6 +8,7 @@
 #
 
 add_subdirectory(NodeCodegen)
+add_subdirectory(LLVMCodegen)
 
 install(DIRECTORY "."
         DESTINATION "include/CoreGen/CoreGenCodegen"
