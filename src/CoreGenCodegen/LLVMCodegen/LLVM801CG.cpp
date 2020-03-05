@@ -485,7 +485,7 @@ bool LLVM801CG::TIGenerateSystemTablegen(){
   std::ofstream OutStream;
   OutStream.open(OutFile,std::ios::trunc);
   if( !OutStream.is_open() ){
-    Errno->SetError(CGERR_ERROR, "Could not open the InstrInfo tablegen file: " + OutFile );
+    Errno->SetError(CGERR_ERROR, "Could not open the SystemOperands tablegen file: " + OutFile );
     return false;
   }
 
@@ -493,6 +493,25 @@ bool LLVM801CG::TIGenerateSystemTablegen(){
             << "Symbolic Operands ---*- tablegen -*-===//" << std::endl;
 
   OutStream << "include \"llvm/TableGen/SearchableTable.td\"" << std::endl << std::endl;
+
+  // TBD whether we need anything else here
+
+  OutStream.close();
+
+  return true;
+}
+
+bool LLVM801CG::TIGenerateCallingConvTablegen(){
+  std::string OutFile = LLVMRoot + "/" + TargetName + "CallingConv.td";
+  std::ofstream OutStream;
+  OutStream.open(OutFile,std::ios::trunc);
+  if( !OutStream.is_open() ){
+    Errno->SetError(CGERR_ERROR, "Could not open the CallingConv tablegen file: " + OutFile );
+    return false;
+  }
+
+  OutStream << "//===-- " << TargetName << "CallingConv.td - " << TargetName
+            << "Calling convention ---*- tablegen -*-===//" << std::endl;
 
   // TBD whether we need anything else here
 
@@ -622,6 +641,8 @@ bool LLVM801CG::TIGenerateTablegen(){
     return false;
 
   // Stage 6: generate calling convention tablegen?
+  if( !TIGenerateCallingConvTablegen() )
+    return false;
 
   return true;
 }
