@@ -480,6 +480,27 @@ std::map<std::string,unsigned> LLVM801CG::TIGenerateImmFieldVector(){
   return Imms;
 }
 
+bool LLVM801CG::TIGenerateSystemTablegen(){
+  std::string OutFile = LLVMRoot + "/" + TargetName + "SystemOperands.td";
+  std::ofstream OutStream;
+  OutStream.open(OutFile,std::ios::trunc);
+  if( !OutStream.is_open() ){
+    Errno->SetError(CGERR_ERROR, "Could not open the InstrInfo tablegen file: " + OutFile );
+    return false;
+  }
+
+  OutStream << "//===-- " << TargetName << "SystemOperands.td - " << TargetName
+            << "Symbolic Operands ---*- tablegen -*-===//" << std::endl;
+
+  OutStream << "include \"llvm/TableGen/SearchableTable.td\"" << std::endl << std::endl;
+
+  // TBD whether we need anything else here
+
+  OutStream.close();
+
+  return true;
+}
+
 bool LLVM801CG::TIGenerateInstTablegen(){
 
   std::string OutFile = LLVMRoot + "/" + TargetName + "InstrInfo.td";
@@ -597,6 +618,8 @@ bool LLVM801CG::TIGenerateTablegen(){
     return false;
 
   // Stage 5: generate system operands tablegen???
+  if( !TIGenerateSystemTablegen() )
+    return false;
 
   // Stage 6: generate calling convention tablegen?
 
