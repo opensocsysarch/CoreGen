@@ -43,7 +43,7 @@
 
 // Codegen Headers
 #include "CoreGen/CoreGenCodegen/CoreGenChiselCodegen.h"
-#include "CoreGen/CoreGenCodegen/CoreGenLLVMCodegen.h"
+#include "CoreGen/CoreGenCodegen/CoreGenCompCodegen.h"
 
 
 class CoreGenCodegen

@@ -288,7 +288,7 @@ bool CoreGenCodegen::ExecuteLLVMCodegen(std::string CompVer){
   }
 
   // Stage 4: Execute the codegen
-  CoreGenLLVMCodegen *CG = new CoreGenLLVMCodegen(Top,
+  CoreGenCompCodegen *CG = new CoreGenCompCodegen(Top,
                                                   Proj,
                                                   LLEntry,
                                                   LLVMDir,
