@@ -64,7 +64,7 @@ bool LLVM801CG::TIGenerateTopLevelTablegen(){
   OutStream << "// " << TargetName << " registers, calling conventions and instruction descriptions" << std::endl;
   OutStream << "//===----------------------------------------------------------------------===//" << std::endl;
   OutStream << "include \"" << TargetName << "RegisterInfo.td\"" << std::endl;
-  // TBD: OutStream << "include \"" << TargetName << "CallingConv.td\"" << std::endl;
+  OutStream << "include \"" << TargetName << "CallingConv.td\"" << std::endl;
   OutStream << "include \"" << TargetName << "InstrInfo.td\"" << std::endl;
 
   // processors supported
@@ -636,11 +636,11 @@ bool LLVM801CG::TIGenerateTablegen(){
   if( !TIGenerateInstTablegen() )
     return false;
 
-  // Stage 5: generate system operands tablegen???
+  // Stage 5: generate system operands tablegen: done;
   if( !TIGenerateSystemTablegen() )
     return false;
 
-  // Stage 6: generate calling convention tablegen?
+  // Stage 6: generate calling convention tablegen: done;
   if( !TIGenerateCallingConvTablegen() )
     return false;
 
@@ -656,6 +656,90 @@ bool LLVM801CG::TIGenerateISelDag(){
     Errno->SetError(CGERR_ERROR, "Could not open the InstrInfo tablegen file: " + OutFile );
     return false;
   }
+
+  OutStream << "//===-- " << TargetName
+            << "ISelDAGToDAG.cpp - A dag to dag inst selector for "
+            << TargetName << "------===//" << std::endl << std::endl;
+
+  // write out the headers
+  OutStream << "#include \"MCTargetDesc/RISCVMCTargetDesc.h\"" << std::endl;
+  OutStream << "#include \"" << TargetName << ".h\"" << std::endl;
+  OutStream << "#include \"" << TargetName << "TargetMachine.h\"" << std::endl;
+  OutStream << "#include \"llvm/CodeGen/MachineFrameInfo.h\"" << std::endl;
+  OutStream << "#include \"llvm/CodeGen/SelectionDAGISel.h\"" << std::endl;
+  OutStream << "#include \"llvm/Support/Debug.h\"" << std::endl;
+  OutStream << "#include \"llvm/Support/MathExtras.h\"" << std::endl;
+  OutStream << "#include \"llvm/Support/raw_ostream.h\"" << std::endl << std::endl;
+
+  OutStream << "using namespace llvm;" << std::endl << std::endl;
+
+  OutStream << "#define DEBUG_TYPE \"" << TargetName << "-isel\"" << std::endl << std::endl;
+
+  OutStream << "namespace {" << std::endl;
+  OutStream << "class " << TargetName << "DAGToDAGISel final : public SelectionDAGISel {" << std::endl;
+  OutStream << "  const " << TargetName << "Subtarget *Subtarget;" << std::endl << std::endl;
+  OutStream << "public:" << std::endl;
+  OutStream << "  explicit " << TargetName << "DAGToDAGISel(" << TargetName << "TargetMachine &TargetMachine)" << std::endl;
+  OutStream << "      : SelectionDAGISel(TargetMachine) {}" << std::endl << std::endl;
+  OutStream << "  StringRef getPassName() const override {" << std::endl;
+  OutStream << "    return \"" << TargetName
+            << " DAG->DAG Pattern Instruction Selection\";" << std::endl << std::endl;
+  OutStream << "  }" << std::endl << std::endl;
+
+  OutStream << "  bool runOnMachineFunction(MachineFunction &MF) override {" << std::endl;
+  OutStream << "    Subtarget = &MF.getSubtarget<" << TargetName << "Subtarget>();"<< std::endl;
+  OutStream << "    return SelectionDAGISel::runOnMachineFunction(MF);" << std::endl;
+  OutStream << "  }" << std::endl << std::endl;
+
+  OutStream << "  void PostprocessISelDAG() override;" << std::endl << std::endl;
+
+  OutStream << "  void Select(SDNode *Node) override;" << std::endl << std::endl;
+
+  OutStream << "  bool SelectInlineAsmMemoryOperand(const SDValue &Op, unsigned ConstraintID,"
+            << std::endl
+            << "                                    std::vector<SDValue> &OutOps) override;"
+            << std::endl << std::endl;
+
+  OutStream << "#include \"" << TargetName << "GenDAGISel.inc\"" << std::endl << std::endl;
+  OutStream << "private:" << std::endl;
+  OutStream << "}" << std::endl << std::endl;
+
+  OutStream << "void " << TargetName << "DAGToDAGISel::PostprocessISelDAG() {"
+            << std::endl
+            << "}" << std::endl << std::endl;
+
+  OutStream << "void " << TargetName << "DAGToDAGISel::Select(SDNode *Node) {" << std::endl;
+  OutStream << "  if (Node->isMachineOpcode()) {" << std::endl;
+  OutStream << "    LLVM_DEBUG(dbgs() << \"== \"; Node->dump(CurDAG); dbgs() << \"\n\");" << std::endl;
+  OutStream << "    Node->setNodeId(-1);" << std::endl;
+  OutStream << "    return;" << std::endl;
+  OutStream << "  }" << std::endl << std::endl;
+
+  OutStream << "  unsigned Opcode = Node->getOpcode();" << std::endl;
+  OutStream << "  MVT XLenVT = Subtarget->getXLenVT();" << std::endl; //TODO: do we need this?
+  OutStream << "  SDLoc DL(Node);" << std::endl;
+  OutStream << "  EVT VT = Node->getValueType(0);" << std::endl;
+  OutStream << "  SelectCode(Node);" << std::endl;
+
+  OutStream << "}" << std::endl << std::endl;
+
+  OutStream << "bool " << TargetName << "DAGToDAGISel::SelectInlineAsmMemoryOperand(" << std::endl;
+  OutStream << "  const SDValue &Op, unsigned ConstraintID, std::vector<SDValue> &OutOps) {" << std::endl;
+  OutStream << "  switch (ConstraintID) {" << std::endl
+            << "  case InlineAsm::Constraint_i:" << std::endl
+            << "  case InlineAsm::Constraint_m:" << std::endl
+            << "    OutOps.push_back(Op);" << std::endl
+            << "    return false;" << std::endl
+            << "  default:" << std::endl
+            << "    break;" << std::endl
+            << "  }" << std::endl << std::endl
+            << "  return true;" << std::endl;
+  OutStream << "}" << std::endl;
+
+  OutStream << "FunctionPass *llvm::create" << TargetName << "ISelDag("
+            << TargetName << "TargetMachine &TM) {" << std::endl
+            << "  return new " << TargetName << "DAGToDAGISel(TM);"
+            << std::endl << "}" << std::endl << std::endl;
 
   OutStream.close();
 
@@ -1196,7 +1280,7 @@ bool LLVM801CG::GenerateTargetImpl(){
   if( !TIGenerateTablegen() )
     return false;
 
-  // Stage 2: Create the ISelDagToDag template
+  // Stage 2: Create the ISelDagToDag template; done;
   if( !TIGenerateISelDag() )
     return false;
 
