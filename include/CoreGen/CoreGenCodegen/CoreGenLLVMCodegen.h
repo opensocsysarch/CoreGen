@@ -46,6 +46,7 @@ protected:
   std::string Version;              ///< LLVM Version Number
 
   std::string TargetName;           ///< Name of the compiler target
+  std::string AddrMode;             ///< LLVM addressing mode
 
   std::vector<std::string> Subtargets;        ///< vector of subtarget ISAs
   std::vector<CoreGenInstFormat *> Formats;   ///< vector of instruction formats
@@ -67,6 +68,9 @@ protected:
 
   /// Generates the vector of pseudo instruction nodes
   bool GeneratePInsts();
+
+  /// Generates the resident addressing mode
+  bool GenerateAddrMode();
 
   /// Convert a string to upper case
   std::string UpperCase(std::string Str);

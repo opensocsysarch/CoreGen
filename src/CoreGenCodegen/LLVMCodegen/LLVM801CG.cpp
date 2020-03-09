@@ -439,7 +439,7 @@ bool LLVM801CG::TIGenerateRegisterTablegen(){
   for( unsigned i=0; i<RegClasses.size(); i++ ){
     OutStream << "def " << UpperCase(RegClasses[i]->GetName())
               << " : RegisterClass<\"" << TargetName
-              << "\", [i32], " << RegClasses[i]->GetMaxWidth()  //TODO: we need to fix this based upon the memory model
+              << "\", [" << AddrMode << "], " << RegClasses[i]->GetMaxWidth()  //TODO: we need to fix this based upon the memory model
               << ", (add" << std::endl;
     for( unsigned j=0; j<RegClasses[i]->GetNumReg(); j++ ){
       OutStream << "    " << UpperCase(RegClasses[i]->GetReg(j)->GetName());
@@ -538,7 +538,7 @@ bool LLVM801CG::TIGenerateInstTablegen(){
   std::map<std::string,unsigned>::iterator it;
   for( it = ImmFields.begin(); it != ImmFields.end(); ++it ){
     OutStream << "def " << it->first
-              << " : Operand<i32>, ImmLeaf<i32, [{return isUInt<"
+              << " : Operand<" << AddrMode << ">, ImmLeaf<" << AddrMode << ", [{return isUInt<"
               << it->second << ">(Imm);}]> {" << std::endl;
     OutStream << "  let ParserMatchClass = UImmAsmOperand<5>;" << std::endl;
     OutStream << "  let DecoderMethod =\"decodeUImmOperand<"
@@ -649,6 +649,16 @@ bool LLVM801CG::TIGenerateTablegen(){
 
 bool LLVM801CG::TIGenerateISelDag(){
   // <TargetName>ISelDAGToDAG.cpp
+  std::string OutFile = LLVMRoot + "/" + TargetName + "ISelDAGToDAG.cpp";
+  std::ofstream OutStream;
+  OutStream.open(OutFile,std::ios::trunc);
+  if( !OutStream.is_open() ){
+    Errno->SetError(CGERR_ERROR, "Could not open the InstrInfo tablegen file: " + OutFile );
+    return false;
+  }
+
+  OutStream.close();
+
   return true;
 }
 
@@ -708,7 +718,7 @@ bool LLVM801CG::TIGenerateSubtargetInfo(){
   OutStream << "  bool EnableLinkerRelax = false;" << std::endl;
   // TODO: derive the MVT type
   //       see reference here: https://llvm.org/doxygen/classllvm_1_1MVT.html
-  OutStream << "  MVT XLenVT = MVT::i32;" << std::endl;
+  OutStream << "  MVT XLenVT = MVT::" << AddrMode <<";" << std::endl;
   OutStream << "  " << TargetName << "FrameLowering FrameLowering;" << std::endl;
   OutStream << "  " << TargetName << "InstrInfo InstrInfo;" << std::endl;
   OutStream << "  " << TargetName << "RegisterInfo RegInfo;" << std::endl;
@@ -1182,7 +1192,7 @@ bool LLVM801CG::TIGenerateCmake(){
 
 bool LLVM801CG::GenerateTargetImpl(){
 
-  // Stage 1: Create the tablegen infrastructure
+  // Stage 1: Create the tablegen infrastructure; done;
   if( !TIGenerateTablegen() )
     return false;
 
