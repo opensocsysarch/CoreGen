@@ -653,7 +653,7 @@ bool LLVM801CG::TIGenerateISelDag(){
   std::ofstream OutStream;
   OutStream.open(OutFile,std::ios::trunc);
   if( !OutStream.is_open() ){
-    Errno->SetError(CGERR_ERROR, "Could not open the InstrInfo tablegen file: " + OutFile );
+    Errno->SetError(CGERR_ERROR, "Could not open the ISelDAGToDAG.cpp file: " + OutFile );
     return false;
   }
 
@@ -752,6 +752,81 @@ bool LLVM801CG::TIGenerateInstLowering(){
 }
 
 bool LLVM801CG::TIGenerateRegInfo(){
+
+  // write out the header first
+  std::string OutFile = LLVMRoot + "/" + TargetName + "RegisterInfo.h";
+  std::ofstream OutStream;
+  OutStream.open(OutFile,std::ios::trunc);
+  if( !OutStream.is_open() ){
+    Errno->SetError(CGERR_ERROR, "Could not open the Subtarget header file: " + OutFile );
+    return false;
+  }
+
+  OutStream << "//===-- " << TargetName
+            << "RegisterInfo.h - " << TargetName << " Register Information Impl"
+            << " -------*- C++ -*-===//" << std::endl << std::endl;
+
+  OutStream << "#ifndef LLVM_LIB_TARGET_" << TargetName << "_"
+            << TargetName << "REGISTERINFO_H" << std::endl;
+  OutStream << "#define LLVM_LIB_TARGET_" << TargetName << "_"
+            << TargetName << "REGISTERINFO_H" << std::endl << std::endl;
+
+  OutStream << "#include \"llvm/CodeGen/TargetRegisterInfo.h\"" << std::endl << std::endl;
+
+  OutStream << "#define GET_REGINFO_HEADER" << std::endl;
+  OutStream << "#include \"" << TargetName << "GenRegisterInfo.inc\"" << std::endl;
+
+  OutStream << "namespace llvm {" << std::endl << std::endl;
+
+  OutStream << "struct " << TargetName << "RegisterInfo : public " << TargetName
+            << "GenRegisterInfo {" << std::endl;
+
+  OutStream << "  " << TargetName << "RegisterInfo(unsigned HwMode);" << std::endl;
+  OutStream << "  const uint32_t *getCallPreservedMask(const MachineFunction &MF,"
+            << std::endl
+            << "                                       CallingConv::ID) const override;" << std::endl;
+
+  OutStream << "  const MCPhysReg *getCalleeSavedRegs(const MachineFunction *MF) const override;" << std::endl;
+
+  OutStream << "  BitVector getReservedRegs(const MachineFunction &MF) const override;" << std::endl;
+
+  OutStream << "  bool isConstantPhysReg(unsigned PhysReg) const override;" << std::endl;
+
+  OutStream << "  const uint32_t *getNoPreservedMask() const override;" << std::endl;
+
+  OutStream << "  void eliminateFrameIndex(MachineBasicBlock::iterator MI, int SPAdj," << std::endl
+            << "                           unsigned FIOperandNum," << std::endl
+            << "                           RegScavenger *RS = nullptr) const override;" << std::endl;
+
+  OutStream << "  unsigned getFrameRegister(const MachineFunction &MF) const override;" << std::endl;
+
+  OutStream << "  bool requiresRegisterScavenging(const MachineFunction &MF) const override {"
+            << std::endl
+            << "    return true;"
+            << std::endl
+            << "  }" << std::endl;
+
+  OutStream << "  bool requiresFrameIndexScavenging(const MachineFunction &MF) const override {"
+            << std::endl
+            << "    return true;"
+            << std::endl
+            << "  }" << std::endl;
+
+  OutStream << "  bool trackLivenessAfterRegAlloc(const MachineFunction &) const override {"
+            << std::endl
+            << "    return true;"
+            << std::endl
+            << "  }" << std::endl;
+
+  OutStream << "};" << std::endl;
+  OutStream << "}" << std::endl << std::endl;
+
+  OutStream << "#endif" << std::endl << std::endl;
+
+  OutStream.close();
+
+  // write out the implementation file
+
   return true;
 }
 
@@ -800,7 +875,7 @@ bool LLVM801CG::TIGenerateSubtargetInfo(){
     OutStream << "  bool Has" << Subtargets[i] << " = false; " << std::endl;
   }
   OutStream << "  bool EnableLinkerRelax = false;" << std::endl;
-  // TODO: derive the MVT type
+
   //       see reference here: https://llvm.org/doxygen/classllvm_1_1MVT.html
   OutStream << "  MVT XLenVT = MVT::" << AddrMode <<";" << std::endl;
   OutStream << "  " << TargetName << "FrameLowering FrameLowering;" << std::endl;
