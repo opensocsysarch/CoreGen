@@ -1250,6 +1250,136 @@ bool LLVM801CG::TIGenerateTargetMach(){
 }
 
 bool LLVM801CG::TIGenerateTargetObj(){
+  // {TargetName}TargetObjectFile.h/cpp
+
+  // header file
+  std::string OutFile = LLVMRoot + "/" + TargetName + "TargetObjectFile.h";
+  std::ofstream OutStream;
+  OutStream.open(OutFile,std::ios::trunc);
+  if( !OutStream.is_open() ){
+    Errno->SetError(CGERR_ERROR, "Could not open the target object file header file: " + OutFile );
+    return false;
+  }
+
+  OutStream << "//===-- " << TargetName
+            << "TargetObjectFile.h - Define Object Info " << TargetName
+            << " -------*- C++ -*-===//" << std::endl << std::endl;
+
+  OutStream << "#ifndef LLVM_LIB_TARGET_" << TargetName << "_"
+            << TargetName << "TARGETOBJECTFILE_H" << std::endl;
+  OutStream << "#define LLVM_LIB_TARGET_" << TargetName << "_"
+            << TargetName << "TARGETOBJECTFILE_H" << std::endl;
+
+  OutStream << "namespace llvm {" << std::endl;
+  OutStream << "class " << TargetName << "TargetMachine;" << std::endl << std::endl;
+
+  OutStream << "class " << TargetName << "TargetObjectFile : public TargetLoweringObjectFileELF {" << std::endl;
+
+  OutStream << "  MCSection *SmallDataSection;" << std::endl;
+  OutStream << "  MCSection *SmallBSSSection;" << std::endl;
+  OutStream << "  unsigned SSThreshold = 8;" << std::endl;
+  OutStream << "public:" << std::endl;
+  OutStream << "  void Initialize(MCContext &Ctx, const TargetMachine &TM) override;" << std::endl;
+  OutStream << "  bool isGlobalInSmallSection(const GlobalObject *GO, const TargetMachine &TM) const override;" << std::endl;
+  OutStream << "  MCSection *SelectSectionForGlobal(const GlobalObject *GO, SectionKind Kind,const TargetMachine &TM) const override;" << std::endl;
+  OutStream << "  MCSection *getSectionForConstant(const DataLayout &DL, SectionKind Kind,"
+            << "                                   const Constant *C, unsigned &Align) const override;" << std::endl;
+  OutStream << "  void getModuleMetadata(Module &M) override;" << std::endl;
+
+  OutStream << "};" << std::endl;
+  OutStream << "}" << std::endl;
+  OutStream << "#endif" << std::endl;
+
+  OutStream.close();
+
+  // implementation file
+  OutFile = LLVMRoot + "/" + TargetName + "TargetObjectFile.cpp";
+  OutStream.open(OutFile,std::ios::trunc);
+  if( !OutStream.is_open() ){
+    Errno->SetError(CGERR_ERROR, "Could not open the target object file implementation file: " + OutFile );
+    return false;
+  }
+
+  OutStream << "//===-- " << TargetName
+            << "TargetObjectFile.cpp - Define Object Info " << TargetName
+            << " -------*- C++ -*-===//" << std::endl << std::endl;
+
+  OutStream << "#include \"" << TargetName << "TargetObjectFile.h\"" << std::endl;
+  OutStream << "#include \"" << TargetName << "TargetMachine.h\"" << std::endl;
+  OutStream << "#include \"llvm/BinaryFormat/ELF.h\"" << std::endl;
+  OutStream << "#include \"llvm/MC/MCContext.h\"" << std::endl;
+  OutStream << "#include \"llvm/MC/MCSectionELF.h\"" << std::endl << std::endl;
+
+  OutStream << "using namespace llvm;" << std::endl << std::endl;
+
+  OutStream << "void " << TargetName << "ELFTargetObjectFile::Initialize(MCContext &Ctx,"
+            << std::endl
+            << "                const TargetMachine &TM) {"
+            << std::endl
+            << "  TargetLoweringObjectFileELF::Initialize(Ctx, TM);"
+            << std::endl
+            << "  InitializeELF(TM.Options.UseInitArray);"
+            << std::endl
+            << "}"
+            << std::endl << std::endl;
+
+  OutStream << "bool " << TargetName << "ELFTargetObjectFile::isGlobalInSmallSection("
+            << std::endl
+            << "    const GlobalObject *GO, const TargetMachine &TM) const {"
+            << std::endl
+            << "\\\\ ENTER TARGET SPECIFIC INFO HERE"
+            << std::endl
+            << "  return true;"
+            << std::endl
+            << "}" << std::endl << std::endl;
+
+  OutStream << "MCSection *" << TargetName << "ELFTargetObjectFile::SelectSectionForGlobal("
+            << std::endl
+            << "    const GlobalObject *GO, SectionKind Kind, const TargetMachine &TM) const {"
+            << std::endl
+            << "  if (Kind.isBSS() && isGlobalInSmallSection(GO, TM))"
+            << std::endl
+            << "    return SmallBSSSection;"
+            << std::endl
+            << "  if (Kind.isData() && isGlobalInSmallSection(GO, TM))"
+            << "    return SmallDataSection;"
+            << std::endl
+            << "  return TargetLoweringObjectFileELF::SelectSectionForGlobal(GO, Kind, TM);"
+            << std::endl
+            << "}" << std::endl << std::endl;
+
+  OutStream << "void " << TargetName << "ELFTargetObjectFile::getModuleMetadata(Module &M) {"
+            << std::endl
+            << "  SmallVector<Module::ModuleFlagEntry, 8> ModuleFlags;"
+            << std::endl
+            << "  M.getModuleFlagsMetadata(ModuleFlags);"
+            << std::endl
+            << "  for(const auto &MFE : ModuleFlags) {"
+            << std::endl
+            << "    StringRef Key = MFE.Key->getString();"
+            << std::endl
+            << "    if (Key == \"SmallDataLimit\") {"
+            << std::endl
+            << "      SSThreshold = mdconst::extract<ConstantInt>(MFE.Val)->getZExtValue();"
+            << std::endl
+            << "      break;"
+            << std::endl
+            << "    }"
+            << std::endl
+            << "  }"
+            << std::endl
+            << "}" << std::endl << std::endl;
+
+  OutStream << "MCSection *" << TargetName << "ELFTargetObjectFile::getSectionForConstant("
+            << std::endl
+            << "  const DataLayout &DL, SectionKind Kind, const Constant *C, unsigned &Align) const {"
+            << std::endl
+            << "  return TargetLoweringObjectFileELF::getSectionForConstant(DL, Kind, C, Align);"
+            << std::endl
+            << "}" << std::endl << std::endl;
+
+  OutStream.close();
+
   return true;
 }
 
@@ -1461,7 +1591,7 @@ bool LLVM801CG::GenerateTargetImpl(){
   if( !TIGenerateTargetMach() )
     return false;
 
-  // Stage 8: Create the target object file template
+  // Stage 8: Create the target object file template; done;
   if( !TIGenerateTargetObj() )
     return false;
 
