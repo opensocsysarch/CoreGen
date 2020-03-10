@@ -826,6 +826,88 @@ bool LLVM801CG::TIGenerateRegInfo(){
   OutStream.close();
 
   // write out the implementation file
+  OutFile = LLVMRoot + "/" + TargetName + "RegisterInfo.cpp";
+  OutStream.open(OutFile,std::ios::trunc);
+  if( !OutStream.is_open() ){
+    Errno->SetError(CGERR_ERROR, "Could not open the Subtarget cpp file: " + OutFile );
+    return false;
+  }
+
+  OutStream << "//===-- " << TargetName
+            << "RegisterInfo.cpp - " << TargetName << " Register Information"
+            << " -------*- C++ -*-===//" << std::endl << std::endl;
+
+  OutStream << "#include \"" << TargetName << "RegisterInfo.h\"" << std::endl;
+  OutStream << "#include \"" << TargetName << ".h\"" << std::endl;
+  OutStream << "#include \"" << TargetName << "Subtarget.h\"" << std::endl;
+  OutStream << "#include \"llvm/CodeGen/MachineFrameInfo.h\"" << std::endl;
+  OutStream << "#include \"llvm/CodeGen/MachineFunction.h\"" << std::endl;
+  OutStream << "#include \"llvm/CodeGen/MachineInstrBuilder.h\"" << std::endl;
+  OutStream << "#include \"llvm/CodeGen/RegisterScavenging.h\"" << std::endl;
+  OutStream << "#include \"llvm/CodeGen/TargetFrameLowering.h\"" << std::endl;
+  OutStream << "#include \"llvm/CodeGen/TargetInstrInfo.h\"" << std::endl;
+  OutStream << "#include \"llvm/Support/ErrorHandling.h\"" << std::endl << std::endl;
+
+  OutStream << "#define GET_REGINFO_TARGET_DESC" << std::endl;
+  OutStream << "#include \"" << TargetName << "GenRegisterInfo.inc\"" << std::endl << std::endl;
+
+  OutStream << "using namespace llvm;" << std::endl << std::endl;
+
+  OutStream << TargetName << "RegisterInfo::" << TargetName << "RegisterInfo(unsigned HwMode)" << std::endl;
+  OutStream << "   : " << TargetName << "GenRegisterInfo("
+            << TargetName << "::" << FirstReg << "0, 0, 0, HwMode) {}" << std::endl << std::endl;
+
+  OutStream << "const MCPhysReg *"
+            << TargetName << "RegisterInfo::getCalleeSavedRegs(const MachineFunction *MF) const {"
+            << std::endl
+            << "  return ABI_Unknown;"
+            << std::endl
+            << "}" << std::endl << std::endl;
+
+  OutStream << "BitVector " << TargetName
+            << "RegisterInfo::getReservedRegs(const MachineFunction &MF) const {"
+            << std::endl
+            << "  const TargetFrameLowering *TFI = getFrameLowering(MF);"
+            << std::endl
+            << "  BitVector Reserved(getNumRegs());"
+            << std::endl
+            << "  return Reserved;"
+            << std::endl
+            << "}"
+            << std::endl << std::endl;
+
+  OutStream << "bool " << TargetName << "RegisterInfo::isConstantPhysReg(unsigned PhysReg) const {"
+            << std::endl
+            << "  return PhysReg == " << TargetName << "::" << FirstReg << ";"
+            << std::endl
+            << "}" << std::endl << std::endl;
+
+  OutStream << "const uint32_t *" << TargetName << "RegisterInfo::getNoPreservedMask() const {"
+            << std::endl
+            << "  return 0;"
+            << std::endl
+            << "}" << std::endl << std::endl;
+
+  OutStream << "void " << TargetName << "RegisterInfo::eliminateFrameIndex(MachineBasicBlock::iterator II,"
+            << "int SPAdj, unsigned FIOperandNum, RegScavenger *RS) const {"
+            << std::endl
+            << "  assert(SPAdj == 0 && \"Unexpected non-zero SPAdj value\");"
+            << std::endl
+            << "}" << std::endl << std::endl;
+
+  OutStream << "unsigned " << TargetName << "RegisterInfo::getFrameRegister(const MachineFunction &MF) const {"
+            << std::endl
+            << "  return " << TargetName << ":" << FirstReg << ";" << std::endl
+            << "}" << std::endl << std::endl;
+
+  OutStream << "const uint32_t *" << TargetName << "RegisterInfo::getCallPreservedMask(const MachineFunction & MF,"
+            << "CallingConv::ID /*CC*/) const {"
+            << std::endl
+            << "  return ABI_Unknown;"
+            << std::endl
+            << "}" << std::endl << std::endl;
+
+  OutStream.close();
 
   return true;
 }
@@ -1367,7 +1449,7 @@ bool LLVM801CG::GenerateTargetImpl(){
   if( !TIGenerateInstLowering() )
     return false;
 
-  // Stage 5: Create the register info template
+  // Stage 5: Create the register info template; done;
   if( !TIGenerateRegInfo() )
     return false;
 
