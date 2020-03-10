@@ -47,6 +47,7 @@ protected:
 
   std::string TargetName;           ///< Name of the compiler target
   std::string AddrMode;             ///< LLVM addressing mode
+  std::string FirstReg;             ///< First register
 
   std::vector<std::string> Subtargets;        ///< vector of subtarget ISAs
   std::vector<CoreGenInstFormat *> Formats;   ///< vector of instruction formats
@@ -71,6 +72,9 @@ protected:
 
   /// Generates the resident addressing mode
   bool GenerateAddrMode();
+
+  /// Retrieves the first register
+  bool RetrieveFirstRegister();
 
   /// Convert a string to upper case
   std::string UpperCase(std::string Str);

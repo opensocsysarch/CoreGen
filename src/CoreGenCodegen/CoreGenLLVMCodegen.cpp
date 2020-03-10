@@ -97,6 +97,26 @@ bool CoreGenLLVMCodegen::GenerateAddrMode(){
   return true;
 }
 
+bool CoreGenLLVMCodegen::RetrieveFirstRegister(){
+
+  CoreGenReg *R = nullptr;
+
+  for( unsigned i=0; i<RegClasses.size(); i++ ){
+    for( unsigned j=0; j<RegClasses[i]->GetNumReg(); j++ ){
+      R = RegClasses[i]->GetReg(j);
+      // make sure the register is a GPR
+      if( (R->IsRWAttr()) &&
+          (!R->IsCSRAttr()) &&
+          (!R->IsAMSAttr()) ){
+        FirstReg = UpperCase(R->GetName());
+        return true;
+      }
+    }
+  }
+
+  return false;
+}
+
 bool CoreGenLLVMCodegen::ExecuteBackend(){
 
   // Stage 1: generate subtargets
@@ -121,6 +141,10 @@ bool CoreGenLLVMCodegen::ExecuteBackend(){
 
   /// Stage 6: determine the resident addressing mode
   if( !GenerateAddrMode() )
+    return false;
+
+  /// Stage 7: retrieve the first register in the ISA
+  if( !RetrieveFirstRegister() )
     return false;
 
   return true;
