@@ -55,7 +55,7 @@ sudo apt-get update
 ```
 2.  Install the system dependencies:
 ```
-sudo apt-get install -y libllvm-8-ocaml-dev libllvm8 llvm-8 llvm-8-dev llvm-8-doc llvm-8-examples llvm-8-runtime clang-8 clang-tools-8 clang-8-doc libclang-common-8-dev libclang-8-dev libclang1-8 clang-format-8 python-clang-8 zlib1g zlib1g-dev bison libcurl4-gnutls-dev 
+sudo apt-get install -y libllvm-8-ocaml-dev libllvm8 llvm-8 llvm-8-dev llvm-8-doc llvm-8-examples llvm-8-runtime clang-8 clang-tools-8 clang-8-doc libclang-common-8-dev libclang-8-dev libclang1-8 clang-format-8 python-clang-8 zlib1g zlib1g-dev bison libcurl4-gnutls-dev zlib1g-dev
 ```
 3. Clone the CoreGen repository
 ```
@@ -87,7 +87,7 @@ sudo apt-get update
 ```
 2.  Install the system dependencies:
 ```
-sudo apt-get install -y clang-8 lldb-8 lld-8 libllvm8 llvm-8 llvm-8-dev llvm-8-doc llvm-8-examples llvm-8-runtime python-dev libcurl4 libcurl4-gnutls-dev
+sudo apt-get install -y clang-8 lldb-8 lld-8 libllvm8 llvm-8 llvm-8-dev llvm-8-doc llvm-8-examples llvm-8-runtime python-dev libcurl4 libcurl4-gnutls-dev zlib1g-dev
 ```
 3. Clone the CoreGen repository
 ```
