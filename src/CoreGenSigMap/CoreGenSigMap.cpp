@@ -347,12 +347,17 @@ bool CoreGenSigMap::ReadInstSignals(const YAML::Node& InstNodes){
           DF = LSNode["DistanceFalse"].as<signed>();
         }
 
+        std::string PipeStage;
+        if( CheckValidNode(LSNode,"PipeStage") ){
+          PipeStage = LSNode["PipeStage"].as<std::string>();
+        }
+
         std::string FusedOp;
         if( CheckValidNode(LSNode,"FusedOp") ){
           FusedOp = LSNode["FusedOp"].as<std::string>();
         }
 
-        Signals.push_back(new SCSig(Type,Width,DT,DF,Name,SigName));
+        Signals.push_back(new SCSig(Type,Width,DT,DF,Name,SigName,PipeStage));
         if( FusedOp.length() > 0 ){
           // write the fused op to the latest signal
           FusedOpType FType = StrToFusedOpType(FusedOp);
@@ -531,6 +536,9 @@ bool CoreGenSigMap::WriteInstSignals(YAML::Emitter *out){
       *out << YAML::Key << "Width" << YAML::Value << CSigs[j]->GetWidth();
       *out << YAML::Key << "DistanceTrue" << YAML::Value << CSigs[j]->GetDistanceTrue();
       *out << YAML::Key << "DistanceFalse" << YAML::Value << CSigs[j]->GetDistanceFalse();
+      if( CSigs[j]->IsPipeDefined() ){
+        *out << YAML::Key << "PipeStage" << YAML::Value << CSigs[j]->GetPipeName();
+      }
       if( CSigs[j]->GetFusedType() != FOP_UNK )
         *out << YAML::Key << "FusedOp" << YAML::Value << CSigs[j]->FusedOpTypeToStr();
 
