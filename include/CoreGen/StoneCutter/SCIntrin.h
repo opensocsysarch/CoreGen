@@ -77,7 +77,11 @@ public:
   /// Generates the intrinsic signal map
   virtual bool GetSigMap(CoreGenSigMap *Sigs,Instruction &I,std::string Inst){
     for( auto i : ISignals ){
-      Sigs->InsertSignal(new SCSig(i->GetType(), i->GetWidth(), Inst));
+      std::string Str;
+      if( MDNode *N = I.getMetadata("pipe.pipeName")) {
+        Str = cast<MDString>(N->getOperand(0))->getString().str();
+      }
+      Sigs->InsertSignal(new SCSig(i->GetType(), i->GetWidth(), Inst, Str));
     }
     return true;
   }

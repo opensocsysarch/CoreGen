@@ -121,6 +121,7 @@ private:
   signed DistanceFalse;     ///< SCSig: Branch distance (in uOps) for alternate targets
   std::string Inst;         ///< SCSig: Name of the instruction
   std::string Name;         ///< SCSig: Name of the signal
+  std::string PipeName;     ///< SCSIg: Name of the respective pipeline stage
   std::vector<std::string> Inputs; ///< SCSig: vector of required inputs for ALU ops
 
 public:
@@ -131,7 +132,7 @@ public:
   SCSig(SigType T, unsigned W);
 
   /// Overloaded constructor
-  SCSig(SigType T, unsigned W, std::string I);
+  SCSig(SigType T, unsigned W, std::string I, std::string P);
 
   /// Overload constructor
   SCSig(SigType T, std::string I);
@@ -140,13 +141,13 @@ public:
   SCSig(SigType T, std::string I, std::string N);
 
   /// Overloaded constructor
-  SCSig(SigType T, unsigned W, signed DT, signed DF, std::string I);
+  SCSig(SigType T, unsigned W, signed DT, signed DF, std::string I, std::string P);
 
   /// Overloaded constructor
-  SCSig(SigType T, unsigned W, std::string I, std::string N);
+  SCSig(SigType T, unsigned W, std::string I, std::string N, std::string P);
 
   /// Overloaded constructor
-  SCSig(SigType T, unsigned W, signed DT, signed DF, std::string I, std::string N );
+  SCSig(SigType T, unsigned W, signed DT, signed DF, std::string I, std::string N, std::string P );
 
   /// Default destructor
   ~SCSig();
@@ -210,6 +211,15 @@ public:
 
   /// Sets the signal name
   bool SetName( std::string Name );
+
+  /// Determines whether there is a specific pipe stage defined
+  bool IsPipeDefined();
+
+  /// Retrieves the pipeline name
+  std::string GetPipeName() { return PipeName; }
+
+  /// Sets the pipeline name
+  bool SetPipeName( std::string PName );
 
   /// Retrieves the signal name
   std::string GetName() { return Name; }
