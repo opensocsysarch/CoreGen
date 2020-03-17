@@ -1583,11 +1583,11 @@ bool LLVM801CG::GenerateTargetImpl(){
   if( !TIGenerateRegInfo() )
     return false;
 
-  // Stage 6: Create the subtarget info template: done;
+  // Stage 6: Create the subtarget info template; done;
   if( !TIGenerateSubtargetInfo() )
     return false;
 
-  // Stage 7: Create the target machine template: done;
+  // Stage 7: Create the target machine template; done;
   if( !TIGenerateTargetMach() )
     return false;
 
