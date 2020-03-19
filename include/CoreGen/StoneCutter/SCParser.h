@@ -148,15 +148,18 @@ public:
   /// PipeExprAST - Expression class for pipe regions
   class PipeExprASTContainer : public ExprASTContainer {
     std::string PipeName;                                     ///< Name of the target pipe stage
+    std::string PipeLine;                                     ///< Pipeline designator
     unsigned Instance;                                        ///< Instance of the pipe stage
     std::vector<std::unique_ptr<ExprASTContainer>> BodyExpr;  ///< Vector of body expressions
 
   public:
     /// PipExprASTContainer default constructor
     PipeExprASTContainer(std::string PipeName,
+                         std::string PipeLine,
                          unsigned Instance,
                          std::vector<std::unique_ptr<ExprASTContainer>> BodyExpr)
-      : PipeName(PipeName), Instance(Instance), BodyExpr(std::move(BodyExpr)) {}
+      : PipeName(PipeName), PipeLine(PipeLine), Instance(Instance),
+        BodyExpr(std::move(BodyExpr)) {}
 
     /// PipeExprASTContainer code generation driver
     Value *codegen() override;
@@ -406,6 +409,7 @@ public:
   static SCMsg *GMsgs;                                                                  ///< Global message handler
   static MDNode *NameMDNode;                                                            ///< Pipe name metadata node
   static MDNode *InstanceMDNode;                                                        ///< Pipe instance metadata node
+  static MDNode *PipelineMDNode;                                                        ///< Pipeline name metadata node
 
 private:
 

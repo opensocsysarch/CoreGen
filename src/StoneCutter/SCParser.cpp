@@ -24,6 +24,7 @@ bool SCParser::IsPipe = false;
 SCMsg *SCParser::GMsgs = nullptr;
 MDNode *SCParser::NameMDNode = nullptr;
 MDNode *SCParser::InstanceMDNode = nullptr;
+MDNode *SCParser::PipelineMDNode = nullptr;
 
 SCParser::SCParser(std::string B, std::string F, SCOpts *O, SCMsg *M)
   : CurTok(-1), InBuf(B), FileName(F), Opts(O), Msgs(M), Lex(new SCLexer()),
@@ -970,6 +971,16 @@ std::unique_ptr<ExprAST> SCParser::ParsePipeExpr() {
   std::string PipeName = Lex->GetIdentifierStr();
   GetNextToken();  // eat identifier.
 
+  std::string PipeLine;
+
+  if( CurTok == ':' ){
+    GetNextToken();
+    if( CurTok != tok_identifier)
+      return LogError("expected pipeline identifier after 'pipe:'");
+    PipeLine = Lex->GetIdentifierStr();
+    GetNextToken();
+  }
+
   if (CurTok != '{' )
     return LogError("expected '{' for while loop control statement");
 
@@ -1004,7 +1015,7 @@ std::unique_ptr<ExprAST> SCParser::ParsePipeExpr() {
   GetNextToken(); // eat the '}'
   IsPipe = false;
 
-  return llvm::make_unique<PipeExprAST>(PipeName,Instance,std::move(BodyExpr));
+  return llvm::make_unique<PipeExprAST>(PipeName,PipeLine,Instance,std::move(BodyExpr));
 }
 
 std::unique_ptr<ExprAST> SCParser::ParseForExpr() {
@@ -1591,6 +1602,7 @@ static AllocaInst *CreateEntryBlockAllocaAttr(Function *TheFunction,
                              VarName.c_str());
     if( SCParser::NameMDNode ){
       AI->setMetadata("pipe.pipeName",SCParser::NameMDNode);
+      AI->setMetadata("pipe.pipeLine",SCParser::PipelineMDNode);
       AI->setMetadata("pipe.pipeInstance",SCParser::InstanceMDNode);
     }
     return AI;
@@ -1599,6 +1611,7 @@ static AllocaInst *CreateEntryBlockAllocaAttr(Function *TheFunction,
                              VarName.c_str());
     if( SCParser::NameMDNode ){
       AI->setMetadata("pipe.pipeName",SCParser::NameMDNode);
+      AI->setMetadata("pipe.pipeLine",SCParser::PipelineMDNode);
       AI->setMetadata("pipe.pipeInstance",SCParser::InstanceMDNode);
     }
     return AI;
@@ -1652,10 +1665,13 @@ Value *PipeExprAST::codegen() {
   }
 
   TheFunction->addFnAttr("pipename" + std::to_string(AttrVal),PipeName);
+  TheFunction->addFnAttr("pipeline" + std::to_string(AttrVal),PipeLine);
 
   // build the metadata
   MDNode *N = MDNode::get(SCParser::TheContext,
                           MDString::get(SCParser::TheContext,PipeName));
+  MDNode *PN = MDNode::get(SCParser::TheContext,
+                          MDString::get(SCParser::TheContext,PipeLine));
   MDNode *TmpPI = MDNode::get(SCParser::TheContext,
                               ConstantAsMetadata::get(ConstantInt::get(
                                 SCParser::TheContext,
@@ -1666,6 +1682,7 @@ Value *PipeExprAST::codegen() {
   // functions can pick up the necessary MDNode's
   SCParser::NameMDNode = N;
   SCParser::InstanceMDNode = PI;
+  SCParser::PipelineMDNode = PN;
 
   // Walk all the body instructions, emit them and tag each
   // instruction with the appropriate metadata
@@ -1674,6 +1691,7 @@ Value *PipeExprAST::codegen() {
     if( isa<Instruction>(*BVal) ){
       Instruction *Inst = cast<Instruction>(BVal);
       Inst->setMetadata("pipe.pipeName",N);
+      Inst->setMetadata("pipe.pipeLine",PN);
       Inst->setMetadata("pipe.pipeInstance",PI);
     }
   }
@@ -1681,6 +1699,7 @@ Value *PipeExprAST::codegen() {
   // exit the pipe codegen block
   SCParser::NameMDNode = nullptr;
   SCParser::InstanceMDNode = nullptr;
+  SCParser::PipelineMDNode = nullptr;
 
   // pipe expr
   return Constant::getNullValue(Type::getIntNTy(SCParser::TheContext,64));
@@ -1730,6 +1749,7 @@ Value *DoWhileExprAST::codegen() {
   BranchInst *BI = Builder.CreateCondBr(CondV,LoopBB,AfterBB);
   if( SCParser::NameMDNode ){
     BI->setMetadata("pipe.pipeName",SCParser::NameMDNode);
+    BI->setMetadata("pipe.pipeLine",SCParser::PipelineMDNode);
     BI->setMetadata("pipe.pipeInstance",SCParser::InstanceMDNode);
   }
 
@@ -1758,6 +1778,7 @@ Value *WhileExprAST::codegen() {
   BranchInst *BI = Builder.CreateBr(LoopBB);
   if( SCParser::NameMDNode ){
     BI->setMetadata("pipe.pipeName",SCParser::NameMDNode);
+    BI->setMetadata("pipe.pipeLine",SCParser::PipelineMDNode);
     BI->setMetadata("pipe.pipeInstance",SCParser::InstanceMDNode);
   }
 
@@ -1797,6 +1818,7 @@ Value *WhileExprAST::codegen() {
   BI = Builder.CreateCondBr(CondV,EntryBB,AfterBB);
   if( SCParser::NameMDNode ){
     BI->setMetadata("pipe.pipeName",SCParser::NameMDNode);
+    BI->setMetadata("pipe.pipeLine",SCParser::PipelineMDNode);
     BI->setMetadata("pipe.pipeInstance",SCParser::InstanceMDNode);
   }
 
@@ -1822,6 +1844,7 @@ Value *ForExprAST::codegen() {
   StoreInst *SI = SCParser::Builder.CreateStore(StartVal,Alloca);
   if( SCParser::NameMDNode ){
     SI->setMetadata("pipe.pipeName",SCParser::NameMDNode);
+    SI->setMetadata("pipe.pipeLine",SCParser::PipelineMDNode);
     SI->setMetadata("pipe.pipeInstance",SCParser::InstanceMDNode);
   }
 
@@ -1837,6 +1860,7 @@ Value *ForExprAST::codegen() {
   BranchInst *BI = Builder.CreateBr(LoopBB);
   if( SCParser::NameMDNode ){
     BI->setMetadata("pipe.pipeName",SCParser::NameMDNode);
+    BI->setMetadata("pipe.pipeLine",SCParser::PipelineMDNode);
     BI->setMetadata("pipe.pipeInstance",SCParser::InstanceMDNode);
   }
 
@@ -1888,10 +1912,13 @@ Value *ForExprAST::codegen() {
   SI = Builder.CreateStore(NextVar,Alloca);
   if( SCParser::NameMDNode ){
     cast<LoadInst>(CurVar)->setMetadata("pipe.pipeName",SCParser::NameMDNode);
+    cast<LoadInst>(CurVar)->setMetadata("pipe.pipeLine",SCParser::PipelineMDNode);
     cast<LoadInst>(CurVar)->setMetadata("pipe.pipeInstance",SCParser::InstanceMDNode);
     cast<Instruction>(NextVar)->setMetadata("pipe.pipeName",SCParser::NameMDNode);
+    cast<Instruction>(NextVar)->setMetadata("pipe.pipeLine",SCParser::PipelineMDNode);
     cast<Instruction>(NextVar)->setMetadata("pipe.pipeInstance",SCParser::InstanceMDNode);
     SI->setMetadata("pipe.pipeName",SCParser::NameMDNode);
+    SI->setMetadata("pipe.pipeLine",SCParser::PipelineMDNode);
     SI->setMetadata("pipe.pipeInstance",SCParser::InstanceMDNode);
   }
 
@@ -1904,6 +1931,7 @@ Value *ForExprAST::codegen() {
                                "loopcond" + std::to_string(LocalLabel));
   if( SCParser::NameMDNode ){
     cast<Instruction>(EndCond)->setMetadata("pipe.pipeName",SCParser::NameMDNode);
+    cast<Instruction>(EndCond)->setMetadata("pipe.pipeLine",SCParser::PipelineMDNode);
     cast<Instruction>(EndCond)->setMetadata("pipe.pipeInstance",SCParser::InstanceMDNode);
   }
 
@@ -1917,6 +1945,7 @@ Value *ForExprAST::codegen() {
   BI = Builder.CreateCondBr(EndCond, LoopBB, AfterBB);
   if( SCParser::NameMDNode ){
     BI->setMetadata("pipe.pipeName",SCParser::NameMDNode);
+    BI->setMetadata("pipe.pipeLine",SCParser::PipelineMDNode);
     BI->setMetadata("pipe.pipeInstance",SCParser::InstanceMDNode);
   }
 
@@ -1947,6 +1976,7 @@ Value *VariableExprAST::codegen() {
   Value *LI = SCParser::Builder.CreateLoad(V,Name.c_str());
   if( SCParser::NameMDNode ){
     cast<LoadInst>(LI)->setMetadata("pipe.pipeName",SCParser::NameMDNode);
+    cast<LoadInst>(LI)->setMetadata("pipe.pipeLine",SCParser::PipelineMDNode);
     cast<LoadInst>(LI)->setMetadata("pipe.pipeInstance",SCParser::InstanceMDNode);
   }
   return LI;
@@ -1991,6 +2021,7 @@ Value *VarExprAST::codegen() {
     StoreInst *SI = Builder.CreateStore(InitVal, Alloca);
     if( SCParser::NameMDNode ){
       SI->setMetadata("pipe.pipeName",SCParser::NameMDNode);
+      SI->setMetadata("pipe.pipeLine",SCParser::PipelineMDNode);
       SI->setMetadata("pipe.pipeInstance",SCParser::InstanceMDNode);
     }
 
@@ -2041,6 +2072,7 @@ Value *BinaryExprAST::codegen() {
     StoreInst *SI = Builder.CreateStore(Val, Variable);
     if( SCParser::NameMDNode ){
       SI->setMetadata("pipe.pipeName",SCParser::NameMDNode);
+      SI->setMetadata("pipe.pipeLine",SCParser::PipelineMDNode);
       SI->setMetadata("pipe.pipeInstance",SCParser::InstanceMDNode);
     }
 
@@ -2066,6 +2098,7 @@ Value *BinaryExprAST::codegen() {
       R = SCParser::Builder.CreateUIToFP(R,LT,"uitofptmp");
       if( SCParser::NameMDNode ){
         cast<Instruction>(R)->setMetadata("pipe.pipeName",SCParser::NameMDNode);
+        cast<Instruction>(R)->setMetadata("pipe.pipeLine",SCParser::PipelineMDNode);
         cast<Instruction>(R)->setMetadata("pipe.pipeInstance",SCParser::InstanceMDNode);
       }
     }else{
@@ -2073,6 +2106,7 @@ Value *BinaryExprAST::codegen() {
       R = SCParser::Builder.CreateFPToUI(R,LT,"fptouitmp");
       if( SCParser::NameMDNode ){
         cast<Instruction>(R)->setMetadata("pipe.pipeName",SCParser::NameMDNode);
+        cast<Instruction>(R)->setMetadata("pipe.pipeLine",SCParser::PipelineMDNode);
         cast<Instruction>(R)->setMetadata("pipe.pipeInstance",SCParser::InstanceMDNode);
       }
     }
@@ -2081,6 +2115,7 @@ Value *BinaryExprAST::codegen() {
     R = SCParser::Builder.CreateIntCast(R,LT,true);
     if( SCParser::NameMDNode ){
       cast<Instruction>(R)->setMetadata("pipe.pipeName",SCParser::NameMDNode);
+      cast<Instruction>(R)->setMetadata("pipe.pipeLine",SCParser::PipelineMDNode);
       cast<Instruction>(R)->setMetadata("pipe.pipeInstance",SCParser::InstanceMDNode);
     }
   }
@@ -2212,6 +2247,7 @@ Value *BinaryExprAST::codegen() {
 
   if( SCParser::NameMDNode ){
     cast<Instruction>(VI)->setMetadata("pipe.pipeName",SCParser::NameMDNode);
+    cast<Instruction>(VI)->setMetadata("pipe.pipeLine",SCParser::PipelineMDNode);
     cast<Instruction>(VI)->setMetadata("pipe.pipeInstance",SCParser::InstanceMDNode);
   }
 
@@ -2242,6 +2278,7 @@ Value *CallExprAST::codegen() {
   Value *CI = SCParser::Builder.CreateCall(CalleeF, ArgsV, "calltmp");
   if( SCParser::NameMDNode ){
     cast<Instruction>(CI)->setMetadata("pipe.pipeName",SCParser::NameMDNode);
+    cast<Instruction>(CI)->setMetadata("pipe.pipeLine",SCParser::PipelineMDNode);
     cast<Instruction>(CI)->setMetadata("pipe.pipeInstance",SCParser::InstanceMDNode);
   }
   return CI;
@@ -2520,6 +2557,7 @@ Function *FunctionAST::codegen() {
     StoreInst *SI = Builder.CreateStore(&Arg, Alloca);
     if( SCParser::NameMDNode ){
       SI->setMetadata("pipe.pipeName",SCParser::NameMDNode);
+      SI->setMetadata("pipe.pipeLine",SCParser::PipelineMDNode);
       SI->setMetadata("pipe.pipeInstance",SCParser::InstanceMDNode);
     }
 
@@ -2563,6 +2601,7 @@ Value *IfExprAST::codegen() {
         "ifcond."+std::to_string(LocalLabel));
   if( SCParser::NameMDNode ){
     cast<Instruction>(CondV)->setMetadata("pipe.pipeName",SCParser::NameMDNode);
+    cast<Instruction>(CondV)->setMetadata("pipe.pipeLine",SCParser::PipelineMDNode);
     cast<Instruction>(CondV)->setMetadata("pipe.pipeInstance",SCParser::InstanceMDNode);
   }
 
@@ -2581,6 +2620,7 @@ Value *IfExprAST::codegen() {
   BranchInst *BI = Builder.CreateCondBr(CondV, ThenBB, ElseBB);
   if( SCParser::NameMDNode ){
     BI->setMetadata("pipe.pipeName",SCParser::NameMDNode);
+    BI->setMetadata("pipe.pipeLine",SCParser::PipelineMDNode);
     BI->setMetadata("pipe.pipeInstance",SCParser::InstanceMDNode);
   }
 
@@ -2598,6 +2638,7 @@ Value *IfExprAST::codegen() {
   BI = Builder.CreateBr(MergeBB);
   if( SCParser::NameMDNode ){
     BI->setMetadata("pipe.pipeName",SCParser::NameMDNode);
+    BI->setMetadata("pipe.pipeLine",SCParser::PipelineMDNode);
     BI->setMetadata("pipe.pipeInstance",SCParser::InstanceMDNode);
   }
 
@@ -2619,6 +2660,7 @@ Value *IfExprAST::codegen() {
   BI = Builder.CreateBr(MergeBB);
   if( SCParser::NameMDNode ){
     BI->setMetadata("pipe.pipeName",SCParser::NameMDNode);
+    BI->setMetadata("pipe.pipeLine",SCParser::PipelineMDNode);
     BI->setMetadata("pipe.pipeInstance",SCParser::InstanceMDNode);
   }
 
@@ -2635,6 +2677,7 @@ Value *IfExprAST::codegen() {
                                     2, "iftmp."+std::to_string(LocalLabel));
     if( SCParser::NameMDNode ){
       PN->setMetadata("pipe.pipeName",SCParser::NameMDNode);
+      PN->setMetadata("pipe.pipeLine",SCParser::PipelineMDNode);
       PN->setMetadata("pipe.pipeInstance",SCParser::InstanceMDNode);
     }
   }else{
@@ -2642,6 +2685,7 @@ Value *IfExprAST::codegen() {
                                     2, "iftmp."+std::to_string(LocalLabel));
     if( SCParser::NameMDNode ){
       PN->setMetadata("pipe.pipeName",SCParser::NameMDNode);
+      PN->setMetadata("pipe.pipeLine",SCParser::PipelineMDNode);
       PN->setMetadata("pipe.pipeInstance",SCParser::InstanceMDNode);
     }
   }
