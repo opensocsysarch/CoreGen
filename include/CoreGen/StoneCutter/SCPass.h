@@ -104,6 +104,9 @@ public:
   /// Determines if the target variable has the target attribute
   bool HasGlobalAttribute(std::string Var, std::string Attribute );
 
+  /// Retrieves a metadata pipeName instance from the target instruction
+  std::string GetMDPipeName(Instruction &I);
+
   /// Retrieves the target attribute from the target global variable
   std::string GetGlobalAttribute(std::string Var, std::string Attribute);
 

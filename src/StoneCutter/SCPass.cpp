@@ -354,6 +354,13 @@ std::string SCPass::StrToUpper(std::string S){
   return S;
 }
 
+std::string SCPass::GetMDPipeName(Instruction &I){
+  std::string Str;
+  if( MDNode *N = I.getMetadata("pipe.pipeName")) {
+    Str = cast<MDString>(N->getOperand(0))->getString().str();
+  }
+  return Str;
+}
 
 std::string SCPass::TraceOperand( Function &F, Value *V,
                                   bool &isPredef, bool &isImm,

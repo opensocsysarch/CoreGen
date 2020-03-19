@@ -27,7 +27,11 @@ bool SCLoad::GetSigMap(CoreGenSigMap *Sigs,
                        Instruction &I,
                        std::string Inst){
   unsigned width = I.getOperand(0)->getType()->getIntegerBitWidth();
-  return Sigs->InsertSignal(new SCSig(MEM_READ,width,Inst) );
+  std::string Str;
+  if( MDNode *N = I.getMetadata("pipe.pipeName")) {
+    Str = cast<MDString>(N->getOperand(0))->getString().str();
+  }
+  return Sigs->InsertSignal(new SCSig(MEM_READ,width,Inst,Str) );
 }
 
 // EOF
