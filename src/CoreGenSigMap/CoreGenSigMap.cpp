@@ -114,11 +114,20 @@ unsigned CoreGenSigMap::GetMinSignalWidth( unsigned Idx ){
   return Min;
 }
 
+bool CoreGenSigMap::WriteSigMap(){
+  if( SigFile.length() > 0 )
+    return WriteSigMap(SigFile);
+  return false;
+}
+
 bool CoreGenSigMap::WriteSigMap( std::string File ){
   if( File.length() == 0 )
     return false;
   if( Signals.size() == 0 )
     return false;
+
+  // set the file name
+  SigFile = File;
 
   // open the file
   std::ofstream OutYaml(File.c_str());
@@ -432,6 +441,8 @@ bool CoreGenSigMap::ReadSigMap( std::string File ){
   if( File.length() == 0 )
     return false;
 
+  SigFile = File;
+
   // load the file
   YAML::Node IR;
   try{
@@ -499,6 +510,20 @@ std::vector<SCSig *> CoreGenSigMap::GetSigVect(std::string Inst){
     }
   }
   return CSigs;
+}
+
+std::vector<std::string> CoreGenSigMap::GetPipeVect(){
+  std::vector<std::string> V;
+
+  for( unsigned i=0; i<Signals.size(); i++ ){
+    if( Signals[i]->IsPipeDefined() ){
+      V.push_back(Signals[i]->GetPipeName());
+    }
+  }
+
+  std::sort( V.begin(), V.end() );
+  V.erase( std::unique(V.begin(),V.end()), V.end() );
+  return V;
 }
 
 bool CoreGenSigMap::WriteInstSignals(YAML::Emitter *out){
