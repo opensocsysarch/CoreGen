@@ -1517,7 +1517,7 @@ bool SCChiselCodeGen::ExecutePipelineOpt(){
     PB->SetExecOpts(mit->second);
 
   // set the signal map
-  if( PB->SetSignalMap(CSM) ){
+  if( !PB->SetSignalMap(CSM) ){
     delete PB;
     return false;
   }
