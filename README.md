@@ -147,6 +147,39 @@ cmake -DLLVM_DIR=/opt/rh/llvm-toolset-7.0/root/usr/lib64/cmake/llvm ../
 make
 ```
 
+### Centos8
+
+Centos8 has a native toolchain that is much more adept at building modern C++ applications.
+Utilize the following steps on vanilla CentOS 8 systems.
+
+1.  Install the system dependencies:
+```
+sudo yum -y install cmake gcc-toolset-9 texlive texlive-*.noarch bison libcurl-devel zlib-devel llvm llvm-toolset llvm-libs llvm-devel llvm-static graphviz ncurses-*
+```
+2. [Optional] For those wishing to build Centos8 RPMS, you also need the following packages.
+```
+sudo yum install rpm-build rpmdevtools
+```
+3. Clone the CoreGen repository
+```
+git clone https://github.com/opensocsysarch/CoreGen.git
+```
+4. Setup your build tree
+```
+cd CoreGen
+mkdir build
+cd build
+```
+5. Execute CMake to generate the makefiles
+```
+cmake -DLLVM_DIR=/usr/lib64/cmake/llvm ../
+```
+6. Execute the build
+```
+make
+```
+
+
 ### Darwin (OSX)
 
 The Darwin (OSX) build is currently tested on 10.13.6.  However, these
