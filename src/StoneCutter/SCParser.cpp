@@ -1730,11 +1730,41 @@ Value *PipeExprAST::codegen() {
 
   if( PipeLine.length() > 0 ){
     std::map<std::string, GlobalVariable*>::iterator it;
+    unsigned PIdx = 0;
     it = SCParser::GlobalNamedValues.find(PipeLine);
     if( it != SCParser::GlobalNamedValues.end() ){
-      // TODO: check for collisions in the pipeline namespace
+      // check for collisions in the pipeline namespace
+      // Walk all the existing pipeline attributes and find any pipe stages
+      // with the same name associated with a different pipeline
+      for( auto &Global : SCParser::TheModule->getGlobalList() ){
+        AttributeSet PAttrSet = Global.getAttributes();
+        if( PAttrSet.hasAttribute("pipeline") ){
+          // found a pipeline attribute
+          if( PAttrSet.getAttribute("pipeline").getValueAsString().str() ==
+              PipeLine ){
+            // found a matching pipeline
+            unsigned Idx = 0;
+            bool done = false;
+            while( !done ){
+              if( !PAttrSet.hasAttribute("pipestage" + std::to_string(Idx)) ){
+                PIdx = Idx;
+                done = true;
+              }else if( PAttrSet.getAttribute("pipestage" + std::to_string(Idx)).getValueAsString().str() ==
+                        PipeName ){
+                // found a collision
+                return LogErrorV( "Found a collision in pipe stages for pipeline=" + 
+                                  PipeLine + " for pipestage=" + PipeName );
+              }
+              Idx++;
+            }
+          }
+        }
+      }
+
       // add an attribute to the pipeline global variable
-      it->second->addAttribute("pipestage", PipeName);
+      it->second->addAttribute("pipestage" + std::to_string(PIdx), PipeName);
+    }else{
+      return LogErrorV( "Undefined pipeline: " + PipeLine );
     }
   }
 
