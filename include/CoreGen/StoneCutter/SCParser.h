@@ -327,6 +327,25 @@ public:
     Value *codegen();
   };
 
+  /// PipelineASTContainer - This class represents a pipeline definition with
+  ///               its respective attribuets
+  class PipelineASTContainer{
+    std::string Name;                 ///< Name of the pipeline unit
+    std::vector<std::string> Attrs;   ///< Pipeline attribute vector
+
+  public:
+    /// PipelineASTContainer default constructor
+    PipelineASTContainer(const std::string &Name,
+                         std::vector<std::string> Attrs)
+      : Name(Name), Attrs(std::move(Attrs)) {}
+
+    /// PipelineASTContainer: Retrieve the  name of the register class
+    const std::string &getName() const { return Name; }
+
+    /// PipelineASTContainer: code generation driver
+    Value *codegen();
+  };
+
   /// RegClassASTContainer - This class represents a register class definition
   ///               which captures the name and the associated registers
   class RegClassASTContainer {
@@ -515,6 +534,12 @@ private:
   /// Parse definitions
   std::unique_ptr<FunctionASTContainer> ParseDefinition();
 
+  /// Parse pipeline
+  std::unique_ptr<PipelineASTContainer> ParsePipeline();
+
+  /// Parse pipeline definition
+  std::unique_ptr<PipelineASTContainer> ParsePipelineDef();
+
   /// Parse register classes
   std::unique_ptr<RegClassASTContainer> ParseRegClass();
 
@@ -557,6 +582,9 @@ private:
   /// Handles register class definitions
   void HandleRegClass();
 
+  /// Handles pipeline definitions
+  void HandlePipeline();
+
   /// Handles instruction field definitions
   void HandleInstFormat();
 
@@ -574,6 +602,9 @@ private:
 
   /// Logs a register class error
   std::unique_ptr<RegClassASTContainer> LogErrorR(std::string Str);
+
+  /// Logs a pipeline error
+  std::unique_ptr<PipelineASTContainer> LogErrorPI(std::string Str);
 
   /// Logs an instruction format error
   std::unique_ptr<InstFormatASTContainer> LogErrorIF(std::string Str);
@@ -601,6 +632,8 @@ typedef SCParser::CallExprASTContainer CallExprAST;
 typedef SCParser::PrototypeASTContainer PrototypeAST;
 /** Typedef for FunctionASTContainer */
 typedef SCParser::FunctionASTContainer FunctionAST;
+/** Typedef for PipelineASTContainer */
+typedef SCParser::PipelineASTContainer PipelineAST;
 /** Typedef for RegClassASTContainer */
 typedef SCParser::RegClassASTContainer RegClassAST;
 /** Typedef for InstFormatASTContainer */

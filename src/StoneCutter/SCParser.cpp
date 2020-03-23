@@ -497,6 +497,9 @@ bool SCParser::Parse(){
     case tok_regclass:
       HandleRegClass();
       break;
+    case tok_pipeline:
+      HandlePipeline();
+      break;
     case tok_instf:
       HandleInstFormat();
       break;
@@ -1167,7 +1170,7 @@ std::unique_ptr<InstFormatAST> SCParser::ParseInstFormatDef(){
   GetNextToken();
 
   if(CurTok != '(' )
-    return LogErrorIF("Expected '(' in instruction format prototype");
+    return LogErrorIF("Expected '(' in instruction format prototype= " + FName);
 
   std::vector<std::tuple<std::string,
                            SCInstField,
@@ -1244,6 +1247,53 @@ std::unique_ptr<InstFormatAST> SCParser::ParseInstFormatDef(){
 
   return llvm::make_unique<InstFormatAST>(FName,
                                           std::move(Fields));
+}
+
+std::unique_ptr<PipelineAST> SCParser::ParsePipeline(){
+  GetNextToken(); //eat pipeline
+  return ParsePipelineDef();
+}
+
+std::unique_ptr<PipelineAST> SCParser::ParsePipelineDef(){
+  if( CurTok != tok_identifier )
+    return LogErrorPI("Expected pipeline name in prototype");
+
+  std::string PName = Lex->GetIdentifierStr();
+  GetNextToken();
+
+  if (CurTok != '(')
+    return LogErrorPI("Expected '(' in pipeline prototype");
+
+  std::vector<std::string> Attrs; // vector of pipeline attributes
+
+  // pull the next identifier
+  GetNextToken(); // eat the '('
+
+  while (CurTok == tok_pipeattr){
+
+    Attrs.push_back(Lex->GetIdentifierStr());
+
+    GetNextToken();
+
+    // --
+    // Parse a comma, if a comma exist, move to the next attribute
+    // --
+    if( CurTok == ',' ){
+      // eat the comma
+      GetNextToken();
+    }else{
+      break; // probably the end of the attribute list
+    }
+  }// end while loop
+
+  if (CurTok != ')')
+    return LogErrorPI("Expected ')' in pipeline prototype");
+
+  // success.
+  GetNextToken(); // eat ')'.
+
+  return llvm::make_unique<PipelineAST>(PName,
+                                        std::move(Attrs));
 }
 
 std::unique_ptr<RegClassAST> SCParser::ParseRegClassDef(){
@@ -1535,6 +1585,17 @@ void SCParser::HandleExtern() {
   }
 }
 
+void SCParser::HandlePipeline(){
+  // evaluate the pipeline definition
+  if( auto PipelineAST = ParsePipeline()){
+    if( auto *FnIR = PipelineAST->codegen()){
+    }
+  }else{
+    Rtn = false;
+    GetNextToken();
+  }
+}
+
 void SCParser::HandleRegClass() {
   // evaluate a register class definition
   if(auto RegClassAST = ParseRegClass()){
@@ -1666,6 +1727,16 @@ Value *PipeExprAST::codegen() {
 
   TheFunction->addFnAttr("pipename" + std::to_string(AttrVal),PipeName);
   TheFunction->addFnAttr("pipeline" + std::to_string(AttrVal),PipeLine);
+
+  if( PipeLine.length() > 0 ){
+    std::map<std::string, GlobalVariable*>::iterator it;
+    it = SCParser::GlobalNamedValues.find(PipeLine);
+    if( it != SCParser::GlobalNamedValues.end() ){
+      // TODO: check for collisions in the pipeline namespace
+      // add an attribute to the pipeline global variable
+      it->second->addAttribute("pipestage", PipeName);
+    }
+  }
 
   // build the metadata
   MDNode *N = MDNode::get(SCParser::TheContext,
@@ -2424,6 +2495,31 @@ Value *InstFormatAST::codegen(){
   return nullptr;
 }
 
+Value *PipelineAST::codegen(){
+  // create a global variable to track the pipeline def
+  GlobalVariable *val = new GlobalVariable(*SCParser::TheModule,
+                                           Type::getIntNTy(SCParser::TheContext,64),
+                                           false,
+                                           GlobalValue::ExternalLinkage,
+                                           nullptr,
+                                           Twine(Name),
+                                           nullptr,
+                                           GlobalVariable::NotThreadLocal,
+                                           0);
+  if( !val )
+    return LogErrorV( "Failed to lower pipeline definition to global: pipeline = " + Name);
+
+  GlobalNamedValues[Name] = val;
+
+  // add all the attributes
+  val->addAttribute("pipeline", Name);
+  for( unsigned i=0; i<Attrs.size(); i++ ){
+    val->addAttribute("pipeattr" + std::to_string(i), Attrs[i]);
+  }
+
+  return nullptr;
+}
+
 Value *RegClassAST::codegen(){
 
   // registers
@@ -2717,6 +2813,11 @@ std::unique_ptr<PrototypeAST> SCParser::LogErrorP(std::string Str) {
 }
 
 std::unique_ptr<RegClassAST> SCParser::LogErrorR(std::string Str) {
+  LogError(Str);
+  return nullptr;
+}
+
+std::unique_ptr<PipelineAST> SCParser::LogErrorPI(std::string Str){
   LogError(Str);
   return nullptr;
 }
