@@ -24,7 +24,7 @@ def fma:Arith.if( ra rb rt imm )
   pipe p0:pipeline1{
     rt = ra + rb
   }
-  pipe p1:pipeline2{
+  pipe p1:pipeline1{
     rt = rt * imm
   }
 }
@@ -32,7 +32,7 @@ def fma:Arith.if( ra rb rt imm )
 # add
 def add:Arith.if( ra rb rt imm )
 {
-  pipe p0:integer_pipeline{
+  pipe pi0:integer_pipeline{
     rt = ra + rb
   }
 }
@@ -40,7 +40,7 @@ def add:Arith.if( ra rb rt imm )
 # sub
 def sub:Arith.if( ra rb rt imm )
 {
-  pipe p1:integer_pipeline{
+  pipe pi1:integer_pipeline{
     rt = ra - rb
   }
 }

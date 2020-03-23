@@ -11,11 +11,10 @@ regclass GPR( u64 r0, u64 r1, u64 r2, u64 r3, u64 r4, u64 r5, u64 r6, u64 r7, u6
 regclass CTRL( u64 pc[PC], u64 exc, u64 ne, u64 eq, u64 gt, u64 lt, u64 gte, u64 lte, u64 sp, u64 fp, u64 rp )
 
 # pipeline definition
-pipeline pipeline1(in_order, forward)
+pipeline pipeline1()
+pipeline pipeline1(out_of_order, forward)
 
-pipeline integer_pipeline(out_of_order, branch_predict)
-
-pipeline dummy_pipe()
+pipeline integer_pipeline()
 
 # Instruction Definitions
 # FMA
@@ -32,7 +31,7 @@ def fma:Arith.if( ra rb rt imm )
 # add
 def add:Arith.if( ra rb rt imm )
 {
-  pipe p0:integer_pipeline{
+  pipe pi0:integer_pipeline{
     rt = ra + rb
   }
 }
@@ -40,7 +39,7 @@ def add:Arith.if( ra rb rt imm )
 # sub
 def sub:Arith.if( ra rb rt imm )
 {
-  pipe p1:integer_pipeline{
+  pipe pi1:integer_pipeline{
     rt = ra - rb
   }
 }

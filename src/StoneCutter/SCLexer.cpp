@@ -115,11 +115,13 @@ bool SCLexer::IsPipeAttrDef(){
       return true;
     Idx++;
   }
-  if( isdigit(IdentifierStr[0]) ){
-    std::string Tmp = IdentifierStr.substr(1,IdentifierStr.length()-1);
-    if( Tmp == "-stage")
-      return true;
-  }
+
+  if( IdentifierStr.length() < 8 )
+    return false;
+
+  std::string Tmp = IdentifierStr.substr(0,7);
+  if( Tmp == "stages_" )
+    return true;
 
   return false;
 }

@@ -982,6 +982,12 @@ std::unique_ptr<ExprAST> SCParser::ParsePipeExpr() {
       return LogError("expected pipeline identifier after 'pipe:'");
     PipeLine = Lex->GetIdentifierStr();
     GetNextToken();
+
+    std::map<std::string, GlobalVariable*>::iterator it;
+    it = SCParser::GlobalNamedValues.find(PipeLine);
+    if( it == SCParser::GlobalNamedValues.end() ){
+      return LogError("Pipeline=" + PipeLine + " was not previously defined");
+    }
   }
 
   if (CurTok != '{' )
@@ -1260,6 +1266,13 @@ std::unique_ptr<PipelineAST> SCParser::ParsePipelineDef(){
 
   std::string PName = Lex->GetIdentifierStr();
   GetNextToken();
+
+  std::map<std::string, GlobalVariable*>::iterator it;
+  it = SCParser::GlobalNamedValues.find(PName);
+  if( it != SCParser::GlobalNamedValues.end() ){
+    return LogErrorPI("Found duplicate pipeline name: " + PName );
+  }
+
 
   if (CurTok != '(')
     return LogErrorPI("Expected '(' in pipeline prototype");

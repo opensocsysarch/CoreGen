@@ -11,11 +11,11 @@ regclass GPR( u64 r0, u64 r1, u64 r2, u64 r3, u64 r4, u64 r5, u64 r6, u64 r7, u6
 regclass CTRL( u64 pc[PC], u64 exc, u64 ne, u64 eq, u64 gt, u64 lt, u64 gte, u64 lte, u64 sp, u64 fp, u64 rp )
 
 # pipeline definition
-#pipeline pipeline1(in_order)
+pipeline pipeline1(in_order)
 
 pipeline pipeline2()
 
-#pipeline integer_pipeline(out_of_order)
+pipeline integer_pipeline(out_of_order)
 
 # Instruction Definitions
 # FMA
