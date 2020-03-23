@@ -119,6 +119,12 @@ public:
   /// Retrieves the number of instruction format register class attributes that include the target variable
   unsigned GetNumRegClasses(std::string Var);
 
+  /// Retrieves a list of unique pipelines
+  std::vector<std::string> GetPipelines();
+
+  /// Retrieves a list of attributes for the target pipeline
+  std::vector<std::string> GetPipelineAttrs(std::string Pipe);
+
   /// Retrieves a list of unique instruction formats
   std::vector<std::string> GetInstFormats();
 
