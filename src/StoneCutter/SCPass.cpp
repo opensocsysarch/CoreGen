@@ -65,6 +65,10 @@ bool SCPass::HasGlobalAttribute( std::string Var, std::string Attribute ){
   return false;
 }
 
+unsigned SCPass::GetNumPipelines(){
+  return GetPipelines().size();
+}
+
 std::vector<std::string> SCPass::GetPipelines(){
   std::vector<std::string> IF;
   for( auto &Global : TheModule->getGlobalList() ){
