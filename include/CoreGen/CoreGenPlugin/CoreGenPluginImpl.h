@@ -51,6 +51,7 @@
 #include "CoreGen/CoreGenBackend/CoreGenSpad.h"
 #include "CoreGen/CoreGenBackend/CoreGenMCtrl.h"
 #include "CoreGen/CoreGenBackend/CoreGenVTP.h"
+#include "CoreGen/CoreGenBackend/CoreGenDataPath.h"
 
 /*! \enum CGPluginType
  *  \brief Defnes the type of the CoreGenPlugin
@@ -137,23 +138,24 @@ private:
 
 
   std::vector<CGFeatureTable> FeatureTable; ///< CoreGenPluginImpl: Extended Feature Table
-
+  
   std::vector<CoreGenNode *> Nodes;         ///< CoreGenPluginImpl: DAG nodes
-
-  std::vector<CoreGenCache *> Caches;       ///< CoreGenPluginImpl: Caches
-  std::vector<CoreGenCore *> Cores;         ///< CoreGenPluginImpl: Cores
-  std::vector<CoreGenInst *> Insts;         ///< CoreGenPluginImpl: Instructions
-  std::vector<CoreGenPseudoInst *> PInsts;  ///< CoreGenPluginImpl: Pseudo Instructions
-  std::vector<CoreGenInstFormat *> Formats; ///< CoreGenPluginImpl: Instruction Formats
-  std::vector<CoreGenReg *> Regs;           ///< CoreGenPluginImpl: Registers
-  std::vector<CoreGenRegClass *> RegClasses;///< CoreGenPluginImpl: Register Classes
-  std::vector<CoreGenSoC *> Socs;           ///< CoreGenPluginImpl: SoC's
-  std::vector<CoreGenISA *> ISAs;           ///< CoreGenPluginImpl: ISA's
-  std::vector<CoreGenExt *> Exts;           ///< CoreGenPluginImpl: Extensions
-  std::vector<CoreGenComm *> Comms;         ///< CoreGenPluginImpl: Communication channels
-  std::vector<CoreGenSpad *> Spads;         ///< CoreGenPluginImpl: Scratchpads
-  std::vector<CoreGenMCtrl *> MCtrls;       ///< CoreGenPluginImpl: Memory Controllers
-  std::vector<CoreGenVTP *> VTPs;           ///< CoreGenPluginImpl: Virtual to Physical Controllers
+  
+  std::vector<CoreGenCache *> Caches;       ///< CoreGenImpl: Caches
+  std::vector<CoreGenCore *> Cores;         ///< CoreGenImpl: Cores
+  std::vector<CoreGenInst *> Insts;         ///< CoreGenImpl: Instructions
+  std::vector<CoreGenPseudoInst *> PInsts;  ///< CoreGenImpl: Pseudo Instructions
+  std::vector<CoreGenInstFormat *> Formats; ///< CoreGenImpl: Instruction Formats
+  std::vector<CoreGenReg *> Regs;           ///< CoreGenImpl: Registers
+  std::vector<CoreGenRegClass *> RegClasses;///< CoreGenImpl: Register Classes
+  std::vector<CoreGenSoC *> Socs;           ///< CoreGenImpl: SoC's
+  std::vector<CoreGenISA *> ISAs;           ///< CoreGenImpl: ISA's
+  std::vector<CoreGenExt *> Exts;           ///< CoreGenImpl: Extensions
+  std::vector<CoreGenComm *> Comms;         ///< CoreGenImpl: Communication channels
+  std::vector<CoreGenSpad *> Spads;         ///< CoreGenImpl: Scratchpads
+  std::vector<CoreGenMCtrl *> MCtrls;       ///< CoreGenImpl: Memory Controllers
+  std::vector<CoreGenVTP *> VTPs;           ///< CoreGenImpl: Virtual to Physical Controllers
+  std::vector<CoreGenDataPath*> DataPaths;  ///< CoreGenImpl: Pipelines / DataPath
 
   // private functions
 
@@ -220,6 +222,9 @@ public:
   /// Retrieve the virtual to physical translation data
   std::vector<CoreGenVTP *> *GetVTPs() { return &VTPs; }
 
+  /// Retrieve the Pipeline / DataPath data
+  std::vector<CoreGenDataPath *> *GetDataPaths() { return &DataPaths; }
+
   /// Retrieve the number of caches
   unsigned GetNumCaches() { return VTPs.size(); }
 
@@ -261,6 +266,9 @@ public:
 
   /// Retrieve the number of virtual to physical units
   unsigned GetNumVTPs() { return VTPs.size(); }
+
+  /// Retrieve the number of DataPaths / Pipelines
+  unsigned GetNumDataPaths() { return DataPaths.size(); }
 
   /// Retrieve the plugin name
   std::string GetName() { return Name; }
@@ -355,6 +363,9 @@ public:
   /// Insert a new ISA node
   CoreGenISA *InsertISA( std::string Name );
 
+  /// Insert a new DataPath node
+  CoreGenDataPath *InsertDataPath( std::string Name, std::string Style);
+
   /// Build the DAG for executing passes
   bool BuildDAG();
 
@@ -402,6 +413,9 @@ public:
 
   /// Retrieve a reference to the soc vector
   std::vector<CoreGenSoC *> &GetSocVect() { return Socs; }
+
+  /// Retrieve a reference to the DataPaths vector
+  std::vector<CoreGenDataPath *> &GetDataPathVect() { return DataPaths; }
 
   /// Retrieve the type of the target plugin
   CGPluginType GetPluginType();

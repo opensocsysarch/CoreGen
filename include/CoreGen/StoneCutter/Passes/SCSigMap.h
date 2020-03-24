@@ -42,7 +42,7 @@ private:
   std::vector<SCIntrin *>* Intrins; ///< Intrinsics vector
 
   // Private functions
-  /// walks the LLVM Module object and discovers all the interior signals
+  /// Walks the LLVM Module object and discovers all the interior signals
   bool DiscoverSigMap();
 
   /// Decodes an individual instruction for the signal map

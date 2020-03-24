@@ -33,7 +33,12 @@ bool SCStoreElem::GetSigMap(CoreGenSigMap *Sigs,
     width = I.getOperand(2)->getType()->getIntegerBitWidth();
   }
 
-  return Sigs->InsertSignal(new SCSig(MEM_WRITE,width,Inst) );
+  std::string Str;
+  if( MDNode *N = I.getMetadata("pipe.pipeName")) {
+    Str = cast<MDString>(N->getOperand(0))->getString().str();
+  }
+
+  return Sigs->InsertSignal(new SCSig(MEM_WRITE,width,Inst,Str) );
 }
 
 // EOF

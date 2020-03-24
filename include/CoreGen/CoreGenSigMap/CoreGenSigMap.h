@@ -42,9 +42,11 @@ private:
 
   std::vector<SigType> TopSigs;   ///< CoreGenSigMap: top-level signals
 
-  unsigned TmpIdx;
+  unsigned TmpIdx;                ///< CoreGenSigMap: Temporary index
 
-  std::string Error;
+  std::string Error;              ///< CoreGenSigMap: Error string
+
+  std::string SigFile;            ///< CoreGenSigMap: Output file
 
   // private functions
   /// Writes the top-level signal map to the YAML file
@@ -108,6 +110,12 @@ public:
 
   /// Retrieves the number of signals in the signal map
   unsigned GetNumSignals() { return Signals.size(); }
+
+  /// Retrieves a vector of the pipeline stages found in the included signals
+  std::vector<std::string> GetPipeVect();
+
+  /// Write the signal map
+  bool WriteSigMap();
 
   /// Write the signal map to the target file
   bool WriteSigMap( std::string File );

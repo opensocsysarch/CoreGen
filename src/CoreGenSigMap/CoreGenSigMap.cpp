@@ -114,11 +114,20 @@ unsigned CoreGenSigMap::GetMinSignalWidth( unsigned Idx ){
   return Min;
 }
 
+bool CoreGenSigMap::WriteSigMap(){
+  if( SigFile.length() > 0 )
+    return WriteSigMap(SigFile);
+  return false;
+}
+
 bool CoreGenSigMap::WriteSigMap( std::string File ){
   if( File.length() == 0 )
     return false;
   if( Signals.size() == 0 )
     return false;
+
+  // set the file name
+  SigFile = File;
 
   // open the file
   std::ofstream OutYaml(File.c_str());
@@ -347,12 +356,17 @@ bool CoreGenSigMap::ReadInstSignals(const YAML::Node& InstNodes){
           DF = LSNode["DistanceFalse"].as<signed>();
         }
 
+        std::string PipeStage;
+        if( CheckValidNode(LSNode,"PipeStage") ){
+          PipeStage = LSNode["PipeStage"].as<std::string>();
+        }
+
         std::string FusedOp;
         if( CheckValidNode(LSNode,"FusedOp") ){
           FusedOp = LSNode["FusedOp"].as<std::string>();
         }
 
-        Signals.push_back(new SCSig(Type,Width,DT,DF,Name,SigName));
+        Signals.push_back(new SCSig(Type,Width,DT,DF,Name,SigName,PipeStage));
         if( FusedOp.length() > 0 ){
           // write the fused op to the latest signal
           FusedOpType FType = StrToFusedOpType(FusedOp);
@@ -427,6 +441,8 @@ bool CoreGenSigMap::ReadSigMap( std::string File ){
   if( File.length() == 0 )
     return false;
 
+  SigFile = File;
+
   // load the file
   YAML::Node IR;
   try{
@@ -496,6 +512,20 @@ std::vector<SCSig *> CoreGenSigMap::GetSigVect(std::string Inst){
   return CSigs;
 }
 
+std::vector<std::string> CoreGenSigMap::GetPipeVect(){
+  std::vector<std::string> V;
+
+  for( unsigned i=0; i<Signals.size(); i++ ){
+    if( Signals[i]->IsPipeDefined() ){
+      V.push_back(Signals[i]->GetPipeName());
+    }
+  }
+
+  std::sort( V.begin(), V.end() );
+  V.erase( std::unique(V.begin(),V.end()), V.end() );
+  return V;
+}
+
 bool CoreGenSigMap::WriteInstSignals(YAML::Emitter *out){
   if( out == nullptr )
     return false;
@@ -531,6 +561,9 @@ bool CoreGenSigMap::WriteInstSignals(YAML::Emitter *out){
       *out << YAML::Key << "Width" << YAML::Value << CSigs[j]->GetWidth();
       *out << YAML::Key << "DistanceTrue" << YAML::Value << CSigs[j]->GetDistanceTrue();
       *out << YAML::Key << "DistanceFalse" << YAML::Value << CSigs[j]->GetDistanceFalse();
+      if( CSigs[j]->IsPipeDefined() ){
+        *out << YAML::Key << "PipeStage" << YAML::Value << CSigs[j]->GetPipeName();
+      }
       if( CSigs[j]->GetFusedType() != FOP_UNK )
         *out << YAML::Key << "FusedOp" << YAML::Value << CSigs[j]->FusedOpTypeToStr();
 

@@ -247,6 +247,13 @@ CoreGenComm *CoreGenPlugin::InsertComm(std::string Name){
   return Impl->InsertComm(Name);
 }
 
+CoreGenDataPath *CoreGenPlugin::InsertDataPath(std::string Name, std::string Style){
+  if(!Impl){
+    return nullptr;
+  }
+  return Impl->InsertDataPath(Name, Style);
+}
+
 std::vector<CoreGenCache *> *CoreGenPlugin::GetCaches(){
   if( !Impl ){
     return nullptr;
@@ -345,6 +352,13 @@ std::vector<CoreGenVTP *> *CoreGenPlugin::GetVTPs(){
   return Impl->GetVTPs();
 }
 
+std::vector<CoreGenDataPath *> *CoreGenPlugin::GetDataPaths(){
+  if( !Impl ){
+    return nullptr;
+  }
+  return Impl->GetDataPaths();
+}
+
 unsigned CoreGenPlugin::GetNumCaches(){
   if( !Impl ){
     return 0;
@@ -441,6 +455,13 @@ unsigned CoreGenPlugin::GetNumVTPs(){
     return 0;
   }
   return Impl->GetNumVTPs();
+}
+
+unsigned CoreGenPlugin::GetNumDataPaths(){
+  if( !Impl ){
+    return 0;
+  }
+  return Impl->GetNumDataPaths();
 }
 
 std::vector<CoreGenCache *> &CoreGenPlugin::GetCacheVect(){
@@ -553,6 +574,14 @@ std::vector<CoreGenSoC *> &CoreGenPlugin::GetSocVect(){
     throw "Plugin implementation not loaded";
   }
   return Impl->GetSocVect();
+}
+
+std::vector<CoreGenDataPath *> &CoreGenPlugin::GetDataPathVect(){
+  if( !Impl ){
+    Errno->SetError(CGERR_ERROR, "Plugin implementation not loaded" );
+    throw "Plugin implementation not loaded";
+  }
+  return Impl->GetDataPathVect();
 }
 
 // EOF

@@ -23,15 +23,40 @@
 #include <map>
 #include <vector>
 #include "CoreGen/StoneCutter/SCPass.h"
+#include "CoreGen/CoreGenSigMap/CoreGenSigMap.h"
 
 class SCPipeBuilder : public SCPass {
 private:
 
-  std::vector<unsigned> ArithOps;   ///< Pipline arithmetic operations
-  std::vector<unsigned> ShiftOps;   ///< Pipline shift operations
+  CoreGenSigMap *SigMap;              ///< SCPipeBuilder: Signal map object
 
-  /// Construct the arithmetic pipeline
-  bool BuildArithPipe();
+  std::vector<std::string> PipeVect;  ///< SCPipeBuilder: Pipe vector
+  std::vector<std::string> InstVect;  ///< SCPipeBuilder: Instruction vector
+
+  std::vector<std::pair<std::string, std::string>> AttrMap;  ///< SCPipeBuilder: Attribute  to pipeline pairs
+
+  unsigned **AdjMat;                  ///< SCPipeBuilder: Adjacency Matrix
+
+  /// SCPipeBuilder: Initialize the atreibute vector
+  bool InitAttrs();
+
+  /// SCPipeBuilder: Build the matrix representation
+  bool BuildMat();
+
+  /// SCPipeBuilder: Writes the pipeline back to the signal map
+  bool WriteSigMap();
+
+  /// SCPipeBuilder: Allocates the adjacency matrix
+  bool AllocMat();
+
+  /// SCPipeBuilder: Frees the adjacency matrix
+  bool FreeMat();
+
+  /// SCPipeBuilder: Execute the various optimization phases
+  bool Optimize();
+
+  /// SCPipeBuilder: Retrives the x-axis idx from the pipe stage name
+  unsigned PipeToIdx(std::string P);
 
 public:
   /// Default cosntructor
@@ -39,6 +64,9 @@ public:
 
   /// Default destructor
   ~SCPipeBuilder();
+
+  /// Set the signal map object
+  bool SetSignalMap(CoreGenSigMap *CSM){ SigMap = CSM; return true; }
 
   /// Execute the codegen
   virtual bool Execute() override;

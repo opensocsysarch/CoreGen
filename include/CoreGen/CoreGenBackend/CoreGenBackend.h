@@ -62,6 +62,7 @@
 #include "CoreGen/CoreGenBackend/CoreGenMCtrl.h"
 #include "CoreGen/CoreGenBackend/CoreGenVTP.h"
 #include "CoreGen/CoreGenBackend/CoreGenPlugin.h"
+#include "CoreGen/CoreGenBackend/CoreGenDataPath.h"
 
 // Codegen Headers
 #include "CoreGen/CoreGenCodegen/CoreGenCodegen.h"
@@ -95,6 +96,7 @@ private:
   std::vector<CoreGenMCtrl *> MCtrls;       ///< CoreGenBackend: Memory Controllers
   std::vector<CoreGenVTP *> VTPs;           ///< CoreGenBackend: Virtual to Physical Controllers
   std::vector<CoreGenPlugin *> Plugins;     ///< CoreGenBackend: Plugins
+  std::vector<CoreGenDataPath *> DataPaths; ///< CoreGenBackend: Data Path Implementations
 
   CoreGenNode *Top;                         ///< CoreGenBackend: Top-level project node
 
@@ -116,6 +118,7 @@ private:
   bool DeleteMCtrlNode(CoreGenMCtrl *M);            ///< CoreGenBackend: deletes an mctrl node
   bool DeleteVTPNode(CoreGenVTP *V);                ///< CoreGenBackend: deletes a VTP node
   bool DeletePluginNode(CoreGenPlugin *P);          ///< CoreGenBackend: deletes a plugin node
+  bool DeleteDPathNode(CoreGenDataPath *D);         ///< CoreGenBackend: deletes a Data Path node
 
 public:
 
@@ -209,6 +212,9 @@ public:
 
   /// Insert a new ISA node
   CoreGenISA *InsertISA( std::string Name );
+
+  /// Insert a new Data Path node TODO:Specify a type, arch, etc.  depending on RISC, OOO, SS, etc
+  CoreGenDataPath *InsertDPath( std::string Name, std::string Style );
 
   /// Insert a new VTP node
   CoreGenVTP *InsertVTP( std::string Name );

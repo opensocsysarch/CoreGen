@@ -19,6 +19,7 @@
 #include "CoreGen/CoreGenCodegen/NodeCodegen/SocCG.h"
 #include "CoreGen/CoreGenCodegen/NodeCodegen/ISACG.h"
 #include "CoreGen/CoreGenCodegen/NodeCodegen/PluginCG.h"
+#include "CoreGen/CoreGenCodegen/NodeCodegen/DPathCG.h"
 #include "CoreGen/CoreGenCodegen/NodeCodegen/CacheCG.h"
 
 #endif

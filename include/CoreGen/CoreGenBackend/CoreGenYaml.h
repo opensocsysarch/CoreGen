@@ -40,6 +40,7 @@
 #include "CoreGen/CoreGenBackend/CoreGenMCtrl.h"
 #include "CoreGen/CoreGenBackend/CoreGenVTP.h"
 #include "CoreGen/CoreGenBackend/CoreGenProj.h"
+#include "CoreGen/CoreGenBackend/CoreGenDataPath.h"
 
 #include "CoreGen/CoreGenBackend/CoreGenDAG.h"
 
@@ -185,6 +186,10 @@ private:
   bool ReadCacheYaml(const YAML::Node& CacheNodes,
                      std::vector<CoreGenCache *> &Caches);
 
+  /// Read Yaml: Datapath
+  bool ReadDataPathYaml(const YAML::Node& DataPathNodes,
+                    std::vector<CoreGenDataPath *> &DataPaths);
+
   /// Read Yaml: Cores
   bool ReadCoreYaml(const YAML::Node& CoreNodes,
                     std::vector<CoreGenCore *> &Cores,
@@ -305,6 +310,7 @@ public:
                  std::vector<CoreGenMCtrl *> &MCtrls,
                  std::vector<CoreGenVTP *> &VTPs,
                  std::vector<CoreGenExt *>  &Exts,
+                 std::vector<CoreGenDataPath *> &DataPaths,
                  std::vector<CoreGenPlugin *> &Plugins );
 
 };

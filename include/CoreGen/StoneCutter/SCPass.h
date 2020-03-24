@@ -104,6 +104,9 @@ public:
   /// Determines if the target variable has the target attribute
   bool HasGlobalAttribute(std::string Var, std::string Attribute );
 
+  /// Retrieves a metadata pipeName instance from the target instruction
+  std::string GetMDPipeName(Instruction &I);
+
   /// Retrieves the target attribute from the target global variable
   std::string GetGlobalAttribute(std::string Var, std::string Attribute);
 
@@ -115,6 +118,15 @@ public:
 
   /// Retrieves the number of instruction format register class attributes that include the target variable
   unsigned GetNumRegClasses(std::string Var);
+
+  /// Retrieves a list of unique pipelines
+  std::vector<std::string> GetPipelines();
+
+  /// Retrieves the number of pipelines present
+  unsigned GetNumPipelines();
+
+  /// Retrieves a list of attributes for the target pipeline
+  std::vector<std::string> GetPipelineAttrs(std::string Pipe);
 
   /// Retrieves a list of unique instruction formats
   std::vector<std::string> GetInstFormats();

@@ -80,6 +80,15 @@ const VarAttrEntry VarAttrEntryTable[] = {
   { ".",       0, 0, false, false, false }  // disable flag
 };
 
+/** Contains a list of pipeline attributes */
+const std::string PipeAttrTable[] = {
+  "in_order",
+  "out_of_order",
+  "branch_predict",
+  "forward",
+  "." // disable flag
+};
+
 // SCUtil: Retrieve the current date+time
 inline std::string SCCurrentDateTime(){
   time_t now = time(0);

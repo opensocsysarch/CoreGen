@@ -13,6 +13,7 @@ SpadCG.cpp
 SocCG.cpp
 ISACG.cpp
 PluginCG.cpp
+DPathCG.cpp
 CacheCG.cpp
 )
 

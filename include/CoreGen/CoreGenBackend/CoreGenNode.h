@@ -45,6 +45,7 @@ typedef enum{
   CGSpad  = 12,                         ///< CGNodeType: Scratchpad
   CGMCtrl = 13,                         ///< CGNodeType: Memory Controller
   CGVTP   = 14,                         ///< CGNodeType: Virtual to Physical Node
+  CGDPath = 15,                         ///< CGNodeType: DataPath
   CGPlugin= 30,                         ///< CGNodeType: Plugin
   CGTop   = 100                         ///< CGNodeType: Top-Level Node
 }CGNodeType;                            ///< CoreGenNode: CoreGen Node Types

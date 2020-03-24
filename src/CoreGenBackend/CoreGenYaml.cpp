@@ -2582,6 +2582,36 @@ bool CoreGenYaml::ReadPseudoInstYaml(const YAML::Node& PInstNodes,
   return true;
 }
 
+bool CoreGenYaml::ReadDataPathYaml(const YAML::Node& DataPathNodes,
+                                std::vector<CoreGenDataPath *> &DataPaths){
+
+   for( unsigned i=0; i<DataPathNodes.size(); i++){
+     const YAML::Node& Node = DataPathNodes[i];
+     if( !CheckValidNode(Node, "Pipeline") ){
+       PrintParserError(DataPathNodes,
+                          "DataPaths",
+                          "Pipeline");
+       return false;
+    }
+   
+    
+    std::string Name = Node["Pipeline"].as<std::string>();
+
+    if( !IsValidName(Name) ){
+      Errno->SetError(CGERR_ERROR, "Invalid IR Node name: " + Name);
+      return false;
+    } 
+  
+    std::string Style = Node["Style"].as<std::string>();
+
+    CoreGenDataPath *D = new CoreGenDataPath(Name, Style, Errno);
+    DataPaths.push_back(D);
+   }
+
+
+   return true;
+}
+
 bool CoreGenYaml::ReadCacheYaml(const YAML::Node& CacheNodes,
                                 std::vector<CoreGenCache *> &Caches){
   for( unsigned i=0; i<CacheNodes.size(); i++ ){
@@ -3395,6 +3425,14 @@ bool CoreGenYaml::ReadPluginYaml(const YAML::Node& PluginNodes,
       }
     }
 
+    //-- DataPaths
+    if( Node["DataPaths"] ){
+      const YAML::Node& DataPathNodes = Node["DataPaths"];
+      if( !ReadDataPathYaml(DataPathNodes,NewPlugin->GetDataPathVect()) ){
+        return false;
+      }
+    }
+
     //-- Cores
     if( Node["Cores"] ){
       const YAML::Node& CoreNodes = Node["Cores"];
@@ -3829,6 +3867,7 @@ bool CoreGenYaml::ReadYaml(  std::vector<CoreGenSoC *>  &Socs,
                              std::vector<CoreGenMCtrl *> &MCtrls,
                              std::vector<CoreGenVTP *> &VTPs,
                              std::vector<CoreGenExt *>  &Exts,
+                             std::vector<CoreGenDataPath *> &DataPaths,
                              std::vector<CoreGenPlugin *> &Plugins ){
   // sanity check
   if( FileName.length() == 0 ){
@@ -3914,6 +3953,13 @@ bool CoreGenYaml::ReadYaml(  std::vector<CoreGenSoC *>  &Socs,
   //-- Caches
   const YAML::Node& CacheNodes = IR["Caches"];
   if( !ReadCacheYaml(CacheNodes,Caches) ){
+    fin.close();
+    return false;
+  }
+
+  //-- DataPaths
+  const YAML::Node& DatapathNodes = IR["DataPaths"];
+  if( !ReadDataPathYaml(DatapathNodes,DataPaths) ){
     fin.close();
     return false;
   }

@@ -82,7 +82,11 @@ enum SCToken {
   tok_intrin      = -30,
 
   // pipes
-  tok_pipe        = -40
+  tok_pipe        = -40,
+
+  // pipeline
+  tok_pipeline    = -50,
+  tok_pipeattr    = -51
 };
 
 
@@ -137,6 +141,9 @@ private:
 
   /// Determine if the current token is a variable definition
   bool IsVarDef();
+
+  /// Determine if the current token is a pipeline attribute definition
+  bool IsPipeAttrDef();
 
   /// Detrmines in the token is a potential dyadic operator
   bool IsDyadic(int LC);

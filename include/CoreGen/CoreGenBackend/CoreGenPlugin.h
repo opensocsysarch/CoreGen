@@ -152,6 +152,9 @@ public:
   /// Insert a new cache node
   CoreGenCache *InsertCache(std::string Name, unsigned Sets,unsigned Ways);
 
+  /// Insert a new DataPath node
+  CoreGenDataPath *InsertDataPath(std::string Name, std::string Style);
+
   /// Retrieve the cache data
   std::vector<CoreGenCache *> *GetCaches();
 
@@ -193,6 +196,9 @@ public:
 
   /// Retrieve the virtual to physical translation data
   std::vector<CoreGenVTP *> *GetVTPs();
+
+  /// Retrieve the DataPath data
+  std::vector<CoreGenDataPath *> *GetDataPaths();
 
   /// Retrieve the number of caches
   unsigned GetNumCaches();
@@ -236,6 +242,9 @@ public:
   /// Retrieve the number of virtual to physical units
   unsigned GetNumVTPs();
 
+  /// Retrieve the number of DataPaths / Pipelines
+  unsigned GetNumDataPaths();
+
   /// Retrieve a reference to the cache vector
   std::vector<CoreGenCache *> &GetCacheVect();
 
@@ -277,6 +286,10 @@ public:
 
   /// Retrieves a reference to the soc vector
   std::vector<CoreGenSoC *> &GetSocVect();
+
+  /// Retrieve a reference to the DataPaths vector
+  std::vector<CoreGenDataPath *> &GetDataPathVect();
+
 };
 
 #endif

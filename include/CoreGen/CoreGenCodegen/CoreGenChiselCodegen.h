@@ -36,6 +36,7 @@
 // Codegen Headers
 #include "CoreGen/CoreGenCodegen/CoreGenNodeCodegen.h"
 #include "CoreGen/CoreGenCodegen/CoreGenNodeCodegens.h"
+#include "CoreGen/CoreGenCodegen/CoreGenChiselParms.h"
 
 class CoreGenChiselCodegen
 {
@@ -44,6 +45,7 @@ private:
   CoreGenProj *Proj;                ///< CoreGen Project Info
   std::string ChiselRoot;           ///< Root directory for chisel output
   CoreGenErrno *Errno;              ///< CoreGen Errno Structure
+  CoreGenChiselParms<std::string, std::string> *Parms;        ///< Pamaeters to be used in the Chisel generation
 
   /// Generates the top level configuration scala file
   bool GenerateConfig();
@@ -68,6 +70,10 @@ private:
 
   /// Execute the ISA code generator
   bool ExecISACodegen(CoreGenNode *N);
+
+
+  /// Execute the DataPath code generator
+  bool ExecDataPathCodegen(CoreGenNode *N);
 
   /// Execute teh cache code generator
   bool ExecCacheCodegen(CoreGenNode *N);
