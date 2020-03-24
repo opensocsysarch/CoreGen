@@ -1,4 +1,4 @@
-# CoreGen Codegen CMakeLists.txt
+# CoreGenCodegen/NodeCodegen CMakeLists.txt
 #
 # Copyright (C) 2017-2020 Tactical Computing Laboratories, LLC
 # All Rights Reserved
@@ -14,6 +14,7 @@ SocCG.cpp
 ISACG.cpp
 PluginCG.cpp
 DPathCG.cpp
+CacheCG.cpp
 )
 
 include_directories(${YAML_PATH}/include)

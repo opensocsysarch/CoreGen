@@ -27,31 +27,74 @@
 #include <sys/stat.h>
 #include <cerrno>
 #include <cstdlib>
+#include <vector>
+#include <cmath>
+#include <locale>
 
 // CoreGen Headers
-#include "CoreGen/CoreGenBackend/CoreGenBackend.h"
+#include "CoreGen/CoreGenBackend/CoreGenNodes.h"
 #include "CoreGen/CoreGenBackend/CoreGenUtil.h"
+#include "CoreGen/CoreGenArchive/CoreGenArchive.h"
 
-class CoreGenLLVMCodegen
-{
-private:
+class CoreGenLLVMCodegen {
+protected:
   CoreGenNode *Top;                 ///< Top-level coregen node
   CoreGenProj *Proj;                ///< CoreGen Project Info
-  std::string LLVMRoot;             ///< Root directory for chisel output
+  CoreGenArchEntry *Entry;          ///< CoreGenArchEntry for the target LLVM version
+  std::string LLVMRoot;             ///< Root directory for LLVM output
   CoreGenErrno *Errno;              ///< CoreGen Errno Structure
+  std::string Version;              ///< LLVM Version Number
+
+  std::string TargetName;           ///< Name of the compiler target
+  std::string AddrMode;             ///< LLVM addressing mode
+
+  std::vector<std::string> Subtargets;        ///< vector of subtarget ISAs
+  std::vector<CoreGenInstFormat *> Formats;   ///< vector of instruction formats
+  std::vector<CoreGenRegClass *> RegClasses;  ///< vector of register classes
+  std::vector<CoreGenInst *> Insts;           ///< vector of instructions
+  std::vector<CoreGenPseudoInst *> PInsts;    ///< vector of pseudo instructions
+
+  /// Generate the vector of subtarget nodes
+  bool GenerateSubtargets();
+
+  /// Generate the vector of instruction format nodes
+  bool GenerateInstFormats();
+
+  /// Generate the vector of register class nodes
+  bool GenerateRegClasses();
+
+  /// Generate the vector of instruction nodes
+  bool GenerateInsts();
+
+  /// Generates the vector of pseudo instruction nodes
+  bool GeneratePInsts();
+
+  /// Generates the resident addressing mode
+  bool GenerateAddrMode();
+
+  /// Convert a string to upper case
+  std::string UpperCase(std::string Str);
 
 public:
   /// Default constructor
   CoreGenLLVMCodegen(CoreGenNode *T,
                      CoreGenProj *P,
+                     CoreGenArchEntry *EN,
                      std::string R,
-                     CoreGenErrno *E);
+                     CoreGenErrno *E,
+                     std::string Ver);
 
   /// Default destructor
-  ~CoreGenLLVMCodegen();
+  virtual ~CoreGenLLVMCodegen();
 
   /// Execute the LLVM codegen
-  bool Execute();
+  virtual bool Execute() { return false; }
+
+  /// Execute the backend LLVM codegen
+  bool ExecuteBackend();
+
+  /// Retrieve the version info
+  std::string GetVersion() { return Version; }
 
 };
 

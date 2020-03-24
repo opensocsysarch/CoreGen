@@ -14,6 +14,7 @@ file(GLOB TEST_SRCS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} *.cpp)
 if(BUILD_COREGEN_YAML_READER_TESTING)
 set(BUILD_COREGEN_YAML_READER_MISSING_DATA_TESTING "ON")
 set(BUILD_COREGEN_YAML_READER_INDENT_FAIL_TESTING "ON")
+set(BUILD_COREGEN_YAML_READER_CONV_FAIL_TESTING "ON")
 foreach(testSrc ${TEST_SRCS})
   # Extract the file name
   get_filename_component(testName ${testSrc} NAME_WE)
@@ -38,3 +39,6 @@ endif()
 
 add_subdirectory(MissingData)
 add_subdirectory(IndentFail)
+add_subdirectory(ConvFail)
+
+# EOF

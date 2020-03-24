@@ -17,10 +17,11 @@ CoreGenPluginImpl::CoreGenPluginImpl(std::string N,
                                      unsigned MaV,
                                      unsigned MiV,
                                      unsigned PaV,
+                                     CoreGenEnv *EV,
                                      CoreGenErrno *E)
   : Name(N), Type(T), NumFeatures(0), HDLCodegen(HDL), LLVMCodegen(LLVM),
     MajorVersion(MaV), MinorVersion(MiV), PatchVersion(PaV),
-    Errno(E),Top(new CoreGenNode(CGTop,Errno)) {
+    Env(EV), Errno(E),Top(new CoreGenNode(CGTop,Errno)) {
 }
 
 CoreGenPluginImpl::~CoreGenPluginImpl(){
@@ -30,6 +31,195 @@ CoreGenPluginImpl::~CoreGenPluginImpl(){
   if( Top ){
     delete Top;
   }
+}
+
+bool CoreGenPluginImpl::IsCommentLine(std::string line){
+  if( (line[0] == '/') && (line[1] == '/') ){
+    // c++, verilog, chisel comment
+    return true;
+  }else if( (line[0] == '/') && (line[1] == '*') ){
+    // c, c++, verilog comment
+    return true;
+  }else if( line[0] == '#' ){
+    // shell script comment
+    return true;
+  }
+  return false;
+}
+
+bool CoreGenPluginImpl::CodegenChiselImport(std::string File,
+                                            std::vector<std::string> Imports){
+  // Stage 1: copy the target file to a temporary
+  std::string TmpFile = File + ".tmp";
+
+  if( !CGFileCopy( File, TmpFile ) ){
+    Errno->SetError(CGERR_ERROR,
+                    this->GetName() + ":Could not copy file to temporary: " + File );
+    return false;
+  }
+
+  // Stage 2: open the TmpFile
+  std::ifstream InFile(TmpFile);
+  if( !InFile.is_open() ){
+    Errno->SetError(CGERR_ERROR,
+                    this->GetName() + ":Failed to open temporary source file: " + TmpFile );
+    return false;
+  }
+
+  // Stage 3: walk the file and find the line number of the last import statement
+  std::string line;
+  unsigned lineNum = 0;
+  unsigned foundLine = 0;
+  while( std::getline(InFile,line) ){
+    if( !IsCommentLine(line) ){
+      // not a comment line, look for the keyword
+      std::size_t found = line.find("import");
+      if( found != std::string::npos ){
+        foundLine = lineNum;
+      }
+    }
+    lineNum++;
+  }
+
+  // Stage 4: reset the input file pointer
+  InFile.seekg(std::ios_base::beg);
+
+  // Stage 5: Delete the original file
+  if( !CGDeleteFile(File) ){
+    Errno->SetError(CGERR_ERROR,
+                    this->GetName() + ":Failed to remove original source file: " + File );
+    InFile.close();
+    CGDeleteFile(TmpFile);
+    return false;
+  }
+
+  // Stage 6: open the original file
+  std::ofstream OutStream;
+  OutStream.open(File,std::ios::trunc);
+  if( !OutStream.is_open() ){
+    Errno->SetError(CGERR_ERROR,
+                    this->GetName() + ":Failed to open target source file: " + File );
+    InFile.close();
+    CGDeleteFile(TmpFile);
+    return false;
+  }
+
+  // Stage 7: iterate across the TmpFile and copy until we hit "foundLine"
+  //          then insert the vector of import statements and continue copying
+  lineNum = 0;
+  while( std::getline(InFile,line) ){
+    if( lineNum == foundLine ){
+      // output the last import statement
+      OutStream << line;
+
+      // output the set of imports from the user
+      for( unsigned i=0; i<Imports.size(); i++ ){
+        OutStream << Imports[i] << std::endl;
+      }
+    }else{
+      OutStream << line;
+    }
+    lineNum++;
+  }
+
+  // Stage 8: close all the files and delete the tmp
+  InFile.close();
+  OutStream.close();
+  CGDeleteFile(TmpFile);
+
+  return true;
+}
+
+bool CoreGenPluginImpl::CodegenKeyword(std::string File,
+                                       std::string Key,
+                                       std::string Output){
+  // Stage 1: copy the target file to a temporary
+  std::string TmpFile = File + ".tmp";
+
+  if( !CGFileCopy( File, TmpFile ) ){
+    Errno->SetError(CGERR_ERROR,
+                    this->GetName() + ":Could not copy file to temporary: " + File );
+    return false;
+  }
+
+  // Stage 2: remove the original file
+  if( !CGDeleteFile(File) ){
+    Errno->SetError(CGERR_ERROR,
+                    this->GetName() + ":Failed to remove original source file: " + File );
+    return false;
+  }
+
+  // Stage 3: open the temporary file and the original file
+  std::ofstream OutStream;
+  OutStream.open(File,std::ios::trunc);
+  if( !OutStream.is_open() ){
+    Errno->SetError(CGERR_ERROR,
+                    this->GetName() + ":Failed to open target source file: " + File );
+    // copy the original back
+    CGFileCopy( TmpFile, File );
+    return false;
+  }
+
+  std::ifstream InFile(TmpFile);
+  if( !InFile.is_open() ){
+    Errno->SetError(CGERR_ERROR,
+                    this->GetName() + ":Failed to open temporary source file: " + TmpFile );
+    OutStream.close();
+    CGFileCopy(TmpFile,File);
+    return false;
+  }
+
+  // Stage 4: walk the file and initiate the codegen
+  std::string line;
+  while( std::getline(InFile,line) ){
+    if( IsCommentLine(line) ){
+      // found a comment line, look for the keyword
+      std::size_t found = line.find(Key);
+      if( found != std::string::npos ){
+        OutStream << Output;
+      }
+    }else{
+      // just output the line
+      OutStream << line;
+    }
+  }
+
+  // Stage 5: close the files
+  InFile.close();
+  OutStream.close();
+
+  return true;
+}
+
+bool CoreGenPluginImpl::CodegenFile(std::string File,
+                                    std::string Output){
+  std::ofstream OutStream;
+  OutStream.open(File,std::ios::trunc);
+  if( !OutStream.is_open() ){
+    Errno->SetError(CGERR_ERROR,
+                    this->GetName() + ":Could not open plugin output file: " + File );
+    return false;
+  }
+  OutStream << Output;
+  OutStream.close();
+  return true;
+}
+
+bool CoreGenPluginImpl::CopyPluginSrc(std::string Archive, std::string Path){
+  if( !CGDirExists(Path.c_str()) ){
+    if( !CGMkDirP(Path) ){
+      Errno->SetError(CGERR_ERROR,
+                      this->GetName() + ":Directory doesn't exist and could not be created: " + Path );
+      return false;
+    }
+  }
+  std::string UncStr = "cp -R" + Archive + "/*" + Path + "/";
+  if( system( UncStr.c_str() ) != 0 ){
+      Errno->SetError(CGERR_ERROR,
+                      this->GetName() + ":Could not copy source from archive directory: " + Archive );
+      return false;
+  }
+  return true;
 }
 
 CGPluginType CoreGenPluginImpl::GetPluginType(){

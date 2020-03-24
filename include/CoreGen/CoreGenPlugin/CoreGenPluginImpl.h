@@ -28,11 +28,14 @@
 #define _COREGENPLUGINIMPL_H_
 
 #include <iostream>
+#include <fstream>
 #include <string>
 #include <cstdint>
 #include <vector>
 
+#include "CoreGen/CoreGenBackend/CoreGenEnv.h"
 #include "CoreGen/CoreGenBackend/CoreGenErrno.h"
+#include "CoreGen/CoreGenBackend/CoreGenUtil.h"
 #include "CoreGen/CoreGenBackend/CoreGenCache.h"
 #include "CoreGen/CoreGenBackend/CoreGenCore.h"
 #include "CoreGen/CoreGenBackend/CoreGenExt.h"
@@ -133,10 +136,11 @@ private:
   unsigned MinorVersion;  ///< CoreGenPluginImpl: Minor Version
   unsigned PatchVersion;  ///< CoreGenPluginImpl: Patch Version
 
+
   std::vector<CGFeatureTable> FeatureTable; ///< CoreGenPluginImpl: Extended Feature Table
-
+  
   std::vector<CoreGenNode *> Nodes;         ///< CoreGenPluginImpl: DAG nodes
-
+  
   std::vector<CoreGenCache *> Caches;       ///< CoreGenImpl: Caches
   std::vector<CoreGenCore *> Cores;         ///< CoreGenImpl: Cores
   std::vector<CoreGenInst *> Insts;         ///< CoreGenImpl: Instructions
@@ -153,10 +157,16 @@ private:
   std::vector<CoreGenVTP *> VTPs;           ///< CoreGenImpl: Virtual to Physical Controllers
   std::vector<CoreGenDataPath*> DataPaths;  ///< CoreGenImpl: Pipelines / DataPath
 
+  // private functions
+
+  /// CoreGenPluginImpl: Determines if the target line is comment
+  bool IsCommentLine(std::string line);
+
 protected:
+  CoreGenEnv *Env;        ///< CoreGenPluginImpl: Environment structure
   CoreGenErrno *Errno;    ///< CoreGenPluginImpl: Errno structure
   CoreGenNode *Top;       ///< CoreGenPluginImpl: Top-level component node
-
+  std::string Path;       ///< CoreGenPluginImpl: Codegen path
 
 public:
   /// Default Constructor
@@ -167,6 +177,7 @@ public:
                     unsigned MajorVersion,
                     unsigned MinorVersion,
                     unsigned PatchVersion,
+                    CoreGenEnv *EV,
                     CoreGenErrno *E);
 
   /// Retrieve the cache data
@@ -409,13 +420,30 @@ public:
   /// Retrieve the type of the target plugin
   CGPluginType GetPluginType();
 
+  /// CoreGenPluginImpl: Perform a keyword match codegen
+  bool CodegenKeyword( std::string File, std::string Key, std::string Output );
+
+  /// CoreGenPluginImpl: Perform a full file codegen
+  bool CodegenFile( std::string File, std::string Output );
+
+  /// CoreGenPluginImpl: Insert a set of Chisel import statements in the target file
+  bool CodegenChiselImport(std::string File,
+                           std::vector<std::string> Imports);
+
+  /// CoreGenPluginImpl: Peform a deep copy from the archive to the target project path
+  bool CopyPluginSrc( std::string Archive, std::string Path );
+
   // -- virtual methods --
 
   /// Process the plugin features
   virtual bool ProcessFeatures() { return false; }
 
+  /// Execute the Codegen initialization routine
+  virtual bool Init(std::string P) { Path=P; return true; }
+
   /// Execute the HDL Codegen
-  virtual bool ExecuteHDLCodegen() { return false; }
+  virtual bool ExecuteHDLCodegen(CoreGenNode *Top,
+                                 CoreGenNode *Parent) { return false; }
 
   /// Execute the LLVM Codegen
   virtual bool ExecuteLLVMCodegen() { return false; }

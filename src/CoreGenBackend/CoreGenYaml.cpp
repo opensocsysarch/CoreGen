@@ -1601,12 +1601,28 @@ bool CoreGenYaml::ReadProjYaml(const YAML::Node& ProjNodes ){
       PrintParserError(Node,"ProjectInfo","ChiselMajorVersion");
       return false;
     }
-    unsigned CMaV = Node["ChiselMajorVersion"].as<unsigned>();
+    unsigned CMaV = 0;
+    try{
+      CMaV = Node["ChiselMajorVersion"].as<unsigned>();
+    }catch(YAML::BadConversion& e){
+      Errno->SetError(CGERR_ERROR, "Error in parsing ChilseMajorVersion: "
+                      + std::string(e.what()));
+    return false;
+    }
+
     if( !CheckValidNode(Node,"ChiselMinorVersion") ){
       PrintParserError(Node,"ProjectInfo","ChiselMinorVersion");
       return false;
     }
-    unsigned CMiV = Node["ChiselMinorVersion"].as<unsigned>();
+    unsigned CMiV = 0;
+    try{
+      CMiV = Node["ChiselMinorVersion"].as<unsigned>();
+    }catch(YAML::BadConversion& e){
+      Errno->SetError(CGERR_ERROR, "Error in parsing ChilseMinorVersion: "
+                      + std::string(e.what()));
+    return false;
+    }
+
     Proj->SetChiselVersion(CMaV,CMiV);
   }
 
@@ -1636,8 +1652,14 @@ bool CoreGenYaml::ReadRegisterYaml(const YAML::Node& RegNodes,
                        "Width");
       return false;
     }
-    int Width = Node["Width"].as<int>();
-    //TODO: add width pred
+    int Width = 0;
+    try{
+      Width = Node["Width"].as<int>();
+    }catch(YAML::BadConversion& e){
+      Errno->SetError(CGERR_ERROR, "Error in parsing register width: "
+                      + std::string(e.what()));
+      return false;
+    }
 
     if( !CheckValidNode(Node,"Index") ){
       PrintParserError(Node,
@@ -1645,8 +1667,14 @@ bool CoreGenYaml::ReadRegisterYaml(const YAML::Node& RegNodes,
                        "Index");
       return false;
     }
-    int Index = Node["Index"].as<int>();
-    //TODO: add index pred
+    int Index = 0;
+    try{
+      Index = Node["Index"].as<int>();
+    }catch(YAML::BadConversion& e){
+      Errno->SetError(CGERR_ERROR, "Error in parsing register index: "
+                      + std::string(e.what()));
+      return false;
+    }
 
     if( !CheckValidNode(Node,"IsFixedValue") ){
       PrintParserError(Node,
@@ -1654,7 +1682,16 @@ bool CoreGenYaml::ReadRegisterYaml(const YAML::Node& RegNodes,
                        "IsFixedValue");
       return false;
     }
-    bool IFV = Node["IsFixedValue"].as<bool>();
+
+    bool IFV = false;
+    try{
+      IFV = Node["IsFixedValue"].as<bool>();
+    }catch(YAML::BadConversion& e){
+      Errno->SetError(CGERR_ERROR, "Error in parsing register IsFixedValue: "
+                      + std::string(e.what()));
+      return false;
+    }
+
     std::vector<uint64_t> FixedVals;
 
     if( IFV ){
@@ -1664,8 +1701,15 @@ bool CoreGenYaml::ReadRegisterYaml(const YAML::Node& RegNodes,
                          "FixedValue");
         return false;
       }
-      //TODO:: add val pred
-      FixedVals.push_back( Node["FixedValue"].as<uint64_t>() );
+      uint64_t TVal = 0x00ull;
+      try{
+        TVal = Node["FixedValue"].as<uint64_t>();
+      }catch(YAML::BadConversion& e){
+        Errno->SetError(CGERR_ERROR, "Error in parsing register FixedValue: "
+                        + std::string(e.what()));
+        return false;
+      }
+      FixedVals.push_back( TVal );
     }
 
     bool IsSIMD = false;
@@ -1678,35 +1722,83 @@ bool CoreGenYaml::ReadRegisterYaml(const YAML::Node& RegNodes,
     bool IsShared = false;
 
     if( CheckValidNode(Node,"IsSIMD") ){
-      IsSIMD = Node["IsSIMD"].as<bool>();
+      try{
+        IsSIMD = Node["IsSIMD"].as<bool>();
+      }catch(YAML::BadConversion& e){
+        Errno->SetError(CGERR_ERROR, "Error in parsing register IsSIMD: "
+                        + std::string(e.what()));
+        return false;
+      }
     }
 
     if( CheckValidNode(Node,"RWReg") ){
-      RWReg = Node["RWReg"].as<bool>();
+      try{
+        RWReg = Node["RWReg"].as<bool>();
+      }catch(YAML::BadConversion& e){
+        Errno->SetError(CGERR_ERROR, "Error in parsing register RWReg: "
+                        + std::string(e.what()));
+        return false;
+      }
     }
 
     if( CheckValidNode(Node,"ROReg") ){
-      ROReg = Node["ROReg"].as<bool>();
+      try{
+        ROReg = Node["ROReg"].as<bool>();
+      }catch(YAML::BadConversion& e){
+        Errno->SetError(CGERR_ERROR, "Error in parsing register ROReg: "
+                        + std::string(e.what()));
+        return false;
+      }
     }
 
     if( CheckValidNode(Node,"CSRReg") ){
-      CSRReg = Node["CSRReg"].as<bool>();
+      try{
+        CSRReg = Node["CSRReg"].as<bool>();
+      }catch(YAML::BadConversion& e){
+        Errno->SetError(CGERR_ERROR, "Error in parsing register CSRReg: "
+                        + std::string(e.what()));
+        return false;
+      }
     }
 
     if( CheckValidNode(Node,"AMSReg") ){
-      AMSReg = Node["AMSReg"].as<bool>();
+      try{
+        AMSReg = Node["AMSReg"].as<bool>();
+      }catch(YAML::BadConversion& e){
+        Errno->SetError(CGERR_ERROR, "Error in parsing register AMSReg: "
+                        + std::string(e.what()));
+        return false;
+      }
     }
 
     if( CheckValidNode(Node,"TUSReg") ){
-      TUSReg = Node["TUSReg"].as<bool>();
+      try{
+        TUSReg = Node["TUSReg"].as<bool>();
+      }catch(YAML::BadConversion& e){
+        Errno->SetError(CGERR_ERROR, "Error in parsing register TUSReg: "
+                        + std::string(e.what()));
+        return false;
+      }
     }
 
     if( CheckValidNode(Node,"PCReg") ){
-      PCReg = Node["PCReg"].as<bool>();
+      try{
+        PCReg = Node["PCReg"].as<bool>();
+      }catch(YAML::BadConversion& e){
+        Errno->SetError(CGERR_ERROR, "Error in parsing register PCReg: "
+                        + std::string(e.what()));
+        return false;
+      }
     }
 
     if( CheckValidNode(Node,"Shared") ){
-      IsShared = Node["Shared"].as<bool>();
+      try{
+        IsShared = Node["Shared"].as<bool>();
+      }catch(YAML::BadConversion& e){
+        Errno->SetError(CGERR_ERROR, "Error in parsing register Shared: "
+                        + std::string(e.what()));
+        return false;
+      }
     }
 
     // build a new register node
@@ -1715,14 +1807,21 @@ bool CoreGenYaml::ReadRegisterYaml(const YAML::Node& RegNodes,
       return false;
     }
 
-    //TODO: add name pred
     if( CheckValidNode(Node,"PseudoName") ){
       R->SetPseudoName(Node["PseudoName"].as<std::string>());
     }
 
     // set the simd attrs
     if( IsSIMD && CheckValidNode(Node,"SIMDWidth") ){
-      int SIMDWidth = Node["SIMDWidth"].as<int>();
+      int SIMDWidth = 0;
+      try{
+        SIMDWidth = Node["SIMDWidth"].as<int>();
+      }catch(YAML::BadConversion& e){
+        Errno->SetError(CGERR_ERROR, "Error in parsing register SIMDWidth: "
+                        + std::string(e.what()));
+        delete R;
+        return false;
+      }
       R->SetSIMD(SIMDWidth);
     }
 
@@ -1778,14 +1877,30 @@ bool CoreGenYaml::ReadRegisterYaml(const YAML::Node& RegNodes,
           PrintParserError(LSNode, "SubRegs", "StartBit" );
           return false;
         }
-        unsigned SB = LSNode["StartBit"].as<unsigned>();
+        unsigned SB = 0;
+        try{
+          SB = LSNode["StartBit"].as<unsigned>();
+        }catch(YAML::BadConversion& e){
+          Errno->SetError(CGERR_ERROR, "Error in parsing subregister StartBit: "
+                          + std::string(e.what()));
+          delete R;
+          return false;
+        }
 
         // end bit
         if( !CheckValidNode(LSNode, "EndBit") ){
           PrintParserError(LSNode, "SubRegs", "EndBit" );
           return false;
         }
-        unsigned EB = LSNode["EndBit"].as<unsigned>();
+        unsigned EB = 0;
+        try{
+          EB = LSNode["EndBit"].as<unsigned>();
+        }catch(YAML::BadConversion& e){
+          Errno->SetError(CGERR_ERROR, "Error in parsing subregister EndBit: "
+                          + std::string(e.what()));
+          delete R;
+          return false;
+        }
 
         // insert the subreg into the register
         if( !R->InsertSubReg(SName,SB,EB) ){
@@ -1888,11 +2003,31 @@ bool CoreGenYaml::ReadRegisterClassYaml(const YAML::Node& RegClassNodes,
     } // end if
 
     if( CheckValidNode(Node,"ReadPorts") ){
-      RC->SetReadPorts(Node["ReadPorts"].as<unsigned>());
+      unsigned RP = 0;
+      try{
+        RP = Node["ReadPorts"].as<unsigned>();
+      }catch(YAML::BadConversion& e){
+          Errno->SetError(CGERR_ERROR, "Error in parsing register class ReadPorts: "
+                          + std::string(e.what()));
+          delete RC;
+          return false;
+      }
+
+      RC->SetReadPorts(RP);
     }
 
     if( CheckValidNode(Node,"WritePorts") ){
-      RC->SetWritePorts(Node["WritePorts"].as<unsigned>());
+      unsigned WP = 0;
+      try{
+        WP = Node["WritePorts"].as<unsigned>();
+      }catch(YAML::BadConversion& e){
+          Errno->SetError(CGERR_ERROR, "Error in parsing register class WritePorts: "
+                          + std::string(e.what()));
+          delete RC;
+          return false;
+      }
+
+      RC->SetWritePorts(WP);
     }
 
     if( CheckValidNode(Node,"RTL") ){
@@ -2080,19 +2215,43 @@ bool CoreGenYaml::ReadInstFormatYaml(const YAML::Node& InstFormatNodes,
           PrintParserError(LFNode,"Fields","StartBit");
           return false;
         }
-        int StartBit = LFNode["StartBit"].as<int>();
+        int StartBit = 0;
+        try{
+          StartBit = LFNode["StartBit"].as<int>();
+        }catch(YAML::BadConversion& e){
+          Errno->SetError(CGERR_ERROR, "Error in parsing InstFormat StartBit: "
+                          + std::string(e.what()));
+          delete IF;
+          return false;
+        }
 
         if( !CheckValidNode(LFNode,"EndBit") ){
           PrintParserError(LFNode,"Fields","EndBit");
           return false;
         }
-        int EndBit = LFNode["EndBit"].as<int>();
+        int EndBit = 0;
+        try{
+          EndBit = LFNode["EndBit"].as<int>();
+        }catch(YAML::BadConversion& e){
+          Errno->SetError(CGERR_ERROR, "Error in parsing InstFormat EndBit: "
+                          + std::string(e.what()));
+          delete IF;
+          return false;
+        }
 
         if( !CheckValidNode(LFNode,"MandatoryField") ){
           PrintParserError(LFNode,"Fields","MandatoryField");
           return false;
         }
-        bool Mand = LFNode["MandatoryField"].as<bool>();
+        bool Mand = false;
+        try{
+          Mand = LFNode["MandatoryField"].as<bool>();
+        }catch(YAML::BadConversion& e){
+          Errno->SetError(CGERR_ERROR, "Error in parsing InstFormat MandatoryField: "
+                          + std::string(e.what()));
+          delete IF;
+          return false;
+        }
 
         CoreGenInstFormat::CGInstField FT;
         if( FieldType == "CGInstReg" ){
@@ -2259,7 +2418,15 @@ bool CoreGenYaml::ReadInstYaml(const YAML::Node& InstNodes,
                             "EncodingValue");
           return false;
         }
-        int Value = LFNode["EncodingValue"].as<int>();
+        int Value = 0;
+        try{
+          Value = LFNode["EncodingValue"].as<int>();
+        }catch(YAML::BadConversion& e){
+          Errno->SetError(CGERR_ERROR, "Error in parsing instruction EncodingValue: "
+                          + std::string(e.what()));
+          delete Inst;
+          return false;
+        }
 
         if( !Inst->SetEncoding(FieldName,Value) ){
           return false;
@@ -2377,7 +2544,15 @@ bool CoreGenYaml::ReadPseudoInstYaml(const YAML::Node& PInstNodes,
       for( unsigned k=0; k<FNode.size(); k++ ){
         const YAML::Node& LFNode = FNode[k];
         std::string FieldName = LFNode["EncodingField"].as<std::string>();
-        int Value = LFNode["EncodingValue"].as<int>();
+        int Value = 0;
+        try{
+          Value = LFNode["EncodingValue"].as<int>();
+        }catch(YAML::BadConversion& e){
+          Errno->SetError(CGERR_ERROR, "Error in parsing pseudo instruction EncodingValue: "
+                          + std::string(e.what()));
+          delete P;
+          return false;
+        }
 
         if( !P->SetEncoding(FieldName,Value) ){
           return false;
@@ -2455,12 +2630,33 @@ bool CoreGenYaml::ReadCacheYaml(const YAML::Node& CacheNodes,
       return false;
     }
 
-    int Sets = Node["Sets"].as<int>();
-    int Ways = Node["Ways"].as<int>();
+    int Sets = 0;
+    try{
+      Sets = Node["Sets"].as<int>();
+    }catch(YAML::BadConversion& e){
+      Errno->SetError(CGERR_ERROR, "Error in parsing cache Sets: "
+                      + std::string(e.what()));
+      return false;
+    }
+
+    int Ways = 0;
+    try {
+      Ways = Node["Ways"].as<int>();
+    }catch(YAML::BadConversion& e){
+      Errno->SetError(CGERR_ERROR, "Error in parsing cache Ways: "
+                      + std::string(e.what()));
+      return false;
+    }
     unsigned LineSize = 64;
 
     if( CheckValidNode(Node,"LineSize") ){
-      LineSize = Node["LineSize"].as<unsigned>();
+      try{
+        LineSize = Node["LineSize"].as<unsigned>();
+      }catch(YAML::BadConversion& e){
+        Errno->SetError(CGERR_ERROR, "Error in parsing cache LineSize: "
+                        + std::string(e.what()));
+        return false;
+      }
     }
 
     std::string SubLevel;
@@ -2581,8 +2777,15 @@ bool CoreGenYaml::ReadCoreYaml(const YAML::Node& CoreNodes,
       if( !CheckValidNode(Node,"ThreadUnits") ){
         return false;
       }
-      ThreadUnits = Node["ThreadUnits"].as<unsigned>();
-      std::string TU = Node["ThreadUnits"].as<std::string>();
+
+      try{
+        ThreadUnits = Node["ThreadUnits"].as<unsigned>();
+      }catch(YAML::BadConversion& e){
+        Errno->SetError(CGERR_ERROR, "Error in parsing core ThreadUnits: "
+                        + std::string(e.what()));
+        return false;
+      }
+
       if( !C->SetNumThreadUnits(ThreadUnits) ){
         return false;
       }
@@ -2781,16 +2984,40 @@ bool CoreGenYaml::ReadSpadYaml(const YAML::Node& SpadNodes,
     unsigned RspPorts = 0;
     uint64_t StartAddr = 0x00ull;
     if( Node["MemSize"] ){
-      MemSize = Node["MemSize"].as<unsigned>();
+      try{
+        MemSize = Node["MemSize"].as<unsigned>();
+      }catch(YAML::BadConversion& e){
+        Errno->SetError(CGERR_ERROR, "Error in parsing spad MemSize: "
+                        + std::string(e.what()));
+        return false;
+      }
     }
     if( Node["RqstPorts"] ){
-      RqstPorts = Node["RqstPorts"].as<unsigned>();
+      try{
+        RqstPorts = Node["RqstPorts"].as<unsigned>();
+      }catch(YAML::BadConversion& e){
+        Errno->SetError(CGERR_ERROR, "Error in parsing spad RqstPorts: "
+                        + std::string(e.what()));
+        return false;
+      }
     }
     if( Node["RspPorts"] ){
-      RspPorts = Node["RspPorts"].as<unsigned>();
+      try{
+        RspPorts = Node["RspPorts"].as<unsigned>();
+      }catch(YAML::BadConversion& e){
+        Errno->SetError(CGERR_ERROR, "Error in parsing spad RspPorts: "
+                        + std::string(e.what()));
+        return false;
+      }
     }
     if( Node["StartAddr"] ){
-      StartAddr = Node["StartAddr"].as<uint64_t>();
+      try{
+        StartAddr = Node["StartAddr"].as<uint64_t>();
+      }catch(YAML::BadConversion& e){
+        Errno->SetError(CGERR_ERROR, "Error in parsing spad StartAddr: "
+                        + std::string(e.what()));
+        return false;
+      }
     }
 
     CoreGenSpad *S = new CoreGenSpad(Name,Errno,MemSize,
@@ -2987,13 +3214,31 @@ bool CoreGenYaml::ReadPluginYaml(const YAML::Node& PluginNodes,
     unsigned Minor = 0;
     unsigned Patch = 0;
     if( Node["MajorVersion"] ){
-      Major = Node["MajorVersion"].as<unsigned>();
+      try{
+        Major = Node["MajorVersion"].as<unsigned>();
+      }catch(YAML::BadConversion& e){
+        Errno->SetError(CGERR_ERROR, "Error in parsing plugin MajorVersion: "
+                        + std::string(e.what()));
+        return false;
+      }
     }
     if( Node["MinorVersion"] ){
-      Minor = Node["MinorVersion"].as<unsigned>();
+      try{
+        Minor = Node["MinorVersion"].as<unsigned>();
+      }catch(YAML::BadConversion& e){
+        Errno->SetError(CGERR_ERROR, "Error in parsing plugin MinorVersion: "
+                        + std::string(e.what()));
+        return false;
+      }
     }
     if( Node["PatchVersion"] ){
-      Patch = Node["PatchVersion"].as<unsigned>();
+      try{
+        Patch = Node["PatchVersion"].as<unsigned>();
+      }catch(YAML::BadConversion& e){
+        Errno->SetError(CGERR_ERROR, "Error in parsing plugin PatchVersion: "
+                        + std::string(e.what()));
+        return false;
+      }
     }
 
     std::string Notes;
@@ -3520,7 +3765,13 @@ bool CoreGenYaml::ReadCommYaml( const YAML::Node& CommNodes,
     // width
     unsigned Width = 0;
     if( Node["Width"] ){
-      Width = Node["Width"].as<unsigned>();
+      try{
+        Width = Node["Width"].as<unsigned>();
+      }catch(YAML::BadConversion& e){
+        Errno->SetError(CGERR_ERROR, "Error in parsing comm Width: "
+                        + std::string(e.what()));
+        return false;
+      }
     }
 
     CoreGenComm *Comm = new CoreGenComm(Name,FullType,Width,Errno);

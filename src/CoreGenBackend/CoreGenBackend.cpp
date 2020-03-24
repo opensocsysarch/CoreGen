@@ -14,7 +14,7 @@ CoreGenBackend::CoreGenBackend() :
   Errno(new CoreGenErrno()),
   Proj(nullptr),
   Env(new CoreGenEnv(Errno)),
-  PluginMgr(new CoreGenPluginMgr(Errno)),
+  PluginMgr(new CoreGenPluginMgr(Env,Errno)),
   PassMgr(nullptr),
   Top(new CoreGenNode(CGTop,Errno)),
   DAG(nullptr){
@@ -26,7 +26,7 @@ CoreGenBackend::CoreGenBackend(std::string ProjName,
   Errno(new CoreGenErrno()),
   Proj(new CoreGenProj(Errno,ProjName,ProjRoot)),
   Env(new CoreGenEnv(ArchRoot,Errno)),
-  PluginMgr(new CoreGenPluginMgr(Errno)),
+  PluginMgr(new CoreGenPluginMgr(Env,Errno)),
   PassMgr(nullptr),
   Top(new CoreGenNode(CGTop,Errno)),
   DAG(nullptr){
@@ -39,7 +39,7 @@ CoreGenBackend::CoreGenBackend(std::string ProjName,
   Errno(new CoreGenErrno()),
   Proj(new CoreGenProj(Errno,ProjName,ProjRoot,Type)),
   Env(new CoreGenEnv(ArchRoot,Errno)),
-  PluginMgr(new CoreGenPluginMgr(Errno)),
+  PluginMgr(new CoreGenPluginMgr(Env,Errno)),
   PassMgr(nullptr),
   Top(new CoreGenNode(CGTop,Errno)),
   DAG(nullptr) {
@@ -110,10 +110,11 @@ CoreGenBackend::~CoreGenBackend(){
   delete Errno;
 }
 
-bool CoreGenBackend::ExecuteLLVMCodegen(){
+bool CoreGenBackend::ExecuteLLVMCodegen(std::string CompVer){
   // Create the codegen object
   CoreGenCodegen *CG = new CoreGenCodegen(Top,
                                           Proj,
+                                          Env,
                                           Errno);
 
   if( CG == nullptr ){
@@ -121,8 +122,47 @@ bool CoreGenBackend::ExecuteLLVMCodegen(){
     return false;
   }
 
+  std::string TmpCompVer = CompVer;
+
+  // check the state of the compiler version
+  // if we have a null string, then attempt to derive
+  // the latest version of llvm by default
+  if( TmpCompVer.length() == 0 ){
+    CoreGenArchive *Archive = new CoreGenArchive( CGInstallPrefix() + "/archive" );
+    if( !Archive ){
+      Errno->SetError(CGERR_ERROR, "Could not create CoreGenArchive object" );
+      return false;
+    }
+
+    if( !Archive->ReadYaml( CGInstallPrefix() + "/archive/master.yaml" ) ){
+      Errno->SetError(CGERR_ERROR, "Could not read archive yaml : "
+                      + CGInstallPrefix() + "/archive/master.yaml" );
+      delete Archive;
+      return false;
+    }
+
+    for( unsigned i=0; i<Archive->GetNumEntries(); i++ ){
+      CoreGenArchEntry *E = Archive->GetEntry(i);
+      if( (E->GetEntryType() == CGA_COMPILER) &&
+          (E->IsLatest()) ){
+        if( !Archive->IsInit(E) ){
+          Errno->SetError(CGERR_ERROR, "Found a default latest compiler at: "
+                          + E->GetName() + " : but the entry is not initialized" );
+          delete Archive;
+          return false;
+        }
+
+        // found a good entry and the entry is initialized
+        TmpCompVer = E->GetName();
+        break;
+      }
+    }
+
+    delete Archive;
+  }
+
   // Execute it
-  bool rtn = CG->ExecuteLLVMCodegen();
+  bool rtn = CG->ExecuteLLVMCodegen(TmpCompVer);
 
   // delete and clean everything up
   delete CG;
@@ -155,6 +195,7 @@ bool CoreGenBackend::ExecuteChiselCodegen(){
   // Create the codegen object
   CoreGenCodegen *CG = new CoreGenCodegen(Top,
                                           Proj,
+                                          Env,
                                           Errno);
 
   if( CG == nullptr ){
@@ -174,6 +215,7 @@ bool CoreGenBackend::ExecuteCodegen(){
   // Create the codegen object
   CoreGenCodegen *CG = new CoreGenCodegen(Top,
                                           Proj,
+                                          Env,
                                           Errno);
 
   if( CG == nullptr ){
@@ -490,6 +532,7 @@ bool CoreGenBackend::BuildDAG(){
   }
   for( unsigned i=0; i<Plugins.size(); i++ ){
     Top->InsertChild(static_cast<CoreGenNode *>(Plugins[i]));
+    Plugins[i]->ProcessFeatures();
     Plugins[i]->BuildDAG();
   }
 

@@ -36,7 +36,15 @@ CoreGenReg *CoreGenRegClass::GetRegByName(std::string Name){
     }
   }
 
-  return NULL;
+  return nullptr;
+}
+
+CoreGenReg *CoreGenRegClass::GetRegByIndex(unsigned Idx){
+  for( unsigned i=0; i<this->GetNumReg(); i++ ){
+    if( this->GetReg(i)->GetIndex() == (int)(Idx) )
+      return this->GetReg(i);
+  }
+  return nullptr;
 }
 
 unsigned CoreGenRegClass::GetMaxWidth(){

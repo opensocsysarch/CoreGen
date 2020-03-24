@@ -12,11 +12,15 @@
 
 CoreGenCodegen::CoreGenCodegen(CoreGenNode *T,
                                CoreGenProj *P,
+                               CoreGenEnv *V,
                                CoreGenErrno *E)
-  : Top(T), Proj(P), Errno(E) {
+  : Top(T), Proj(P), Env(V), Errno(E), Archive(nullptr) {
+  Archive = new CoreGenArchive(Env->GetArchRoot());
 }
 
 CoreGenCodegen::~CoreGenCodegen(){
+  if( Archive )
+    delete Archive;
 }
 
 std::string CoreGenCodegen::GetRegAttrStr(CoreGenReg *REG){
@@ -178,7 +182,92 @@ bool CoreGenCodegen::BuildLLVMDir(){
   return true;
 }
 
-bool CoreGenCodegen::ExecuteLLVMCodegen(){
+bool CoreGenCodegen::InitLLVMSrc(std::string CompVer){
+  // Stage 1: check to see if the target compiler version is initialized
+  std::string ArchRoot = Env->GetArchRoot();
+  if( ArchRoot.length() == 0 ){
+    Errno->SetError(CGERR_ERROR, "Could not find LLVM source tree: archive root is null");
+    return false;
+  }
+
+  std::string MasterYaml = ArchRoot + "/master.yaml";
+  if( !CGFileExists(MasterYaml) ){
+    Errno->SetError(CGERR_ERROR, "Could not find master archive file : " + MasterYaml );
+    return false;
+  }
+
+  if( !Archive->ReadYaml(MasterYaml) ){
+    Errno->SetError(CGERR_ERROR,"Could not read master yaml file : " + MasterYaml );
+    return false;
+  }
+
+  CoreGenArchEntry *Entry = nullptr;
+  if( CompVer.length() == 0 ){
+    // find the latest version in the archive
+    for( unsigned i=0; i<Archive->GetNumEntries(); i++ ){
+      if( (Archive->GetEntry(i)->GetEntryType() == CGA_COMPILER) &&
+          (Archive->GetEntry(i)->IsLatest()) &&
+          (Archive->IsInit(Archive->GetEntry(i))) ){
+        Entry = Archive->GetEntry(i);
+      }
+    }
+    if( Entry == nullptr ){
+      Errno->SetError(CGERR_ERROR,
+                      "Could not find latest compiler version from archive that is initialized");
+      return false;
+    }
+  }else{
+    // determine of the target CompVer is present and initialized
+    unsigned EntryNum = 0;
+    if( !Archive->GetEntryNum(CompVer,EntryNum) ){
+      Errno->SetError(CGERR_ERROR, "Could not find compiler version for entry: " + CompVer );
+      return false;
+    }
+
+    Entry = Archive->GetEntry(EntryNum);
+    if( !Archive->IsInit(Entry) ){
+      Errno->SetError(CGERR_ERROR, "Compiler version is not initialized: " + CompVer );
+      return false;
+    }
+  }
+
+  // save off the entry for future use
+  LLEntry = Entry;
+
+  // Stage 2: check to see if there already exists a compiler in the target
+  //          build directory; if so, delete it then create a new directory
+  std::string FullCompPath = LLVMDir + "/" + Entry->GetName();
+  if( CGDirExists(FullCompPath.c_str()) ){
+    // delete the directory
+    if( !CGDeleteDir(FullCompPath) ){
+      Errno->SetError(CGERR_ERROR, "Could not delete stale compiler directory: " +
+                      FullCompPath );
+      return false;
+    }
+  }
+
+  if( !CGMkDir(FullCompPath) ){
+    Errno->SetError(CGERR_ERROR, "Could not create directory for compiler: " +
+                    FullCompPath );
+    return false;
+  }
+
+  // Stage 3: construct a new build tree for the target compiler version
+  //          using the archive copy
+  std::string BaseComp = ArchRoot + "/COMPILER/" + Entry->GetDirectory();
+  if( !CGCopyR(BaseComp,FullCompPath) ){
+    Errno->SetError(CGERR_ERROR, "Could not copy LLVM directory tree from: " +
+                    BaseComp + " to: " + FullCompPath );
+    return false;
+  }
+
+  // reset the LLVMDir to the new source directory
+  LLVMDir = FullCompPath;
+
+  return true;
+}
+
+bool CoreGenCodegen::ExecuteLLVMCodegen(std::string CompVer){
 
   // Stage 1: Build the top-level makefile
   if( !isTopMakefile ){
@@ -194,8 +283,23 @@ bool CoreGenCodegen::ExecuteLLVMCodegen(){
   }
 
   // Stage 3: Copy the source tree over from the archive
+  if( !InitLLVMSrc(CompVer) ){
+    return false;
+  }
 
   // Stage 4: Execute the codegen
+  CoreGenCompCodegen *CG = new CoreGenCompCodegen(Top,
+                                                  Proj,
+                                                  LLEntry,
+                                                  LLVMDir,
+                                                  Errno);
+
+  if( !CG->Execute() ){
+    delete CG;
+    return false;
+  }
+
+  delete CG;
 
   return true;
 }
@@ -761,7 +865,8 @@ bool CoreGenCodegen::Execute(){
   if( !ExecuteChiselCodegen() ){
     return false;
   }
-  if( !ExecuteLLVMCodegen() ){
+  std::string CompVer = ""; // forces the LLVM codegen to use the latest compiler
+  if( !ExecuteLLVMCodegen(CompVer) ){
     return false;
   }
   return true;

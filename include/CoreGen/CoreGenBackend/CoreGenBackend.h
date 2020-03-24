@@ -67,6 +67,8 @@
 // Codegen Headers
 #include "CoreGen/CoreGenCodegen/CoreGenCodegen.h"
 
+// Archive Headers
+#include "CoreGen/CoreGenArchive/CoreGenArchive.h"
 
 class CoreGenBackend
 {
@@ -278,7 +280,7 @@ public:
   bool ExecuteCodegen();
 
   /// Execute the LLVM codegen
-  bool ExecuteLLVMCodegen();
+  bool ExecuteLLVMCodegen(std::string CompVer);
 
   /// Execute the Chisel codegen
   bool ExecuteChiselCodegen();

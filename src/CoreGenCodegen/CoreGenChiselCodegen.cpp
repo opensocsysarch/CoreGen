@@ -191,6 +191,91 @@ bool CoreGenChiselCodegen::ExecRegClassCodegen(CoreGenNode *N){
   return rtn;
 }
 
+bool CoreGenChiselCodegen::ExecCacheTemplateCodegen(CoreGenNode *N){
+  std::string FullPath = ChiselRoot + "/common/"
+                                    + CGRemoveDot(N->GetName())
+                                    + ".chisel";
+  std::string Package = Proj->GetProjName();
+
+  CacheCG *CG = new CacheCG(N,Proj,Package,FullPath,true,Errno);
+  bool rtn = true;
+  if( !CG->ExecutePlugin() ){
+    rtn = false;
+  }
+
+  delete CG;
+  return rtn;
+}
+
+bool CoreGenChiselCodegen::ExecPluginTemplateCodegen(CoreGenNode *N){
+  bool rtn = true;
+
+  // determine if we need to create a template interface block
+  switch( N->GetType() ){
+  case CGSoc:
+    break;
+  case CGCore:
+    break;
+#if 0
+  case CGInstF:
+  break;
+#endif
+  case CGInst:
+    break;
+#if 0
+  case CGPInst:
+  break;
+#endif
+  case CGRegC:
+    break;
+#if 0
+  case CGReg:
+  break;
+#endif
+  case CGISA:
+    break;
+  case CGCache:
+    rtn = ExecCacheTemplateCodegen(N);
+    break;
+#if 0
+  case CGEnc:
+  break;
+#endif
+  case CGExt:
+    break;
+  case CGComm:
+    break;
+  case CGSpad:
+    break;
+  case CGMCtrl:
+    break;
+  case CGVTP:
+    break;
+  case CGPlugin:
+    break;
+  default:
+    break;
+  }
+
+  return rtn;
+}
+
+bool CoreGenChiselCodegen::ExecCacheCodegen(CoreGenNode *N){
+  std::string FullPath = ChiselRoot + "/common/"
+                                    + CGRemoveDot(N->GetName())
+                                    + ".chisel";
+  std::string Package = Proj->GetProjName();
+
+  CacheCG *CG = new CacheCG(N,Proj,Package,FullPath,true,Errno);
+  bool rtn = true;
+  if( !CG->Execute() ){
+    rtn = false;
+  }
+
+  delete CG;
+  return rtn;
+}
+
 bool CoreGenChiselCodegen::ExecPluginCodegen(CoreGenNode *N){
   std::string FullPath = ChiselRoot + "/top/"
                                     + CGRemoveDot(N->GetName())
@@ -352,7 +437,10 @@ bool CoreGenChiselCodegen::Execute(){
   CoreGenNode *SocNode = nullptr;
 
   for( unsigned i=0; i<Top->GetNumChild(); i++ ){
+
     if( Top->GetChild(i)->IsOverridden() ){
+      if( !ExecPluginTemplateCodegen(Top->GetChild(i)) )
+        rtn = false;
       if( !ExecPluginCodegen(Top->GetChild(i)) )
           rtn = false;
     }
@@ -392,6 +480,9 @@ bool CoreGenChiselCodegen::Execute(){
       }
       break;
     case CGCache:
+      if( !ExecCacheCodegen(Top->GetChild(i)) ){
+        rtn = false;
+      }
       break;
     case CGDPath:
         if( !ExecDataPathCodegen(Top->GetChild(i) )){

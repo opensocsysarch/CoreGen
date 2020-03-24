@@ -10,10 +10,13 @@
 
 #include "CoreGen/CoreGenBackend/CoreGenPlugin.h"
 
-CoreGenPlugin::CoreGenPlugin(std::string N, CGPluginFunc F, CoreGenErrno *E)
-  : CoreGenNode(CGPlugin,N,E), Funcs(F), Impl(nullptr) {
+CoreGenPlugin::CoreGenPlugin(std::string N,
+                             CGPluginFunc F,
+                             CoreGenEnv *Env,
+                             CoreGenErrno *E)
+  : CoreGenNode(CGPlugin,N,E), Funcs(F), Env(Env), Impl(nullptr) {
   create_t *create = Funcs.create;
-  Impl = create(E);
+  Impl = create(Env,E);
 }
 
 CoreGenPlugin::~CoreGenPlugin(){
@@ -65,11 +68,16 @@ CGPluginFunc CoreGenPlugin::GetFunctionInfo(){
 CoreGenPlugin *CoreGenPlugin::ClonePlugin(std::string NewName){
   return new CoreGenPlugin(NewName,
                            this->GetFunctionInfo(),
+                           Env,
                            Errno);
 }
 
 std::string CoreGenPlugin::GetPluginName(){
   return Impl->GetName();
+}
+
+bool CoreGenPlugin::ProcessFeatures(){
+  return Impl->ProcessFeatures();
 }
 
 CGFeatureType CoreGenPlugin::GetFeatureType( std::string Feature ){
@@ -125,11 +133,12 @@ bool CoreGenPlugin::SetFeatureValue( unsigned Idx,
   return Impl->SetFeatureValue( Idx, Val );
 }
 
-bool CoreGenPlugin::ExecuteHDLCodegen(){
+bool CoreGenPlugin::ExecuteHDLCodegen(CoreGenNode *TopNode,
+                                      CoreGenNode *Parent){
   if( !Impl ){
     return false;
   }
-  return Impl->ExecuteHDLCodegen();
+  return Impl->ExecuteHDLCodegen(TopNode,Parent);
 }
 
 bool CoreGenPlugin::ExecuteLLVMCodegen(){

@@ -23,6 +23,7 @@
 #include <iostream>
 #include <vector>
 
+#include "CoreGen/CoreGenBackend/CoreGenEnv.h"
 #include "CoreGen/CoreGenBackend/CoreGenNode.h"
 #include "CoreGen/CoreGenBackend/CoreGenErrno.h"
 #include "CoreGen/CoreGenBackend/CoreGenPluginTypes.h"
@@ -42,12 +43,16 @@
 class CoreGenPlugin : public CoreGenNode{
 private:
   CGPluginFunc Funcs;       ///< CoreGenPlugin: Function pointer structure
+  CoreGenEnv *Env;          ///< CoreGenPlugin: Environment handler
   CoreGenPluginImpl *Impl;  ///< CoreGenPlugin: Implementation object
 
 public:
 
   /// Default constructor
-  CoreGenPlugin(std::string Name, CGPluginFunc Funcs, CoreGenErrno *Errno);
+  CoreGenPlugin(std::string Name,
+                CGPluginFunc Funcs,
+                CoreGenEnv *Env,
+                CoreGenErrno *Errno);
 
   /// Defeault destructor
   ~CoreGenPlugin();
@@ -94,8 +99,11 @@ public:
   /// Set the feature value
   bool SetFeatureValue( unsigned Idx, CGFeatureVal Val );
 
+  /// Process the internal plugin features
+  bool ProcessFeatures();
+
   /// Execute the HDL Codegen
-  bool ExecuteHDLCodegen();
+  bool ExecuteHDLCodegen(CoreGenNode *TopNode, CoreGenNode *Parent);
 
   /// Execute the LLVM Codegen
   bool ExecuteLLVMCodegen();
