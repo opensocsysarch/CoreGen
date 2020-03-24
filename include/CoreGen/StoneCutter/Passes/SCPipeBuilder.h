@@ -33,7 +33,12 @@ private:
   std::vector<std::string> PipeVect;  ///< SCPipeBuilder: Pipe vector
   std::vector<std::string> InstVect;  ///< SCPipeBuilder: Instruction vector
 
+  std::vector<std::pair<std::string, std::string>> AttrMap;  ///< SCPipeBuilder: Attribute  to pipeline pairs
+
   unsigned **AdjMat;                  ///< SCPipeBuilder: Adjacency Matrix
+
+  /// SCPipeBuilder: Initialize the atreibute vector
+  bool InitAttrs();
 
   /// SCPipeBuilder: Build the matrix representation
   bool BuildMat();

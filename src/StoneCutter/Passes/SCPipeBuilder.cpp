@@ -100,6 +100,17 @@ bool SCPipeBuilder::FreeMat(){
   return true;
 }
 
+bool SCPipeBuilder::InitAttrs(){
+  for( unsigned i=0; i<PipeVect.size(); i++ ){
+    std::vector<std::string> PV = GetPipelineAttrs(PipeVect[i]);
+    for( unsigned j=0; j<PV.size(); j++ ){
+      AttrMap.push_back( std::make_pair(PipeVect[i],PV[j]) );
+    }
+  }
+
+  return true;
+}
+
 bool SCPipeBuilder::Execute(){
   if( !TheModule ){
     this->PrintMsg( L_ERROR, "LLVM IR Module is null" );
@@ -109,6 +120,12 @@ bool SCPipeBuilder::Execute(){
   // retrieve the pipeline stage vector
   PipeVect = SigMap->GetPipeVect();
   InstVect = SigMap->GetInstVect();
+
+  // Initalize the attribute map
+  if( !InitAttrs() ){
+    this->PrintMsg( L_ERROR, "Could not initialize attributes" );
+    return false;
+  }
 
   // TODO: what if no pipeline stages are defined?
   //       different optimization path?
