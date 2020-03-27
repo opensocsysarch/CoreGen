@@ -26,35 +26,36 @@ bool CoreGenInstFormat::InsertField( std::string Name, unsigned StartBit,
   }
 
   // ensure that this new field doesn't conflict with adjacent fields
-  std::vector<std::tuple<std::string,unsigned,unsigned,CGInstField,bool>>::iterator it;
+  std::vector<std::tuple<std::string,unsigned,unsigned,CGInstField,bool,bool>>::iterator it;
   for( it=Format.begin(); it != Format.end(); ++it ){
-    if( Name == std::get<0>(*it) ){
+    if( Name == std::get<CGFormatName>(*it) ){
       Errno->SetError(CGERR_ERROR,
                       "Attempting to insert a duplicate field; Name="+Name+"; InstFormat="+this->GetName());
       return false;
     }
   }
 
+  bool reg_is_dest = false;
   Format.push_back(
     std::tuple< std::string,unsigned,
-                unsigned,CGInstField,bool>(Name,StartBit,
-                                           EndBit,Type,Mand) );
+                unsigned,CGInstField,bool,bool>(Name,StartBit,
+                                           EndBit,Type,Mand, reg_is_dest) );
   // sort the vector of fields by the start bit
   std::sort(begin(Format), end(Format),
        [](std::tuple< std::string,unsigned,
-                      unsigned,CoreGenInstFormat::CGInstField,bool> const &t1,
+                      unsigned,CoreGenInstFormat::CGInstField,bool, bool> const &t1,
           std::tuple< std::string,unsigned,
-                      unsigned,CoreGenInstFormat::CGInstField,bool> const &t2){
-          return std::get<1>(t1) < std::get<1>(t2);
+                      unsigned,CoreGenInstFormat::CGInstField,bool, bool> const &t2){
+          return std::get<CGFormatStartBit>(t1) < std::get<CGFormatStartBit>(t2);
         }
   );
   return true;
 }
 
 bool CoreGenInstFormat::IsValidField(std::string Field ){
-  std::vector<std::tuple<std::string,unsigned,unsigned,CGInstField,bool>>::iterator it;
+  std::vector<std::tuple<std::string,unsigned,unsigned,CGInstField,bool,bool>>::iterator it;
   for( it=Format.begin(); it != Format.end(); ++it ){
-    if( Field == std::get<0>(*it) ){
+    if( Field == std::get<CGFormatName>(*it) ){
       return true;
     }
   }
@@ -69,11 +70,11 @@ bool CoreGenInstFormat::InsertRegFieldMap( std::string Name,
 
   // walk the vector of fields and find our target
   // target must be a register field
-  std::vector<std::tuple<std::string,unsigned,unsigned,CGInstField,bool>>::iterator it;
+  std::vector<std::tuple<std::string,unsigned,unsigned,CGInstField,bool,bool>>::iterator it;
 
   for( it=Format.begin(); it != Format.end(); ++it ){
-    if( (Name == std::get<0>(*it)) &&
-        (std::get<3>(*it) == CGInstReg) ){
+    if( (Name == std::get<CGFormatName>(*it)) &&
+        (std::get<CGFormatType>(*it) == CGInstReg) ){
       // found a match
       RegMap.insert( std::pair<std::string,CoreGenRegClass *>(Name,RClass) );
       CoreGenNode *N = static_cast<CoreGenNode *>(RClass);
@@ -88,11 +89,23 @@ bool CoreGenInstFormat::InsertRegFieldMap( std::string Name,
 }
 
 bool CoreGenInstFormat::SetMandatoryFlag( std::string Name, bool Flag ){
-  std::vector<std::tuple<std::string,unsigned,unsigned,CGInstField,bool>>::iterator it;
+  std::vector<std::tuple<std::string,unsigned,unsigned,CGInstField,bool,bool>>::iterator it;
 
   for( it=Format.begin(); it != Format.end(); ++it ){
-    if( Name == std::get<0>(*it) ){
-      std::get<4>(*it) = Flag;
+    if( Name == std::get<CGFormatName>(*it) ){
+      std::get<CGFormatMandatory>(*it) = Flag;
+      return true;
+    }
+  }
+  return false;
+}
+
+bool CoreGenInstFormat::SetRegFieldIsDestFlag( std::string Name, bool Flag ){
+  std::vector<std::tuple<std::string,unsigned,unsigned,CGInstField,bool,bool>>::iterator it;
+
+  for( it=Format.begin(); it != Format.end(); ++it ){
+    if( Name == std::get<CGFormatName>(*it) ){
+      std::get<CGFormatRegIsDest>(*it) = Flag;
       return true;
     }
   }
@@ -100,11 +113,11 @@ bool CoreGenInstFormat::SetMandatoryFlag( std::string Name, bool Flag ){
 }
 
 bool CoreGenInstFormat::SetStartBit( std::string Name, unsigned Start ){
-  std::vector<std::tuple<std::string,unsigned,unsigned,CGInstField,bool>>::iterator it;
+  std::vector<std::tuple<std::string,unsigned,unsigned,CGInstField,bool,bool>>::iterator it;
 
   for( it=Format.begin(); it != Format.end(); ++it ){
-    if( Name == std::get<0>(*it) ){
-      std::get<1>(*it) = Start;
+    if( Name == std::get<CGFormatName>(*it) ){
+      std::get<CGFormatStartBit>(*it) = Start;
       return true;
     }
   }
@@ -112,11 +125,11 @@ bool CoreGenInstFormat::SetStartBit( std::string Name, unsigned Start ){
 }
 
 bool CoreGenInstFormat::SetEndBit( std::string Name, unsigned End ){
-  std::vector<std::tuple<std::string,unsigned,unsigned,CGInstField,bool>>::iterator it;
+  std::vector<std::tuple<std::string,unsigned,unsigned,CGInstField,bool,bool>>::iterator it;
 
   for( it=Format.begin(); it != Format.end(); ++it ){
-    if( Name == std::get<0>(*it) ){
-      std::get<2>(*it) = End;
+    if( Name == std::get<CGFormatName>(*it) ){
+      std::get<CGFormatEndBit>(*it) = End;
       return true;
     }
   }
@@ -124,11 +137,11 @@ bool CoreGenInstFormat::SetEndBit( std::string Name, unsigned End ){
 }
 
 bool CoreGenInstFormat::SetFieldType( std::string Name, CGInstField Type ){
-  std::vector<std::tuple<std::string,unsigned,unsigned,CGInstField,bool>>::iterator it;
+  std::vector<std::tuple<std::string,unsigned,unsigned,CGInstField,bool,bool>>::iterator it;
 
   for( it=Format.begin(); it != Format.end(); ++it ){
-    if( Name == std::get<0>(*it) ){
-      std::get<3>(*it) = Type;
+    if( Name == std::get<CGFormatName>(*it) ){
+      std::get<CGFormatType>(*it) = Type;
       return true;
     }
   }
@@ -136,23 +149,23 @@ bool CoreGenInstFormat::SetFieldType( std::string Name, CGInstField Type ){
 }
 
 bool CoreGenInstFormat::GetMandatoryFlag( std::string Name ){
-  std::vector<std::tuple<std::string,unsigned,unsigned,CGInstField,bool>>::iterator it;
+  std::vector<std::tuple<std::string,unsigned,unsigned,CGInstField,bool,bool>>::iterator it;
 
   for( it=Format.begin(); it != Format.end(); ++it ){
-    if( Name == std::get<0>(*it) ){
-      return std::get<4>(*it);
+    if( Name == std::get<CGFormatName>(*it) ){
+      return std::get<CGFormatMandatory>(*it);
     }
   }
   return 0;
 }
 
 unsigned CoreGenInstFormat::GetNumMandatory(){
-  std::vector<std::tuple<std::string,unsigned,unsigned,CGInstField,bool>>::iterator it;
+  std::vector<std::tuple<std::string,unsigned,unsigned,CGInstField,bool,bool>>::iterator it;
 
   unsigned M = 0;
 
   for( it=Format.begin(); it != Format.end(); ++it ){
-    if( std::get<4>(*it)){
+    if( std::get<CGFormatMandatory>(*it)){
       M++;
     }
   }
@@ -160,33 +173,33 @@ unsigned CoreGenInstFormat::GetNumMandatory(){
 }
 
 unsigned CoreGenInstFormat::GetFieldWidth( std::string Name ){
-  std::vector<std::tuple<std::string,unsigned,unsigned,CGInstField,bool>>::iterator it;
+  std::vector<std::tuple<std::string,unsigned,unsigned,CGInstField,bool,bool>>::iterator it;
 
   for( it=Format.begin(); it != Format.end(); ++it ){
-    if( Name == std::get<0>(*it) ){
-      return (std::get<2>(*it) - std::get<1>(*it))+1;
+    if( Name == std::get<CGFormatName>(*it) ){
+      return (std::get<CGFormatEndBit>(*it) - std::get<CGFormatStartBit>(*it))+1;
     }
   }
   return 0;
 }
 
 unsigned CoreGenInstFormat::GetStartBit( std::string Name ){
-  std::vector<std::tuple<std::string,unsigned,unsigned,CGInstField,bool>>::iterator it;
+  std::vector<std::tuple<std::string,unsigned,unsigned,CGInstField,bool,bool>>::iterator it;
 
   for( it=Format.begin(); it != Format.end(); ++it ){
-    if( Name == std::get<0>(*it) ){
-      return std::get<1>(*it);
+    if( Name == std::get<CGFormatName>(*it) ){
+      return std::get<CGFormatStartBit>(*it);
     }
   }
   return 0;
 }
 
 unsigned CoreGenInstFormat::GetEndBit( std::string Name ){
-  std::vector<std::tuple<std::string,unsigned,unsigned,CGInstField,bool>>::iterator it;
+  std::vector<std::tuple<std::string,unsigned,unsigned,CGInstField,bool,bool>>::iterator it;
 
   for( it=Format.begin(); it != Format.end(); ++it ){
-    if( Name == std::get<0>(*it) ){
-      return std::get<2>(*it);
+    if( Name == std::get<CGFormatName>(*it) ){
+      return std::get<CGFormatEndBit>(*it);
     }
   }
   return 0;
@@ -196,15 +209,15 @@ std::string CoreGenInstFormat::GetFieldName( unsigned N ){
   if( N > (Format.size()-1) ){
     return " ";
   }
-  return std::get<0>(Format[N]);
+  return std::get<CGFormatName>(Format[N]);
 }
 
 CoreGenInstFormat::CGInstField CoreGenInstFormat::GetFieldType( std::string Name ){
-  std::vector<std::tuple<std::string,unsigned,unsigned,CGInstField,bool>>::iterator it;
+  std::vector<std::tuple<std::string,unsigned,unsigned,CGInstField,bool,bool>>::iterator it;
 
   for( it=Format.begin(); it != Format.end(); ++it ){
-    if( Name == std::get<0>(*it) ){
-      return std::get<3>(*it);
+    if( Name == std::get<CGFormatName>(*it) ){
+      return std::get<CGFormatType>(*it);
     }
   }
   return CGInstField::CGInstUnk;
@@ -232,16 +245,27 @@ CoreGenRegClass *CoreGenInstFormat::GetFieldRegClass( std::string Name ){
 }
 
 unsigned CoreGenInstFormat::GetFormatWidth(){
-  std::vector<std::tuple<std::string,unsigned,unsigned,CGInstField,bool>>::iterator it;
+  std::vector<std::tuple<std::string,unsigned,unsigned,CGInstField,bool,bool>>::iterator it;
   unsigned max = 0;
 
   for( it=Format.begin(); it != Format.end(); ++it ){
-    if( std::get<2>(*it) > max ){
-      max = std::get<2>(*it);
+    if( std::get<CGFormatEndBit>(*it) > max ){
+      max = std::get<CGFormatEndBit>(*it);
     }
   }
 
   return (max+1);
+}
+
+bool CoreGenInstFormat::GetRegFieldIsDest(std::string Name){
+  std::vector<std::tuple<std::string,unsigned,unsigned,CGInstField,bool,bool>>::iterator it;
+
+  for( it=Format.begin(); it != Format.end(); ++it ){
+    if( Name == std::get<CGFormatName>(*it) ){
+      return std::get<CGFormatRegIsDest>(*it);
+    }
+  }
+  return 0;
 }
 
 std::string CoreGenInstFormat::CGInstFieldToStr(CGInstField F){

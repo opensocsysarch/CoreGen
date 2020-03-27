@@ -35,10 +35,10 @@ class CoreGenInstFormat : public CoreGenNode{
 public:
   /// CoreGenInstFormat: Instruction field types
   typedef enum{
-    CGInstReg   = 0,  ///< CGInstField: Register field
-    CGInstCode  = 1,  ///< CGInstField: Instruction code field (opcode, etc)
-    CGInstImm   = 2,  ///< CGInstField: Immediate field
-    CGInstUnk   = 64  ///< CGInstField: Unknown field type
+    CGInstReg       = 0,  ///< CGInstField: Register field
+    CGInstCode      = 1,  ///< CGInstField: Instruction code field (opcode, etc)
+    CGInstImm       = 2,  ///< CGInstField: Immediate field
+    CGInstUnk       = 64  ///< CGInstField: Unknown field type
   }CGInstField;       ///< CoreGenInstFormat: Instruction field types
 
   /// Default constructor
@@ -65,6 +65,9 @@ public:
 
   /// Set the mandatory flag for the target field
   bool SetMandatoryFlag( std::string Name, bool Flag );
+
+  /// Set Register Field as a destination type
+  bool SetRegFieldIsDestFlag( std::string Name, bool Flag);
 
   /// Determine whether the target field is valid
   bool IsValidField( std::string Field );
@@ -108,14 +111,27 @@ public:
   /// Retrieve the instruction set type
   CoreGenISA *GetISA() { return ISA; }
 
+  /// Determine if the register field is a destination type
+  bool GetRegFieldIsDest( std::string Name);
+
 private:
   std::vector<std::tuple< std::string,
                           unsigned,
                           unsigned,
                           CoreGenInstFormat::CGInstField,
-                          bool>> Format;  ///< Format vector of name:start_bit:end:bit:type:mandatory
+                          bool,
+                          bool >> Format;  ///< Format vector of name:start_bit:end:bit:type:mandatory:reg_is_dest
   std::map<std::string,CoreGenRegClass *> RegMap;   ///< Register mapping
   CoreGenISA *ISA;                                  ///< Instructon Set Bundle
+
+  typedef enum {
+    CGFormatName      = 0,
+    CGFormatStartBit  = 1,
+    CGFormatEndBit    = 2,
+    CGFormatType      = 3,
+    CGFormatMandatory = 4,
+    CGFormatRegIsDest = 5
+  } CGFormatVectorInd;
 };
 
 #endif

@@ -2300,6 +2300,27 @@ bool CoreGenYaml::ReadInstFormatYaml(const YAML::Node& InstFormatNodes,
                   + Name + " for field " + FieldName);
             return false;
           }
+        
+          //Right now we are making it optional to specify whether a register is a destination
+          // If the user does not specify we set it to "false" by default
+          bool IsDest = false;
+          if( CheckValidNode(LFNode,"RegIsDestination") ){
+            try{
+              IsDest = LFNode["RegIsDestination"].as<bool>();
+            }catch(YAML::BadConversion& e){
+              Errno->SetError(CGERR_ERROR, "Error in parsing InstFormat RegIsDestination: "
+                              + std::string(e.what()));
+              delete IF;
+              return false;
+            }
+          }
+
+          if( !IF->SetRegFieldIsDestFlag(FieldName, IsDest) ){
+            Errno->SetError(CGERR_ERROR,
+                  "Error: Could not set destination register flag into InstructionFormat="
+                  + Name + " for field " + FieldName);
+            return false;
+          }
         }
       }
     }
