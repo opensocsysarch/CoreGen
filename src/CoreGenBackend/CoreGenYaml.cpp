@@ -571,6 +571,12 @@ void CoreGenYaml::WriteInstFormatYaml(YAML::Emitter *out,
         if( F == CoreGenInstFormat::CGInstReg ){
           *out << YAML::Key << "RegClass";
           *out << YAML::Value << Formats[i]->GetFieldRegClass(LField)->GetName();
+          *out << YAML::Key << "RegIsDestination";
+          if( Formats[i]->GetRegFieldIsDest(LField)){
+            *out << YAML::Value << "true";
+          }else{
+            *out << YAML::Value << "false";
+          }
         }
 
         *out << YAML::EndMap;
