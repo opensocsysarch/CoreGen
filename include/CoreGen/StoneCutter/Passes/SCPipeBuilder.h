@@ -33,7 +33,9 @@ private:
   std::vector<std::string> PipeVect;  ///< SCPipeBuilder: Pipe vector
   std::vector<std::string> InstVect;  ///< SCPipeBuilder: Instruction vector
 
-  std::vector<std::pair<std::string, std::string>> AttrMap;  ///< SCPipeBuilder: Attribute  to pipeline pairs
+  std::vector<std::pair<std::string,bool (SCPipeBuilder::*)()>> Enabled;   ///< SCPipeBuilder: Enabled sub-passes
+
+  std::vector<std::pair<std::string, std::string>> AttrMap;     ///< SCPipeBuilder: Attribute  to pipeline pairs
 
   unsigned **AdjMat;                  ///< SCPipeBuilder: Adjacency Matrix
 
@@ -57,6 +59,19 @@ private:
 
   /// SCPipeBuilder: Retrives the x-axis idx from the pipe stage name
   unsigned PipeToIdx(std::string P);
+
+  /// SCPipeBuilder: Enable sub-passes
+  bool EnableSubPasses();
+
+  /// SCPipeBuilder: Determines if a pass is enabled
+  bool IsSubPassEnabled(std::string Pass);
+
+  // ----------------------------------------------------------
+  // Sub Passes
+  // ----------------------------------------------------------
+
+  /// SCPipeBuilder SubPass: Split the register IO
+  bool SplitRegisterIO();
 
 public:
   /// Default cosntructor

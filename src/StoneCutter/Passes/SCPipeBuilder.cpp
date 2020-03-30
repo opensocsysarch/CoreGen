@@ -30,6 +30,16 @@ unsigned SCPipeBuilder::PipeToIdx(std::string P){
 }
 
 bool SCPipeBuilder::Optimize(){
+  bool (SCPipeBuilder::*Pass)() = nullptr;
+
+  for( unsigned i=0; i<Enabled.size(); i++ ){
+    Pass = Enabled[i].second;
+    if( !(*this.*Pass)() ){
+      this->PrintMsg( L_ERROR, "Subpass failed: " + Enabled[i].first );
+      return false;
+    }
+  }
+
   return true;
 }
 
@@ -111,6 +121,25 @@ bool SCPipeBuilder::InitAttrs(){
   return true;
 }
 
+bool SCPipeBuilder::SplitRegisterIO(){
+  return true;
+}
+
+bool SCPipeBuilder::EnableSubPasses(){
+  // temporarily enable all the sub-passes
+  Enabled.push_back(std::make_pair("SplitRegisterIO",
+                                   &SCPipeBuilder::SplitRegisterIO) );
+  return true;
+}
+
+bool SCPipeBuilder::IsSubPassEnabled(std::string Pass){
+  for( unsigned i=0; i<Enabled.size(); i++ ){
+    if( Enabled[i].first == Pass )
+      return true;
+  }
+  return false;
+}
+
 bool SCPipeBuilder::Execute(){
   if( !TheModule ){
     this->PrintMsg( L_ERROR, "LLVM IR Module is null" );
@@ -120,6 +149,12 @@ bool SCPipeBuilder::Execute(){
   // retrieve the pipeline stage vector
   PipeVect = SigMap->GetPipeVect();
   InstVect = SigMap->GetInstVect();
+
+  // Enable all the subpasses
+  if( !EnableSubPasses() ){
+    this->PrintMsg( L_ERROR, "Could not initialize sub-passes" );
+    return false;
+  }
 
   // Initalize the attribute map
   if( !InitAttrs() ){
