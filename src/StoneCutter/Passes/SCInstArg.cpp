@@ -34,7 +34,8 @@ bool SCInstArg::GetRegClassMap(){
       // this is a register file definition
       RegFileVect.push_back(
         AttrSet.getAttribute("regfile").getValueAsString().str());
-    }else if( !AttrSet.hasAttribute("subregister") ){
+    }else if( !AttrSet.hasAttribute("subregister") &&
+              !AttrSet.hasAttribute("pipeline") ){
       // normal register
       if( !AttrSet.hasAttribute("regclass") ){
         this->PrintMsg( L_ERROR,
@@ -52,7 +53,7 @@ bool SCInstArg::GetRegClassMap(){
         std::pair<std::string,std::string>(
           AttrSet.getAttribute("register").getValueAsString().str(),
           AttrSet.getAttribute("regclass").getValueAsString().str() ) );
-    }else{
+    }else if( AttrSet.hasAttribute("subregister") ){
       // subregister
       if( !AttrSet.hasAttribute("register") ){
         this->PrintMsg( L_ERROR,
