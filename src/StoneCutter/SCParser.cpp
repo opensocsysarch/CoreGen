@@ -1753,7 +1753,7 @@ Value *PipeExprAST::codegen() {
         AttributeSet PAttrSet = Global.getAttributes();
         if( PAttrSet.hasAttribute("pipeline") ){
           // found a pipeline attribute
-          if( PAttrSet.getAttribute("pipeline").getValueAsString().str() ==
+          if( PAttrSet.getAttribute("pipeline").getValueAsString().str() !=
               PipeLine ){
             // found a matching pipeline
             unsigned Idx = 0;
