@@ -35,7 +35,7 @@ private:
 
   std::vector<std::pair<std::string,bool (SCPipeBuilder::*)()>> Enabled;   ///< SCPipeBuilder: Enabled sub-passes
 
-  std::vector<std::pair<std::string, std::string>> AttrMap;     ///< SCPipeBuilder: Attribute  to pipeline pairs
+  std::vector<std::pair<std::string, std::string>> AttrMap;     ///< SCPipeBuilder: Attribute to pipeline pairs
 
   unsigned **AdjMat;                  ///< SCPipeBuilder: Adjacency Matrix
 

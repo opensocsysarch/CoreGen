@@ -122,6 +122,9 @@ public:
   /// Retrieves a list of unique pipelines
   std::vector<std::string> GetPipelines();
 
+  /// Retrieves the pipeline from the pipeline stage name
+  std::string GetPipelineFromStage(std::string Stage);
+
   /// Retrieves the number of pipelines present
   unsigned GetNumPipelines();
 

@@ -20,6 +20,95 @@ SCPipeBuilder::SCPipeBuilder(Module *TM,
 SCPipeBuilder::~SCPipeBuilder(){
 }
 
+bool SCPipeBuilder::SplitRegisterIO(){
+
+  // Determine whether we currently have any defined pipeline stages
+  // If no, then define a minimum of five stages:
+  // - N    = Fetch/PC_INCR
+  // - N+1  = Register Read
+  // - N+2  = Arith
+  // - N+3  = Register Write
+  // - N+4  = Memory
+  if( PipeVect.size() == 0 ){
+    PipeVect.push_back("FETCH");
+    PipeVect.push_back("REG_READ");
+    PipeVect.push_back("ARITH");
+    PipeVect.push_back("REG_WRITE");
+    PipeVect.push_back("MEMORY");
+
+    // allocate the new matrix
+    if( !AllocMat() ){
+      this->PrintMsg( L_ERROR, "SplitRegisterIO: Failed to allocate matrix" );
+      return false;
+    }
+
+    // lay out all the signals
+    SCSig *Sig = nullptr;
+    unsigned Idx = PipeVect.size();
+
+    for( unsigned i=0; i<SigMap->GetNumSignals(); i++ ){
+      Sig = SigMap->GetSignal(i);
+      if( Sig->GetType() == PC_INCR ){
+        Idx = PipeToIdx("FETCH");
+      }else if( Sig->isALUSig() ){
+        Idx = PipeToIdx("ARITH");
+      }else if( Sig->isMemSig() ){
+        Idx = PipeToIdx("MEMORY");
+      }else if( Sig->isRegSig() ){
+        SigType Type = Sig->GetType();
+        if( Type == REG_READ ){
+          Idx = PipeToIdx("REG_READ");
+        }else if( Type == REG_WRITE ){
+          Idx = PipeToIdx("REG_WRITE");
+        }else{
+          Idx = PipeToIdx("ARITH");
+        }
+      }else if( Sig->isBranchSig() ){
+        Idx = PipeToIdx("ARITH");
+      }
+      AdjMat[Idx][i] = 1;
+    }
+    return true;
+  }
+
+  // We have a mixture of currently defined pipeline states
+  // We will need to derive which instructions have pipelines
+  // containing register I/O operations and which do not.  For those
+  // that do not, we need to "fit" them into the correct stages.
+
+  // SplitPipes: instruction:pipeline:pipe_stage
+  std::vector<std::tuple<std::string,std::string,std::string>> SplitPipes;
+  std::vector<SCSig *> IVect;
+  SCSig *Sig = nullptr;
+  for( unsigned i=0; i<SigMap->GetNumSignals(); i++ ){
+    Sig = SigMap->GetSignal(i);
+    // if we find a register or memory signal, determine if it
+    // shares a stage with an operation
+    if( (Sig->isMemSig() || Sig->isRegSig()) && Sig->IsPipeDefined() ){
+      // retrieve all the adjacent signals from the same instruction
+      IVect = SigMap->GetSigVect(Sig->GetInst());
+      for( unsigned j=0; j<IVect.size(); j++ ){
+        if( (IVect[j] != Sig) &&
+            (IVect[j]->IsPipeDefined()) &&
+            (IVect[j]->isALUSig() || IVect[j]->isBranchSig()) &&
+            (IVect[j]->GetPipeName() == Sig->GetPipeName()) ){
+          // record the instruction : pipeline : pipe_stage
+          SplitPipes.push_back( std::tuple<std::string,std::string,std::string>(
+                                  IVect[j]->GetInst(),
+                                  IVect[j]->GetPipeName(),
+                                  Sig->GetPipeName() ) );
+        } // end conditional
+      } // for IVect loop
+    } // end conditional
+  } // end signal loop
+
+  // determine if we have any candidate pipe stages to adjust
+  if( SplitPipes.size() > 0 ){
+  }
+
+  return true;
+}
+
 unsigned SCPipeBuilder::PipeToIdx(std::string P){
   for( unsigned i=0; i<PipeVect.size(); i++ ){
     if( PipeVect[i] == P )
@@ -78,6 +167,11 @@ bool SCPipeBuilder::AllocMat(){
   if( AdjMat != nullptr )
     return false;
 
+  // no reason to allocate a zero width matrix
+  if( PipeVect.size() == 0 ){
+    return true;
+  }
+
   AdjMat = new unsigned*[PipeVect.size()];
   if( AdjMat == nullptr )
     return false;
@@ -118,10 +212,6 @@ bool SCPipeBuilder::InitAttrs(){
     }
   }
 
-  return true;
-}
-
-bool SCPipeBuilder::SplitRegisterIO(){
   return true;
 }
 

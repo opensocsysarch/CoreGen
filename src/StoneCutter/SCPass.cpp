@@ -65,6 +65,28 @@ bool SCPass::HasGlobalAttribute( std::string Var, std::string Attribute ){
   return false;
 }
 
+std::string SCPass::GetPipelineFromStage(std::string Stage){
+  std::string PName;
+  unsigned Val = 0;
+
+  // walk all the functions
+  for( auto &Func : TheModule->getFunctionList() ){
+    AttributeSet AttrSet = Func.getAttributes().getFnAttributes();
+    Val = 0;
+    while( AttrSet.hasAttribute("pipename"+std::to_string(Val)) ){
+      if( AttrSet.getAttribute("pipename"+std::to_string(Val)).getValueAsString().str() == Stage ){
+        if( AttrSet.hasAttribute("pipeline"+std::to_string(Val)) ){
+          PName = AttrSet.getAttribute("pipename"+std::to_string(Val)).getValueAsString().str();
+          return PName;
+        }
+      }
+      Val = Val + 1;
+    }
+  }
+
+  return PName;
+}
+
 unsigned SCPass::GetNumPipelines(){
   return GetPipelines().size();
 }

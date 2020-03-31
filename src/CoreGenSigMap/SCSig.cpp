@@ -194,13 +194,13 @@ bool SCSig::isALUSig(){
 }
 
 bool SCSig::isMemSig(){
-  if( Type>REG_WRITE )
+  if( Type>AREG_WRITE )
     return true;
   return false;
 }
 
 bool SCSig::isRegSig(){
-  if( (Type>BR_JR) && (Type<MEM_READ) )
+  if( (Type>MUX) && (Type<MEM_READ) )
     return true;
   return false;
 }
