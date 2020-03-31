@@ -60,6 +60,12 @@ private:
   /// SCPipeBuilder: Retrives the x-axis idx from the pipe stage name
   unsigned PipeToIdx(std::string P);
 
+  /// SCPipeBuilder: Retrieves the y-axis idx from the signal name
+  unsigned SigToIdx(SCSig *S);
+
+  /// SCPipeBuilder: Clears all the enabled pipe stages for the target signal name
+  bool ClearSignal(SCSig *S);
+
   /// SCPipeBuilder: Enable sub-passes
   bool EnableSubPasses();
 
@@ -70,8 +76,8 @@ private:
   // Sub Passes
   // ----------------------------------------------------------
 
-  /// SCPipeBuilder SubPass: Split the register IO
-  bool SplitRegisterIO();
+  /// SCPipeBuilder SubPass: Split the register  and memory IO
+  bool SplitIO();
 
 public:
   /// Default cosntructor

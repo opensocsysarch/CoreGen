@@ -20,7 +20,7 @@ SCPipeBuilder::SCPipeBuilder(Module *TM,
 SCPipeBuilder::~SCPipeBuilder(){
 }
 
-bool SCPipeBuilder::SplitRegisterIO(){
+bool SCPipeBuilder::SplitIO(){
 
   // Determine whether we currently have any defined pipeline stages
   // If no, then define a minimum of five stages:
@@ -38,7 +38,7 @@ bool SCPipeBuilder::SplitRegisterIO(){
 
     // allocate the new matrix
     if( !AllocMat() ){
-      this->PrintMsg( L_ERROR, "SplitRegisterIO: Failed to allocate matrix" );
+      this->PrintMsg( L_ERROR, "SplitIO: Failed to allocate matrix" );
       return false;
     }
 
@@ -76,8 +76,8 @@ bool SCPipeBuilder::SplitRegisterIO(){
   // containing register I/O operations and which do not.  For those
   // that do not, we need to "fit" them into the correct stages.
 
-  // SplitPipes: instruction:pipeline:pipe_stage
-  std::vector<std::tuple<std::string,std::string,std::string>> SplitPipes;
+  // SplitPipes: signal_ptr:pipeline:pipe_stage
+  std::vector<std::tuple<SCSig *,std::string,std::string>> SplitPipes;
   std::vector<SCSig *> IVect;
   SCSig *Sig = nullptr;
   for( unsigned i=0; i<SigMap->GetNumSignals(); i++ ){
@@ -93,9 +93,9 @@ bool SCPipeBuilder::SplitRegisterIO(){
             (IVect[j]->isALUSig() || IVect[j]->isBranchSig()) &&
             (IVect[j]->GetPipeName() == Sig->GetPipeName()) ){
           // record the instruction : pipeline : pipe_stage
-          SplitPipes.push_back( std::tuple<std::string,std::string,std::string>(
-                                  IVect[j]->GetInst(),
-                                  IVect[j]->GetPipeName(),
+          SplitPipes.push_back( std::tuple<SCSig *,std::string,std::string>(
+                                  Sig,
+                                  GetPipelineFromStage(IVect[j]->GetPipeName()),
                                   Sig->GetPipeName() ) );
         } // end conditional
       } // for IVect loop
@@ -104,6 +104,106 @@ bool SCPipeBuilder::SplitRegisterIO(){
 
   // determine if we have any candidate pipe stages to adjust
   if( SplitPipes.size() > 0 ){
+    std::vector<std::string> Unique;  // unique pipelines to split
+    for( unsigned i=0; i<SplitPipes.size(); i++ ){
+      Unique.push_back(std::get<1>(SplitPipes[i]));
+    }
+
+    // find the unique pipelines
+    std::sort( Unique.begin(), Unique.end() );
+    Unique.erase( std::unique(Unique.begin(),Unique.end()), Unique.end());
+
+    // free the adjacency matrix
+    if( !FreeMat() ){
+      this->PrintMsg( L_ERROR, "SplitIO: Could not free adjacency matrix" );
+      return false;
+    }
+
+    // records the mapping of Pipeline to PipeStage
+    std::map<std::string,std::string> PipeMap;
+
+    // split each pipeline's i/o stages into REG_READ, REG_WRITE and MEMORY
+    for( unsigned i=0; i<Unique.size(); i++ ){
+      // split Unique[i]: find the first candidate pipe to split
+      bool done = false;
+      unsigned j = 0;
+      while( !done ){
+        if( std::get<1>(SplitPipes[j]) == Unique[i] ){
+          PipeVect.push_back( std::get<2>(SplitPipes[j]) + "_REG_READ" );
+          PipeVect.push_back( std::get<2>(SplitPipes[j]) + "_REG_WRITE" );
+          PipeVect.push_back( std::get<2>(SplitPipes[j]) + "_MEMORY" );
+          PipeMap[Unique[i]] = std::get<2>(SplitPipes[j]); // record the pipe to pipe stage mapping
+          done = true;
+        }
+        j += 1;
+      }
+    }
+
+    // allocate the new matrix and build it out
+    if( !AllocMat() ){
+      this->PrintMsg( L_ERROR, "SplitIO: Could not allocate matrix" );
+      return false;
+    }
+
+    // build the pipeline matrix
+    if( !BuildMat() ){
+      this->PrintMsg( L_ERROR, "SplitIO: Could not build matrix representation of pipeline" );
+      return false;
+    }
+
+    // now that we have the signals identified, the new pipe stage constructed
+    // and the adjacency matrix built,
+    // walk through our list of identified signals and adjust the i/o's
+    for( unsigned i=0; i<SplitPipes.size(); i++ ){
+      SCSig *Sig            = std::get<0>(SplitPipes[i]);
+      std::string Pipeline  = std::get<1>(SplitPipes[i]);
+      std::string SigName   = Sig->GetName();
+      std::string Stage     = PipeMap[Pipeline];
+      unsigned SigIdx       = SigToIdx(Sig);
+
+      // clear out all the existing mappings
+      if( !ClearSignal(Sig) ){
+        this->PrintMsg( L_ERROR, "SplitIO: Could not clear signal to pipe mapping for: " + SigName );
+        return false;
+      }
+
+      // set the new signals
+      switch( Sig->GetType() ){
+      case REG_READ:
+        AdjMat[PipeToIdx(Stage+"_REG_READ")][SigIdx] = 1;
+        break;
+      case REG_WRITE:
+        AdjMat[PipeToIdx(Stage+"_REG_WRITE")][SigIdx] = 1;
+        break;
+      case AREG_READ:
+      case AREG_WRITE:
+        AdjMat[PipeToIdx(Stage)][SigIdx] = 1;
+        break;
+      case MEM_READ:
+      case MEM_WRITE:
+        AdjMat[PipeToIdx(Stage+"_MEMORY")][SigIdx] = 1;
+        break;
+      default:
+        this->PrintMsg( L_ERROR,
+                        "SplitIO: Unknown adjustment for Signal=" +
+                        SigName + " in instruction=" + Sig->GetInst() );
+        return false;
+        break;
+      }
+    }
+  }
+
+  return true;
+}
+
+bool SCPipeBuilder::ClearSignal(SCSig *S){
+  unsigned SigIdx = SigToIdx(S);
+
+  if( SigIdx == SigMap->GetNumSignals() )
+    return false;
+
+  for( unsigned i=0; i<PipeVect.size(); i++ ){
+    AdjMat[i][SigIdx] = 0;
   }
 
   return true;
@@ -116,6 +216,14 @@ unsigned SCPipeBuilder::PipeToIdx(std::string P){
   }
 
   return PipeVect.size();
+}
+
+unsigned SCPipeBuilder::SigToIdx(SCSig *Sig){
+  for( unsigned i=0; i<SigMap->GetNumSignals(); i++ ){
+    if( SigMap->GetSignal(i) == Sig)
+      return i;
+  }
+  return SigMap->GetNumSignals();
 }
 
 bool SCPipeBuilder::Optimize(){
@@ -201,6 +309,8 @@ bool SCPipeBuilder::FreeMat(){
     delete [] AdjMat;
   }
 
+  AdjMat = nullptr;
+
   return true;
 }
 
@@ -217,8 +327,8 @@ bool SCPipeBuilder::InitAttrs(){
 
 bool SCPipeBuilder::EnableSubPasses(){
   // temporarily enable all the sub-passes
-  Enabled.push_back(std::make_pair("SplitRegisterIO",
-                                   &SCPipeBuilder::SplitRegisterIO) );
+  Enabled.push_back(std::make_pair("SplitIO",
+                                   &SCPipeBuilder::SplitIO) );
   return true;
 }
 

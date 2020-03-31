@@ -66,7 +66,7 @@ bool SCPass::HasGlobalAttribute( std::string Var, std::string Attribute ){
 }
 
 std::string SCPass::GetPipelineFromStage(std::string Stage){
-  std::string PName;
+  std::string PName = "pipeline";
   unsigned Val = 0;
 
   // walk all the functions
@@ -76,7 +76,7 @@ std::string SCPass::GetPipelineFromStage(std::string Stage){
     while( AttrSet.hasAttribute("pipename"+std::to_string(Val)) ){
       if( AttrSet.getAttribute("pipename"+std::to_string(Val)).getValueAsString().str() == Stage ){
         if( AttrSet.hasAttribute("pipeline"+std::to_string(Val)) ){
-          PName = AttrSet.getAttribute("pipename"+std::to_string(Val)).getValueAsString().str();
+          PName = AttrSet.getAttribute("pipeline"+std::to_string(Val)).getValueAsString().str();
           return PName;
         }
       }
