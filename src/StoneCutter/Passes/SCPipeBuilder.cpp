@@ -20,6 +20,47 @@ SCPipeBuilder::SCPipeBuilder(Module *TM,
 SCPipeBuilder::~SCPipeBuilder(){
 }
 
+bool SCPipeBuilder::DeadPipeElim(){
+  // Attempts to remove any pipeline stages that aren't involved in any operations
+
+  std::vector<std::string> EmptyStages;
+  for( unsigned i=0; i<PipeVect.size(); i++ ){
+    unsigned Total = 0;
+    for( unsigned j=0; j<SigMap->GetNumSignals(); j++ ){
+      Total = Total + AdjMat[i][j];
+    }
+    if( Total == 0 )
+      EmptyStages.push_back( PipeVect[i] );
+  }
+
+  if( EmptyStages.size() > 0 ){
+    if( !FreeMat() ){
+      this->PrintMsg( L_ERROR, "DeadPipeElim: Could not free adjacency matrix" );
+      return false;
+    }
+
+    // delete each empty pipe
+    for( unsigned i=0; i<EmptyStages.size(); i++ ){
+      auto it = std::find( PipeVect.begin(), PipeVect.end(), EmptyStages[i] );
+      PipeVect.erase(it);
+    }
+
+    // allocate the new matrix and build it out
+    if( !AllocMat() ){
+      this->PrintMsg( L_ERROR, "DeepPipeElim: Could not allocate matrix" );
+      return false;
+    }
+
+    // build the pipeline matrix
+    if( !BuildMat() ){
+      this->PrintMsg( L_ERROR, "DeepPipeElim: Could not build matrix representation of pipeline" );
+      return false;
+    }
+  }
+
+  return true;
+}
+
 bool SCPipeBuilder::SplitIO(){
 
   // Determine whether we currently have any defined pipeline stages
@@ -235,6 +276,10 @@ bool SCPipeBuilder::Optimize(){
       this->PrintMsg( L_ERROR, "Subpass failed: " + Enabled[i].first );
       return false;
     }
+    if( !WriteSigMap() ){
+      this->PrintMsg( L_ERROR, "Failed to write signal map following " + Enabled[i].first );
+      return false;
+    }
   }
 
   return true;
@@ -329,6 +374,8 @@ bool SCPipeBuilder::EnableSubPasses(){
   // temporarily enable all the sub-passes
   Enabled.push_back(std::make_pair("SplitIO",
                                    &SCPipeBuilder::SplitIO) );
+  Enabled.push_back(std::make_pair("DeadPipeElim",
+                                   &SCPipeBuilder::DeadPipeElim) );
   return true;
 }
 

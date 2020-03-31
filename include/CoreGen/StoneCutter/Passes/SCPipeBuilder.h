@@ -79,6 +79,9 @@ private:
   /// SCPipeBuilder SubPass: Split the register  and memory IO
   bool SplitIO();
 
+  /// SCPipeBuilde SubPass: Removes dead pipeline stages
+  bool DeadPipeElim();
+
 public:
   /// Default cosntructor
   SCPipeBuilder(Module *TM, SCOpts *O, SCMsg *M);
