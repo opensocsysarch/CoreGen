@@ -79,6 +79,9 @@ private:
   /// SCPipeBuilder SubPass: Split the register  and memory IO
   bool SplitIO();
 
+  /// SCPipeBuilder SubPass: Fit the remaining arithmetic ops into adjacement pipe stages
+  bool FitArith();
+
   /// SCPipeBuilde SubPass: Removes dead pipeline stages
   bool DeadPipeElim();
 

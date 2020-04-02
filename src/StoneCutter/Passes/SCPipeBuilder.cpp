@@ -20,6 +20,34 @@ SCPipeBuilder::SCPipeBuilder(Module *TM,
 SCPipeBuilder::~SCPipeBuilder(){
 }
 
+bool SCPipeBuilder::FitArith(){
+  // Attempts to fit any arithmetic operations that are not currently asssigned
+  // to a given pipe stage to a predefined stage
+
+  // record the list of arithmetic pipeline stages that are not assigned
+  std::vector<SCSig *> ArithOps;
+  for( unsigned i=0; i<SigMap->GetNumSignals(); i++ ){
+    SCSig *Sig = SigMap->GetSignal(i);
+
+    if( !Sig->isMemSig() && !Sig->isRegSig() && !Sig->IsPipeDefined() ){
+      if( Sig->GetType() != PC_INCR ){
+        ArithOps.push_back( Sig );
+      }
+    }
+  }
+
+  for( unsigned i=0; i<ArithOps.size(); i++ ){
+    std::cout << "Fitting " << ArithOps[i]->GetName() << std::endl;
+    // Attempt 1: find an identical arith op in the same pipeline
+
+    // Attempt 2: attempt to find a similar arith op in the same pipeline
+
+    // Attempt 3:fall back and fit into an existing stage with no i/o ops
+  }
+
+  return true;
+}
+
 bool SCPipeBuilder::DeadPipeElim(){
   // Attempts to remove any pipeline stages that aren't involved in any operations
 
@@ -374,6 +402,8 @@ bool SCPipeBuilder::EnableSubPasses(){
   // temporarily enable all the sub-passes
   Enabled.push_back(std::make_pair("SplitIO",
                                    &SCPipeBuilder::SplitIO) );
+  Enabled.push_back(std::make_pair("FitArith",
+                                   &SCPipeBuilder::FitArith) );
   Enabled.push_back(std::make_pair("DeadPipeElim",
                                    &SCPipeBuilder::DeadPipeElim) );
   return true;

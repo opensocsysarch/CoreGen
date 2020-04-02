@@ -1017,6 +1017,10 @@ std::unique_ptr<ExprAST> SCParser::ParsePipeExpr() {
     BodyExpr.push_back(std::move(Body));
   }
 
+  if( BodyExpr.size() == 0 ){
+    return LogError("Pipeline=" + PipeLine + " has no body");
+  }
+
   // handle close bracket
   if( CurTok != '}' )
     return LogError("expected '}' for do while loop control body");
