@@ -158,7 +158,7 @@ public:
   /// Retrieves the name of the target pipe stage
   bool GetPipeStageName(Function &F, unsigned N, std::string& PipeName );
 
-  /// Retrieve a vector of all teh pipe stage names
+  /// Retrieve a vector of all the pipe stage names
   std::vector<std::string> GetPipeStages(Function &F);
 
   /// Retrieve the pipe stage name associated with the target instruction

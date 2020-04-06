@@ -72,6 +72,12 @@ private:
   /// SCPipeBuilder: Determines if a pass is enabled
   bool IsSubPassEnabled(std::string Pass);
 
+  /// SCPipeBuilder: Determines if the two signals are "adjacent"
+  bool IsAdjacent(SCSig *Base, SCSig *New);
+
+  /// SCPipeBuilder: Does the target pipe have any I/O signals?
+  bool HasIOSigs(std::string Pipe);
+
   // ----------------------------------------------------------
   // Sub Passes
   // ----------------------------------------------------------

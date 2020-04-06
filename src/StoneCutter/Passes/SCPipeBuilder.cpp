@@ -20,6 +20,36 @@ SCPipeBuilder::SCPipeBuilder(Module *TM,
 SCPipeBuilder::~SCPipeBuilder(){
 }
 
+bool SCPipeBuilder::HasIOSigs(std::string Pipe){
+  bool ret = false;
+
+  unsigned Idx = PipeToIdx(Pipe);
+  SCSig *Sig = nullptr;
+
+  for( unsigned i=0; i<SigMap->GetNumSignals(); i++ ){
+    if( AdjMat[Idx][i] == 1 ){
+      Sig = SigMap->GetSignal(i);
+      if( Sig->isRegSig() ||
+          Sig->isMemSig() ||
+          (Sig->GetType() == PC_INCR) ){
+        ret = true;
+      }
+
+    }
+  }
+
+  return ret;
+}
+
+bool SCPipeBuilder::IsAdjacent(SCSig *Base, SCSig *New){
+  if( Base->GetType() == New->GetType() ){
+    return true;
+  }else if( Base->isALUSig() && New->isALUSig() ){
+    return true;
+  }
+  return false;
+}
+
 bool SCPipeBuilder::FitArith(){
   // Attempts to fit any arithmetic operations that are not currently asssigned
   // to a given pipe stage to a predefined stage
@@ -29,22 +59,113 @@ bool SCPipeBuilder::FitArith(){
   for( unsigned i=0; i<SigMap->GetNumSignals(); i++ ){
     SCSig *Sig = SigMap->GetSignal(i);
 
-    if( !Sig->isMemSig() && !Sig->isRegSig() && !Sig->IsPipeDefined() ){
-      if( Sig->GetType() != PC_INCR ){
-        ArithOps.push_back( Sig );
-      }
+    //if( !Sig->isMemSig() && !Sig->isRegSig() && !Sig->IsPipeDefined() ){
+      //if( Sig->GetType() != PC_INCR ){
+    if( Sig->isALUSig() && (!Sig->IsPipeDefined()) ){
+      ArithOps.push_back( Sig );
+      //}
     }
   }
 
+  std::vector<SCSig *> ArithSigVect;
+  bool done = false;
+
   for( unsigned i=0; i<ArithOps.size(); i++ ){
     if( Opts->IsVerbose() ){
-      this->PrintRawMsg("FitArith: Fitting " + ArithOps[i]->GetName() );
+      this->PrintRawMsg("FitArith: Fitting " + ArithOps[i]->GetName() +
+                        " from instruction=" +  ArithOps[i]->GetInst() );
     }
-    // Attempt 1: find an identical arith op in the same pipeline
 
-    // Attempt 2: attempt to find a similar arith op in the same pipeline
+    done = false;
 
-    // Attempt 3:fall back and fit into an existing stage with no i/o ops
+    // Stage 1: Search local instruction for an adjacent arithmetic signal
+    ArithSigVect = SigMap->GetSigVect(ArithOps[i]->GetInst());
+    for( unsigned j=0; j<ArithSigVect.size(); j++ ){
+      if( (ArithSigVect[j]->isALUSig()) &&
+          (ArithSigVect[j]->IsPipeDefined()) &&
+          (ArithOps[i] != ArithSigVect[j]) &&
+          (!done) ){
+        if( IsAdjacent(ArithOps[i],ArithSigVect[j]) ){
+          // found a match
+          AdjMat[PipeToIdx(ArithSigVect[j]->GetPipeName())][SigToIdx(ArithOps[i])] = 1;
+          done = true;
+          if( Opts->IsVerbose() ){
+            this->PrintRawMsg("FitArith: Fitting " + ArithOps[i]->GetName() +
+                              " to " + ArithSigVect[j]->GetPipeName());
+          }
+        }
+      }
+    }
+
+    // Stage 2: Search for identical or adjacent signals across the remainder
+    //          of all instructions
+    if( !done ){
+      SCSig *ASig = nullptr;
+      for( unsigned j=0; j<SigMap->GetNumSignals(); j++ ){
+        ASig = SigMap->GetSignal(j);
+        if( (ASig->isALUSig()) &&
+            (ASig != ArithOps[i]) &&
+            (ASig->IsPipeDefined()) &&
+            (IsAdjacent(ArithOps[i],ASig)) &&
+            (!done) ){
+          // found a match
+          AdjMat[PipeToIdx(ASig->GetPipeName())][SigToIdx(ArithOps[i])] = 1;
+          done = true;
+          if( Opts->IsVerbose() ){
+            this->PrintRawMsg("FitArith: Fitting " + ArithOps[i]->GetName() +
+                              " to " + ASig->GetPipeName());
+          }
+        }
+      }
+    }
+
+    // Stage 3: Fall back and find an arith stage that contains no I/O signals
+    if( !done ){
+      // find a pipe stage that isn't utilized by I/O signals
+      std::vector<unsigned> PipeSums;
+      unsigned Sum = 0;
+      for( unsigned i=0; i<PipeVect.size(); i++ ){
+        Sum = 0;
+        for( unsigned j=0; j<SigMap->GetNumSignals(); j++ ){
+          Sum = Sum + AdjMat[i][j];
+        }
+        PipeSums.push_back(Sum);
+      }
+
+      // first, try to fina an unused pipe stage
+      for( unsigned i=0; i<PipeSums.size(); i++ ){
+        if( (PipeSums[i] == 0) && (!done) ){
+          AdjMat[i][SigToIdx(ArithOps[i])] = 1;
+          done = true;
+          if( Opts->IsVerbose() ){
+            this->PrintRawMsg("FitArith: Fitting " + ArithOps[i]->GetName() +
+                              " to " + PipeVect[i]);
+          }
+        }
+      }
+
+      if( !done ){
+        // find an arith stage with no i/o signals
+        for( unsigned i=0; i<PipeVect.size(); i++ ){
+          if( !HasIOSigs(PipeVect[i]) && !done ){
+            AdjMat[i][SigToIdx(ArithOps[i])] = 1;
+            done = true;
+            if( Opts->IsVerbose() ){
+              this->PrintRawMsg("FitArith: Fitting " + ArithOps[i]->GetName() +
+                                " to " + PipeVect[i]);
+            }
+          }
+        }
+      }
+    }
+
+    // print failure
+    if( !done ){
+      if( Opts->IsVerbose() ){
+        this->PrintRawMsg("FitArith: Failed to fit " + ArithOps[i]->GetName());
+      }
+      return false;
+    }
   }
 
   return true;
