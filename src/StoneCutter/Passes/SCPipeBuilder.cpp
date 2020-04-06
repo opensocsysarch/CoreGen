@@ -37,7 +37,9 @@ bool SCPipeBuilder::FitArith(){
   }
 
   for( unsigned i=0; i<ArithOps.size(); i++ ){
-    std::cout << "Fitting " << ArithOps[i]->GetName() << std::endl;
+    if( Opts->IsVerbose() ){
+      this->PrintRawMsg("FitArith: Fitting " + ArithOps[i]->GetName() );
+    }
     // Attempt 1: find an identical arith op in the same pipeline
 
     // Attempt 2: attempt to find a similar arith op in the same pipeline
@@ -70,6 +72,9 @@ bool SCPipeBuilder::DeadPipeElim(){
     // delete each empty pipe
     for( unsigned i=0; i<EmptyStages.size(); i++ ){
       auto it = std::find( PipeVect.begin(), PipeVect.end(), EmptyStages[i] );
+      if( Opts->IsVerbose() ){
+        this->PrintRawMsg("DeadPipeElim: Removing dead pipe=" + EmptyStages[i] );
+      }
       PipeVect.erase(it);
     }
 
@@ -109,6 +114,10 @@ bool SCPipeBuilder::SplitIO(){
     if( !AllocMat() ){
       this->PrintMsg( L_ERROR, "SplitIO: Failed to allocate matrix" );
       return false;
+    }
+
+    if( Opts->IsVerbose() ){
+      this->PrintRawMsg("SplitIO: No pipeline stages found, splitting into 5-stage pipeline");
     }
 
     // lay out all the signals
@@ -236,6 +245,13 @@ bool SCPipeBuilder::SplitIO(){
         return false;
       }
 
+      if( Opts->IsVerbose() ){
+        this->PrintRawMsg("SplitIO: Splitting I/O for signal=" +
+                          SigName +
+                          " from instruction=" +
+                          Sig->GetInst() );
+      }
+
       // set the new signals
       switch( Sig->GetType() ){
       case REG_READ:
@@ -300,6 +316,9 @@ bool SCPipeBuilder::Optimize(){
 
   for( unsigned i=0; i<Enabled.size(); i++ ){
     Pass = Enabled[i].second;
+    if( Opts->IsVerbose() ){
+      this->PrintRawMsg("Executing subpass: " + Enabled[i].first );
+    }
     if( !(*this.*Pass)() ){
       this->PrintMsg( L_ERROR, "Subpass failed: " + Enabled[i].first );
       return false;
