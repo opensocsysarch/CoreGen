@@ -88,8 +88,11 @@ private:
   /// SCPipeBuilder SubPass: Fit the remaining arithmetic ops into adjacement pipe stages
   bool FitArith();
 
-  /// SCPipeBuilde SubPass: Removes dead pipeline stages
+  /// SCPipeBuilder SubPass: Removes dead pipeline stages
   bool DeadPipeElim();
+
+  /// SCPipeBuilder SubPass: Checks for signals with no pipes
+  bool EmptySig();
 
 public:
   /// Default cosntructor

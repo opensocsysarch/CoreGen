@@ -20,6 +20,25 @@ SCPipeBuilder::SCPipeBuilder(Module *TM,
 SCPipeBuilder::~SCPipeBuilder(){
 }
 
+bool SCPipeBuilder::EmptySig(){
+  bool ret = true;
+
+  for( unsigned i=0; i<SigMap->GetNumSignals(); i++ ){
+    if( !SigMap->GetSignal(i)->IsPipeDefined() ){
+      ret = false;
+      if( Opts->IsVerbose() ){
+        this->PrintRawMsg("EmptySig: signal=" +
+                          SigMap->GetSignal(i)->GetName() +
+                          " from instruction=" +
+                          SigMap->GetSignal(i)->GetInst() +
+                          " has no associated pipe stage");
+      }
+    }
+  }
+
+  return ret;
+}
+
 bool SCPipeBuilder::HasIOSigs(std::string Pipe){
   bool ret = false;
 
@@ -34,7 +53,6 @@ bool SCPipeBuilder::HasIOSigs(std::string Pipe){
           (Sig->GetType() == PC_INCR) ){
         ret = true;
       }
-
     }
   }
 
@@ -61,7 +79,10 @@ bool SCPipeBuilder::FitArith(){
 
     //if( !Sig->isMemSig() && !Sig->isRegSig() && !Sig->IsPipeDefined() ){
       //if( Sig->GetType() != PC_INCR ){
-    if( Sig->isALUSig() && (!Sig->IsPipeDefined()) ){
+    if( (Sig->isALUSig() || Sig->isMuxSig() || Sig->isBranchSig()) &&
+        (!Sig->IsPipeDefined()) ){
+
+      // now back fit the set of ALU register operations AREG_READ/AREG_WRITE
       ArithOps.push_back( Sig );
       //}
     }
@@ -81,7 +102,7 @@ bool SCPipeBuilder::FitArith(){
     // Stage 1: Search local instruction for an adjacent arithmetic signal
     ArithSigVect = SigMap->GetSigVect(ArithOps[i]->GetInst());
     for( unsigned j=0; j<ArithSigVect.size(); j++ ){
-      if( (ArithSigVect[j]->isALUSig()) &&
+      if( (ArithSigVect[j]->isALUSig()||ArithSigVect[j]->isMuxSig()||ArithSigVect[j]->isBranchSig()) &&
           (ArithSigVect[j]->IsPipeDefined()) &&
           (ArithOps[i] != ArithSigVect[j]) &&
           (!done) ){
@@ -103,7 +124,7 @@ bool SCPipeBuilder::FitArith(){
       SCSig *ASig = nullptr;
       for( unsigned j=0; j<SigMap->GetNumSignals(); j++ ){
         ASig = SigMap->GetSignal(j);
-        if( (ASig->isALUSig()) &&
+        if( (ASig->isALUSig()||ASig->isMuxSig()||ASig->isBranchSig()) &&
             (ASig != ArithOps[i]) &&
             (ASig->IsPipeDefined()) &&
             (IsAdjacent(ArithOps[i],ASig)) &&
@@ -124,30 +145,44 @@ bool SCPipeBuilder::FitArith(){
       // find a pipe stage that isn't utilized by I/O signals
       std::vector<unsigned> PipeSums;
       unsigned Sum = 0;
-      for( unsigned i=0; i<PipeVect.size(); i++ ){
+      for( unsigned j=0; j<PipeVect.size(); j++ ){
         Sum = 0;
-        for( unsigned j=0; j<SigMap->GetNumSignals(); j++ ){
-          Sum = Sum + AdjMat[i][j];
+        for( unsigned k=0; k<SigMap->GetNumSignals(); k++ ){
+          Sum = Sum + AdjMat[j][k];
         }
         PipeSums.push_back(Sum);
       }
 
       // first, try to fina an unused pipe stage
-      for( unsigned i=0; i<PipeSums.size(); i++ ){
-        if( (PipeSums[i] == 0) && (!done) ){
-          AdjMat[i][SigToIdx(ArithOps[i])] = 1;
+      for( unsigned j=0; j<PipeSums.size(); j++ ){
+        if( (PipeSums[j] == 0) && (!done) ){
+          AdjMat[j][SigToIdx(ArithOps[i])] = 1;
           done = true;
           if( Opts->IsVerbose() ){
             this->PrintRawMsg("FitArith: Fitting " + ArithOps[i]->GetName() +
-                              " to " + PipeVect[i]);
+                              " to " + PipeVect[j]);
           }
         }
       }
 
       if( !done ){
         // find an arith stage with no i/o signals
+        unsigned j = 0;
+        do{
+          if( !HasIOSigs(PipeVect[j]) ){
+            AdjMat[j][SigToIdx(ArithOps[i])] = 1;
+            done = true;
+            if( Opts->IsVerbose() ){
+              this->PrintRawMsg("FitArith: Fitting " + ArithOps[i]->GetName() +
+                                " to " + PipeVect[j]);
+            }
+          }
+          j = j+1;
+        }while( (j<PipeVect.size()) && (!done) );
+
+#if 0
         for( unsigned i=0; i<PipeVect.size(); i++ ){
-          if( !HasIOSigs(PipeVect[i]) && !done ){
+          if( (!HasIOSigs(PipeVect[i])) && (!done) ){
             AdjMat[i][SigToIdx(ArithOps[i])] = 1;
             done = true;
             if( Opts->IsVerbose() ){
@@ -156,6 +191,7 @@ bool SCPipeBuilder::FitArith(){
             }
           }
         }
+#endif
       }
     }
 
@@ -164,6 +200,12 @@ bool SCPipeBuilder::FitArith(){
       if( Opts->IsVerbose() ){
         this->PrintRawMsg("FitArith: Failed to fit " + ArithOps[i]->GetName());
       }
+      return false;
+    }
+
+    // write the signal map back out
+    if( !WriteSigMap() ){
+      this->PrintMsg( L_ERROR, "Failed to write signal map during the FitArith phase" ); 
       return false;
     }
   }
@@ -270,6 +312,9 @@ bool SCPipeBuilder::SplitIO(){
     return true;
   }
 
+  //
+  // Phase 1: Mixed pipeline
+  //
   // We have a mixture of currently defined pipeline states
   // We will need to derive which instructions have pipelines
   // containing register I/O operations and which do not.  For those
@@ -398,6 +443,75 @@ bool SCPipeBuilder::SplitIO(){
       }
     }
   }
+
+  // write all the intermediate results back to the core data structures
+  if( !WriteSigMap() ){
+    this->PrintMsg( L_ERROR, "Failed to write signal map during the SplitIO phase" ); 
+    return false;
+  }
+
+  //
+  // Phase 2: Mixed Pipeline
+  // back fit any i/o stages that have no pipes defined
+  //
+  SCSig *Input = nullptr;
+  SCSig *Fit   = nullptr;
+  std::vector<SCSig *> SV;
+  for( unsigned i=0; i<SigMap->GetNumSignals(); i++ ){
+    Input = SigMap->GetSignal(i);
+    if( (Input->isMemSig() || Input->isRegSig()) && (!Input->IsPipeDefined()) ){
+      //
+      // We found an I/O signal with no candidate pipe stage
+      // First, search the signals in the same instruction and determine
+      // whether there is a good fit for an I/O signal
+      //
+      // If not, search all the signals for a good fit for an I/O signal
+      //
+      bool done = false;
+
+      // search the signals within the target instruction
+      SV = SigMap->GetSigVect(Input->GetInst());
+      for( unsigned j=0; j<SV.size(); j++ ){
+        if( SV[j]->IsPipeDefined() &&
+            (Input->GetType() == SV[j]->GetType()) &&
+            (!done) ){
+          done = true;
+          AdjMat[PipeToIdx(SV[j]->GetPipeName())][i] = 1;
+          if( Opts->IsVerbose() ){
+            this->PrintRawMsg( "SplitIO: Fitting Signal=" +
+                               Input->GetName() + " in instruction=" +
+                               Input->GetInst() + " to pipe stage=" +
+                               SV[j]->GetPipeName() );
+          }
+        }
+      }
+
+      // search all the signals
+      if( !done ){
+        for( unsigned j=0; j<SigMap->GetNumSignals(); j++ ){
+          if( (SigMap->GetSignal(j) != Input) &&
+              (SigMap->GetSignal(j)->IsPipeDefined()) &&
+              (SigMap->GetSignal(j)->GetType() == Input->GetType()) &&
+              (!done) ){
+            done = true;
+            Fit = SigMap->GetSignal(j);
+            AdjMat[PipeToIdx(Fit->GetPipeName())][i] = 1;
+            if( Opts->IsVerbose() ){
+              this->PrintRawMsg( "SplitIO: Fitting Signal=" +
+                                Input->GetName() + " in instruction=" +
+                                Input->GetInst() + " to pipe stage=" +
+                                Fit->GetPipeName() );
+            }
+          }
+        }
+      }
+    }
+  }// end back fit loop
+
+  //
+  // Phase 2: Mixed Pipeline
+  // now back fit the set of ALU register operations AREG_READ/AREG_WRITE
+  //
 
   return true;
 }
@@ -546,6 +660,8 @@ bool SCPipeBuilder::EnableSubPasses(){
                                    &SCPipeBuilder::FitArith) );
   Enabled.push_back(std::make_pair("DeadPipeElim",
                                    &SCPipeBuilder::DeadPipeElim) );
+  Enabled.push_back(std::make_pair("EmptySig",
+                                   &SCPipeBuilder::EmptySig) );
   return true;
 }
 
