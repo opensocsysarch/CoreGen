@@ -75,6 +75,31 @@ bool SCPipeBuilder::IsAdjacent(SCSig *Base, SCSig *New){
 }
 
 bool  SCPipeBuilder::FitTmpReg(){
+
+  SCSig *Sig = nullptr;
+  for( unsigned i=0; i<SigMap->GetNumSignals(); i++ ){
+    Sig = SigMap->GetSignal(i);
+    if( ((Sig->GetType() == AREG_READ) ||
+        (Sig->GetType() == AREG_WRITE)) &&
+        (!Sig->IsPipeDefined())){
+      // found a candidate temp signal
+      std::vector<SCSig *> SV = SigMap->GetSigVect(Sig->GetInst());
+
+      for( unsigned j=0; j<SV.size(); j++ ){
+        if( ((SV[j]->isALUSig()) ||
+            (SV[j]->isMuxSig()) ||
+            (SV[j]->isBranchSig())) &&
+            SV[j]->IsPipeDefined() ){
+          AdjMat[PipeToIdx(SV[j]->GetPipeName())][i] = 1;
+          if( Opts->IsVerbose() ){
+            this->PrintRawMsg("FitTmpReg: Fitting " + Sig->GetName() +
+                              " to " + SV[j]->GetPipeName());
+          }
+        }
+      }
+    }
+  }
+
   return true;
 }
 
