@@ -64,6 +64,12 @@ bool SCPipeBuilder::IsAdjacent(SCSig *Base, SCSig *New){
     return true;
   }else if( Base->isALUSig() && New->isALUSig() ){
     return true;
+  }else if( Base->isMemSig() && New->isMemSig() ){
+    return true;
+  }else if( Base->isMuxSig() && New->isMuxSig() ){
+    return true;
+  }else if( Base->isBranchSig() && New->isBranchSig() ){
+    return true;
   }
   return false;
 }
@@ -167,9 +173,8 @@ bool SCPipeBuilder::FitArith(){
 
       if( !done ){
         // find an arith stage with no i/o signals
-        unsigned j = 0;
-        do{
-          if( !HasIOSigs(PipeVect[j]) ){
+        for( unsigned j=0; j<PipeVect.size(); j++ ){
+          if( (!HasIOSigs(PipeVect[j])) && (!done) ){
             AdjMat[j][SigToIdx(ArithOps[i])] = 1;
             done = true;
             if( Opts->IsVerbose() ){
@@ -177,21 +182,7 @@ bool SCPipeBuilder::FitArith(){
                                 " to " + PipeVect[j]);
             }
           }
-          j = j+1;
-        }while( (j<PipeVect.size()) && (!done) );
-
-#if 0
-        for( unsigned i=0; i<PipeVect.size(); i++ ){
-          if( (!HasIOSigs(PipeVect[i])) && (!done) ){
-            AdjMat[i][SigToIdx(ArithOps[i])] = 1;
-            done = true;
-            if( Opts->IsVerbose() ){
-              this->PrintRawMsg("FitArith: Fitting " + ArithOps[i]->GetName() +
-                                " to " + PipeVect[i]);
-            }
-          }
         }
-#endif
       }
     }
 
@@ -334,7 +325,7 @@ bool SCPipeBuilder::SplitIO(){
       for( unsigned j=0; j<IVect.size(); j++ ){
         if( (IVect[j] != Sig) &&
             (IVect[j]->IsPipeDefined()) &&
-            (IVect[j]->isALUSig() || IVect[j]->isBranchSig()) &&
+            (IVect[j]->isALUSig() || IVect[j]->isBranchSig() || IVect[j]->isMuxSig()) &&
             (IVect[j]->GetPipeName() == Sig->GetPipeName()) ){
           // record the instruction : pipeline : pipe_stage
           SplitPipes.push_back( std::tuple<SCSig *,std::string,std::string>(
@@ -473,7 +464,7 @@ bool SCPipeBuilder::SplitIO(){
       SV = SigMap->GetSigVect(Input->GetInst());
       for( unsigned j=0; j<SV.size(); j++ ){
         if( SV[j]->IsPipeDefined() &&
-            (Input->GetType() == SV[j]->GetType()) &&
+            (IsAdjacent(Input,SV[j])) &&
             (!done) ){
           done = true;
           AdjMat[PipeToIdx(SV[j]->GetPipeName())][i] = 1;
@@ -491,7 +482,7 @@ bool SCPipeBuilder::SplitIO(){
         for( unsigned j=0; j<SigMap->GetNumSignals(); j++ ){
           if( (SigMap->GetSignal(j) != Input) &&
               (SigMap->GetSignal(j)->IsPipeDefined()) &&
-              (SigMap->GetSignal(j)->GetType() == Input->GetType()) &&
+              (IsAdjacent(Input,SigMap->GetSignal(j))) &&
               (!done) ){
             done = true;
             Fit = SigMap->GetSignal(j);
