@@ -377,19 +377,10 @@ bool CoreGenSigMap::ReadInstSignals(const YAML::Node& InstNodes){
         if( LSNode["Inputs"] ){
           const YAML::Node& INode = LSNode["Inputs"];
           for( unsigned k=0; k<INode.size(); k++ ){
-            const YAML::Node& LINode = INode[k];
-            if( !CheckValidNode(LINode,"Input") ){
-              Error = "Input has no name";
-              return false;
-            }
-            std::string InputStr = LINode["Input"].as<std::string>();
-            if( InputStr.length() == 0 ){
-              Error = "Input has a null name";
-              return false;
-            }
+            std::string InputStr = INode[k].as<std::string>();
             Signals[Signals.size()-1]->InsertInput(InputStr);
           }
-        } // end check for inputs
+        } // end inputs loop
       }
     }
   }
@@ -569,11 +560,18 @@ bool CoreGenSigMap::WriteInstSignals(YAML::Emitter *out){
 
       // determine whether we need to write out the input block
       if( CSigs[j]->GetNumInputs() > 0 ){
+        *out << YAML::Key << "Inputs" << YAML::Value << YAML::BeginSeq;
+        for( unsigned k=0; k<CSigs[j]->GetNumInputs() ; k++ ){
+          *out << YAML::Key << CSigs[j]->GetInput(k);
+        }
+        *out << YAML::EndSeq;
+#if 0
         *out << YAML::Key << "Inputs" << YAML::Value << YAML::BeginSeq << YAML::BeginMap;
         for( unsigned k=0; k<CSigs[j]->GetNumInputs() ; k++ ){
           *out << YAML::Key << "Input" << YAML::Value << CSigs[j]->GetInput(k);
         }
         *out << YAML::EndMap << YAML::EndSeq;
+#endif
       }
       *out << YAML::EndMap;
     }

@@ -88,6 +88,9 @@ private:
   /// SCPipeBuilder SubPass: Fit the remaining arithmetic ops into adjacement pipe stages
   bool FitArith();
 
+  /// SCPipeBuilder SubPass: Fit the temporary register read/write signals
+  bool FitTmpReg();
+
   /// SCPipeBuilder SubPass: Removes dead pipeline stages
   bool DeadPipeElim();
 

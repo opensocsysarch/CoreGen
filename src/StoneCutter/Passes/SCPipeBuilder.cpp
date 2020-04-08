@@ -74,6 +74,10 @@ bool SCPipeBuilder::IsAdjacent(SCSig *Base, SCSig *New){
   return false;
 }
 
+bool  SCPipeBuilder::FitTmpReg(){
+  return true;
+}
+
 bool SCPipeBuilder::FitArith(){
   // Attempts to fit any arithmetic operations that are not currently asssigned
   // to a given pipe stage to a predefined stage
@@ -191,12 +195,6 @@ bool SCPipeBuilder::FitArith(){
       if( Opts->IsVerbose() ){
         this->PrintRawMsg("FitArith: Failed to fit " + ArithOps[i]->GetName());
       }
-      return false;
-    }
-
-    // write the signal map back out
-    if( !WriteSigMap() ){
-      this->PrintMsg( L_ERROR, "Failed to write signal map during the FitArith phase" ); 
       return false;
     }
   }
@@ -499,11 +497,6 @@ bool SCPipeBuilder::SplitIO(){
     }
   }// end back fit loop
 
-  //
-  // Phase 2: Mixed Pipeline
-  // now back fit the set of ALU register operations AREG_READ/AREG_WRITE
-  //
-
   return true;
 }
 
@@ -649,6 +642,8 @@ bool SCPipeBuilder::EnableSubPasses(){
                                    &SCPipeBuilder::SplitIO) );
   Enabled.push_back(std::make_pair("FitArith",
                                    &SCPipeBuilder::FitArith) );
+  Enabled.push_back(std::make_pair("FitTmpReg",
+                                   &SCPipeBuilder::FitTmpReg) );
   Enabled.push_back(std::make_pair("DeadPipeElim",
                                    &SCPipeBuilder::DeadPipeElim) );
   Enabled.push_back(std::make_pair("EmptySig",
