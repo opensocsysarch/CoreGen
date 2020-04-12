@@ -17,7 +17,7 @@ SCOpts::SCOpts(SCMsg *M)
   isOptimize(true), isChisel(true), isCG(false), isVerbose(false),
   isDisable(false), isEnable(false), isListPass(false), isListSCPass(false),
   isSigMap(false), isPassRun(false), isPerf(false),
-  isSCDisable(false),isSCEnable(false),
+  isSCDisable(false), isSCEnable(false), isPipeline(false),
   Msgs(M) {}
 
 SCOpts::SCOpts(SCMsg *M, int A, char **C)
@@ -26,11 +26,20 @@ SCOpts::SCOpts(SCMsg *M, int A, char **C)
   isOptimize(true), isChisel(true), isCG(false), isVerbose(false),
   isDisable(false), isEnable(false), isListPass(false), isListSCPass(false),
   isSigMap(false), isPassRun(false), isPerf(false),
-  isSCDisable(false),isSCEnable(false),
+  isSCDisable(false), isSCEnable(false), isPipeline(false),
   Msgs(M) {}
 
 // ------------------------------------------------- DESTRUCTOR
 SCOpts::~SCOpts(){}
+
+// ------------------------------------------------- FINDPIPELINE
+bool SCOpts::FindPipeline(const std::string &s){
+  auto pos = s.find("-Pipeline");
+  if( pos == std::string::npos ){
+    return false;
+  }
+  return true;
+}
 
 // ------------------------------------------------- FIND_DASH
 bool SCOpts::FindDash(const std::string &s){
@@ -206,9 +215,13 @@ bool SCOpts::ParseOpts(bool *isHelp){
     }else if( (s=="-D") || (s=="-disable-chisel") || (s=="--disable-chisel") ){
       isChisel = false;
     }else if( (s=="-O") || (s=="-optimize") || (s=="--optimize") ){
-      isOptimize = true;
+      isOptimize = true;    // enable optimizations
+      isSCEnable = false;   // individual pass enalbler
+      isSCDisable = false;  // individual pass disabler
+      isPipeline = false;   // disable pipelining
     }else if( (s=="-N") || (s=="-no-optimize") || (s=="--no-optimize") ) {
       isOptimize = false;
+      isPipeline = false;
     }else if( (s=="-v") || (s=="-verbose") || (s=="--verbose") ) {
       isVerbose = true;
     }else if( (s=="-V") || (s=="-version") || (s=="--version") ) {
@@ -291,6 +304,29 @@ bool SCOpts::ParseOpts(bool *isHelp){
       std::map<std::string,std::string> TempMap = ParsePassOpts(P);
       SCPassOpts.insert(TempMap.begin(),TempMap.end());
       i++;
+    }else if( s=="-O0" ){
+      isOptimize = false;   // disable optimizations
+      isPipeline = false;   // disable pipelining
+    }else if( s=="-O1" ){
+      isOptimize = true;    // enable optimizations
+      isSCEnable = true;    // individual pass enabler (with no passes enabled)
+      EnableSCPass.clear();
+      isSCDisable = false;  // individual pass disabler
+      isPipeline = false;   // disable pipelining
+    }else if( s=="-O2" ){
+      isOptimize = true;    // enable optimizations
+      isSCEnable = false;   // individual pass enalbler
+      isSCDisable = false;  // individual pass disabler
+      isPipeline = false;   // disable pipelining
+    }else if( s=="-O3" ){
+      isOptimize = true;    // enable optimizations
+      isPipeline = true;    // enable pipelining
+      isSCEnable = false;   // individual pass enalbler
+      isSCDisable = false;  // individual pass disabler
+      isPipeline = false;   // disable pipelining
+    }else if( FindPipeline(s) ){
+      // parse a '-Pipeline' option
+      isPipeline = true;
     }else{
       if( FindDash(s) ){
         Msgs->PrintMsg(L_ERROR, "Unknown argument: " + s );
@@ -372,6 +408,11 @@ void SCOpts::PrintHelp(){
   Msgs->PrintRawMsg("     -v|-verbose|--verbose               : Enable verbosity");
   Msgs->PrintRawMsg(" ");
   Msgs->PrintRawMsg("Optimization Pass Options:");
+  Msgs->PrintRawMsg("     -O                                  : Default optimizations; -O2");
+  Msgs->PrintRawMsg("     -O1                                 : Enable LLVM optmizations");
+  Msgs->PrintRawMsg("     -O2                                 : Enable basic StoneCutter optimizations");
+  Msgs->PrintRawMsg("     -O3                                 : Enable StoneCutter pipeliner");
+  Msgs->PrintRawMsg("     -Pipeline:OPTION=VALUE              : Set specific pipeline options");
   Msgs->PrintRawMsg("     --list-passes                       : Lists all the LLVM passes");
   Msgs->PrintRawMsg("     --list-sc-passes                    : Lists all the StoneCutter passes");
   Msgs->PrintRawMsg("     --enable-pass \"PASS1,PASS2\"         : Enables individual LLVM passes");
@@ -379,6 +420,10 @@ void SCOpts::PrintHelp(){
   Msgs->PrintRawMsg("     --enable-sc-pass \"PASS1,PASS2\"      : Enables individual StoneCutter passes");
   Msgs->PrintRawMsg("     --disable-sc-pass \"PASS1,PASS2\"     : Disables individual StoneCutter passes");
   Msgs->PrintRawMsg("     --sc-pass-opts \"PASS1:OPTS\"         : Set StoneCutter pass-specific optiosn");
+  Msgs->PrintRawMsg(" ");
+  Msgs->PrintRawMsg("Pipeline Optimizer Options");
+  Msgs->PrintRawMsg("     -Pipeline:Opt=Area                  : Optimize the pipeline for area efficiency");
+  Msgs->PrintRawMsg("     -Pipeline:Opt=Perf                  : Optimize the pipeline for performance");
   Msgs->PrintRawMsg(" ");
   Msgs->PrintRawMsg("Chisel Output Options:");
   Msgs->PrintRawMsg("     -a|-package|--package PACKAGE       : Sets the Chisel package name");

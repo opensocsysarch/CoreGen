@@ -16,8 +16,10 @@ SCPass::SCPass(std::string N,
                SCOpts *O,
                SCMsg *M)
   : Name(N), Options(Opt), Msgs(M), Opts(O), TheModule(TM) {
+#if 0
   if( Opts->IsVerbose() )
     Msgs->PrintRawMsg( "Executing Pass: " + this->GetName() );
+#endif
 }
 
 SCPass::~SCPass(){

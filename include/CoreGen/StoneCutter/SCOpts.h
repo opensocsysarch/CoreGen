@@ -68,6 +68,7 @@ private:
   bool isPerf;      ///< SCOpts: Are the performance stats enabled?
   bool isSCDisable; ///< SCOpts: Manually disabled StoneCutter passes flag
   bool isSCEnable;  ///< SCOpts: Manually enabled StoneCutter passes flag
+  bool isPipeline;  ///< SCOpts: Is the pipeline optimizer enabled?
 
   std::string OutFile;  ///< SCOpts: Output file designator
   std::string SigMap;   ///< SCOpts: Signal map output file
@@ -106,6 +107,9 @@ private:
 
   /// Determines if a dash is found in the input name
   bool FindDash(const std::string &s);
+
+  /// Determines if a pipeline option is found
+  bool FindPipeline(const std::string &s);
 
   /// Derives the ISA name from the path
   std::string GetISANameFromPath();
@@ -170,6 +174,9 @@ public:
 
   /// SCOpts: Do we execute the optimizer
   bool IsOptimize() { return isOptimize; }
+
+  /// SCOpts: Is the pipeline optimizer enabled
+  bool IsPipeline() { return isPipeline; }
 
   /// SCOpts: Is verbosity enabled?
   bool IsVerbose() { return isVerbose; }
