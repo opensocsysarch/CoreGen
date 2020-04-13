@@ -18,6 +18,7 @@ SCOpts::SCOpts(SCMsg *M)
   isDisable(false), isEnable(false), isListPass(false), isListSCPass(false),
   isSigMap(false), isPassRun(false), isPerf(false),
   isSCDisable(false), isSCEnable(false), isPipeline(false),
+  isAreaOpt(false), isPerfOpt(false),
   Msgs(M) {}
 
 SCOpts::SCOpts(SCMsg *M, int A, char **C)
@@ -27,6 +28,7 @@ SCOpts::SCOpts(SCMsg *M, int A, char **C)
   isDisable(false), isEnable(false), isListPass(false), isListSCPass(false),
   isSigMap(false), isPassRun(false), isPerf(false),
   isSCDisable(false), isSCEnable(false), isPipeline(false),
+  isAreaOpt(false), isPerfOpt(false),
   Msgs(M) {}
 
 // ------------------------------------------------- DESTRUCTOR
@@ -129,6 +131,48 @@ std::map<std::string,std::string> SCOpts::ParsePassOpts(std::string P){
   }
 
   return TM;
+}
+
+// ------------------------------------------------- PARSEPIPELINEOPTS
+bool SCOpts::ParsePipelineOpts( std::string P ){
+  std::string Str;  // local parsing string
+  std::vector<std::string> V;
+
+  std::size_t pos = P.find(":");
+  if( pos == std::string::npos ){
+    return true;
+  }else if( (pos+1) >= P.length() ){
+    return false;
+  }
+  pos = pos+1;
+  Str = P.substr(pos);
+
+  // break the string into tokens
+  Split(Str, ',', V);
+
+  for( unsigned i=0; i<V.size(); i++ ){
+    // split into "OPTION=VALUE"
+    std::vector<std::string> TV;
+    Split(V[i],'=',TV);
+    if( TV.size() != 2 ){
+      Msgs->PrintMsg( L_WARN, "-Pipeline opts at " + V[i] + " contains erroneous data");
+      return false;
+    }
+    PipePassOpts.insert(std::pair<std::string,std::string>(TV[0],TV[1]));
+  }
+
+  return true;
+}
+
+// ------------------------------------------------- GETPIPELINEPASSOPTION
+bool SCOpts::GetPipelinePassOption(const std::string Option,
+                                   std::string &Value ){
+  auto it = PipePassOpts.find(Option);
+  if( it != PipePassOpts.end() ){
+    Value = it->second;
+    return true;
+  }
+  return false;
 }
 
 // ------------------------------------------------- PARSEPASSES
@@ -327,6 +371,10 @@ bool SCOpts::ParseOpts(bool *isHelp){
     }else if( FindPipeline(s) ){
       // parse a '-Pipeline' option
       isPipeline = true;
+      if( !ParsePipelineOpts(s) ){
+        Msgs->PrintMsg( L_ERROR, "failed to parse pipeline options: " + s );
+        return false;
+      }
     }else{
       if( FindDash(s) ){
         Msgs->PrintMsg(L_ERROR, "Unknown argument: " + s );

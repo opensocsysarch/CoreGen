@@ -16,4 +16,6 @@ if [[  "$retVal" -eq 0 ]]; then
   exit $retVal
 fi
 
+echo "Failed to read signal map"
+
 exit 0
