@@ -123,6 +123,9 @@ public:
   /// Reads the signal map file into the signal structure
   bool ReadSigMap( std::string File );
 
+  /// Retrieve the number of temporary registers that need to exist in the ALUL
+  unsigned GetNumTemps() { return TempRegs.size(); }
+
   /// Attempt to retrieve a temporary register for the target instruction:IRName mapping
   std::string GetTempReg( std::string Inst, std::string IRName, unsigned width );
 

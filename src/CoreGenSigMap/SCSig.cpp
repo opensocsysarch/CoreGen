@@ -187,6 +187,18 @@ bool SCSig::SetInst( std::string I ){
   return true;
 }
 
+bool SCSig::isMuxSig(){
+  if( (Type>BR_JR) && (Type<REG_READ) )
+    return true;
+  return false;
+}
+
+bool SCSig::isPCSig(){
+  if( (Type>ALU_FREM) && (Type<BR_N) )
+    return true;
+  return false;
+}
+
 bool SCSig::isALUSig(){
   if( (Type>SIGINSTF) && (Type<PC_INCR) )
     return true;
@@ -194,13 +206,13 @@ bool SCSig::isALUSig(){
 }
 
 bool SCSig::isMemSig(){
-  if( Type>REG_WRITE )
+  if( Type>AREG_WRITE )
     return true;
   return false;
 }
 
 bool SCSig::isRegSig(){
-  if( (Type>BR_JR) && (Type<MEM_READ) )
+  if( (Type>MUX) && (Type<MEM_READ) )
     return true;
   return false;
 }

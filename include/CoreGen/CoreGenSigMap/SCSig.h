@@ -161,6 +161,12 @@ public:
   /// Returns true if the target signal is an ALU signal
   bool isALUSig();
 
+  /// Returns true if the target signal is a MUX signal
+  bool isMuxSig();
+
+  /// Returns true if the target signal is a PC branch
+  bool isPCSig();
+
   /// Returns true if the target signal is a memory signal
   bool isMemSig();
 

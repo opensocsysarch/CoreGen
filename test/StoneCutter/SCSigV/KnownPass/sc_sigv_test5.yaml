@@ -44,9 +44,9 @@ Instructions:
         Width: 1
         FusedOp: FOP_NOT
         Inputs:
-          - Input: RA
-          - Input: RB
-          - Input: RT
+          - RA
+          - RB
+          - RT
       - Signal: rt_GPR_WRITE
         Type: REG_WRITE
         Width: 1

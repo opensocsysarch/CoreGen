@@ -68,6 +68,10 @@ private:
   bool isPerf;      ///< SCOpts: Are the performance stats enabled?
   bool isSCDisable; ///< SCOpts: Manually disabled StoneCutter passes flag
   bool isSCEnable;  ///< SCOpts: Manually enabled StoneCutter passes flag
+  bool isPipeline;  ///< SCOpts: Is the pipeline optimizer enabled?
+
+  bool isAreaOpt;   ///< SCOpts: Is the area pipeline optimizations enabled
+  bool isPerfOpt;   ///< SCOpts: Is the performance pipeline optimizations enabled
 
   std::string OutFile;  ///< SCOpts: Output file designator
   std::string SigMap;   ///< SCOpts: Signal map output file
@@ -83,7 +87,8 @@ private:
   std::vector<std::string> EnableSCPass;  ///< SCOpts: List of enabled StoneCutter passes
   std::vector<std::string> DisableSCPass; ///< SCOpts: List of disabled StoneCutter passes
 
-  std::map<std::string,std::string> SCPassOpts; ///< SCOpts: Map of StoneCutter pass to respective options
+  std::map<std::string,std::string> SCPassOpts;   ///< SCOpts: Map of StoneCutter pass to respective options
+  std::map<std::string,std::string> PipePassOpts; ///< SCOpts: Map of Pipeline pass options to values
 
   SCMsg *Msgs;    ///< SCOpts: Message handlers
 
@@ -106,6 +111,12 @@ private:
 
   /// Determines if a dash is found in the input name
   bool FindDash(const std::string &s);
+
+  /// Determines if a pipeline option is found
+  bool FindPipeline(const std::string &s);
+
+  /// Parses the pipeline options string
+  bool ParsePipelineOpts(std::string P);
 
   /// Derives the ISA name from the path
   std::string GetISANameFromPath();
@@ -171,6 +182,9 @@ public:
   /// SCOpts: Do we execute the optimizer
   bool IsOptimize() { return isOptimize; }
 
+  /// SCOpts: Is the pipeline optimizer enabled
+  bool IsPipeline() { return isPipeline; }
+
   /// SCOpts: Is verbosity enabled?
   bool IsVerbose() { return isVerbose; }
 
@@ -197,6 +211,12 @@ public:
 
   /// SCOpts: Retrieve a map of StoneCutter pass options
   std::map<std::string,std::string> GetSCPassOptions() { return SCPassOpts; }
+
+  /// SCOpts: Retrieve a map of StoneCutter Pipeline pass options
+  std::map<std::string,std::string> GetPipelinePassOptions() { return PipePassOpts; }
+
+  /// SCOpts: Retrieve a specific mapped option from the Pipeline pass map
+  bool GetPipelinePassOption(const std::string Option, std::string &Value);
 
   /// SCOpts: Retrieve the output file name
   std::string GetOutputFile() { return OutFile; }

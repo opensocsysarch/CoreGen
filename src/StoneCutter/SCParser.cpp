@@ -1017,6 +1017,10 @@ std::unique_ptr<ExprAST> SCParser::ParsePipeExpr() {
     BodyExpr.push_back(std::move(Body));
   }
 
+  if( BodyExpr.size() == 0 ){
+    return LogError("Pipeline=" + PipeLine + " has no body");
+  }
+
   // handle close bracket
   if( CurTok != '}' )
     return LogError("expected '}' for do while loop control body");
@@ -1753,7 +1757,7 @@ Value *PipeExprAST::codegen() {
         AttributeSet PAttrSet = Global.getAttributes();
         if( PAttrSet.hasAttribute("pipeline") ){
           // found a pipeline attribute
-          if( PAttrSet.getAttribute("pipeline").getValueAsString().str() ==
+          if( PAttrSet.getAttribute("pipeline").getValueAsString().str() !=
               PipeLine ){
             // found a matching pipeline
             unsigned Idx = 0;

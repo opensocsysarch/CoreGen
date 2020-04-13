@@ -33,7 +33,9 @@ private:
   std::vector<std::string> PipeVect;  ///< SCPipeBuilder: Pipe vector
   std::vector<std::string> InstVect;  ///< SCPipeBuilder: Instruction vector
 
-  std::vector<std::pair<std::string, std::string>> AttrMap;  ///< SCPipeBuilder: Attribute  to pipeline pairs
+  std::vector<std::pair<std::string,bool (SCPipeBuilder::*)()>> Enabled;   ///< SCPipeBuilder: Enabled sub-passes
+
+  std::vector<std::pair<std::string, std::string>> AttrMap;     ///< SCPipeBuilder: Attribute to pipeline pairs
 
   unsigned **AdjMat;                  ///< SCPipeBuilder: Adjacency Matrix
 
@@ -57,6 +59,46 @@ private:
 
   /// SCPipeBuilder: Retrives the x-axis idx from the pipe stage name
   unsigned PipeToIdx(std::string P);
+
+  /// SCPipeBuilder: Retrieves the y-axis idx from the signal name
+  unsigned SigToIdx(SCSig *S);
+
+  /// SCPipeBuilder: Clears all the enabled pipe stages for the target signal name
+  bool ClearSignal(SCSig *S);
+
+  /// SCPipeBuilder: Enable sub-passes
+  bool EnableSubPasses();
+
+  /// SCPipeBuilder: Determines if a pass is enabled
+  bool IsSubPassEnabled(std::string Pass);
+
+  /// SCPipeBuilder: Determines if the two signals are "adjacent"
+  bool IsAdjacent(SCSig *Base, SCSig *New);
+
+  /// SCPipeBuilder: Does the target pipe have any I/O signals?
+  bool HasIOSigs(std::string Pipe);
+
+  // ----------------------------------------------------------
+  // Sub Passes
+  // ----------------------------------------------------------
+
+  /// SCPipeBuilder SubPass: Split the register  and memory IO
+  bool SplitIO();
+
+  /// SCPipeBuilder SubPass: Fit the remaining arithmetic ops into adjacement pipe stages
+  bool FitArith();
+
+  /// SCPipeBuilder SubPass: Fit the temporary register read/write signals
+  bool FitTmpReg();
+
+  /// SCPipeBuilder SubPass: Fit the PC update signals
+  bool FitPCSigs();
+
+  /// SCPipeBuilder SubPass: Removes dead pipeline stages
+  bool DeadPipeElim();
+
+  /// SCPipeBuilder SubPass: Checks for signals with no pipes
+  bool EmptySig();
 
 public:
   /// Default cosntructor
