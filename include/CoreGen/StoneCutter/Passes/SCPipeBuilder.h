@@ -91,6 +91,9 @@ private:
   /// SCPipeBuilder SubPass: Fit the temporary register read/write signals
   bool FitTmpReg();
 
+  /// SCPipeBuilder SubPass: Fit the PC update signals
+  bool FitPCSigs();
+
   /// SCPipeBuilder SubPass: Removes dead pipeline stages
   bool DeadPipeElim();
 

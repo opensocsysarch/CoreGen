@@ -367,7 +367,6 @@ bool SCOpts::ParseOpts(bool *isHelp){
       isPipeline = true;    // enable pipelining
       isSCEnable = false;   // individual pass enalbler
       isSCDisable = false;  // individual pass disabler
-      isPipeline = false;   // disable pipelining
     }else if( FindPipeline(s) ){
       // parse a '-Pipeline' option
       isPipeline = true;

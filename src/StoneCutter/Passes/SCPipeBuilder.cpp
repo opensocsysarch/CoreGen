@@ -74,6 +74,10 @@ bool SCPipeBuilder::IsAdjacent(SCSig *Base, SCSig *New){
   return false;
 }
 
+bool SCPipeBuilder::FitPCSigs(){
+  return true;
+}
+
 bool  SCPipeBuilder::FitTmpReg(){
 
   SCSig *Sig = nullptr;
@@ -669,6 +673,8 @@ bool SCPipeBuilder::EnableSubPasses(){
                                    &SCPipeBuilder::FitArith) );
   Enabled.push_back(std::make_pair("FitTmpReg",
                                    &SCPipeBuilder::FitTmpReg) );
+  Enabled.push_back(std::make_pair("FitPCSigs",
+                                   &SCPipeBuilder::FitPCSigs) );
   Enabled.push_back(std::make_pair("DeadPipeElim",
                                    &SCPipeBuilder::DeadPipeElim) );
   Enabled.push_back(std::make_pair("EmptySig",

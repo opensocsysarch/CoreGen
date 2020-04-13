@@ -130,6 +130,9 @@ bool SCChiselCodeGen::ExecutePasses(){
       if( mit != PassOpts.end() )
         P->SetExecOpts(mit->second);
 
+      if( Opts->IsVerbose() ){
+        Msgs->PrintRawMsg( "Executing StoneCutter Pass: " + P->GetName() );
+      }
       if( !P->Execute() ){
         rtn = false;
       }
@@ -1507,11 +1510,16 @@ bool SCChiselCodeGen::WriteUCodeCompiler(){
 }
 
 bool SCChiselCodeGen::ExecutePipelineOpt(){
+
   SCPipeBuilder *PB = new SCPipeBuilder(SCParser::TheModule.get(),
                                         Opts,
                                         Msgs);
   if( !PB )
     return false;
+
+  if( Opts->IsVerbose() ){
+    Msgs->PrintRawMsg( "Executing StoneCutter Pass: " + PB->GetName() );
+  }
 
   // set the options
   std::map<std::string,std::string> PassOpts = Opts->GetSCPassOptions();
@@ -1569,7 +1577,7 @@ bool SCChiselCodeGen::ExecuteCodegen(){
   }
 
   // attempt to perform pipeline optimization
-  if( CSM && Opts->IsPipeline() && !Opts->IsPassRun() ){
+  if( CSM && Opts->IsPipeline() ){
     if( !ExecutePipelineOpt() ){
       return false;
     }
@@ -1630,8 +1638,6 @@ bool SCChiselCodeGen::GenerateSignalMap(std::string SM){
     Msgs->PrintMsg( L_ERROR, "Failed to execute passes for signal map" );
     return false;
   }
-
-  Opts->PassRun();
 
   if( !ExecuteSignalMap() ){
     Msgs->PrintMsg( L_ERROR, "Failed to generate signal map" );
