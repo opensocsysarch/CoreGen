@@ -75,6 +75,65 @@ bool SCPipeBuilder::IsAdjacent(SCSig *Base, SCSig *New){
 }
 
 bool SCPipeBuilder::FitPCSigs(){
+
+  //
+  // Stage 1: Fit all the PC_INCR signals
+  //
+  // This requires two steps as follows:
+  // First, look for any PC_INCR signals that are already allocated
+  // If we find a candidate stage, then fit all the other PC_INCR signals into
+  // this stage.  If we don't find a candidate stage, then split a new stage off
+  // called "FETCH" and fit all the PC_INCR stages here.
+  //
+  std::string FetchStage;
+  bool done = false;
+  for( unsigned i=0; i<SigMap->GetNumSignals(); i++ ){
+    if( (SigMap->GetSignal(i)->GetType() == REG_WRITE) &&
+        (SigMap->GetSignal(i)->IsPipeDefined()) &&
+        (!done)){
+      FetchStage = SigMap->GetSignal(i)->GetPipeName();
+      done = true;
+    }
+  }
+
+  if( FetchStage.length() == 0 ){
+    // we must split off a new stage
+    FetchStage = "WRITE_BACK";
+    auto it = PipeVect.begin();
+    it = PipeVect.insert(it,FetchStage);
+
+    // free the existing matrix
+    if( !FreeMat() ){
+      this->PrintMsg( L_ERROR, "FitPCSigs: Could not free adjacency matrix" );
+      return false;
+    }
+
+    // allocate the new matrix and build it out
+    if( !AllocMat() ){
+      this->PrintMsg( L_ERROR, "FitPCSigs: Could not allocate matrix" );
+      return false;
+    }
+
+    // build the pipeline matrix
+    if( !BuildMat() ){
+      this->PrintMsg( L_ERROR, "FitPCSigs: Could not build matrix representation of pipeline" );
+      return false;
+    }
+  }
+
+  // now fit all the existing PC_INCR signals to "FetchStage"
+  for( unsigned i=0; i<SigMap->GetNumSignals(); i++ ){
+    if( (SigMap->GetSignal(i)->isPCSig() ) &&
+        (!SigMap->GetSignal(i)->IsPipeDefined()) ){
+      if( Opts->IsVerbose() ){
+        this->PrintRawMsg( "FitPCSigs: Fitting " + SigMap->GetSignal(i)->GetName() +
+                           " from instruction = " +
+                           SigMap->GetSignal(i)->GetInst() + " to " + FetchStage );
+      }
+      AdjMat[PipeToIdx(FetchStage)][i] = 1;
+    }
+  }
+
   return true;
 }
 
@@ -288,7 +347,7 @@ bool SCPipeBuilder::SplitIO(){
     PipeVect.push_back("FETCH");
     PipeVect.push_back("REG_READ");
     PipeVect.push_back("ARITH");
-    PipeVect.push_back("REG_WRITE");
+    PipeVect.push_back("WRITE_BACK");
     PipeVect.push_back("MEMORY");
 
     // allocate the new matrix
@@ -318,7 +377,7 @@ bool SCPipeBuilder::SplitIO(){
         if( Type == REG_READ ){
           Idx = PipeToIdx("REG_READ");
         }else if( Type == REG_WRITE ){
-          Idx = PipeToIdx("REG_WRITE");
+          Idx = PipeToIdx("WRITE_BACK");
         }else{
           Idx = PipeToIdx("ARITH");
         }
@@ -392,7 +451,7 @@ bool SCPipeBuilder::SplitIO(){
       while( !done ){
         if( std::get<1>(SplitPipes[j]) == Unique[i] ){
           PipeVect.push_back( std::get<2>(SplitPipes[j]) + "_REG_READ" );
-          PipeVect.push_back( std::get<2>(SplitPipes[j]) + "_REG_WRITE" );
+          PipeVect.push_back( std::get<2>(SplitPipes[j]) + "_WRITE_BACK" );
           PipeVect.push_back( std::get<2>(SplitPipes[j]) + "_MEMORY" );
           PipeMap[Unique[i]] = std::get<2>(SplitPipes[j]); // record the pipe to pipe stage mapping
           done = true;
@@ -442,7 +501,7 @@ bool SCPipeBuilder::SplitIO(){
         AdjMat[PipeToIdx(Stage+"_REG_READ")][SigIdx] = 1;
         break;
       case REG_WRITE:
-        AdjMat[PipeToIdx(Stage+"_REG_WRITE")][SigIdx] = 1;
+        AdjMat[PipeToIdx(Stage+"_WRITE_BACK")][SigIdx] = 1;
         break;
       case AREG_READ:
       case AREG_WRITE:
