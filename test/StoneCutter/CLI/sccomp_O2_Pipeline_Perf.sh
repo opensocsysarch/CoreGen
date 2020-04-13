@@ -7,7 +7,7 @@ if [ ! -f $SCCOMP_PATH/sccomp ]; then
   exit -1
 fi
 
-FILE=opt.sc
+FILE=opt_O2_Pipeline_Perf.sc
 
 $SCCOMP_PATH/sccomp -O2 -Pipeline:Opt=Perf $FILE
 retVal=$?

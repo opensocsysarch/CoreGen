@@ -7,7 +7,7 @@ if [ ! -f $SCCOMP_PATH/sccomp ]; then
   exit -1
 fi
 
-FILE=opt.sc
+FILE=opt_O1.sc
 
 $SCCOMP_PATH/sccomp -O1 $FILE
 retVal=$?

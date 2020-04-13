@@ -7,7 +7,7 @@ if [ ! -f $SCCOMP_PATH/sccomp ]; then
   exit -1
 fi
 
-FILE=opt.sc
+FILE=opt_O1_Pipeline_Area.sc
 
 $SCCOMP_PATH/sccomp -O1 -Pipeline:Opt=Area $FILE
 retVal=$?
