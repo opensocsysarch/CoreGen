@@ -748,6 +748,150 @@ bool LLVM801CG::TIGenerateISelDag(){
 
 bool LLVM801CG::TIGenerateInstLowering(){
   // <TargetName>ISelLowering.{h,cpp}
+  // write out the header first
+  std::string OutFile = LLVMRoot + "/" + TargetName + "ISelLowering.h";
+  std::ofstream OutStream;
+  OutStream.open(OutFile,std::ios::trunc);
+  if( !OutStream.is_open() ){
+    Errno->SetError(CGERR_ERROR, "Could not open the ISelLowering header file: " + OutFile );
+    return false;
+  }
+
+  OutStream << "//===-- " << TargetName
+            << "ISelLowering.h - " << TargetName << " DAG Lowering Interface"
+            << " -------*- C++ -*-===//" << std::endl << std::endl;
+
+  OutStream << "#ifndef LLVM_LIB_TARGET_" << TargetName
+            << "_" << TargetName << "ISELLOWERING_H" << std::endl;
+  OutStream << "#define LLVM_LIB_TARGET_" << TargetName
+            << "_" << TargetName << "ISELLOWERING_H" << std::endl;
+
+  OutStream << "#include \"" << TargetName << ".h\"" << std::endl;
+  OutStream << "#include \"llvm/CodeGen/SelectionDAG.h\"" << std::endl;
+  OutStream << "#include \"llvm/CodeGen/TargetLowering.h\"" << std::endl << std::endl;
+
+  std::cout << "namespace llvm {" << std::endl;
+  std::cout << "class " << TargetName << "Subtarget;" << std::endl;
+  std::cout << "enum NodeType : unsigned {" << std::endl
+            << "\tFIRST_NUMBER = ISD::BUILTIN_OP_END," << std::endl
+            << "\tRET_FLAG," << std::endl
+            << "\tURET_FLAG," << std::endl
+            << "\tSRET_FLAG," << std::endl
+            << "\tMRET_FLAG," << std::endl
+            << "\tCALL," << std::endl
+            << "\tSELECT_CC" << std::endl
+            << "\tTAIL" << std::endl
+            << "};" << std::endl
+            << "}" << std::endl << std::endl;
+
+  OutStream << "class " << TargetName << "TargetLowering : public TargetLowering {" << std::endl;
+  OutStream << "\tconst " << TargetName << "Subtarget &Subtarget;" << std::endl;
+  OutStream << "public:" << std::endl;
+  OutStream << "\texplicit " << TargetName << "TargetLowering(const TargetMachine &TM," << std::endl
+            << "\t\tconst " << TargetName << "Subtarget &STI);" << std::endl;
+  OutStream << "\tbool getTgtMemIntrinsic(IntrinsicInfo &Info, const CallInst &I," << std::endl
+            << "\t\tMachineFunction &MF, unsigned Intrinsic) const override;" << std::endl;
+  OutStream << "\tbool isLegalAddressingMode(const DataLayout &DL, const AddrMode &AM, Type *Ty," << std::endl
+            << "\t\tunsigned AS, Instruction *I = nullptr) const override;" << std::endl;
+  OutStream << "\tbool isLegalICmpImmediate(int64_t Imm) const override;" << std::endl;
+  OutStream << "\tbool isLegalAddImmediate(int64_t Imm) const override;" << std::endl;
+  OutStream << "\tbool isTruncateFree(Type *SrcTy, Type *DstTy) const override;" << std::endl;
+  OutStream << "\tbool isTruncateFree(EVT SrcVT, EVT DstVT) const override;" << std::endl;
+  OutStream << "\tbool isZExtFree(SDValue Val, EVT VT2) const override;" << std::endl;
+  OutStream << "\tbool isSExtCheaperThanZExt(EVT SrcVT, EVT DstVT) const override;" << std::endl;
+  OutStream << "\tbool hasBitPreservingFPLogic(EVT VT) const override;" << std::endl;
+  OutStream << "\tSDValue LowerOperation(SDValue Op, SelectionDAG &DAG) const override;" << std::endl;
+  OutStream << "\tvoid ReplaceNodeResults(SDNode *N, SmallVectorImpl<SDValue> &Results," << std::endl
+            << "\t\tSelectionDAG &DAG) const override;" << std::endl;
+  OutStream << "\tSDValue PerformDAGCombine(SDNode *N, DAGCombinerInfo &DCI) const override;" << std::endl;
+  OutStream << "\tunsigned ComputeNumSignBitsForTargetNode(SDValue Op, const APInt &DemandedElts," << std::endl
+            << "\t\tconst SelectionDAG &DAG, unsigned Depth) const override;" << std::endl;
+  OutStream << "\tconst char *getTargetNodeName(unsigned Opcode) const override;" << std::endl;
+  OutStream << "\tstd::pair<unsigned, const TargetRegisterClass *>" << std::endl
+            << "\t\tgetRegForInlineAsmConstraint(const TargetRegisterInfo *TRI," << std::endl
+            << "\t\t\tStringRef Constraint, MVT VT) const override;" << std::endl;
+  OutStream << "\tMachineBasicBlock * EmitInstrWithCustomInserter(MachineInstr &MI" << std::endl
+            << "\t\tMachineBasicBlock *BB) const override;" << std::endl;
+  OutStream << "\tEVT getSetCCResultType(const DataLayout &DL, LLVMContext &Context," << std::endl
+            << "\t\tEVT VT) const override;" << std::endl;
+  OutStream << "\tbool convertSetCCLogicToBitwiseLogic(EVT VT) const override {" << std::endl
+            << "\t\treturn VT.isScalarInteger();" << std::endl
+            << "\t}" << std::endl;
+  OutStream << "\tbool shouldInsertFencesForAtomic(const Instruction *I) const override {" << std::endl
+            << "\t\treturn isa<LoadInst>(I) || isa<StoreInst>(I);" << std::endl
+            << "}" << std::endl;
+  OutStream << "\tInstruction *emitLeadingFence(IRBuilder<> &Builder, Instruction *Inst," << std::endl
+            << "\t\tAtomicOrdering Ord) const override;" << std::endl;
+  OutStream << "\tInstruction *emitTrailingFence(IRBuilder<> &Builder, Instruction *Inst," << std::endl
+            << "\t\tAtomicOrdering Ord) const override;" << std::endl;
+  OutStream << "\tISD::NodeType getExtendForAtomicOps() const override {" << std::endl
+            << "\t\treturn ISD::SIGN_EXTEND;" << std::endl
+            << "\t" << std::endl;
+  OutStream << "\tbool shouldExpandShift(SelectionDAG &DAG, SDNode *N) const override {" << std::endl
+            << "\t\tif (DAG.getMachineFunction().getFunction().hasMinSize())" << std::endl
+            << "\t\t\treturn false;" << std::endl
+            << "\t\treturn true;" << std::endl
+            << "\t}" << std::endl << std::endl;
+
+  OutStream << "private:" << std::endl;
+  OutStream << "\tvoid analyzeInputArgs(MachineFunction &MF, CCState &CCInfo," << std::endl
+            << "\t\tconst SmallVectorImpl<ISD::InputArg> &Ins," << std::endl
+            << "\t\tbool IsRet) const;" << std::endl;
+  OutStream << "\tvoid analyzeOutputArgs(MachineFunction &MF, CCState &CCInfo," << std::endl
+            << "\t\tconst SmallVectorImpl<ISD::OutputArg> &Outs," << std::endl
+            << "\t\tbool IsRet, CallLoweringInfo *CLI) const;" << std::endl;
+  OutStream << "\tSDValue LowerFormalArguments(SDValue Chain, CallingConv::ID CallConv," << std::endl
+            << "\t\tbool IsVarArg, const SmallVectorImpl<ISD::InputArg> &Ins," << std::endl
+            << "\t\tconst SDLoc &DL, SelectionDAG &DAG," << std::endl
+            << "\t\tSmallVectorImpl<SDValue> &InVals) const override;" << std::endl;
+  OutStream << "\tbool CanLowerReturn(CallingConv::ID CallConv, MachineFunction &MF," << std::endl
+            << "\t\tbool IsVarArg, const SmallVectorImpl<ISD::OutputArg> &Outs," << std::endl
+            << "\t\tLLVMContext &Context) const override;" << std::endl;
+  OutStream << "\tSDValue LowerReturn(SDValue Chain, CallingConv::ID CallConv, bool IsVarArg," << std::endl
+            << "\t\tconst SmallVectorImpl<ISD::OutputArg> &Outs," << std::endl
+            << "\t\tconst SmallVectorImpl<SDValue> &OutVals, const SDLoc &DL," << std::endl
+            << "\t\tSelectionDAG &DAG) const override;" << std::endl;
+  OutStream << "\tSDValue LowerCall(TargetLowering::CallLoweringInfo &CLI," << std::endl
+            << "\t\tSmallVectorImpl<SDValue> &InVals) const override;" << std::endl;
+  OutStream << "\tbool shouldConvertConstantLoadToIntImm(const APInt &Imm," << std::endl
+            << "\t\tType *Ty) const override {" << std::endl
+            << "\t\treturn true;" << std::endl
+            << "\t}" << std::endl;
+  OutStream << "\ttemplate <class NodeTy>" << std::endl
+            << "\tSDValue getAddr(NodeTy *N, SelectionDAG &DAG) const;" << std::endl;
+  OutStream << "\tSDValue lowerGlobalAddress(SDValue Op, SelectionDAG &DAG) const;" << std::endl;
+  OutStream << "\tSDValue lowerBlockAddress(SDValue Op, SelectionDAG &DAG) const;" << std::endl;
+  OutStream << "\tSDValue lowerConstantPool(SDValue Op, SelectionDAG &DAG) const;" << std::endl;
+  OutStream << "\tSDValue lowerSELECT(SDValue Op, SelectionDAG &DAG) const;" << std::endl;
+  OutStream << "\tSDValue lowerVASTART(SDValue Op, SelectionDAG &DAG) const;" << std::endl;
+  OutStream << "\tSDValue lowerFRAMEADDR(SDValue Op, SelectionDAG &DAG) const;" << std::endl;
+  OutStream << "\tSDValue lowerRETURNADDR(SDValue Op, SelectionDAG &DAG) const;" << std::endl;
+  OutStream << "\tSDValue lowerShiftLeftParts(SDValue Op, SelectionDAG &DAG) const;" << std::endl;
+  OutStream << "\tSDValue lowerShiftRightParts(SDValue Op, SelectionDAG &DAG, bool IsSRA) const;" << std::endl;
+
+  OutStream << "\tbool isEligibleForTailCallOptimization(" << std::endl
+            << "\t\tCCState &CCInfo, CallLoweringInfo &CLI, MachineFunction &MF," << std::endl
+            << "\t\tconst SmallVector<CCValAssign, 16> &ArgLocs) const;" << std::endl;
+  OutStream << "\tTargetLowering::AtomicExpansionKind" << std::endl
+            << "\tshouldExpandAtomicRMWInIR(AtomicRMWInst *AI) const override;" << std::endl;
+  OutStream << "\tvirtual Value *emitMaskedAtomicRMWIntrinsic(" << std::endl
+            << "\t\tIRBuilder<> &Builder, AtomicRMWInst *AI, Value *AlignedAddr, Value *Incr," << std::endl
+            << "\t\tValue *Mask, Value *ShiftAmt, AtomicOrdering Ord) const override;" << std::endl;
+  OutStream << "\tTargetLowering::AtomicExpansionKind" << std::endl
+            << "\tshouldExpandAtomicCmpXchgInIR(AtomicCmpXchgInst *CI) const override;" << std::endl;
+  OutStream << "\tvirtual Value *" << std::endl
+            << "\temitMaskedAtomicCmpXchgIntrinsic(IRBuilder<> &Builder, AtomicCmpXchgInst *CI," << std::endl
+            << "\t\tValue *AlignedAddr, Value *CmpVal," << std::endl
+            << "\t\tValue *NewVal, Value *Mask," << std::endl
+            << "\t\tAtomicOrdering Ord) const override;" << std::endl;
+
+  OutStream << "};" << std::endl << "}" << std::endl;
+
+  OutStream << "#endif" << std::endl;
+  OutStream.close();
+
+  // write out the implementation file
+
   return true;
 }
 
