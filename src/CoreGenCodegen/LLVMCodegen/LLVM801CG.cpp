@@ -1484,6 +1484,240 @@ bool LLVM801CG::TIGenerateTargetObj(){
 }
 
 bool LLVM801CG::TIGenerateAsmParser(){
+
+  // Stage 1: generate the CMakeLists.txt
+  std::string OutFile = LLVMRoot + "/AsmParser/CMakeLists.txt";
+  std::ofstream OutStream;
+  OutStream.open(OutFile,std::ios::trunc);
+  if( !OutStream.is_open() ){
+    Errno->SetError(CGERR_ERROR, "Could not open AsmParser CMakeLists.txt file: " + OutFile );
+    return false;
+  }
+
+  OutStream << "add_llvm_library(LLVM" << TargetName << "AsmParser" << std::endl
+            << "  " << TargetName << "AsmParser.cpp" << std::endl
+            << "   }" << std::endl;
+
+  OutStream.close();
+
+  // Stage 2: generate the LLVMBuild.txt file
+  OutFile = LLVMRoot + "/AsmParser/LLVMBuild.txt";
+  OutStream.open(OutFile,std::ios::trunc);
+  if( !OutStream.is_open() ){
+    Errno->SetError(CGERR_ERROR, "Could not open AsmParser LLVMBuild.txt file: " + OutFile );
+    return false;
+  }
+
+  OutStream << ";===- ./lib/Target/" << TargetName << "/AsmParser/LLVMBuild.txt ---------------*- Conf -*--===;" << std::endl;
+
+  OutStream << std::endl
+            << "[component_0]" << std::endl
+            << "type = Library" << std::endl
+            << "name = " << TargetName << "AsmParser" << std::endl
+            << "parent = " << TargetName << std::endl
+            << "required_libraries = MC MCParser " << TargetName
+            << "Desc " << TargetName << "Info Support" << std::endl
+            << "add_to_library_groups = " << TargetName << std::endl;
+
+  OutStream.close();
+
+  // Stage 3: generate the actual AsmParser
+  OutFile = LLVMRoot + "/AsmParser/" + TargetName + "AsmParser.cpp";
+  OutStream.open(OutFile,std::ios::trunc);
+  if( !OutStream.is_open() ){
+    Errno->SetError(CGERR_ERROR, "Could not open AsmParser implementation file: " + OutFile );
+    return false;
+  }
+
+  OutStream << "//===-- " << TargetName
+            << "AsmParser.cpp - Define AsmParser for " << TargetName
+            << " -----------===//" << std::endl << std::endl;
+
+  OutStream << "#include \"MCTargetDesc/" << TargetName << "AsmBackend.h\"" << std::endl;
+  OutStream << "#include \"MCTargetDesc/" << TargetName << "MCExpr.h\"" << std::endl;
+  OutStream << "#include \"MCTargetDesc/" << TargetName << "MCTargetDesc.h\"" << std::endl;
+  OutStream << "#include \"MCTargetDesc/" << TargetName << "MCTargetStreamer.h\"" << std::endl;
+  OutStream << "#include \"TargetInfo/" << TargetName << "TargetInfo.h\"" << std::endl;
+  OutStream << "#include \"llvm/ADT/STLExtras.h\"" << std::endl;
+  OutStream << "#include \"llvm/ADT/SmallVector.h\"" << std::endl;
+  OutStream << "#include \"llvm/ADT/StringSwitch.h\"" << std::endl;
+  OutStream << "#include \"llvm/MC/MCAssembler.h\"" << std::endl;
+  OutStream << "#include \"llvm/MC/MCContext.h\"" << std::endl;
+  OutStream << "#include \"llvm/MC/MCExpr.h\"" << std::endl;
+  OutStream << "#include \"llvm/MC/MCInst.h\"" << std::endl;
+  OutStream << "#include \"llvm/MC/MCInstBuilder.h\"" << std::endl;
+  OutStream << "#include \"llvm/MC/MCObjectFileInfo.h\"" << std::endl;
+  OutStream << "#include \"llvm/MC/MCParser/MCAsmLexer.h\"" << std::endl;
+  OutStream << "#include \"llvm/MC/MCParser/MCParsedAsmOperand.h\"" << std::endl;
+  OutStream << "#include \"llvm/MC/MCParser/MCTargetAsmParser.h\"" << std::endl;
+  OutStream << "#include \"llvm/MC/MCRegisterInfo.h\"" << std::endl;
+  OutStream << "#include \"llvm/MC/MCStreamer.h\"" << std::endl;
+  OutStream << "#include \"llvm/MC/MCSubtargetInfo.h\"" << std::endl;
+  OutStream << "#include \"llvm/Support/Casting.h\"" << std::endl;
+  OutStream << "#include \"llvm/Support/MathExtras.h\"" << std::endl;
+  OutStream << "#include \"llvm/Support/TargetRegistry.h\"" << std::endl;
+  OutStream << "#include <limits>" << std::endl;
+  OutStream << std::endl << std::endl;
+
+  OutStream << "using namespace llvm;" << std::endl << std::endl;
+
+  OutStream << "#define DEBUG_TYPE \"" << TargetName << "-asm-parser\"" << std::endl << std::endl;
+
+  OutStream << "namespace {" << std::endl
+            << "struct " << TargetName << "Operand;" << std::endl << std::endl;
+
+  // -- output MCTargetAsmParser class def
+  OutStream << "class " << TargetName << "AsmParser : public MCTargetAsmParser {" << std::endl;
+  OutStream << "\tSMLoc getLoc() const { return getParser().getTok().getLoc(); }" << std::endl;
+  OutStream << "\t" << TargetName << "TargetStreamer &getTargetStreamer() {"
+            << std::endl
+            << "\t\tMCTargetStreamer &TS = *getParser().getStreamer().getTargetStreamer();"
+            << std::endl
+            << "\t\treturn static_cast<" << TargetName << "TargetStreamer &>(TS);"
+            << "\t}" << std::endl;
+
+  OutStream << "\tunsigned validateTargetOperandClass(MCParsedAsmOperand &Op, unsigned Kind) override;" << std::endl;
+
+  OutStream << "\tbool MatchAndEmitInstruction(SMLoc IDLoc, unsigned &Opcode,"
+            << std::endl
+            << "\t\tOperandVector &Operands, MCStreamer &Out, uint64_t &ErrorInfo,"
+            << "\t\tbool MatchingInlineAsm) override;"
+            << std::endl;
+
+  OutStream << "\tbool ParseRegister(unsigned &RegNo, SMLoc &StartLoc, SMLoc &EndLoc) override;" << std::endl;
+
+  OutStream << "\tbool ParseInstruction(ParseInstructionInfo &Info, StringRef Name,"
+            << "\t\tSMLoc NameLoc, OperandVector &Operands) override;" << std::endl;
+
+  OutStream << "\tbool ParseDirective(AsmToken DirectiveID) override;" << std::endl;
+
+  OutStream << "#define GET_ASSEMBLER_HEADER" << std::endl;
+  OutStream << "#include \"" << TargetName << "GenAsmMatcher.inc\"" << std::endl << std::endl;
+
+  OutStream << "public:" << std::endl;
+  OutStream << "\tenum " << TargetName << "MatchResultTy {" << std::endl;
+  OutStream << "\t\tMatch_Dummy = FIRST_TARGET_MATCH_RESULT_TY," << std::endl;
+  OutStream << "#define GET_OPERAND_DIAGNOSTIC_TYPES" << std::endl;
+  OutStream << "#include \"" << TargetName << "GenAsmMatcher.inc\"" << std::endl;
+  OutStream << "#undef GET_OPERAND_DIAGNOSTIC_TYPES" << std::endl;
+  OutStream << "\t};" << std::endl << std::endl;
+
+  OutStream << "\t" << TargetName << "AsmParser(const MCSubtargetInfo &STI, MCAsmParser &Parser,"
+            << std::endl
+            << "\t\t\tconst MCInstrInfo &MII, const MCTargetOptions &Options)"
+            << std::endl
+            << "\t\t: MCTargetAsmParser(Options, STI, MII) {"
+            << std::endl
+            << "\t\tParser.addAliasForDirective(\".half\", \".2byte\");"
+            << "\t\tParser.addAliasForDirective(\".hword\", \".2byte\");"
+            << "\t\tParser.addAliasForDirective(\".word\", \".4byte\");"
+            << "\t\tParser.addAliasForDirective(\".dword\", \".8byte\");"
+            << "\t\tsetAvailableFeatures(ComputeAvailableFeatures(STI.getFeatureBits()));"
+            << std::endl
+            << "\t}" << std::endl;
+
+  OutStream << "};" << std::endl << std::endl;
+
+  // -- output MCParsedAsmOperand class def
+  OutStream << "struct " << TargetName << "Operand : public MCParsedAsmOperand {" << std::endl;
+
+  OutStream << "\tenum KindTy {" << std::endl
+            << "\t\tToken," << std::endl
+            << "\t\tRegister," << std::endl
+            << "\t\tImmediate" << std::endl
+            << "\t} Kind;" << std::endl;
+
+  OutStream << "\tstruct RegOp {" << std::endl
+            << "\t\tunsigned RegNum;" << std::endl
+            << "\t};" << std::endl;
+
+  OutStream << "\tstruct ImmOp" << std::endl
+            << "\t\tconst MCExpr *Val;" << std::endl
+            << "\t};" << std::endl;
+
+  OutStream << "\tSMLoc StartLoc, EndLoc;" << std::endl;
+
+  OutStream << "\tunion {" << std::endl
+            << "\t\tStringRef Tok;" << std::endl
+            << "\t\tRegOp Reg;" << std::endl
+            << "\t\tImmOp Imm;" << std::endl
+            << "\t};" << std::endl;
+
+  OutStream << "\t" << TargetName << "Operand(KindTy K) : MCParsedAsmOperand(), Kind(K) {}" << std::endl;
+
+  OutStream << std::endl << std::endl;
+
+  OutStream << "\tpublic:" << std::endl;
+  OutStream << "\t\t" << TargetName << "Operand(const "
+            << TargetName << "Operand &o) : MCParsedAsmOperand() {"
+            << std::endl;
+  OutStream << "\t\t\tKind = o.Kind;" << std::endl;
+  OutStream << "\t\t\tStartLoc = o.StartLoc;" << std::endl;
+  OutStream << "\t\\ttEndLoc = o.EndLoc;" << std::endl;
+  OutStream << "\t\t\tswitch(Kind){" << std::endl;
+  OutStream << "\t\t\tcase Register:" << std::endl
+            << "\t\t\t\tReg = o.Reg;" << std::endl
+            << "\t\t\t\tbreak;" << std::endl;
+  OutStream << "\t\t\tcase Immediate:" << std::endl
+            << "\t\t\t\tImm = o.Imm;" << std::endl
+            << "\t\t\t\tbreak;" << std::endl;
+  OutStream << "\t\t\tcase Token:" << std::endl
+            << "\t\t\t\tTok = o.Tok;" << std::endl
+            << "\t\t\t\tbreak;" << std::endl;
+  OutStream << "\t\t\t}" << std::endl;
+  OutStream << "\t\t}" << std::endl;
+
+  OutStream << "\tbool isToken() const override { return Kind == Token; }" << std::endl;
+  OutStream << "\tbool isReg() const override { return Kind == Register; }" << std::endl;
+  OutStream << "\tbool isImm() const override { return Kind == Immediate; }" << std::endl;
+  OutStream << "\tbool isMem() const override { return false; }" << std::endl;
+
+  OutStream << "\tSMLoc getStartLoc() const override { return StartLoc; }" << std::endl;
+  OutStream << "\tSMLoc getEndLoc() const override { return EndLoc; }" << std::endl;
+
+  OutStream << "\tunsigned getReg() const override {"
+            << std::endl
+            << "\t\tassert(Kind == Register && \"Invalid type access!\");"
+            << std::endl
+            << "\treturn Reg.RegNum;"
+            << std::endl
+            << "\t}" << std::endl << std::endl;
+
+  OutStream << "\tvoid print(raw_ostream &OS) const override {"
+            << std::endl
+            << "\t\tswitch(Kind) {"
+            << std::endl
+            << "\t\tcase Immedaite:" << std::endl
+            << "\t\t\tOS << *getImm();" << std::endl
+            << "\t\t\tbreak;" << std::endl
+            << "\t\tcase Register:" << std::endl
+            << "\t\t\tOS << \"<register x\";" << std::endl
+            << "\t\t\tbreak;" << std::endl
+            << "\t\tcase Token:" << std::endl
+            << "\t\t\tOS << \"'\" << getToken() << \"'\";" << std::endl
+            << "\t\t\tbreak;" << std::endl
+            << "\t\tcase SystemRegister:" << std::endl
+            << "\t\t\tOS << \"<sysreg: \" << getSysReg() << '>';" << std::endl
+            << "\t\t\tbreak;" << std::endl
+            << "\t\t}" << std::endl
+            << "\t}" << std::endl << std::endl;
+
+  OutStream << "};" << std::endl;
+  OutStream << "}" << std::endl;  // end anonymous namespace
+
+  // -- output all the implementation details
+  OutStream << "#define GET_REGISTER_MATCHER" << std::endl;
+  OutStream << "#define GET_MATCHER_IMPLEMENTATION" << std::endl;
+  OutStream << "#include \"" << TargetName << "GenAsmMatcher.inc\""
+            << std::endl << std::endl;
+
+  OutStream << "extern \"C\" void LLVMInitialize" << TargetName << "AsmParser() {"
+            << "\tRegisterMCAsmParser<" << TargetName << "AsmParser> X(getThe"
+            << TargetName << "Target());" << std::endl
+            << "}" << std::endl;
+
+  OutStream.close();
+
   return true;
 }
 
@@ -1654,7 +1888,7 @@ bool LLVM801CG::TIGenerateCmake(){
   OutStream << "add_subdirectory(InstPrinter)" << std::endl;
   OutStream << "add_subdirectory(MCTargetDesc)" << std::endl;
   OutStream << "add_subdirectory(TargetInfo)" << std::endl;
-  OutStream << "add_subdirectory(Utils)" << std::endl;
+  //OutStream << "add_subdirectory(Utils)" << std::endl;
 
   OutStream.close();
 
@@ -1695,7 +1929,7 @@ bool LLVM801CG::GenerateTargetImpl(){
   if( !TIGenerateTargetObj() )
     return false;
 
-  // Stage 9: Create the AsmParser
+  // Stage 9: Create the AsmParser; done;
   if( !TIGenerateAsmParser() )
     return false;
 
