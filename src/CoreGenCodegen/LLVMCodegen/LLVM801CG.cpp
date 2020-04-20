@@ -1722,6 +1722,115 @@ bool LLVM801CG::TIGenerateAsmParser(){
 }
 
 bool LLVM801CG::TIGenerateDisass(){
+  // Stage 1: generate the cmake script
+  std::string OutFile = LLVMRoot + "/Disassembler/CMakeLists.txt";
+  std::ofstream OutStream;
+  OutStream.open(OutFile,std::ios::trunc);
+  if( !OutStream.is_open() ){
+    Errno->SetError(CGERR_ERROR, "Could not open disassembler CMakeLists: " + OutFile );
+    return false;
+  }
+
+  OutStream << "add_llvm_library(LLVM" << TargetName << "Disassembler"
+            << std::endl
+            << "\t" << TargetName << "Disassembler.cpp"
+            << std::endl
+            << "\t)" << std::endl;
+
+  OutStream.close();
+
+  // Stage 2: generate the LLVMBuild file
+  OutFile = LLVMRoot + "/Disassembler/LLVMBuild.txt";
+  OutStream.open(OutFile,std::ios::trunc);
+  if( !OutStream.is_open() ){
+    Errno->SetError(CGERR_ERROR, "Could not open Disassembler LLVMBuild.txt file: " + OutFile );
+    return false;
+  }
+
+  OutStream << ";===- ./lib/Target/" << TargetName << "/Disassembler/LLVMBuild.txt ---------------*- Conf -*--===;" << std::endl;
+
+  OutStream << std::endl
+            << "[component_0]" << std::endl
+            << "type = Library" << std::endl
+            << "name = " << TargetName << "Disassembler" << std::endl
+            << "parent = " << TargetName << std::endl
+            << "required_libraries = MCDisassembler "
+            << TargetName << "Info Support" << std::endl
+            << "add_to_library_groups = " << TargetName << std::endl;
+
+  OutStream.close();
+
+  // Stage 3: generate the disassembler implementation
+  OutFile = LLVMRoot + "/Disassembler/" + TargetName + "Disassembler.cpp";
+  OutStream.open(OutFile,std::ios::trunc);
+  if( !OutStream.is_open() ){
+    Errno->SetError(CGERR_ERROR, "Could not open Disassembler implementation file: " + OutFile );
+    return false;
+  }
+
+  OutStream << "//===-- " << TargetName
+            << "Disassembler.cpp - Define AsmParser for " << TargetName
+            << " -----------===//" << std::endl << std::endl;
+
+  OutStream << "#include \"MCTargetDesc/" << TargetName << "MCTargetDesc.h\"" << std::endl;
+  OutStream << "#include \"TargetInfo/" << TargetName << "TargetInfo.h\"" << std::endl;
+  OutStream << "#include \"llvm/MC/MCContext.h\"" << std::endl;
+  OutStream << "#include \"llvm/MC/MCDisassembler/MCDisassembler.h\"" << std::endl;
+  OutStream << "#include \"llvm/MC/MCFixedLenDisassembler.h\"" << std::endl;
+  OutStream << "#include \"llvm/MC/MCInst.h\"" << std::endl;
+  OutStream << "#include \"llvm/MC/MCRegisterInfo.h\"" << std::endl;
+  OutStream << "#include \"llvm/MC/MCSubtargetInfo.h\"" << std::endl;
+  OutStream << "#include \"llvm/Support/Endian.h\"" << std::endl;
+  OutStream << "#include \"llvm/Support/TargetRegistry.h\"" << std::endl << std::endl;
+
+  OutStream << "using namespace llvm;" << std::endl << std::endl;
+
+  OutStream << "#define DEBUG_TYPE \"" << TargetName << "-disassembler\"" << std::endl << std::endl;
+
+  OutStream << "typedef MCDisassembler::DecodeStatus DecodeStatus;" << std::endl << std::endl;
+
+  OutStream << "namespace {" << std::endl;
+  OutStream << "class " << TargetName << "Disassembler : public MCDisassembler {" << std::endl;
+  OutStream << "public: " << std::endl;
+  OutStream << "\t" << TargetName << "Disassembler(const MCSubtargetInfo &STI, MCContext &Ctx)"
+            << std::endl
+            << "\t\t\t: MCDisassembler(STI, Ctx) {}" << std::endl;
+  OutStream << "\tDecodeStatus getInstruction(MCInst &Instr, uint64_t &Size,"
+            << std::endl
+            << "\t\t\tArrayRef<uint8_t> Bytes, uint64_t Address,"
+            << std::endl
+            << "\t\t\traw_ostream &VStream,raw_ostream &CStream) const override;" << std::endl;
+  OutStream << "};" << std::endl;
+  OutStream << "}" << std::endl; // end anonymous namespace
+
+  OutStream << "static MCDisassembler *create" << TargetName << "Disassembler(const Target &T,"
+            << std::endl
+            << "\t\t\tconst MCSubtargetInfo &STI,MCContext &Ctx) {"
+            << std::endl
+            << "\treturn new " << TargetName << "Disassembler(STI, Ctx);"
+            << std::endl
+            << "}" << std::endl;
+
+  OutStream << "extern \"C\" void LLVMInitialize" << TargetName << "Disassembler() {"
+            << std::endl
+            << "\tTargetRegistry::RegisterMCDisassembler(getThe" << TargetName << "Target(),"
+            << std::endl
+            << "\t\t\tcreate" << TargetName << "Disassembler);"
+            << std::endl
+            << "}" << std::endl;
+
+  OutStream << "DecodeStatus " << TargetName << "Disassembler::getInstruction(MCInst &MI, uint64_t &Size,"
+            << std::endl
+            << "\t\t\tArrayRef<uint8_t> Bytes, uint64_t Address,"
+            << std::endl
+            << "\t\t\traw_ostream &OS, raw_ostream &CS) const {"
+            << std::endl;
+  // TODO: set the size of the instruction
+  OutStream << "\treturn decodeInstruction(DecoderTable, MI, Insn, Address, this, STI);" << std::endl;
+  OutStream << "}" << std::endl;
+
+  OutStream.close();
+
   return true;
 }
 
@@ -1933,7 +2042,7 @@ bool LLVM801CG::GenerateTargetImpl(){
   if( !TIGenerateAsmParser() )
     return false;
 
-  // Stage 10: Create the Disassembler
+  // Stage 10: Create the Disassembler; done;
   if( !TIGenerateDisass() )
     return false;
 
