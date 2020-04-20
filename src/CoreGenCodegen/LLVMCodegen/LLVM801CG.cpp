@@ -1835,6 +1835,137 @@ bool LLVM801CG::TIGenerateDisass(){
 }
 
 bool LLVM801CG::TIGenerateInstPrinter(){
+  std::string OutFile = LLVMRoot + "/" + TargetName + "AsmPrinter.cpp";
+  std::ofstream OutStream;
+  OutStream.open(OutFile,std::ios::trunc);
+  if( !OutStream.is_open() ){
+    Errno->SetError(CGERR_ERROR, "Could not open AsmPrinter file: " + OutFile );
+    return false;
+  }
+
+  OutStream << "//===-- " << TargetName
+            << "AsmPrinter.cpp - Define AsmPrinter for " << TargetName
+            << " -----------===//" << std::endl << std::endl;
+
+  OutStream << "#include \"" << TargetName << ".h\"" << std::endl;
+  OutStream << "#include \"MCTargetDesc/" << TargetName << "InstPrinter.h\"" << std::endl;
+  OutStream << "#include \"MCTargetDesc/" << TargetName << "MCExpr.h\"" << std::endl;
+  OutStream << "#include \"" << TargetName << "TargetMachine.h\"" << std::endl;
+  OutStream << "#include \"TargetInfo/" << TargetName << "TargetInfo.h\"" << std::endl;
+  OutStream << "#include \"llvm/CodeGen/AsmPrinter.h\"" << std::endl;
+  OutStream << "#include \"llvm/CodeGen/MachineConstantPool.h\"" << std::endl;
+  OutStream << "#include \"llvm/CodeGen/MachineFunctionPass.h\"" << std::endl;
+  OutStream << "#include \"llvm/CodeGen/MachineInstr.h\"" << std::endl;
+  OutStream << "#include \"llvm/CodeGen/MachineModuleInfo.h\"" << std::endl;
+  OutStream << "#include \"llvm/MC/MCAsmInfo.h\"" << std::endl;
+  OutStream << "#include \"llvm/MC/MCInst.h\"" << std::endl;
+  OutStream << "#include \"llvm/MC/MCStreamer.h\"" << std::endl;
+  OutStream << "#include \"llvm/MC/MCSymbol.h\"" << std::endl;
+  OutStream << "#include \"llvm/Support/TargetRegistry.h\"" << std::endl;
+  OutStream << "#include \"llvm/Support/raw_ostream.h\"" << std::endl;
+
+  OutStream << "using namespace llvm;" << std::endl << std::endl;
+
+  OutStream << "#define DEBUG_TYPE \"asm-printer\"" << std::endl << std::endl;
+
+  OutStream << "namespace{" << std::endl;
+  OutStream << "class " << TargetName << "AsmPrinter : public AsmPrinter {" << std::endl;
+  OutStream << "public:" << std::endl;
+  OutStream << "\t explicit " << TargetName << "AsmPrinter(TargetMachine &TM,"
+            << std::endl
+            << "\t\t\tstd::unique_ptr<MCStreamer> Streamer)"
+            << std::endl
+            << "\t\t: AsmPrinter(TM, std::move(Streamer)) {}" << std::endl;
+  OutStream << "\tStringRef getPassName() const override { return \""
+            << TargetName << " Assembly Printer\"; }" << std::endl;
+  OutStream << "\tvoid EmitInstruction(const MachineInstr *MI) override;" << std::endl;
+  OutStream << "\tbool PrintAsmOperand(const MachineInstr *MI, unsigned OpNo,"
+            << std::endl
+            << "\t\tconst char *ExtraCode, raw_ostream &OS) override;" << std::endl;
+  OutStream << "\tbool PrintAsmMemoryOperand(const MachineInstr *MI, unsigned OpNo,"
+            << std::endl
+            << "\t\tconst char *ExtraCode, raw_ostream &OS) override;" << std::endl;
+  //OutStream << "\tvoid EmitToStreamer(MCStreamer &S, const MCInst &Inst);" << std::endl;
+  OutStream << "\tbool emitPseudoExpansionLowering(MCStreamer &OutStreamer,const MachineInstr *MI);" << std::endl;
+  OutStream << "\tbool lowerOperand(const MachineOperand &MO, MCOperand &MCOp) const {"
+            << std::endl
+            << "\t\treturn Lower" << TargetName << "MachineOperandToMCOperand(MO, MCOp, *this);"
+            << std::endl
+            << "\t}" << std::endl;
+  OutStream << "};" << std::endl;
+  OutStream << "}" << std::endl;
+
+  if( PInsts.size() > 0 ){
+    OutStream << "#include \"" << TargetName << "GenMCPseudoLowering.inc\"" << std::endl;
+  }
+
+  OutStream << "void " << TargetName << "AsmPrinter::EmitInstruction(const MachineInstr *MI) {" << std::endl;
+  if( PInsts.size() > 0 ){
+    OutStream << "\tif (emitPseudoExpansionLowering(*OutStreamer, MI))"
+              << std::endl
+              << "\t\treturn ;" << std::endl;
+  }
+  OutStream << "\tMCInt TmpInst;"
+            << std::endl
+            << "\tLower" << TargetName << "MachineInstrToMCInst(MI, TmpInst, *this);"
+            << std::endl
+            << "\tEmitToStreamer(*OutStreamer, TmpInst);" << std::endl;
+  OutStream << "}" << std::endl << std::endl;
+
+  OutStream << "bool " << TargetName << "AsmPrinter::PrintAsmOperand(const MachineInstr *MI, unsigned OpNo,"
+            << "\t\t\tconst char *ExtraCode, raw_ostream &OS) {"
+            << std::endl;
+  OutStream << "\tif (!AsmPrinter::PrintAsmOperand(MI, OpNo, ExtraCode, OS))" << std::endl;
+  OutStream << "\t\treturn false;" << std::endl;
+  OutStream << "\tif(!ExtraCode) {" << std::endl;
+  OutStream << "\t\tconst MachineOperand &MO = MI->getOperand(OpNo);";
+  OutStream << "\t\tswitch(MO.getType()) {"
+            << std::endl
+            << "\t\tcase MachineOperand::MO_Immediate:"
+            << std::endl
+            << "\t\t\tOS << MO.getImm();" << std::endl << "\t\t\treturn false;"
+            << std::endl
+            << "\t\tcase MachineOperand::MO_Register:"
+            << std::endl
+            << "\t\t\tOS << " << TargetName << "InstPrinter::getRegisterName(MO.getReg());"
+            << std::endl
+            << "\t\t\treturn false;"
+            << "\t\tdefault:"
+            << std::endl
+            << "\t\t\tbreak;"
+            << std::endl
+            << "\t\t}" << std::endl;
+  OutStream << "\t}" << std::endl;
+  OutStream << "\treturn true;" << std::endl;
+  OutStream << "}" << std::endl << std::endl;
+
+  OutStream << "bool " << TargetName << "AsmPrinter::PrintAsmMemoryOperand(const MachineInstr *MI,"
+            << std::endl
+            << "\t\t\tunsigned OpNo, const char *ExtraCode, raw_ostream &OS) {"
+            << std::endl;
+  OutStream << "\tif(!ExtraCode) {"
+            << std::endl
+            << "\t\tconst MachineOperand &MO = MI->getOperand(OpNo);"
+            << std::endl
+            << "\t\tif(!MO.isReg())"
+            << std::endl
+            << "\t\tOS << \"0(\" << "
+            << TargetName << "InstPrinter::getRegisterName(MO.getReg())"
+            << " << \")\";"
+            << std::endl
+            << "\t\treturn false;"
+            << "\t}" << std::endl;
+  OutStream << "\treturn AsmPrinter::PrintAsmMemoryOperand(MI, OpNo, ExtraCode, OS);" << std::endl;
+  OutStream << "}" << std::endl << std::endl;
+
+  OutStream << "extern \"C\" void LLVMInitialize" << TargetName << "AsmPrinter() {"
+            << std::endl
+            << "\tRegisterAsmPrinter<" << TargetName << "AsmPrinter> X(getThe"
+            << TargetName << "Target());" << std::endl
+            << "}" << std::endl;
+
+  OutStream.close();
+
   return true;
 }
 
@@ -2046,7 +2177,7 @@ bool LLVM801CG::GenerateTargetImpl(){
   if( !TIGenerateDisass() )
     return false;
 
-  // Stage 11: Create the InstPrinter
+  // Stage 11: Create the InstPrinter; done;
   if( !TIGenerateInstPrinter() )
     return false;
 
