@@ -2036,6 +2036,88 @@ bool LLVM801CG::TIGenerateMCElfObjWriter(){
 }
 
 bool LLVM801CG::TIGenerateMCElfStreamer(){
+  // Stage 1: ELFStreamer.h
+  std::string OutFile = LLVMRoot + "/MCTargetDesc/" + TargetName + "ELFStreamer.h";
+  std::ofstream OutStream;
+  OutStream.open(OutFile,std::ios::trunc);
+  if( !OutStream.is_open() ){
+    Errno->SetError(CGERR_ERROR, "Could not open the ELFStreamer header file: " + OutFile );
+    return false;
+  }
+
+  OutStream << "//===-- " << TargetName
+            << "ELFStreamer.h - Define Target Descriptions" << TargetName
+            << " -------*- C++ -*-===//" << std::endl << std::endl;
+
+  OutStream << "#ifndef LLVM_LIB_TARGET_" << TargetName
+            << "_" << TargetName << "ELFSTREAMER_H" << std::endl;
+  OutStream << "#define LLVM_LIB_TARGET_" << TargetName
+            << "_" << TargetName << "ELFSTREAMER_H" << std::endl;
+
+  OutStream << "#include \"" << TargetName << "TargetStreamer.h\"" << std::endl;
+  OutStream << "#include \"llvm/MC/MCELFStreamer.h\"" << std::endl << std::endl;
+
+  OutStream << "namespace llvm {" << std::endl;
+
+  OutStream << "class " << TargetName << "TargetELFStreamer : public "
+            << TargetName << "TargetStreamer {" << std::endl;
+  OutStream << "public:" << std::endl;
+  OutStream << "\tMCELFStreamer &getStreamer();" << std::endl;
+  OutStream << "\t" << TargetName << "TargetELFStreamer(MCStreamer &S, const MCSubtargetInfo &STI);" << std::endl;
+
+  OutStream << "};" << std::endl << "}" << std::endl;
+
+  OutStream << "#endif" << std::endl;
+
+  OutStream.close();
+
+  // Stage 2: ELFStreamer.cpp
+  OutFile = LLVMRoot + "/MCTargetDesc/" + TargetName + "ELFStreamer.cpp";
+  OutStream.open(OutFile,std::ios::trunc);
+  if( !OutStream.is_open() ){
+    Errno->SetError(CGERR_ERROR, "Could not open the ELFStreamer implementation file: " + OutFile );
+    return false;
+  }
+
+  OutStream << "//===-- " << TargetName
+            << "ELFStreamer.cpp - Define ELFStreamer for " << TargetName
+            << " -----------===//" << std::endl << std::endl;
+
+  OutStream << "#include \"" << TargetName << "ELFStreamer.h\"" << std::endl;
+  OutStream << "#include \"MCTargetDesc/" << TargetName << "AsmBackend.h\"" << std::endl;
+  OutStream << "#include \"" << TargetName << "MCTargetDesc.h\"" << std::endl;
+  OutStream << "#include \"llvm/BinaryFormat/ELF.h\"" << std::endl;
+  OutStream << "#include \"llvm/MC/MCSubtargetInfo.h\"" << std::endl;
+
+  OutStream << "using namespace llvm;" << std::endl << std::endl;
+
+  OutStream << TargetName << "TargetELFStreamer::" << TargetName
+            << "TargetELFStreamer(MCStreamer &S,const MCSubtargetInfo &STI)"
+            << std::endl
+            << "\t:" << TargetName << "TargetStreamer(S) {"
+            << std::endl;
+
+  OutStream << "\tMCAssembler &MCA = getStreamer().getAssembler();" << std::endl;
+  OutStream << "\tconst FeatureBitset &Features = STI.getFeatureBits();" << std::endl;
+  OutStream << "\tauto &MAB = static_cast<"
+            << TargetName << "AsmBackend &>(MCA.getBackend());" << std::endl;
+  OutStream << "\t" << TargetName << "ABI::ABI ABI = MAB.getTargetABI();" << std::endl;
+
+  OutStream << "\tunsigned EFlags = MCA.getELFHeaderEFlags();" << std::endl;
+  OutStream << "\t//TODO: IMPLEMENT THE ABI" << std::endl;
+  OutStream << "\tMCA.setELFHeaderEFlags(EFlags);" << std::endl;
+
+  OutStream << "}" << std::endl;
+
+  OutStream << "MCELFStreamer &" << TargetName
+            << "TargetELFStreamer::getStreamer() {"
+            << std::endl
+            << "\treturn static_cast<MCELFStreamer &>(Streamer);"
+            << std::endl
+            << "}" << std::endl << std::endl;
+
+  OutStream.close();
+
   return true;
 }
 
@@ -2440,11 +2522,11 @@ bool LLVM801CG::TIGenerateMCTargetDesc(){
   if( !TIGenerateMCElfObjWriter() )
     return false;
 
-  // Stage 4: <TargetName>ElfStreamer{.h,cpp}
+  // Stage 4: <TargetName>ElfStreamer{.h,cpp}; done;
   if( !TIGenerateMCElfStreamer() )
     return false;
 
-  // Stage 5: <TargetName>FixupKinds,h; done;
+  // Stage 5: <TargetName>FixupKinds.h; done;
   if( !TIGenerateMCFixupKinds() )
     return false;
 
