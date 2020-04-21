@@ -1969,7 +1969,150 @@ bool LLVM801CG::TIGenerateInstPrinter(){
   return true;
 }
 
+bool LLVM801CG::TIGenerateMCBuild(){
+  // Stage 1: generate the cmake script
+  std::string OutFile = LLVMRoot + "/MCTargetDesc/CMakeLists.txt";
+  std::ofstream OutStream;
+  OutStream.open(OutFile,std::ios::trunc);
+  if( !OutStream.is_open() ){
+    Errno->SetError(CGERR_ERROR, "Could not open MCTargetDesc CMakeLists: " + OutFile );
+    return false;
+  }
+
+  OutStream << "add_llvm_library(LLVM" << TargetName << "Desc"
+            << std::endl
+            << "\t" << TargetName << "AsmBackend.cpp"
+            << std::endl
+            << "\t" << TargetName << "ELFObjectWriter.cpp"
+            << std::endl
+            << "\t" << TargetName << "InstPrinter.cpp"
+            << std::endl
+            << "\t" << TargetName << "MCAsmInfo.cpp"
+            << std::endl
+            << "\t" << TargetName << "MCCodeEmitter.cpp"
+            << std::endl
+            << "\t" << TargetName << "MCExpr.cpp"
+            << std::endl
+            << "\t" << TargetName << "MCTargetDesc.cpp"
+            << std::endl
+            << "\t" << TargetName << "TargetStreamer.cpp"
+            << std::endl
+            << "\t" << TargetName << "ELFStreamer.cpp"
+            << std::endl
+            << "\t)" << std::endl;
+
+  OutStream.close();
+
+  // Stage 2: generate the LLVMBuild file
+  OutFile = LLVMRoot + "/MCTargetDesc/LLVMBuild.txt";
+  OutStream.open(OutFile,std::ios::trunc);
+  if( !OutStream.is_open() ){
+    Errno->SetError(CGERR_ERROR, "Could not open MCTargetDesc LLVMBuild.txt file: " + OutFile );
+    return false;
+  }
+
+  OutStream << ";===- ./lib/Target/" << TargetName << "/MCTargetDesc/LLVMBuild.txt ---------------*- Conf -*--===;" << std::endl;
+
+  OutStream << std::endl
+            << "[component_0]" << std::endl
+            << "type = Library" << std::endl
+            << "name = " << TargetName << "Desc" << std::endl
+            << "parent = " << TargetName << std::endl
+            << "required_libraries = MC "
+            << TargetName << "Info Support" << std::endl
+            << "add_to_library_groups = " << TargetName << std::endl;
+
+  OutStream.close();
+
+  return true;
+}
+
+bool LLVM801CG::TIGenerateMCAsmBackend(){
+  return true;
+}
+
+bool LLVM801CG::TIGenerateMCElfObjWriter(){
+  return true;
+}
+
+bool LLVM801CG::TIGenerateMCElfStreamer(){
+  return true;
+}
+
+bool LLVM801CG::TIGenerateMCFixupKinds(){
+  return true;
+}
+
+bool LLVM801CG::TIGenerateMCInstPrinter(){
+  return true;
+}
+
+bool LLVM801CG::TIGenerateMCAsmInfo(){
+  return true;
+}
+
+bool LLVM801CG::TIGenerateMCCodeEmitter(){
+  return true;
+}
+
+bool LLVM801CG::TIGenerateMCExpr(){
+  return true;
+}
+
+bool LLVM801CG::TIGenerateMCTargetDescCore(){
+  return true;
+}
+
+bool LLVM801CG::TIGenerateMCTargetStreamer(){
+  return true;
+}
+
 bool LLVM801CG::TIGenerateMCTargetDesc(){
+
+  // Stage 1: CmakeLists.txt and LLVMBuild.txt
+  if( !TIGenerateMCBuild() )
+    return false;
+
+  // Stage 2: <TargetName>AsmBackend.{h,cpp}
+  if( !TIGenerateMCAsmBackend() )
+    return false;
+
+  // Stage 3: <TargetName>ElfObjectWriter.cpp
+  if( !TIGenerateMCElfObjWriter() )
+    return false;
+
+  // Stage 4: <TargetName>ElfStreamer{.h,cpp}
+  if( !TIGenerateMCElfStreamer() )
+    return false;
+
+  // Stage 5: <TargetName>FixupKinds,h
+  if( !TIGenerateMCFixupKinds() )
+    return false;
+
+  // Stage 6: <TargetName>InstPrinter,{h,cpp}
+  if( !TIGenerateMCInstPrinter() )
+    return false;
+
+  // Stage 7: <TargetName>MCAsmInfo.{h,cpp}
+  if( !TIGenerateMCAsmInfo() )
+    return false;
+
+  // Stage 8: <TargetName>MCCodeEmitter.cpp
+  if( !TIGenerateMCCodeEmitter() )
+    return false;
+
+  // Stage 9: <TargetName>MCExpr.{h,cpp}
+  if( !TIGenerateMCExpr() )
+    return false;
+
+  // Stage 10: <TargetName>TargetDesc.{h,cpp}
+  if( !TIGenerateMCTargetDescCore() )
+    return false;
+
+  // Stage 11: <TargetName>TargetStreamer.{h,cpp}
+  if( !TIGenerateMCTargetStreamer() )
+    return false;
+
   return true;
 }
 

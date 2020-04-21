@@ -121,6 +121,39 @@ private:
   /// Generate the top-level CMake scripts
   bool TIGenerateCmake();
 
+  // Generate the MCTarget build infrastructure
+  bool TIGenerateMCBuild();
+
+  // Generate the MCTarget AsmBackend
+  bool TIGenerateMCAsmBackend();
+
+  // Generate the MCTarget Elf Object Writer
+  bool TIGenerateMCElfObjWriter();
+
+  // Generate the MCTarget ElfStreamer
+  bool TIGenerateMCElfStreamer();
+
+  // Generate the MCTarget FixupKinds
+  bool TIGenerateMCFixupKinds();
+
+  // Generate the MCTarget InstPrinter
+  bool TIGenerateMCInstPrinter();
+
+  // Generate the MCTarget Asm Info
+  bool TIGenerateMCAsmInfo();
+
+  // Generate the MCTarget CodeEmitter
+  bool TIGenerateMCCodeEmitter();
+
+  // Generate the MCTarget Expression Handler
+  bool TIGenerateMCExpr();
+
+  // Generate the MCTarget Target Description
+  bool TIGenerateMCTargetDescCore();
+
+  // Generate the MCTarget Target Streamer
+  bool TIGenerateMCTargetStreamer();
+
 public:
   /// Default constructor
   LLVM801CG(CoreGenNode *T,
