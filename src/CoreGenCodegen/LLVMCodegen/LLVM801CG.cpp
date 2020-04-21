@@ -2040,6 +2040,49 @@ bool LLVM801CG::TIGenerateMCElfStreamer(){
 }
 
 bool LLVM801CG::TIGenerateMCFixupKinds(){
+  // Stage 1: FixupKinds.h
+  std::string OutFile = LLVMRoot + "/MCTargetDesc/" + TargetName + "FixupKinds.h";
+  std::ofstream OutStream;
+  OutStream.open(OutFile,std::ios::trunc);
+  if( !OutStream.is_open() ){
+    Errno->SetError(CGERR_ERROR, "Could not open the FixupKinds header file: " + OutFile );
+    return false;
+  }
+
+  OutStream << "//===-- " << TargetName
+            << "FixupKinds.h - Define Fixup Kinds" << TargetName
+            << " -------*- C++ -*-===//" << std::endl << std::endl;
+
+  OutStream << "#ifndef LLVM_LIB_TARGET_" << TargetName
+            << "_MCTARGETDESC_" << TargetName
+            << "FIXUPKINDS_H" << std::endl;
+  OutStream << "#define LLVM_LIB_TARGET_" << TargetName
+            << "_MCTARGETDESC_" << TargetName
+            << "FIXUPKINDS_H" << std::endl;
+
+  OutStream << "#include \"llvm/MC/MCFixup.h\"" << std::endl;
+
+  OutStream << "#undef " << TargetName << std::endl << std::endl;
+
+  OutStream << "namespace llvm{" << std::endl
+            << "namespace " << TargetName << std::endl
+            << "enum Fixups {" << std::endl;
+
+  OutStream << "\tfixup_" << TargetName << "_branch = FirstTargetFixupKind,"
+            << std::endl;
+  OutStream << "\tfixup_" << TargetName << "_call," << std::endl;
+  OutStream << "\tfixup_" << TargetName << "_invalid," << std::endl;
+  OutStream << "\tNumTargetFixupKinds = fixup_" << TargetName
+            << "_invalid - FirstTargetFixupKind" << std::endl;
+
+  OutStream << "};" << std::endl
+            << "}" << std::endl
+            << "}" << std::endl;
+
+  OutStream << "#endif" << std::endl;
+
+  OutStream.close();
+
   return true;
 }
 
@@ -2340,7 +2383,7 @@ bool LLVM801CG::TIGenerateMCTargetDesc(){
   if( !TIGenerateMCElfStreamer() )
     return false;
 
-  // Stage 5: <TargetName>FixupKinds,h
+  // Stage 5: <TargetName>FixupKinds,h; done;
   if( !TIGenerateMCFixupKinds() )
     return false;
 
