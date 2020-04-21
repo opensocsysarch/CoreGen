@@ -2251,6 +2251,74 @@ bool LLVM801CG::TIGenerateMCTargetDescCore(){
 }
 
 bool LLVM801CG::TIGenerateMCTargetStreamer(){
+  // Stage 1: TargetStreamer.h
+  std::string OutFile = LLVMRoot + "/MCTargetDesc/" + TargetName + "TargetStreamer.h";
+  std::ofstream OutStream;
+  OutStream.open(OutFile,std::ios::trunc);
+  if( !OutStream.is_open() ){
+    Errno->SetError(CGERR_ERROR, "Could not open the TargetStreamer header file: " + OutFile );
+    return false;
+  }
+
+  OutStream << "//===-- " << TargetName
+            << "TargetStreamer.h - Define Target Descriptions" << TargetName
+            << " -------*- C++ -*-===//" << std::endl << std::endl;
+
+  OutStream << "#ifndef LLVM_LIB_TARGET_" << TargetName << "_" << TargetName
+            << "TARGETSTREAMER_H" << std::endl;
+  OutStream << "#define LLVM_LIB_TARGET_" << TargetName << "_" << TargetName
+            << "TARGETSTREAMER_H" << std::endl;
+
+  OutStream << "#include \"llvm/MC/MCStreamer.h\"" << std::endl << std::endl;
+
+  OutStream << "namespace llvm {" << std::endl << std::endl;
+
+  OutStream << "class " << TargetName << "TargetStreamer : public MCTargetStreamer {" << std::endl;
+  OutStream << "public: " << std::endl;
+  OutStream << "\t" << TargetName << "TargetStreamer(MCStreamer &S);" << std::endl;
+  OutStream << "};" << std::endl << std::endl;
+
+  OutStream << "class " << TargetName << "TargetAsmStreamer : public "
+            << TargetName << "TargetStreamer {" << std::endl;
+  OutStream << "\tformatted_raw_ostream &OS;" << std::endl;
+  OutStream << "public:" << std::endl;
+  OutStream << "\t" << TargetName << "TargetAsmStreamer(MCStreamer &S, formatted_raw_ostream &OS);"
+            << std::endl
+            << "};" << std::endl;
+
+  OutStream << "}" << std::endl << std::endl;
+
+  OutStream << "#endif" << std::endl;
+
+  OutStream.close();
+
+  // Stage 2: TargetStreamer.cpp
+  OutFile = LLVMRoot + "/MCTargetDesc/" + TargetName + "TargetStreamer.cpp";
+  OutStream.open(OutFile,std::ios::trunc);
+  if( !OutStream.is_open() ){
+    Errno->SetError(CGERR_ERROR, "Could not open the TargetStreamer implementation file: " + OutFile );
+    return false;
+  }
+
+  OutStream << "//===-- " << TargetName
+            << "TargetStreamer.cpp - Define TargetDesc for " << TargetName
+            << " -----------===//" << std::endl << std::endl;
+
+  OutStream << "#include \"" << TargetName << "TargetStreamer.h" << std::endl;
+  OutStream << "#include \"llvm/Support/FormattedStream.h\"" << std::endl << std::endl;
+
+  OutStream << "using namespace llvm;" << std::endl << std::endl;
+
+  OutStream << TargetName << "TargetStreamer::" << TargetName
+            << "TargetStreamer((MCStreamer &S) : MCTargetStreamer(S) {}" << std::endl << std::endl;
+
+  OutStream << TargetName << "TargetAsmStreamer::" << TargetName
+            << "TargetAsmStreamer(MCStreamer &S, formatted_raw_ostream &OS)"
+            << std::endl
+            << "\t:" << TargetName << "TargetStreamer(S), OS(OS) {}" << std::endl;
+
+  OutStream.close();
+
   return true;
 }
 
@@ -2292,11 +2360,11 @@ bool LLVM801CG::TIGenerateMCTargetDesc(){
   if( !TIGenerateMCExpr() )
     return false;
 
-  // Stage 10: <TargetName>TargetDesc.{h,cpp}
+  // Stage 10: <TargetName>TargetDesc.{h,cpp}; done;
   if( !TIGenerateMCTargetDescCore() )
     return false;
 
-  // Stage 11: <TargetName>TargetStreamer.{h,cpp}
+  // Stage 11: <TargetName>TargetStreamer.{h,cpp}; done;
   if( !TIGenerateMCTargetStreamer() )
     return false;
 
