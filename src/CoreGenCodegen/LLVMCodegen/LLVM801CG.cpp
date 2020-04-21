@@ -2060,6 +2060,193 @@ bool LLVM801CG::TIGenerateMCExpr(){
 }
 
 bool LLVM801CG::TIGenerateMCTargetDescCore(){
+  // Stage 1: MCTargetDesc.h
+  std::string OutFile = LLVMRoot + "/MCTargetDesc/" + TargetName + "MCTargetDesc.h";
+  std::ofstream OutStream;
+  OutStream.open(OutFile,std::ios::trunc);
+  if( !OutStream.is_open() ){
+    Errno->SetError(CGERR_ERROR, "Could not open the MCTargetDesc header file: " + OutFile );
+    return false;
+  }
+
+  OutStream << "//===-- " << TargetName
+            << "MCTargetDesc.h - Define Target Descriptions" << TargetName
+            << " -------*- C++ -*-===//" << std::endl << std::endl;
+
+  OutStream << "#ifndef LLVM_LIB_TARGET_" << TargetName << "MCTARGETDESC_"
+            << TargetName << "TARGETDESC_H" << std::endl;
+  OutStream << "#define LLVM_LIB_TARGET_" << TargetName << "MCTARGETDESC_"
+            << TargetName << "TARGETDESC_H" << std::endl << std::endl;
+
+  OutStream << "#include \"llvm/Config/config.h\"" << std::endl;
+  OutStream << "#include \"llvm/MC/MCTargetOptions.h\"" << std::endl;
+  OutStream << "#include \"llvm/Support/DataTypes.h\"" << std::endl;
+  OutStream << "#include <memory>" << std::endl << std::endl;
+
+  OutStream << "namespace llvm {" << std::endl;
+
+  OutStream << "class MCAsmBackend;"  << std::endl
+            << "class MCCodeEmitter;" << std::endl
+            << "class MCContext;" << std::endl
+            << "class MCInstrInfo;" << std::endl
+            << "class MCObjectTargetWriter;" << std::endl
+            << "class MCRegisterInfo;" << std::endl
+            << "class MCSubtargetInfo;" << std::endl
+            << "class StringRef;" << std::endl
+            << "class Target;" << std::endl
+            << "class Triple;" << std::endl
+            << "class raw_ostream;" << std::endl
+            << "class raw_pwrite_stream;" << std::endl << std::endl;
+
+  OutStream << "MCCodeEmitter *create" << TargetName << "MCCodeEmitter(const MCInstrInfo &MCII,"
+            << "\t\t\tconst MCRegisterInfo &MRI, MCContext &Ctx);" << std::endl;
+  OutStream << "MCAsmBackend *create" << TargetName << "AsmBackend(const Target &T, const MCSubtargetInfo &STI,"
+            << "\t\t\tconst MCRegisterInfo &MRI, const MCTargetOptions &Options);" << std::endl;
+  OutStream << "std::unique_ptr<MCObjectTargetWriter> create" << TargetName
+            << "ELFObjectWriter(uint8_t OSABI,"
+            << std::endl
+            << "\t\t\tbool Is64Bit);" << std::endl;
+  OutStream << "}" << std::endl << std::endl; // end namespace
+
+  OutStream << "#define GET_REGINFO_ENUM" << std::endl;
+  OutStream << "#include \"" << TargetName << "GenRegisterInfo.inc\"" << std::endl;
+  OutStream << std::endl;
+  OutStream << "#define GET_SUBTARGETINFO_ENUM" << std::endl;
+  OutStream << "#include \"" << TargetName << "GenSubtargetInfo.inc\"" << std::endl;
+
+  OutStream << "#endif" << std::endl;
+
+  OutStream.close();
+
+  // Stage 2: MCTargetDesc.cpp
+  OutFile = LLVMRoot + "/MCTargetDesc/" + TargetName + "MCTargetDesc.cpp";
+  OutStream.open(OutFile,std::ios::trunc);
+  if( !OutStream.is_open() ){
+    Errno->SetError(CGERR_ERROR, "Could not open the MCTargetDesc implementation file: " + OutFile );
+    return false;
+  }
+
+  OutStream << "//===-- " << TargetName
+            << "MCTargetDesc.cpp - Define TargetDesc for " << TargetName
+            << " -----------===//" << std::endl << std::endl;
+
+  OutStream << "#include \"" << TargetName << "MCTargetDesc.h\"" << std::endl;
+  OutStream << "#include \"" << TargetName << "ELFStreamer.h\"" << std::endl;
+  OutStream << "#include \"" << TargetName << "InstPrinter.h\"" << std::endl;
+  OutStream << "#include \"" << TargetName << "MCAsmInfo.h\"" << std::endl;
+  OutStream << "#include \"" << TargetName << "TargetStreamher.h\"" << std::endl;
+  OutStream << "#include \"TargetInfo/" << TargetName << "TargetInfo.h\"" << std::endl;
+  OutStream << "#include \"llvm/ADT/STLExtras.h\"" << std::endl;
+  OutStream << "#include \"llvm/MC/MCAsmInfo.h\"" << std::endl;
+  OutStream << "#include \"llvm/MC/MCInstrInfo.h\"" << std::endl;
+  OutStream << "#include \"llvm/MC/MCRegisterInfo.h\"" << std::endl;
+  OutStream << "#include \"llvm/MC/MCStreamer.h\"" << std::endl;
+  OutStream << "#include \"llvm/MC/MCSubtargetInfo.h\"" << std::endl;
+  OutStream << "#include \"llvm/Support/ErrorHandling.h\"" << std::endl;
+  OutStream << "#include \"llvm/Support/TargetRegistry.h\"" << std::endl << std::endl;
+
+  OutStream << "#define GEN_INSTRINFO_MC_DESC" << std::endl;
+  OutStream << "#include \"" << TargetName << "GenInstrInfo.inc\"" << std::endl << std::endl;
+
+  OutStream << "#define GEN_REGINFO_MC_DESC" << std::endl;
+  OutStream << "#include \"" << TargetName << "GenRegisterInfo.inc\"" << std::endl << std::endl;
+
+  OutStream << "#define GEN_SUBTARGETINFO_MC_DESC" << std::endl;
+  OutStream << "#include \"" << TargetName << "GenSubtargetInfo.inc\"" << std::endl << std::endl;
+
+  OutStream << "using namespace llvm;" << std::endl << std::endl;
+
+  OutStream << "static MCInstrInfo *create" << TargetName << "MCInstrInfo() {"
+            << std::endl
+            << "\tMCInstrInfo *X = new MCInstrInfo();"
+            << std::endl
+            << "\tInit" << TargetName << "MCInstrInfo(X);"
+            << std::endl
+            << "\treturn X;"
+            << std::endl
+            << "}" << std::endl << std::endl;
+
+  std::string TempReg = RegClasses[0]->GetReg(0)->GetName();
+  OutStream << "static MCRegisterInfo *create" << TargetName << "MCRegisterInof(const Triple &TT) {"
+            << std::endl
+            << "\tMCRegisterInfo *X = new MCRegisterInfo();"
+            << std::endl
+            << "\tInit" << TargetName << "MCRegisterInof(X, "
+            << TargetName << "::" << TempReg << ");"
+            << std::endl
+            << "\treturn X;"
+            << std::endl
+            << "}" << std::endl << std::endl;
+
+  OutStream << "static MCSubtargetInfo *create" << TargetName << "MCSubtargetInfo(const Triple &TT,"
+            << std::endl
+            << "\t\t\tStringRef CPU, StringRef FS) {"
+            << std::endl
+            << "\tstd::string CPUName = CPU;"
+            << std::endl
+            << "\tif(CPUName.empty()) CPUName = \"generic-" << TargetName << "\";"
+            << std::endl
+            << "\treturn create" << TargetName << "MCSubtargetInfoImpl(TT, CPUName, FS);"
+            << std::endl
+            << "}" << std::endl << std::endl;
+
+  OutStream << "static MCInstPrinter *create" << TargetName << "MCInstPrinter(const Triple &T,"
+            << std::endl
+            << "\t\t\tunsigned SyntaxVariant, const MCAsmInfo &MAI, const MCInstrInfo &MII,"
+            << std::endl
+            << "\t\t\tconst MCRegisterInfo &MRI) {"
+            << std::endl
+            << "\treturn new " << TargetName << "InstPrinter(MAI, MII, MRI);"
+            << std::endl
+            << "}" << std::endl << std::endl;
+
+  OutStream << "static MCTargetStreamer *create" << TargetName << "ObjectTargetStreamer(MCStreamer &S, "
+            << "const MCSubtargetInfo &STI) {"
+            << std::endl
+            << "\tconst Triple &TT = STI.getTargetTriple();"
+            << "\tif(TT.isOSBinFormatELF()) return new " << TargetName << "TargetELFStreamer(S,STI);"
+            << std::endl
+            << "\treturn nullptr;"
+            << std::endl
+            << "}" << std::endl << std::endl;
+
+  OutStream << "static MCTargetStreamer *create" << TargetName << "AsmTargetStreamer(MCStream &S"
+            << std::endl
+            << "\t\t\tformatted_raw_ostream &OS, MCInstPrinter *InstPrint,"
+            << std::endl
+            << "\t\t\tbool isVerboseAsm) {"
+            << std::endl
+            << "\treturn new " << TargetName << "TargetAsmStreamer(S, OS);"
+            << std::endl
+            << "}" << std::endl << std::endl;
+
+  OutStream << "extern \"C\" void LLVMInitialize" << TargetName << "TargetMC() {"
+            << std::endl
+            << "\tfor (Target *T : {&getThe" << TargetName << "Target()}) {"
+            << "\t\tTargetRegistry::RegisterMCAsmInfo(*T, create" << TargetName << "MCAsmInfo);"
+            << std::endl
+            << "\t\tTargetRegistry::RegisterMCInstrInfo(*T, create" << TargetName << "MCInstrInfo);"
+            << std::endl
+            << "\t\tTargetRegistry::RegisterMCRegInfo(*T, create" << TargetName << "MCRegisterInfo);"
+            << std::endl
+            << "\t\tTargetRegistry::RegisterMCAsmBackend(*T, create" << TargetName << "AsmBackend);"
+            << std::endl
+            << "\t\tTargetRegistry::RegisterMCCodeEmitter(*T, create" << TargetName << "MCCodeEmitter);"
+            << std::endl
+            << "\t\tTargetRegistry::RegisterMCInstPrinter(*T, create" << TargetName << "MCInstPrinter);"
+            << std::endl
+            << "\t\tTargetRegistry::RegisterMCSubtargetInfo(*T, create" << TargetName << "MCSubtargetInfo);"
+            << std::endl
+            << "\t\tTargetRegistry::RegisterObjectTargetStreamer(*T, create" << TargetName << "ObjectTargetStreamer);"
+            << std::endl
+            << "\t\tTargetRegistry::RegisterAsmTargetStreamer(*T, create" << TargetName << "AsmTargetStreamer);"
+            << std::endl
+            << "\t}"
+            << std::endl
+            << "}" << std::endl << std::endl;
+
+  OutStream.close();
+
   return true;
 }
 
@@ -2069,7 +2256,7 @@ bool LLVM801CG::TIGenerateMCTargetStreamer(){
 
 bool LLVM801CG::TIGenerateMCTargetDesc(){
 
-  // Stage 1: CmakeLists.txt and LLVMBuild.txt
+  // Stage 1: CmakeLists.txt and LLVMBuild.txt; done;
   if( !TIGenerateMCBuild() )
     return false;
 
