@@ -2091,6 +2091,67 @@ bool LLVM801CG::TIGenerateMCInstPrinter(){
 }
 
 bool LLVM801CG::TIGenerateMCAsmInfo(){
+  // Stage 1: MCAsmInfo.h
+  std::string OutFile = LLVMRoot + "/MCTargetDesc/" + TargetName + "MCAsmInfo.h";
+  std::ofstream OutStream;
+  OutStream.open(OutFile,std::ios::trunc);
+  if( !OutStream.is_open() ){
+    Errno->SetError(CGERR_ERROR, "Could not open the MCAsmInfo header file: " + OutFile );
+    return false;
+  }
+
+  OutStream << "//===-- " << TargetName
+            << "MCAsmInfo.h - Define Target Descriptions" << TargetName
+            << " -------*- C++ -*-===//" << std::endl << std::endl;
+
+  OutStream << "#ifndef LLVM_LIB_TARGET_" << TargetName
+            << "_MCTARGETDESC_" << TargetName << "MCASMINFO_H" << std::endl;
+  OutStream << "#define LLVM_LIB_TARGET_" << TargetName
+            << "_MCTARGETDESC_" << TargetName << "MCASMINFO_H" << std::endl;
+
+  OutStream << "#include \"llvm/MC/MCAsmInfoELF.h\"" << std::endl;
+
+  OutStream << "namespace llvm{" << std::endl;
+  OutStream << "class Triple;" << std::endl;
+  OutStream << "class " << TargetName << "MCAsmInfo : public MCAsmInfoELF {" << std::endl;
+  OutStream << "\tvoid anchor() override;" << std::endl;
+  OutStream << "public:" << std::endl;
+  OutStream << "\texplicit " << TargetName << "MCAsmInfo(const Triple &TargetTriple);" << std::endl;
+  OutStream << "};" << std::endl;
+  OutStream << "}" << std::endl; //end namespace
+
+  OutStream << "#endif" << std::endl;
+
+  OutStream.close();
+
+  // Stage 2: MCAsmInfo.cpp
+  OutFile = LLVMRoot + "/MCTargetDesc/" + TargetName + "MCAsmInfo.cpp";
+  OutStream.open(OutFile,std::ios::trunc);
+  if( !OutStream.is_open() ){
+    Errno->SetError(CGERR_ERROR, "Could not open the MCAsmInfo implementation file: " + OutFile );
+    return false;
+  }
+
+  OutStream << "//===-- " << TargetName
+            << "MCAsmInfo.cpp - Define MCAsmInfo for " << TargetName
+            << " -----------===//" << std::endl << std::endl;
+
+  OutStream << "#include \"" << TargetName << "MCAsmInfo.h" << std::endl;
+  OutStream << "#include \"llvm/ADT/Triple.h\"" << std::endl;
+  OutStream << "using namespace llvm;" << std::endl << std::endl;
+  OutStream << "void " << TargetName << "MCAsmInfo::anchor() {}" << std::endl;
+  OutStream << TargetName << "MCAsmInfo::" << TargetName << "MCAsmInfo(const Triple &TT) {" << std::endl;
+  OutStream << "\tCodePointerSize = 8;"
+            << "\tCommentString = \"#\";"
+            << "\tAlignmentIsInBytes = false;"
+            << "\tSupportsDebugInformation = true;"
+            << "\tData16bitsDirective = \"\\t.half\\t\";"
+            << "\tData32bitsDirective = \"\\t.word\\t\";"
+            << std::endl;
+  OutStream << "}" << std::endl;
+
+  OutStream.close();
+
   return true;
 }
 
@@ -2391,7 +2452,7 @@ bool LLVM801CG::TIGenerateMCTargetDesc(){
   if( !TIGenerateMCInstPrinter() )
     return false;
 
-  // Stage 7: <TargetName>MCAsmInfo.{h,cpp}
+  // Stage 7: <TargetName>MCAsmInfo.{h,cpp}; done;
   if( !TIGenerateMCAsmInfo() )
     return false;
 
