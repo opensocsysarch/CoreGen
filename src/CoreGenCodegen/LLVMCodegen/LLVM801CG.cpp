@@ -2032,6 +2032,67 @@ bool LLVM801CG::TIGenerateMCAsmBackend(){
 }
 
 bool LLVM801CG::TIGenerateMCElfObjWriter(){
+  std::string OutFile = LLVMRoot + "/MCTargetDesc/" + TargetName + "ELFObjectWriter.cpp";
+  std::ofstream OutStream;
+  OutStream.open(OutFile,std::ios::trunc);
+  if( !OutStream.is_open() ){
+    Errno->SetError(CGERR_ERROR, "Could not open the ELFObjectFile implementation file: " + OutFile );
+    return false;
+  }
+
+  OutStream << "//===-- " << TargetName
+            << "ELFObjectWriter.cpp - ELFObjectWriter for " << TargetName
+            << " -------*- C++ -*-===//" << std::endl << std::endl;
+
+  OutStream << "#include \"MCTargetDesc/" << TargetName << "FixupKinds.h\"" << std::endl;
+  OutStream << "#include \"MCTargetDesc/" << TargetName << "MCTargetDesc.h\"" << std::endl;
+  OutStream << "#include \"llvm/MC/MCELFObjectWriter.h\"" << std::endl;
+  OutStream << "#include \"llvm/MC/MCFixup.h\"" << std::endl;
+  OutStream << "#include \"llvm/MC/MCObjectWriter.h\"" << std::endl;
+  OutStream << "#include \"llvm/Support/ErrorHandling.h\"" << std::endl << std::endl;
+
+  OutStream << "using namespace llvm;" << std::endl << std::endl;
+
+  OutStream << "namespace {" << std::endl;
+  OutStream << "class " << TargetName << "ELFObjectWriter : public MCELFObjectTargetWriter {"
+            << std::endl;
+  OutStream << "public:" << std::endl;
+  OutStream << "\t" << TargetName << "ELFObjectWriter(uint8_t OSABI, bool Is64Bit);" << std::endl;
+  OutStream << "\t~" << TargetName << "ELFObjectWriter() override;" << std::endl;
+  OutStream << "protected:" << std::endl;
+  OutStream << "\tunsigned getRelocType(MCContext &Ctx, const MCValue &Target,"
+            << std::endl
+            << "\t\t\tconst MCFixup &Fixup, bool IsPCRel) const override;" << std::endl;
+  OutStream << "};" << std::endl;
+  OutStream << "}" << std::endl << std::endl;
+
+  OutStream << TargetName << "ELFObjectWriter::" << TargetName
+            << "ELFObjectWriter(uint8_t OSABI, bool Is64Bit)"
+            << std::endl
+            << "\t: MCELFObjectTargetWriter(Is64Bit, OSABI, ELF::EM_"
+            << TargetName << ",false) {}" << std::endl;
+
+  OutStream << TargetName << "ELFObjectWriter::~" << TargetName
+            << "ELFObjectWriter() {}" << std::endl;
+
+  OutStream << "unsigned " << TargetName << "ELFObjectWriter::getRelocType(MCContext &Ctx,"
+            << std::endl
+            << "\t\t\tconst MCValue &Target, const MCFixup &Fixup, bool IsPCRel) const {"
+            << std::endl;
+  OutStream << "\tllvm_unreachable(\"no relocs implemented\");" << std::endl;
+  OutStream << "}" << std::endl << std::endl;
+
+  OutStream << "std::unique_ptr<MCObjectTargetWriter>"
+            << std::endl
+            << "llvm::create" << TargetName << "ELFObjectWriter(uint8_t OSABI, bool Is64Bit) {"
+            << std::endl
+            << "\treturn llvm::make_unique<" << TargetName
+            << "ELFObjectWriter>(OSABI, Is64Bit);"
+            << std::endl
+            << "}" << std::endl;
+
+  OutStream.close();
+
   return true;
 }
 
@@ -2518,7 +2579,7 @@ bool LLVM801CG::TIGenerateMCTargetDesc(){
   if( !TIGenerateMCAsmBackend() )
     return false;
 
-  // Stage 3: <TargetName>ElfObjectWriter.cpp
+  // Stage 3: <TargetName>ElfObjectWriter.cpp; done;
   if( !TIGenerateMCElfObjWriter() )
     return false;
 
