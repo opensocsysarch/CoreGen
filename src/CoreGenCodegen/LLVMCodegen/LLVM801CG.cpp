@@ -2578,6 +2578,86 @@ bool LLVM801CG::TIGenerateMCAsmInfo(){
 }
 
 bool LLVM801CG::TIGenerateMCCodeEmitter(){
+  std::string OutFile = LLVMRoot + "/MCTargetDesc/" + TargetName + "MCCodeEmitter.cpp";
+  std::ofstream OutStream;
+  OutStream.open(OutFile,std::ios::trunc);
+  if( !OutStream.is_open() ){
+    Errno->SetError(CGERR_ERROR, "Could not open the MCCodeEmitter implementation file: " + OutFile );
+    return false;
+  }
+
+  OutStream << "//===-- " << TargetName
+            << "MCCodeEmitter.cpp - ELFObjectWriter for " << TargetName
+            << " -------*- C++ -*-===//" << std::endl << std::endl;
+
+  OutStream << "#include \"MCTargetDesc/" << TargetName << "FixupKinds.h\"" << std::endl;
+  OutStream << "#include \"MCTargetDesc/" << TargetName << "MCExpr.h\"" << std::endl;
+  OutStream << "#include \"MCTargetDesc/" << TargetName << "MCTargetDesc.h\"" << std::endl;
+
+  OutStream << "using namespace llvm;" << std::endl << std::endl;
+
+  OutStream << "#define DEBUG_TYPE \"mccodeemitter\"" << std::endl;
+
+  OutStream << "STATISTIC(MCNumEmitted, \"Number of MC instructions emitted\");" << std::endl;
+  OutStream << "STATISTIC(MCNumFixups, \"Number of MC fixups created\");" << std::endl << std::endl;
+
+  OutStream << "namespace {" << std::endl;
+  OutStream << "class " << TargetName << "MCCodeEmitter : public MCCodeEmitter {" << std::endl;
+  OutStream << "\t" << TargetName << "MCCodeEmitter(const " << TargetName << "MCCodeEmitter &) = delete;" << std::endl;
+  OutStream << "\tvoid operator=(const " << TargetName << "MCCodeEmitter &) = delete;" << std::endl;
+  OutStream << "\tMCContext &Ctx;" << std::endl;
+  OutStream << "\tMCInstrInfo const &MCII;" << std::endl;
+  OutStream << "public:" << std::endl;
+  OutStream << "\t" << TargetName << "MCCodeEmitter(MCContext &ctx, MCInstrInfo const &MCII)"
+            << "\t\t : Ctx(ctx), MCII(MCII) {}" << std::endl;
+  OutStream << "\t~" << TargetName << "MCCodeEmitter() override {}" << std::endl;
+  OutStream << "\tvoid encodeInstruction(const MCInst &MI, raw_ostream &OS,"
+            << "\t\tSmallVectorImpl<MCFixup> &Fixups, const MCSubtargetInfo &STI) const override;"
+            << std::endl;
+  OutStream << "\tunsigned getMachineOpValue(const MCInst &MI, const MCOperand &MO,"
+            << "\t\tSmallVectorImpl<MCFixup> &Fixups, const MCSubtargetInfo &STI) const;"
+            << std::endl;
+  OutStream << "};" << std::endl;
+  OutStream << "}" << std::endl;    //end anonymous namespace
+
+  OutStream << "MCCodeEmitter *llvm::create" << TargetName << "MCCodeEmitter(const MCInstrInfo &MCII,"
+            << std::endl
+            << "\t\t\tconst MCRegisterInfo &MRI, MCContext &Ctx) {"
+            << std::endl
+            << "\treturn new " << TargetName << "MCCodeEmitter(Ctx, MCII);"
+            << std::endl
+            << "}" << std::endl << std::endl;
+
+  OutStream << "void " << TargetName << "MCCodeEmitter::encodeInstruction(const MCInst &MI, raw_ostream &OS,"
+            << std::endl
+            << "\t\t\tSmallVectorImpl<MCFixup> &Fixups, const MCSubtargetInfo &STI) const {"
+            << std::endl
+            << "\tconst MCInstrDesc &Desc = MCII.get(MI.getOpcode());"
+            << std::endl
+            << "\tuint32_t Bits = getBinaryCodeForInstr(MI, Fixups, STI);"
+            << std::endl
+            << "\tsupport::endian::write(OS, Bits, support::little);"
+            << std::endl
+            << "\t++MCNumEmitted;"
+            << std::endl
+            << "}" << std::endl << std::endl;
+
+  OutStream << "unsigned " << TargetName << "MCCodeEmitter::getMachineOpValue(const MCInst &MI, const MCOperand &MO,"
+            << std::endl
+            << "\t\t\tSmallVectorImpl<MCFixup> &Fixups, const MCSubtargetInfo &STI) const {"
+            << std::endl
+            << "\tif (MO.isReg())" << std::endl
+            << "\t\treturn Ctx.getRegisterInfo()->getEncodingValue(MO.getReg());" << std::endl
+            << "\tif (MO.isImm())" << std::endl
+            << "\t\treturn static_cast<unsigned>(MO.getImm());" << std::endl
+            << "\tllvm_unreachable(\"Unhandled expression!\");" << std::endl
+            << "\treturn 0;" << std::endl
+            << "}" << std::endl;
+
+  OutStream << "#include \"" << TargetName << "GenMCCodeEmitter.inc\"" << std::endl;
+
+  OutStream.close();
+
   return true;
 }
 
@@ -2878,7 +2958,7 @@ bool LLVM801CG::TIGenerateMCTargetDesc(){
   if( !TIGenerateMCAsmInfo() )
     return false;
 
-  // Stage 8: <TargetName>MCCodeEmitter.cpp
+  // Stage 8: <TargetName>MCCodeEmitter.cpp; done;
   if( !TIGenerateMCCodeEmitter() )
     return false;
 
