@@ -2028,6 +2028,142 @@ bool LLVM801CG::TIGenerateMCBuild(){
 }
 
 bool LLVM801CG::TIGenerateMCAsmBackend(){
+  // Stage 1: AsmBackend.h
+  std::string OutFile = LLVMRoot + "/MCTargetDesc/" + TargetName + "AsmBackend.h";
+  std::ofstream OutStream;
+  OutStream.open(OutFile,std::ios::trunc);
+  if( !OutStream.is_open() ){
+    Errno->SetError(CGERR_ERROR, "Could not open the AsmBackend header file: " + OutFile );
+    return false;
+  }
+
+  OutStream << "//===-- " << TargetName
+            << "AsmBackend.h - Defines the Assembler Backend" << TargetName
+            << " -------*- C++ -*-===//" << std::endl << std::endl;
+
+  OutStream << "#ifndef LLVM_LIB_TARGET_" << TargetName
+            << "_" << TargetName << "ASMBACKEND_H" << std::endl;
+  OutStream << "#define LLVM_LIB_TARGET_" << TargetName
+            << "_" << TargetName << "ASMBACKEND_H" << std::endl;
+
+  OutStream << "#include \"MCTargetDesc/" << TargetName << "FixupKinds.h" << std::endl;
+  OutStream << "#include \"MCTargetDesc/" << TargetName << "MCTargetDesc.h" << std::endl;
+  OutStream << "#include \"llvm/MC/MCAsmBackend.h" << std::endl;
+  OutStream << "#include \"llvm/MC/MCFixupKindInfo.h" << std::endl;
+  OutStream << "#include \"llvm/MC/MCSubtargetInfo.h" << std::endl;
+
+  OutStream << "namespace llvm {" << std::endl;
+  OutStream << "class MCAssembler;" << std::endl;
+  OutStream << "class MCObjectTargetWriter;" << std::endl;
+  OutStream << "class raw_ostream;" << std::endl << std::endl;
+
+  OutStream << "class " << TargetName << "AsmBackend : public MCAsmBackend {" << std::endl;
+  OutStream << "\tconst MCSubtargetInfo &STI;"
+            << std::endl
+            << "\tuint8_t OSABI;"
+            << std::endl
+            << "\tbool Is64Bit;"
+            << std::endl
+            << "\tconst MCTargetOptions &TargetOptions;"
+            << std::endl
+            << "\t" << TargetName << "ABI::ABI TargetABI = " << TargetName
+            << "ABI::ABI_Unknown;" << std::endl << std::endl;
+  OutStream << "public:" << std::endl;
+  OutStream << "\t" << TargetName << "AsmBackend(const MCSubtargetInfo &STI, uint8_t OSABI, bool Is64Bit,"
+            << std::endl
+            << "\t\t\tconst MCTargetOptions &Options)"
+            << std::endl
+            << "\t\t: MCAsmBackend(support::little), STI(STI), OSABI(OSABI), Is64Bit(Is64Bit),"
+            << std::endl
+            << "\t\t\tTargetOptions(Options) {"
+            << std::endl;
+  OutStream << "\t\t" << TargetName
+            << "Features::validate(STI.getTargetTriple(), STI.getFeatureBits());" << std::endl;
+  OutStream << "\t}" << std::endl;
+  OutStream << "\t~" << TargetName << "AsmBackend() override {}" << std::endl;
+  OutStream << "\tunsigned getNumFixupKinds() const override {"
+            << std::endl
+            << "\t\treturn " << TargetName << "::NumTargetFixupKinds;"
+            << std::endl
+            << "\t}" << std::endl << std::endl;
+  OutStream << "\tconst MCFixupKindInfo &getFixupKindInfo(MCFixupKind Kind) const override {"
+            << std::endl
+            << "\t\tconst static MCFixupKindInfo Infos[] = {"
+            << std::endl
+            << "\t\t\t{\"fixup_" << TargetName << "_branch\",0,32,MCFixupKindInfo::FKF_IsPCRel },"
+            << std::endl
+            << "\t\t\t{\"fixup_" << TargetName << "_call\",0,64,MCFixupKindInfo::FKF_IsPCRel },"
+            << std::endl
+            << "\t\t};"
+            << std::endl
+            << "\t\tstatic_assert((array_lengthof(Infos)) == " << TargetName << "::NumTargetFixupKinds,"
+            << std::endl
+            << "\t\t\t\"Not all fixup kinds added to Infos array\");"
+            << std::endl
+            << "\t\tif (Kind < FirstTargetFixupKind)"
+            << std::endl
+            << "\t\t\treturn MCAsmBackend::getFixupKindInfo(Kind);"
+            << std::endl
+            << "\t\tassert(unsigned(Kind - FirstTargetFixupKind) < getNumFixupKinds() &&"
+            << std::endl
+            << "\t\t\t\"Invalid kind!\");"
+            << std::endl
+            << "\t\treturn Infos[Kind - FirstTargetFixupKind];"
+            << std::endl
+            << "\t}" << std::endl << std::endl;
+  OutStream << "\tconst MCTargetOptions &getTargetOptions() const { return TargetOptions; }" << std::endl << std::endl;
+  OutStream << "\t" << TargetName << "ABI::ABI getTargetABI() const { return TargetABI; }" << std::endl << std::endl;
+  OutStream << "};" << std::endl;
+  OutStream << "}" << std::endl;  // end namespace
+  OutStream << "#endif" << std::endl;
+
+  OutStream.close();
+
+  OutFile = LLVMRoot + "/MCTargetDesc/" + TargetName + "AsmBackend.cpp";
+  OutStream.open(OutFile,std::ios::trunc);
+  if( !OutStream.is_open() ){
+    Errno->SetError(CGERR_ERROR, "Could not open the AsmBackend implementation file: " + OutFile );
+    return false;
+  }
+
+  OutStream << "//===-- " << TargetName
+            << "AsmBackend.cpp - Define AsmBackend for " << TargetName
+            << " -----------===//" << std::endl << std::endl;
+
+  OutStream << "#include \"" << TargetName << "AsmBackend.h\"" << std::endl;
+  OutStream << "#include \"" << TargetName << "MCExpr.h\"" << std::endl;
+  OutStream << "#include \"llvm/ADT/APInt.h\"" << std::endl;
+  OutStream << "#include \"llvm/MC/MCAssembler.h\"" << std::endl;
+  OutStream << "#include \"llvm/MC/MCContext.h\"" << std::endl;
+  OutStream << "#include \"llvm/MC/MCDirectives.h\"" << std::endl;
+  OutStream << "#include \"llvm/MC/MCELFObjectWriter.h\"" << std::endl;
+  OutStream << "#include \"llvm/MC/MCExpr.h\"" << std::endl;
+  OutStream << "#include \"llvm/MC/MCObjectWriter.h\"" << std::endl;
+  OutStream << "#include \"llvm/MC/MCSymbol.h\"" << std::endl;
+  OutStream << "#include \"llvm/MC/MCValue.h\"" << std::endl;
+  OutStream << "#include \"llvm/Support/ErrorHandling.h\"" << std::endl;
+  OutStream << "#include \"llvm/Support/raw_ostream.h\"" << std::endl << std::endl;
+
+  OutStream << "using namespace llvm;" << std::endl << std::endl;
+
+  OutStream << "std::unique_ptr<MCObjectTargetWriter>"
+            << std::endl
+            << TargetName << "AsmBackend::createObjectTargetWriter() const {"
+            << std::endl
+            << "\treturn create" << TargetName << "ELFObjectWriter(OSABI, Is64Bit);"
+            << std::endl
+            << "}" << std::endl << std::endl;
+  OutStream << "MCAsmBackend *llvm::createRISCVAsmBackend(const Target &T,"
+            << std::endl
+            << "\t\t\tconst MCSubtargetInfo &STI,const MCRegisterInfo &MRI,const MCTargetOptions &Options) {"
+            << std::endl
+            << "\tconst Triple &TT = STI.getTargetTriple();"
+            << "\tuint8_t OSABI = MCELFObjectTargetWriter::getOSABI(TT.getOS());"
+            << "\treturn new " << TargetName << "AsmBackend(STI, OSABI, TT.isArch64Bit(), Options);"
+            << "}" << std::endl;
+
+  OutStream.close();
+
   return true;
 }
 
@@ -2575,7 +2711,7 @@ bool LLVM801CG::TIGenerateMCTargetDesc(){
   if( !TIGenerateMCBuild() )
     return false;
 
-  // Stage 2: <TargetName>AsmBackend.{h,cpp}
+  // Stage 2: <TargetName>AsmBackend.{h,cpp}; done;
   if( !TIGenerateMCAsmBackend() )
     return false;
 
