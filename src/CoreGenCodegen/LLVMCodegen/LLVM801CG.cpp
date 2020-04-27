@@ -2662,6 +2662,123 @@ bool LLVM801CG::TIGenerateMCCodeEmitter(){
 }
 
 bool LLVM801CG::TIGenerateMCExpr(){
+  // Stage 1: MCExpr.h
+  std::string OutFile = LLVMRoot + "/MCTargetDesc/" + TargetName + "MCExpr.h";
+  std::ofstream OutStream;
+  OutStream.open(OutFile,std::ios::trunc);
+  if( !OutStream.is_open() ){
+    Errno->SetError(CGERR_ERROR, "Could not open the MCExpr header file: " + OutFile );
+    return false;
+  }
+
+  OutStream << "//===-- " << TargetName
+            << "MCExpr.h - Define Target Descriptions" << TargetName
+            << " -------*- C++ -*-===//" << std::endl << std::endl;
+
+  OutStream << "#ifndef LLVM_LIB_TARGET_" << TargetName << "MCTARGETDESC_"
+            << TargetName << "MCEXPR_H" << std::endl;
+  OutStream << "#define LLVM_LIB_TARGET_" << TargetName << "MCTARGETDESC_"
+            << TargetName << "MCEXPR_H" << std::endl << std::endl;
+
+  OutStream << "#include \"llvm/MC/MCExpr.h\"" << std::endl << std::endl;
+
+  OutStream << "namespace llvm {" << std::endl;
+  OutStream << "class StringRef;" << std::endl;
+  OutStream << "class MCOperand;" << std::endl;
+  OutStream << "class " << TargetName << "MCExpr : public MCTargetExpr {" << std::endl;
+  OutStream << "public: " << std::endl;
+  OutStream << "\tenum VariantKind {" << std::endl
+            << "\t\tVK_" << TargetName << "_None," << std::endl
+            << "\t\tVK_" << TargetName << "_CALL," << std::endl
+            << "\t\tVK_" << TargetName << "_Invalid" << std::endl
+            << "\t};" << std::endl;
+  OutStream << "private:" << std::endl;
+  OutStream << "\tconst MCExpr *Expr;" << std::endl;
+  OutStream << "\tconst VariantKind Kind;" << std::endl;
+  OutStream << "\texplicit " << TargetName << "MCExpr(const MCExpr *Expr, VariantKind Kind)"
+            << std::endl
+            << "\t\t\t: Expr(Expr), Kind(Kind) {}" << std::endl;
+  OutStream << "public:" << std::endl;
+  OutStream << "\tstatic const " << TargetName << "MCExpr *create(const MCExpr *Expr, VariantKind Kind,"
+            << std::endl
+            << "\t\t\tMCContext &Ctx);" << std::endl;
+  OutStream << "\tVariantKind getKind() const { return Kind; }" << std::endl;
+  OutStream << "\tconst MCExpr *getSubExpr() const { return Expr; }" << std::endl;
+
+  OutStream << "\tvoid printImpl(raw_ostream &OS, const MCAsmInfo *MAI) const override;" << std::endl;
+  OutStream << "\tvoid visitUsedExpr(MCStreamer &Streamer) const override;" << std::endl;
+  OutStream << "\tMCFragment *findAssociatedFragment() const override {"
+            << std::endl
+            << "\t\treturn getSubExpr()->findAssociatedFragment();"
+            << "\t}" << std::endl;
+  OutStream << "\tstatic bool classof(const MCExpr *E) {" << std::endl
+            << "\t\treturn E->getKind() == MCExpr::Target;" << std::endl
+            << "\t}" << std::endl;
+  OutStream << "\tstatic bool classof(const " << TargetName << "MCExpr *) { return true; }" << std::endl;
+  OutStream << "};" << std::endl;
+
+  OutStream << "}" << std::endl;
+
+  OutStream.close();
+
+  // Stage 2: MCExpr.cpp
+  OutFile = LLVMRoot + "/MCTargetDesc/" + TargetName + "MCExpr.cpp";
+  OutStream.open(OutFile,std::ios::trunc);
+  if( !OutStream.is_open() ){
+    Errno->SetError(CGERR_ERROR, "Could not open the MCExpr implementation file: " + OutFile );
+    return false;
+  }
+
+  OutStream << "//===-- " << TargetName
+            << "MCExpr.cpp - Define TargetDesc for " << TargetName
+            << " -----------===//" << std::endl << std::endl;
+
+  OutStream << "#include \"" << TargetName << "MCExpr.h\"" << std::endl;
+  OutStream << "#include \"MCTargetDesc/" << TargetName << "AsmBackend.h\"" << std::endl;
+  OutStream << "#include \"" << TargetName << ".h\"" << std::endl;
+  OutStream << "#include \"" << TargetName << "FixupKinds.h\"" << std::endl;
+  OutStream << "#include \"llvm/BinaryFormat/ELF.h\"" << std::endl;
+  OutStream << "#include \"llvm/MC/MCAsmLayout.h\"" << std::endl;
+  OutStream << "#include \"llvm/MC/MCAssembler.h\"" << std::endl;
+  OutStream << "#include \"llvm/MC/MCContext.h\"" << std::endl;
+  OutStream << "#include \"llvm/MC/MCStreamer.h\"" << std::endl;
+  OutStream << "#include \"llvm/MC/MCSymbolELF.h\"" << std::endl;
+  OutStream << "#include \"llvm/MC/MCValue.h\"" << std::endl;
+  OutStream << "#include \"llvm/Support/ErrorHandling.h\"" << std::endl << std::endl;
+
+  OutStream << "using namespace llvm;" << std::endl << std::endl;
+
+  OutStream << "#define DEBUG_TYPE \"" << TargetName << "mcexpr\"" << std::endl;
+
+  OutStream << "const " << TargetName << "MCExpr *" << TargetName << "MCExpr::create(const MCExpr *Expr, VariantKind Kind,"
+            << std::endl
+            << "\t\t\tMCContext &Ctx) {"
+            << std::endl
+            << "\treturn new (Ctx) " << TargetName << "MCExpr(Expr, Kind);"
+            << std::endl
+            << "}" << std::endl << std::endl;
+
+  OutStream << "void " << TargetName << "MCExpr::printImpl(raw_ostream &OS, const MCAsmInfo *MAI) const {"
+            << std::endl
+            << "\tVariantKind Kind = getKind();"
+            << std::endl
+            << "\tbool HasVariant = ((Kind != VK_" << TargetName << "_None) && (Kind != VK_" << TargetName << "_Call));"
+            << std::endl
+            << "\tif (HasVariant)" << std::endl
+            << "\t\tOS << '%' << getVariantKindName(getKind()) << '(';" << std::endl
+            << "\tExpr->print(OS,MAI);" << std::endl
+            << "\tif (HasVariant)" << std::endl
+            << "\t\tOS << ')';" << std::endl
+            << "}" << std::endl << std::endl;
+
+  OutStream << "void " << TargetName << "MCExpr::visitUsedExpr(MCStreamer &Streamer) const {"
+            << std::endl
+            << "\tStreamer.visitUsedExpr(*getSubExpr());"
+            << std::endl
+            << "}" << std::endl << std::endl;
+
+  OutStream.close();
+
   return true;
 }
 
@@ -2962,7 +3079,7 @@ bool LLVM801CG::TIGenerateMCTargetDesc(){
   if( !TIGenerateMCCodeEmitter() )
     return false;
 
-  // Stage 9: <TargetName>MCExpr.{h,cpp}
+  // Stage 9: <TargetName>MCExpr.{h,cpp}; done;
   if( !TIGenerateMCExpr() )
     return false;
 
