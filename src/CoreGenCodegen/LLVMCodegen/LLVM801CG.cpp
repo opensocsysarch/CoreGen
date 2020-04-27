@@ -2366,6 +2366,149 @@ bool LLVM801CG::TIGenerateMCFixupKinds(){
 }
 
 bool LLVM801CG::TIGenerateMCInstPrinter(){
+  // Stage 1: InstPrinter.h
+  std::string OutFile = LLVMRoot + "/MCTargetDesc/" + TargetName + "InstPrinter.h";
+  std::ofstream OutStream;
+  OutStream.open(OutFile,std::ios::trunc);
+  if( !OutStream.is_open() ){
+    Errno->SetError(CGERR_ERROR, "Could not open the InstPrinter header file: " + OutFile );
+    return false;
+  }
+
+  OutStream << "//===-- " << TargetName
+            << "InstPrinter.h - Define Target Descriptions" << TargetName
+            << " -------*- C++ -*-===//" << std::endl << std::endl;
+
+  OutStream << "#ifndef LLVM_LIB_TARGET_" << TargetName
+            << "_MCTARGETDESC_" << TargetName << "INSTPRINTER_H" << std::endl;
+  OutStream << "#define LLVM_LIB_TARGET_" << TargetName
+            << "_MCTARGETDESC_" << TargetName << "INSTPRINTER_H" << std::endl;
+
+  OutStream << "#include \"MCTargetDesc/" << TargetName << "MCTargetDesc.h\"" << std::endl;
+  OutStream << "#include \"llvm/MC/MCInstPrinter.h\"" << std::endl << std::endl;
+
+  OutStream << "namespace llvm{" << std::endl;
+  OutStream << "class MCOperand;" << std::endl;
+  OutStream << "class " << TargetName << "InstPrinter : public MCInstrInfo &MII,"
+            << std::endl
+            << "\t\t\tconst MCRegisterInfo &MRI)"
+            << std::endl
+            << "\t\tMCInstPrinter(MAI, MII, MRI) {}" << std::endl;
+  OutStream << "\tvoid printInst(const MCInst *MI, raw_ostream &O, StringRef Annot, const MCSubtargetInfo &STI) override;" << std::endl;
+  OutStream << "\tvoid printRegName(raw_ostream &O, unsigned RegNo) const override;" << std::endl;
+  OutStream << "\tvoid printOperand(const MCInst *MI, unsigned OpNo, const MCSubtargetInfo &STI,raw_ostream &O, const char *Modifier = nullptr);" << std::endl;
+  OutStream << "\tvoid printInstruction(const MCInst *MI, const MCSubtargetInfo &STI,raw_ostream &O);" << std::endl;
+  OutStream << "\tbool printAliasInstr(const MCInst *MI, const MCSubtargetInfo &STI,raw_ostream &O);" << std::endl;
+  OutStream << "\tvoid printCustomAliasOperand(const MCInst *MI, unsigned OpIdx,unsigned PrintMethodIdx,const MCSubtargetInfo &STI, raw_ostream &O);" << std::endl;
+  OutStream << "\tstatic const char *getRegisterName(unsigned RegNo,unsigned AltIdx = RISCV::ABIRegAltName);" << std::endl;
+  OutStream << "};" << std::endl;
+  OutStream << "}" << std::endl; //end namespace
+
+  OutStream << "#endif" << std::endl;
+
+  OutStream.close();
+
+  // Stage 2: InstPrinter.cpp
+  OutFile = LLVMRoot + "/MCTargetDesc/" + TargetName + "InstPrinter.cpp";
+  OutStream.open(OutFile,std::ios::trunc);
+  if( !OutStream.is_open() ){
+    Errno->SetError(CGERR_ERROR, "Could not open the InstPrinter implementation file: " + OutFile );
+    return false;
+  }
+
+  OutStream << "//===-- " << TargetName
+            << "InstPrinter.cpp - Define InstPrinter for " << TargetName
+            << " -----------===//" << std::endl << std::endl;
+
+  OutStream << "#include \"" << TargetName << "InstPrinter.h" << std::endl;
+  OutStream << "#include \"MCTargetDesc/" << TargetName << "MCExpr.h" << std::endl;
+  OutStream << "#include \"llvm/MC/MCAsmInfo.h\"" << std::endl;
+  OutStream << "#include \"llvm/MC/MCExpr.h\"" << std::endl;
+  OutStream << "#include \"llvm/MC/MCInst.h\"" << std::endl;
+  OutStream << "#include \"llvm/MC/MCRegisterInfo.h\"" << std::endl;
+  OutStream << "#include \"llvm/MC/MCSubtargetInfo.h\"" << std::endl;
+  OutStream << "#include \"llvm/MC/MCSymbol.h\"" << std::endl;
+  OutStream << "#include \"llvm/Support/CommandLine.h\"" << std::endl;
+  OutStream << "#include \"llvm/Support/ErrorHandling.h\"" << std::endl;
+  OutStream << "#include \"llvm/Support/FormattedStream.h\"" << std::endl;
+  OutStream << "using namespace llvm;" << std::endl << std::endl;
+
+  OutStream << "#define DEBUG_TYPE \"asm-printer\"" << std::endl << std::endl;
+
+  OutStream << "#define PRINT_ALIAS_INSTR" << std::endl;
+  OutStream << "#include \"" << TargetName << "GenAsmWriter.inc\"" << std::endl;
+
+  OutStream << "static cl::opt<bool>"
+            << std::endl
+            << "\tNoAliases(\"" << TargetName << "-no-aliases\","
+            << std::endl
+            << "\tcl::desc(\"Disable the emission of assembler pseudo instructions\"),"
+            << "\tcl::init(false), cl::Hidden);" << std::endl << std::endl;
+
+  OutStream << "void " << TargetName << "InstPrinter::printInst(const MCInst *MI, raw_ostream &O,"
+            << std::endl
+            << "\t\t\tStringRef Annot, const MCSubtargetInfo &STI) {"
+            << std::endl
+            << "\tbool Res = false;"
+            << std::endl
+            << "\tconst MCInst *NewMI = MI;"
+            << std::endl
+            << "\tMCInst UncompressedMI;"
+            << std::endl
+            << "\tif (!NoAliases)"
+            << std::endl
+            << "\t\tRes = uncompressInst(UncompressedMI, *MI, MRI, STI);"
+            << std::endl
+            << "\tif (Res)"
+            << std::endl
+            << "\t\tNewMI = const_cast<MCInst *>(&UncompressedMI);"
+            << std::endl
+            << "\tif (NoAliases || !printAliasInstr(NewMI, STI, O))"
+            << std::endl
+            << "\t\tprintInstruction(NewMI, STI, O);"
+            << std::endl
+            << "\tprintAnnotation(O, Annot);"
+            << std::endl
+            << "}" << std::endl << std::endl;
+
+  OutStream << "void " << TargetName << "InstPrinter::printRegName(raw_ostream &O, unsigned RegNo) const {"
+            << std::endl
+            << "\tO << getRegisterName(regNo);"
+            << std::endl
+            << "}" << std::endl << std::endl;
+
+  OutStream << "void " << TargetName << "InstPrinter::printOperand(const MCInst *MI, unsigned OpNo,"
+            << std::endl
+            << "\t\t\tconst MCSubtargetInfo &STI, raw_ostream &O, const char *Modifier) {"
+            << std::endl
+            << "\tassert((Modifier == 0 || Modifier[0] == 0) && \"No modifiers supported\");"
+            << std::endl
+            << "\tconst MCOperand &MO = MI->getOperand(OpNo);"
+            << std::endl
+            << "\tif (MO.isReg()) {"
+            << std::endl
+            << "\t\tprintRegName(O, MO.getReg());"
+            << std::endl
+            << "\t\treturn;"
+            << std::endl
+            << "\t}"
+            << std::endl
+            << "\tif (MO.isImm()) {"
+            << std::endl
+            << "\t\tO << MO.getImm();"
+            << std::endl
+            << "\t\treturn;"
+            << std::endl
+            << "\t}"
+            << std::endl
+            << "\tassert(MO.isExpr() && \"Unknown operand kind in printOperand\");"
+            << std::endl
+            << "\tMO.getExpr()->print(O, &MAI);"
+            << std::endl
+            << "}" << std::endl;
+
+  OutStream.close();
+
   return true;
 }
 
@@ -2727,7 +2870,7 @@ bool LLVM801CG::TIGenerateMCTargetDesc(){
   if( !TIGenerateMCFixupKinds() )
     return false;
 
-  // Stage 6: <TargetName>InstPrinter,{h,cpp}
+  // Stage 6: <TargetName>InstPrinter,{h,cpp}; done;
   if( !TIGenerateMCInstPrinter() )
     return false;
 
