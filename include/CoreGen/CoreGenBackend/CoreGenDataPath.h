@@ -37,6 +37,12 @@ public:
   /// Overloaded Constructor
   CoreGenDataPath( std::string Name, std::string Style,CoreGenErrno *Errno );
 
+  /// Sets the target style
+  bool SetStyle(std::string S) { Style = S; return true; }
+
+  /// Retrieves the target style
+  std::string GetStyle() { return Style; }
+
   /// Default Destructor
   ~CoreGenDataPath();
 };
