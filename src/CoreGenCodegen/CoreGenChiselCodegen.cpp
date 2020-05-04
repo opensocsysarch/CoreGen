@@ -14,10 +14,12 @@ CoreGenChiselCodegen::CoreGenChiselCodegen( CoreGenNode *T,
                                             CoreGenProj *P,
                                             std::string R,
                                             CoreGenErrno *E )
-  : Top(T), Proj(P), ChiselRoot(R), Errno(E) {
+  : Top(T), Proj(P), ChiselRoot(R), Errno(E)  {
+    Parms = new CoreGenChiselParms<std::string, std::string>(E);
 }
 
 CoreGenChiselCodegen::~CoreGenChiselCodegen(){
+  if(Parms) { delete Parms; }
 }
 
 CoreGenNode *CoreGenChiselCodegen::GetRegClassISANode(CoreGenNode *N){
@@ -71,6 +73,32 @@ bool CoreGenChiselCodegen::ExecSpadCodegen(CoreGenNode *N){
   return rtn;
 }
 
+bool CoreGenChiselCodegen::ExecDataPathCodegen(CoreGenNode *N){
+
+  std::string Package = Proj->GetProjName();
+  std::string FullPath = ChiselRoot;
+
+  FullPath += ("/" + N->GetName());
+
+  if( !CGMkDirP(FullPath) ){
+    Errno->SetError(CGERR_ERROR, "Could not construct DataPath directory: "
+                      + FullPath );
+    return false;
+  }
+
+  FullPath += "/DataPath.chisel";
+
+  DPathCG *CG = new DPathCG(N,Proj,Package,FullPath,false,Errno);
+  bool rtn = true;
+  if( !CG->Execute() ){
+    rtn = false;
+  }
+
+  delete CG;
+
+  return rtn;
+    
+}
 bool CoreGenChiselCodegen::ExecISACodegen(CoreGenNode *N){
   // build a vector of all the instructions contained within the ISA
   std::vector<CoreGenInst *> Insts;
@@ -160,6 +188,91 @@ bool CoreGenChiselCodegen::ExecRegClassCodegen(CoreGenNode *N){
 
   delete CG;
 
+  return rtn;
+}
+
+bool CoreGenChiselCodegen::ExecCacheTemplateCodegen(CoreGenNode *N){
+  std::string FullPath = ChiselRoot + "/common/"
+                                    + CGRemoveDot(N->GetName())
+                                    + ".chisel";
+  std::string Package = Proj->GetProjName();
+
+  CacheCG *CG = new CacheCG(N,Proj,Package,FullPath,true,Errno);
+  bool rtn = true;
+  if( !CG->ExecutePlugin() ){
+    rtn = false;
+  }
+
+  delete CG;
+  return rtn;
+}
+
+bool CoreGenChiselCodegen::ExecPluginTemplateCodegen(CoreGenNode *N){
+  bool rtn = true;
+
+  // determine if we need to create a template interface block
+  switch( N->GetType() ){
+  case CGSoc:
+    break;
+  case CGCore:
+    break;
+#if 0
+  case CGInstF:
+  break;
+#endif
+  case CGInst:
+    break;
+#if 0
+  case CGPInst:
+  break;
+#endif
+  case CGRegC:
+    break;
+#if 0
+  case CGReg:
+  break;
+#endif
+  case CGISA:
+    break;
+  case CGCache:
+    rtn = ExecCacheTemplateCodegen(N);
+    break;
+#if 0
+  case CGEnc:
+  break;
+#endif
+  case CGExt:
+    break;
+  case CGComm:
+    break;
+  case CGSpad:
+    break;
+  case CGMCtrl:
+    break;
+  case CGVTP:
+    break;
+  case CGPlugin:
+    break;
+  default:
+    break;
+  }
+
+  return rtn;
+}
+
+bool CoreGenChiselCodegen::ExecCacheCodegen(CoreGenNode *N){
+  std::string FullPath = ChiselRoot + "/common/"
+                                    + CGRemoveDot(N->GetName())
+                                    + ".chisel";
+  std::string Package = Proj->GetProjName();
+
+  CacheCG *CG = new CacheCG(N,Proj,Package,FullPath,true,Errno);
+  bool rtn = true;
+  if( !CG->Execute() ){
+    rtn = false;
+  }
+
+  delete CG;
   return rtn;
 }
 
@@ -324,7 +437,10 @@ bool CoreGenChiselCodegen::Execute(){
   CoreGenNode *SocNode = nullptr;
 
   for( unsigned i=0; i<Top->GetNumChild(); i++ ){
+
     if( Top->GetChild(i)->IsOverridden() ){
+      if( !ExecPluginTemplateCodegen(Top->GetChild(i)) )
+        rtn = false;
       if( !ExecPluginCodegen(Top->GetChild(i)) )
           rtn = false;
     }
@@ -364,6 +480,14 @@ bool CoreGenChiselCodegen::Execute(){
       }
       break;
     case CGCache:
+      if( !ExecCacheCodegen(Top->GetChild(i)) ){
+        rtn = false;
+      }
+      break;
+    case CGDPath:
+        if( !ExecDataPathCodegen(Top->GetChild(i) )){
+         rtn = false;
+        }
       break;
 #if 0
     case CGEnc:

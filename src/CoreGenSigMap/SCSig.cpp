@@ -26,9 +26,9 @@ SCSig::SCSig(SigType T,std::string I)
   Name = this->SigTypeToStr();
 }
 
-SCSig::SCSig(SigType T,unsigned W,std::string I)
+SCSig::SCSig(SigType T,unsigned W,std::string I,std::string P)
   : Type(T), FType(FOP_UNK), SigWidth(W),
-    DistanceTrue(0), DistanceFalse(0), Inst(I){
+    DistanceTrue(0), DistanceFalse(0), Inst(I),PipeName(P){
   Name = this->SigTypeToStr();
 }
 
@@ -37,21 +37,21 @@ SCSig::SCSig(SigType T,std::string I,std::string N)
     DistanceTrue(0), DistanceFalse(0), Inst(I), Name(N){
 }
 
-SCSig::SCSig(SigType T,unsigned W,signed DT,signed DF,std::string I)
+SCSig::SCSig(SigType T,unsigned W,signed DT,signed DF,std::string I,std::string P)
   : Type(T), FType(FOP_UNK), SigWidth(W),
-    DistanceTrue(DT), DistanceFalse(DF), Inst(I){
+    DistanceTrue(DT), DistanceFalse(DF), Inst(I), PipeName(P){
   Name = this->SigTypeToStr();
 }
 
-SCSig::SCSig(SigType T,unsigned W,std::string I,std::string N)
+SCSig::SCSig(SigType T,unsigned W,std::string I,std::string N,std::string P)
   : Type(T), FType(FOP_UNK), SigWidth(W),
-    DistanceTrue(0), DistanceFalse(0), Inst(I), Name(N){
+    DistanceTrue(0), DistanceFalse(0), Inst(I), Name(N), PipeName(P){
 }
 
 SCSig::SCSig(SigType T,unsigned W,signed DT,signed DF,
-             std::string I,std::string N)
+             std::string I,std::string N,std::string P)
   : Type(T), FType(FOP_UNK), SigWidth(W),
-    DistanceTrue(DT), DistanceFalse(DF), Inst(I), Name(N){
+    DistanceTrue(DT), DistanceFalse(DF), Inst(I), Name(N), PipeName(P){
 }
 
 SCSig::~SCSig(){
@@ -166,6 +166,17 @@ bool SCSig::SetWidth( unsigned W ){
   return true;
 }
 
+bool SCSig::IsPipeDefined(){
+  if( PipeName.length() > 0 )
+    return true;
+  return false;
+}
+
+bool SCSig::SetPipeName( std::string PName ){
+  PipeName = PName;
+  return true;
+}
+
 bool SCSig::SetName( std::string N ){
   Name = N;
   return true;
@@ -176,6 +187,18 @@ bool SCSig::SetInst( std::string I ){
   return true;
 }
 
+bool SCSig::isMuxSig(){
+  if( (Type>BR_JR) && (Type<REG_READ) )
+    return true;
+  return false;
+}
+
+bool SCSig::isPCSig(){
+  if( (Type>ALU_FREM) && (Type<BR_N) )
+    return true;
+  return false;
+}
+
 bool SCSig::isALUSig(){
   if( (Type>SIGINSTF) && (Type<PC_INCR) )
     return true;
@@ -183,13 +206,13 @@ bool SCSig::isALUSig(){
 }
 
 bool SCSig::isMemSig(){
-  if( Type>REG_WRITE )
+  if( Type>AREG_WRITE )
     return true;
   return false;
 }
 
 bool SCSig::isRegSig(){
-  if( (Type>BR_JR) && (Type<MEM_READ) )
+  if( (Type>MUX) && (Type<MEM_READ) )
     return true;
   return false;
 }

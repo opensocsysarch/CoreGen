@@ -39,6 +39,7 @@
 #include "CoreGen/CoreGenBackend/CoreGenSpad.h"
 #include "CoreGen/CoreGenBackend/CoreGenMCtrl.h"
 #include "CoreGen/CoreGenBackend/CoreGenCore.h"
+#include "CoreGen/CoreGenBackend/CoreGenDataPath.h"
 
 typedef enum{
   CGExtTemplate = 1,                        ///< CGExtType: Template extension
@@ -63,6 +64,7 @@ private:
   std::vector<CoreGenCore *> Cores;         ///< CoreGenExt: Cores
   std::vector<CoreGenSpad *> Spads;         ///< CoreGenExt: Scratchpads
   std::vector<CoreGenMCtrl *> MCtrls;       ///< CoreGenExt: Memory Controllers
+  std::vector<CoreGenDataPath *> DataPaths; ///< CoreGenExt: DataPaths
 
 public:
 
@@ -115,6 +117,9 @@ public:
   /// Retrieve the cores
   std::vector<CoreGenCore *> *GetCores() { return &Cores; }
 
+  /// Retrieve the Datapaths
+  std::vector<CoreGenDataPath *> *GetDataPaths() { return &DataPaths; }
+
   /// Retrieve the number of child Cache nodes
   unsigned GetNumCaches() { return Caches.size(); }
 
@@ -150,6 +155,9 @@ public:
 
   /// Retrieve the number of child memory controllers
   unsigned GetNumMCtrls() { return MCtrls.size(); }
+
+  /// Retrieve the number of child DataPaths / Pipelines
+  unsigned GetNumDataPaths() { return DataPaths.size(); }
 
   /// Updates the child node structure after inserting new nodes
   bool UpdateChildNodes();
@@ -217,6 +225,12 @@ public:
 
   /// Insert an existing extension
   bool InsertExt( CoreGenExt *E );
+
+  /// Insert a new DataPath
+  CoreGenDataPath *InsertDataPath( std::string Name, std::string Style );
+
+  /// Insert an existing DataPath
+  bool InsertDataPath( CoreGenDataPath *D );
 
   /// Retrieve a reference to the cache vector
   std::vector<CoreGenCache *> &GetCacheVect(){ return Caches; }

@@ -36,6 +36,7 @@
 // Codegen Headers
 #include "CoreGen/CoreGenCodegen/CoreGenNodeCodegen.h"
 #include "CoreGen/CoreGenCodegen/CoreGenNodeCodegens.h"
+#include "CoreGen/CoreGenCodegen/CoreGenChiselParms.h"
 
 class CoreGenChiselCodegen
 {
@@ -44,6 +45,7 @@ private:
   CoreGenProj *Proj;                ///< CoreGen Project Info
   std::string ChiselRoot;           ///< Root directory for chisel output
   CoreGenErrno *Errno;              ///< CoreGen Errno Structure
+  CoreGenChiselParms<std::string, std::string> *Parms;        ///< Pamaeters to be used in the Chisel generation
 
   /// Generates the top level configuration scala file
   bool GenerateConfig();
@@ -57,7 +59,7 @@ private:
   /// Writes the core configuration data
   bool WriteCoreConfig(std::ofstream &O);
 
-  ///Execute the SoC code generator
+  /// Execute the SoC code generator
   bool ExecSocCodegen(CoreGenNode *N);
 
   /// Execute the register class code generator
@@ -69,8 +71,21 @@ private:
   /// Execute the ISA code generator
   bool ExecISACodegen(CoreGenNode *N);
 
+
+  /// Execute the DataPath code generator
+  bool ExecDataPathCodegen(CoreGenNode *N);
+
+  /// Execute teh cache code generator
+  bool ExecCacheCodegen(CoreGenNode *N);
+
+  /// Execute the cache template code generator
+  bool ExecCacheTemplateCodegen(CoreGenNode *N);
+
   /// Execute the target plugin codegen instead of the default
   bool ExecPluginCodegen(CoreGenNode *N);
+
+  /// Executes the target node plugin template codegen instead of the default
+  bool ExecPluginTemplateCodegen(CoreGenNode *N);
 
   /// Retrieve the appropriate ISA node from the register class
   CoreGenNode *GetRegClassISANode(CoreGenNode *N);

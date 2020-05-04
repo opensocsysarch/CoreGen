@@ -16,8 +16,10 @@ SCPass::SCPass(std::string N,
                SCOpts *O,
                SCMsg *M)
   : Name(N), Options(Opt), Msgs(M), Opts(O), TheModule(TM) {
+#if 0
   if( Opts->IsVerbose() )
     Msgs->PrintRawMsg( "Executing Pass: " + this->GetName() );
+#endif
 }
 
 SCPass::~SCPass(){
@@ -63,6 +65,66 @@ bool SCPass::HasGlobalAttribute( std::string Var, std::string Attribute ){
     }
   }
   return false;
+}
+
+std::string SCPass::GetPipelineFromStage(std::string Stage){
+  std::string PName = "pipeline";
+  unsigned Val = 0;
+
+  // walk all the functions
+  for( auto &Func : TheModule->getFunctionList() ){
+    AttributeSet AttrSet = Func.getAttributes().getFnAttributes();
+    Val = 0;
+    while( AttrSet.hasAttribute("pipename"+std::to_string(Val)) ){
+      if( AttrSet.getAttribute("pipename"+std::to_string(Val)).getValueAsString().str() == Stage ){
+        if( AttrSet.hasAttribute("pipeline"+std::to_string(Val)) ){
+          PName = AttrSet.getAttribute("pipeline"+std::to_string(Val)).getValueAsString().str();
+          return PName;
+        }
+      }
+      Val = Val + 1;
+    }
+  }
+
+  return PName;
+}
+
+unsigned SCPass::GetNumPipelines(){
+  return GetPipelines().size();
+}
+
+std::vector<std::string> SCPass::GetPipelines(){
+  std::vector<std::string> IF;
+  for( auto &Global : TheModule->getGlobalList() ){
+    AttributeSet AttrSet = Global.getAttributes();
+    if( AttrSet.hasAttribute("pipeline") ){
+      IF.push_back(
+        AttrSet.getAttribute("pipeline").getValueAsString().str() );
+    }
+  }
+  std::sort(IF.begin(),IF.end());
+  IF.erase( std::unique(IF.begin(),IF.end()), IF.end() );
+  return IF;
+}
+
+std::vector<std::string> SCPass::GetPipelineAttrs(std::string Pipe){
+  std::vector<std::string> IF;
+  for( auto &Global : TheModule->getGlobalList() ){
+    AttributeSet AttrSet = Global.getAttributes();
+    if( AttrSet.hasAttribute("pipeline") ){
+      if( AttrSet.getAttribute("pipeline").getValueAsString().str() == Pipe ){
+        unsigned Idx = 0;
+        while( AttrSet.hasAttribute("pipeattr"+std::to_string(Idx)) ){
+          IF.push_back(
+            AttrSet.getAttribute("pipeattr"+std::to_string(Idx)).getValueAsString().str() );
+          Idx++;
+        }
+      }
+    }
+  }
+  std::sort(IF.begin(),IF.end());
+  IF.erase( std::unique(IF.begin(),IF.end()), IF.end() );
+  return IF;
 }
 
 std::vector<std::string> SCPass::GetInstFormats(){
@@ -354,6 +416,13 @@ std::string SCPass::StrToUpper(std::string S){
   return S;
 }
 
+std::string SCPass::GetMDPipeName(Instruction &I){
+  std::string Str;
+  if( MDNode *N = I.getMetadata("pipe.pipeName")) {
+    Str = cast<MDString>(N->getOperand(0))->getString().str();
+  }
+  return Str;
+}
 
 std::string SCPass::TraceOperand( Function &F, Value *V,
                                   bool &isPredef, bool &isImm,

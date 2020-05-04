@@ -54,6 +54,9 @@ public:
   /// Retrieve the register object by its name
   CoreGenReg *GetRegByName(std::string name);
 
+  /// Retrieve the register object by its encoded index
+  CoreGenReg *GetRegByIndex(unsigned Idx);
+
   /// Sets the number of read ports
   bool SetReadPorts( unsigned R ) { ReadPorts = R; return true; }
 

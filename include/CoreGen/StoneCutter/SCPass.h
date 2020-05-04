@@ -104,6 +104,9 @@ public:
   /// Determines if the target variable has the target attribute
   bool HasGlobalAttribute(std::string Var, std::string Attribute );
 
+  /// Retrieves a metadata pipeName instance from the target instruction
+  std::string GetMDPipeName(Instruction &I);
+
   /// Retrieves the target attribute from the target global variable
   std::string GetGlobalAttribute(std::string Var, std::string Attribute);
 
@@ -115,6 +118,18 @@ public:
 
   /// Retrieves the number of instruction format register class attributes that include the target variable
   unsigned GetNumRegClasses(std::string Var);
+
+  /// Retrieves a list of unique pipelines
+  std::vector<std::string> GetPipelines();
+
+  /// Retrieves the pipeline from the pipeline stage name
+  std::string GetPipelineFromStage(std::string Stage);
+
+  /// Retrieves the number of pipelines present
+  unsigned GetNumPipelines();
+
+  /// Retrieves a list of attributes for the target pipeline
+  std::vector<std::string> GetPipelineAttrs(std::string Pipe);
 
   /// Retrieves a list of unique instruction formats
   std::vector<std::string> GetInstFormats();
@@ -143,7 +158,7 @@ public:
   /// Retrieves the name of the target pipe stage
   bool GetPipeStageName(Function &F, unsigned N, std::string& PipeName );
 
-  /// Retrieve a vector of all teh pipe stage names
+  /// Retrieve a vector of all the pipe stage names
   std::vector<std::string> GetPipeStages(Function &F);
 
   /// Retrieve the pipe stage name associated with the target instruction

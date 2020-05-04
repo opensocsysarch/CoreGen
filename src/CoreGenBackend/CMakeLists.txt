@@ -32,6 +32,7 @@ CoreGenPluginMgr.cpp
 CoreGenPlugin.cpp
 CoreGenPassMgr.cpp
 CoreGenEnv.cpp
+CoreGenDataPath.cpp
 )
 
 add_subdirectory(Passes)

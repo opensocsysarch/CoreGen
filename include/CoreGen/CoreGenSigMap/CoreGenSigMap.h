@@ -42,9 +42,11 @@ private:
 
   std::vector<SigType> TopSigs;   ///< CoreGenSigMap: top-level signals
 
-  unsigned TmpIdx;
+  unsigned TmpIdx;                ///< CoreGenSigMap: Temporary index
 
-  std::string Error;
+  std::string Error;              ///< CoreGenSigMap: Error string
+
+  std::string SigFile;            ///< CoreGenSigMap: Output file
 
   // private functions
   /// Writes the top-level signal map to the YAML file
@@ -109,11 +111,20 @@ public:
   /// Retrieves the number of signals in the signal map
   unsigned GetNumSignals() { return Signals.size(); }
 
+  /// Retrieves a vector of the pipeline stages found in the included signals
+  std::vector<std::string> GetPipeVect();
+
+  /// Write the signal map
+  bool WriteSigMap();
+
   /// Write the signal map to the target file
   bool WriteSigMap( std::string File );
 
   /// Reads the signal map file into the signal structure
   bool ReadSigMap( std::string File );
+
+  /// Retrieve the number of temporary registers that need to exist in the ALUL
+  unsigned GetNumTemps() { return TempRegs.size(); }
 
   /// Attempt to retrieve a temporary register for the target instruction:IRName mapping
   std::string GetTempReg( std::string Inst, std::string IRName, unsigned width );

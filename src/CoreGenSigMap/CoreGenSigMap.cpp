@@ -114,11 +114,20 @@ unsigned CoreGenSigMap::GetMinSignalWidth( unsigned Idx ){
   return Min;
 }
 
+bool CoreGenSigMap::WriteSigMap(){
+  if( SigFile.length() > 0 )
+    return WriteSigMap(SigFile);
+  return false;
+}
+
 bool CoreGenSigMap::WriteSigMap( std::string File ){
   if( File.length() == 0 )
     return false;
   if( Signals.size() == 0 )
     return false;
+
+  // set the file name
+  SigFile = File;
 
   // open the file
   std::ofstream OutYaml(File.c_str());
@@ -347,12 +356,17 @@ bool CoreGenSigMap::ReadInstSignals(const YAML::Node& InstNodes){
           DF = LSNode["DistanceFalse"].as<signed>();
         }
 
+        std::string PipeStage;
+        if( CheckValidNode(LSNode,"PipeStage") ){
+          PipeStage = LSNode["PipeStage"].as<std::string>();
+        }
+
         std::string FusedOp;
         if( CheckValidNode(LSNode,"FusedOp") ){
           FusedOp = LSNode["FusedOp"].as<std::string>();
         }
 
-        Signals.push_back(new SCSig(Type,Width,DT,DF,Name,SigName));
+        Signals.push_back(new SCSig(Type,Width,DT,DF,Name,SigName,PipeStage));
         if( FusedOp.length() > 0 ){
           // write the fused op to the latest signal
           FusedOpType FType = StrToFusedOpType(FusedOp);
@@ -363,19 +377,10 @@ bool CoreGenSigMap::ReadInstSignals(const YAML::Node& InstNodes){
         if( LSNode["Inputs"] ){
           const YAML::Node& INode = LSNode["Inputs"];
           for( unsigned k=0; k<INode.size(); k++ ){
-            const YAML::Node& LINode = INode[k];
-            if( !CheckValidNode(LINode,"Input") ){
-              Error = "Input has no name";
-              return false;
-            }
-            std::string InputStr = LINode["Input"].as<std::string>();
-            if( InputStr.length() == 0 ){
-              Error = "Input has a null name";
-              return false;
-            }
+            std::string InputStr = INode[k].as<std::string>();
             Signals[Signals.size()-1]->InsertInput(InputStr);
           }
-        } // end check for inputs
+        } // end inputs loop
       }
     }
   }
@@ -426,6 +431,8 @@ bool CoreGenSigMap::ReadTmpRegs(const YAML::Node& TmpNodes){
 bool CoreGenSigMap::ReadSigMap( std::string File ){
   if( File.length() == 0 )
     return false;
+
+  SigFile = File;
 
   // load the file
   YAML::Node IR;
@@ -496,6 +503,20 @@ std::vector<SCSig *> CoreGenSigMap::GetSigVect(std::string Inst){
   return CSigs;
 }
 
+std::vector<std::string> CoreGenSigMap::GetPipeVect(){
+  std::vector<std::string> V;
+
+  for( unsigned i=0; i<Signals.size(); i++ ){
+    if( Signals[i]->IsPipeDefined() ){
+      V.push_back(Signals[i]->GetPipeName());
+    }
+  }
+
+  std::sort( V.begin(), V.end() );
+  V.erase( std::unique(V.begin(),V.end()), V.end() );
+  return V;
+}
+
 bool CoreGenSigMap::WriteInstSignals(YAML::Emitter *out){
   if( out == nullptr )
     return false;
@@ -531,16 +552,26 @@ bool CoreGenSigMap::WriteInstSignals(YAML::Emitter *out){
       *out << YAML::Key << "Width" << YAML::Value << CSigs[j]->GetWidth();
       *out << YAML::Key << "DistanceTrue" << YAML::Value << CSigs[j]->GetDistanceTrue();
       *out << YAML::Key << "DistanceFalse" << YAML::Value << CSigs[j]->GetDistanceFalse();
+      if( CSigs[j]->IsPipeDefined() ){
+        *out << YAML::Key << "PipeStage" << YAML::Value << CSigs[j]->GetPipeName();
+      }
       if( CSigs[j]->GetFusedType() != FOP_UNK )
         *out << YAML::Key << "FusedOp" << YAML::Value << CSigs[j]->FusedOpTypeToStr();
 
       // determine whether we need to write out the input block
       if( CSigs[j]->GetNumInputs() > 0 ){
+        *out << YAML::Key << "Inputs" << YAML::Value << YAML::BeginSeq;
+        for( unsigned k=0; k<CSigs[j]->GetNumInputs() ; k++ ){
+          *out << YAML::Key << CSigs[j]->GetInput(k);
+        }
+        *out << YAML::EndSeq;
+#if 0
         *out << YAML::Key << "Inputs" << YAML::Value << YAML::BeginSeq << YAML::BeginMap;
         for( unsigned k=0; k<CSigs[j]->GetNumInputs() ; k++ ){
           *out << YAML::Key << "Input" << YAML::Value << CSigs[j]->GetInput(k);
         }
         *out << YAML::EndMap << YAML::EndSeq;
+#endif
       }
       *out << YAML::EndMap;
     }

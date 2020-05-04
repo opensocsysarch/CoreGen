@@ -52,12 +52,6 @@ public:
                       CoreGenErrno *E ) : Node(N), Proj(P), Package(Pac),
                                           Path(Pa), Common(Comm), Errno(E){}
 
-  /// Default destructor
-  virtual ~CoreGenNodeCodegen() {}
-
-  /// Executes the node-specific code generator
-  virtual bool Execute() { return false; }
-
   /// Writes the top-level Chisel package info
   bool WritePackageInfo(std::ofstream &O);
 
@@ -66,6 +60,18 @@ public:
 
   /// Writes the standard Chisel footer
   bool WriteStdFooter(std::ofstream &O);
+
+  // Virtual Functions
+
+  /// Default destructor
+  virtual ~CoreGenNodeCodegen() {}
+
+  /// Executes the node-specific code generator
+  virtual bool Execute() { return false; }
+
+  /// Executes the node-specific plugin template code generator
+  virtual bool ExecutePlugin() { return true; }
+
 };
 
 #endif

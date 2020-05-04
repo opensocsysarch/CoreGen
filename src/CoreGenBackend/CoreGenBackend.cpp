@@ -110,10 +110,11 @@ CoreGenBackend::~CoreGenBackend(){
   delete Errno;
 }
 
-bool CoreGenBackend::ExecuteLLVMCodegen(){
+bool CoreGenBackend::ExecuteLLVMCodegen(std::string CompVer){
   // Create the codegen object
   CoreGenCodegen *CG = new CoreGenCodegen(Top,
                                           Proj,
+                                          Env,
                                           Errno);
 
   if( CG == nullptr ){
@@ -121,8 +122,47 @@ bool CoreGenBackend::ExecuteLLVMCodegen(){
     return false;
   }
 
+  std::string TmpCompVer = CompVer;
+
+  // check the state of the compiler version
+  // if we have a null string, then attempt to derive
+  // the latest version of llvm by default
+  if( TmpCompVer.length() == 0 ){
+    CoreGenArchive *Archive = new CoreGenArchive( CGInstallPrefix() + "/archive" );
+    if( !Archive ){
+      Errno->SetError(CGERR_ERROR, "Could not create CoreGenArchive object" );
+      return false;
+    }
+
+    if( !Archive->ReadYaml( CGInstallPrefix() + "/archive/master.yaml" ) ){
+      Errno->SetError(CGERR_ERROR, "Could not read archive yaml : "
+                      + CGInstallPrefix() + "/archive/master.yaml" );
+      delete Archive;
+      return false;
+    }
+
+    for( unsigned i=0; i<Archive->GetNumEntries(); i++ ){
+      CoreGenArchEntry *E = Archive->GetEntry(i);
+      if( (E->GetEntryType() == CGA_COMPILER) &&
+          (E->IsLatest()) ){
+        if( !Archive->IsInit(E) ){
+          Errno->SetError(CGERR_ERROR, "Found a default latest compiler at: "
+                          + E->GetName() + " : but the entry is not initialized" );
+          delete Archive;
+          return false;
+        }
+
+        // found a good entry and the entry is initialized
+        TmpCompVer = E->GetName();
+        break;
+      }
+    }
+
+    delete Archive;
+  }
+
   // Execute it
-  bool rtn = CG->ExecuteLLVMCodegen();
+  bool rtn = CG->ExecuteLLVMCodegen(TmpCompVer);
 
   // delete and clean everything up
   delete CG;
@@ -155,6 +195,7 @@ bool CoreGenBackend::ExecuteChiselCodegen(){
   // Create the codegen object
   CoreGenCodegen *CG = new CoreGenCodegen(Top,
                                           Proj,
+                                          Env,
                                           Errno);
 
   if( CG == nullptr ){
@@ -174,6 +215,7 @@ bool CoreGenBackend::ExecuteCodegen(){
   // Create the codegen object
   CoreGenCodegen *CG = new CoreGenCodegen(Top,
                                           Proj,
+                                          Env,
                                           Errno);
 
   if( CG == nullptr ){
@@ -284,7 +326,7 @@ bool CoreGenBackend::ReadIR( std::string FileName ){
 
   if( !IR->ReadYaml( Socs, Cores, Caches, ISAs, Formats, Insts,
                       PInsts, RegClasses, Regs, Comms, Spads,
-                      MCtrls, VTPs, Exts, Plugins) ){
+                      MCtrls, VTPs, Exts, DataPaths, Plugins) ){
     delete IR;
     return false;
   }
@@ -446,6 +488,9 @@ bool CoreGenBackend::BuildDAG(){
   for( unsigned i=0; i<Caches.size(); i++ ){
     Top->InsertChild(static_cast<CoreGenNode *>(Caches[i]));
   }
+  for( unsigned i=0; i<DataPaths.size(); i++ ){
+    Top->InsertChild(static_cast<CoreGenNode *>(DataPaths[i]));
+  }
   for( unsigned i=0; i<Cores.size(); i++ ){
     Top->InsertChild(static_cast<CoreGenNode *>(Cores[i]));
   }
@@ -487,6 +532,7 @@ bool CoreGenBackend::BuildDAG(){
   }
   for( unsigned i=0; i<Plugins.size(); i++ ){
     Top->InsertChild(static_cast<CoreGenNode *>(Plugins[i]));
+    Plugins[i]->ProcessFeatures();
     Plugins[i]->BuildDAG();
   }
 
@@ -1242,6 +1288,12 @@ CoreGenISA *CoreGenBackend::InsertISA(std::string Name){
   CoreGenISA *I = new CoreGenISA(Name,Errno);
   ISAs.push_back(I);
   return I;
+}
+
+CoreGenDataPath *CoreGenBackend::InsertDPath(std::string Name, std::string Style){
+  CoreGenDataPath *D = new CoreGenDataPath(Name,Style, Errno);
+  DataPaths.push_back(D);
+  return D;
 }
 
 CoreGenComm *CoreGenBackend::InsertComm(std::string Name){

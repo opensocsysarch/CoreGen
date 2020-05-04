@@ -106,6 +106,26 @@ bool SCLexer::IsDyadic(int LC){
   return false;
 }
 
+bool SCLexer::IsPipeAttrDef(){
+  int Idx = 0;
+
+  // pipeline attributes
+  while(PipeAttrTable[Idx] != "."){
+    if( IdentifierStr == PipeAttrTable[Idx] )
+      return true;
+    Idx++;
+  }
+
+  if( IdentifierStr.length() < 8 )
+    return false;
+
+  std::string Tmp = IdentifierStr.substr(0,7);
+  if( Tmp == "stages_" )
+    return true;
+
+  return false;
+}
+
 bool SCLexer::IsVarDef(){
   int Idx = 0;
 
@@ -200,12 +220,16 @@ int SCLexer::GetTok(){
       return tok_while;
     if( IdentifierStr == "do" )
       return tok_do;
+    if( IdentifierStr == "pipe" )
+      return tok_pipe;
+    if( IdentifierStr == "pipeline" )
+      return tok_pipeline;
     if( IsVarDef() )
       return tok_var;
     if( IsIntrinsic() )
       return tok_intrin;
-    if( IdentifierStr == "pipe" )
-      return tok_pipe;
+    if( IsPipeAttrDef() )
+      return tok_pipeattr;
 
     // the identifier
     return tok_identifier;
