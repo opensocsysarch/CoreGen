@@ -107,6 +107,28 @@ std::vector<std::string> SCPass::GetPipelines(){
   return IF;
 }
 
+std::vector<std::string> SCPass::GetPipelineStages(std::string Pipe){
+  std::vector<std::string> Pipes;
+  unsigned Val = 0;
+
+  for( auto &Global : TheModule->getGlobalList() ){
+    AttributeSet AttrSet = Global.getAttributes();
+    if( AttrSet.hasAttribute("pipeline") ){
+      if( AttrSet.getAttribute("pipeline").getValueAsString().str() == Pipe ){
+        // found the pipeline, pull all the attributes
+        Val = 0;
+        while( AttrSet.hasAttribute("pipestage" + std::to_string(Val)) ){
+          Pipes.push_back(
+            AttrSet.getAttribute("pipestage" + std::to_string(Val)).getValueAsString().str() );
+          Val = Val + 1;
+        }
+      }
+    }
+  }
+
+  return Pipes;
+}
+
 std::vector<std::string> SCPass::GetPipelineAttrs(std::string Pipe){
   std::vector<std::string> IF;
   for( auto &Global : TheModule->getGlobalList() ){

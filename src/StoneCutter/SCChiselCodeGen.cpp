@@ -1510,7 +1510,6 @@ bool SCChiselCodeGen::WriteUCodeCompiler(){
 }
 
 bool SCChiselCodeGen::ExecutePipelineOpt(){
-
   SCPipeBuilder *PB = new SCPipeBuilder(SCParser::TheModule.get(),
                                         Opts,
                                         Msgs);

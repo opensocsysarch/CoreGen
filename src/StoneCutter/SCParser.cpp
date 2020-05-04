@@ -1757,7 +1757,7 @@ Value *PipeExprAST::codegen() {
         AttributeSet PAttrSet = Global.getAttributes();
         if( PAttrSet.hasAttribute("pipeline") ){
           // found a pipeline attribute
-          if( PAttrSet.getAttribute("pipeline").getValueAsString().str() !=
+          if( PAttrSet.getAttribute("pipeline").getValueAsString().str() ==
               PipeLine ){
             // found a matching pipeline
             unsigned Idx = 0;
@@ -1772,11 +1772,11 @@ Value *PipeExprAST::codegen() {
                 return LogErrorV( "Found a collision in pipe stages for pipeline=" + 
                                   PipeLine + " for pipestage=" + PipeName );
               }
-              Idx++;
+              Idx = Idx + 1;
             }
-          }
-        }
-      }
+          } // end is getAttribute
+        } // end if hasAttribute
+      } // end for( auto )
 
       // add an attribute to the pipeline global variable
       it->second->addAttribute("pipestage" + std::to_string(PIdx), PipeName);

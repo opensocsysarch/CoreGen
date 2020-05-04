@@ -22,6 +22,7 @@
 
 #include <map>
 #include <vector>
+#include <tuple>
 #include "CoreGen/StoneCutter/SCPass.h"
 #include "CoreGen/CoreGenSigMap/CoreGenSigMap.h"
 
@@ -78,9 +79,15 @@ private:
   /// SCPipeBuilder: Does the target pipe have any I/O signals?
   bool HasIOSigs(std::string Pipe);
 
+  /// SCPipeBuilder: Retrieves a vector of empty pipeline stages
+  std::vector<std::string> GetEmptyStages();
+
   // ----------------------------------------------------------
   // Sub Passes
   // ----------------------------------------------------------
+
+  /// SCPipeBuilder SubPass: Splits the pipeline to N-stages if prescribed by the user
+  bool SplitNStage();
 
   /// SCPipeBuilder SubPass: Split the register  and memory IO
   bool SplitIO();

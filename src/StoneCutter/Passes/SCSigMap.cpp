@@ -878,7 +878,6 @@ bool SCSigMap::Execute(){
     this->PrintMsg( L_ERROR, "LLVM IR Module is null" );
     return false;
   }
-
   // Stage 1: Create a new CoreGenSigMap object
   Signals = new CoreGenSigMap();
 
