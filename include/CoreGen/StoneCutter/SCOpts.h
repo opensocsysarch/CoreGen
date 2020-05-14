@@ -281,6 +281,9 @@ public:
   /// SCOpts: Sets the 'sigmap' option
   bool SetSignalMap(std::string O) { isSigMap = true; SigMap = O; return true; }
 
+  /// SCOpts: Enables the pipeliner
+  bool SetPipeline() { isPipeline = true; return true; }
+
   /// SCOpts: Disables the 'chisel' option
   bool UnsetChisel() { isChisel = false; return false; }
 
@@ -301,6 +304,18 @@ public:
 
   /// SCOpts: Disables the 'sigmap' option
   bool UnsetSignalMap() { isSigMap = false; return true; }
+
+  /// SCOpts: Disables the 'keep' option
+  bool UnsetKeep() { isKeep = false; return true; }
+
+  /// SCOpts: Disables the pipeline option
+  bool UnsetPipeline() { isPipeline = false; return true; }
+
+  /// SCOpts: Disable SC passes
+  bool UnsetSCPasses() { isSCEnable = true; EnableSCPass.clear(); return true; }
+
+  /// SCOpts: Disable Manual SC passes
+  bool DisableManualSCPasses() { isSCEnable = false; return true; }
 };
 
 #endif // _STONECUTTER_SCOPTS_H_
