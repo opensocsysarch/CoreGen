@@ -43,6 +43,7 @@ SCParser::SCParser(SCMsg *M)
   GMsgs = M;
   InitBinopPrecedence();
   LabelIncr = 0;
+  InitPassMap();
   InitIntrinsics();
 }
 
