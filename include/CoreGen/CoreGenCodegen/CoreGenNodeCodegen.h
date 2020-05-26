@@ -72,6 +72,9 @@ public:
   /// Executes the node-specific plugin template code generator
   virtual bool ExecutePlugin() { return true; }
 
+  /// Executes the node-specific code generator with top and parent node arguments
+  /// This is generally used for the PluginCG
+  virtual bool Execute(CoreGenNode *Top, CoreGenNode *Parent) { return true; }
 };
 
 #endif

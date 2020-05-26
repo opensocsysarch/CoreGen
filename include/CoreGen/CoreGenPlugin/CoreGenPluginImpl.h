@@ -135,12 +135,13 @@ private:
   unsigned MajorVersion;  ///< CoreGenPluginImpl: Major Version
   unsigned MinorVersion;  ///< CoreGenPluginImpl: Minor Version
   unsigned PatchVersion;  ///< CoreGenPluginImpl: Patch Version
+  std::string NodeName;   ///< CoreGenPluginImpl: Name of the IR node
 
 
   std::vector<CGFeatureTable> FeatureTable; ///< CoreGenPluginImpl: Extended Feature Table
-  
+
   std::vector<CoreGenNode *> Nodes;         ///< CoreGenPluginImpl: DAG nodes
-  
+
   std::vector<CoreGenCache *> Caches;       ///< CoreGenImpl: Caches
   std::vector<CoreGenCore *> Cores;         ///< CoreGenImpl: Cores
   std::vector<CoreGenInst *> Insts;         ///< CoreGenImpl: Instructions
@@ -439,7 +440,7 @@ public:
   virtual bool ProcessFeatures() { return false; }
 
   /// Execute the Codegen initialization routine
-  virtual bool Init(std::string P) { Path=P; return true; }
+  virtual bool Init(std::string P,std::string N) { Path=P; NodeName=N; return true; }
 
   /// Execute the HDL Codegen
   virtual bool ExecuteHDLCodegen(CoreGenNode *Top,

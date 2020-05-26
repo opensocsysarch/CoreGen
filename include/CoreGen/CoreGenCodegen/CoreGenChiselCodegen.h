@@ -90,6 +90,9 @@ private:
   /// Retrieve the appropriate ISA node from the register class
   CoreGenNode *GetRegClassISANode(CoreGenNode *N);
 
+  /// Retrieve the parent node for the target
+  CoreGenNode *GetParentNode(CoreGenNode *Target);
+
 public:
   /// Default constructor
   CoreGenChiselCodegen(CoreGenNode *T,

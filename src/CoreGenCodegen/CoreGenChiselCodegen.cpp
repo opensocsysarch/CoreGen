@@ -277,19 +277,31 @@ bool CoreGenChiselCodegen::ExecCacheCodegen(CoreGenNode *N){
 }
 
 bool CoreGenChiselCodegen::ExecPluginCodegen(CoreGenNode *N){
-  std::string FullPath = ChiselRoot + "/top/"
+  std::string FullPath = ChiselRoot + "/common/"
                                     + CGRemoveDot(N->GetName())
                                     + ".chisel";
   std::string Package = Proj->GetProjName();
 
   PluginCG *CG = new PluginCG(N,Proj,Package,FullPath,true,Errno);
   bool rtn = true;
-  if( !CG->Execute() ){
+  if( !CG->Execute(Top,GetParentNode(N)) ){
     rtn = false;
   }
 
   delete CG;
   return rtn;
+}
+
+CoreGenNode *CoreGenChiselCodegen::GetParentNode(CoreGenNode *Target){
+  CoreGenNode *Tmp = nullptr;
+  for( unsigned i=0; i<Top->GetNumChild(); i++ ){
+    Tmp = Top->GetChild(i);
+    for( unsigned j=0; j<Tmp->GetNumChild(); j++ ){
+      if( Tmp->GetChild(i) == Target )
+        return Tmp;
+    }
+  }
+  return nullptr;
 }
 
 bool CoreGenChiselCodegen::WriteCoreConfig(std::ofstream &O){
@@ -439,79 +451,81 @@ bool CoreGenChiselCodegen::Execute(){
   for( unsigned i=0; i<Top->GetNumChild(); i++ ){
 
     if( Top->GetChild(i)->IsOverridden() ){
+      // the i'th node has been overridden with an external codegen
+      // construct the template then execute the plugin's codegen
       if( !ExecPluginTemplateCodegen(Top->GetChild(i)) )
         rtn = false;
       if( !ExecPluginCodegen(Top->GetChild(i)) )
+        rtn = false;
+    }else{
+      // codegen the i'th node
+      switch( Top->GetChild(i)->GetType() ){
+      case CGSoc:
+        if( !ExecSocCodegen(Top->GetChild(i)) ){
           rtn = false;
-    }
-
-    // codegen the i'th node
-    switch( Top->GetChild(i)->GetType() ){
-    case CGSoc:
-      if( !ExecSocCodegen(Top->GetChild(i)) ){
-        rtn = false;
-      }
-      SocNode = Top->GetChild(i);
-      break;
-    case CGCore:
-      break;
+        }
+        SocNode = Top->GetChild(i);
+        break;
+      case CGCore:
+        break;
 #if 0
-    case CGInstF:
-      break;
+      case CGInstF:
+        break;
 #endif
-    case CGInst:
-      break;
+      case CGInst:
+        break;
 #if 0
-    case CGPInst:
-      break;
+      case CGPInst:
+        break;
 #endif
-    case CGRegC:
-      if( !ExecRegClassCodegen(Top->GetChild(i)) ){
-        rtn = false;
-      }
-      break;
+      case CGRegC:
+        if( !ExecRegClassCodegen(Top->GetChild(i)) ){
+          rtn = false;
+        }
+        break;
 #if 0
-    case CGReg:
-      break;
+      case CGReg:
+        break;
 #endif
-    case CGISA:
-      if( !ExecISACodegen(Top->GetChild(i)) ){
-        rtn = false;
-      }
-      break;
-    case CGCache:
-      if( !ExecCacheCodegen(Top->GetChild(i)) ){
-        rtn = false;
-      }
-      break;
-    case CGDPath:
+      case CGISA:
+        if( !ExecISACodegen(Top->GetChild(i)) ){
+          rtn = false;
+        }
+        break;
+      case CGCache:
+        if( !ExecCacheCodegen(Top->GetChild(i)) ){
+          rtn = false;
+        }
+        break;
+      case CGDPath:
         if( !ExecDataPathCodegen(Top->GetChild(i) )){
          rtn = false;
         }
-      break;
+        break;
 #if 0
-    case CGEnc:
-      break;
+      case CGEnc:
+        break;
 #endif
-    case CGExt:
-      break;
-    case CGComm:
-      break;
-    case CGSpad:
-      if( !ExecSpadCodegen(Top->GetChild(i)) ){
-        rtn = false;
-      }
-      break;
-    case CGMCtrl:
-      break;
-    case CGVTP:
-      break;
-    case CGPlugin:
-      break;
-    default:
-      break;
-    }
-  }
+      case CGExt:
+        break;
+      case CGComm:
+        break;
+      case CGSpad:
+        if( !ExecSpadCodegen(Top->GetChild(i)) ){
+          rtn = false;
+        }
+        break;
+      case CGMCtrl:
+        break;
+      case CGVTP:
+        break;
+      case CGPlugin:
+        break;
+      default:
+        break;
+      }// end switch
+    }// end else
+  }// end for loop
 
   // generate the scala driver
   if( !GenerateDriver(SocNode) ){

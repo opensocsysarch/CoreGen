@@ -19,9 +19,17 @@ PluginCG::PluginCG( CoreGenNode *N, CoreGenProj *P,
 PluginCG::~PluginCG(){
 }
 
-bool PluginCG::Execute(){
+bool PluginCG::Execute(CoreGenNode *Top, CoreGenNode *Parent){
 
-  return true;
+  CoreGenPlugin *PluginNode = static_cast<CoreGenPlugin *>(Node);
+
+  if( !PluginNode->InitImpl(Path,PluginNode->GetName()) )
+    return false;
+
+  if( PluginNode->HasHDLCodegen() )
+    return PluginNode->ExecuteHDLCodegen(Top,Parent);
+
+  return false;
 }
 
 // EOF

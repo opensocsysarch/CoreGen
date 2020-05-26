@@ -38,7 +38,7 @@ public:
   ~PluginCG();
 
   /// Execute the codegen
-  virtual bool Execute();
+  virtual bool Execute(CoreGenNode *Top, CoreGenNode *Parent);
 };
 
 #endif

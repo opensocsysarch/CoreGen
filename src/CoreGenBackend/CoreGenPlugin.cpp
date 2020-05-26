@@ -133,6 +133,13 @@ bool CoreGenPlugin::SetFeatureValue( unsigned Idx,
   return Impl->SetFeatureValue( Idx, Val );
 }
 
+bool CoreGenPlugin::InitImpl(std::string Path, std::string NodeName){
+  if( !Impl )
+    return false;
+
+  return Impl->Init(Path,NodeName);
+}
+
 bool CoreGenPlugin::ExecuteHDLCodegen(CoreGenNode *TopNode,
                                       CoreGenNode *Parent){
   if( !Impl ){

@@ -108,6 +108,9 @@ public:
   /// Execute the LLVM Codegen
   bool ExecuteLLVMCodegen();
 
+  /// Initialize the backend implementation
+  bool InitImpl(std::string Path, std::string NodeName);
+
   /// Build the Plugin DAG
   bool BuildDAG();
 
