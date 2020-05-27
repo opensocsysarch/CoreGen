@@ -277,9 +277,7 @@ bool CoreGenChiselCodegen::ExecCacheCodegen(CoreGenNode *N){
 }
 
 bool CoreGenChiselCodegen::ExecPluginCodegen(CoreGenNode *N){
-  std::string FullPath = ChiselRoot + "/common/"
-                                    + CGRemoveDot(N->GetName())
-                                    + ".chisel";
+  std::string FullPath = ChiselRoot + "/common/";
   std::string Package = Proj->GetProjName();
 
   PluginCG *CG = new PluginCG(N,Proj,Package,FullPath,true,Errno);

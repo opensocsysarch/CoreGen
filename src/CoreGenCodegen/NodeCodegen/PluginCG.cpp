@@ -23,7 +23,7 @@ bool PluginCG::Execute(CoreGenNode *Top, CoreGenNode *Parent){
 
   CoreGenPlugin *PluginNode = static_cast<CoreGenPlugin *>(Node);
 
-  if( !PluginNode->InitImpl(Path,PluginNode->GetName()) )
+  if( !PluginNode->InitImpl(Path,CGRemoveDot(PluginNode->GetName())) )
     return false;
 
   if( PluginNode->HasHDLCodegen() )
