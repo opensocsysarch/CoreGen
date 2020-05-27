@@ -135,8 +135,6 @@ private:
   unsigned MajorVersion;  ///< CoreGenPluginImpl: Major Version
   unsigned MinorVersion;  ///< CoreGenPluginImpl: Minor Version
   unsigned PatchVersion;  ///< CoreGenPluginImpl: Patch Version
-  std::string NodeName;   ///< CoreGenPluginImpl: Name of the IR node
-
 
   std::vector<CGFeatureTable> FeatureTable; ///< CoreGenPluginImpl: Extended Feature Table
 
@@ -168,6 +166,7 @@ protected:
   CoreGenErrno *Errno;    ///< CoreGenPluginImpl: Errno structure
   CoreGenNode *Top;       ///< CoreGenPluginImpl: Top-level component node
   std::string Path;       ///< CoreGenPluginImpl: Codegen path
+  std::string NodeName;   ///< CoreGenPluginImpl: Name of the IR node
 
 public:
   /// Default Constructor
