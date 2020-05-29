@@ -28,24 +28,29 @@
 
 class DPathCG : public CoreGenNodeCodegen {
 private:
-    
-    bool          GenSharedBus(std::ofstream &O);
 
-    bool          GenInstDispatch(std::ofstream &O ) { return false;};
+  /// Generate the shared bus
+  bool          GenSharedBus(std::ofstream &O);
 
-    bool          GenALU(std::ofstream &O ){return false; };
+  /// Generate the instruction dispatch
+  bool          GenInstDispatch(std::ofstream &O ) { return false;};
+
+  /// Generate the ALU
+  bool          GenALU(std::ofstream &O ){return false; };
 
 
 public:
 
-    DPathCG(CoreGenNode *N,
-            CoreGenProj *P,
-            std::string Package,
-            std::string Path,
-            bool Common,
-            CoreGenErrno *E );
+  /// Default constructor
+  DPathCG(CoreGenNode *N,
+          CoreGenProj *P,
+          std::string Package,
+          std::string Path,
+          bool Common,
+          CoreGenErrno *E );
 
-    bool    Execute( );
+  /// Execute the codegen
+  bool    Execute( );
 
 };
 
