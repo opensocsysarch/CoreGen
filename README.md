@@ -108,6 +108,37 @@ cmake -DLLVM_DIR=/usr/lib/llvm-8/cmake ../
 make
 ```
 
+#### Ubuntu 20.04 (Focal)
+
+1.  Install the necessary apt repositories
+```
+wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
+sudo apt-add-repository "deb http://apt.llvm.org/focal/ llvm-toolchain-focal-9 main"
+sudo apt-get update
+```
+2.  Install the system dependencies:
+```
+sudo apt-get install -y clang-8 lldb-8 lld-8 libllvm8 llvm-8 llvm-8-dev llvm-8-doc llvm-8-examples llvm-8-runtime python-dev libcurl4 libcurl4-gnutls-dev
+```
+3. Clone the CoreGen repository
+```
+git clone https://github.com/opensocsysarch/CoreGen.git
+```
+4. Setup your build tree
+```
+cd CoreGen
+mkdir build
+cd build
+```
+5. Execute CMake to generate the makefiles
+```
+cmake -DLLVM_DIR=/usr/lib/llvm-8/cmake ../
+```
+6. Execute the build
+```
+make
+```
+
 
 ### Centos7
 
