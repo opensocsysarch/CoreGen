@@ -325,6 +325,10 @@ void CoreGenYaml::WriteCoreYaml( YAML::Emitter *out,
       *out << YAML::EndSeq;
     }
 
+    // scheduler parameters
+    *out << YAML::Key << "Scheduler"
+         << YAML::Value << Cores[i]->CGSchedToStr(Cores[i]->GetSched());
+
     // extensions
     if( Cores[i]->GetNumExt() > 0 ){
       *out << YAML::Key << "Extensions" << YAML::Value << YAML::BeginSeq;
@@ -1563,7 +1567,7 @@ bool CoreGenYaml::ReadProjYaml(const YAML::Node& ProjNodes ){
                       "ProjectName");
       return false;
     }
-  }catch(YAML::InvalidNode){
+  }catch(const YAML::InvalidNode &){
     PrintParserError(ProjNodes,
                       "ProjectInfo",
                       "ProjectName");
@@ -2853,6 +2857,26 @@ bool CoreGenYaml::ReadCoreYaml(const YAML::Node& CoreNodes,
       }
     }
 
+    // Scheduler
+    CGSched Sched = SMTUnk;
+    if( Node["Scheduler"] ){
+      if( !CheckValidNode(Node,"Scheduler") ){
+        return false;
+      }
+
+      try{
+        Sched = C->StrToCGSched(Node["Scheduler"].as<std::string>());
+      }catch(YAML::BadConversion& e){
+        Errno->SetError(CGERR_ERROR, "Error in parsing core Scheduler: "
+                        + std::string(e.what()));
+        return false;
+      }
+
+      if( !C->SetSched(Sched) )
+        return false;
+    }
+
+    // Extensions
     const YAML::Node& ENode = Node["Extensions"];
     if( ENode ){
       for( unsigned k=0; k<ENode.size(); k++ ){
