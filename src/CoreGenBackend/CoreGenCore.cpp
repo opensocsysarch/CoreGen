@@ -11,12 +11,18 @@
 #include "CoreGen/CoreGenBackend/CoreGenCore.h"
 
 CoreGenCore::CoreGenCore( std::string N, CoreGenISA *I, CoreGenErrno *E)
-  : CoreGenNode(CGCore,N,E), Cache(NULL), ISA(I), ThreadUnits(1){
+  : CoreGenNode(CGCore,N,E), Cache(NULL), ISA(I), ThreadUnits(1),
+    Sched(SMTUnk){
   if( ISA )
     InsertChild(static_cast<CoreGenNode *>(ISA));
 }
 
 CoreGenCore::~CoreGenCore(){
+}
+
+bool CoreGenCore::SetSched( CGSched S ){
+  Sched = S;
+  return true;
 }
 
 bool CoreGenCore::SetISA( CoreGenISA *I ){
@@ -112,6 +118,42 @@ bool CoreGenCore::SetNumThreadUnits( unsigned TU ){
   }
   ThreadUnits = TU;
   return true;
+}
+
+std::string CoreGenCore::CGSchedToStr( CGSched S ){
+  switch( S ){
+  case SMTUnk:
+    return "Unknown";
+    break;
+  case SMTPCycle:
+    return "PCycle";
+    break;
+  case SMTPressure:
+    return "Pressure";
+    break;
+  case SMTProg:
+    return "Programmatic";
+    break;
+  default:
+    return "";
+    break;
+  }
+  return "";
+}
+
+CGSched CoreGenCore::StrToCGSched( std::string Str ){
+  if( Str == "Unknown" ){
+    return SMTUnk;
+  }else if( Str == "PCycle" ){
+    return SMTPCycle;
+  }else if( Str == "Pressure" ){
+    return SMTPressure;
+  }else if( Str == "Programmatic" ){
+    return SMTProg;
+  }else{
+    return SMTUnk;
+  }
+  return SMTUnk;
 }
 
 // EOF
