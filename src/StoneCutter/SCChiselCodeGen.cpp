@@ -1541,7 +1541,6 @@ bool SCChiselCodeGen::ExecutePipelineOpt(){
   }else if( Opts->IsEnableSCPass() ){
     // manually enabled passes
     std::vector<std::string> E = Opts->GetEnableSCPass();
-    std::vector<SCPass *>::iterator it;
     std::vector<std::string>::iterator str;
     str = std::find(E.begin(),E.end(),PB->GetName());
     if( str != E.end() ){
@@ -1552,7 +1551,6 @@ bool SCChiselCodeGen::ExecutePipelineOpt(){
   }else if( Opts->IsDisableSCPass() ){
     // manually disabled passes
     std::vector<std::string> D = Opts->GetDisabledSCPass();
-    std::vector<SCPass *>::iterator it;
     std::vector<std::string>::iterator str;
     str = std::find(D.begin(),D.end(),PB->GetName());
     if( str == D.end() ){
