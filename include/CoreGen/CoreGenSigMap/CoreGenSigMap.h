@@ -42,6 +42,10 @@ private:
 
   std::vector<SigType> TopSigs;   ///< CoreGenSigMap: top-level signals
 
+  std::vector<std::string> Pipelines; ///< CoreGenSigMap: pipelines
+  std::vector<std::pair<std::string,std::string>> PipeAttrs;  ///< CoreGenSigMap: pipeline attributes <pipeline:attr>
+  std::vector<std::pair<std::string,std::string>> PipeStages; ///< CoreGenSigMap: pipeline stages <pipeline:stage>
+
   unsigned TmpIdx;                ///< CoreGenSigMap: Temporary index
 
   std::string Error;              ///< CoreGenSigMap: Error string
@@ -131,6 +135,30 @@ public:
 
   /// Retrieve the existing mapping for the Inst:IRName pair
   std::string GetTempMap( std::string Inst, std::string IRName );
+
+  /// Insert a pipeline
+  bool InsertPipeline(std::string Pipeline);
+
+  /// Retrieve the pipeline vector
+  std::vector<std::string> GetPipelines() { return Pipelines; }
+
+  /// Insert a pipeline stage into the target pipeline
+  bool InsertPipelineStage(std::string Pipeline, std::string Stage);
+
+  /// Retrieve the number of pipeline stages for the target pipeline
+  unsigned GetNumPipeStages(std::string Pipeline);
+
+  /// Retrieve the target stage for the target pipeline
+  std::string GetPipelineStage( std::string Pipeline, unsigned Stage );
+
+  /// Insert a pipeline attribute into the target pipeline
+  bool InsertPipelineAttr(std::string Pipeline, std::string Attr);
+
+  /// Retrieve the number of pipeline attributes for the target pipeline
+  unsigned GetNumPipeAttrs(std::string Pipeline);
+
+  /// Retrieve the target attribute for the target pipeline stage
+  std::string GetPipelineAttr(std::string Pipeline, unsigned Stage );
 
   /// Execute all the signal map passes
   bool ExecutePasses();

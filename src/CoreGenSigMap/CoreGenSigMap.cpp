@@ -662,4 +662,113 @@ std::string CoreGenSigMap::GetTempMap( std::string Inst, std::string IRName ){
   return NStr;
 }
 
+bool CoreGenSigMap::InsertPipeline(std::string P){
+  Pipelines.push_back(P);
+  // ensure the vector is unique
+  std::sort(Pipelines.begin(), Pipelines.end());
+  Pipelines.erase( std::unique( Pipelines.begin(), Pipelines.end() ), Pipelines.end() );
+  return true;
+}
+
+bool CoreGenSigMap::InsertPipelineStage(std::string Pipeline,
+                                        std::string Stage){
+
+  // ensure the pipeline exists
+  if( std::find(Pipelines.begin(),Pipelines.end(),Pipeline) == Pipelines.end() ){
+    return false;
+  }
+
+  // search for an existing entry
+  for( unsigned i=0; i<PipeStages.size(); i++ ){
+    if( (PipeStages[i].first == Pipeline) &&
+        (PipeStages[i].second == Stage) ){
+      // found it
+      return true;
+    }
+  }
+
+  // not found, insert it
+  PipeStages.push_back(std::pair<std::string,std::string>(Pipeline,Stage));
+
+  return true;
+}
+
+unsigned CoreGenSigMap::GetNumPipeStages(std::string Pipeline){
+  unsigned NPS = 0;
+
+  for( unsigned i=0; i<PipeStages.size(); i++ ){
+    if( PipeStages[i].first == Pipeline ){
+      NPS++;
+    }
+  }
+
+  return NPS;
+}
+
+std::string CoreGenSigMap::GetPipelineStage(std::string Pipeline,
+                                            unsigned Stage){
+  std::string S;
+  unsigned N = 0;
+
+  for( unsigned i=0; i<PipeStages.size(); i++ ){
+    if( (PipeStages[i].first == Pipeline) && (N==Stage) ){
+      return PipeStages[i].second;
+    }else if( PipeStages[i].first == Pipeline ){
+      N++;
+    }
+  }
+
+  return S;
+}
+
+bool CoreGenSigMap::InsertPipelineAttr(std::string Pipeline,std::string Attr){
+  // ensure the pipeline exists
+  if( std::find(Pipelines.begin(),Pipelines.end(),Pipeline) == Pipelines.end() ){
+    return false;
+  }
+
+  // search for an existing entry
+  for( unsigned i=0; i<PipeAttrs.size(); i++ ){
+    if( (PipeAttrs[i].first == Pipeline) &&
+        (PipeAttrs[i].second == Attr) ){
+      // found it
+      return true;
+    }
+  }
+
+  PipeAttrs.push_back(std::pair<std::string,std::string>(Pipeline,Attr));
+
+  return true;
+}
+
+unsigned CoreGenSigMap::GetNumPipeAttrs(std::string Pipeline){
+  unsigned NPA = 0;
+
+  for( unsigned i=0; i<PipeAttrs.size(); i++ ){
+    if( PipeAttrs[i].first == Pipeline ){
+      NPA++;
+    }
+  }
+
+  return NPA;
+}
+
+std::string CoreGenSigMap::GetPipelineAttr(std::string Pipeline,
+                                            unsigned Attr){
+  std::string S;
+  unsigned N = 0;
+
+  for( unsigned i=0; i<PipeAttrs.size(); i++ ){
+    if( (PipeAttrs[i].first == Pipeline) && (N==Attr) ){
+      return PipeAttrs[i].second;
+    }else if( PipeAttrs[i].first == Pipeline ){
+      N++;
+    }
+  }
+
+  return S;
+}
+
+
+
 // EOF
