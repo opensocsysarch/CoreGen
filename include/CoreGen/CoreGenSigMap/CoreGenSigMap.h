@@ -62,6 +62,9 @@ private:
   /// Writes the temporary register info and the associated mappings to the YAML file
   bool WriteTempRegs(YAML::Emitter *out);
 
+  /// Writes the pipeline information to the YAML file
+  bool WritePipeData(YAML::Emitter *out);
+
   /// Determines if the target YAML node is valid
   bool CheckValidNode(const YAML::Node Node, std::string Token);
 

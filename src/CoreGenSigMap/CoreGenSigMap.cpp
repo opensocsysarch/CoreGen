@@ -144,6 +144,12 @@ bool CoreGenSigMap::WriteSigMap( std::string File ){
     return false;
   }
 
+  // write the pipeline data
+  if( !WritePipeData(&out) ){
+    OutYaml.close();
+    return false;
+  }
+
   // write the individual instruction signals
   if( !WriteInstSignals(&out) ){
     OutYaml.close();
@@ -517,6 +523,34 @@ std::vector<std::string> CoreGenSigMap::GetPipeVect(){
   return V;
 }
 
+bool CoreGenSigMap::WritePipeData(YAML::Emitter *out){
+  *out << YAML::Key << "Pipelines" << YAML::BeginSeq;
+
+  // walk all the pipelines
+  for( unsigned i=0; i<Pipelines.size(); i++ ){
+    *out << YAML::Key << "Pipeline" << YAML::Value << Pipelines[i];
+    if( GetNumPipeAttrs(Pipelines[i]) > 0 ){
+      *out << YAML::Key << "Attributes" << YAML::Value << YAML::BeginSeq;
+      for( unsigned j=0; j<GetNumPipeAttrs(Pipelines[i]); j++ ){
+        *out << YAML::Key
+             << GetPipelineAttr(Pipelines[i], j);
+      }
+      *out << YAML::EndSeq;
+    }
+    if( GetNumPipeStages(Pipelines[i]) > 0 ){
+      *out << YAML::Key << "Stages" << YAML::Value << YAML::BeginSeq;
+      for( unsigned j=0; j<GetNumPipeStages(Pipelines[i]); j++ ){
+        *out << YAML::Key
+             << GetPipelineStage(Pipelines[i],j);
+      }
+      *out << YAML::EndSeq;
+    }
+  }
+
+  *out << YAML::EndSeq;
+  return true;
+}
+
 bool CoreGenSigMap::WriteInstSignals(YAML::Emitter *out){
   if( out == nullptr )
     return false;
@@ -565,13 +599,6 @@ bool CoreGenSigMap::WriteInstSignals(YAML::Emitter *out){
           *out << YAML::Key << CSigs[j]->GetInput(k);
         }
         *out << YAML::EndSeq;
-#if 0
-        *out << YAML::Key << "Inputs" << YAML::Value << YAML::BeginSeq << YAML::BeginMap;
-        for( unsigned k=0; k<CSigs[j]->GetNumInputs() ; k++ ){
-          *out << YAML::Key << "Input" << YAML::Value << CSigs[j]->GetInput(k);
-        }
-        *out << YAML::EndMap << YAML::EndSeq;
-#endif
       }
       *out << YAML::EndMap;
     }
