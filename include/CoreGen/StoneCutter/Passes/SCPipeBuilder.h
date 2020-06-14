@@ -82,6 +82,9 @@ private:
   /// SCPipeBuilder: Retrieves a vector of empty pipeline stages
   std::vector<std::string> GetEmptyStages();
 
+  /// SCPipeBuilder: Derives the source pipeline from the pipeline stage
+  std::string DerivePipeline(std::string Stage);
+
   // ----------------------------------------------------------
   // Sub Passes
   // ----------------------------------------------------------

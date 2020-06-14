@@ -68,7 +68,7 @@ bool SCPass::HasGlobalAttribute( std::string Var, std::string Attribute ){
 }
 
 std::string SCPass::GetPipelineFromStage(std::string Stage){
-  std::string PName = "pipeline";
+  std::string PName = "default";
   unsigned Val = 0;
 
   // walk all the functions

@@ -788,13 +788,54 @@ bool SCPipeBuilder::BuildMat(){
   return true;
 }
 
+std::string SCPipeBuilder::DerivePipeline(std::string Stage){
+  std::string Pipe;
+  std::vector<std::string> Pipelines = GetPipelines();
+
+  if( Pipelines.size() == 0 ){
+    Pipe = "default";
+    return Pipe;
+  }
+
+  // stage 1: see if there is only one pipeline defined
+  if( Pipelines.size() == 1 ){
+    Pipe = Pipelines[0];
+    return Pipe;
+  }
+
+  // stage 2: see if it was defined in the StoneCutter source
+  for( unsigned i=0; i<Pipelines.size(); i++ ){
+    std::vector<std::string> SV = GetPipelineStages(Pipelines[i]);
+    for( unsigned j=0; j<SV.size(); j++ ){
+      if( SV[j] == Stage )
+        return Pipelines[i];
+    }
+  }
+
+  // stage 3:
+
+  return Pipe;
+}
+
 bool SCPipeBuilder::WriteSigMap(){
+  // set all the pipe stages
   for( unsigned i=0; i<SigMap->GetNumSignals(); i++ ){
     for( unsigned j=0; j<PipeVect.size(); j++ ){
       if( AdjMat[j][i] == 1 ){
         SigMap->GetSignal(i)->SetPipeName(PipeVect[j]);
       }
     }
+  }
+
+  // if no original pipelines were defined, then define one
+  if( GetNumPipelines() == 0 ){
+    SigMap->InsertPipeline("default");
+  }
+
+  // set the pipeline data
+  for( unsigned i=0; i<PipeVect.size(); i++ ){
+    SigMap->InsertPipelineStage(DerivePipeline(PipeVect[i]),
+                                PipeVect[i]);
   }
   return SigMap->WriteSigMap();
 }
@@ -847,8 +888,10 @@ bool SCPipeBuilder::InitAttrs(){
   std::vector<std::string> Pipes = GetPipelines();
   for( unsigned i=0; i<Pipes.size(); i++ ){
     std::vector<std::string> PV = GetPipelineAttrs(Pipes[i]);
+    SigMap->InsertPipeline(Pipes[i]);
     for( unsigned j=0; j<PV.size(); j++ ){
       AttrMap.push_back( std::make_pair(Pipes[i],PV[j]) );
+      SigMap->InsertPipelineAttr(Pipes[i],PV[j]);
     }
   }
 

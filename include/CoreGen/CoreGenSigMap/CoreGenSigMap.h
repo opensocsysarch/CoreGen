@@ -74,6 +74,9 @@ private:
   /// Reads the instruction-level signal map
   bool ReadInstSignals(const YAML::Node& InstNodes);
 
+  /// Reads the pipeline structure from the signal map
+  bool ReadPipelineData(const YAML::Node& PipeNodes);
+
   /// Reads the temporary register value mappings
   bool ReadTmpRegs(const YAML::Node& TmpNodes);
 

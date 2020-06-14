@@ -315,6 +315,37 @@ bool CoreGenSigMap::ReadTopLevelSignals(const YAML::Node& TopNodes){
   return true;
 }
 
+bool CoreGenSigMap::ReadPipelineData(const YAML::Node& PipeNodes){
+  if( PipeNodes.size() == 0 )
+    return true;
+
+  for( unsigned i=0; i<PipeNodes.size(); i++ ){
+    const YAML::Node& Node = PipeNodes[i];
+    if( !CheckValidNode(Node,"Pipeline") ){
+      Error = "Pipeline has no name";
+      return false;
+    }
+    std::string Pipeline = Node["Pipeline"].as<std::string>();
+    InsertPipeline(Pipeline);
+    if( Node["Attributes"] ){
+      const YAML::Node& ANode = Node["Attributes"];
+      for( unsigned j=0; j<ANode.size(); j++ ){
+        std::string Attr = ANode[j].as<std::string>();
+        InsertPipelineAttr(Pipeline,Attr);
+      }
+    }
+    if( Node["Stages"] ){
+      const YAML::Node& SNode = Node["Stages"];
+      for( unsigned j=0; j<SNode.size(); j++ ){
+        std::string Stage = SNode[j].as<std::string>();
+        InsertPipelineStage(Pipeline,Stage);
+      }
+    }
+  }
+
+  return true;
+}
+
 bool CoreGenSigMap::ReadInstSignals(const YAML::Node& InstNodes){
   if( InstNodes.size() == 0 )
     return false;
@@ -461,6 +492,13 @@ bool CoreGenSigMap::ReadSigMap( std::string File ){
       return false;
   }
 
+  // read the pipeline data
+  const YAML::Node& PipeNodes = IR["Pipelines"];
+  if( CheckValidNode(IR,"Pipelines") ){
+    if( !ReadPipelineData(PipeNodes) )
+      return false;
+  }
+
   // read the instruction signals
   const YAML::Node& InstNodes = IR["Instructions"];
   if( CheckValidNode(IR,"Instructions") ){
@@ -528,6 +566,7 @@ bool CoreGenSigMap::WritePipeData(YAML::Emitter *out){
 
   // walk all the pipelines
   for( unsigned i=0; i<Pipelines.size(); i++ ){
+    *out << YAML::BeginMap;
     *out << YAML::Key << "Pipeline" << YAML::Value << Pipelines[i];
     if( GetNumPipeAttrs(Pipelines[i]) > 0 ){
       *out << YAML::Key << "Attributes" << YAML::Value << YAML::BeginSeq;
@@ -545,6 +584,7 @@ bool CoreGenSigMap::WritePipeData(YAML::Emitter *out){
       }
       *out << YAML::EndSeq;
     }
+    *out << YAML::EndMap;
   }
 
   *out << YAML::EndSeq;
