@@ -442,6 +442,11 @@ bool SCPipeBuilder::SplitIO(){
     PipeVect.push_back("WRITE_BACK");
     PipeVect.push_back("MEMORY");
 
+    if( GetPipelines().size() == 0 ){
+      AttrMap.push_back( std::make_pair("default","stages_5") );
+      AttrMap.push_back( std::make_pair("default","in_order") );
+    }
+
     // add the new stages to the extension vector
     ExtStage.push_back(std::pair<std::string,std::string>(DerivePipeline("FETCH"),
                                                             "FETCH"));
@@ -861,6 +866,11 @@ bool SCPipeBuilder::WriteSigMap(){
     SigMap->InsertPipelineStage(DerivePipeline(PipeVect[i]),
                                 PipeVect[i]);
   }
+
+  // set the attributes
+  for( unsigned i=0; i<AttrMap.size(); i++ ){
+    SigMap->InsertPipelineAttr(AttrMap[i].first,AttrMap[i].second);
+  }
   return SigMap->WriteSigMap();
 }
 
@@ -915,7 +925,6 @@ bool SCPipeBuilder::InitAttrs(){
     SigMap->InsertPipeline(Pipes[i]);
     for( unsigned j=0; j<PV.size(); j++ ){
       AttrMap.push_back( std::make_pair(Pipes[i],PV[j]) );
-      SigMap->InsertPipelineAttr(Pipes[i],PV[j]);
     }
   }
 
