@@ -402,6 +402,8 @@ bool SCPipeBuilder::SplitNStage(){
 
       for( unsigned i=0; i<(it->second-Stages.size()); i++ ){
         PipeVect.push_back( it->first + std::to_string(Base+i) );
+        ExtStage.push_back( std::pair<std::string,std::string>( it->first,
+                                                                it->first + std::to_string(Base+i)));
       }
 
       // allocate the new matrix and build it out
@@ -439,6 +441,18 @@ bool SCPipeBuilder::SplitIO(){
     PipeVect.push_back("ARITH");
     PipeVect.push_back("WRITE_BACK");
     PipeVect.push_back("MEMORY");
+
+    // add the new stages to the extension vector
+    ExtStage.push_back(std::pair<std::string,std::string>(DerivePipeline("FETCH"),
+                                                            "FETCH"));
+    ExtStage.push_back(std::pair<std::string,std::string>(DerivePipeline("REG_READ"),
+                                                            "REG_READ"));
+    ExtStage.push_back(std::pair<std::string,std::string>(DerivePipeline("ARITH"),
+                                                            "ARITH"));
+    ExtStage.push_back(std::pair<std::string,std::string>(DerivePipeline("WRITE_BACK"),
+                                                            "WRITE_BACK"));
+    ExtStage.push_back(std::pair<std::string,std::string>(DerivePipeline("MEMORY"),
+                                                            "MEMORY"));
 
     // allocate the new matrix
     if( !AllocMat() ){
@@ -557,6 +571,8 @@ bool SCPipeBuilder::SplitIO(){
             // add a new pipe stage
             READStage = std::get<2>(SplitPipes[j]) + "_REG_READ";
             PipeVect.push_back( READStage );
+            ExtStage.push_back(std::pair<std::string,std::string>(
+                std::get<1>(SplitPipes[j]),READStage));
           }
 
           // write stage
@@ -567,6 +583,8 @@ bool SCPipeBuilder::SplitIO(){
             // add a new pipe stage
             WRITEStage = std::get<2>(SplitPipes[j]) + "_WRITE_BACK";
             PipeVect.push_back( WRITEStage );
+            ExtStage.push_back(std::pair<std::string,std::string>(
+                std::get<1>(SplitPipes[j]),WRITEStage));
           }
 
           // memory stage
@@ -577,6 +595,8 @@ bool SCPipeBuilder::SplitIO(){
             // add a new pipe stage
             MEMStage = std::get<2>(SplitPipes[j]) + "_MEMORY";
             PipeVect.push_back( MEMStage );
+            ExtStage.push_back(std::pair<std::string,std::string>(
+                std::get<1>(SplitPipes[j]),MEMStage));
           }
 
           PipeMap.emplace(Unique[i],
@@ -812,7 +832,11 @@ std::string SCPipeBuilder::DerivePipeline(std::string Stage){
     }
   }
 
-  // stage 3:
+  // stage 3: scan the ExtStage vector for matches
+  for( unsigned i=0; i<ExtStage.size(); i++ ){
+    if( ExtStage[i].second == Stage )
+      return ExtStage[i].first;
+  }
 
   return Pipe;
 }
