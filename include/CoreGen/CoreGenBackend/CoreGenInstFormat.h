@@ -111,6 +111,9 @@ public:
   /// Retrieve the instruction set type
   CoreGenISA *GetISA() { return ISA; }
 
+  /// Set the instruction set type
+  bool SetISA( CoreGenISA *ISA );
+
   /// Determine if the register field is a destination type
   bool GetRegFieldIsDest( std::string Name);
 

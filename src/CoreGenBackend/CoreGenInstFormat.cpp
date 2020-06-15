@@ -18,6 +18,17 @@ CoreGenInstFormat::CoreGenInstFormat(std::string N,
     InsertChild(static_cast<CoreGenNode *>(ISA));
 }
 
+bool CoreGenInstFormat::SetISA(CoreGenISA *I){
+  if( !I )
+    return false;
+
+  if( ISA ){
+    DeleteChild(ISA);
+  }
+  ISA = I;
+  return InsertChild(I);
+}
+
 bool CoreGenInstFormat::InsertField( std::string Name, unsigned StartBit,
                                      unsigned EndBit, CGInstField Type,
                                      bool Mand ){
