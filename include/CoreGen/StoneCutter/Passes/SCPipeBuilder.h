@@ -38,6 +38,8 @@ private:
 
   std::vector<std::pair<std::string, std::string>> AttrMap;     ///< SCPipeBuilder: Attribute to pipeline pairs
 
+  std::vector<std::pair<std::string,std::string>> ExtStage;     ///< SCPipeBuilder: Tracks the new pipeline to stage relationship
+
   unsigned **AdjMat;                  ///< SCPipeBuilder: Adjacency Matrix
 
   /// SCPipeBuilder: Initialize the atreibute vector
@@ -81,6 +83,9 @@ private:
 
   /// SCPipeBuilder: Retrieves a vector of empty pipeline stages
   std::vector<std::string> GetEmptyStages();
+
+  /// SCPipeBuilder: Derives the source pipeline from the pipeline stage
+  std::string DerivePipeline(std::string Stage);
 
   // ----------------------------------------------------------
   // Sub Passes

@@ -402,6 +402,8 @@ bool SCPipeBuilder::SplitNStage(){
 
       for( unsigned i=0; i<(it->second-Stages.size()); i++ ){
         PipeVect.push_back( it->first + std::to_string(Base+i) );
+        ExtStage.push_back( std::pair<std::string,std::string>( it->first,
+                                                                it->first + std::to_string(Base+i)));
       }
 
       // allocate the new matrix and build it out
@@ -439,6 +441,18 @@ bool SCPipeBuilder::SplitIO(){
     PipeVect.push_back("ARITH");
     PipeVect.push_back("WRITE_BACK");
     PipeVect.push_back("MEMORY");
+
+    // add the new stages to the extension vector
+    ExtStage.push_back(std::pair<std::string,std::string>(DerivePipeline("FETCH"),
+                                                            "FETCH"));
+    ExtStage.push_back(std::pair<std::string,std::string>(DerivePipeline("REG_READ"),
+                                                            "REG_READ"));
+    ExtStage.push_back(std::pair<std::string,std::string>(DerivePipeline("ARITH"),
+                                                            "ARITH"));
+    ExtStage.push_back(std::pair<std::string,std::string>(DerivePipeline("WRITE_BACK"),
+                                                            "WRITE_BACK"));
+    ExtStage.push_back(std::pair<std::string,std::string>(DerivePipeline("MEMORY"),
+                                                            "MEMORY"));
 
     // allocate the new matrix
     if( !AllocMat() ){
@@ -557,6 +571,8 @@ bool SCPipeBuilder::SplitIO(){
             // add a new pipe stage
             READStage = std::get<2>(SplitPipes[j]) + "_REG_READ";
             PipeVect.push_back( READStage );
+            ExtStage.push_back(std::pair<std::string,std::string>(
+                std::get<1>(SplitPipes[j]),READStage));
           }
 
           // write stage
@@ -567,6 +583,8 @@ bool SCPipeBuilder::SplitIO(){
             // add a new pipe stage
             WRITEStage = std::get<2>(SplitPipes[j]) + "_WRITE_BACK";
             PipeVect.push_back( WRITEStage );
+            ExtStage.push_back(std::pair<std::string,std::string>(
+                std::get<1>(SplitPipes[j]),WRITEStage));
           }
 
           // memory stage
@@ -577,6 +595,8 @@ bool SCPipeBuilder::SplitIO(){
             // add a new pipe stage
             MEMStage = std::get<2>(SplitPipes[j]) + "_MEMORY";
             PipeVect.push_back( MEMStage );
+            ExtStage.push_back(std::pair<std::string,std::string>(
+                std::get<1>(SplitPipes[j]),MEMStage));
           }
 
           PipeMap.emplace(Unique[i],
@@ -788,13 +808,58 @@ bool SCPipeBuilder::BuildMat(){
   return true;
 }
 
+std::string SCPipeBuilder::DerivePipeline(std::string Stage){
+  std::string Pipe;
+  std::vector<std::string> Pipelines = GetPipelines();
+
+  if( Pipelines.size() == 0 ){
+    Pipe = "default";
+    return Pipe;
+  }
+
+  // stage 1: see if there is only one pipeline defined
+  if( Pipelines.size() == 1 ){
+    Pipe = Pipelines[0];
+    return Pipe;
+  }
+
+  // stage 2: see if it was defined in the StoneCutter source
+  for( unsigned i=0; i<Pipelines.size(); i++ ){
+    std::vector<std::string> SV = GetPipelineStages(Pipelines[i]);
+    for( unsigned j=0; j<SV.size(); j++ ){
+      if( SV[j] == Stage )
+        return Pipelines[i];
+    }
+  }
+
+  // stage 3: scan the ExtStage vector for matches
+  for( unsigned i=0; i<ExtStage.size(); i++ ){
+    if( ExtStage[i].second == Stage )
+      return ExtStage[i].first;
+  }
+
+  return Pipe;
+}
+
 bool SCPipeBuilder::WriteSigMap(){
+  // set all the pipe stages
   for( unsigned i=0; i<SigMap->GetNumSignals(); i++ ){
     for( unsigned j=0; j<PipeVect.size(); j++ ){
       if( AdjMat[j][i] == 1 ){
         SigMap->GetSignal(i)->SetPipeName(PipeVect[j]);
       }
     }
+  }
+
+  // if no original pipelines were defined, then define one
+  if( GetNumPipelines() == 0 ){
+    SigMap->InsertPipeline("default");
+  }
+
+  // set the pipeline data
+  for( unsigned i=0; i<PipeVect.size(); i++ ){
+    SigMap->InsertPipelineStage(DerivePipeline(PipeVect[i]),
+                                PipeVect[i]);
   }
   return SigMap->WriteSigMap();
 }
@@ -847,8 +912,10 @@ bool SCPipeBuilder::InitAttrs(){
   std::vector<std::string> Pipes = GetPipelines();
   for( unsigned i=0; i<Pipes.size(); i++ ){
     std::vector<std::string> PV = GetPipelineAttrs(Pipes[i]);
+    SigMap->InsertPipeline(Pipes[i]);
     for( unsigned j=0; j<PV.size(); j++ ){
       AttrMap.push_back( std::make_pair(Pipes[i],PV[j]) );
+      SigMap->InsertPipelineAttr(Pipes[i],PV[j]);
     }
   }
 
