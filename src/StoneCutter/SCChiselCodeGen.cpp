@@ -1509,11 +1509,13 @@ bool SCChiselCodeGen::WriteUCodeCompiler(){
   return true;
 }
 
-bool SCChiselCodeGen::ExecutePipelineOpt(){
+bool SCChiselCodeGen::ExecutePipelineOpt(CoreGenSigMap *SM){
   SCPipeBuilder *PB = new SCPipeBuilder(SCParser::TheModule.get(),
                                         Opts,
                                         Msgs);
   if( !PB )
+    return false;
+  if( !SM )
     return false;
 
   if( Opts->IsVerbose() ){
@@ -1528,7 +1530,7 @@ bool SCChiselCodeGen::ExecutePipelineOpt(){
     PB->SetExecOpts(mit->second);
 
   // set the signal map
-  if( !PB->SetSignalMap(CSM) ){
+  if( !PB->SetSignalMap(SM) ){
     delete PB;
     return false;
   }
@@ -1575,7 +1577,7 @@ bool SCChiselCodeGen::ExecuteCodegen(){
 
   // attempt to perform pipeline optimization
   if( CSM && Opts->IsPipeline() ){
-    if( !ExecutePipelineOpt() ){
+    if( !ExecutePipelineOpt(CSM) ){
       return false;
     }
   }
@@ -1615,6 +1617,20 @@ bool SCChiselCodeGen::ExecuteSignalMap(){
 
   // delete the signal map object
   delete SM;
+
+  // attempt to perform pipeline optimization
+  if( Opts->IsPipeline() ){
+    CoreGenSigMap *TSM = new CoreGenSigMap();
+    if( !TSM->ReadSigMap(SigMap) ){
+      Msgs->PrintMsg( L_ERROR, "Could not read signal map for pipelining pass" );
+      delete TSM;
+      return false;
+    }
+    if( !ExecutePipelineOpt(TSM) ){
+      return false;
+    }
+    delete TSM;
+  }
 
   return rtn;
 }

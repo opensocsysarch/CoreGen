@@ -94,7 +94,7 @@ private:
   void InitPasses();                          ///< Init the pass vector
   bool ExecutePasses();                       ///< Executes all the code generation passes
   bool ExecuteSignalMap();                    ///< Executes the signal map generator
-  bool ExecutePipelineOpt();                  ///< Executes the pipeline optimizer
+  bool ExecutePipelineOpt(CoreGenSigMap *SM); ///< Executes the pipeline optimizer
   bool ExecuteUcodeCodegen();                 ///< Executes a microcode codegen using sigmaps
   bool ExecuteManualCodegen();                ///< Executes a manual codegen
 
