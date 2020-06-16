@@ -259,6 +259,10 @@ unsigned CoreGenInstFormat::GetFormatWidth(){
   std::vector<std::tuple<std::string,unsigned,unsigned,CGInstField,bool,bool>>::iterator it;
   unsigned max = 0;
 
+  if( Format.size() == 0 ){
+    return 0;
+  }
+
   for( it=Format.begin(); it != Format.end(); ++it ){
     if( std::get<CGFormatEndBit>(*it) > max ){
       max = std::get<CGFormatEndBit>(*it);
