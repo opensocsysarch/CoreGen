@@ -30,7 +30,6 @@
 #include <ctime>
 #include <vector>
 #include <sstream>
-#include <cstring>
 #include <cassert>
 
 // Curl headers
