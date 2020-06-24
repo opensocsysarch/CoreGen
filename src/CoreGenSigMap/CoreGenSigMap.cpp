@@ -121,10 +121,14 @@ bool CoreGenSigMap::WriteSigMap(){
 }
 
 bool CoreGenSigMap::WriteSigMap( std::string File ){
-  if( File.length() == 0 )
+  if( File.length() == 0 ){
+    Error = "File is null";
     return false;
-  if( Signals.size() == 0 )
+  }
+  if( Signals.size() == 0 ){
+    Error = "No signals to write";
     return false;
+  }
 
   // set the file name
   SigFile = File;
@@ -562,6 +566,11 @@ std::vector<std::string> CoreGenSigMap::GetPipeVect(){
 }
 
 bool CoreGenSigMap::WritePipeData(YAML::Emitter *out){
+  if( out == nullptr ){
+    Error = "Output handle is null";
+    return false;
+  }
+
   *out << YAML::Key << "Pipelines" << YAML::BeginSeq;
 
   // walk all the pipelines
@@ -592,8 +601,10 @@ bool CoreGenSigMap::WritePipeData(YAML::Emitter *out){
 }
 
 bool CoreGenSigMap::WriteInstSignals(YAML::Emitter *out){
-  if( out == nullptr )
+  if( out == nullptr ){
+    Error = "Output handle is null";
     return false;
+  }
 
   *out << YAML::Key << "Instructions" << YAML::BeginSeq;
 
@@ -652,8 +663,10 @@ bool CoreGenSigMap::WriteInstSignals(YAML::Emitter *out){
 }
 
 bool CoreGenSigMap::WriteTempRegs(YAML::Emitter *out){
-  if( out == nullptr )
+  if( out == nullptr ){
+    Error = "Output handle is null";
     return false;
+  }
 
   *out << YAML::Key << "Temps" << YAML::BeginSeq;
   for( unsigned i=0; i<TempRegs.size(); i++ ){
@@ -678,8 +691,10 @@ bool CoreGenSigMap::WriteTempRegs(YAML::Emitter *out){
 }
 
 bool CoreGenSigMap::WriteTopLevelSignals(YAML::Emitter *out){
-  if( out == nullptr )
+  if( out == nullptr ){
+    Error = "Output handle is null";
     return false;
+  }
 
   std::vector<std::string> Sigs;
   for( unsigned i=0; i<Signals.size(); i++ ){

@@ -122,8 +122,13 @@ bool SCExec::Exec(){
 
   // Read the file into a buffer
   std::ifstream t(LTmpFile);
+  if( !t.is_open() ){
+    Msgs->PrintMsg( L_ERROR, "Failed to open stonecutter input file: " + LTmpFile );
+    return false;
+  }
   std::string Buf( (std::istreambuf_iterator<char>(t)),
                      (std::istreambuf_iterator<char>()));
+  t.close();
 
   Parser = new SCParser(Buf,LTmpFile,Opts,Msgs);
   if( !Parser ){
@@ -193,6 +198,7 @@ bool SCExec::Exec(){
     }
     return false;
   }
+
 
   SCLLCodeGen *CG = nullptr;
 
@@ -315,6 +321,7 @@ bool SCExec::Exec(){
   if( CCG ){
     delete CCG;
   }
+
   delete Parser;
 
 

@@ -194,6 +194,9 @@ public:
   /// SCOpts: Have the passes been executed()?
   bool IsPassRun() { return isPassRun; }
 
+  /// SCOpts: Force the passes to rerun
+  void ReRunPass() { isPassRun = false; }
+
   /// SCOpts: Notify the options object that the passes have been run
   void PassRun() { isPassRun = true; }
 

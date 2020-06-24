@@ -52,6 +52,11 @@ SCParser::~SCParser(){
   TheFPM.reset();
   NamedValues.clear();
   Intrins.clear();
+  delete Lex;
+  SCParser::NamedValues.clear();
+  SCParser::GlobalNamedValues.clear();
+  SCParser::FunctionProtos.clear();
+  SCParser::PipeInstances.clear();
 }
 
 void SCParser::InitIntrinsics(){
@@ -458,12 +463,6 @@ bool SCParser::Parse(){
     return false;
   }
 
-#if 0
-  std::cout << "---------------------------- DEBUG" << std::endl;
-  std::cout << InBuf << std::endl;
-  std::cout << "---------------------------- DEBUG" << std::endl;
-#endif
-
   // set the input buffer for the lexer
   if( !Lex ){
     Msgs->PrintMsg( L_ERROR,
@@ -475,6 +474,9 @@ bool SCParser::Parse(){
     return false;
   }
 
+  // reset the character entry point to the beginning
+  Lex->Reset();
+
   // pull the first token
   GetNextToken();
 
@@ -485,6 +487,7 @@ bool SCParser::Parse(){
         // no close bracket found
         return false;
       }
+
       return Rtn;
     case ';':
       GetNextToken();
@@ -579,9 +582,6 @@ bool SCParser::GetVarAttr( std::string Str, VarAttrs &V ){
 
 int SCParser::GetNextToken(){
   CurTok = Lex->GetTok();
-#if 0
-  std::cout << "CurTok = " << CurTok << std::endl;
-#endif
   return CurTok;
 }
 
@@ -2497,6 +2497,7 @@ Value *InstFormatAST::codegen(){
 
       // ensure that the instruction fieldtype is the same
       std::string FType = AttrSet.getAttribute("fieldtype").getValueAsString().str();
+
       switch( FT ){
       case field_enc:
         if( FType != "encoding" ){
