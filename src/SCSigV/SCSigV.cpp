@@ -21,11 +21,12 @@ void PrintHelp(){
   std::cout << "Options:" << std::endl;
   std::cout << "     -h|-help|--help              : Print the help menu" << std::endl;
   std::cout << "     -s|-stats|--stats            : Print stats" << std::endl;
+  std::cout << "     -p|-pipeline|--pipeline      : Print pipeline stats" << std::endl;
 }
 
 // ------------------------------------------------- ParseCommandLineOpts
 bool ParseCommandLineOpts( int argc, char **argv,
-                           bool &help, bool &stats,
+                           bool &help, bool &stats, bool &pipeline,
                            std::string &FName ){
   if( argc == 1 ){
     std::cout << "ERROR: No input files found" << std::endl;
@@ -39,12 +40,42 @@ bool ParseCommandLineOpts( int argc, char **argv,
       return true;
     }else if( (s=="-s") || (s=="-stats") || (s=="--stats") ){
       stats = true;
+    }else if( (s=="-p") || (s=="-pipeline") || (s=="--pipeline") ){
+      pipeline = true;
     }else{
       FName = s;
     }
   }
 
   return true;
+}
+
+// ------------------------------------------------- PrintPipeline
+void PrintPipeline( CoreGenSigMap *SM ){
+
+  std::vector<std::string> Pipelines = SM->GetPipelines();
+
+  std::cout << "---------------------------------------------------------------" << std::endl;
+  std::cout << "Signal Map Pipeline Statistics" << std::endl;
+  std::cout << "---------------------------------------------------------------" << std::endl;
+  if( Pipelines.size() == 0 ){
+    std::cout << "NO PIPELINES DEFINED!" << std::endl;
+    return ;
+  }
+
+  std::cout << " Num Pipelines: " << Pipelines.size() << std::endl;
+  std::cout << "---------------------------------------------------------------" << std::endl;
+
+  for( unsigned i=0; i<Pipelines.size(); i++ ){
+    std::cout << " Pipeline: " << Pipelines[i] << " contains "
+              << SM->GetNumPipeStages(Pipelines[i]) << " pipeline stages" << std::endl;
+    for( unsigned j=0; j<SM->GetNumPipeStages(Pipelines[i]); j++ ){
+      std::cout << "    Stage [" << j << "] ==> "
+                << SM->GetPipelineStage(Pipelines[i], j) << std::endl;
+    }
+  }
+
+  std::cout << "---------------------------------------------------------------" << std::endl;
 }
 
 // ------------------------------------------------- PrintStats
@@ -100,9 +131,10 @@ int main( int argc, char **argv ){
   // validate the command line options
   bool help   = false;
   bool stats  = false;
+  bool pipeline = false;
   std::string FName;
 
-  if( !ParseCommandLineOpts(argc,argv,help,stats,FName) ){
+  if( !ParseCommandLineOpts(argc,argv,help,stats,pipeline,FName) ){
     return -1;
   }
 
@@ -131,6 +163,10 @@ int main( int argc, char **argv ){
 
   if( stats ){
     PrintStats(SM);
+  }
+
+  if( pipeline ){
+    PrintPipeline(SM);
   }
 
   delete SM;
