@@ -803,6 +803,35 @@ std::string CoreGenSigMap::GetPipelineStage(std::string Pipeline,
   return S;
 }
 
+std::vector<std::string> CoreGenSigMap::GetSignalsByPipeStage(std::string Pipeline,
+                                                              std::string Stage){
+  std::vector<std::string> TmpSigVect;
+
+  // ensure the pipeline + stage combo are valid
+  bool found = false;
+  for( unsigned i=0; i<PipeStages.size(); i++ ){
+    if( (PipeStages[i].first == Pipeline) && (PipeStages[i].second == Stage) )
+      found = true;
+  }
+
+  // if !found, return an empty vector
+  if( !found )
+    return TmpSigVect;
+
+  for( unsigned i=0; i<Signals.size(); i++ ){
+    if( Signals[i]->IsPipeDefined() ){
+      if( Signals[i]->GetPipeName() == Stage )
+        TmpSigVect.push_back(Signals[i]->GetName());
+    }
+  }
+
+  // make the signal vector unique
+  std::sort(TmpSigVect.begin(), TmpSigVect.end());
+  TmpSigVect.erase( std::unique( TmpSigVect.begin(), TmpSigVect.end()), TmpSigVect.end() );
+
+  return TmpSigVect;
+}
+
 bool CoreGenSigMap::InsertPipelineAttr(std::string Pipeline,std::string Attr){
   // ensure the pipeline exists
   if( std::find(Pipelines.begin(),Pipelines.end(),Pipeline) == Pipelines.end() ){
