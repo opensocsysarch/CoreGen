@@ -142,6 +142,9 @@ public:
   /// Retrieve Version Information
   void CoreGenVersion( int *major, int *minor );
 
+  /// Retrieve the CoreGenProj object
+  CoreGenProj *GetProj() { return Proj; }
+
   /// Write the Yaml IR out to a file
   bool WriteIR( std::string FileName );
 
