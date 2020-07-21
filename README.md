@@ -223,6 +223,7 @@ the ``HomeBrew`` package manager in order to fulfill these dependencies.
 brew cask install mactex
 brew install cmake
 brew install llvm@8
+brew install pkg-config
 ```
 2. Clone the CoreGen repository
 ```
