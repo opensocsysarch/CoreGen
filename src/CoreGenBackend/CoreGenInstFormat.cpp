@@ -283,6 +283,18 @@ bool CoreGenInstFormat::GetRegFieldIsDest(std::string Name){
   return 0;
 }
 
+CoreGenInstFormat::CGInstField CoreGenInstFormat::StrToCGInstField(std::string Field){
+  if( Field == "CGInstReg" ){
+    return CoreGenInstFormat::CGInstReg;
+  }else if( Field == "CGInstCode" ){
+    return CoreGenInstFormat::CGInstCode;
+  }else if( Field == "CGInstImm" ){
+    return CoreGenInstFormat::CGInstImm;
+  }else{
+    return CoreGenInstFormat::CGInstUnk;
+  }
+}
+
 std::string CoreGenInstFormat::CGInstFieldToStr(CGInstField F){
   switch( F ){
   case CGInstReg:

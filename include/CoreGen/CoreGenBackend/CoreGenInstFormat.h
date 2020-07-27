@@ -99,6 +99,9 @@ public:
   /// Converts CGInstField to std::string
   std::string CGInstFieldToStr(CGInstField F);
 
+  /// Converts std::string to CGInstFiled
+  CoreGenInstFormat::CGInstField StrToCGInstField(std::string Field);
+
   /// Retrieve the register class (IFF Type=CGInstReg)
   CoreGenRegClass *GetFieldRegClass(std::string Name);
 
