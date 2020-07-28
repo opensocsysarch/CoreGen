@@ -108,6 +108,10 @@ public:
   /// Sets the target field in the instruction format to null
   bool SetNullField(std::string Name);
 
+  /// Sets a new name for the target field
+  bool SetFieldName(std::string OldName,
+                    std::string NewNew);
+
   /// Retrieve the number of instruction format fields
   unsigned GetNumFields() { return Format.size(); }
 

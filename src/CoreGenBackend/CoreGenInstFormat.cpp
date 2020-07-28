@@ -123,6 +123,18 @@ bool CoreGenInstFormat::SetRegFieldIsDestFlag( std::string Name, bool Flag ){
   return false;
 }
 
+bool CoreGenInstFormat::SetFieldName( std::string OldName,
+                                      std::string NewName ){
+  std::vector<std::tuple<std::string,unsigned,unsigned,CGInstField,bool,bool>>::iterator it;
+  for( it=Format.begin(); it != Format.end(); ++it ){
+    if( OldName == std::get<CGFormatName>(*it) ){
+      std::get<CGFormatName>(*it) = NewName;
+      return true;
+    }
+  }
+  return false;
+}
+
 bool CoreGenInstFormat::SetStartBit( std::string Name, unsigned Start ){
   std::vector<std::tuple<std::string,unsigned,unsigned,CGInstField,bool,bool>>::iterator it;
 
