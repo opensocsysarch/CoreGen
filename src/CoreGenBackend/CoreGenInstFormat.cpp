@@ -234,6 +234,34 @@ CoreGenInstFormat::CGInstField CoreGenInstFormat::GetFieldType( std::string Name
   return CGInstField::CGInstUnk;
 }
 
+bool CoreGenInstFormat::RemoveField(std::string Name){
+  std::vector<std::tuple<std::string,unsigned,unsigned,CGInstField,bool,bool>>::iterator it;
+
+  for( it=Format.begin(); it != Format.end(); ){
+    if( Name == std::get<CGFormatName>(*it) ){
+
+      // remove the entry from the vector
+      it = Format.erase(it);
+
+      // remove it from the register class map
+      RegMap.erase(Name);
+      return true;
+
+    }else{
+      ++it;
+    }
+  }
+
+  // field doesn't exist
+  return false;
+}
+
+bool CoreGenInstFormat::ClearFields(){
+  Format.clear();
+  RegMap.clear();
+  return true;
+}
+
 bool CoreGenInstFormat::SetNullField( std::string Name ){
   // nullify the field
   if( !this->SetFieldType(Name,CoreGenInstFormat::CGInstUnk) )
