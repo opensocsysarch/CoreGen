@@ -57,6 +57,9 @@ private:
   /// SCPipeBuilder: Frees the adjacency matrix
   bool FreeMat();
 
+  /// SCPipeBuilder: Prints the adjancency matrix for debugging
+  void PrintAdjMat();
+
   /// SCPipeBuilder: Execute the various optimization phases
   bool Optimize();
 

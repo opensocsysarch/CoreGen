@@ -290,15 +290,29 @@ bool SCPipeBuilder::FitArith(){
   return true;
 }
 
+void SCPipeBuilder::PrintAdjMat(){
+  for( unsigned i=0; i<PipeVect.size(); i++ ){
+    std::cout << "[" << PipeVect[i] << "] ";
+    for( unsigned j=0; j<SigMap->GetNumSignals(); j++ ){
+      std::cout << "[" << AdjMat[i][j] << "] ";
+    }
+    std::cout << std::endl;
+  }
+  std::cout << std::endl;
+}
+
 std::vector<std::string> SCPipeBuilder::GetEmptyStages(){
+
   std::vector<std::string> EmptyStages;
   for( unsigned i=0; i<PipeVect.size(); i++ ){
     unsigned Total = 0;
     for( unsigned j=0; j<SigMap->GetNumSignals(); j++ ){
       Total = Total + AdjMat[i][j];
     }
-    if( Total == 0 )
+    if( Total == 0 ){
+      std::cout << "!!!!!!!!!!!! " << PipeVect[i] << std::endl;
       EmptyStages.push_back( PipeVect[i] );
+    }
   }
 
   return EmptyStages;
@@ -784,6 +798,11 @@ bool SCPipeBuilder::Optimize(){
       this->PrintMsg( L_ERROR, "Subpass failed: " + Enabled[i].first );
       return false;
     }
+
+#if 0
+    PrintAdjMat();
+#endif
+
     if( !WriteSigMap() ){
       this->PrintMsg( L_ERROR, "Failed to write signal map following " + Enabled[i].first );
       return false;
