@@ -1509,12 +1509,13 @@ bool SCChiselCodeGen::WriteUCodeCompiler(){
   return true;
 }
 
-bool SCChiselCodeGen::ExecutePipelineOpt(){
-
+bool SCChiselCodeGen::ExecutePipelineOpt(CoreGenSigMap *SM){
   SCPipeBuilder *PB = new SCPipeBuilder(SCParser::TheModule.get(),
                                         Opts,
                                         Msgs);
   if( !PB )
+    return false;
+  if( !SM )
     return false;
 
   if( Opts->IsVerbose() ){
@@ -1529,7 +1530,7 @@ bool SCChiselCodeGen::ExecutePipelineOpt(){
     PB->SetExecOpts(mit->second);
 
   // set the signal map
-  if( !PB->SetSignalMap(CSM) ){
+  if( !PB->SetSignalMap(SM) ){
     delete PB;
     return false;
   }
@@ -1542,7 +1543,6 @@ bool SCChiselCodeGen::ExecutePipelineOpt(){
   }else if( Opts->IsEnableSCPass() ){
     // manually enabled passes
     std::vector<std::string> E = Opts->GetEnableSCPass();
-    std::vector<SCPass *>::iterator it;
     std::vector<std::string>::iterator str;
     str = std::find(E.begin(),E.end(),PB->GetName());
     if( str != E.end() ){
@@ -1553,7 +1553,6 @@ bool SCChiselCodeGen::ExecutePipelineOpt(){
   }else if( Opts->IsDisableSCPass() ){
     // manually disabled passes
     std::vector<std::string> D = Opts->GetDisabledSCPass();
-    std::vector<SCPass *>::iterator it;
     std::vector<std::string>::iterator str;
     str = std::find(D.begin(),D.end(),PB->GetName());
     if( str == D.end() ){
@@ -1578,7 +1577,7 @@ bool SCChiselCodeGen::ExecuteCodegen(){
 
   // attempt to perform pipeline optimization
   if( CSM && Opts->IsPipeline() ){
-    if( !ExecutePipelineOpt() ){
+    if( !ExecutePipelineOpt(CSM) ){
       return false;
     }
   }
@@ -1618,6 +1617,20 @@ bool SCChiselCodeGen::ExecuteSignalMap(){
 
   // delete the signal map object
   delete SM;
+
+  // attempt to perform pipeline optimization
+  if( Opts->IsPipeline() ){
+    CoreGenSigMap *TSM = new CoreGenSigMap();
+    if( !TSM->ReadSigMap(SigMap) ){
+      Msgs->PrintMsg( L_ERROR, "Could not read signal map for pipelining pass" );
+      delete TSM;
+      return false;
+    }
+    if( !ExecutePipelineOpt(TSM) ){
+      return false;
+    }
+    delete TSM;
+  }
 
   return rtn;
 }

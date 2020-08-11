@@ -110,7 +110,7 @@ std::map<std::string,std::string> SCOpts::ParsePassOpts(std::string P){
 
   // exit if the string is null
   if( P.length() == 0 ){
-    Msgs->PrintMsg(L_WARN, "Warning: No pas options found for pass argument");
+    Msgs->PrintMsg(L_WARN, "Warning: No pass options found for pass argument");
     return TM;
   }
 
@@ -466,7 +466,7 @@ void SCOpts::PrintHelp(){
   Msgs->PrintRawMsg("     --disable-pass \"PASS1,PASS2\"        : Disables individual LLVM passes");
   Msgs->PrintRawMsg("     --enable-sc-pass \"PASS1,PASS2\"      : Enables individual StoneCutter passes");
   Msgs->PrintRawMsg("     --disable-sc-pass \"PASS1,PASS2\"     : Disables individual StoneCutter passes");
-  Msgs->PrintRawMsg("     --sc-pass-opts \"PASS1:OPTS\"         : Set StoneCutter pass-specific optiosn");
+  Msgs->PrintRawMsg("     --sc-pass-opts \"PASS1:OPTS\"         : Set StoneCutter pass-specific options");
   Msgs->PrintRawMsg(" ");
   Msgs->PrintRawMsg("Pipeline Optimizer Options");
   Msgs->PrintRawMsg("     -Pipeline:Opt=Area                  : Optimize the pipeline for area efficiency");

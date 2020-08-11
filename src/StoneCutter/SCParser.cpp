@@ -43,6 +43,7 @@ SCParser::SCParser(SCMsg *M)
   GMsgs = M;
   InitBinopPrecedence();
   LabelIncr = 0;
+  InitPassMap();
   InitIntrinsics();
 }
 
@@ -51,6 +52,11 @@ SCParser::~SCParser(){
   TheFPM.reset();
   NamedValues.clear();
   Intrins.clear();
+  delete Lex;
+  SCParser::NamedValues.clear();
+  SCParser::GlobalNamedValues.clear();
+  SCParser::FunctionProtos.clear();
+  SCParser::PipeInstances.clear();
 }
 
 void SCParser::InitIntrinsics(){
@@ -457,12 +463,6 @@ bool SCParser::Parse(){
     return false;
   }
 
-#if 0
-  std::cout << "---------------------------- DEBUG" << std::endl;
-  std::cout << InBuf << std::endl;
-  std::cout << "---------------------------- DEBUG" << std::endl;
-#endif
-
   // set the input buffer for the lexer
   if( !Lex ){
     Msgs->PrintMsg( L_ERROR,
@@ -474,6 +474,9 @@ bool SCParser::Parse(){
     return false;
   }
 
+  // reset the character entry point to the beginning
+  Lex->Reset();
+
   // pull the first token
   GetNextToken();
 
@@ -484,6 +487,7 @@ bool SCParser::Parse(){
         // no close bracket found
         return false;
       }
+
       return Rtn;
     case ';':
       GetNextToken();
@@ -578,9 +582,6 @@ bool SCParser::GetVarAttr( std::string Str, VarAttrs &V ){
 
 int SCParser::GetNextToken(){
   CurTok = Lex->GetTok();
-#if 0
-  std::cout << "CurTok = " << CurTok << std::endl;
-#endif
   return CurTok;
 }
 
@@ -1745,44 +1746,38 @@ Value *PipeExprAST::codegen() {
   TheFunction->addFnAttr("pipename" + std::to_string(AttrVal),PipeName);
   TheFunction->addFnAttr("pipeline" + std::to_string(AttrVal),PipeLine);
 
+  std::vector<std::string> FoundVect;
+
+
+  // walk all the pipelines and determine if the current pipe stage
+  // is defined across multiple pipelines.  if so, raise an error in the
+  // parser and inform the user.
   if( PipeLine.length() > 0 ){
     std::map<std::string, GlobalVariable*>::iterator it;
     unsigned PIdx = 0;
     it = SCParser::GlobalNamedValues.find(PipeLine);
     if( it != SCParser::GlobalNamedValues.end() ){
-      // check for collisions in the pipeline namespace
-      // Walk all the existing pipeline attributes and find any pipe stages
-      // with the same name associated with a different pipeline
       for( auto &Global : SCParser::TheModule->getGlobalList() ){
         AttributeSet PAttrSet = Global.getAttributes();
         if( PAttrSet.hasAttribute("pipeline") ){
-          // found a pipeline attribute
-          if( PAttrSet.getAttribute("pipeline").getValueAsString().str() !=
-              PipeLine ){
-            // found a matching pipeline
-            unsigned Idx = 0;
-            bool done = false;
-            while( !done ){
-              if( !PAttrSet.hasAttribute("pipestage" + std::to_string(Idx)) ){
-                PIdx = Idx;
-                done = true;
-              }else if( PAttrSet.getAttribute("pipestage" + std::to_string(Idx)).getValueAsString().str() ==
-                        PipeName ){
-                // found a collision
-                return LogErrorV( "Found a collision in pipe stages for pipeline=" + 
-                                  PipeLine + " for pipestage=" + PipeName );
-              }
-              Idx++;
+          bool done = false;
+          unsigned Idx = 0;
+          while( !done ){
+            if( !PAttrSet.hasAttribute("pipestage" + std::to_string(Idx)) ){
+              done = true;
+            }else if( PAttrSet.getAttribute("pipestage" + std::to_string(Idx)).getValueAsString().str() == PipeName ){
+              FoundVect.push_back(PAttrSet.getAttribute("pipeline").getValueAsString().str());
             }
-          }
-        }
-      }
+            Idx = Idx + 1;
+          }// end while
+        }// end if( PAtterSet.hasAttribute)
+      }// end for( Global )
+    } // end if( it != end() )
+  } // end if( PipeLine.length() )
 
-      // add an attribute to the pipeline global variable
-      it->second->addAttribute("pipestage" + std::to_string(PIdx), PipeName);
-    }else{
-      return LogErrorV( "Undefined pipeline: " + PipeLine );
-    }
+  if( FoundVect.size() > 1 ){
+    return LogErrorV( "Found a collision in pipe stages for pipeline=" +
+                      PipeLine + " for pipestage=" + PipeName );
   }
 
   // build the metadata
@@ -2496,6 +2491,7 @@ Value *InstFormatAST::codegen(){
 
       // ensure that the instruction fieldtype is the same
       std::string FType = AttrSet.getAttribute("fieldtype").getValueAsString().str();
+
       switch( FT ){
       case field_enc:
         if( FType != "encoding" ){

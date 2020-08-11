@@ -22,6 +22,7 @@
 
 #include <map>
 #include <vector>
+#include <tuple>
 #include "CoreGen/StoneCutter/SCPass.h"
 #include "CoreGen/CoreGenSigMap/CoreGenSigMap.h"
 
@@ -36,6 +37,8 @@ private:
   std::vector<std::pair<std::string,bool (SCPipeBuilder::*)()>> Enabled;   ///< SCPipeBuilder: Enabled sub-passes
 
   std::vector<std::pair<std::string, std::string>> AttrMap;     ///< SCPipeBuilder: Attribute to pipeline pairs
+
+  std::vector<std::pair<std::string,std::string>> ExtStage;     ///< SCPipeBuilder: Tracks the new pipeline to stage relationship
 
   unsigned **AdjMat;                  ///< SCPipeBuilder: Adjacency Matrix
 
@@ -78,9 +81,18 @@ private:
   /// SCPipeBuilder: Does the target pipe have any I/O signals?
   bool HasIOSigs(std::string Pipe);
 
+  /// SCPipeBuilder: Retrieves a vector of empty pipeline stages
+  std::vector<std::string> GetEmptyStages();
+
+  /// SCPipeBuilder: Derives the source pipeline from the pipeline stage
+  std::string DerivePipeline(std::string Stage);
+
   // ----------------------------------------------------------
   // Sub Passes
   // ----------------------------------------------------------
+
+  /// SCPipeBuilder SubPass: Splits the pipeline to N-stages if prescribed by the user
+  bool SplitNStage();
 
   /// SCPipeBuilder SubPass: Split the register  and memory IO
   bool SplitIO();

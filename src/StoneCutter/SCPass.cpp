@@ -68,7 +68,7 @@ bool SCPass::HasGlobalAttribute( std::string Var, std::string Attribute ){
 }
 
 std::string SCPass::GetPipelineFromStage(std::string Stage){
-  std::string PName = "pipeline";
+  std::string PName = "default";
   unsigned Val = 0;
 
   // walk all the functions
@@ -105,6 +105,28 @@ std::vector<std::string> SCPass::GetPipelines(){
   std::sort(IF.begin(),IF.end());
   IF.erase( std::unique(IF.begin(),IF.end()), IF.end() );
   return IF;
+}
+
+std::vector<std::string> SCPass::GetPipelineStages(std::string Pipe){
+  std::vector<std::string> Pipes;
+  unsigned Val = 0;
+
+  for( auto &Global : TheModule->getGlobalList() ){
+    AttributeSet AttrSet = Global.getAttributes();
+    if( AttrSet.hasAttribute("pipeline") ){
+      if( AttrSet.getAttribute("pipeline").getValueAsString().str() == Pipe ){
+        // found the pipeline, pull all the attributes
+        Val = 0;
+        while( AttrSet.hasAttribute("pipestage" + std::to_string(Val)) ){
+          Pipes.push_back(
+            AttrSet.getAttribute("pipestage" + std::to_string(Val)).getValueAsString().str() );
+          Val = Val + 1;
+        }
+      }
+    }
+  }
+
+  return Pipes;
 }
 
 std::vector<std::string> SCPass::GetPipelineAttrs(std::string Pipe){

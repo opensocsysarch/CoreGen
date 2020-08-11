@@ -38,24 +38,31 @@
 template<typename KeyT, typename ValT>
 class CoreGenChiselParms {
   private:
+    CoreGenErrno                *Errno;        ///< CoreGen Errno Structure
     std::map<KeyT, ValT>  CGChiselParms;       ///< Map containing Parameters 
-    CoreGenErrno                *Errno;              ///< CoreGen Errno Structure
 
-    CoreGenChiselParms()  {};                       ///< Default constructor not supported, must supply CoreGenErrno
+    CoreGenChiselParms()  {};                  ///< Default constructor not supported, must supply CoreGenErrno
 
   public:
-            CoreGenChiselParms(CoreGenErrno *E);
 
+    /// Default constructor
+    CoreGenChiselParms(CoreGenErrno *E);
+
+    /// Determines if a key exists
     bool    KeyExists(KeyT key){  return (CGChiselParms.count(key) > 0);};
 
+    /// Retreives the target value from the map
     ValT    GetVal(KeyT key);
 
-    bool    Set(KeyT key, ValT val);  
+    /// Insert the key value map
+    bool    Set(KeyT key, ValT val);
 
+    /// Replace the current key with a new value
     bool    Replace(KeyT curKey, ValT newVal);
 
-    bool    Delete(KeyT key); 
-      
+    /// Delete the target key
+    bool    Delete(KeyT key);
+
 };
 
 template<typename KeyT, typename ValT>

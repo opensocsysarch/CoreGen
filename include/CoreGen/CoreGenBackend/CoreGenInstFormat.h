@@ -99,17 +99,29 @@ public:
   /// Converts CGInstField to std::string
   std::string CGInstFieldToStr(CGInstField F);
 
+  /// Converts std::string to CGInstFiled
+  CoreGenInstFormat::CGInstField StrToCGInstField(std::string Field);
+
   /// Retrieve the register class (IFF Type=CGInstReg)
   CoreGenRegClass *GetFieldRegClass(std::string Name);
 
   /// Sets the target field in the instruction format to null
   bool SetNullField(std::string Name);
 
+  /// Clears all the defined fields
+  bool ClearFields();
+
+  /// Removes a single instruction format field from the format
+  bool RemoveField(std::string Name);
+
   /// Retrieve the number of instruction format fields
   unsigned GetNumFields() { return Format.size(); }
 
   /// Retrieve the instruction set type
   CoreGenISA *GetISA() { return ISA; }
+
+  /// Set the instruction set type
+  bool SetISA( CoreGenISA *ISA );
 
   /// Determine if the register field is a destination type
   bool GetRegFieldIsDest( std::string Name);

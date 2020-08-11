@@ -10,24 +10,36 @@
 
 #include "CoreGen/StoneCutter/SCLexer.h"
 
-SCLexer::SCLexer() : LineNum(1), CurChar(0) {
+SCLexer::SCLexer()
+  : InBuf(""), IdentifierStr(""), NumVal(0.), LineNum(1), CurChar(0),
+    LC(nullptr), isReset(false) {
 }
 
 SCLexer::~SCLexer(){
+}
+
+void SCLexer::Reset(){
+  isReset = true;
+}
+
+void SCLexer::InternalReset(){
+  *LC = ' ';
+  isReset = false;
 }
 
 bool SCLexer::SetInput(std::string B){
   if( B.length() == 0 ){
     return false;
   }
+  CurChar = 0;
   InBuf = B;
   return true;
 }
 
 int SCLexer::GetNext(){
-  if( (unsigned)(CurChar) >= InBuf.size() ){
+  if( (unsigned)(CurChar) >= InBuf.size() )
     return EOF;
-  }
+
   int TChar = InBuf[CurChar];
   CurChar++;
   if( TChar == '\n' ){
@@ -171,9 +183,9 @@ bool SCLexer::IsVarDef(){
   return false;
 }
 
-int SCLexer::IsValidChar(int *LastChar){
+int SCLexer::IsValidChar(int *LC){
   int TmpChar = GetNext();
-  *LastChar = TmpChar;
+  *LC = TmpChar;
   if( isalnum(TmpChar) ){
     return 1;
   }else if( TmpChar == '_' ){
@@ -186,6 +198,11 @@ int SCLexer::IsValidChar(int *LastChar){
 
 int SCLexer::GetTok(){
   static int LastChar = ' ';
+
+  LC = (&LastChar);
+  if( isReset ){
+    InternalReset();
+  }
 
   // Skip any whitespace.
   while (isspace(LastChar))

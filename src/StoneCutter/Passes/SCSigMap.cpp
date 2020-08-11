@@ -897,7 +897,8 @@ bool SCSigMap::Execute(){
 
   // Stage 4: write the signal map out to a yaml file
   if( !Signals->WriteSigMap(SigMap) ){
-    this->PrintMsg( L_ERROR, "Failed to write the signal map to a file: " + Signals->GetErrStr() );
+    this->PrintMsg( L_ERROR, "Failed to write the signal map to the file " +
+                    SigMap + " : " + Signals->GetErrStr() );
     delete Signals;
     return false;
   }

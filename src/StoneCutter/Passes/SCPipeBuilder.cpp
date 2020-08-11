@@ -290,9 +290,7 @@ bool SCPipeBuilder::FitArith(){
   return true;
 }
 
-bool SCPipeBuilder::DeadPipeElim(){
-  // Attempts to remove any pipeline stages that aren't involved in any operations
-
+std::vector<std::string> SCPipeBuilder::GetEmptyStages(){
   std::vector<std::string> EmptyStages;
   for( unsigned i=0; i<PipeVect.size(); i++ ){
     unsigned Total = 0;
@@ -302,6 +300,13 @@ bool SCPipeBuilder::DeadPipeElim(){
     if( Total == 0 )
       EmptyStages.push_back( PipeVect[i] );
   }
+
+  return EmptyStages;
+}
+
+bool SCPipeBuilder::DeadPipeElim(){
+  // Attempts to remove any pipeline stages that aren't involved in any operations
+  std::vector<std::string> EmptyStages = GetEmptyStages();
 
   if( EmptyStages.size() > 0 ){
     if( !FreeMat() ){
@@ -334,6 +339,93 @@ bool SCPipeBuilder::DeadPipeElim(){
   return true;
 }
 
+bool SCPipeBuilder::SplitNStage(){
+  // First determine whether the user has prescribed us to setup an N-stage pipeline
+  std::map<std::string,unsigned> NStages;
+  std::size_t found;
+  unsigned stages;
+  for( unsigned i=0; i<AttrMap.size(); i++ ){
+    found = AttrMap[i].second.find("stages_");
+    if( found != std::string::npos ){
+      // split out the number of pipe stages
+      stages = std::stoull( AttrMap[i].second.substr(found+7), 0, 10 );
+      if( stages == 0 ){
+        this->PrintMsg( L_ERROR,
+                        "SplitNStage: 0 length pipeline stages are not permitted for pipeline=" +
+                        AttrMap[i].first);
+        return false;
+      }
+      NStages.insert( std::pair<std::string,unsigned>(AttrMap[i].first,stages) );
+    }
+  }
+
+  // print the options
+  if( Opts->IsVerbose() ){
+    std::map<std::string,unsigned>::iterator it = NStages.begin();
+    while( it != NStages.end() ){
+      this->PrintRawMsg("SplitNStage: Pipeline " + it->first +
+                        " prescribed to use " + std::to_string(it->second) +
+                        " stages");
+      it++;
+    }
+  }
+
+  // determine whether each pipeline has sufficient stages defined
+  // if not, split the pipeline into N stages
+  std::map<std::string,unsigned>::iterator it = NStages.begin();
+  std::vector<std::string> Stages;
+  while( it != NStages.end() ){
+    Stages = GetPipelineStages(it->first);
+    if( Opts->IsVerbose() ){
+      this->PrintRawMsg("SplitNStage: Pipeline " + it->first + " has " +
+                        std::to_string(Stages.size())  + " predifined stages of " +
+                        std::to_string(it->second) +
+                        " prescribed");
+    }
+
+    if( it->second != Stages.size() ){
+      // split the stages to N stages
+      unsigned Base = 1;
+      if( Stages.size() > 0 )
+        Base = Stages.size();
+
+      if( !FreeMat() ){
+        this->PrintMsg( L_ERROR, "SplitNStage: Could not free adjacency matrix" );
+        return false;
+      }
+
+      if( Opts->IsVerbose() ){
+        this->PrintRawMsg("SplitNStage: Adding " +
+                          std::to_string(it->second-Stages.size()) +
+                          " stages for Pipeline=" + it->first );
+      }
+
+      for( unsigned i=0; i<(it->second-Stages.size()); i++ ){
+        PipeVect.push_back( it->first + std::to_string(Base+i) );
+        ExtStage.push_back( std::pair<std::string,std::string>( it->first,
+                                                                it->first + std::to_string(Base+i)));
+      }
+
+      // allocate the new matrix and build it out
+      if( !AllocMat() ){
+        this->PrintMsg( L_ERROR, "SplitNStage: Could not allocate matrix" );
+        return false;
+      }
+
+      // build the pipeline matrix
+      if( !BuildMat() ){
+        this->PrintMsg( L_ERROR, "SplitNStage: Could not build matrix representation of pipeline" );
+        return false;
+      }
+
+    }
+
+    it++;
+  }
+
+  return true;
+}
+
 bool SCPipeBuilder::SplitIO(){
 
   // Determine whether we currently have any defined pipeline stages
@@ -349,6 +441,23 @@ bool SCPipeBuilder::SplitIO(){
     PipeVect.push_back("ARITH");
     PipeVect.push_back("WRITE_BACK");
     PipeVect.push_back("MEMORY");
+
+    if( GetPipelines().size() == 0 ){
+      AttrMap.push_back( std::make_pair("default","stages_5") );
+      AttrMap.push_back( std::make_pair("default","in_order") );
+    }
+
+    // add the new stages to the extension vector
+    ExtStage.push_back(std::pair<std::string,std::string>(DerivePipeline("FETCH"),
+                                                            "FETCH"));
+    ExtStage.push_back(std::pair<std::string,std::string>(DerivePipeline("REG_READ"),
+                                                            "REG_READ"));
+    ExtStage.push_back(std::pair<std::string,std::string>(DerivePipeline("ARITH"),
+                                                            "ARITH"));
+    ExtStage.push_back(std::pair<std::string,std::string>(DerivePipeline("WRITE_BACK"),
+                                                            "WRITE_BACK"));
+    ExtStage.push_back(std::pair<std::string,std::string>(DerivePipeline("MEMORY"),
+                                                            "MEMORY"));
 
     // allocate the new matrix
     if( !AllocMat() ){
@@ -434,26 +543,70 @@ bool SCPipeBuilder::SplitIO(){
     std::sort( Unique.begin(), Unique.end() );
     Unique.erase( std::unique(Unique.begin(),Unique.end()), Unique.end());
 
+    // retrieve the set of empty stages
+    std::vector<std::string> EmptyStages = GetEmptyStages();
+
     // free the adjacency matrix
     if( !FreeMat() ){
       this->PrintMsg( L_ERROR, "SplitIO: Could not free adjacency matrix" );
       return false;
     }
 
-    // records the mapping of Pipeline to PipeStage
-    std::map<std::string,std::string> PipeMap;
+    // records the mapping of Pipeline to PipeStages [read:write:memory:arith]
+    std::map<std::string,std::tuple<std::string,std::string,std::string>> PipeMap;
+    std::map<std::string,std::string> PipeArithMap;
 
-    // split each pipeline's i/o stages into REG_READ, REG_WRITE and MEMORY
+    // split each pipeline's i/o stages into REAG_READ, WRITE_BACK and MEMORY
+    // utilize the empty stages first before creating new stages
+    unsigned Empty = 0;
+    std::string READStage;
+    std::string WRITEStage;
+    std::string MEMStage;
     for( unsigned i=0; i<Unique.size(); i++ ){
       // split Unique[i]: find the first candidate pipe to split
       bool done = false;
       unsigned j = 0;
       while( !done ){
         if( std::get<1>(SplitPipes[j]) == Unique[i] ){
-          PipeVect.push_back( std::get<2>(SplitPipes[j]) + "_REG_READ" );
-          PipeVect.push_back( std::get<2>(SplitPipes[j]) + "_WRITE_BACK" );
-          PipeVect.push_back( std::get<2>(SplitPipes[j]) + "_MEMORY" );
-          PipeMap[Unique[i]] = std::get<2>(SplitPipes[j]); // record the pipe to pipe stage mapping
+          // read stage
+          if( Empty < EmptyStages.size() ){
+            READStage = EmptyStages[Empty];
+            Empty += 1;
+          }else{
+            // add a new pipe stage
+            READStage = std::get<2>(SplitPipes[j]) + "_REG_READ";
+            PipeVect.push_back( READStage );
+            ExtStage.push_back(std::pair<std::string,std::string>(
+                std::get<1>(SplitPipes[j]),READStage));
+          }
+
+          // write stage
+          if( Empty < EmptyStages.size() ){
+            WRITEStage = EmptyStages[Empty];
+            Empty += 1;
+          }else{
+            // add a new pipe stage
+            WRITEStage = std::get<2>(SplitPipes[j]) + "_WRITE_BACK";
+            PipeVect.push_back( WRITEStage );
+            ExtStage.push_back(std::pair<std::string,std::string>(
+                std::get<1>(SplitPipes[j]),WRITEStage));
+          }
+
+          // memory stage
+          if( Empty < EmptyStages.size() ){
+            MEMStage = EmptyStages[Empty];
+            Empty += 1;
+          }else{
+            // add a new pipe stage
+            MEMStage = std::get<2>(SplitPipes[j]) + "_MEMORY";
+            PipeVect.push_back( MEMStage );
+            ExtStage.push_back(std::pair<std::string,std::string>(
+                std::get<1>(SplitPipes[j]),MEMStage));
+          }
+
+          PipeMap.emplace(Unique[i],
+                          std::make_tuple(READStage,WRITEStage,MEMStage));
+          PipeArithMap[Unique[i]] = std::get<2>(SplitPipes[j]);
           done = true;
         }
         j += 1;
@@ -479,7 +632,8 @@ bool SCPipeBuilder::SplitIO(){
       SCSig *Sig            = std::get<0>(SplitPipes[i]);
       std::string Pipeline  = std::get<1>(SplitPipes[i]);
       std::string SigName   = Sig->GetName();
-      std::string Stage     = PipeMap[Pipeline];
+      std::tuple<std::string,std::string,std::string> Stage = PipeMap[Pipeline];
+      std::string ArithStage = PipeArithMap[Pipeline];
       unsigned SigIdx       = SigToIdx(Sig);
 
       // clear out all the existing mappings
@@ -498,18 +652,18 @@ bool SCPipeBuilder::SplitIO(){
       // set the new signals
       switch( Sig->GetType() ){
       case REG_READ:
-        AdjMat[PipeToIdx(Stage+"_REG_READ")][SigIdx] = 1;
+        AdjMat[PipeToIdx(std::get<0>(Stage))][SigIdx] = 1;
         break;
       case REG_WRITE:
-        AdjMat[PipeToIdx(Stage+"_WRITE_BACK")][SigIdx] = 1;
+        AdjMat[PipeToIdx(std::get<1>(Stage))][SigIdx] = 1;
         break;
       case AREG_READ:
       case AREG_WRITE:
-        AdjMat[PipeToIdx(Stage)][SigIdx] = 1;
+        AdjMat[PipeToIdx(ArithStage)][SigIdx] = 1;
         break;
       case MEM_READ:
       case MEM_WRITE:
-        AdjMat[PipeToIdx(Stage+"_MEMORY")][SigIdx] = 1;
+        AdjMat[PipeToIdx(std::get<2>(Stage))][SigIdx] = 1;
         break;
       default:
         this->PrintMsg( L_ERROR,
@@ -659,13 +813,63 @@ bool SCPipeBuilder::BuildMat(){
   return true;
 }
 
+std::string SCPipeBuilder::DerivePipeline(std::string Stage){
+  std::string Pipe;
+  std::vector<std::string> Pipelines = GetPipelines();
+
+  if( Pipelines.size() == 0 ){
+    Pipe = "default";
+    return Pipe;
+  }
+
+  // stage 1: see if there is only one pipeline defined
+  if( Pipelines.size() == 1 ){
+    Pipe = Pipelines[0];
+    return Pipe;
+  }
+
+  // stage 2: see if it was defined in the StoneCutter source
+  for( unsigned i=0; i<Pipelines.size(); i++ ){
+    std::vector<std::string> SV = GetPipelineStages(Pipelines[i]);
+    for( unsigned j=0; j<SV.size(); j++ ){
+      if( SV[j] == Stage )
+        return Pipelines[i];
+    }
+  }
+
+  // stage 3: scan the ExtStage vector for matches
+  for( unsigned i=0; i<ExtStage.size(); i++ ){
+    if( ExtStage[i].second == Stage )
+      return ExtStage[i].first;
+  }
+
+  return Pipe;
+}
+
 bool SCPipeBuilder::WriteSigMap(){
+  // set all the pipe stages
   for( unsigned i=0; i<SigMap->GetNumSignals(); i++ ){
     for( unsigned j=0; j<PipeVect.size(); j++ ){
       if( AdjMat[j][i] == 1 ){
         SigMap->GetSignal(i)->SetPipeName(PipeVect[j]);
       }
     }
+  }
+
+  // if no original pipelines were defined, then define one
+  if( GetNumPipelines() == 0 ){
+    SigMap->InsertPipeline("default");
+  }
+
+  // set the pipeline data
+  for( unsigned i=0; i<PipeVect.size(); i++ ){
+    SigMap->InsertPipelineStage(DerivePipeline(PipeVect[i]),
+                                PipeVect[i]);
+  }
+
+  // set the attributes
+  for( unsigned i=0; i<AttrMap.size(); i++ ){
+    SigMap->InsertPipelineAttr(AttrMap[i].first,AttrMap[i].second);
   }
   return SigMap->WriteSigMap();
 }
@@ -714,18 +918,30 @@ bool SCPipeBuilder::FreeMat(){
 }
 
 bool SCPipeBuilder::InitAttrs(){
-  for( unsigned i=0; i<PipeVect.size(); i++ ){
-    std::vector<std::string> PV = GetPipelineAttrs(PipeVect[i]);
+
+  std::vector<std::string> Pipes = GetPipelines();
+  for( unsigned i=0; i<Pipes.size(); i++ ){
+    std::vector<std::string> PV = GetPipelineAttrs(Pipes[i]);
+    SigMap->InsertPipeline(Pipes[i]);
     for( unsigned j=0; j<PV.size(); j++ ){
-      AttrMap.push_back( std::make_pair(PipeVect[i],PV[j]) );
+      AttrMap.push_back( std::make_pair(Pipes[i],PV[j]) );
     }
   }
 
+  if( Opts->IsVerbose() ){
+    for( unsigned i=0; i<AttrMap.size(); i++ ){
+      this->PrintRawMsg("PipelineAttr: " +
+                        AttrMap[i].first + ":" +
+                        AttrMap[i].second );
+    }
+  }
   return true;
 }
 
 bool SCPipeBuilder::EnableSubPasses(){
   // temporarily enable all the sub-passes
+  Enabled.push_back(std::make_pair("SplitNStage",
+                                   &SCPipeBuilder::SplitNStage) );
   Enabled.push_back(std::make_pair("SplitIO",
                                    &SCPipeBuilder::SplitIO) );
   Enabled.push_back(std::make_pair("FitArith",

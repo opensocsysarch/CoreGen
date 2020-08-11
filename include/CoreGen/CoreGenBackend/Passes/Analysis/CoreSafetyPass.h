@@ -35,6 +35,9 @@ private:
   /// Searches for unconnected Cores
   bool FindDanglingCores(CoreGenDAG *D, CoreGenCore *Core, unsigned Idx);
 
+  /// Ensures the SMT configuration is correct
+  bool SMTConfig(CoreGenCore *Core);
+
 public:
   /// Default constructor
   CoreSafetyPass(std::ostream *O, CoreGenDAG *D, CoreGenErrno *E);

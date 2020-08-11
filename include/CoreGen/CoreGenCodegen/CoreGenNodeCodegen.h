@@ -71,7 +71,6 @@ public:
 
   /// Executes the node-specific plugin template code generator
   virtual bool ExecutePlugin() { return true; }
-
 };
 
 #endif

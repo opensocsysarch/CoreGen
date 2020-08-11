@@ -18,6 +18,17 @@ CoreGenInstFormat::CoreGenInstFormat(std::string N,
     InsertChild(static_cast<CoreGenNode *>(ISA));
 }
 
+bool CoreGenInstFormat::SetISA(CoreGenISA *I){
+  if( !I )
+    return false;
+
+  if( ISA ){
+    DeleteChild(ISA);
+  }
+  ISA = I;
+  return InsertChild(I);
+}
+
 bool CoreGenInstFormat::InsertField( std::string Name, unsigned StartBit,
                                      unsigned EndBit, CGInstField Type,
                                      bool Mand ){
@@ -223,6 +234,34 @@ CoreGenInstFormat::CGInstField CoreGenInstFormat::GetFieldType( std::string Name
   return CGInstField::CGInstUnk;
 }
 
+bool CoreGenInstFormat::RemoveField(std::string Name){
+  std::vector<std::tuple<std::string,unsigned,unsigned,CGInstField,bool,bool>>::iterator it;
+
+  for( it=Format.begin(); it != Format.end(); ){
+    if( Name == std::get<CGFormatName>(*it) ){
+
+      // remove the entry from the vector
+      it = Format.erase(it);
+
+      // remove it from the register class map
+      RegMap.erase(Name);
+      return true;
+
+    }else{
+      ++it;
+    }
+  }
+
+  // field doesn't exist
+  return false;
+}
+
+bool CoreGenInstFormat::ClearFields(){
+  Format.clear();
+  RegMap.clear();
+  return true;
+}
+
 bool CoreGenInstFormat::SetNullField( std::string Name ){
   // nullify the field
   if( !this->SetFieldType(Name,CoreGenInstFormat::CGInstUnk) )
@@ -248,6 +287,10 @@ unsigned CoreGenInstFormat::GetFormatWidth(){
   std::vector<std::tuple<std::string,unsigned,unsigned,CGInstField,bool,bool>>::iterator it;
   unsigned max = 0;
 
+  if( Format.size() == 0 ){
+    return 0;
+  }
+
   for( it=Format.begin(); it != Format.end(); ++it ){
     if( std::get<CGFormatEndBit>(*it) > max ){
       max = std::get<CGFormatEndBit>(*it);
@@ -266,6 +309,18 @@ bool CoreGenInstFormat::GetRegFieldIsDest(std::string Name){
     }
   }
   return 0;
+}
+
+CoreGenInstFormat::CGInstField CoreGenInstFormat::StrToCGInstField(std::string Field){
+  if( Field == "CGInstReg" ){
+    return CoreGenInstFormat::CGInstReg;
+  }else if( Field == "CGInstCode" ){
+    return CoreGenInstFormat::CGInstCode;
+  }else if( Field == "CGInstImm" ){
+    return CoreGenInstFormat::CGInstImm;
+  }else{
+    return CoreGenInstFormat::CGInstUnk;
+  }
 }
 
 std::string CoreGenInstFormat::CGInstFieldToStr(CGInstField F){

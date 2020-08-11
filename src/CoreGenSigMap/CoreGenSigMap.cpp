@@ -121,10 +121,14 @@ bool CoreGenSigMap::WriteSigMap(){
 }
 
 bool CoreGenSigMap::WriteSigMap( std::string File ){
-  if( File.length() == 0 )
+  if( File.length() == 0 ){
+    Error = "File is null";
     return false;
-  if( Signals.size() == 0 )
+  }
+  if( Signals.size() == 0 ){
+    Error = "No signals to write";
     return false;
+  }
 
   // set the file name
   SigFile = File;
@@ -140,6 +144,12 @@ bool CoreGenSigMap::WriteSigMap( std::string File ){
 
   // write the opt-level signals
   if( !WriteTopLevelSignals(&out) ){
+    OutYaml.close();
+    return false;
+  }
+
+  // write the pipeline data
+  if( !WritePipeData(&out) ){
     OutYaml.close();
     return false;
   }
@@ -309,6 +319,37 @@ bool CoreGenSigMap::ReadTopLevelSignals(const YAML::Node& TopNodes){
   return true;
 }
 
+bool CoreGenSigMap::ReadPipelineData(const YAML::Node& PipeNodes){
+  if( PipeNodes.size() == 0 )
+    return true;
+
+  for( unsigned i=0; i<PipeNodes.size(); i++ ){
+    const YAML::Node& Node = PipeNodes[i];
+    if( !CheckValidNode(Node,"Pipeline") ){
+      Error = "Pipeline has no name";
+      return false;
+    }
+    std::string Pipeline = Node["Pipeline"].as<std::string>();
+    InsertPipeline(Pipeline);
+    if( Node["Attributes"] ){
+      const YAML::Node& ANode = Node["Attributes"];
+      for( unsigned j=0; j<ANode.size(); j++ ){
+        std::string Attr = ANode[j].as<std::string>();
+        InsertPipelineAttr(Pipeline,Attr);
+      }
+    }
+    if( Node["Stages"] ){
+      const YAML::Node& SNode = Node["Stages"];
+      for( unsigned j=0; j<SNode.size(); j++ ){
+        std::string Stage = SNode[j].as<std::string>();
+        InsertPipelineStage(Pipeline,Stage);
+      }
+    }
+  }
+
+  return true;
+}
+
 bool CoreGenSigMap::ReadInstSignals(const YAML::Node& InstNodes){
   if( InstNodes.size() == 0 )
     return false;
@@ -455,6 +496,13 @@ bool CoreGenSigMap::ReadSigMap( std::string File ){
       return false;
   }
 
+  // read the pipeline data
+  const YAML::Node& PipeNodes = IR["Pipelines"];
+  if( CheckValidNode(IR,"Pipelines") ){
+    if( !ReadPipelineData(PipeNodes) )
+      return false;
+  }
+
   // read the instruction signals
   const YAML::Node& InstNodes = IR["Instructions"];
   if( CheckValidNode(IR,"Instructions") ){
@@ -517,9 +565,46 @@ std::vector<std::string> CoreGenSigMap::GetPipeVect(){
   return V;
 }
 
-bool CoreGenSigMap::WriteInstSignals(YAML::Emitter *out){
-  if( out == nullptr )
+bool CoreGenSigMap::WritePipeData(YAML::Emitter *out){
+  if( out == nullptr ){
+    Error = "Output handle is null";
     return false;
+  }
+
+  *out << YAML::Key << "Pipelines" << YAML::BeginSeq;
+
+  // walk all the pipelines
+  for( unsigned i=0; i<Pipelines.size(); i++ ){
+    *out << YAML::BeginMap;
+    *out << YAML::Key << "Pipeline" << YAML::Value << Pipelines[i];
+    if( GetNumPipeAttrs(Pipelines[i]) > 0 ){
+      *out << YAML::Key << "Attributes" << YAML::Value << YAML::BeginSeq;
+      for( unsigned j=0; j<GetNumPipeAttrs(Pipelines[i]); j++ ){
+        *out << YAML::Key
+             << GetPipelineAttr(Pipelines[i], j);
+      }
+      *out << YAML::EndSeq;
+    }
+    if( GetNumPipeStages(Pipelines[i]) > 0 ){
+      *out << YAML::Key << "Stages" << YAML::Value << YAML::BeginSeq;
+      for( unsigned j=0; j<GetNumPipeStages(Pipelines[i]); j++ ){
+        *out << YAML::Key
+             << GetPipelineStage(Pipelines[i],j);
+      }
+      *out << YAML::EndSeq;
+    }
+    *out << YAML::EndMap;
+  }
+
+  *out << YAML::EndSeq;
+  return true;
+}
+
+bool CoreGenSigMap::WriteInstSignals(YAML::Emitter *out){
+  if( out == nullptr ){
+    Error = "Output handle is null";
+    return false;
+  }
 
   *out << YAML::Key << "Instructions" << YAML::BeginSeq;
 
@@ -565,13 +650,6 @@ bool CoreGenSigMap::WriteInstSignals(YAML::Emitter *out){
           *out << YAML::Key << CSigs[j]->GetInput(k);
         }
         *out << YAML::EndSeq;
-#if 0
-        *out << YAML::Key << "Inputs" << YAML::Value << YAML::BeginSeq << YAML::BeginMap;
-        for( unsigned k=0; k<CSigs[j]->GetNumInputs() ; k++ ){
-          *out << YAML::Key << "Input" << YAML::Value << CSigs[j]->GetInput(k);
-        }
-        *out << YAML::EndMap << YAML::EndSeq;
-#endif
       }
       *out << YAML::EndMap;
     }
@@ -585,8 +663,10 @@ bool CoreGenSigMap::WriteInstSignals(YAML::Emitter *out){
 }
 
 bool CoreGenSigMap::WriteTempRegs(YAML::Emitter *out){
-  if( out == nullptr )
+  if( out == nullptr ){
+    Error = "Output handle is null";
     return false;
+  }
 
   *out << YAML::Key << "Temps" << YAML::BeginSeq;
   for( unsigned i=0; i<TempRegs.size(); i++ ){
@@ -611,8 +691,10 @@ bool CoreGenSigMap::WriteTempRegs(YAML::Emitter *out){
 }
 
 bool CoreGenSigMap::WriteTopLevelSignals(YAML::Emitter *out){
-  if( out == nullptr )
+  if( out == nullptr ){
+    Error = "Output handle is null";
     return false;
+  }
 
   std::vector<std::string> Sigs;
   for( unsigned i=0; i<Signals.size(); i++ ){
@@ -661,5 +743,143 @@ std::string CoreGenSigMap::GetTempMap( std::string Inst, std::string IRName ){
   std::string NStr = "";
   return NStr;
 }
+
+bool CoreGenSigMap::InsertPipeline(std::string P){
+  Pipelines.push_back(P);
+  // ensure the vector is unique
+  std::sort(Pipelines.begin(), Pipelines.end());
+  Pipelines.erase( std::unique( Pipelines.begin(), Pipelines.end() ), Pipelines.end() );
+  return true;
+}
+
+bool CoreGenSigMap::InsertPipelineStage(std::string Pipeline,
+                                        std::string Stage){
+
+  // ensure the pipeline exists
+  if( std::find(Pipelines.begin(),Pipelines.end(),Pipeline) == Pipelines.end() ){
+    return false;
+  }
+
+  // search for an existing entry
+  for( unsigned i=0; i<PipeStages.size(); i++ ){
+    if( (PipeStages[i].first == Pipeline) &&
+        (PipeStages[i].second == Stage) ){
+      // found it
+      return true;
+    }
+  }
+
+  // not found, insert it
+  PipeStages.push_back(std::pair<std::string,std::string>(Pipeline,Stage));
+
+  return true;
+}
+
+unsigned CoreGenSigMap::GetNumPipeStages(std::string Pipeline){
+  unsigned NPS = 0;
+
+  for( unsigned i=0; i<PipeStages.size(); i++ ){
+    if( PipeStages[i].first == Pipeline ){
+      NPS++;
+    }
+  }
+
+  return NPS;
+}
+
+std::string CoreGenSigMap::GetPipelineStage(std::string Pipeline,
+                                            unsigned Stage){
+  std::string S;
+  unsigned N = 0;
+
+  for( unsigned i=0; i<PipeStages.size(); i++ ){
+    if( (PipeStages[i].first == Pipeline) && (N==Stage) ){
+      return PipeStages[i].second;
+    }else if( PipeStages[i].first == Pipeline ){
+      N++;
+    }
+  }
+
+  return S;
+}
+
+std::vector<std::string> CoreGenSigMap::GetSignalsByPipeStage(std::string Pipeline,
+                                                              std::string Stage){
+  std::vector<std::string> TmpSigVect;
+
+  // ensure the pipeline + stage combo are valid
+  bool found = false;
+  for( unsigned i=0; i<PipeStages.size(); i++ ){
+    if( (PipeStages[i].first == Pipeline) && (PipeStages[i].second == Stage) )
+      found = true;
+  }
+
+  // if !found, return an empty vector
+  if( !found )
+    return TmpSigVect;
+
+  for( unsigned i=0; i<Signals.size(); i++ ){
+    if( Signals[i]->IsPipeDefined() ){
+      if( Signals[i]->GetPipeName() == Stage )
+        TmpSigVect.push_back(Signals[i]->GetName());
+    }
+  }
+
+  // make the signal vector unique
+  std::sort(TmpSigVect.begin(), TmpSigVect.end());
+  TmpSigVect.erase( std::unique( TmpSigVect.begin(), TmpSigVect.end()), TmpSigVect.end() );
+
+  return TmpSigVect;
+}
+
+bool CoreGenSigMap::InsertPipelineAttr(std::string Pipeline,std::string Attr){
+  // ensure the pipeline exists
+  if( std::find(Pipelines.begin(),Pipelines.end(),Pipeline) == Pipelines.end() ){
+    return false;
+  }
+
+  // search for an existing entry
+  for( unsigned i=0; i<PipeAttrs.size(); i++ ){
+    if( (PipeAttrs[i].first == Pipeline) &&
+        (PipeAttrs[i].second == Attr) ){
+      // found it
+      return true;
+    }
+  }
+
+  PipeAttrs.push_back(std::pair<std::string,std::string>(Pipeline,Attr));
+
+  return true;
+}
+
+unsigned CoreGenSigMap::GetNumPipeAttrs(std::string Pipeline){
+  unsigned NPA = 0;
+
+  for( unsigned i=0; i<PipeAttrs.size(); i++ ){
+    if( PipeAttrs[i].first == Pipeline ){
+      NPA++;
+    }
+  }
+
+  return NPA;
+}
+
+std::string CoreGenSigMap::GetPipelineAttr(std::string Pipeline,
+                                            unsigned Attr){
+  std::string S;
+  unsigned N = 0;
+
+  for( unsigned i=0; i<PipeAttrs.size(); i++ ){
+    if( (PipeAttrs[i].first == Pipeline) && (N==Attr) ){
+      return PipeAttrs[i].second;
+    }else if( PipeAttrs[i].first == Pipeline ){
+      N++;
+    }
+  }
+
+  return S;
+}
+
+
 
 // EOF

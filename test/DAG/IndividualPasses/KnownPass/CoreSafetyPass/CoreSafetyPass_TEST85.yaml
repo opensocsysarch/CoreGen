@@ -3165,8 +3165,8 @@ Extensions:
           - TEST74.ext0.reg
     ISAs:
       - ISAName: TEST74.ext0.isa
-    RTLFile: TEST74.ext0.v
-    RTLType: Verilog
+    RTLFile: TEST74.ext0.chisel
+    RTLType: Chisel
   - Extension: TEST74.ext1
     Type: unknown
     Registers:
@@ -3262,7 +3262,8 @@ Cores:
     Extensions:
       - Extension: TEST74.ext2
   - Core: TEST74.core3
-    ThreadUnits: 4
+    ThreadUnits: 1
+    Scheduler: Programmatic
     Cache: TEST74.core3.L1.cache
     ISA: TEST74.isa
     RegisterClasses:

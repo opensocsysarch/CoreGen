@@ -116,12 +116,17 @@ public:
   /// Initializes the input buffer
   bool SetInput(std::string B);
 
+  /// Resets the current character
+  void Reset();
+
 private:
   std::string InBuf;                ///< Input buffer
   std::string IdentifierStr;        ///< Utilized for tok_identifier
   double NumVal;                    ///< Utilized for tok_number
   unsigned long LineNum;            ///< Current line number
   int CurChar;                      ///< Current parsed character
+  int *LC;                          ///< LastChar pointer
+  bool isReset;                     ///< Do we need a reset?
   VarAttrs Var;                     ///< Parameters for most recent variable entry
 
   /// Determines whether the next character is valid for a variable or instruction def
@@ -150,6 +155,9 @@ private:
 
   /// Examines the target character and returns true if it is an operator
   bool IsOperator(int LC);
+
+  /// Internal lexer reset function
+  void InternalReset();
 };
 
 #endif
