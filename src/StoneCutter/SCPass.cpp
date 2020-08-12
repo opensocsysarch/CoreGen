@@ -504,6 +504,21 @@ std::string SCPass::TraceOperand( Function &F, Value *V,
     return V->getName().str();
   }
 
+
+  // walk all the instructions and search for any alloca
+  // instructions that include our variable as the target
+  for( auto &BB : F.getBasicBlockList() ){
+    // walk all the instructions
+    for( auto &Inst : BB.getInstList() ){
+      if( Inst.getOpcode() == Instruction::Alloca ){
+        Value *LHS = cast<Value>(&Inst);
+        if( LHS->getName().str() == V->getName().str() ){
+          return LHS->getName().str();
+        }
+      }
+    }
+  }
+
   // The current operand was not in our global list, search for all its uses
   // and determine if it has a global root operand.  If not, return the tmp
   // name as it requires a custom operand

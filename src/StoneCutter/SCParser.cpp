@@ -2016,7 +2016,7 @@ Value *ForExprAST::codegen() {
   if (!EndCond)
     return nullptr;
 
-  // reload and incrememnt the alloca
+  // reload and increment the alloca
   Value *CurVar  = Builder.CreateLoad(Alloca,VarName.c_str());
   Value *NextVar = Builder.CreateAdd(CurVar,
                                       StepVal,
