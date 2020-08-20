@@ -164,6 +164,9 @@ public:
   /// Retrieve a vector of all the pipe stage names
   std::vector<std::string> GetPipeStages(Function &F);
 
+  /// Retrieve the pipe line name associated witht the target instruction
+  bool GetPipeLine(Instruction &Inst, std::string &PipeLine );
+
   /// Retrieve the pipe stage name associated with the target instruction
   bool GetPipeStage(Instruction &Inst, std::string &Stage );
 

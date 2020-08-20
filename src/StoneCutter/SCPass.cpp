@@ -414,6 +414,14 @@ std::vector<std::string> SCPass::GetPipeStages(Function &F){
   return Vect;
 }
 
+bool SCPass::GetPipeLine(Instruction &I, std::string &PipeLine){
+  if (MDNode* N = I.getMetadata("pipe.pipeLine")){
+    PipeLine = cast<MDString>(N->getOperand(0))->getString().str();
+    return true;
+  }
+  return false;
+}
+
 bool SCPass::GetPipeStage(Instruction &I, std::string &Stage){
   if (MDNode* N = I.getMetadata("pipe.pipeName")){
     Stage = cast<MDString>(N->getOperand(0))->getString().str();

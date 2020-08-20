@@ -18,6 +18,7 @@
 #include "CoreGen/StoneCutter/Passes/SCFieldIO.h"
 #include "CoreGen/StoneCutter/Passes/SCPipeBuilder.h"
 #include "CoreGen/StoneCutter/Passes/SCSigMap.h"
+#include "CoreGen/StoneCutter/Passes/SCMetadataAdjust.h"
 
 #endif
 
