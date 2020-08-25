@@ -957,8 +957,10 @@ bool SCPipeBuilder::InitAttrs(){
   return true;
 }
 
-bool SCPipeBuilder::EnableSubPasses(){
-  // temporarily enable all the sub-passes
+bool SCPipeBuilder::EnablePerfSubPasses(){
+  if( Opts->IsVerbose() )
+    this->PrintRawMsg("Enabling Pipeline Performance Sub Passes");
+
   Enabled.push_back(std::make_pair("SplitNStage",
                                    &SCPipeBuilder::SplitNStage) );
   Enabled.push_back(std::make_pair("SplitIO",
@@ -973,6 +975,59 @@ bool SCPipeBuilder::EnableSubPasses(){
                                    &SCPipeBuilder::DeadPipeElim) );
   Enabled.push_back(std::make_pair("EmptySig",
                                    &SCPipeBuilder::EmptySig) );
+  return true;
+}
+
+bool SCPipeBuilder::EnableAreaSubPasses(){
+  if( Opts->IsVerbose() )
+    this->PrintRawMsg("Enabling Pipeline Area Sub Passes");
+
+  Enabled.push_back(std::make_pair("SplitNStage",
+                                   &SCPipeBuilder::SplitNStage) );
+  Enabled.push_back(std::make_pair("SplitIO",
+                                   &SCPipeBuilder::SplitIO) );
+  Enabled.push_back(std::make_pair("FitArith",
+                                   &SCPipeBuilder::FitArith) );
+  Enabled.push_back(std::make_pair("FitTmpReg",
+                                   &SCPipeBuilder::FitTmpReg) );
+  Enabled.push_back(std::make_pair("FitPCSigs",
+                                   &SCPipeBuilder::FitPCSigs) );
+  Enabled.push_back(std::make_pair("DeadPipeElim",
+                                   &SCPipeBuilder::DeadPipeElim) );
+  Enabled.push_back(std::make_pair("EmptySig",
+                                   &SCPipeBuilder::EmptySig) );
+  return true;
+}
+
+bool SCPipeBuilder::EnablePowerSubPasses(){
+  if( Opts->IsVerbose() )
+    this->PrintRawMsg("Enabling Pipeline Power Sub Passes");
+
+  Enabled.push_back(std::make_pair("SplitNStage",
+                                   &SCPipeBuilder::SplitNStage) );
+  Enabled.push_back(std::make_pair("SplitIO",
+                                   &SCPipeBuilder::SplitIO) );
+  Enabled.push_back(std::make_pair("FitArith",
+                                   &SCPipeBuilder::FitArith) );
+  Enabled.push_back(std::make_pair("FitTmpReg",
+                                   &SCPipeBuilder::FitTmpReg) );
+  Enabled.push_back(std::make_pair("FitPCSigs",
+                                   &SCPipeBuilder::FitPCSigs) );
+  Enabled.push_back(std::make_pair("DeadPipeElim",
+                                   &SCPipeBuilder::DeadPipeElim) );
+  Enabled.push_back(std::make_pair("EmptySig",
+                                   &SCPipeBuilder::EmptySig) );
+  return true;
+}
+
+bool SCPipeBuilder::EnableSubPasses(){
+  if( Opts->IsPerfOpt() ){
+    return EnablePerfSubPasses();
+  }else if( Opts->IsAreaOpt() ){
+    return EnableAreaSubPasses();
+  }else if( Opts->IsPowerOpt() ){
+    return EnablePowerSubPasses();
+  }
   return true;
 }
 

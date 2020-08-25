@@ -71,6 +71,7 @@ private:
   bool isPipeline;  ///< SCOpts: Is the pipeline optimizer enabled?
 
   bool isAreaOpt;   ///< SCOpts: Is the area pipeline optimizations enabled
+  bool isPowerOpt;  ///< SCOpts: Is the power pipeline optimizations enabled
   bool isPerfOpt;   ///< SCOpts: Is the performance pipeline optimizations enabled
 
   std::string OutFile;  ///< SCOpts: Output file designator
@@ -185,6 +186,15 @@ public:
   /// SCOpts: Is the pipeline optimizer enabled
   bool IsPipeline() { return isPipeline; }
 
+  /// SCOpts: Are the area optimizations enabled
+  bool IsAreaOpt() { return isAreaOpt; }
+
+  /// SCOpts: Are the power optimizations enabled
+  bool IsPowerOpt() { return isPowerOpt; }
+
+  /// SCOpts: Are the performance optimizations enabled
+  bool IsPerfOpt() { return isPerfOpt; }
+
   /// SCOpts: Is verbosity enabled?
   bool IsVerbose() { return isVerbose; }
 
@@ -257,8 +267,17 @@ public:
   /// SCOpts: Purge the input file names
   bool PurgeInputFiles();
 
-  /// SCOpts: Set the 'perf' option
+  /// SCOpts: Set the 'performance stats' option
   bool SetPerf() { isPerf = true; return true; }
+
+  /// SCOpts: Set the 'area' opt
+  bool SetAreaOpt() { isAreaOpt = true; isPowerOpt = false; isPerfOpt = false; return true; }
+
+  /// SCOpts: Set the 'power' opt
+  bool SetPowerOpt() { isPowerOpt = true; isAreaOpt = false; isPerfOpt = false; return true; }
+
+  /// SCOpts: Set the 'performance' opt
+  bool SetPerfOpt() { isPerfOpt = true; isPowerOpt = false; isAreaOpt = false; return true; }
 
   /// SCOpts: Set the 'chisel' option
   bool SetChisel() { isChisel = true; return true; }
@@ -316,6 +335,9 @@ public:
 
   /// SCOpts: Disable SC passes
   bool UnsetSCPasses() { isSCEnable = true; EnableSCPass.clear(); return true; }
+
+  /// SCOpts: Disables the performance stats
+  bool UnsetPref() { isPerf = false; return true; }
 
   /// SCOpts: Disable Manual SC passes
   bool DisableManualSCPasses() { isSCEnable = false; return true; }

@@ -75,6 +75,15 @@ private:
   /// SCPipeBuilder: Enable sub-passes
   bool EnableSubPasses();
 
+  /// SCPipeBuilder: Enable performance optimization sub-passes
+  bool EnablePerfSubPasses();
+
+  /// SCPipeBuilder: Enable area optimization sub-passes
+  bool EnableAreaSubPasses();
+
+  /// SCPipeBuilder: Enable power optimization sub-passes
+  bool EnablePowerSubPasses();
+
   /// SCPipeBuilder: Determines if a pass is enabled
   bool IsSubPassEnabled(std::string Pass);
 
