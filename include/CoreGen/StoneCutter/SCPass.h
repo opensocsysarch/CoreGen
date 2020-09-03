@@ -131,6 +131,9 @@ public:
   /// Retrieves the number of pipelines present
   unsigned GetNumPipelines();
 
+  /// Retrieves the StoneCutter options string for the respective pass
+  std::string GetSCPassOptions();
+
   /// Retrieves a list of attributes for the target pipeline
   std::vector<std::string> GetPipelineAttrs(std::string Pipe);
 

@@ -29,8 +29,17 @@
 class SCMetadataAdjust : public SCPass {
 private:
 
+  unsigned Distance;    ///< SCMetadataAdjust: distance for which to search for pipeline deltas
+
+  /// Splits a string into base, delim and argument
+  void Split(const std::string& s, char delim,
+             std::vector<std::string>& v);
+
   /// Adjusts the metadata that has been dropped due to LLVM optimizations
   void AdjustMD();
+
+  /// Read the pass options
+  bool ReadPassOptions();
 
   /// Examines the target basic block for metadata continuity
   void ExamineBBMetadata(BasicBlock &BB);

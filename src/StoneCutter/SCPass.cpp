@@ -25,6 +25,13 @@ SCPass::SCPass(std::string N,
 SCPass::~SCPass(){
 }
 
+std::string SCPass::GetSCPassOptions(){
+  std::map<std::string,std::string> OptionsMap = Opts->GetSCPassOptions();
+  if( OptionsMap.find(Name) != OptionsMap.end() )
+    return OptionsMap.find(Name)->second;
+  return "";
+}
+
 void SCPass::PrintMsg( MSG_LEVEL L, const std::string M ){
   Msgs->PrintMsg( L, this->GetName() + " : " + M );
 }
