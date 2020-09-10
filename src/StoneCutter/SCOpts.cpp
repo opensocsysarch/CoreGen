@@ -481,6 +481,7 @@ void SCOpts::PrintHelp(){
   Msgs->PrintRawMsg(" ");
   Msgs->PrintRawMsg("Optimization Pass Options:");
   Msgs->PrintRawMsg("     -O                                  : Default optimizations; -O2");
+  Msgs->PrintRawMsg("     -O0                                 : Disable optimizations (-N)");
   Msgs->PrintRawMsg("     -O1                                 : Enable LLVM optmizations");
   Msgs->PrintRawMsg("     -O2                                 : Enable basic StoneCutter optimizations");
   Msgs->PrintRawMsg("     -O3                                 : Enable StoneCutter pipeliner");
