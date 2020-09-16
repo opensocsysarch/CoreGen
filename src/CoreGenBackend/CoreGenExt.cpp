@@ -17,31 +17,56 @@ CoreGenExt::CoreGenExt(std::string N, CoreGenErrno *E)
 
 CoreGenExt::~CoreGenExt(){
   for( unsigned i=0; i<Cores.size(); i++ ){
+    this->DeleteChild(static_cast<CoreGenNode *>(Cores[i]));
     delete Cores[i];
   }
   for( unsigned i=0; i<Caches.size(); i++ ){
+    this->DeleteChild(static_cast<CoreGenNode *>(Caches[i]));
     delete Caches[i];
   }
   for( unsigned i=0; i<Exts.size(); i++ ){
+    this->DeleteChild(static_cast<CoreGenNode *>(Exts[i]));
     delete Exts[i];
   }
   for( unsigned i=0; i<Insts.size(); i++ ){
+    this->DeleteChild(static_cast<CoreGenNode *>(Insts[i]));
     delete Insts[i];
   }
   for( unsigned i=0; i<Formats.size(); i++ ){
+    this->DeleteChild(static_cast<CoreGenNode *>(Formats[i]));
     delete Formats[i];
   }
   for( unsigned i=0; i<Regs.size(); i++ ){
+    this->DeleteChild(static_cast<CoreGenNode *>(Regs[i]));
     delete Regs[i];
   }
   for( unsigned i=0; i<RegClasses.size(); i++ ){
+    this->DeleteChild(static_cast<CoreGenNode *>(RegClasses[i]));
     delete RegClasses[i];
   }
   for( unsigned i=0; i<ISAs.size(); i++ ){
+    this->DeleteChild(static_cast<CoreGenNode *>(ISAs[i]));
     delete ISAs[i];
   }
   for( unsigned i=0; i<Comms.size(); i++ ){
+    this->DeleteChild(static_cast<CoreGenNode *>(Comms[i]));
     delete Comms[i];
+  }
+  for( unsigned i=0; i<Spads.size(); i++ ){
+    this->DeleteChild(static_cast<CoreGenNode *>(Spads[i]));
+    delete Spads[i];
+  }
+  for( unsigned i=0; i<MCtrls.size(); i++ ){
+    this->DeleteChild(static_cast<CoreGenNode *>(MCtrls[i]));
+    delete MCtrls[i];
+  }
+  for( unsigned i=0; i<DataPaths.size(); i++ ){
+    this->DeleteChild(static_cast<CoreGenNode *>(DataPaths[i]));
+    delete DataPaths[i];
+  }
+  for( unsigned i=0; i<VTPs.size(); i++ ){
+    this->DeleteChild(static_cast<CoreGenNode *>(VTPs[i]));
+    delete VTPs[i];
   }
 }
 
@@ -84,6 +109,21 @@ bool CoreGenExt::UpdateChildNodes(){
   }
   for( unsigned i=0; i<Comms.size(); i++ ){
     this->InsertChild(static_cast<CoreGenNode *>(Comms[i]));
+  }
+  for( unsigned i=0; i<Cores.size(); i++ ){
+    this->InsertChild(static_cast<CoreGenNode *>(Cores[i]));
+  }
+  for( unsigned i=0; i<Spads.size(); i++ ){
+    this->InsertChild(static_cast<CoreGenNode *>(Spads[i]));
+  }
+  for( unsigned i=0; i<MCtrls.size(); i++ ){
+    this->InsertChild(static_cast<CoreGenNode *>(MCtrls[i]));
+  }
+  for( unsigned i=0; i<DataPaths.size(); i++ ){
+    this->InsertChild(static_cast<CoreGenNode *>(DataPaths[i]));
+  }
+  for( unsigned i=0; i<VTPs.size(); i++ ){
+    this->InsertChild(static_cast<CoreGenNode *>(VTPs[i]));
   }
   return true;
 }
@@ -185,7 +225,8 @@ CoreGenISA *CoreGenExt::InsertISA( std::string Name ){
   return I;
 }
 
-CoreGenDataPath *CoreGenExt::InsertDataPath( std::string Name, std::string Style ){
+CoreGenDataPath *CoreGenExt::InsertDataPath( std::string Name,
+                                             std::string Style ){
   CoreGenDataPath *D = new CoreGenDataPath(Name, Style, Errno);
   DataPaths.push_back(D);
   CoreGenNode *N = static_cast<CoreGenNode *>(D);
@@ -193,6 +234,16 @@ CoreGenDataPath *CoreGenExt::InsertDataPath( std::string Name, std::string Style
     return nullptr;
   }
   return D;
+}
+
+CoreGenVTP *CoreGenExt::InsertVTP(std::string Name){
+  CoreGenVTP *V = new CoreGenVTP(Name,Errno);
+  VTPs.push_back(V);
+  CoreGenNode *N = static_cast<CoreGenNode *>(V);
+  if( !this->InsertChild(N) ){
+    return nullptr;
+  }
+  return V;
 }
 
 bool CoreGenExt::InsertRegClass( CoreGenRegClass *R ){
@@ -291,6 +342,15 @@ bool CoreGenExt::InsertDataPath( CoreGenDataPath *D ){
   }
   DataPaths.push_back(D);
   CoreGenNode *N = static_cast<CoreGenNode *>(D);
+  return this->InsertChild(N);
+}
+
+bool CoreGenExt::InsertVTP( CoreGenVTP *V ){
+  if( !V ){
+    return false;
+  }
+  VTPs.push_back(V);
+  CoreGenNode *N = static_cast<CoreGenNode *>(V);
   return this->InsertChild(N);
 }
 

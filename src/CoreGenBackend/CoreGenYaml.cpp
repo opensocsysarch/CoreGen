@@ -1177,6 +1177,10 @@ void CoreGenYaml::WriteExtYaml( YAML::Emitter *out,
       WriteMCtrlYaml(out, *(Exts[i]->GetMCtrls()) );
     }
 
+    if( Exts[i]->GetNumVTPs() > 0 ){
+      WriteVTPYaml(out, *(Exts[i]->GetVTPs()) );
+    }
+
     if( Exts[i]->GetNumExts() > 0 ){
       WriteExtYaml(out, *(Exts[i]->GetExts()) );
     }
@@ -1514,6 +1518,7 @@ bool CoreGenYaml::WriteYaml(  std::vector<CoreGenSoC *> const &Socs,
     WriteMCtrlYaml(&out,MCtrls);
   }
 
+  //-- VTPs
   if( VTPs.size() > 0 ){
     WriteVTPYaml(&out,VTPs);
   }
@@ -3707,6 +3712,14 @@ bool CoreGenYaml::ReadExtYaml(const YAML::Node& ExtNodes,
       }
     }
 
+    //-- VTP Controllers
+    if( Node["VTPControllers"] ){
+      const YAML::Node& VTPNodes = Node["VTPControllers"];
+      if( !ReadVTPYaml(VTPNodes,E->GetVTPVect()) ){
+        return false;
+      }
+    }
+
     //-- Exts
     if( Node["Extensions"] ){
       const YAML::Node& ExtNodes = Node["Extensions"];
@@ -3718,12 +3731,10 @@ bool CoreGenYaml::ReadExtYaml(const YAML::Node& ExtNodes,
     //-- Comms
     if( Node["Comms"] ){
       const YAML::Node& CommNodes = Node["Comms"];
-      // we define three blank vectors of nodes
+      // we define two blank vectors of nodes
       // because extensions do not have plugins, SoCs
-      // and VTPs
       std::vector<CoreGenPlugin *> Plugins;   // temporary fix
       std::vector<CoreGenSoC *> TSoCVect;     // temporary fix
-      std::vector<CoreGenVTP *> TVTPVect;     // temporary fix
       if( !ReadCommYaml(CommNodes,
                     TSoCVect,
                     E->GetCoreVect(),
@@ -3737,7 +3748,7 @@ bool CoreGenYaml::ReadExtYaml(const YAML::Node& ExtNodes,
                     E->GetCommVect(),
                     E->GetSpadVect(),
                     E->GetMCtrlVect(),
-                    TVTPVect,
+                    E->GetVTPVect(),
                     E->GetExtVect(),
                     Plugins) ){
         return false;
