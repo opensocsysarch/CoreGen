@@ -92,6 +92,54 @@ bool SCSigMap::TranslateBinaryOp( Function &F,
   return true;
 }
 
+bool SCSigMap::IsLegalMemOp( Function &F,
+                             Instruction &I ){
+  if( I.getOpcode() == Instruction::Store ){
+    // store operations need to trace the target (op 1) of the instruction
+    bool isPredef = false;
+    bool isImm = false;
+    unsigned Width = 0;
+    std::string WOpName = TraceOperand(F,I.getOperand(1),isPredef,isImm,Width);
+    DataLayout* DL = new DataLayout(TheModule);
+    auto *SInst = dyn_cast<StoreInst>(&I);
+    Value *LV = SInst->getPointerOperand();
+    PointerType *PT = cast<PointerType>(LV->getType());
+    Width = DL->getTypeStoreSize(PT->getPointerElementType()) * 8;  // convert to bits
+    delete DL;
+    if( isPredef  ){
+      Signals->InsertSignal(new SCSig(REG_WRITE,
+                                      Width,
+                                      F.getName().str(),
+                                      WOpName+"_WRITE",
+                                      GetMDPipeName(I)));
+      return true;
+    }
+  }else if( I.getOpcode() == Instruction::Load ){
+    // load operations need to trace the address of the source (op 0)
+    bool isPredef = false;
+    bool isImm = false;
+    unsigned Width = 0;
+    std::string WOpName = TraceOperand(F,I.getOperand(0),isPredef,isImm,Width);
+
+    DataLayout* DL = new DataLayout(TheModule);
+    auto *LInst = dyn_cast<LoadInst>(&I);
+    Value *LV = LInst->getPointerOperand();
+    PointerType *PT = cast<PointerType>(LV->getType());
+    Width = DL->getTypeStoreSize(PT->getPointerElementType()) * 8;  // convert to bits
+    delete DL;
+    if( isPredef ){
+      Signals->InsertSignal(new SCSig(REG_READ,
+                                      Width,
+                                      F.getName().str(),
+                                      WOpName+"_READ",
+                                      GetMDPipeName(I)));
+      return true;
+    }
+  }
+
+  return false;
+}
+
 bool SCSigMap::TranslateMemOp( Function &F,
                                Instruction &I ){
   if( I.getOpcode() == Instruction::Store ){
@@ -324,6 +372,8 @@ bool SCSigMap::IsNullBranchTarget(Instruction &I){
 
 bool SCSigMap::IsIgnoreInst(Instruction &I){
   switch( I.getOpcode() ){
+  case Instruction::ZExt :    // temporary
+  case Instruction::SExt :    // temporary
   case Instruction::FPToUI :
   case Instruction::FPToSI :
   case Instruction::UIToFP :
@@ -368,11 +418,6 @@ signed SCSigMap::GetBranchDistance(Function &F, Instruction &BI, Instruction &Ta
   signed TargetID   = 0;
   signed Count      = 0;
 
-#if 0
-  std::cout << "Source Instruction = " << BI.getOpcodeName() << std::endl;
-  std::cout << "Target Instruction = " << Target.getOpcodeName() << std::endl;
-#endif
-
   if( BI.isIdenticalTo(&Target) )
     return 0;
 
@@ -386,12 +431,19 @@ signed SCSigMap::GetBranchDistance(Function &F, Instruction &BI, Instruction &Ta
           TargetID = Count;
         }
 
-        if( !IsIgnoreInst(Inst) )
+        if( !IsIgnoreInst(Inst) && IsLegalMemOp(F,Inst) )
           ++Count;
       }
     }
   }
 
+#if 0
+  // debug messages
+  std::cout << "Function           = " << F.getName().str() << std::endl;
+  std::cout << "Source Instruction = " << BI.getOpcodeName() << std::endl;
+  std::cout << "Target Instruction = " << Target.getOpcodeName() << std::endl;
+  std::cout << "Distance           = " << TargetID - SourceID << std::endl;
+#endif
 
   return TargetID - SourceID;
 }
@@ -400,6 +452,9 @@ SigType SCSigMap::GetBranchType(Function &F, Instruction &I){
   SigType Type = BR_N;          // default type
   Value *V = I.getOperand(0);   // conditional branch var
 
+  // Walk all the basic blocks and instructions in the current function
+  // (inst def) and find the instruction that writes the compare instruction
+  // that determines the value used for the branch
   for( auto &BB : F.getBasicBlockList() ){
     if( !F.isDeclaration() ){
       // walk all the instructions
@@ -634,7 +689,6 @@ bool SCSigMap::CheckSigReq( Function &F, Instruction &I ){
   //
   // For each one of the relevant signals decoded, generate a signal map
   // and push it into the master vector of signals
-
   // Decode everything else
   switch( I.getOpcode() ){
     // binary signals

@@ -40,6 +40,7 @@
 #include "CoreGen/CoreGenBackend/CoreGenMCtrl.h"
 #include "CoreGen/CoreGenBackend/CoreGenCore.h"
 #include "CoreGen/CoreGenBackend/CoreGenDataPath.h"
+#include "CoreGen/CoreGenBackend/CoreGenVTP.h"
 
 typedef enum{
   CGExtTemplate = 1,                        ///< CGExtType: Template extension
@@ -65,6 +66,7 @@ private:
   std::vector<CoreGenSpad *> Spads;         ///< CoreGenExt: Scratchpads
   std::vector<CoreGenMCtrl *> MCtrls;       ///< CoreGenExt: Memory Controllers
   std::vector<CoreGenDataPath *> DataPaths; ///< CoreGenExt: DataPaths
+  std::vector<CoreGenVTP *> VTPs;           ///< CoreGenExt: Virtual to physical controllers
 
 public:
 
@@ -120,6 +122,9 @@ public:
   /// Retrieve the Datapaths
   std::vector<CoreGenDataPath *> *GetDataPaths() { return &DataPaths; }
 
+  /// Retrieve the VTPs
+  std::vector<CoreGenVTP *> *GetVTPs() { return &VTPs; }
+
   /// Retrieve the number of child Cache nodes
   unsigned GetNumCaches() { return Caches.size(); }
 
@@ -158,6 +163,9 @@ public:
 
   /// Retrieve the number of child DataPaths / Pipelines
   unsigned GetNumDataPaths() { return DataPaths.size(); }
+
+  /// Retrive the number of VTPs
+  unsigned GetNumVTPs() { return VTPs.size(); }
 
   /// Updates the child node structure after inserting new nodes
   bool UpdateChildNodes();
@@ -232,6 +240,12 @@ public:
   /// Insert an existing DataPath
   bool InsertDataPath( CoreGenDataPath *D );
 
+  /// Insert a new VTP
+  CoreGenVTP *InsertVTP(std::string Name );
+
+  /// Insert an existing VTP
+  bool InsertVTP( CoreGenVTP *VTP );
+
   /// Retrieve a reference to the cache vector
   std::vector<CoreGenCache *> &GetCacheVect(){ return Caches; }
 
@@ -268,6 +282,11 @@ public:
   /// Retrieve a reference to the memory controllers vector
   std::vector<CoreGenMCtrl *> &GetMCtrlVect() { return MCtrls; }
 
+  /// Retrieve a reference to the datapath vector
+  std::vector<CoreGenDataPath *> &GetDataPathVect() { return DataPaths; }
+
+  /// Retrieve a reference to the VTP vector
+  std::vector<CoreGenVTP *> &GetVTPVect() { return VTPs; }
 };
 
 #endif

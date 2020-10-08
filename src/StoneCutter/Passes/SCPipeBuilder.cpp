@@ -290,15 +290,29 @@ bool SCPipeBuilder::FitArith(){
   return true;
 }
 
+void SCPipeBuilder::PrintAdjMat(){
+  for( unsigned i=0; i<PipeVect.size(); i++ ){
+    std::cout << "[" << PipeVect[i] << "] ";
+    for( unsigned j=0; j<SigMap->GetNumSignals(); j++ ){
+      std::cout << "[" << AdjMat[i][j] << "] ";
+    }
+    std::cout << std::endl;
+  }
+  std::cout << std::endl;
+}
+
 std::vector<std::string> SCPipeBuilder::GetEmptyStages(){
+
   std::vector<std::string> EmptyStages;
   for( unsigned i=0; i<PipeVect.size(); i++ ){
     unsigned Total = 0;
     for( unsigned j=0; j<SigMap->GetNumSignals(); j++ ){
       Total = Total + AdjMat[i][j];
     }
-    if( Total == 0 )
+    if( Total == 0 ){
+      std::cout << "!!!!!!!!!!!! " << PipeVect[i] << std::endl;
       EmptyStages.push_back( PipeVect[i] );
+    }
   }
 
   return EmptyStages;
@@ -784,6 +798,11 @@ bool SCPipeBuilder::Optimize(){
       this->PrintMsg( L_ERROR, "Subpass failed: " + Enabled[i].first );
       return false;
     }
+
+#if 0
+    PrintAdjMat();
+#endif
+
     if( !WriteSigMap() ){
       this->PrintMsg( L_ERROR, "Failed to write signal map following " + Enabled[i].first );
       return false;
@@ -938,8 +957,10 @@ bool SCPipeBuilder::InitAttrs(){
   return true;
 }
 
-bool SCPipeBuilder::EnableSubPasses(){
-  // temporarily enable all the sub-passes
+bool SCPipeBuilder::EnablePerfSubPasses(){
+  if( Opts->IsVerbose() )
+    this->PrintRawMsg("Enabling Pipeline Performance Sub Passes");
+
   Enabled.push_back(std::make_pair("SplitNStage",
                                    &SCPipeBuilder::SplitNStage) );
   Enabled.push_back(std::make_pair("SplitIO",
@@ -954,6 +975,59 @@ bool SCPipeBuilder::EnableSubPasses(){
                                    &SCPipeBuilder::DeadPipeElim) );
   Enabled.push_back(std::make_pair("EmptySig",
                                    &SCPipeBuilder::EmptySig) );
+  return true;
+}
+
+bool SCPipeBuilder::EnableAreaSubPasses(){
+  if( Opts->IsVerbose() )
+    this->PrintRawMsg("Enabling Pipeline Area Sub Passes");
+
+  Enabled.push_back(std::make_pair("SplitNStage",
+                                   &SCPipeBuilder::SplitNStage) );
+  Enabled.push_back(std::make_pair("SplitIO",
+                                   &SCPipeBuilder::SplitIO) );
+  Enabled.push_back(std::make_pair("FitArith",
+                                   &SCPipeBuilder::FitArith) );
+  Enabled.push_back(std::make_pair("FitTmpReg",
+                                   &SCPipeBuilder::FitTmpReg) );
+  Enabled.push_back(std::make_pair("FitPCSigs",
+                                   &SCPipeBuilder::FitPCSigs) );
+  Enabled.push_back(std::make_pair("DeadPipeElim",
+                                   &SCPipeBuilder::DeadPipeElim) );
+  Enabled.push_back(std::make_pair("EmptySig",
+                                   &SCPipeBuilder::EmptySig) );
+  return true;
+}
+
+bool SCPipeBuilder::EnablePowerSubPasses(){
+  if( Opts->IsVerbose() )
+    this->PrintRawMsg("Enabling Pipeline Power Sub Passes");
+
+  Enabled.push_back(std::make_pair("SplitNStage",
+                                   &SCPipeBuilder::SplitNStage) );
+  Enabled.push_back(std::make_pair("SplitIO",
+                                   &SCPipeBuilder::SplitIO) );
+  Enabled.push_back(std::make_pair("FitArith",
+                                   &SCPipeBuilder::FitArith) );
+  Enabled.push_back(std::make_pair("FitTmpReg",
+                                   &SCPipeBuilder::FitTmpReg) );
+  Enabled.push_back(std::make_pair("FitPCSigs",
+                                   &SCPipeBuilder::FitPCSigs) );
+  Enabled.push_back(std::make_pair("DeadPipeElim",
+                                   &SCPipeBuilder::DeadPipeElim) );
+  Enabled.push_back(std::make_pair("EmptySig",
+                                   &SCPipeBuilder::EmptySig) );
+  return true;
+}
+
+bool SCPipeBuilder::EnableSubPasses(){
+  if( Opts->IsPerfOpt() ){
+    return EnablePerfSubPasses();
+  }else if( Opts->IsAreaOpt() ){
+    return EnableAreaSubPasses();
+  }else if( Opts->IsPowerOpt() ){
+    return EnablePowerSubPasses();
+  }
   return true;
 }
 

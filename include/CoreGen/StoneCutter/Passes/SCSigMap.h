@@ -87,6 +87,10 @@ private:
   /// Determines the branch distance in instructions between the branch source and the branch target
   signed GetBranchDistance(Function &F, Instruction &BI, Instruction &Target);
 
+  /// Determines if the target memory operation is legal for translation to a signal
+  /// Similar in function to TranslateMemOp, but NEVER inserts signals into the signal map
+  bool IsLegalMemOp(Function &F, Instruction &I);
+
   /// Determines if the branch target can be ignored
   bool IsNullBranchTarget(Instruction &I);
 

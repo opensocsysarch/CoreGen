@@ -62,13 +62,28 @@ bool SMLegalizeSigMap::CheckLegalBr(){
       SCSig *LSig = Sigs[j];
       if( LSig->isBranchSig() ){
         // found a branch signal
-        signed TargetTrue = LSig->GetDistanceTrue() + j;
-        signed TargetFalse = LSig->GetDistanceFalse() + j;
+        //signed TargetTrue = LSig->GetDistanceTrue() + j;
+        //signed TargetFalse = LSig->GetDistanceFalse() + j;
+        signed TargetTrue = LSig->GetDistanceTrue() + (signed)(j);
+        signed TargetFalse = LSig->GetDistanceFalse() + (signed)(j);
         if( (TargetTrue<0) || (TargetTrue>((signed)(Sigs.size()-1))) ){
           SetErrorStr( "Branch uOp falls outside uOp block in instruction " +
                        SigNames[i] +
                        " at operation = " +
                        LSig->SigTypeToStr() );
+#if 0
+          // Debug messages
+          std::cout << "Branch uOp falls outside uOp block in instruction " +
+                       SigNames[i] +
+                       " at operation = " +
+                       LSig->SigTypeToStr() << std::endl;
+          std::cout << "SigNames[i] = " << SigNames[i] << " has " << Sigs.size() << std::endl;
+          std::cout << "DTrue_Base = " << LSig->GetDistanceTrue() << std::endl;
+          std::cout << "DFalse_Base = " << LSig->GetDistanceFalse() << std::endl;
+          std::cout << "j = " << j << std::endl;
+          std::cout << "DTrue = " << LSig->GetDistanceTrue() + (signed)(j) << std::endl;
+          std::cout << "DFalse = " << LSig->GetDistanceFalse() + (signed)(j) << std::endl;
+#endif
           rtn = false;
         }
         if( (TargetFalse<0) || (TargetFalse>((signed)(Sigs.size()-1))) ){

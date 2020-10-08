@@ -75,6 +75,9 @@ void SCChiselCodeGen::InitPasses(){
   Passes.push_back(static_cast<SCPass *>(new SCFieldIO(SCParser::TheModule.get(),
                                                        Opts,
                                                        Msgs)));
+  Passes.push_back(static_cast<SCPass *>(new SCMetadataAdjust(SCParser::TheModule.get(),
+                                                              Opts,
+                                                              Msgs)));
 }
 
 void SCChiselCodeGen::WriteChiselHeader(std::ofstream &out,
@@ -111,6 +114,10 @@ std::vector<std::string> SCChiselCodeGen::GetOptsList(){
 
 bool SCChiselCodeGen::ExecutePasses(){
   bool rtn = true;
+
+  // make sure we don't run the passes twice
+  if( Opts->IsPassRun() )
+    return true;
 
   Opts->PassRun();
 
@@ -1576,7 +1583,7 @@ bool SCChiselCodeGen::ExecuteCodegen(){
   }
 
   // attempt to perform pipeline optimization
-  if( CSM && Opts->IsPipeline() ){
+  if( CSM && Opts->IsPipeline() && !Opts->IsPassRun() ){
     if( !ExecutePipelineOpt(CSM) ){
       return false;
     }

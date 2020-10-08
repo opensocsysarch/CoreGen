@@ -161,6 +161,25 @@ bool SCOpts::ParsePipelineOpts( std::string P ){
     PipePassOpts.insert(std::pair<std::string,std::string>(TV[0],TV[1]));
   }
 
+  // walk the pipeline options and set everything up
+  // first, enable the performance options by default
+  SetPerfOpt();
+
+  for( auto it = PipePassOpts.begin(); it != PipePassOpts.end(); ++it ){
+    if( it->first == "Opt" ){
+      if( it->second == "Area" ){
+        SetAreaOpt();
+      }else if( it->second == "Power" ){
+        SetPowerOpt();
+      }else if( it->second == "Perf" ){
+        SetPerfOpt();
+      }else{
+        Msgs->PrintMsg( L_WARN, "-Pipeline opts at " + it->second + " is invalid");
+        return true;
+      }
+    }
+  }
+
   return true;
 }
 
@@ -367,6 +386,12 @@ bool SCOpts::ParseOpts(bool *isHelp){
       isPipeline = true;    // enable pipelining
       isSCEnable = false;   // individual pass enalbler
       isSCDisable = false;  // individual pass disabler
+
+      // only enable the performance optimizations if the power and area
+      // optimizations are disabled
+      if( (!IsAreaOpt()) && (!IsPowerOpt()) ){
+        SetPerfOpt();         // enable performance oriented pipeliner
+      }
     }else if( FindPipeline(s) ){
       // parse a '-Pipeline' option
       isPipeline = true;
@@ -456,6 +481,7 @@ void SCOpts::PrintHelp(){
   Msgs->PrintRawMsg(" ");
   Msgs->PrintRawMsg("Optimization Pass Options:");
   Msgs->PrintRawMsg("     -O                                  : Default optimizations; -O2");
+  Msgs->PrintRawMsg("     -O0                                 : Disable optimizations (-N)");
   Msgs->PrintRawMsg("     -O1                                 : Enable LLVM optmizations");
   Msgs->PrintRawMsg("     -O2                                 : Enable basic StoneCutter optimizations");
   Msgs->PrintRawMsg("     -O3                                 : Enable StoneCutter pipeliner");
@@ -470,7 +496,8 @@ void SCOpts::PrintHelp(){
   Msgs->PrintRawMsg(" ");
   Msgs->PrintRawMsg("Pipeline Optimizer Options");
   Msgs->PrintRawMsg("     -Pipeline:Opt=Area                  : Optimize the pipeline for area efficiency");
-  Msgs->PrintRawMsg("     -Pipeline:Opt=Perf                  : Optimize the pipeline for performance");
+  Msgs->PrintRawMsg("     -Pipeline:Opt=Power                 : Optimize the pipeline for minimal power");
+  Msgs->PrintRawMsg("     -Pipeline:Opt=Perf                  : Optimize the pipeline for performance (default at -O3)");
   Msgs->PrintRawMsg(" ");
   Msgs->PrintRawMsg("Chisel Output Options:");
   Msgs->PrintRawMsg("     -a|-package|--package PACKAGE       : Sets the Chisel package name");

@@ -25,6 +25,13 @@ SCPass::SCPass(std::string N,
 SCPass::~SCPass(){
 }
 
+std::string SCPass::GetSCPassOptions(){
+  std::map<std::string,std::string> OptionsMap = Opts->GetSCPassOptions();
+  if( OptionsMap.find(Name) != OptionsMap.end() )
+    return OptionsMap.find(Name)->second;
+  return "";
+}
+
 void SCPass::PrintMsg( MSG_LEVEL L, const std::string M ){
   Msgs->PrintMsg( L, this->GetName() + " : " + M );
 }
@@ -414,6 +421,14 @@ std::vector<std::string> SCPass::GetPipeStages(Function &F){
   return Vect;
 }
 
+bool SCPass::GetPipeLine(Instruction &I, std::string &PipeLine){
+  if (MDNode* N = I.getMetadata("pipe.pipeLine")){
+    PipeLine = cast<MDString>(N->getOperand(0))->getString().str();
+    return true;
+  }
+  return false;
+}
+
 bool SCPass::GetPipeStage(Instruction &I, std::string &Stage){
   if (MDNode* N = I.getMetadata("pipe.pipeName")){
     Stage = cast<MDString>(N->getOperand(0))->getString().str();
@@ -502,6 +517,21 @@ std::string SCPass::TraceOperand( Function &F, Value *V,
     if( V->getType()->isIntegerTy() )
       Width = V->getType()->getIntegerBitWidth();
     return V->getName().str();
+  }
+
+
+  // walk all the instructions and search for any alloca
+  // instructions that include our variable as the target
+  for( auto &BB : F.getBasicBlockList() ){
+    // walk all the instructions
+    for( auto &Inst : BB.getInstList() ){
+      if( Inst.getOpcode() == Instruction::Alloca ){
+        Value *LHS = cast<Value>(&Inst);
+        if( LHS->getName().str() == V->getName().str() ){
+          return LHS->getName().str();
+        }
+      }
+    }
   }
 
   // The current operand was not in our global list, search for all its uses
