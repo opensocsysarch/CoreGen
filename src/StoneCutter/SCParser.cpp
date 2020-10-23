@@ -1754,7 +1754,6 @@ Value *PipeExprAST::codegen() {
   // parser and inform the user.
   if( PipeLine.length() > 0 ){
     std::map<std::string, GlobalVariable*>::iterator it;
-    unsigned PIdx = 0;
     it = SCParser::GlobalNamedValues.find(PipeLine);
     if( it != SCParser::GlobalNamedValues.end() ){
       for( auto &Global : SCParser::TheModule->getGlobalList() ){

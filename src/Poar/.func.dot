@@ -1,0 +1,22 @@
+digraph "CFG for 'func' function" {
+	label="CFG for 'func' function";
+
+	Node0x1cebe80 [shape=record,label="{%3|{<s0>T|<s1>F}}"];
+	Node0x1cebe80:s0 -> Node0x1cebed0;
+	Node0x1cebe80:s1 -> Node0x1cebfc0;
+	Node0x1cebed0 [shape=record,label="{%12|{<s0>T|<s1>F}}"];
+	Node0x1cebed0:s0 -> Node0x1cebf20;
+	Node0x1cebed0:s1 -> Node0x1cebf70;
+	Node0x1cebf20 [shape=record,label="{%17}"];
+	Node0x1cebf20 -> Node0x1cebf70;
+	Node0x1cebf70 [shape=record,label="{%20}"];
+	Node0x1cebf70 -> Node0x1cec010;
+	Node0x1cebfc0 [shape=record,label="{%21}"];
+	Node0x1cebfc0 -> Node0x1cec010;
+	Node0x1cec010 [shape=record,label="{%24|{<s0>T|<s1>F}}"];
+	Node0x1cec010:s0 -> Node0x1cec060;
+	Node0x1cec010:s1 -> Node0x1cec0b0;
+	Node0x1cec060 [shape=record,label="{%27}"];
+	Node0x1cec060 -> Node0x1cec0b0;
+	Node0x1cec0b0 [shape=record,label="{%30}"];
+}
