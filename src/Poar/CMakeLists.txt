@@ -12,7 +12,7 @@ set(PoarSrcs
 )
 
 # -- TARGETS
-add_library(Poar ${PoarSrcs})
+add_library(PoarBackend ${PoarSrcs})
 add_executable(poar PoarMain.cpp)
 
 # -- HEADERS
@@ -20,10 +20,10 @@ include_directories(${COREGEN_INCLUDE_PATH})
 include_directories(${YAML_PATH}/include)
 
 # -- LINK LIBS
-target_link_libraries(poar Poar CoreGenBackend SCComp)
+target_link_libraries(poar PoarBackend CoreGenBackend SCComp)
 
 # -- INSTALL TARGETS
-install(TARGETS Poar DESTINATION lib)
+install(TARGETS PoarBackend DESTINATION lib)
 install(TARGETS poar DESTINATION bin)
 
 #-- EOF
