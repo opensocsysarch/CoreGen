@@ -22,6 +22,7 @@ if(BUILD_ALL_TESTING)
   set(BUILD_COREGEN_CODEGEN_TESTING "ON")
   set(BUILD_COREGEN_ARCHIVE_TESTING "ON")
   set(BUILD_COREGEN_CONFIG_TESTING "ON")
+  set(BUILD_COREGEN_POAR_TESTING "ON")
 endif()
 
 add_subdirectory(Yaml)
@@ -32,5 +33,6 @@ add_subdirectory(StoneCutter)
 add_subdirectory(CodeGen)
 add_subdirectory(Archive)
 add_subdirectory(Config)
+add_subdirectory(Poar)
 
 #-- EOF

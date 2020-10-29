@@ -9,6 +9,7 @@
 
 set(PoarSrcs
  PoarOpts.cpp
+ PoarConfig.cpp
 )
 
 # -- TARGETS
