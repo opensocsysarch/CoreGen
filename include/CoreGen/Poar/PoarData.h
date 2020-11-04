@@ -13,7 +13,7 @@
  *
  * \ingroup Poar
  *
- * \brief Power/Area speculation configuration class
+ * \brief Power/Area speculation data class
  *
  */
 

@@ -11,6 +11,7 @@ set(PoarSrcs
  PoarOpts.cpp
  PoarConfig.cpp
  PoarData.cpp
+ PoarIO.cpp
 )
 
 # -- TARGETS

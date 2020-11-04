@@ -12,6 +12,7 @@
 #include <string>
 
 #include "CoreGen/Poar/PoarData.h"
+#include "CoreGen/Poar/PoarIO.h"
 
 int main( int argc, char **argv ){
   // -- classes --
