@@ -34,11 +34,17 @@ public:
     POWER_REGBIT    = 10,       ///< ConfigType: Power per register bit
     POWER_DPATHBIT  = 11,       ///< ConfigType: Power per data path bit
     POWER_CPATHBIT  = 12,       ///< ConfigType: Power per control path bit
+    POWER_CACHEBIT  = 13,       ///< ConfigType: Power per cache bit
+    POWER_SPADBIT   = 14,       ///< ConfigType: Power per scratchpad bit
+    POWER_ROMBIT    = 15,       ///< ConfigType: Power per ROM bit
 
     // Area Values
     AREA_REGBIT     = 100,      ///< ConfigType: Area per register bit
     AREA_DPATHBIT   = 101,      ///< ConfigType: Area per data path bit
-    AREA_CPATHBIT   = 102       ///< ConfigType: Area per control path bit
+    AREA_CPATHBIT   = 102,      ///< ConfigType: Area per control path bit
+    AREA_CACHEBIT   = 103,      ///< ConfigType: Area per cache bit
+    AREA_SPADBIT    = 104,      ///< ConfigType: Area per scratchpad bit
+    AREA_ROMBIT     = 105       ///< ConfigType: Area per ROM bi
   }ConfigType;                  ///< PoarConfig: Defines the configuration types
 
   typedef struct{
