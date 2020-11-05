@@ -24,6 +24,9 @@
 #include <string>
 #include <vector>
 #include <iostream>
+#include <fstream>
+
+#include "yaml-cpp/yaml.h"
 
 class PoarIO{
 public:

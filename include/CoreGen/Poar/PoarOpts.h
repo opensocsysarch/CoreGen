@@ -41,9 +41,9 @@ private:
   int argc;             ///< PoarOpts: ARGC command line info
   char **argv;          ///< PoarOpts: ARGV command line info
   std::string YamlFile; ///< PoarOpts: Yaml input file
-  std::string SCFile;   ///< PoarOpts: StoneCutter input file
+  std::string SCFile;   ///< PoarOpts: Signal map input file
   std::string Config;   ///< PoarOpts: configuration file
-  std::string OutFile;  ///< PoarOpts: output file
+  std::string OutFile;  ///< PoarOpts: output files
 
   bool TextOutput;      ///< PoarOpts: defines textual output
   bool YamlOutput;      ///< PoarOpts: defines yaml output
@@ -88,6 +88,9 @@ public:
 
   /// PoarOpts: Retrieves the design input file
   std::string GetDesignFile() { return YamlFile; }
+
+  /// PoarOpts: Retrieves the signal map input file
+  std::string GetSigMapFile() { return SCFile; }
 };
 
 #endif // _POAROPTS_H_

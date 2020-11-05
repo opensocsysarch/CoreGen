@@ -54,8 +54,20 @@ int main( int argc, char **argv ){
   }
 
   // Derive the power/area data
+  if( !PData->DeriveData() ){
+    std::cout << "Error : " << PData->GetErrStr() << std::endl;
+    delete POpts;
+    delete PData;
+    return -1;
+  }
 
   // Print the data
+  if( !PData->WriteData() ){
+    std::cout << "Error : " << PData->GetErrStr() << std::endl;
+    delete POpts;
+    delete PData;
+    return -1;
+  }
 
   // Delete all the objects
   delete PData;

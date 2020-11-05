@@ -26,11 +26,12 @@
 
 //-- CoreGen headers
 #include "CoreGen/CoreGenBackend/CoreGenBackend.h"
-#include "CoreGen/StoneCutter/StoneCutter.h"
+#include "CoreGen/CoreGenSigMap/CoreGenSigMap.h"
 
 //-- Poar headers
 #include "CoreGen/Poar/PoarOpts.h"
 #include "CoreGen/Poar/PoarConfig.h"
+#include "CoreGen/Poar/PoarIO.h"
 
 class PoarData{
 public:
@@ -46,10 +47,17 @@ public:
   /// PoarData: initialize the object
   bool Init();
 
+  /// PoarData: derive the power and area data
+  bool DeriveData();
+
+  /// PoarData: write the data out to a file
+  bool WriteData();
+
 private:
   PoarOpts *POpts;          ///< PoarData: Poar options handler object
   PoarConfig *PConfig;      ///< PoarData: Poar configuration entry
-  CoreGenBackend *CG;       ///< PoarData: CoreGenBackend Object
+  CoreGenBackend *CG;       ///< PoarData: CoreGenBackend object
+  CoreGenSigMap *SM;        ///< PoarData: Signal Map object
 
   std::string ErrStr;       ///< PoarData: error string
 };

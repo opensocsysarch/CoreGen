@@ -16,7 +16,10 @@ PoarData::PoarData(PoarOpts *P)
 
 PoarData::~PoarData(){
   delete PConfig;
-  delete CG;
+  if( CG )
+    delete CG;
+  if( SM )
+    delete SM;
 }
 
 bool PoarData::Init(){
@@ -34,16 +37,61 @@ bool PoarData::Init(){
   }
 
   // load a coregen design object
-  CG = new CoreGenBackend();
-  if( !CG ){
-    ErrStr = "Could not load CoreGen design data";
+  if( POpts->GetDesignFile().length() > 0 ){
+    CG = new CoreGenBackend();
+    if( !CG ){
+      ErrStr = "Could not load CoreGen design data";
+      return false;
+    }
+
+    if( !CG->ReadIR(POpts->GetDesignFile()) ){
+      ErrStr = "Could not read design input file : " + CG->GetErrStr();
+      return false;
+    }
+  }
+
+  if( POpts->GetSigMapFile().length() > 0 ){
+    SM = new CoreGenSigMap();
+    if( !SM ){
+      ErrStr = "Could not not CoreGenSigMap signal map data";
+      return false;
+    }
+
+    if( !SM->ReadSigMap(POpts->GetSigMapFile()) ){
+      ErrStr = "Could not read signal map input file : " + SM->GetErrStr();
+      return false;
+    }
+  }
+
+  return true;
+}
+
+bool PoarData::DeriveData(){
+  return true;
+}
+
+bool PoarData::WriteData(){
+  if( !POpts ){
+    ErrStr = "Options object not initialized";
     return false;
   }
 
-  if( !CG->ReadIR(POpts->GetDesignFile()) ){
-    ErrStr = "Could not read design input file : " + CG->GetErrStr();
+  PoarIO *PIO = new PoarIO();
+  if( !PIO ){
+    ErrStr = "Could not init IO object";
     return false;
   }
+
+  // init the specific i/o options
+  if( POpts->IsTextOutput() ){
+  }else if( POpts->IsYamlOutput() ){
+  }else if( POpts->IsLatexOutput() ){
+  }else if( POpts->IsXmlOutput() ){
+  }
+
+  // write out all the data
+
+  delete PIO;
 
   return true;
 }

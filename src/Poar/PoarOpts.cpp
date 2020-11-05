@@ -36,6 +36,7 @@ void PoarOpts::PrintHelp(){
   std::cout << std::endl;
   std::cout << "Input Files:" << std::endl;
   std::cout << "\t--design /path/to/design.yaml       : Set the CoreGen design input file" << std::endl;
+  std::cout << "\t--sigmap /path/to/sigmap.yaml       : Set the StoneCutter signal map" << std::endl;
   std::cout << std::endl;
   std::cout << "Output Formats:" << std::endl;
   std::cout << "\t--text                              : Text output (default)" << std::endl;
@@ -86,6 +87,14 @@ bool PoarOpts::ParseOpts(bool *isHelp){
       std::string S(argv[i+1]);
       YamlFile = S;
       i++;
+    }else if( s=="--sigmap" ){
+      if( i+1 > (argc-1) ){
+        std::cout << "Error : --sigmap requires an argument" << std::endl;
+        return false;
+      }
+      std::string S(argv[i+1]);
+      SCFile = S;
+      i++;
     }else if( s=="--text" ){
       TextOutput = true;
       YamlOutput = false;
@@ -112,8 +121,8 @@ bool PoarOpts::ParseOpts(bool *isHelp){
     }
   }
 
-  if( YamlFile.length() == 0 ){
-    std::cout << "Error : no design inputs specified; see the --design option" << std::endl;
+  if( (YamlFile.length() == 0) && (SCFile.length() == 0) ){
+    std::cout << "Error : no design inputs specified; see the --design and --sigmap options" << std::endl;
     return false;
   }
 

@@ -23,7 +23,8 @@ include_directories(${COREGEN_INCLUDE_PATH})
 include_directories(${YAML_PATH}/include)
 
 # -- LINK LIBS
-target_link_libraries(poar PoarBackend CoreGenBackend SCComp)
+target_link_libraries(PoarBackend CoreGenBackend CoreGenSigMap yaml-cpp ${COREGEN_LINK_LIBS})
+target_link_libraries(poar PoarBackend ${COREGEN_LINK_LIBS})
 
 # -- INSTALL TARGETS
 install(TARGETS PoarBackend DESTINATION lib)

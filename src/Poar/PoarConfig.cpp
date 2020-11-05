@@ -51,7 +51,10 @@ PoarConfig::PoarConfig(std::string C)
     LoadDefaultValues();
   }
 
+#if 0
+  // debug statement
   PrintConfig();
+#endif
 }
 
 PoarConfig::~PoarConfig(){
