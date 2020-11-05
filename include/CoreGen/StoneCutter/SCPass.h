@@ -63,11 +63,34 @@ private:
 
   /// Convert a string to upper case
   std::string StrToUpper(std::string S);
-
+  
 protected:
+  CoreGenSigMap *SigMap;              ///< SCPipeBuilder: Signal map objec
+  unsigned **AdjMat;                  ///< SCPipeBuilder: Adjacency Matrix
+
+  std::vector<std::string> PipeVect;  ///< SCPipeBuilder: Pipe vector
+  std::vector<std::string> InstVect;  ///< SCPipeBuilder: Instruction vector
+
   SCOpts *Opts;                       ///< StoneCutter options
   Module *TheModule;                  ///< LLVM IR Module
 
+  /// SCPipeBuilder: Allocates the adjacency matrix
+  bool AllocMat();
+
+  /// SCPipeBuilder: Frees the adjacency matrix
+  bool FreeMat();
+
+  /// SCPipeBuilder: Prints the adjancency matrix for debugging
+  void PrintAdjMat();
+
+   /// SCPipeBuilder: Build the matrix representation
+  bool BuildMat();
+
+  /// SCPipeBuilder: Retrives the x-axis idx from the pipe stage name
+  unsigned PipeToIdx(std::string P);
+
+  /// SCPipeBuilder: Retrieves the y-axis idx from the signal name
+  unsigned SigToIdx(SCSig *S);
 public:
 
   /// Default constructor
@@ -187,6 +210,8 @@ public:
   /// Set the execution options for the pass
   virtual bool SetExecOpts( std::string E );
 
+  /// Set the signal map object
+  bool SetSignalMap(CoreGenSigMap *CSM){ SigMap = CSM; return true; }
 };
 
 #endif
