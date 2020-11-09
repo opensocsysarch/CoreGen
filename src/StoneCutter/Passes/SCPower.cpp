@@ -19,4 +19,40 @@ SCPower::SCPower(Module *TM,
 SCPower::~SCPower(){
 }
 
+void SCPower::GetActiveCycles(){
+  std::cout << GetNumPipelines() << std::endl;
+}
 
+bool SCPower::Execute(){
+  if( !TheModule ){
+    this->PrintMsg( L_ERROR, "LLVM IR Module is null" );
+    return false;
+  }
+
+  // retrieve the pipeline stage vector
+  // InstVect = SigMap->GetInstVect();
+
+  // //std::cout << sizeof(PipeVect) << std::endl;
+
+  // // allocate the matrix
+  // if( !AllocMat() ){
+  //   this->PrintMsg( L_ERROR, "Could not allocate matrix" );
+  //   return false;
+  // }
+
+  // // build the pipeline matrix
+  // if( !BuildMat() ){
+  //   this->PrintMsg( L_ERROR, "Could not build matrix representation of pipeline" );
+  //   FreeMat();
+  //   return false;
+  // }
+
+  // //PrintAdjMat();
+  // // free the matrix
+  // if( !FreeMat() ){
+  //   this->PrintMsg( L_ERROR, "Could not free adjacency matrix" );
+  //   return false;
+  // }
+
+  return true;
+}

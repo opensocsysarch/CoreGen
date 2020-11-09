@@ -14,7 +14,7 @@ SCPipeBuilder::SCPipeBuilder(Module *TM,
                              SCOpts *O,
                              SCMsg *M)
   : SCPass("PipeBuilder","",TM,O,M) {
-  //AdjMat = nullptr;
+  AdjMat = nullptr;
 }
 
 SCPipeBuilder::~SCPipeBuilder(){
@@ -289,8 +289,6 @@ bool SCPipeBuilder::FitArith(){
 
   return true;
 }
-
-
 
 std::vector<std::string> SCPipeBuilder::GetEmptyStages(){
 
@@ -760,17 +758,6 @@ bool SCPipeBuilder::ClearSignal(SCSig *S){
   return true;
 }
 
-unsigned SCPipeBuilder::PipeToIdx(std::string P){
-  for( unsigned i=0; i<PipeVect.size(); i++ ){
-    if( PipeVect[i] == P )
-      return i;
-  }
-
-  return PipeVect.size();
-}
-
-
-
 bool SCPipeBuilder::Optimize(){
   bool (SCPipeBuilder::*Pass)() = nullptr;
 
@@ -794,9 +781,30 @@ bool SCPipeBuilder::Optimize(){
     }
   }
 
+  // execute the power/area passes
+  if( Opts->IsPowerOpt() ){
+    SCPower *PB = new SCPower(SCParser::TheModule.get(),
+                              Opts,
+                              Msgs);
+    if( !PB ){
+      this->PrintMsg( L_ERROR, "Failed to generate the SCPower pass" );
+      return false;
+    }
+
+    if( !PB->SetSignalMap(SigMap) ){
+      delete PB;
+      return false;
+    }
+
+    if( !PB->Execute() ){
+      delete PB;
+      return false;
+    }
+    delete PB;
+  }
+
   return true;
 }
-
 
 std::string SCPipeBuilder::DerivePipeline(std::string Stage){
   std::string Pipe;
@@ -858,8 +866,6 @@ bool SCPipeBuilder::WriteSigMap(){
   }
   return SigMap->WriteSigMap();
 }
-
-
 
 bool SCPipeBuilder::InitAttrs(){
 

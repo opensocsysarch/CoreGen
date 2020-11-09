@@ -24,6 +24,8 @@ SCPass::SCPass(std::string N,
 }
 
 SCPass::~SCPass(){
+  PipeVect.clear();
+  InstVect.clear();
 }
 
 std::string SCPass::GetSCPassOptions(){
@@ -663,6 +665,12 @@ void SCPass::PrintAdjMat(){
   std::cout << std::endl;
 }
 
+unsigned SCPass::PipeToIdx(std::string P){
+  for( unsigned i=0; i<PipeVect.size(); i++ ){
+    if( PipeVect[i] == P )
+      return i;
+  }
 
-
+  return PipeVect.size();
+}
 // EOF
