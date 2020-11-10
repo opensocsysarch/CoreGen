@@ -59,12 +59,12 @@ private:
   std::string Name;                   ///< Name of the StoneCutter pass
   std::string Options;                ///< Options string for the pass
   std::string ExecOpts;               ///< Execution options string
-  SCMsg *Msgs;                        ///< StoneCutter messages output
 
   /// Convert a string to upper case
   std::string StrToUpper(std::string S);
   
 protected:
+  SCMsg *Msgs;                        ///< StoneCutter messages output
   CoreGenSigMap *SigMap;              ///< SCPipeBuilder: Signal map objec
   unsigned **AdjMat;                  ///< SCPipeBuilder: Adjacency Matrix
 

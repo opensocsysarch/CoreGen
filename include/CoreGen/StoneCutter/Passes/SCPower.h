@@ -32,14 +32,15 @@ class SCPower : public SCPass {
       std::string Name;
       unsigned Cycles;
     } InstInfo;
-    
+
+    void GetActiveCycles();
+
   public:
     SCPower(Module *TM, SCOpts *O, SCMsg *M);
 
     ~SCPower();
 
     virtual bool Execute() override;
-
 
 };
 

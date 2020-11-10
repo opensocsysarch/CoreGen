@@ -25,49 +25,28 @@
 #include <tuple>
 #include "CoreGen/StoneCutter/SCPass.h"
 #include "CoreGen/CoreGenSigMap/CoreGenSigMap.h"
+#include "CoreGen/StoneCutter/Passes/SCPower.h"
+#include "CoreGen/StoneCutter/SCParser.h"
 
 class SCPipeBuilder : public SCPass {
 private:
 
-  CoreGenSigMap *SigMap;              ///< SCPipeBuilder: Signal map object
-
-  std::vector<std::string> PipeVect;  ///< SCPipeBuilder: Pipe vector
-  std::vector<std::string> InstVect;  ///< SCPipeBuilder: Instruction vector
-
+  
   std::vector<std::pair<std::string,bool (SCPipeBuilder::*)()>> Enabled;   ///< SCPipeBuilder: Enabled sub-passes
 
   std::vector<std::pair<std::string, std::string>> AttrMap;     ///< SCPipeBuilder: Attribute to pipeline pairs
 
   std::vector<std::pair<std::string,std::string>> ExtStage;     ///< SCPipeBuilder: Tracks the new pipeline to stage relationship
 
-  unsigned **AdjMat;                  ///< SCPipeBuilder: Adjacency Matrix
 
   /// SCPipeBuilder: Initialize the atreibute vector
   bool InitAttrs();
 
-  /// SCPipeBuilder: Build the matrix representation
-  bool BuildMat();
-
   /// SCPipeBuilder: Writes the pipeline back to the signal map
   bool WriteSigMap();
 
-  /// SCPipeBuilder: Allocates the adjacency matrix
-  bool AllocMat();
-
-  /// SCPipeBuilder: Frees the adjacency matrix
-  bool FreeMat();
-
-  /// SCPipeBuilder: Prints the adjancency matrix for debugging
-  void PrintAdjMat();
-
   /// SCPipeBuilder: Execute the various optimization phases
   bool Optimize();
-
-  /// SCPipeBuilder: Retrives the x-axis idx from the pipe stage name
-  unsigned PipeToIdx(std::string P);
-
-  /// SCPipeBuilder: Retrieves the y-axis idx from the signal name
-  unsigned SigToIdx(SCSig *S);
 
   /// SCPipeBuilder: Clears all the enabled pipe stages for the target signal name
   bool ClearSignal(SCSig *S);
@@ -130,9 +109,6 @@ public:
 
   /// Default destructor
   ~SCPipeBuilder();
-
-  /// Set the signal map object
-  bool SetSignalMap(CoreGenSigMap *CSM){ SigMap = CSM; return true; }
 
   /// Execute the codegen
   virtual bool Execute() override;
