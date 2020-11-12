@@ -15,7 +15,7 @@ set(PoarSrcs
 )
 
 # -- TARGETS
-add_library(PoarBackend ${PoarSrcs})
+add_library(PoarBackend ${PoarSrcs} $<TARGET_OBJECTS:AccumObjs>)
 add_executable(poar PoarMain.cpp)
 
 # -- HEADERS
@@ -29,5 +29,7 @@ target_link_libraries(poar PoarBackend ${COREGEN_LINK_LIBS})
 # -- INSTALL TARGETS
 install(TARGETS PoarBackend DESTINATION lib)
 install(TARGETS poar DESTINATION bin)
+
+add_subdirectory(Accumulators)
 
 #-- EOF

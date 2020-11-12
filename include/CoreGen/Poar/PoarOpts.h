@@ -44,6 +44,7 @@ private:
   std::string SCFile;   ///< PoarOpts: Signal map input file
   std::string Config;   ///< PoarOpts: configuration file
   std::string OutFile;  ///< PoarOpts: output files
+  std::string Root;     ///< PoarOpts: root node for the graph traversal
 
   bool TextOutput;      ///< PoarOpts: defines textual output
   bool YamlOutput;      ///< PoarOpts: defines yaml output
@@ -91,6 +92,9 @@ public:
 
   /// PoarOpts: Retrieves the signal map input file
   std::string GetSigMapFile() { return SCFile; }
+
+  /// PoarOpts: Retrieves the root node for the graph traversal
+  std::string GetRoot() { return Root; }
 };
 
 #endif // _POAROPTS_H_

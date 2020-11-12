@@ -50,6 +50,7 @@ public:
   typedef struct{
     ConfigType Type;    ///< ConfigEntry: configuration type
     std::string Name;   ///< ConfigEntry: name of the config entry
+    std::string Accum;  ///< ConfigEntry: name of the corresponding accumulator
     double DefaultVal;  ///< ConfigEntry: default value
     double Value;       ///< ConfigEntry: the value of the entry
   }ConfigEntry;         ///< PoarConfig: configuration entry structure
@@ -79,6 +80,12 @@ public:
 
   /// PoarConfig: default destructor
   ~PoarConfig();
+
+  /// PoarConfig: retrieve the target configuration
+  PoarConfig::ConfigEntry GetEntry(unsigned Entry);
+
+  /// PoarConfig: retrieve the number of entries
+  unsigned GetNumEntry();
 };
 
 #endif

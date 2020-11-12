@@ -11,7 +11,7 @@
 #include "CoreGen/Poar/PoarData.h"
 
 PoarData::PoarData(PoarOpts *P)
-  : POpts(P), PConfig(nullptr), CG(nullptr){
+  : POpts(P), PConfig(nullptr), CG(nullptr), SM(nullptr), Top(nullptr){
 }
 
 PoarData::~PoarData(){
@@ -48,8 +48,18 @@ bool PoarData::Init(){
       ErrStr = "Could not read design input file : " + CG->GetErrStr();
       return false;
     }
+
+    Top = CG->GetTop();
+    if( POpts->GetRoot().length() > 0 ){
+      if( !CG->GetNodeByName(POpts->GetRoot()) ){
+        ErrStr = "Root node does not exist in design : " + POpts->GetRoot();
+        return false;
+      }
+      Top = CG->GetNodeByName(POpts->GetRoot());
+    }
   }
 
+  // load a stonecutter object
   if( POpts->GetSigMapFile().length() > 0 ){
     SM = new CoreGenSigMap();
     if( !SM ){
@@ -63,10 +73,43 @@ bool PoarData::Init(){
     }
   }
 
+  // init all the accumulators
+  if( !InitAccum() ){
+    ErrStr = "Could not initialize POAR accumulators";
+    return false;
+  }
+
+  return true;
+}
+
+PoarAccum * PoarData::GetAccumByName(std::string N){
+  for( unsigned i=0; i<Accums.size(); i++ ){
+    if( Accums[i]->GetName() == N )
+      return Accums[i];
+  }
+
+  return nullptr;
+}
+
+bool PoarData::InitAccum(){
+  Accums.push_back(static_cast<PoarAccum *>(new PoarRegAccum(Top)));
   return true;
 }
 
 bool PoarData::DeriveData(){
+  // walk all the entries
+  for( unsigned i=0; i<PConfig->GetNumEntry(); i++ ){
+    // retrieve the i'th entry
+    PoarConfig::ConfigEntry CE = PConfig->GetEntry(i);
+
+    // retrieve the equivalent accumulator object
+    PoarAccum *PA = GetAccumByName(CE.Accum);
+
+    // execute the accumulator
+    if( PA ){
+      PA->Accum();
+    }
+  }
   return true;
 }
 

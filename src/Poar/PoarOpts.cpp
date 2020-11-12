@@ -33,6 +33,7 @@ void PoarOpts::PrintHelp(){
   std::cout << "\t-v|-version|--version               : Print the version information" << std::endl;
   std::cout << "\t-c|-config|--config FILE.yaml       : Set the configuration file" << std::endl;
   std::cout << "\t-o|-outfile|--outfile FILE          : Sets the output file." << std::endl;
+  std::cout << "\t-r|-root|--root ROOT_NODE           : Sets the root node for the design graph traversal." << std::endl;
   std::cout << std::endl;
   std::cout << "Input Files:" << std::endl;
   std::cout << "\t--design /path/to/design.yaml       : Set the CoreGen design input file" << std::endl;
@@ -43,6 +44,12 @@ void PoarOpts::PrintHelp(){
   std::cout << "\t--yaml                              : Yaml output" << std::endl;
   std::cout << "\t--latex                             : Latex output" << std::endl;
   std::cout << "\t--xml                               : XML output" << std::endl;
+  std::cout << std::endl;
+  std::cout << "Examples:" << std::endl;
+  std::cout << "\tpoar --design BasicRISC.yaml" << std::endl;
+  std::cout << "\tpoar --design BasicRISC.yaml --sigmap BasicRISC.ISA.yaml" << std::endl;
+  std::cout << "\tpoar --design BasicRISC.yaml --sigmap BasicRISC.ISA.yaml --yaml" << std::endl;
+  std::cout << "\tpoar --design BasicRISC.yaml --sigmap BasicRISC.ISA.yaml --root core0" << std::endl;
 }
 
 bool PoarOpts::ParseOpts(bool *isHelp){
@@ -78,6 +85,14 @@ bool PoarOpts::ParseOpts(bool *isHelp){
       }
       std::string S(argv[i+1]);
       OutFile = S;
+      i++;
+    }else if( (s=="-r") || (s=="-root") || (s=="--root") ){
+      if( i+1 > (argc-1) ){
+        std::cout << "Error : --root requires an argument" << std::endl;
+        return false;
+      }
+      std::string S(argv[i+1]);
+      Root = S;
       i++;
     }else if( s=="--design" ){
       if( i+1 > (argc-1) ){

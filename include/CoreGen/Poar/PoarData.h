@@ -32,6 +32,7 @@
 #include "CoreGen/Poar/PoarOpts.h"
 #include "CoreGen/Poar/PoarConfig.h"
 #include "CoreGen/Poar/PoarIO.h"
+#include "CoreGen/Poar/PoarAccums.h"
 
 class PoarData{
 public:
@@ -58,8 +59,17 @@ private:
   PoarConfig *PConfig;      ///< PoarData: Poar configuration entry
   CoreGenBackend *CG;       ///< PoarData: CoreGenBackend object
   CoreGenSigMap *SM;        ///< PoarData: Signal Map object
+  CoreGenNode *Top;         ///< PoarData: Abstract top node
 
   std::string ErrStr;       ///< PoarData: error string
+
+  std::vector<PoarAccum *> Accums;  ///< PoarData: accumulator objects
+
+  /// PoarData: initialize all the accumulator objects
+  bool InitAccum();
+
+  /// PoarData: retrieve the correct accumulator entry by name
+  PoarAccum *GetAccumByName(std::string Name);
 };
 
 #endif
