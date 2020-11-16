@@ -78,11 +78,16 @@ protected:
   /// PoarAccum: recusively visit and accumulate nodes of the target type from Top down
   bool AccumNodes(std::vector<CoreGenNode *> &Nodes,
                   CGNodeType Type ){
+    if( Top->GetType() == Type )
+      Nodes.push_back(Top);
     return AccumNodeVisitor(Nodes,Type,Top);
   }
 
   /// PoarAccum: flag the pass as having being run already
   void FlagRun() { HasRun = true; }
+
+  /// PoarAccum: determine whether the accumulator should run
+  bool ShouldRun() { return !HasRun; }
 
 private:
   CoreGenNode *Top;     ///< PoarAccum: Top-level node to begin accumulation discovery

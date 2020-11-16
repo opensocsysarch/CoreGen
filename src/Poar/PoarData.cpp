@@ -49,7 +49,21 @@ bool PoarData::Init(){
       return false;
     }
 
+    if( !CG->BuildDAG() ){
+      ErrStr = "Could not construct the design input DAG : " + CG->GetErrStr();
+      return false;
+    }
+
+    // set the top node; if we can find an SoC node; use it
     Top = CG->GetTop();
+    for( unsigned i=0; i<Top->GetNumChild(); i++ ){
+      if( Top->GetChild(i)->GetType() == CGSoc ){
+        Top = Top->GetChild(i);
+        break;
+      }
+    }
+
+    // check to see if the user set the top node
     if( POpts->GetRoot().length() > 0 ){
       if( !CG->GetNodeByName(POpts->GetRoot()) ){
         ErrStr = "Root node does not exist in design : " + POpts->GetRoot();
@@ -108,6 +122,7 @@ bool PoarData::DeriveData(){
     // execute the accumulator
     if( PA ){
       PA->Accum();
+      PConfig->SetResult(i,PA->GetWidth());
     }
   }
   return true;
@@ -119,24 +134,40 @@ bool PoarData::WriteData(){
     return false;
   }
 
-  PoarIO *PIO = new PoarIO();
+  PoarIO *PIO = new PoarIO(PConfig);
   if( !PIO ){
     ErrStr = "Could not init IO object";
     return false;
   }
 
+  bool rtn = true;
+
   // init the specific i/o options
   if( POpts->IsTextOutput() ){
+    if( !PIO->WriteText() ){
+      ErrStr = "Could not write textual output";
+      rtn = false;
+    }
   }else if( POpts->IsYamlOutput() ){
+    if( !PIO->WriteYaml() ){
+      ErrStr = "Could not write Yaml output";
+      rtn = false;
+    }
   }else if( POpts->IsLatexOutput() ){
+    if( !PIO->WriteLatex() ){
+      ErrStr = "Could not write LaTeX output";
+      rtn = false;
+    }
   }else if( POpts->IsXmlOutput() ){
+    if( !PIO->WriteXML() ){
+      ErrStr = "Could not write XML output";
+      rtn = false;
+    }
   }
-
-  // write out all the data
 
   delete PIO;
 
-  return true;
+  return rtn;
 }
 
 // EOF

@@ -24,6 +24,12 @@
 
 class PoarRegAccum : public PoarAccum {
 private:
+  /// PoarRegAccum: accumulate by core
+  bool SearchCores(std::vector<CoreGenNode *> &Cores);
+
+  /// PoarRegAccum: accumulate by regclass
+  bool SearchRegClasses();
+
 public:
   /// PoarRegAccum: default constructor
   PoarRegAccum(CoreGenNode *T)

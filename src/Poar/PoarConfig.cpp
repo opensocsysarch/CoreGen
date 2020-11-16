@@ -19,27 +19,28 @@
 // - std::string Name: defines the string name of the type (used for parsing)
 // - double DefaultVal: the default value if we don't find the value in the parsed config
 // - double Value: the value to use (parsed or default) in the calculation
+// - double Result: the resulting accumulated value (Width * Value)
 //
 //
 PoarConfig::ConfigEntry PoarConfig::Entries[] = {
   // -- POWER --
-  {PoarConfig::POWER_REGBIT,    "POWER_REGBIT",   "CoreGenReg", 0.1, 0.},
-  {PoarConfig::POWER_DPATHBIT,  "POWER_DPATHBIT", "",           0.1, 0.},
-  {PoarConfig::POWER_CPATHBIT,  "POWER_CPATHBIT", "",           0.1, 0.},
-  {PoarConfig::POWER_CACHEBIT,  "POWER_CACHEBIT", "",           0.1, 0.},
-  {PoarConfig::POWER_SPADBIT,   "POWER_SPADBIT",  "",           0.1, 0.},
-  {PoarConfig::POWER_ROMBIT,    "POWER_ROMBIT",   "",           0.1, 0.},
+  {PoarConfig::POWER_REGBIT,   PoarConfig::PoarPower, "POWER_REGBIT",   "CoreGenReg", 0.1, 0., 0.},
+  {PoarConfig::POWER_DPATHBIT, PoarConfig::PoarPower, "POWER_DPATHBIT", "",           0.1, 0., 0.},
+  {PoarConfig::POWER_CPATHBIT, PoarConfig::PoarPower, "POWER_CPATHBIT", "",           0.1, 0., 0.},
+  {PoarConfig::POWER_CACHEBIT, PoarConfig::PoarPower, "POWER_CACHEBIT", "",           0.1, 0., 0.},
+  {PoarConfig::POWER_SPADBIT,  PoarConfig::PoarPower, "POWER_SPADBIT",  "",           0.1, 0., 0.},
+  {PoarConfig::POWER_ROMBIT,   PoarConfig::PoarPower, "POWER_ROMBIT",   "",           0.1, 0., 0.},
 
   // -- AREA --
-  {PoarConfig::AREA_REGBIT,     "AREA_REGBIT",    "CoreGenReg", 1.0, 0.},
-  {PoarConfig::AREA_DPATHBIT,   "AREA_DPATHBIT",  "",           1.0, 0.},
-  {PoarConfig::AREA_CPATHBIT,   "AREA_CPATHBIT",  "",           1.0, 0.},
-  {PoarConfig::AREA_CACHEBIT,   "AREA_CACHEBIT",  "",           1.0, 0.},
-  {PoarConfig::AREA_SPADBIT,    "AREA_SPADBIT",   "",           1.0, 0.},
-  {PoarConfig::AREA_ROMBIT,     "AREA_ROMBIT",    "",           1.0, 0.},
+  {PoarConfig::AREA_REGBIT,    PoarConfig::PoarArea, "AREA_REGBIT",    "CoreGenReg", 1.0, 0., 0.},
+  {PoarConfig::AREA_DPATHBIT,  PoarConfig::PoarArea, "AREA_DPATHBIT",  "",           1.0, 0., 0.},
+  {PoarConfig::AREA_CPATHBIT,  PoarConfig::PoarArea, "AREA_CPATHBIT",  "",           1.0, 0., 0.},
+  {PoarConfig::AREA_CACHEBIT,  PoarConfig::PoarArea, "AREA_CACHEBIT",  "",           1.0, 0., 0.},
+  {PoarConfig::AREA_SPADBIT,   PoarConfig::PoarArea, "AREA_SPADBIT",   "",           1.0, 0., 0.},
+  {PoarConfig::AREA_ROMBIT,    PoarConfig::PoarArea, "AREA_ROMBIT",    "",           1.0, 0., 0.},
 
   // -- FINAL ENTRY --
-  {PoarConfig::UNK_ENTRY, "NULL", "NULL", 0., 0.} //-- this must remain the last entry
+  {PoarConfig::UNK_ENTRY, PoarConfig::PoarPower, "NULL", "NULL", 0., 0., 0.} //-- this must remain the last entry
 };
 
 
@@ -60,10 +61,29 @@ PoarConfig::PoarConfig(std::string C)
 PoarConfig::~PoarConfig(){
 }
 
+bool PoarConfig::SetResult(unsigned Entry, uint64_t Width){
+  unsigned i=0;
+  bool done = false;
+  while( !done ){
+
+    if( i == Entry ){
+      Entries[i].Result = Entries[i].Value * (double)(Width);
+      return true;
+    }
+
+    i++;
+    if( Entries[i].Type == UNK_ENTRY )
+      done = true;
+  }
+  return false;
+}
+
 PoarConfig::ConfigEntry PoarConfig::GetEntry(unsigned Entry){
   unsigned i=0;
   bool done = false;
-  PoarConfig::ConfigEntry NullEntry = {PoarConfig::UNK_ENTRY, "NULL", "NULL", 0., 0.};
+  PoarConfig::ConfigEntry NullEntry = {PoarConfig::UNK_ENTRY,
+                                       PoarConfig::PoarPower,
+                                       "NULL", "NULL", 0., 0., 0.};
 
   while( !done ){
 

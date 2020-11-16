@@ -24,19 +24,43 @@
 #include <string>
 #include <vector>
 #include <iostream>
+#include <iomanip>
 #include <fstream>
 
+//-- Yaml headers
 #include "yaml-cpp/yaml.h"
+
+//-- Poar headers
+#include "CoreGen/Poar/PoarConfig.h"
 
 class PoarIO{
 public:
   /// PoarIO: default constructor
-  PoarIO();
+  PoarIO(PoarConfig *Config);
 
   /// PoarIO: default destructor
   ~PoarIO();
 
+  /// PoarIO: Write textual output
+  bool WriteText();
+
+  /// PoarIO: Write Yaml output
+  bool WriteYaml();
+
+  /// PoarIO: Write Latex output
+  bool WriteLatex();
+
+  /// PoarIO: Write XML output
+  bool WriteXML();
+
 private:
+  PoarConfig *PConfig; ///< Poar configuration value
+
+  /// PoarIO: Get the total power
+  double GetTotalPower();
+
+  /// PoarIO: Get the total area
+  double GetTotalArea();
 };
 
 #endif
