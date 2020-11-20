@@ -33,6 +33,12 @@ bool CoreGenCompCodegen::Execute(){
       Errno->SetError(CGERR_ERROR, "Failed to create LLVM codegen object for version 8.0.1");
       return false;
     }
+  }else if( Entry->GetVersion() == "9.0.1" ){
+    CG = static_cast<CoreGenLLVMCodegen *>(new LLVM901CG(Top,Proj,Entry,LLVMRoot,Errno));
+    if( CG == nullptr ){
+      Errno->SetError(CGERR_ERROR, "Failed to create LLVM codegen object for version 9.0.1");
+      return false;
+    }
   }else{
     Errno->SetError(CGERR_ERROR, "No codegen exists for version LLVM " + Entry->GetVersion() );
     return false;
