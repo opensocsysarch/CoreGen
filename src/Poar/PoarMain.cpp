@@ -11,10 +11,8 @@
 #include <iostream>
 #include <string>
 
-#include "CoreGen/Poar/PoarOpts.h"
-#include "CoreGen/Poar/PoarConfig.h"
-#include "CoreGen/CoreGenBackend/CoreGenBackend.h"
-#include "CoreGen/StoneCutter/StoneCutter.h"
+#include "CoreGen/Poar/PoarData.h"
+#include "CoreGen/Poar/PoarIO.h"
 
 int main( int argc, char **argv ){
   // -- classes --
@@ -41,37 +39,38 @@ int main( int argc, char **argv ){
     return -1;
   }
 
-  // Load a configuration template (or the default)
-  PoarConfig *PConfig = new PoarConfig(POpts->GetConfig());
-  if( !PConfig ){
-    std::cout << "Error : could not load power/area configuration data" << std::endl;
+  PoarData *PData = new PoarData(POpts);
+  if( !PData ){
+    std::cout << "Error : could not load power/area data object" << std::endl;
     delete POpts;
     return -1;
   }
 
-  // Load a coregen design object
-  CoreGenBackend *CG = new CoreGenBackend();
-  if( !CG ){
-    std::cout << "Error : could not load CoreGen design data" << std::endl;
-    delete CG;
+  if( !PData->Init() ){
+    std::cout << "Error : " << PData->GetErrStr() << std::endl;
     delete POpts;
-    return -1;
-  }
-
-  if( !CG->ReadIR(POpts->GetDesignFile()) ){
-    std::cout << "Error : could not read design input file : "
-              << CG->GetErrStr() << std::endl;
-    delete CG;
-    delete POpts;
+    delete PData;
     return -1;
   }
 
   // Derive the power/area data
+  if( !PData->DeriveData() ){
+    std::cout << "Error : " << PData->GetErrStr() << std::endl;
+    delete POpts;
+    delete PData;
+    return -1;
+  }
 
   // Print the data
+  if( !PData->WriteData() ){
+    std::cout << "Error : " << PData->GetErrStr() << std::endl;
+    delete POpts;
+    delete PData;
+    return -1;
+  }
 
   // Delete all the objects
-  delete CG;
+  delete PData;
   delete POpts;
 
   return 0;

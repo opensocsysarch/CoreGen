@@ -1,0 +1,434 @@
+Registers:
+  - RegName: TEST35.0.reg
+    Width: 64
+    Index: 0
+    PseudoName: pseudoreg.0
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST35.1.reg
+    Width: 64
+    Index: 1
+    PseudoName: pseudoreg.1
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST35.2.reg
+    Width: 64
+    Index: 2
+    PseudoName: pseudoreg.2
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST35.3.reg
+    Width: 64
+    Index: 3
+    PseudoName: pseudoreg.3
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST35.4.reg
+    Width: 64
+    Index: 4
+    PseudoName: pseudoreg.4
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST35.5.reg
+    Width: 64
+    Index: 5
+    PseudoName: pseudoreg.5
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST35.6.reg
+    Width: 64
+    Index: 6
+    PseudoName: pseudoreg.6
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST35.7.reg
+    Width: 64
+    Index: 7
+    PseudoName: pseudoreg.7
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST35.8.reg
+    Width: 64
+    Index: 8
+    PseudoName: pseudoreg.8
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST35.9.reg
+    Width: 64
+    Index: 9
+    PseudoName: pseudoreg.9
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST35.10.reg
+    Width: 64
+    Index: 10
+    PseudoName: pseudoreg.10
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST35.11.reg
+    Width: 64
+    Index: 11
+    PseudoName: pseudoreg.11
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST35.12.reg
+    Width: 64
+    Index: 12
+    PseudoName: pseudoreg.12
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST35.13.reg
+    Width: 64
+    Index: 13
+    PseudoName: pseudoreg.13
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST35.14.reg
+    Width: 64
+    Index: 14
+    PseudoName: pseudoreg.14
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST35.15.reg
+    Width: 64
+    Index: 15
+    PseudoName: pseudoreg.15
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST35.0.csr
+    Width: 64
+    Index: 0
+    PseudoName: csr.0
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST35.1.csr
+    Width: 64
+    Index: 1
+    PseudoName: csr.1
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST35.2.csr
+    Width: 64
+    Index: 2
+    PseudoName: csr.2
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST35.3.csr
+    Width: 64
+    Index: 3
+    PseudoName: csr.3
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST35.4.csr
+    Width: 64
+    Index: 4
+    PseudoName: csr.4
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST35.5.csr
+    Width: 64
+    Index: 5
+    PseudoName: csr.5
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST35.6.csr
+    Width: 64
+    Index: 6
+    PseudoName: csr.6
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST35.7.csr
+    Width: 64
+    Index: 7
+    PseudoName: csr.7
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST35.8.csr
+    Width: 64
+    Index: 8
+    PseudoName: csr.8
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST35.9.csr
+    Width: 64
+    Index: 9
+    PseudoName: csr.9
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST35.10.csr
+    Width: 64
+    Index: 10
+    PseudoName: csr.10
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST35.11.csr
+    Width: 64
+    Index: 11
+    PseudoName: csr.11
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST35.12.csr
+    Width: 64
+    Index: 12
+    PseudoName: csr.12
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST35.13.csr
+    Width: 64
+    Index: 13
+    PseudoName: csr.13
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST35.14.csr
+    Width: 64
+    Index: 14
+    PseudoName: csr.14
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+  - RegName: TEST35.15.csr
+    Width: 64
+    Index: 15
+    PseudoName: csr.15
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+RegClasses:
+  - RegisterClassName: TEST35.regclass
+    NumRegisters: 16
+    Registers:
+      - TEST35.0.reg
+      - TEST35.1.reg
+      - TEST35.2.reg
+      - TEST35.3.reg
+      - TEST35.4.reg
+      - TEST35.5.reg
+      - TEST35.6.reg
+      - TEST35.7.reg
+      - TEST35.8.reg
+      - TEST35.9.reg
+      - TEST35.10.reg
+      - TEST35.11.reg
+      - TEST35.12.reg
+      - TEST35.13.reg
+      - TEST35.14.reg
+      - TEST35.15.reg
+  - RegisterClassName: TEST35.csrregclass
+    NumRegisters: 16
+    Registers:
+      - TEST35.0.csr
+      - TEST35.1.csr
+      - TEST35.2.csr
+      - TEST35.3.csr
+      - TEST35.4.csr
+      - TEST35.5.csr
+      - TEST35.6.csr
+      - TEST35.7.csr
+      - TEST35.8.csr
+      - TEST35.9.csr
+      - TEST35.10.csr
+      - TEST35.11.csr
+      - TEST35.12.csr
+      - TEST35.13.csr
+      - TEST35.14.csr
+      - TEST35.15.csr
+ISAs:
+  - ISAName: TEST35.isa
+InstFormats:
+  - InstFormatName: TEST35.if
+    ISA: TEST35.isa
+    FormatWidth: 32
+    Fields:
+      - FieldName: opcode
+        FieldType: CGInstCode
+        FieldWidth: 8
+        StartBit: 0
+        EndBit: 7
+        MandatoryField: true
+      - FieldName: RB
+        FieldType: CGInstReg
+        FieldWidth: 8
+        StartBit: 8
+        EndBit: 15
+        MandatoryField: false
+        RegClass: TEST35.regclass
+      - FieldName: RA
+        FieldType: CGInstReg
+        FieldWidth: 8
+        StartBit: 16
+        EndBit: 23
+        MandatoryField: false
+        RegClass: TEST35.regclass
+      - FieldName: RT
+        FieldType: CGInstReg
+        FieldWidth: 8
+        StartBit: 24
+        EndBit: 31
+        MandatoryField: false
+        RegClass: TEST35.csrregclass
+Insts:
+  - Inst: TEST35.inst1
+    ISA: TEST35.isa
+    InstFormat: TEST35.if
+    Encodings:
+      - EncodingField: opcode
+        EncodingWidth: 8
+        EncodingValue: 1
+PseudoInsts:
+  - PseudoInst: TEST35pinst1
+    ISA: TEST35.isa
+    Inst: TEST35.inst1
+    Encodings:
+      []
+Caches:
+  - Cache: TEST35.L2.cache
+    Sets: 2
+    Ways: 8
+  - Cache: TEST35.core1.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST35.L2.cache
+  - Cache: TEST35.core2.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST35.L2.cache
+Cores:
+  - Core: TEST35.core1
+    Cache: TEST35.core1.L1.cache
+    ISA: TEST35.isa
+    RegisterClasses:
+      - RegClass: TEST35.regclass
+      - RegClass: TEST35.csrregclass
+  - Core: TEST35.core2
+    Cache: TEST35.core2.L1.cache
+    ISA: TEST35.isa
+Socs:
+  - Soc: TEST35.soc
+    Cores:
+      - Core: TEST35.core1

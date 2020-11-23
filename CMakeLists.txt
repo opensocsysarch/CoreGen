@@ -58,11 +58,12 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DCOREGEN_PLATFORM=${CMAKE_SYSTEM_NAME}"
 message(STATUS "Building for ${CMAKE_SYSTEM_NAME}")
 
 # Set the CoreGen linkage
-if( (${CMAKE_SYSTEM_NAME} EQUAL "Darwin") OR (${CMAKE_SYSTEM_NAME} EQUAL "Linux") )
+if( (${CMAKE_SYSTEM_NAME} MATCHES "Darwin") OR (${CMAKE_SYSTEM_NAME} MATCHES "Linux") )
   set(COREGEN_LINK_LIBS "dl")
 else()
   set(COREGEN_LINK_LIBS "")
 endif()
+message(STATUS "COREGEN_LINK_LIBS set to ${COREGEN_LINK_LIBS}")
 
 #------------------------------------------------------------------------
 #-- FIND PACKAGES

@@ -166,6 +166,164 @@ bool  SCPipeBuilder::FitTmpReg(){
   return true;
 }
 
+bool SCPipeBuilder::FitMem(){
+  // Attempt to fit any memory operations that are not currently assigned
+  // to a given pipe stage to a predefined stage or create a new one
+
+  // record the list of mem pipeline stages that are not assigned
+  std::vector<SCSig *> MemOps;
+  for( unsigned i=0; i<SigMap->GetNumSignals(); i++ ){
+    SCSig *Sig = SigMap->GetSignal(i);
+
+    if( Sig->isMemSig() )
+      MemOps.push_back(Sig);
+  }
+
+  std::vector<SCSig *> MemSigVect;
+  bool done = false;
+
+  // walk all the found signals and attempt to fit them
+  for( unsigned i=0; i<MemOps.size(); i++ ){
+    if( Opts->IsVerbose() ){
+      this->PrintRawMsg("FitMem: Fitting " + MemOps[i]->GetName() +
+                        " from instruction=" +  MemOps[i]->GetInst() );
+    }
+
+    done = false;
+
+    // Stage 1: Search local instruction for an adjacent memory signal
+    MemSigVect = SigMap->GetSigVect(MemOps[i]->GetInst());
+    for( unsigned j=0; j<MemSigVect.size(); j++ ){
+      if( IsAdjacent(MemOps[i],MemSigVect[j]) &&
+          MemSigVect[j]->IsPipeDefined() ){
+        AdjMat[PipeToIdx(MemSigVect[j]->GetPipeName())][SigToIdx(MemOps[i])] = 1;
+        done = true;
+        if( Opts->IsVerbose() ){
+          this->PrintRawMsg("FitMem: Fitting " + MemOps[i]->GetName() +
+                            " to " + MemSigVect[j]->GetPipeName());
+        }
+      }// end if
+    } // end stage 1
+
+    // Stage 2: Search for identical or adjacent signals across the remainder
+    //          of all instructions
+    if( !done ){
+      SCSig *MSig = nullptr;
+      for( unsigned j=0; j<SigMap->GetNumSignals(); j++ ){
+        MSig = SigMap->GetSignal(j);
+        if( IsAdjacent(MemOps[i],MSig) &&
+            MSig->IsPipeDefined() &&
+            (!done) ){
+          // found a match
+          AdjMat[PipeToIdx(MSig->GetPipeName())][SigToIdx(MemOps[i])] = 1;
+          done = true;
+          if( Opts->IsVerbose() ){
+            this->PrintRawMsg("FitMem: Fitting " + MemOps[i]->GetName() +
+                              " to " + MSig->GetPipeName());
+          }
+        }
+      }
+    } // end stage 2
+
+    // Stage 3: Search for an empty stage
+    if( !done ){
+      std::vector<unsigned> PipeSums;
+      unsigned Sum = 0;
+      for( unsigned j=0; j<PipeVect.size(); j++ ){
+        Sum = 0;
+        for( unsigned k=0; k<SigMap->GetNumSignals(); k++ ){
+          Sum = Sum + AdjMat[j][k];
+        }
+        PipeSums.push_back(Sum);
+      }
+
+      // try to find an unused pipe stage
+      for( unsigned j=0; j<PipeSums.size(); j++ ){
+        if( (PipeSums[j] == 0) && (!done) ){
+          AdjMat[j][SigToIdx(MemOps[i])] = 1;
+          done = true;
+          if( Opts->IsVerbose() ){
+            this->PrintRawMsg("FitMem: Fitting " + MemOps[i]->GetName() +
+                              " to " + PipeVect[j]);
+          }
+        }
+      }
+    }// end stage 3
+
+    // Stage 4: If we have an N-stage pipeline, then find an appropriate,
+    //          non I/O stage where we can place the operation.
+    //          If we do not have an N-stage pipeline, then we can create
+    //          a new memory stage and place it there
+    if( !done ){
+      MemSigVect = SigMap->GetSigVect(MemOps[i]->GetInst());
+      if( MemSigVect[0]->IsPipeDefined() ){
+        if( NStages.find(MemSigVect[0]->GetPipeName()) != NStages.end() ){
+          // predefined number of stages, fit it to an arith stage
+          // this is not ideal, but functional
+          done = true;
+          SCSig *ASig = nullptr;
+          for( unsigned j=0; j<SigMap->GetNumSignals(); j++ ){
+            ASig = SigMap->GetSignal(j);
+            if( (ASig->isALUSig()||ASig->isMuxSig()||ASig->isBranchSig()) &&
+                (ASig != MemOps[i]) &&
+                (ASig->IsPipeDefined()) &&
+                (!done) ){
+              // found a match
+              AdjMat[PipeToIdx(ASig->GetPipeName())][SigToIdx(MemOps[i])] = 1;
+              done = true;
+              if( Opts->IsVerbose() ){
+                this->PrintRawMsg("FitMem: Fitting " + MemOps[i]->GetName() +
+                                  " to " + MemSigVect[j]->GetPipeName());
+              }
+            }
+          }
+        }
+      }
+
+      if( !done ){
+        // no predefined stages found, expand the stages with new memory stage
+        if( !FreeMat() ){
+          this->PrintMsg( L_ERROR, "FitMem: Could not free adjacency matrix" );
+          return false;
+        }
+
+        if( Opts->IsVerbose() ){
+          this->PrintMsg( L_ERROR, "FitMem: Adding memory stage to pipeline" );
+        }
+
+        PipeVect.push_back( "mem_only" );
+
+        MemOps[i]->SetPipeName("mem_only");
+
+        // allocate the new matrix and build it out
+        if( !AllocMat() ){
+          this->PrintMsg( L_ERROR, "FitMem: Could not allocate matrix" );
+          return false;
+        }
+
+        // build the pipeline matrix
+        if( !BuildMat() ){
+          this->PrintMsg( L_ERROR, "FitMem: Could not build matrix representation of pipeline" );
+          return false;
+        }
+
+        done = true;
+      }
+    }// end stage 4
+
+    // print failure
+    if( !done ){
+      if( Opts->IsVerbose() ){
+        this->PrintRawMsg("FitMem: Failed to fit " + MemOps[i]->GetName());
+      }
+      return false;
+    }
+
+  } // outer for loop
+
+  return true;
+}
+
 bool SCPipeBuilder::FitArith(){
   // Attempts to fit any arithmetic operations that are not currently asssigned
   // to a given pipe stage to a predefined stage
@@ -175,14 +333,11 @@ bool SCPipeBuilder::FitArith(){
   for( unsigned i=0; i<SigMap->GetNumSignals(); i++ ){
     SCSig *Sig = SigMap->GetSignal(i);
 
-    //if( !Sig->isMemSig() && !Sig->isRegSig() && !Sig->IsPipeDefined() ){
-      //if( Sig->GetType() != PC_INCR ){
     if( (Sig->isALUSig() || Sig->isMuxSig() || Sig->isBranchSig()) &&
         (!Sig->IsPipeDefined()) ){
 
       // now back fit the set of ALU register operations AREG_READ/AREG_WRITE
       ArithOps.push_back( Sig );
-      //}
     }
   }
 
@@ -251,7 +406,7 @@ bool SCPipeBuilder::FitArith(){
         PipeSums.push_back(Sum);
       }
 
-      // first, try to fina an unused pipe stage
+      // first, try to find an unused pipe stage
       for( unsigned j=0; j<PipeSums.size(); j++ ){
         if( (PipeSums[j] == 0) && (!done) ){
           AdjMat[j][SigToIdx(ArithOps[i])] = 1;
@@ -299,7 +454,6 @@ std::vector<std::string> SCPipeBuilder::GetEmptyStages(){
       Total = Total + AdjMat[i][j];
     }
     if( Total == 0 ){
-      std::cout << "!!!!!!!!!!!! " << PipeVect[i] << std::endl;
       EmptyStages.push_back( PipeVect[i] );
     }
   }
@@ -344,7 +498,7 @@ bool SCPipeBuilder::DeadPipeElim(){
 
 bool SCPipeBuilder::SplitNStage(){
   // First determine whether the user has prescribed us to setup an N-stage pipeline
-  std::map<std::string,unsigned> NStages;
+  //std::map<std::string,unsigned> NStages;
   std::size_t found;
   unsigned stages;
   for( unsigned i=0; i<AttrMap.size(); i++ ){
@@ -898,6 +1052,8 @@ bool SCPipeBuilder::EnablePerfSubPasses(){
                                    &SCPipeBuilder::SplitIO) );
   Enabled.push_back(std::make_pair("FitArith",
                                    &SCPipeBuilder::FitArith) );
+  Enabled.push_back(std::make_pair("FitMem",
+                                   &SCPipeBuilder::FitMem) );
   Enabled.push_back(std::make_pair("FitTmpReg",
                                    &SCPipeBuilder::FitTmpReg) );
   Enabled.push_back(std::make_pair("FitPCSigs",
@@ -919,6 +1075,8 @@ bool SCPipeBuilder::EnableAreaSubPasses(){
                                    &SCPipeBuilder::SplitIO) );
   Enabled.push_back(std::make_pair("FitArith",
                                    &SCPipeBuilder::FitArith) );
+  Enabled.push_back(std::make_pair("FitMem",
+                                   &SCPipeBuilder::FitMem) );
   Enabled.push_back(std::make_pair("FitTmpReg",
                                    &SCPipeBuilder::FitTmpReg) );
   Enabled.push_back(std::make_pair("FitPCSigs",
@@ -940,6 +1098,8 @@ bool SCPipeBuilder::EnablePowerSubPasses(){
                                    &SCPipeBuilder::SplitIO) );
   Enabled.push_back(std::make_pair("FitArith",
                                    &SCPipeBuilder::FitArith) );
+  Enabled.push_back(std::make_pair("FitMem",
+                                   &SCPipeBuilder::FitMem) );
   Enabled.push_back(std::make_pair("FitTmpReg",
                                    &SCPipeBuilder::FitTmpReg) );
   Enabled.push_back(std::make_pair("FitPCSigs",

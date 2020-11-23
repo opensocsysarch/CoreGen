@@ -316,6 +316,9 @@ make
 * -DBUILD\_COREGEN\_CODEGEN\_TESTING=ON : Enables the CodeGen test harness
 * -DBUILD\_COREGEN\_CODEGEN\_STONECUTTERIMPL\_TESTING=ON : Enables the CodeGen StoneCutter implementation test harness
 * -DBUILD\_COREGEN\_ARCHIVE\_TESTING=ON : Enables teh archive library test harness
+* -DBUILD\_COREGEN\_POAR\_TESTING=ON : Enables all the POAR tests
+* -DBUILD\_COREGEN\_POAR\_CLI\_TESTING=ON : Enable the POAR CLI tests
+* -DBUILD\_COREGEN\_POAR\_TEXT\_TESTING=ON : Enable the POAR text output tests
 
 ## Contributing
 We welcome outside contributions from corporate, acaddemic and individual developers.  However, 
