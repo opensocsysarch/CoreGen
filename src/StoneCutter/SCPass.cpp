@@ -16,6 +16,7 @@ SCPass::SCPass(std::string N,
                SCOpts *O,
                SCMsg *M)
   : Name(N), Options(Opt), Msgs(M), Opts(O), TheModule(TM) {
+    AdjMat = nullptr;
 #if 0
   if( Opts->IsVerbose() )
     Msgs->PrintRawMsg( "Executing Pass: " + this->GetName() );
@@ -23,6 +24,8 @@ SCPass::SCPass(std::string N,
 }
 
 SCPass::~SCPass(){
+  PipeVect.clear();
+  InstVect.clear();
 }
 
 std::string SCPass::GetSCPassOptions(){
@@ -579,4 +582,95 @@ std::string SCPass::TraceOperand( Function &F, Value *V,
   return V->getName().str();
 }
 
+// Stuff from SCPass
+unsigned SCPass::SigToIdx(SCSig *Sig){
+  for( unsigned i=0; i<SigMap->GetNumSignals(); i++ ){
+    if( SigMap->GetSignal(i) == Sig)
+      return i;
+  }
+  return SigMap->GetNumSignals();
+}
+
+bool SCPass::BuildMat(){
+
+  SCSig *Sig = nullptr;
+  unsigned Idx = PipeVect.size();
+
+  for( unsigned i=0; i<SigMap->GetNumSignals(); i++ ){
+    Sig = SigMap->GetSignal(i);
+    if( Sig->IsPipeDefined() ){
+      Idx = PipeToIdx(Sig->GetPipeName());
+      if( Idx == PipeVect.size() ){
+        this->PrintMsg( L_ERROR, "Pipe stage unknown" );
+        return false;
+      }
+      AdjMat[Idx][i] = 1;
+    }
+  }
+
+  return true;
+}
+
+bool SCPass::AllocMat(){
+  if( AdjMat != nullptr )
+    return false;
+
+  // no reason to allocate a zero width matrix
+  if( PipeVect.size() == 0 ){
+    return true;
+  }
+
+  AdjMat = new unsigned*[PipeVect.size()];
+  if( AdjMat == nullptr )
+    return false;
+
+  for( unsigned i=0; i<PipeVect.size(); i++ ){
+    AdjMat[i] = new unsigned[SigMap->GetNumSignals()];
+    if( AdjMat[i] == nullptr )
+      return false;
+  }
+
+  for( unsigned i=0; i<PipeVect.size(); i++ ){
+    for( unsigned j=0; j<SigMap->GetNumSignals(); j++ ){
+      AdjMat[i][j] = 0;
+    }
+  }
+  return true;
+}
+
+bool SCPass::FreeMat(){
+  if( AdjMat == nullptr )
+    return true;
+
+  if( AdjMat != nullptr ){
+    for( unsigned i=0; i<PipeVect.size(); i++ ){
+      delete [] AdjMat[i];
+    }
+    delete [] AdjMat;
+  }
+
+  AdjMat = nullptr;
+
+  return true;
+}
+
+void SCPass::PrintAdjMat(){
+  for( unsigned i=0; i<PipeVect.size(); i++ ){
+    std::cout << "[" << PipeVect[i] << "] ";
+    for( unsigned j=0; j<SigMap->GetNumSignals(); j++ ){
+      std::cout << "[" << AdjMat[i][j] << "] ";
+    }
+    std::cout << std::endl;
+  }
+  std::cout << std::endl;
+}
+
+unsigned SCPass::PipeToIdx(std::string P){
+  for( unsigned i=0; i<PipeVect.size(); i++ ){
+    if( PipeVect[i] == P )
+      return i;
+  }
+
+  return PipeVect.size();
+}
 // EOF
