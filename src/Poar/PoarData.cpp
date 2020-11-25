@@ -108,6 +108,7 @@ PoarAccum * PoarData::GetAccumByName(std::string N){
 bool PoarData::InitAccum(){
   Accums.push_back(static_cast<PoarAccum *>(new PoarRegAccum(Top)));
   Accums.push_back(static_cast<PoarAccum *>(new PoarSpadAccum(Top)));
+  Accums.push_back(static_cast<PoarAccum *>(new PoarCacheAccum(Top)));
   return true;
 }
 
