@@ -28,7 +28,7 @@ PoarConfig::ConfigEntry PoarConfig::Entries[] = {
   {PoarConfig::POWER_DPATHBIT, PoarConfig::PoarPower, "POWER_DPATHBIT", "",           0.1, 0., 0.},
   {PoarConfig::POWER_CPATHBIT, PoarConfig::PoarPower, "POWER_CPATHBIT", "",           0.1, 0., 0.},
   {PoarConfig::POWER_CACHEBIT, PoarConfig::PoarPower, "POWER_CACHEBIT", "",           0.1, 0., 0.},
-  {PoarConfig::POWER_SPADBIT,  PoarConfig::PoarPower, "POWER_SPADBIT",  "",           0.1, 0., 0.},
+  {PoarConfig::POWER_SPADBIT,  PoarConfig::PoarPower, "POWER_SPADBIT",  "CoreGenSpad",0.1, 0., 0.},
   {PoarConfig::POWER_ROMBIT,   PoarConfig::PoarPower, "POWER_ROMBIT",   "",           0.1, 0., 0.},
 
   // -- AREA --
@@ -36,7 +36,7 @@ PoarConfig::ConfigEntry PoarConfig::Entries[] = {
   {PoarConfig::AREA_DPATHBIT,  PoarConfig::PoarArea, "AREA_DPATHBIT",  "",           1.0, 0., 0.},
   {PoarConfig::AREA_CPATHBIT,  PoarConfig::PoarArea, "AREA_CPATHBIT",  "",           1.0, 0., 0.},
   {PoarConfig::AREA_CACHEBIT,  PoarConfig::PoarArea, "AREA_CACHEBIT",  "",           1.0, 0., 0.},
-  {PoarConfig::AREA_SPADBIT,   PoarConfig::PoarArea, "AREA_SPADBIT",   "",           1.0, 0., 0.},
+  {PoarConfig::AREA_SPADBIT,   PoarConfig::PoarArea, "AREA_SPADBIT",   "CoreGenSpad",1.0, 0., 0.},
   {PoarConfig::AREA_ROMBIT,    PoarConfig::PoarArea, "AREA_ROMBIT",    "",           1.0, 0., 0.},
 
   // -- FINAL ENTRY --

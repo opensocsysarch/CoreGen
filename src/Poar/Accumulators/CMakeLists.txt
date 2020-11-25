@@ -9,6 +9,7 @@
 
 set(AccumSrcs
 PoarRegAccum.cpp
+PoarSpadAccum.cpp
 )
 
 

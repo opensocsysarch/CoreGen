@@ -13,6 +13,7 @@
 
 //-- PoarAccum headers
 #include "CoreGen/Poar/Accumulators/PoarRegAccum.h"
+#include "CoreGen/Poar/Accumulators/PoarSpadAccum.h"
 
 #endif
 
