@@ -715,6 +715,13 @@ bool CoreGenSigMap::WriteTopLevelSignals(YAML::Emitter *out){
   return true;
 }
 
+SCTmp *CoreGenSigMap::GetTemp(unsigned T){
+  if( T > (TempRegs.size()-1) )
+    return nullptr;
+
+  return TempRegs[T];
+}
+
 std::string CoreGenSigMap::GetTempReg( std::string Inst, std::string IRName,
                                        unsigned width ){
 

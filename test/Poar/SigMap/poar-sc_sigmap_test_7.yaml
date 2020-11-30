@@ -1,0 +1,273 @@
+SignalTop:
+  - Signal: ALUTMP0_64_WRITE
+  - Signal: ALUTMP1_64_WRITE
+  - Signal: ALU_ADD
+  - Signal: ALU_MUL
+  - Signal: ALU_SLL
+  - Signal: BR_LTU
+  - Signal: BR_N
+  - Signal: MUX
+  - Signal: MUX_EQ
+  - Signal: MUX_LTU
+  - Signal: PC_BRJMP
+  - Signal: PC_INCR
+  - Signal: imm_READ
+  - Signal: pc_CTRL_READ
+  - Signal: pc_CTRL_WRITE
+  - Signal: ra_GPR_READ
+  - Signal: rb_GPR_READ
+  - Signal: rt_GPR_READ
+  - Signal: rt_GPR_WRITE
+Pipelines:
+  []
+Instructions:
+  - Inst: add
+    Signals:
+      - Signal: ra_GPR_READ
+        Type: REG_READ
+        Width: 64
+        DistanceTrue: 0
+        DistanceFalse: 0
+      - Signal: rb_GPR_READ
+        Type: REG_READ
+        Width: 64
+        DistanceTrue: 0
+        DistanceFalse: 0
+      - Signal: ALU_ADD
+        Type: ALU_ADD
+        Width: 64
+        DistanceTrue: 0
+        DistanceFalse: 0
+        Inputs:
+          - rb_GPR
+          - ra_GPR
+      - Signal: rt_GPR_WRITE
+        Type: REG_WRITE
+        Width: 1
+        DistanceTrue: 0
+        DistanceFalse: 0
+      - Signal: PC_INCR
+        Type: PC_INCR
+        Width: 1
+        DistanceTrue: 0
+        DistanceFalse: 0
+  - Inst: brc
+    Signals:
+      - Signal: ra_GPR_READ
+        Type: REG_READ
+        Width: 64
+        DistanceTrue: 0
+        DistanceFalse: 0
+      - Signal: rb_GPR_READ
+        Type: REG_READ
+        Width: 64
+        DistanceTrue: 0
+        DistanceFalse: 0
+      - Signal: MUX_EQ
+        Type: MUX_EQ
+        Width: 1
+        DistanceTrue: 0
+        DistanceFalse: 0
+      - Signal: pc_CTRL_READ
+        Type: REG_READ
+        Width: 64
+        DistanceTrue: 0
+        DistanceFalse: 0
+      - Signal: rt_GPR_READ
+        Type: REG_READ
+        Width: 64
+        DistanceTrue: 0
+        DistanceFalse: 0
+      - Signal: ALU_ADD
+        Type: ALU_ADD
+        Width: 64
+        DistanceTrue: 0
+        DistanceFalse: 0
+        Inputs:
+          - rt_GPR
+          - pc_CTRL
+      - Signal: pc_CTRL_WRITE
+        Type: REG_WRITE
+        Width: 1
+        DistanceTrue: 0
+        DistanceFalse: 0
+      - Signal: ALU_ADD
+        Type: ALU_ADD
+        Width: 64
+        DistanceTrue: 0
+        DistanceFalse: 0
+        Inputs:
+          - pc_CTRL
+          - 4
+      - Signal: pc_CTRL_WRITE
+        Type: REG_WRITE
+        Width: 1
+        DistanceTrue: 0
+        DistanceFalse: 0
+      - Signal: MUX
+        Type: MUX
+        Width: 1
+        DistanceTrue: 0
+        DistanceFalse: 0
+      - Signal: pc_CTRL_WRITE
+        Type: REG_WRITE
+        Width: 64
+        DistanceTrue: 0
+        DistanceFalse: 0
+      - Signal: PC_BRJMP
+        Type: PC_BRJMP
+        Width: 1
+        DistanceTrue: 0
+        DistanceFalse: 0
+  - Inst: lp
+    Signals:
+      - Signal: ra_GPR_READ
+        Type: REG_READ
+        Width: 64
+        DistanceTrue: 0
+        DistanceFalse: 0
+      - Signal: rb_GPR_READ
+        Type: REG_READ
+        Width: 64
+        DistanceTrue: 0
+        DistanceFalse: 0
+      - Signal: imm_READ
+        Type: REG_READ
+        Width: 64
+        DistanceTrue: 0
+        DistanceFalse: 0
+      - Signal: ALU_SLL
+        Type: ALU_SLL
+        Width: 64
+        DistanceTrue: 0
+        DistanceFalse: 0
+        Inputs:
+          - rt_GPR
+          - 5
+      - Signal: rt_GPR_WRITE
+        Type: REG_WRITE
+        Width: 1
+        DistanceTrue: 0
+        DistanceFalse: 0
+      - Signal: ra_GPR_READ
+        Type: REG_READ
+        Width: 64
+        DistanceTrue: 0
+        DistanceFalse: 0
+      - Signal: rb_GPR_READ
+        Type: REG_READ
+        Width: 64
+        DistanceTrue: 0
+        DistanceFalse: 0
+      - Signal: imm_READ
+        Type: REG_READ
+        Width: 64
+        DistanceTrue: 0
+        DistanceFalse: 0
+      - Signal: rt_GPR_WRITE
+        Type: REG_WRITE
+        Width: 64
+        DistanceTrue: 0
+        DistanceFalse: 0
+      - Signal: BR_N
+        Type: BR_N
+        Width: 1
+        DistanceTrue: 0
+        DistanceFalse: 0
+      - Signal: MUX_LTU
+        Type: MUX_LTU
+        Width: 1
+        DistanceTrue: 0
+        DistanceFalse: 0
+      - Signal: ALU_MUL
+        Type: ALU_MUL
+        Width: 64
+        DistanceTrue: 0
+        DistanceFalse: 0
+        Inputs:
+          - nextvar0
+          - 2
+      - Signal: ALUTMP0_64_WRITE
+        Type: AREG_WRITE
+        Width: 64
+        DistanceTrue: 0
+        DistanceFalse: 0
+      - Signal: ALU_ADD
+        Type: ALU_ADD
+        Width: 64
+        DistanceTrue: 0
+        DistanceFalse: 0
+        Inputs:
+          - nextvar0
+          - 1
+      - Signal: ALUTMP1_64_WRITE
+        Type: AREG_WRITE
+        Width: 64
+        DistanceTrue: 0
+        DistanceFalse: 0
+      - Signal: ra_GPR_READ
+        Type: REG_READ
+        Width: 64
+        DistanceTrue: 0
+        DistanceFalse: 0
+      - Signal: rb_GPR_READ
+        Type: REG_READ
+        Width: 64
+        DistanceTrue: 0
+        DistanceFalse: 0
+      - Signal: imm_READ
+        Type: REG_READ
+        Width: 64
+        DistanceTrue: 0
+        DistanceFalse: 0
+      - Signal: rt_GPR_WRITE
+        Type: REG_WRITE
+        Width: 64
+        DistanceTrue: 0
+        DistanceFalse: 0
+      - Signal: ra_GPR_READ
+        Type: REG_READ
+        Width: 64
+        DistanceTrue: 0
+        DistanceFalse: 0
+      - Signal: rb_GPR_READ
+        Type: REG_READ
+        Width: 64
+        DistanceTrue: 0
+        DistanceFalse: 0
+      - Signal: imm_READ
+        Type: REG_READ
+        Width: 64
+        DistanceTrue: 0
+        DistanceFalse: 0
+      - Signal: rt_GPR_WRITE
+        Type: REG_WRITE
+        Width: 64
+        DistanceTrue: 0
+        DistanceFalse: 0
+      - Signal: BR_LTU
+        Type: BR_LTU
+        Width: 1
+        DistanceTrue: 0
+        DistanceFalse: 0
+      - Signal: rt_GPR_WRITE
+        Type: REG_WRITE
+        Width: 64
+        DistanceTrue: 0
+        DistanceFalse: 0
+      - Signal: PC_INCR
+        Type: PC_INCR
+        Width: 1
+        DistanceTrue: 0
+        DistanceFalse: 0
+Temps:
+  - Temp: ALUTMP0_64
+    Width: 64
+    Mappings:
+      - Map: lp
+        IRName: factor
+  - Temp: ALUTMP1_64
+    Width: 64
+    Mappings:
+      - Map: lp
+        IRName: nextvar0

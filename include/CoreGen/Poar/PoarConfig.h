@@ -37,6 +37,7 @@ public:
     POWER_CACHEBIT  = 13,       ///< ConfigType: Power per cache bit
     POWER_SPADBIT   = 14,       ///< ConfigType: Power per scratchpad bit
     POWER_ROMBIT    = 15,       ///< ConfigType: Power per ROM bit
+    POWER_ALUREGBIT = 16,       ///< ConfigType: Power per pipeline register
 
     // Area Values
     AREA_REGBIT     = 100,      ///< ConfigType: Area per register bit
@@ -44,7 +45,8 @@ public:
     AREA_CPATHBIT   = 102,      ///< ConfigType: Area per control path bit
     AREA_CACHEBIT   = 103,      ///< ConfigType: Area per cache bit
     AREA_SPADBIT    = 104,      ///< ConfigType: Area per scratchpad bit
-    AREA_ROMBIT     = 105       ///< ConfigType: Area per ROM bi
+    AREA_ROMBIT     = 105,      ///< ConfigType: Area per ROM bit
+    AREA_ALUREGBIT  = 106,      ///< ConfigType: Area per pipeline register
   }ConfigType;                  ///< PoarConfig: Defines the configuration types
 
   typedef enum{
@@ -52,9 +54,15 @@ public:
     PoarArea        = 400       ///< ValueType: Area value
   }ValueType;                   ///< PoarConfig: Power or area value types
 
+  typedef enum{
+    PoarCG          = 1000,     ///< PassType: CoreGen design file pass
+    PoarSM          = 1001      ///< PassType: StoneCutter signal map file pass
+  }PassType;
+
   typedef struct{
     ConfigType Type;    ///< ConfigEntry: configuration type
     ValueType VType;    ///< ConfigEntry: power or area value
+    PassType PType;     ///< ConfigEntry: CoreGen or StoneCutter pass
     std::string Name;   ///< ConfigEntry: name of the config entry
     std::string Accum;  ///< ConfigEntry: name of the corresponding accumulator
     double DefaultVal;  ///< ConfigEntry: default value

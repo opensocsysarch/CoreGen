@@ -27,8 +27,8 @@ private:
 
 public:
   /// PoarCacheAccum: default constructor
-  PoarCacheAccum(CoreGenNode *T)
-    : PoarAccum(T,"CoreGenCache") { }
+  PoarCacheAccum(CoreGenNode *T, CoreGenSigMap *S)
+    : PoarAccum(T,S,"CoreGenCache") { }
 
   /// PoarCacheAccum: default destructor
   ~PoarCacheAccum() { }

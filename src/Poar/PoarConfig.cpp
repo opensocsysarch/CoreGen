@@ -25,23 +25,25 @@
 //
 PoarConfig::ConfigEntry PoarConfig::Entries[] = {
   // -- POWER --
-  {PoarConfig::POWER_REGBIT,   PoarConfig::PoarPower, "POWER_REGBIT",   "CoreGenReg",   0.1, 0., 0.},
-  {PoarConfig::POWER_DPATHBIT, PoarConfig::PoarPower, "POWER_DPATHBIT", "",             0.1, 0., 0.},
-  {PoarConfig::POWER_CPATHBIT, PoarConfig::PoarPower, "POWER_CPATHBIT", "",             0.1, 0., 0.},
-  {PoarConfig::POWER_CACHEBIT, PoarConfig::PoarPower, "POWER_CACHEBIT", "CoreGenCache", 0.1, 0., 0.},
-  {PoarConfig::POWER_SPADBIT,  PoarConfig::PoarPower, "POWER_SPADBIT",  "CoreGenSpad",  0.1, 0., 0.},
-  {PoarConfig::POWER_ROMBIT,   PoarConfig::PoarPower, "POWER_ROMBIT",   "",             0.1, 0., 0.},
+  {PoarConfig::POWER_REGBIT,   PoarConfig::PoarPower, PoarConfig::PoarCG, "POWER_REGBIT",   "CoreGenReg",   0.1, 0., 0.},
+  {PoarConfig::POWER_DPATHBIT, PoarConfig::PoarPower, PoarConfig::PoarCG, "POWER_DPATHBIT", "",             0.1, 0., 0.},
+  {PoarConfig::POWER_CPATHBIT, PoarConfig::PoarPower, PoarConfig::PoarCG, "POWER_CPATHBIT", "",             0.1, 0., 0.},
+  {PoarConfig::POWER_CACHEBIT, PoarConfig::PoarPower, PoarConfig::PoarCG, "POWER_CACHEBIT", "CoreGenCache", 0.1, 0., 0.},
+  {PoarConfig::POWER_SPADBIT,  PoarConfig::PoarPower, PoarConfig::PoarCG, "POWER_SPADBIT",  "CoreGenSpad",  0.1, 0., 0.},
+  {PoarConfig::POWER_ROMBIT,   PoarConfig::PoarPower, PoarConfig::PoarCG, "POWER_ROMBIT",   "",             0.1, 0., 0.},
+  {PoarConfig::POWER_ALUREGBIT,PoarConfig::PoarPower, PoarConfig::PoarSM, "POWER_ALUREGBIT","ALUReg",       0.1, 0., 0.},
 
   // -- AREA --
-  {PoarConfig::AREA_REGBIT,    PoarConfig::PoarArea, "AREA_REGBIT",    "CoreGenReg",    1.0, 0., 0.},
-  {PoarConfig::AREA_DPATHBIT,  PoarConfig::PoarArea, "AREA_DPATHBIT",  "",              1.0, 0., 0.},
-  {PoarConfig::AREA_CPATHBIT,  PoarConfig::PoarArea, "AREA_CPATHBIT",  "",              1.0, 0., 0.},
-  {PoarConfig::AREA_CACHEBIT,  PoarConfig::PoarArea, "AREA_CACHEBIT",  "CoreGenCache",  1.0, 0., 0.},
-  {PoarConfig::AREA_SPADBIT,   PoarConfig::PoarArea, "AREA_SPADBIT",   "CoreGenSpad",   1.0, 0., 0.},
-  {PoarConfig::AREA_ROMBIT,    PoarConfig::PoarArea, "AREA_ROMBIT",    "",              1.0, 0., 0.},
+  {PoarConfig::AREA_REGBIT,    PoarConfig::PoarArea, PoarConfig::PoarCG, "AREA_REGBIT",    "CoreGenReg",    1.0, 0., 0.},
+  {PoarConfig::AREA_DPATHBIT,  PoarConfig::PoarArea, PoarConfig::PoarCG, "AREA_DPATHBIT",  "",              1.0, 0., 0.},
+  {PoarConfig::AREA_CPATHBIT,  PoarConfig::PoarArea, PoarConfig::PoarCG, "AREA_CPATHBIT",  "",              1.0, 0., 0.},
+  {PoarConfig::AREA_CACHEBIT,  PoarConfig::PoarArea, PoarConfig::PoarCG, "AREA_CACHEBIT",  "CoreGenCache",  1.0, 0., 0.},
+  {PoarConfig::AREA_SPADBIT,   PoarConfig::PoarArea, PoarConfig::PoarCG, "AREA_SPADBIT",   "CoreGenSpad",   1.0, 0., 0.},
+  {PoarConfig::AREA_ROMBIT,    PoarConfig::PoarArea, PoarConfig::PoarCG, "AREA_ROMBIT",    "",              1.0, 0., 0.},
+  {PoarConfig::AREA_ALUREGBIT, PoarConfig::PoarArea, PoarConfig::PoarSM, "AREA_ALUREGBIT","ALUReg",         0.1, 0., 0.},
 
   // -- FINAL ENTRY --
-  {PoarConfig::UNK_ENTRY, PoarConfig::PoarPower, "NULL", "NULL", 0., 0., 0.} //-- this must remain the last entry
+  {PoarConfig::UNK_ENTRY, PoarConfig::PoarPower, PoarConfig::PoarCG, "NULL", "NULL", 0., 0., 0.} //-- this must remain the last entry
 };
 
 
@@ -84,6 +86,7 @@ PoarConfig::ConfigEntry PoarConfig::GetEntry(unsigned Entry){
   bool done = false;
   PoarConfig::ConfigEntry NullEntry = {PoarConfig::UNK_ENTRY,
                                        PoarConfig::PoarPower,
+                                       PoarConfig::PoarCG,
                                        "NULL", "NULL", 0., 0., 0.};
 
   while( !done ){

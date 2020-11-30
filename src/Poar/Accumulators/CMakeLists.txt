@@ -11,6 +11,7 @@ set(AccumSrcs
 PoarRegAccum.cpp
 PoarSpadAccum.cpp
 PoarCacheAccum.cpp
+PoarALURegAccum.cpp
 )
 
 

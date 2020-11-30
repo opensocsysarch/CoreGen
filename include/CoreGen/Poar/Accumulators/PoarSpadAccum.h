@@ -27,8 +27,8 @@ private:
 
 public:
   /// PoarSpadAccum: default constructor
-  PoarSpadAccum(CoreGenNode *T)
-    : PoarAccum(T,"CoreGenSpad") { }
+  PoarSpadAccum(CoreGenNode *T,CoreGenSigMap *S)
+    : PoarAccum(T,S,"CoreGenSpad") { }
 
   /// PoarSpadAccum: default destructor
   ~PoarSpadAccum() { }

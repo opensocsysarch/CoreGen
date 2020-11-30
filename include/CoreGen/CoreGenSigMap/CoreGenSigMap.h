@@ -136,6 +136,9 @@ public:
   /// Retrieve the number of temporary registers that need to exist in the ALUL
   unsigned GetNumTemps() { return TempRegs.size(); }
 
+  /// Retrieve the specific temporary register
+  SCTmp *GetTemp(unsigned T);
+
   /// Attempt to retrieve a temporary register for the target instruction:IRName mapping
   std::string GetTempReg( std::string Inst, std::string IRName, unsigned width );
 

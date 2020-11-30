@@ -106,27 +106,48 @@ PoarAccum * PoarData::GetAccumByName(std::string N){
 }
 
 bool PoarData::InitAccum(){
-  Accums.push_back(static_cast<PoarAccum *>(new PoarRegAccum(Top)));
-  Accums.push_back(static_cast<PoarAccum *>(new PoarSpadAccum(Top)));
-  Accums.push_back(static_cast<PoarAccum *>(new PoarCacheAccum(Top)));
+  Accums.push_back(static_cast<PoarAccum *>(new PoarRegAccum(Top,SM)));
+  Accums.push_back(static_cast<PoarAccum *>(new PoarSpadAccum(Top,SM)));
+  Accums.push_back(static_cast<PoarAccum *>(new PoarCacheAccum(Top,SM)));
+  Accums.push_back(static_cast<PoarAccum *>(new PoarALURegAccum(Top,SM)));
   return true;
 }
 
 bool PoarData::DeriveData(){
-  // walk all the entries
-  for( unsigned i=0; i<PConfig->GetNumEntry(); i++ ){
-    // retrieve the i'th entry
-    PoarConfig::ConfigEntry CE = PConfig->GetEntry(i);
+  // walk all the CoreGenBackend design entries
+  if( CG ){
+    for( unsigned i=0; i<PConfig->GetNumEntry(); i++ ){
+      // retrieve the i'th entry
+      PoarConfig::ConfigEntry CE = PConfig->GetEntry(i);
 
-    // retrieve the equivalent accumulator object
-    PoarAccum *PA = GetAccumByName(CE.Accum);
+      // retrieve the equivalent accumulator object
+      PoarAccum *PA = GetAccumByName(CE.Accum);
 
-    // execute the accumulator
-    if( PA ){
-      PA->Accum();
-      PConfig->SetResult(i,PA->GetWidth());
+      // execute the accumulator
+      if( (PA != nullptr) && (CE.PType == PoarConfig::PoarCG) ){
+        PA->Accum();
+        PConfig->SetResult(i,PA->GetWidth());
+      }
     }
   }
+
+  // walk the signal map from the StoneCutter
+  if( SM ){
+    for( unsigned i=0; i<PConfig->GetNumEntry(); i++ ){
+      // retrieve the i'th entry
+      PoarConfig::ConfigEntry CE = PConfig->GetEntry(i);
+
+      // retrieve the equivalent accumulator object
+      PoarAccum *PA = GetAccumByName(CE.Accum);
+
+      // execute the accumulator
+      if( (PA != nullptr) && (CE.PType == PoarConfig::PoarSM) ){
+        PA->Accum();
+        PConfig->SetResult(i,PA->GetWidth());
+      }
+    }
+  }
+
   return true;
 }
 
