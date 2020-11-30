@@ -169,9 +169,13 @@ public:
   /// Retrieve the target attribute for the target pipeline stage
   std::string GetPipelineAttr(std::string Pipeline, unsigned Stage );
 
-  /// Retrieve the signal vector for each pipeline stage
+  /// Retrieve the signal names for the target pipeline stage
   std::vector<std::string> GetSignalsByPipeStage(std::string Pipeline,
                                                  std::string Stage);
+
+  /// Retrieve the signal vector for each pipeline stage
+  std::vector<SCSig *> GetSignalVectByPipeStage(std::string Pipeline,
+                                                std::string Stage);
 
   /// Execute all the signal map passes
   bool ExecutePasses();

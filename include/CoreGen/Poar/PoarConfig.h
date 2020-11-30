@@ -37,7 +37,8 @@ public:
     POWER_CACHEBIT  = 13,       ///< ConfigType: Power per cache bit
     POWER_SPADBIT   = 14,       ///< ConfigType: Power per scratchpad bit
     POWER_ROMBIT    = 15,       ///< ConfigType: Power per ROM bit
-    POWER_ALUREGBIT = 16,       ///< ConfigType: Power per pipeline register
+    POWER_ALUREGBIT = 16,       ///< ConfigType: Power per pipeline register bit
+    POWER_ALU       = 17,       ///< ConfigType: Power per ALU bit
 
     // Area Values
     AREA_REGBIT     = 100,      ///< ConfigType: Area per register bit
@@ -46,7 +47,8 @@ public:
     AREA_CACHEBIT   = 103,      ///< ConfigType: Area per cache bit
     AREA_SPADBIT    = 104,      ///< ConfigType: Area per scratchpad bit
     AREA_ROMBIT     = 105,      ///< ConfigType: Area per ROM bit
-    AREA_ALUREGBIT  = 106,      ///< ConfigType: Area per pipeline register
+    AREA_ALUREGBIT  = 106,      ///< ConfigType: Area per pipeline register bit
+    AREA_ALU        = 107       ///< ConfigType: Area per pipeline ALU bit
   }ConfigType;                  ///< PoarConfig: Defines the configuration types
 
   typedef enum{

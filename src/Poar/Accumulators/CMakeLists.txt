@@ -12,6 +12,7 @@ PoarRegAccum.cpp
 PoarSpadAccum.cpp
 PoarCacheAccum.cpp
 PoarALURegAccum.cpp
+PoarALUAccum.cpp
 )
 
 
