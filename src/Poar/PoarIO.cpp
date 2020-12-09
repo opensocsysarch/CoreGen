@@ -57,7 +57,9 @@ bool PoarIO::WriteText(){
 
     if( (CE.VType == PoarConfig::PoarPower) &&
         (CE.Type  != PoarConfig::UNK_ENTRY) ){
-      std::cout << " - " << CE.Name << std::setw(20) << CE.Result << " metric" << std::endl;
+      std::cout << " - " << CE.Name;
+      CGPrintSpace(CE.Name.length(),20);
+      std::cout << CE.Result << " metric" << std::endl;
     }
   }
   std::cout << "-----------------------------------------------------------------" << std::endl;
@@ -70,15 +72,17 @@ bool PoarIO::WriteText(){
 
     if( (CE.VType == PoarConfig::PoarArea) &&
         (CE.Type  != PoarConfig::UNK_ENTRY) ){
-      std::cout << " - " << CE.Name << std::setw(20) << CE.Result << " gates" << std::endl;
+      std::cout << " - " << CE.Name;
+      CGPrintSpace(CE.Name.length(),20);
+      std::cout << CE.Result << " gates" << std::endl;
     }
   }
   std::cout << "-----------------------------------------------------------------" << std::endl;
 
   // -- print the totals
   std::cout << "Summary" << std::endl;
-  std::cout << "TOTAL POWER = " << std::setw(10) << TotalPower << " metric" << std::endl;
-  std::cout << "TOTAL AREA  = " << std::setw(10) << TotalArea  << " gates" << std::endl;
+  std::cout << "TOTAL POWER = " << TotalPower << " metric" << std::endl;
+  std::cout << "TOTAL AREA  = " << TotalArea << " gates" << std::endl;
 
   return true;
 }

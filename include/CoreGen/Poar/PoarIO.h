@@ -30,6 +30,9 @@
 //-- Yaml headers
 #include "yaml-cpp/yaml.h"
 
+//-- CoreGen
+#include "CoreGen/CoreGenBackend/CoreGenBackend.h"
+
 //-- Poar headers
 #include "CoreGen/Poar/PoarConfig.h"
 
