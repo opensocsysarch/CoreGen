@@ -26,12 +26,13 @@
 
 //-- CoreGen headers
 #include "CoreGen/CoreGenBackend/CoreGenBackend.h"
+#include "CoreGen/CoreGenSigMap/CoreGenSigMap.h"
 
 class PoarAccum{
 public:
   /// PoarAccum: default constructor
-  PoarAccum(CoreGenNode *T, std::string N)
-    : Top(T), Width(0x00ull), Name(N), HasRun(false) { }
+  PoarAccum(CoreGenNode *T, CoreGenSigMap *S, std::string N)
+    : Top(T), SM(S), Width(0x00ull), Name(N), HasRun(false) { }
 
   /// PoarAccum: default destructor
   ~PoarAccum();
@@ -83,6 +84,9 @@ protected:
     return AccumNodeVisitor(Nodes,Type,Top);
   }
 
+  /// PoarAccum: retrieve the signal map object
+  CoreGenSigMap *GetSignalMap() { return SM; }
+
   /// PoarAccum: flag the pass as having being run already
   void FlagRun() { HasRun = true; }
 
@@ -91,6 +95,7 @@ protected:
 
 private:
   CoreGenNode *Top;     ///< PoarAccum: Top-level node to begin accumulation discovery
+  CoreGenSigMap *SM;    ///< PoarAccum: Signal map object
   uint64_t Width;       ///< PoarAccum: accumulated width of all nodes
   std::string Name;     ///< PoarAccum: name of the accumulator
   bool HasRun;          ///< PoarAccum: flag to determine whether the pass has run

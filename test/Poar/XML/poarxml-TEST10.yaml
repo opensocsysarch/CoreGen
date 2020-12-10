@@ -1,0 +1,69 @@
+ISAs:
+  - ISAName: TEST10.0.isa
+  - ISAName: TEST10.1.isa
+  - ISAName: TEST10.2.isa
+  - ISAName: TEST10.3.isa
+  - ISAName: TEST10.4.isa
+  - ISAName: TEST10.5.isa
+  - ISAName: TEST10.6.isa
+  - ISAName: TEST10.7.isa
+  - ISAName: TEST10.8.isa
+  - ISAName: TEST10.9.isa
+  - ISAName: TEST10.10.isa
+  - ISAName: TEST10.11.isa
+  - ISAName: TEST10.12.isa
+  - ISAName: TEST10.13.isa
+  - ISAName: TEST10.14.isa
+  - ISAName: TEST10.15.isa
+Cores:
+  - Core: TEST10.0.core
+    ISA: TEST10.0.isa
+  - Core: TEST10.1.core
+    ISA: TEST10.1.isa
+  - Core: TEST10.2.core
+    ISA: TEST10.2.isa
+  - Core: TEST10.3.core
+    ISA: TEST10.3.isa
+  - Core: TEST10.4.core
+    ISA: TEST10.4.isa
+  - Core: TEST10.5.core
+    ISA: TEST10.5.isa
+  - Core: TEST10.6.core
+    ISA: TEST10.6.isa
+  - Core: TEST10.7.core
+    ISA: TEST10.7.isa
+  - Core: TEST10.8.core
+    ISA: TEST10.8.isa
+  - Core: TEST10.9.core
+    ISA: TEST10.9.isa
+  - Core: TEST10.10.core
+    ISA: TEST10.10.isa
+  - Core: TEST10.11.core
+    ISA: TEST10.11.isa
+  - Core: TEST10.12.core
+    ISA: TEST10.12.isa
+  - Core: TEST10.13.core
+    ISA: TEST10.13.isa
+  - Core: TEST10.14.core
+    ISA: TEST10.14.isa
+  - Core: TEST10.15.core
+    ISA: TEST10.15.isa
+Socs:
+  - Soc: TEST10.soc
+    Cores:
+      - Core: TEST10.0.core
+      - Core: TEST10.1.core
+      - Core: TEST10.2.core
+      - Core: TEST10.3.core
+      - Core: TEST10.4.core
+      - Core: TEST10.5.core
+      - Core: TEST10.6.core
+      - Core: TEST10.7.core
+      - Core: TEST10.8.core
+      - Core: TEST10.9.core
+      - Core: TEST10.10.core
+      - Core: TEST10.11.core
+      - Core: TEST10.12.core
+      - Core: TEST10.13.core
+      - Core: TEST10.14.core
+      - Core: TEST10.15.core

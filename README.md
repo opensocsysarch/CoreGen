@@ -319,6 +319,7 @@ make
 * -DBUILD\_COREGEN\_POAR\_TESTING=ON : Enables all the POAR tests
 * -DBUILD\_COREGEN\_POAR\_CLI\_TESTING=ON : Enable the POAR CLI tests
 * -DBUILD\_COREGEN\_POAR\_TEXT\_TESTING=ON : Enable the POAR text output tests
+* -DBUILD\_COREGEN\_POAR\_SIGMAP\_TESTING=ON : Enable the POAR sigmap output tests
 
 ## Contributing
 We welcome outside contributions from corporate, acaddemic and individual developers.  However, 

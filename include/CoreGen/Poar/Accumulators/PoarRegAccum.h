@@ -32,8 +32,8 @@ private:
 
 public:
   /// PoarRegAccum: default constructor
-  PoarRegAccum(CoreGenNode *T)
-    : PoarAccum(T,"CoreGenReg") { }
+  PoarRegAccum(CoreGenNode *T,CoreGenSigMap *S)
+    : PoarAccum(T,S,"CoreGenReg") { }
 
   /// PoarRegAccum: default destructor
   ~PoarRegAccum() { }

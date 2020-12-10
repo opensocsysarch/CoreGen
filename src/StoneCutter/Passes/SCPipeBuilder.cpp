@@ -288,7 +288,7 @@ bool SCPipeBuilder::FitMem(){
         }
 
         if( Opts->IsVerbose() ){
-          this->PrintMsg( L_ERROR, "FitMem: Adding memory stage to pipeline" );
+          this->PrintRawMsg("FitMem: Adding memory stage to pipeline" );
         }
 
         PipeVect.push_back( "mem_only" );
@@ -314,7 +314,7 @@ bool SCPipeBuilder::FitMem(){
     // print failure
     if( !done ){
       if( Opts->IsVerbose() ){
-        this->PrintRawMsg("FitMem: Failed to fit " + MemOps[i]->GetName());
+        this->PrintMsg( L_ERROR, "FitMem: failed to fit " + MemOps[i]->GetName());
       }
       return false;
     }

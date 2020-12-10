@@ -10,8 +10,8 @@
 
 #include "CoreGen/Poar/PoarIO.h"
 
-PoarIO::PoarIO(PoarConfig *Config)
-  : PConfig(Config){
+PoarIO::PoarIO(PoarConfig *Config, std::string File)
+  : PConfig(Config), OutFile(File){
 }
 
 PoarIO::~PoarIO(){
@@ -57,7 +57,9 @@ bool PoarIO::WriteText(){
 
     if( (CE.VType == PoarConfig::PoarPower) &&
         (CE.Type  != PoarConfig::UNK_ENTRY) ){
-      std::cout << " - " << CE.Name << std::setw(20) << CE.Result << " metric" << std::endl;
+      std::cout << " - " << CE.Name;
+      CGPrintSpace(CE.Name.length(),20);
+      std::cout << CE.Result << " metric" << std::endl;
     }
   }
   std::cout << "-----------------------------------------------------------------" << std::endl;
@@ -70,28 +72,135 @@ bool PoarIO::WriteText(){
 
     if( (CE.VType == PoarConfig::PoarArea) &&
         (CE.Type  != PoarConfig::UNK_ENTRY) ){
-      std::cout << " - " << CE.Name << std::setw(20) << CE.Result << " gates" << std::endl;
+      std::cout << " - " << CE.Name;
+      CGPrintSpace(CE.Name.length(),20);
+      std::cout << CE.Result << " gates" << std::endl;
     }
   }
   std::cout << "-----------------------------------------------------------------" << std::endl;
 
   // -- print the totals
   std::cout << "Summary" << std::endl;
-  std::cout << "TOTAL POWER = " << std::setw(10) << TotalPower << " metric" << std::endl;
-  std::cout << "TOTAL AREA  = " << std::setw(10) << TotalArea  << " gates" << std::endl;
+  std::cout << "TOTAL POWER = " << TotalPower << " metric" << std::endl;
+  std::cout << "TOTAL AREA  = " << TotalArea << " gates" << std::endl;
 
   return true;
 }
 
 bool PoarIO::WriteYaml(){
-  return true;
-}
+  if( OutFile.length() == 0 ){
+    return false;
+  }
+  double TotalPower = GetTotalPower();
+  double TotalArea  = GetTotalArea();
 
-bool PoarIO::WriteLatex(){
+  // open the output file
+  std::ofstream OutYaml(OutFile.c_str());
+  YAML::Emitter out(OutYaml);
+  out << YAML::BeginMap;
+
+  // write out the total summary
+  out << YAML::Key << "Summary";
+  out << YAML::BeginSeq;
+  out << YAML::BeginMap << YAML::Key << "TotalArea"
+      << YAML::Value << TotalArea << YAML::EndMap;
+  out << YAML::BeginMap << YAML::Key << "TotalPower"
+      << YAML::Value << TotalPower << YAML::EndMap;
+  out << YAML::EndSeq;
+
+  // write out the power values
+  out << YAML::Key << "Area";
+  out << YAML::BeginSeq;
+  for( unsigned i=0; i<PConfig->GetNumEntry(); i++ ){
+    // retrieve the i'th entry
+    PoarConfig::ConfigEntry CE = PConfig->GetEntry(i);
+
+    if( (CE.VType == PoarConfig::PoarArea) &&
+        (CE.Type  != PoarConfig::UNK_ENTRY) ){
+      out << YAML::BeginMap;
+      out << YAML::Key << CE.Name << YAML::Value << CE.Result;
+      out << YAML::EndMap;
+    }
+  }
+  out << YAML::EndSeq;
+
+  // write out the area values
+  out << YAML::Key << "Power";
+  out << YAML::BeginSeq;
+  for( unsigned i=0; i<PConfig->GetNumEntry(); i++ ){
+    // retrieve the i'th entry
+    PoarConfig::ConfigEntry CE = PConfig->GetEntry(i);
+
+    if( (CE.VType == PoarConfig::PoarPower) &&
+        (CE.Type  != PoarConfig::UNK_ENTRY) ){
+      out << YAML::BeginMap;
+      out << YAML::Key << CE.Name << YAML::Value << CE.Result;
+      out << YAML::EndMap;
+    }
+  }
+  out << YAML::EndSeq;
+
+  // close the file
+  out << YAML::EndMap;
+  OutYaml.close();
+
   return true;
 }
 
 bool PoarIO::WriteXML(){
+  if( OutFile.length() == 0 ){
+    return false;
+  }
+  double TotalPower = GetTotalPower();
+  double TotalArea  = GetTotalArea();
+
+  // open the file
+  std::ofstream Out(OutFile.c_str());
+  Out << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" << std::endl;
+  Out << "<POAR>" << std::endl;
+  Out << "\t<Summary>" << std::endl;
+  Out << "\t\t<TotalArea>" << TotalArea << "</TotalArea>" << std::endl;
+  Out << "\t\t<TotalPower>" << TotalPower << "</TotalPower>" << std::endl;
+  Out << "\t</Summary>" << std::endl;
+  Out << "\t<Area>" << std::endl;
+  for( unsigned i=0; i<PConfig->GetNumEntry(); i++ ){
+    // retrieve the i'th entry
+    PoarConfig::ConfigEntry CE = PConfig->GetEntry(i);
+
+    if( (CE.VType == PoarConfig::PoarArea) &&
+        (CE.Type  != PoarConfig::UNK_ENTRY) ){
+      Out << "\t\t<" << CE.Name << ">"
+          << CE.Result
+          << "</" << CE.Name << ">" << std::endl;
+    }
+  }
+  Out << "\t</Area>" << std::endl;
+  Out << "\t<Power>" << std::endl;
+  for( unsigned i=0; i<PConfig->GetNumEntry(); i++ ){
+    // retrieve the i'th entry
+    PoarConfig::ConfigEntry CE = PConfig->GetEntry(i);
+
+    if( (CE.VType == PoarConfig::PoarPower) &&
+        (CE.Type  != PoarConfig::UNK_ENTRY) ){
+      Out << "\t\t<" << CE.Name << ">"
+          << CE.Result
+          << "</" << CE.Name << ">" << std::endl;
+    }
+  }
+  Out << "\t</Power>" << std::endl;
+  Out << "</POAR>" << std::endl;
+
+  // close the file
+  Out.close();
+  return true;
+}
+
+bool PoarIO::WriteLatex(){
+  if( OutFile.length() == 0 ){
+    return false;
+  }
+  double TotalPower = GetTotalPower();
+  double TotalArea  = GetTotalArea();
   return true;
 }
 
