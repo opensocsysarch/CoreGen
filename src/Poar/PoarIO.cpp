@@ -102,10 +102,10 @@ bool PoarIO::WriteYaml(){
   // write out the total summary
   out << YAML::Key << "Summary";
   out << YAML::BeginSeq;
-  out << YAML::BeginMap << YAML::Key << "TotalPower"
-      << YAML::Value << TotalPower << YAML::EndMap;
   out << YAML::BeginMap << YAML::Key << "TotalArea"
       << YAML::Value << TotalArea << YAML::EndMap;
+  out << YAML::BeginMap << YAML::Key << "TotalPower"
+      << YAML::Value << TotalPower << YAML::EndMap;
   out << YAML::EndSeq;
 
   // write out the power values
@@ -147,16 +147,55 @@ bool PoarIO::WriteYaml(){
   return true;
 }
 
-bool PoarIO::WriteLatex(){
+bool PoarIO::WriteXML(){
   if( OutFile.length() == 0 ){
     return false;
   }
   double TotalPower = GetTotalPower();
   double TotalArea  = GetTotalArea();
+
+  // open the file
+  std::ofstream Out(OutFile.c_str());
+  Out << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" << std::endl;
+  Out << "<POAR>" << std::endl;
+  Out << "\t<Summary>" << std::endl;
+  Out << "\t\t<TotalArea>" << TotalArea << "</TotalArea>" << std::endl;
+  Out << "\t\t<TotalPower>" << TotalPower << "</TotalPower>" << std::endl;
+  Out << "\t</Summary>" << std::endl;
+  Out << "\t<Area>" << std::endl;
+  for( unsigned i=0; i<PConfig->GetNumEntry(); i++ ){
+    // retrieve the i'th entry
+    PoarConfig::ConfigEntry CE = PConfig->GetEntry(i);
+
+    if( (CE.VType == PoarConfig::PoarArea) &&
+        (CE.Type  != PoarConfig::UNK_ENTRY) ){
+      Out << "\t\t<" << CE.Name << ">"
+          << CE.Result
+          << "</" << CE.Name << ">" << std::endl;
+    }
+  }
+  Out << "\t</Area>" << std::endl;
+  Out << "\t<Power>" << std::endl;
+  for( unsigned i=0; i<PConfig->GetNumEntry(); i++ ){
+    // retrieve the i'th entry
+    PoarConfig::ConfigEntry CE = PConfig->GetEntry(i);
+
+    if( (CE.VType == PoarConfig::PoarPower) &&
+        (CE.Type  != PoarConfig::UNK_ENTRY) ){
+      Out << "\t\t<" << CE.Name << ">"
+          << CE.Result
+          << "</" << CE.Name << ">" << std::endl;
+    }
+  }
+  Out << "\t</Power>" << std::endl;
+  Out << "</POAR>" << std::endl;
+
+  // close the file
+  Out.close();
   return true;
 }
 
-bool PoarIO::WriteXML(){
+bool PoarIO::WriteLatex(){
   if( OutFile.length() == 0 ){
     return false;
   }
