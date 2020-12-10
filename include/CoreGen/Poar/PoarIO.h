@@ -39,7 +39,7 @@
 class PoarIO{
 public:
   /// PoarIO: default constructor
-  PoarIO(PoarConfig *Config);
+  PoarIO(PoarConfig *Config, std::string File);
 
   /// PoarIO: default destructor
   ~PoarIO();
@@ -57,7 +57,8 @@ public:
   bool WriteXML();
 
 private:
-  PoarConfig *PConfig; ///< Poar configuration value
+  PoarConfig *PConfig;  ///< Poar configuration value
+  std::string OutFile;  ///< Poar output file
 
   /// PoarIO: Get the total power
   double GetTotalPower();

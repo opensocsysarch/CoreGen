@@ -158,7 +158,7 @@ bool PoarData::WriteData(){
     return false;
   }
 
-  PoarIO *PIO = new PoarIO(PConfig);
+  PoarIO *PIO = new PoarIO(PConfig,POpts->GetOutFile());
   if( !PIO ){
     ErrStr = "Could not init IO object";
     return false;

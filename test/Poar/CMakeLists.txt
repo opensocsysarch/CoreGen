@@ -9,11 +9,13 @@
 if(BUILD_COREGEN_POAR_TESTING)
   set(BUILD_COREGEN_POAR_CLI_TESTING "ON")
   set(BUILD_COREGEN_POAR_TEXT_TESTING "ON")
+  set(BUILD_COREGEN_POAR_YAML_TESTING "ON")
   set(BUILD_COREGEN_POAR_SIGMAP_TESTING "ON")
 endif()
 
 add_subdirectory(CLI)
 add_subdirectory(Text)
+add_subdirectory(Yaml)
 add_subdirectory(SigMap)
 
 # EOF

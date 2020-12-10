@@ -10,8 +10,8 @@
 
 #include "CoreGen/Poar/PoarIO.h"
 
-PoarIO::PoarIO(PoarConfig *Config)
-  : PConfig(Config){
+PoarIO::PoarIO(PoarConfig *Config, std::string File)
+  : PConfig(Config), OutFile(File){
 }
 
 PoarIO::~PoarIO(){
@@ -88,14 +88,80 @@ bool PoarIO::WriteText(){
 }
 
 bool PoarIO::WriteYaml(){
+  if( OutFile.length() == 0 ){
+    return false;
+  }
+  double TotalPower = GetTotalPower();
+  double TotalArea  = GetTotalArea();
+
+  // open the output file
+  std::ofstream OutYaml(OutFile.c_str());
+  YAML::Emitter out(OutYaml);
+  out << YAML::BeginMap;
+
+  // write out the total summary
+  out << YAML::Key << "Summary";
+  out << YAML::BeginSeq;
+  out << YAML::BeginMap << YAML::Key << "TotalPower"
+      << YAML::Value << TotalPower << YAML::EndMap;
+  out << YAML::BeginMap << YAML::Key << "TotalArea"
+      << YAML::Value << TotalArea << YAML::EndMap;
+  out << YAML::EndSeq;
+
+  // write out the power values
+  out << YAML::Key << "Area";
+  out << YAML::BeginSeq;
+  for( unsigned i=0; i<PConfig->GetNumEntry(); i++ ){
+    // retrieve the i'th entry
+    PoarConfig::ConfigEntry CE = PConfig->GetEntry(i);
+
+    if( (CE.VType == PoarConfig::PoarArea) &&
+        (CE.Type  != PoarConfig::UNK_ENTRY) ){
+      out << YAML::BeginMap;
+      out << YAML::Key << CE.Name << YAML::Value << CE.Result;
+      out << YAML::EndMap;
+    }
+  }
+  out << YAML::EndSeq;
+
+  // write out the area values
+  out << YAML::Key << "Power";
+  out << YAML::BeginSeq;
+  for( unsigned i=0; i<PConfig->GetNumEntry(); i++ ){
+    // retrieve the i'th entry
+    PoarConfig::ConfigEntry CE = PConfig->GetEntry(i);
+
+    if( (CE.VType == PoarConfig::PoarPower) &&
+        (CE.Type  != PoarConfig::UNK_ENTRY) ){
+      out << YAML::BeginMap;
+      out << YAML::Key << CE.Name << YAML::Value << CE.Result;
+      out << YAML::EndMap;
+    }
+  }
+  out << YAML::EndSeq;
+
+  // close the file
+  out << YAML::EndMap;
+  OutYaml.close();
+
   return true;
 }
 
 bool PoarIO::WriteLatex(){
+  if( OutFile.length() == 0 ){
+    return false;
+  }
+  double TotalPower = GetTotalPower();
+  double TotalArea  = GetTotalArea();
   return true;
 }
 
 bool PoarIO::WriteXML(){
+  if( OutFile.length() == 0 ){
+    return false;
+  }
+  double TotalPower = GetTotalPower();
+  double TotalArea  = GetTotalArea();
   return true;
 }
 
