@@ -65,6 +65,15 @@ private:
 
   /// PoarIO: Get the total area
   double GetTotalArea();
+
+  /// PoarIO: Write the LaTeX makefile
+  bool WriteLatexMakefile();
+
+  /// PoarIO: Write the LaTeX Texfile
+  bool WriteLatexTexfile();
+
+  /// PoarIO: Escape underscores for LaTeX formatting
+  std::string EscapeUnderscore(std::string Str);
 };
 
 #endif

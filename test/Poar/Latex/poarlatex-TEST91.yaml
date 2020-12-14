@@ -1,0 +1,2482 @@
+ProjectInfo:
+  - ProjectName: TEST84
+    ProjectRoot: ./
+    ProjectType: unknown
+    ChiselMajorVersion: 3
+    ChiselMinorVersion: 0
+Registers:
+  - RegName: TEST84.0.reg
+    Width: 64
+    Index: 0
+    PseudoName: pseudoreg.0
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: true
+    PCReg: true
+    Shared: false
+    SubRegs:
+      - SubReg: SUBREG0
+        StartBit: 0
+        EndBit: 31
+      - SubReg: SUBREG1
+        StartBit: 32
+        EndBit: 63
+  - RegName: TEST84.1.reg
+    Width: 64
+    Index: 1
+    PseudoName: pseudoreg.1
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: true
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.2.reg
+    Width: 64
+    Index: 2
+    PseudoName: pseudoreg.2
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: true
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.3.reg
+    Width: 64
+    Index: 3
+    PseudoName: pseudoreg.3
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: true
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.4.reg
+    Width: 64
+    Index: 4
+    PseudoName: pseudoreg.4
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: true
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.5.reg
+    Width: 64
+    Index: 5
+    PseudoName: pseudoreg.5
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: true
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.6.reg
+    Width: 64
+    Index: 6
+    PseudoName: pseudoreg.6
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: true
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.7.reg
+    Width: 64
+    Index: 7
+    PseudoName: pseudoreg.7
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: true
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.8.reg
+    Width: 64
+    Index: 8
+    PseudoName: pseudoreg.8
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: true
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.9.reg
+    Width: 64
+    Index: 9
+    PseudoName: pseudoreg.9
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: true
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.10.reg
+    Width: 64
+    Index: 10
+    PseudoName: pseudoreg.10
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: true
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.11.reg
+    Width: 64
+    Index: 11
+    PseudoName: pseudoreg.11
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: true
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.12.reg
+    Width: 64
+    Index: 12
+    PseudoName: pseudoreg.12
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: true
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.13.reg
+    Width: 64
+    Index: 13
+    PseudoName: pseudoreg.13
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: true
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.14.reg
+    Width: 64
+    Index: 14
+    PseudoName: pseudoreg.14
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: true
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.15.reg
+    Width: 64
+    Index: 15
+    PseudoName: pseudoreg.15
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: true
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.16.reg
+    Width: 64
+    Index: 16
+    PseudoName: pseudoreg.16
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: true
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.17.reg
+    Width: 64
+    Index: 17
+    PseudoName: pseudoreg.17
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: true
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.18.reg
+    Width: 64
+    Index: 18
+    PseudoName: pseudoreg.18
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: true
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.19.reg
+    Width: 64
+    Index: 19
+    PseudoName: pseudoreg.19
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: true
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.20.reg
+    Width: 64
+    Index: 20
+    PseudoName: pseudoreg.20
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: true
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.21.reg
+    Width: 64
+    Index: 21
+    PseudoName: pseudoreg.21
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: true
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.22.reg
+    Width: 64
+    Index: 22
+    PseudoName: pseudoreg.22
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: true
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.23.reg
+    Width: 64
+    Index: 23
+    PseudoName: pseudoreg.23
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: true
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.24.reg
+    Width: 64
+    Index: 24
+    PseudoName: pseudoreg.24
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: true
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.25.reg
+    Width: 64
+    Index: 25
+    PseudoName: pseudoreg.25
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: true
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.26.reg
+    Width: 64
+    Index: 26
+    PseudoName: pseudoreg.26
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: true
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.27.reg
+    Width: 64
+    Index: 27
+    PseudoName: pseudoreg.27
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: true
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.28.reg
+    Width: 64
+    Index: 28
+    PseudoName: pseudoreg.28
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: true
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.29.reg
+    Width: 64
+    Index: 29
+    PseudoName: pseudoreg.29
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: true
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.30.reg
+    Width: 64
+    Index: 30
+    PseudoName: pseudoreg.30
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: true
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.31.reg
+    Width: 64
+    Index: 31
+    PseudoName: pseudoreg.31
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: true
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.32.reg
+    Width: 64
+    Index: 32
+    PseudoName: pseudoreg.32
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: true
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.33.reg
+    Width: 64
+    Index: 33
+    PseudoName: pseudoreg.33
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: true
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.34.reg
+    Width: 64
+    Index: 34
+    PseudoName: pseudoreg.34
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: true
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.35.reg
+    Width: 64
+    Index: 35
+    PseudoName: pseudoreg.35
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: true
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.36.reg
+    Width: 64
+    Index: 36
+    PseudoName: pseudoreg.36
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: true
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.37.reg
+    Width: 64
+    Index: 37
+    PseudoName: pseudoreg.37
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: true
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.38.reg
+    Width: 64
+    Index: 38
+    PseudoName: pseudoreg.38
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: true
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.39.reg
+    Width: 64
+    Index: 39
+    PseudoName: pseudoreg.39
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: true
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.40.reg
+    Width: 64
+    Index: 40
+    PseudoName: pseudoreg.40
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: true
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.41.reg
+    Width: 64
+    Index: 41
+    PseudoName: pseudoreg.41
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: true
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.42.reg
+    Width: 64
+    Index: 42
+    PseudoName: pseudoreg.42
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: true
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.43.reg
+    Width: 64
+    Index: 43
+    PseudoName: pseudoreg.43
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: true
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.44.reg
+    Width: 64
+    Index: 44
+    PseudoName: pseudoreg.44
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: true
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.45.reg
+    Width: 64
+    Index: 45
+    PseudoName: pseudoreg.45
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: true
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.46.reg
+    Width: 64
+    Index: 46
+    PseudoName: pseudoreg.46
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: true
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.47.reg
+    Width: 64
+    Index: 47
+    PseudoName: pseudoreg.47
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: true
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.48.reg
+    Width: 64
+    Index: 48
+    PseudoName: pseudoreg.48
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: true
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.49.reg
+    Width: 64
+    Index: 49
+    PseudoName: pseudoreg.49
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: true
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.50.reg
+    Width: 64
+    Index: 50
+    PseudoName: pseudoreg.50
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: true
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.51.reg
+    Width: 64
+    Index: 51
+    PseudoName: pseudoreg.51
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: true
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.52.reg
+    Width: 64
+    Index: 52
+    PseudoName: pseudoreg.52
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: true
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.53.reg
+    Width: 64
+    Index: 53
+    PseudoName: pseudoreg.53
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: true
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.54.reg
+    Width: 64
+    Index: 54
+    PseudoName: pseudoreg.54
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: true
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.55.reg
+    Width: 64
+    Index: 55
+    PseudoName: pseudoreg.55
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: true
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.56.reg
+    Width: 64
+    Index: 56
+    PseudoName: pseudoreg.56
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: true
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.57.reg
+    Width: 64
+    Index: 57
+    PseudoName: pseudoreg.57
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: true
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.58.reg
+    Width: 64
+    Index: 58
+    PseudoName: pseudoreg.58
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: true
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.59.reg
+    Width: 64
+    Index: 59
+    PseudoName: pseudoreg.59
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: true
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.60.reg
+    Width: 64
+    Index: 60
+    PseudoName: pseudoreg.60
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: true
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.61.reg
+    Width: 64
+    Index: 61
+    PseudoName: pseudoreg.61
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: true
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.62.reg
+    Width: 64
+    Index: 62
+    PseudoName: pseudoreg.62
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: true
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.63.reg
+    Width: 64
+    Index: 63
+    PseudoName: pseudoreg.63
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: true
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.64.reg
+    Width: 64
+    Index: 64
+    PseudoName: pseudoreg.64
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: true
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.65.reg
+    Width: 64
+    Index: 65
+    PseudoName: pseudoreg.65
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: true
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.66.reg
+    Width: 64
+    Index: 66
+    PseudoName: pseudoreg.66
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: true
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.67.reg
+    Width: 64
+    Index: 67
+    PseudoName: pseudoreg.67
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: true
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.68.reg
+    Width: 64
+    Index: 68
+    PseudoName: pseudoreg.68
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: true
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.69.reg
+    Width: 64
+    Index: 69
+    PseudoName: pseudoreg.69
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: true
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.70.reg
+    Width: 64
+    Index: 70
+    PseudoName: pseudoreg.70
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: true
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.71.reg
+    Width: 64
+    Index: 71
+    PseudoName: pseudoreg.71
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: true
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.0.csr
+    Width: 64
+    Index: 0
+    PseudoName: csr.0
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.1.csr
+    Width: 64
+    Index: 1
+    PseudoName: csr.1
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.2.csr
+    Width: 64
+    Index: 2
+    PseudoName: csr.2
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.3.csr
+    Width: 64
+    Index: 3
+    PseudoName: csr.3
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.4.csr
+    Width: 64
+    Index: 4
+    PseudoName: csr.4
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.5.csr
+    Width: 64
+    Index: 5
+    PseudoName: csr.5
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.6.csr
+    Width: 64
+    Index: 6
+    PseudoName: csr.6
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.7.csr
+    Width: 64
+    Index: 7
+    PseudoName: csr.7
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.8.csr
+    Width: 64
+    Index: 8
+    PseudoName: csr.8
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.9.csr
+    Width: 64
+    Index: 9
+    PseudoName: csr.9
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.10.csr
+    Width: 64
+    Index: 10
+    PseudoName: csr.10
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.11.csr
+    Width: 64
+    Index: 11
+    PseudoName: csr.11
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.12.csr
+    Width: 64
+    Index: 12
+    PseudoName: csr.12
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.13.csr
+    Width: 64
+    Index: 13
+    PseudoName: csr.13
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.14.csr
+    Width: 64
+    Index: 14
+    PseudoName: csr.14
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.15.csr
+    Width: 64
+    Index: 15
+    PseudoName: csr.15
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.16.csr
+    Width: 64
+    Index: 16
+    PseudoName: csr.16
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.17.csr
+    Width: 64
+    Index: 17
+    PseudoName: csr.17
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.18.csr
+    Width: 64
+    Index: 18
+    PseudoName: csr.18
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.19.csr
+    Width: 64
+    Index: 19
+    PseudoName: csr.19
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.20.csr
+    Width: 64
+    Index: 20
+    PseudoName: csr.20
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.21.csr
+    Width: 64
+    Index: 21
+    PseudoName: csr.21
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.22.csr
+    Width: 64
+    Index: 22
+    PseudoName: csr.22
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.23.csr
+    Width: 64
+    Index: 23
+    PseudoName: csr.23
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.24.csr
+    Width: 64
+    Index: 24
+    PseudoName: csr.24
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.25.csr
+    Width: 64
+    Index: 25
+    PseudoName: csr.25
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.26.csr
+    Width: 64
+    Index: 26
+    PseudoName: csr.26
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.27.csr
+    Width: 64
+    Index: 27
+    PseudoName: csr.27
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.28.csr
+    Width: 64
+    Index: 28
+    PseudoName: csr.28
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.29.csr
+    Width: 64
+    Index: 29
+    PseudoName: csr.29
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.30.csr
+    Width: 64
+    Index: 30
+    PseudoName: csr.30
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.31.csr
+    Width: 64
+    Index: 31
+    PseudoName: csr.31
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.32.csr
+    Width: 64
+    Index: 32
+    PseudoName: csr.32
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.33.csr
+    Width: 64
+    Index: 33
+    PseudoName: csr.33
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.34.csr
+    Width: 64
+    Index: 34
+    PseudoName: csr.34
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.35.csr
+    Width: 64
+    Index: 35
+    PseudoName: csr.35
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.36.csr
+    Width: 64
+    Index: 36
+    PseudoName: csr.36
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.37.csr
+    Width: 64
+    Index: 37
+    PseudoName: csr.37
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.38.csr
+    Width: 64
+    Index: 38
+    PseudoName: csr.38
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.39.csr
+    Width: 64
+    Index: 39
+    PseudoName: csr.39
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.40.csr
+    Width: 64
+    Index: 40
+    PseudoName: csr.40
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.41.csr
+    Width: 64
+    Index: 41
+    PseudoName: csr.41
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.42.csr
+    Width: 64
+    Index: 42
+    PseudoName: csr.42
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.43.csr
+    Width: 64
+    Index: 43
+    PseudoName: csr.43
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.44.csr
+    Width: 64
+    Index: 44
+    PseudoName: csr.44
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.45.csr
+    Width: 64
+    Index: 45
+    PseudoName: csr.45
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.46.csr
+    Width: 64
+    Index: 46
+    PseudoName: csr.46
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.47.csr
+    Width: 64
+    Index: 47
+    PseudoName: csr.47
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.48.csr
+    Width: 64
+    Index: 48
+    PseudoName: csr.48
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.49.csr
+    Width: 64
+    Index: 49
+    PseudoName: csr.49
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.50.csr
+    Width: 64
+    Index: 50
+    PseudoName: csr.50
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.51.csr
+    Width: 64
+    Index: 51
+    PseudoName: csr.51
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.52.csr
+    Width: 64
+    Index: 52
+    PseudoName: csr.52
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.53.csr
+    Width: 64
+    Index: 53
+    PseudoName: csr.53
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.54.csr
+    Width: 64
+    Index: 54
+    PseudoName: csr.54
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.55.csr
+    Width: 64
+    Index: 55
+    PseudoName: csr.55
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.56.csr
+    Width: 64
+    Index: 56
+    PseudoName: csr.56
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.57.csr
+    Width: 64
+    Index: 57
+    PseudoName: csr.57
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.58.csr
+    Width: 64
+    Index: 58
+    PseudoName: csr.58
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.59.csr
+    Width: 64
+    Index: 59
+    PseudoName: csr.59
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.60.csr
+    Width: 64
+    Index: 60
+    PseudoName: csr.60
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.61.csr
+    Width: 64
+    Index: 61
+    PseudoName: csr.61
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.62.csr
+    Width: 64
+    Index: 62
+    PseudoName: csr.62
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.63.csr
+    Width: 64
+    Index: 63
+    PseudoName: csr.63
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.64.csr
+    Width: 64
+    Index: 64
+    PseudoName: csr.64
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.65.csr
+    Width: 64
+    Index: 65
+    PseudoName: csr.65
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.66.csr
+    Width: 64
+    Index: 66
+    PseudoName: csr.66
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.67.csr
+    Width: 64
+    Index: 67
+    PseudoName: csr.67
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.68.csr
+    Width: 64
+    Index: 68
+    PseudoName: csr.68
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.69.csr
+    Width: 64
+    Index: 69
+    PseudoName: csr.69
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.70.csr
+    Width: 64
+    Index: 70
+    PseudoName: csr.70
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
+  - RegName: TEST84.71.csr
+    Width: 64
+    Index: 71
+    PseudoName: csr.71
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
+RegClasses:
+  - RegisterClassName: TEST84.regclass
+    Registers:
+      - TEST84.0.reg
+      - TEST84.1.reg
+      - TEST84.2.reg
+      - TEST84.3.reg
+      - TEST84.4.reg
+      - TEST84.5.reg
+      - TEST84.6.reg
+      - TEST84.7.reg
+      - TEST84.8.reg
+      - TEST84.9.reg
+      - TEST84.10.reg
+      - TEST84.11.reg
+      - TEST84.12.reg
+      - TEST84.13.reg
+      - TEST84.14.reg
+      - TEST84.15.reg
+      - TEST84.16.reg
+      - TEST84.17.reg
+      - TEST84.18.reg
+      - TEST84.19.reg
+      - TEST84.20.reg
+      - TEST84.21.reg
+      - TEST84.22.reg
+      - TEST84.23.reg
+      - TEST84.24.reg
+      - TEST84.25.reg
+      - TEST84.26.reg
+      - TEST84.27.reg
+      - TEST84.28.reg
+      - TEST84.29.reg
+      - TEST84.30.reg
+      - TEST84.31.reg
+      - TEST84.32.reg
+      - TEST84.33.reg
+      - TEST84.34.reg
+      - TEST84.35.reg
+      - TEST84.36.reg
+      - TEST84.37.reg
+      - TEST84.38.reg
+      - TEST84.39.reg
+      - TEST84.40.reg
+      - TEST84.41.reg
+      - TEST84.42.reg
+      - TEST84.43.reg
+      - TEST84.44.reg
+      - TEST84.45.reg
+      - TEST84.46.reg
+      - TEST84.47.reg
+      - TEST84.48.reg
+      - TEST84.49.reg
+      - TEST84.50.reg
+      - TEST84.51.reg
+      - TEST84.52.reg
+      - TEST84.53.reg
+      - TEST84.54.reg
+      - TEST84.55.reg
+      - TEST84.56.reg
+      - TEST84.57.reg
+      - TEST84.58.reg
+      - TEST84.59.reg
+      - TEST84.60.reg
+      - TEST84.61.reg
+      - TEST84.62.reg
+      - TEST84.63.reg
+      - TEST84.64.reg
+      - TEST84.65.reg
+      - TEST84.66.reg
+      - TEST84.67.reg
+      - TEST84.68.reg
+      - TEST84.69.reg
+      - TEST84.70.reg
+      - TEST84.71.reg
+  - RegisterClassName: TEST84.csrregclass
+    Registers:
+      - TEST84.0.csr
+      - TEST84.1.csr
+      - TEST84.2.csr
+      - TEST84.3.csr
+      - TEST84.4.csr
+      - TEST84.5.csr
+      - TEST84.6.csr
+      - TEST84.7.csr
+      - TEST84.8.csr
+      - TEST84.9.csr
+      - TEST84.10.csr
+      - TEST84.11.csr
+      - TEST84.12.csr
+      - TEST84.13.csr
+      - TEST84.14.csr
+      - TEST84.15.csr
+      - TEST84.16.csr
+      - TEST84.17.csr
+      - TEST84.18.csr
+      - TEST84.19.csr
+      - TEST84.20.csr
+      - TEST84.21.csr
+      - TEST84.22.csr
+      - TEST84.23.csr
+      - TEST84.24.csr
+      - TEST84.25.csr
+      - TEST84.26.csr
+      - TEST84.27.csr
+      - TEST84.28.csr
+      - TEST84.29.csr
+      - TEST84.30.csr
+      - TEST84.31.csr
+      - TEST84.32.csr
+      - TEST84.33.csr
+      - TEST84.34.csr
+      - TEST84.35.csr
+      - TEST84.36.csr
+      - TEST84.37.csr
+      - TEST84.38.csr
+      - TEST84.39.csr
+      - TEST84.40.csr
+      - TEST84.41.csr
+      - TEST84.42.csr
+      - TEST84.43.csr
+      - TEST84.44.csr
+      - TEST84.45.csr
+      - TEST84.46.csr
+      - TEST84.47.csr
+      - TEST84.48.csr
+      - TEST84.49.csr
+      - TEST84.50.csr
+      - TEST84.51.csr
+      - TEST84.52.csr
+      - TEST84.53.csr
+      - TEST84.54.csr
+      - TEST84.55.csr
+      - TEST84.56.csr
+      - TEST84.57.csr
+      - TEST84.58.csr
+      - TEST84.59.csr
+      - TEST84.60.csr
+      - TEST84.61.csr
+      - TEST84.62.csr
+      - TEST84.63.csr
+      - TEST84.64.csr
+      - TEST84.65.csr
+      - TEST84.66.csr
+      - TEST84.67.csr
+      - TEST84.68.csr
+      - TEST84.69.csr
+      - TEST84.70.csr
+      - TEST84.71.csr
+ISAs:
+  - ISAName: TEST84.isa
+InstFormats:
+  - InstFormatName: TEST84.if
+    ISA: TEST84.isa
+    FormatWidth: 32
+    Fields:
+      - FieldName: opcode
+        FieldType: CGInstCode
+        FieldWidth: 8
+        StartBit: 0
+        EndBit: 7
+        MandatoryField: true
+      - FieldName: RB
+        FieldType: CGInstReg
+        FieldWidth: 8
+        StartBit: 8
+        EndBit: 15
+        MandatoryField: false
+        RegClass: TEST84.regclass
+      - FieldName: RA
+        FieldType: CGInstReg
+        FieldWidth: 8
+        StartBit: 16
+        EndBit: 23
+        MandatoryField: false
+        RegClass: TEST84.regclass
+      - FieldName: RT
+        FieldType: CGInstReg
+        FieldWidth: 8
+        StartBit: 24
+        EndBit: 31
+        MandatoryField: false
+        RegClass: TEST84.csrregclass
+    Notes: The one and only inst format
+Insts:
+  - Inst: TEST84.inst0
+    Encodings:
+      []
+  - Inst: TEST84.inst1
+    Encodings:
+      []
+  - Inst: TEST84.inst2
+    Encodings:
+      []
+  - Inst: TEST84.inst3
+    Encodings:
+      []
+  - Inst: TEST84.inst4
+    Encodings:
+      []
+  - Inst: TEST84.inst5
+    Encodings:
+      []
+  - Inst: TEST84.inst6
+    Encodings:
+      []
+  - Inst: TEST84.inst7
+    Encodings:
+      []
+  - Inst: TEST84.inst8
+    Encodings:
+      []
+  - Inst: TEST84.inst9
+    Encodings:
+      []
+  - Inst: TEST84.inst10
+    Encodings:
+      []
+  - Inst: TEST84.inst11
+    Encodings:
+      []
+  - Inst: TEST84.inst12
+    Encodings:
+      []
+  - Inst: TEST84.inst13
+    Encodings:
+      []
+  - Inst: TEST84.inst14
+    Encodings:
+      []
+  - Inst: TEST84.inst15
+    Encodings:
+      []
+  - Inst: TEST84.inst16
+    Encodings:
+      []
+  - Inst: TEST84.inst17
+    Encodings:
+      []
+  - Inst: TEST84.inst18
+    Encodings:
+      []
+  - Inst: TEST84.inst19
+    Encodings:
+      []
+  - Inst: TEST84.inst20
+    Encodings:
+      []
+  - Inst: TEST84.inst21
+    Encodings:
+      []
+  - Inst: TEST84.inst22
+    Encodings:
+      []
+  - Inst: TEST84.inst23
+    Encodings:
+      []
+  - Inst: TEST84.inst24
+    Encodings:
+      []
+  - Inst: TEST84.inst25
+    Encodings:
+      []
+  - Inst: TEST84.inst26
+    Encodings:
+      []
+  - Inst: TEST84.inst27
+    Encodings:
+      []
+  - Inst: TEST84.inst28
+    Encodings:
+      []
+  - Inst: TEST84.inst29
+    Encodings:
+      []
+  - Inst: TEST84.inst30
+    Encodings:
+      []
+  - Inst: TEST84.inst31
+    Encodings:
+      []
+  - Inst: TEST84.inst32
+    Encodings:
+      []
+  - Inst: TEST84.inst33
+    Encodings:
+      []
+  - Inst: TEST84.inst34
+    Encodings:
+      []
+  - Inst: TEST84.inst35
+    Encodings:
+      []
+  - Inst: TEST84.inst36
+    Encodings:
+      []
+  - Inst: TEST84.inst37
+    Encodings:
+      []
+  - Inst: TEST84.inst38
+    Encodings:
+      []
+  - Inst: TEST84.inst39
+    Encodings:
+      []
+  - Inst: TEST84.inst40
+    Encodings:
+      []
+  - Inst: TEST84.inst41
+    Encodings:
+      []
+  - Inst: TEST84.inst42
+    Encodings:
+      []
+  - Inst: TEST84.inst43
+    Encodings:
+      []
+  - Inst: TEST84.inst44
+    Encodings:
+      []
+  - Inst: TEST84.inst45
+    Encodings:
+      []
+  - Inst: TEST84.inst46
+    Encodings:
+      []
+  - Inst: TEST84.inst47
+    Encodings:
+      []
+  - Inst: TEST84.inst48
+    Encodings:
+      []
+  - Inst: TEST84.inst49
+    Encodings:
+      []
+  - Inst: TEST84.inst50
+    Encodings:
+      []
+  - Inst: TEST84.inst51
+    Encodings:
+      []
+  - Inst: TEST84.inst52
+    Encodings:
+      []
+  - Inst: TEST84.inst53
+    Encodings:
+      []
+  - Inst: TEST84.inst54
+    Encodings:
+      []
+  - Inst: TEST84.inst55
+    Encodings:
+      []
+  - Inst: TEST84.inst56
+    Encodings:
+      []
+  - Inst: TEST84.inst57
+    Encodings:
+      []
+  - Inst: TEST84.inst58
+    Encodings:
+      []
+  - Inst: TEST84.inst59
+    Encodings:
+      []
+  - Inst: TEST84.inst60
+    Encodings:
+      []
+  - Inst: TEST84.inst61
+    Encodings:
+      []
+  - Inst: TEST84.inst62
+    Encodings:
+      []
+  - Inst: TEST84.inst63
+    Encodings:
+      []
+  - Inst: TEST84.inst64
+    Encodings:
+      []
+  - Inst: TEST84.inst65
+    Encodings:
+      []
+  - Inst: TEST84.inst66
+    Encodings:
+      []
+  - Inst: TEST84.inst67
+    Encodings:
+      []
+  - Inst: TEST84.inst68
+    Encodings:
+      []
+  - Inst: TEST84.inst69
+    Encodings:
+      []
+  - Inst: TEST84.inst70
+    Encodings:
+      []
+  - Inst: TEST84.inst71
+    Encodings:
+      []
+Caches:
+  - Cache: TEST84.L2.cache
+    Sets: 2
+    Ways: 8
+  - Cache: TEST84.core0.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST84.L2.cache
+  - Cache: TEST84.core1.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST84.L2.cache
+  - Cache: TEST84.core2.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST84.L2.cache
+  - Cache: TEST84.core3.L1.cache
+    Sets: 1
+    Ways: 1
+    SubLevel: TEST84.L2.cache
+Comms:
+  - Comm: TEST84.comm
+    Type: NOC
+    Width: 64
+    Endpoints:
+      []
+Scratchpads:
+  - Scratchpad: TEST84.0.spad
+    MemSize: 1024
+    RqstPorts: 1
+    RspPorts: 1
+    StartAddr: 34359739392
+    Notes: scratchpad TEST84.0.spad
+  - Scratchpad: TEST84.1.spad
+    MemSize: 2048
+    RqstPorts: 1
+    RspPorts: 1
+    StartAddr: 34359740416
+    Notes: scratchpad TEST84.1.spad
+  - Scratchpad: TEST84.2.spad
+    MemSize: 3072
+    RqstPorts: 1
+    RspPorts: 1
+    StartAddr: 34359741440
+    Notes: scratchpad TEST84.2.spad
+  - Scratchpad: TEST84.3.spad
+    MemSize: 4096
+    RqstPorts: 1
+    RspPorts: 1
+    StartAddr: 34359742464
+    Notes: scratchpad TEST84.3.spad
+MemoryControllers:
+  - MemoryController: TEST84.0.mctrl
+    Ports: 2
+  - MemoryController: TEST84.1.mctrl
+    Ports: 2
+  - MemoryController: TEST84.2.mctrl
+    Ports: 2
+  - MemoryController: TEST84.3.mctrl
+    Ports: 2
+VTPControllers:
+  - VTP: TEST84.vtp
+Extensions:
+  - Extension: TEST84.ext0
+    Type: unknown
+    Registers:
+      - RegName: TEST84.ext0.reg
+        Width: 64
+        Index: 0
+        IsFixedValue: false
+        IsSIMD: false
+        RWReg: false
+        ROReg: false
+        CSRReg: true
+        AMSReg: false
+        TUSReg: false
+        PCReg: false
+        Shared: false
+    RegClasses:
+      - RegisterClassName: TEST84.ext0.regclass
+        Registers:
+          - TEST84.ext0.reg
+    ISAs:
+      - ISAName: TEST84.ext0.isa
+    RTL: when( RA === 0x05){RT = RA << RB}
+    RTLType: Verilog
+  - Extension: TEST84.ext1
+    Type: unknown
+    Registers:
+      - RegName: TEST84.ext1.reg
+        Width: 64
+        Index: 0
+        IsFixedValue: false
+        IsSIMD: false
+        RWReg: false
+        ROReg: false
+        CSRReg: true
+        AMSReg: false
+        TUSReg: false
+        PCReg: false
+        Shared: false
+    RegClasses:
+      - RegisterClassName: TEST84.ext1.regclass
+        Registers:
+          - TEST84.ext1.reg
+    ISAs:
+      - ISAName: TEST84.ext1.isa
+    RTL: when( RA === 0x05){RT = RA << RB}
+    RTLType: Verilog
+  - Extension: TEST84.ext2
+    Type: unknown
+    Registers:
+      - RegName: TEST84.ext2.reg
+        Width: 64
+        Index: 0
+        IsFixedValue: false
+        IsSIMD: false
+        RWReg: false
+        ROReg: false
+        CSRReg: true
+        AMSReg: false
+        TUSReg: false
+        PCReg: false
+        Shared: false
+    RegClasses:
+      - RegisterClassName: TEST84.ext2.regclass
+        Registers:
+          - TEST84.ext2.reg
+    ISAs:
+      - ISAName: TEST84.ext2.isa
+    RTL: when( RA === 0x05){RT = RA << RB}
+    RTLType: Verilog
+  - Extension: TEST84.ext3
+    Type: unknown
+    Registers:
+      - RegName: TEST84.ext3.reg
+        Width: 64
+        Index: 0
+        IsFixedValue: false
+        IsSIMD: false
+        RWReg: false
+        ROReg: false
+        CSRReg: true
+        AMSReg: false
+        TUSReg: false
+        PCReg: false
+        Shared: false
+    RegClasses:
+      - RegisterClassName: TEST84.ext3.regclass
+        Registers:
+          - TEST84.ext3.reg
+    ISAs:
+      - ISAName: TEST84.ext3.isa
+    RTL: when( RA === 0x05){RT = RA << RB}
+    RTLType: Verilog
+Cores:
+  - Core: TEST84.core0
+    ThreadUnits: 1
+    Cache: TEST84.core0.L1.cache
+    RegisterClasses:
+      - RegClass: TEST84.regclass
+      - RegClass: TEST84.csrregclass
+    Extensions:
+      - Extension: TEST84.ext0
+  - Core: TEST84.core1
+    ThreadUnits: 2
+    Cache: TEST84.core1.L1.cache
+    RegisterClasses:
+      - RegClass: TEST84.regclass
+      - RegClass: TEST84.csrregclass
+    Extensions:
+      - Extension: TEST84.ext1
+  - Core: TEST84.core2
+    ThreadUnits: 3
+    Cache: TEST84.core2.L1.cache
+    RegisterClasses:
+      - RegClass: TEST84.regclass
+      - RegClass: TEST84.csrregclass
+    Extensions:
+      - Extension: TEST84.ext2
+  - Core: TEST84.core3
+    ThreadUnits: 4
+    Cache: TEST84.core3.L1.cache
+    RegisterClasses:
+      - RegClass: TEST84.regclass
+      - RegClass: TEST84.csrregclass
+    Extensions:
+      - Extension: TEST84.ext3
+Socs:
+  - Soc: TEST84.soc
+    Cores:
+      - Core: TEST84.core0
+      - Core: TEST84.core1
+      - Core: TEST84.core2
+      - Core: TEST84.core3
