@@ -11,6 +11,7 @@ if(BUILD_COREGEN_POAR_TESTING)
   set(BUILD_COREGEN_POAR_TEXT_TESTING "ON")
   set(BUILD_COREGEN_POAR_YAML_TESTING "ON")
   set(BUILD_COREGEN_POAR_XML_TESTING "ON")
+  set(BUILD_COREGEN_POAR_LATEX_TESTING "ON")
   set(BUILD_COREGEN_POAR_SIGMAP_TESTING "ON")
 endif()
 
@@ -18,6 +19,7 @@ add_subdirectory(CLI)
 add_subdirectory(Text)
 add_subdirectory(Yaml)
 add_subdirectory(XML)
+add_subdirectory(Latex)
 add_subdirectory(SigMap)
 
 # EOF

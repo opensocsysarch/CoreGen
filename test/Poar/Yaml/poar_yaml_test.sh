@@ -9,4 +9,6 @@ if [[  "$retVal" -ne 0 ]]; then
   exit $retVal
 fi
 
+rm -Rf $FILE.out.yaml
+
 exit 0
