@@ -23,6 +23,7 @@
 //-- C++ headers
 #include <string>
 #include <vector>
+#include <tuple>
 
 //-- CoreGen headers
 #include "CoreGen/CoreGenBackend/CoreGenBackend.h"

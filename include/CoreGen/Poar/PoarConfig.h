@@ -39,6 +39,8 @@ public:
     POWER_ROMBIT    = 15,       ///< ConfigType: Power per ROM bit
     POWER_ALUREGBIT = 16,       ///< ConfigType: Power per pipeline register bit
     POWER_ALU       = 17,       ///< ConfigType: Power per ALU bit
+    POWER_ALUDPATH  = 18,       ///< ConfigType: Power per ALU data path bit
+    POWER_ALUCPATH  = 19,       ///< ConfigType: Power per ALU control path bit
 
     // Area Values
     AREA_REGBIT     = 100,      ///< ConfigType: Area per register bit
@@ -48,7 +50,9 @@ public:
     AREA_SPADBIT    = 104,      ///< ConfigType: Area per scratchpad bit
     AREA_ROMBIT     = 105,      ///< ConfigType: Area per ROM bit
     AREA_ALUREGBIT  = 106,      ///< ConfigType: Area per pipeline register bit
-    AREA_ALU        = 107       ///< ConfigType: Area per pipeline ALU bit
+    AREA_ALU        = 107,      ///< ConfigType: Area per pipeline ALU bit
+    AREA_ALUDPATH   = 108,      ///< ConfigType: Area per ALU data path bit
+    AREA_ALUCPATH   = 109       ///< ConfigType: Area per ALU control path bit
   }ConfigType;                  ///< PoarConfig: Defines the configuration types
 
   typedef enum{

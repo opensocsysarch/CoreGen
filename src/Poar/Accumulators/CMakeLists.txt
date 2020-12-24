@@ -13,6 +13,8 @@ PoarSpadAccum.cpp
 PoarCacheAccum.cpp
 PoarALURegAccum.cpp
 PoarALUAccum.cpp
+PoarALUCPathAccum.cpp
+PoarALUDPathAccum.cpp
 )
 
 

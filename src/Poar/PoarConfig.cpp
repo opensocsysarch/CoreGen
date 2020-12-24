@@ -33,6 +33,8 @@ PoarConfig::ConfigEntry PoarConfig::Entries[] = {
   {PoarConfig::POWER_ROMBIT,   PoarConfig::PoarPower, PoarConfig::PoarCG, "POWER_ROMBIT",   "",             0.1, 0., 0.},
   {PoarConfig::POWER_ALUREGBIT,PoarConfig::PoarPower, PoarConfig::PoarSM, "POWER_ALUREGBIT","ALUReg",       0.1, 0., 0.},
   {PoarConfig::POWER_ALU,      PoarConfig::PoarPower, PoarConfig::PoarSM, "POWER_ALU",      "ALU",          0.1, 0., 0.},
+  {PoarConfig::POWER_ALUDPATH, PoarConfig::PoarPower, PoarConfig::PoarSM, "POWER_ALUDPATH", "ALUDPath",     0.1, 0., 0.},
+  {PoarConfig::POWER_ALUCPATH, PoarConfig::PoarPower, PoarConfig::PoarSM, "POWER_ALUCPATH", "ALUCPath",     0.1, 0., 0.},
 
   // -- AREA --
   {PoarConfig::AREA_REGBIT,    PoarConfig::PoarArea, PoarConfig::PoarCG, "AREA_REGBIT",    "CoreGenReg",    1.0, 0., 0.},
@@ -41,8 +43,10 @@ PoarConfig::ConfigEntry PoarConfig::Entries[] = {
   {PoarConfig::AREA_CACHEBIT,  PoarConfig::PoarArea, PoarConfig::PoarCG, "AREA_CACHEBIT",  "CoreGenCache",  1.0, 0., 0.},
   {PoarConfig::AREA_SPADBIT,   PoarConfig::PoarArea, PoarConfig::PoarCG, "AREA_SPADBIT",   "CoreGenSpad",   1.0, 0., 0.},
   {PoarConfig::AREA_ROMBIT,    PoarConfig::PoarArea, PoarConfig::PoarCG, "AREA_ROMBIT",    "",              1.0, 0., 0.},
-  {PoarConfig::AREA_ALUREGBIT, PoarConfig::PoarArea, PoarConfig::PoarSM, "AREA_ALUREGBIT","ALUReg",         0.1, 0., 0.},
-  {PoarConfig::AREA_ALU,       PoarConfig::PoarArea, PoarConfig::PoarSM, "AREA_ALU",      "ALU",            0.1, 0., 0.},
+  {PoarConfig::AREA_ALUREGBIT, PoarConfig::PoarArea, PoarConfig::PoarSM, "AREA_ALUREGBIT", "ALUReg",        0.1, 0., 0.},
+  {PoarConfig::AREA_ALU,       PoarConfig::PoarArea, PoarConfig::PoarSM, "AREA_ALU",       "ALU",           0.1, 0., 0.},
+  {PoarConfig::AREA_ALUDPATH,  PoarConfig::PoarArea, PoarConfig::PoarSM, "AREA_ALUDPATH",  "ALUDPath",      0.1, 0., 0.},
+  {PoarConfig::AREA_ALUCPATH,  PoarConfig::PoarArea, PoarConfig::PoarSM, "AREA_ALUCPATH",  "ALUCPath",      0.1, 0., 0.},
 
   // -- FINAL ENTRY --
   {PoarConfig::UNK_ENTRY, PoarConfig::PoarPower, PoarConfig::PoarCG, "NULL", "NULL", 0., 0., 0.} //-- this must remain the last entry
