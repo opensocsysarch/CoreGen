@@ -23,6 +23,7 @@
 //-- C++ headers
 #include <string>
 #include <vector>
+#include <tuple>
 
 //-- CoreGen headers
 #include "CoreGen/CoreGenBackend/CoreGenBackend.h"
@@ -76,7 +77,7 @@ protected:
     return true;
   }
 
-  /// PoarAccum: recusively visit and accumulate nodes of the target type from Top down
+  /// PoarAccum: recursively visit and accumulate nodes of the target type from Top down
   bool AccumNodes(std::vector<CoreGenNode *> &Nodes,
                   CGNodeType Type ){
     if( Top->GetType() == Type )

@@ -17,6 +17,10 @@
 #include "CoreGen/Poar/Accumulators/PoarCacheAccum.h"
 #include "CoreGen/Poar/Accumulators/PoarALURegAccum.h"
 #include "CoreGen/Poar/Accumulators/PoarALUAccum.h"
+#include "CoreGen/Poar/Accumulators/PoarALUDPathAccum.h"
+#include "CoreGen/Poar/Accumulators/PoarALUCPathAccum.h"
+#include "CoreGen/Poar/Accumulators/PoarROMAccum.h"
+#include "CoreGen/Poar/Accumulators/PoarDPathAccum.h"
 
 #endif
 
