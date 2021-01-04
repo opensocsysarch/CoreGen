@@ -38,7 +38,6 @@ llvm_map_components_to_libnames(llvm_libs
   bitreader
   bitwriter
   native)
-  #AllTargetsAsmParsers AllTargetsDescs AllTargetsDisassemblers AllTargetsInfos)
 
 message(STATUS "llvm_libs set to ${llvm_libs}")
 
