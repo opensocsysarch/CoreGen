@@ -11,13 +11,20 @@
 #
 
 Entries:
+  - Entry: LLVM-9.0.1
+    Directory: llvm-project-llvmorg-9.0.1
+    SrcType: ZIP
+    Type: COMPILER
+    Version: 9.0.1
+    URL: https://github.com/llvm/llvm-project/archive/llvmorg-9.0.1.zip
+    Latest: true
   - Entry: LLVM-8.0.1
     Directory: llvm-project-llvmorg-8.0.1
     SrcType: ZIP
     Type: COMPILER
     Version: 8.0.1
     URL: https://github.com/llvm/llvm-project/archive/llvmorg-8.0.1.zip
-    Latest: true
+    Latest: false
   - Entry: LLVM-7.1.0
     Directory: llvmproject-7.1.0
     SrcType: ZIP

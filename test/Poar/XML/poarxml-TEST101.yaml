@@ -1,0 +1,142 @@
+Registers:
+  - RegName: TEST101.0.reg
+    Width: 64
+    Index: 0
+    PseudoName: pseudoreg.0
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: true
+  - RegName: TEST101.1.reg
+    Width: 64
+    Index: 1
+    PseudoName: pseudoreg.1
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: true
+  - RegName: TEST101.2.reg
+    Width: 64
+    Index: 2
+    PseudoName: pseudoreg.2
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: true
+  - RegName: TEST101.3.reg
+    Width: 64
+    Index: 3
+    PseudoName: pseudoreg.3
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: true
+  - RegName: TEST101.4.reg
+    Width: 64
+    Index: 4
+    PseudoName: pseudoreg.4
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: true
+  - RegName: TEST101.5.reg
+    Width: 64
+    Index: 5
+    PseudoName: pseudoreg.5
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: true
+  - RegName: TEST101.6.reg
+    Width: 64
+    Index: 6
+    PseudoName: pseudoreg.6
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: true
+  - RegName: TEST101.7.reg
+    Width: 64
+    Index: 7
+    PseudoName: pseudoreg.7
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: true
+  - RegName: TEST101.8.reg
+    Width: 64
+    Index: 8
+    PseudoName: pseudoreg.8
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: false
+    ROReg: false
+    CSRReg: true
+    AMSReg: true
+RegClasses:
+  - RegisterClassName: TEST101.regclass
+    NumRegisters: 16
+    Registers:
+      - TEST101.0.reg
+      - TEST101.1.reg
+      - TEST101.2.reg
+      - TEST101.3.reg
+      - TEST101.4.reg
+      - TEST101.5.reg
+      - TEST101.6.reg
+      - TEST101.7.reg
+      - TEST101.8.reg
+ISAs:
+  - ISAName: TEST101.isa
+InstFormats:
+  - InstFormatName: TEST101.if
+    ISA: TEST101.isa
+    FormatWidth: 8
+    Fields:
+      - FieldName: opcode
+        FieldType: CGInstCode
+        FieldWidth: 4
+        StartBit: 0
+        EndBit: 3
+        MandatoryField: true
+      - FieldName: ra
+        FieldType: CGInstReg
+        FieldWidth: 2
+        StartBit: 4 
+        EndBit: 5
+        MandatoryField: false
+        RegClass: TEST101.regclass
+        RegIsDestination: false
+      - FieldName: rb
+        FieldType: CGInstReg
+        FieldWidth: 2
+        StartBit: 6
+        EndBit: 7
+        MandatoryField: false
+        RegClass: TEST101.regclass
+        RegIsDestination: true 
+Cores:
+  - Core: TEST101.core
+    ISA: TEST101.isa
+    RegisterClasses:
+      - RegClass: TEST101.regclass
+Socs:
+  - Soc: TEST101.soc
+    Cores:
+      - Core: TEST101.core

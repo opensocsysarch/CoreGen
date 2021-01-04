@@ -715,6 +715,13 @@ bool CoreGenSigMap::WriteTopLevelSignals(YAML::Emitter *out){
   return true;
 }
 
+SCTmp *CoreGenSigMap::GetTemp(unsigned T){
+  if( T > (TempRegs.size()-1) )
+    return nullptr;
+
+  return TempRegs[T];
+}
+
 std::string CoreGenSigMap::GetTempReg( std::string Inst, std::string IRName,
                                        unsigned width ){
 
@@ -822,6 +829,35 @@ std::vector<std::string> CoreGenSigMap::GetSignalsByPipeStage(std::string Pipeli
     if( Signals[i]->IsPipeDefined() ){
       if( Signals[i]->GetPipeName() == Stage )
         TmpSigVect.push_back(Signals[i]->GetName());
+    }
+  }
+
+  // make the signal vector unique
+  std::sort(TmpSigVect.begin(), TmpSigVect.end());
+  TmpSigVect.erase( std::unique( TmpSigVect.begin(), TmpSigVect.end()), TmpSigVect.end() );
+
+  return TmpSigVect;
+}
+
+std::vector<SCSig *> CoreGenSigMap::GetSignalVectByPipeStage(std::string Pipeline,
+                                                             std::string Stage){
+  std::vector<SCSig *> TmpSigVect;
+
+  // ensure the pipeline + stage combo are valid
+  bool found = false;
+  for( unsigned i=0; i<PipeStages.size(); i++ ){
+    if( (PipeStages[i].first == Pipeline) && (PipeStages[i].second == Stage) )
+      found = true;
+  }
+
+  // if !found, return an empty vector
+  if( !found )
+    return TmpSigVect;
+
+  for( unsigned i=0; i<Signals.size(); i++ ){
+    if( Signals[i]->IsPipeDefined() ){
+      if( Signals[i]->GetPipeName() == Stage )
+        TmpSigVect.push_back(Signals[i]);
     }
   }
 

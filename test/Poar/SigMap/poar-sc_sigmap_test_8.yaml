@@ -1,0 +1,83 @@
+SignalTop:
+  - Signal: ALU_ADD
+  - Signal: MUX
+  - Signal: MUX_EQ
+  - Signal: PC_BRJMP
+  - Signal: pc_CTRL_READ
+  - Signal: pc_CTRL_WRITE
+  - Signal: ra_GPR_READ
+  - Signal: rb_GPR_READ
+  - Signal: rt_GPR_READ
+Pipelines:
+  []
+Instructions:
+  - Inst: brc
+    Signals:
+      - Signal: ra_GPR_READ
+        Type: REG_READ
+        Width: 64
+        DistanceTrue: 0
+        DistanceFalse: 0
+      - Signal: rb_GPR_READ
+        Type: REG_READ
+        Width: 64
+        DistanceTrue: 0
+        DistanceFalse: 0
+      - Signal: MUX_EQ
+        Type: MUX_EQ
+        Width: 1
+        DistanceTrue: 0
+        DistanceFalse: 0
+      - Signal: pc_CTRL_READ
+        Type: REG_READ
+        Width: 64
+        DistanceTrue: 0
+        DistanceFalse: 0
+      - Signal: rt_GPR_READ
+        Type: REG_READ
+        Width: 64
+        DistanceTrue: 0
+        DistanceFalse: 0
+      - Signal: ALU_ADD
+        Type: ALU_ADD
+        Width: 64
+        DistanceTrue: 0
+        DistanceFalse: 0
+        Inputs:
+          - rt_GPR
+          - pc_CTRL
+      - Signal: pc_CTRL_WRITE
+        Type: REG_WRITE
+        Width: 1
+        DistanceTrue: 0
+        DistanceFalse: 0
+      - Signal: ALU_ADD
+        Type: ALU_ADD
+        Width: 64
+        DistanceTrue: 0
+        DistanceFalse: 0
+        Inputs:
+          - pc_CTRL
+          - 4
+      - Signal: pc_CTRL_WRITE
+        Type: REG_WRITE
+        Width: 1
+        DistanceTrue: 0
+        DistanceFalse: 0
+      - Signal: MUX
+        Type: MUX
+        Width: 1
+        DistanceTrue: 0
+        DistanceFalse: 0
+      - Signal: pc_CTRL_WRITE
+        Type: REG_WRITE
+        Width: 64
+        DistanceTrue: 0
+        DistanceFalse: 0
+      - Signal: PC_BRJMP
+        Type: PC_BRJMP
+        Width: 1
+        DistanceTrue: 0
+        DistanceFalse: 0
+Temps:
+  []

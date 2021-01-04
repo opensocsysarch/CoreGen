@@ -1,0 +1,84 @@
+SignalTop:
+  - Signal: ALUTMP0_64_WRITE
+  - Signal: PC_INCR
+  - Signal: i4_foo_READ
+  - Signal: i5_foo_READ
+  - Signal: i6_foo_READ
+  - Signal: i7_foo_READ
+  - Signal: i7_foo_WRITE
+Pipelines:
+  []
+Instructions:
+  - Inst: foo.2
+    Signals:
+      - Signal: i4_foo_READ
+        Type: REG_READ
+        Width: 8
+        DistanceTrue: 0
+        DistanceFalse: 0
+      - Signal: i5_foo_READ
+        Type: REG_READ
+        Width: 16
+        DistanceTrue: 0
+        DistanceFalse: 0
+      - Signal: i6_foo_READ
+        Type: REG_READ
+        Width: 16
+        DistanceTrue: 0
+        DistanceFalse: 0
+      - Signal: i4_foo_READ
+        Type: REG_READ
+        Width: 7
+        DistanceTrue: 0
+        DistanceFalse: 0
+      - Signal: i5_foo_READ
+        Type: REG_READ
+        Width: 14
+        DistanceTrue: 0
+        DistanceFalse: 0
+      - Signal: i6_foo_READ
+        Type: REG_READ
+        Width: 12
+        DistanceTrue: 0
+        DistanceFalse: 0
+      - Signal: ALUTMP0_64_WRITE
+        Type: AREG_WRITE
+        Width: 64
+        DistanceTrue: 0
+        DistanceFalse: 0
+      - Signal: i4_foo_READ
+        Type: REG_READ
+        Width: 8
+        DistanceTrue: 0
+        DistanceFalse: 0
+      - Signal: i5_foo_READ
+        Type: REG_READ
+        Width: 16
+        DistanceTrue: 0
+        DistanceFalse: 0
+      - Signal: i6_foo_READ
+        Type: REG_READ
+        Width: 16
+        DistanceTrue: 0
+        DistanceFalse: 0
+      - Signal: i7_foo_READ
+        Type: REG_READ
+        Width: 1
+        DistanceTrue: 0
+        DistanceFalse: 0
+      - Signal: i7_foo_WRITE
+        Type: REG_WRITE
+        Width: 1
+        DistanceTrue: 0
+        DistanceFalse: 0
+      - Signal: PC_INCR
+        Type: PC_INCR
+        Width: 1
+        DistanceTrue: 0
+        DistanceFalse: 0
+Temps:
+  - Temp: ALUTMP0_64
+    Width: 64
+    Mappings:
+      - Map: foo.2
+        IRName: calltmp

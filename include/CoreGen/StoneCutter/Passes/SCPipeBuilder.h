@@ -40,6 +40,8 @@ private:
 
   std::vector<std::pair<std::string,std::string>> ExtStage;     ///< SCPipeBuilder: Tracks the new pipeline to stage relationship
 
+  std::map<std::string,unsigned> NStages;   ///< SCPipeBuilder: Tracks the user-defined pipeline stage counts
+
   unsigned **AdjMat;                  ///< SCPipeBuilder: Adjacency Matrix
 
   /// SCPipeBuilder: Initialize the atreibute vector
@@ -114,6 +116,9 @@ private:
 
   /// SCPipeBuilder SubPass: Fit the temporary register read/write signals
   bool FitTmpReg();
+
+  /// SCPipeBuilder SubPass: Fit memory signals into appropriate pipe stages
+  bool FitMem();
 
   /// SCPipeBuilder SubPass: Fit the PC update signals
   bool FitPCSigs();

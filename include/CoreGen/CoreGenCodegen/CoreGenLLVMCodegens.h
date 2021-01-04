@@ -15,6 +15,7 @@
 // CoreGenLLVMCodegen code generators
 #include "CoreGen/CoreGenCodegen/CoreGenLLVMCodegen.h"
 #include "CoreGen/CoreGenCodegen/LLVMCodegen/LLVM801CG.h"
+#include "CoreGen/CoreGenCodegen/LLVMCodegen/LLVM901CG.h"
 
 #endif
 

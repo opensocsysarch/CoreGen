@@ -136,6 +136,9 @@ public:
   /// Retrieve the number of temporary registers that need to exist in the ALUL
   unsigned GetNumTemps() { return TempRegs.size(); }
 
+  /// Retrieve the specific temporary register
+  SCTmp *GetTemp(unsigned T);
+
   /// Attempt to retrieve a temporary register for the target instruction:IRName mapping
   std::string GetTempReg( std::string Inst, std::string IRName, unsigned width );
 
@@ -166,9 +169,13 @@ public:
   /// Retrieve the target attribute for the target pipeline stage
   std::string GetPipelineAttr(std::string Pipeline, unsigned Stage );
 
-  /// Retrieve the signal vector for each pipeline stage
+  /// Retrieve the signal names for the target pipeline stage
   std::vector<std::string> GetSignalsByPipeStage(std::string Pipeline,
                                                  std::string Stage);
+
+  /// Retrieve the signal vector for each pipeline stage
+  std::vector<SCSig *> GetSignalVectByPipeStage(std::string Pipeline,
+                                                std::string Stage);
 
   /// Execute all the signal map passes
   bool ExecutePasses();

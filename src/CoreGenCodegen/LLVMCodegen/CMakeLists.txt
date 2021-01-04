@@ -9,6 +9,7 @@
 
 set(LLVMCodegenSrcs
   LLVM801CG.cpp
+  LLVM901CG.cpp
 )
 
 include_directories(${YAML_PATH}/include)
