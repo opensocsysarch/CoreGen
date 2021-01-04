@@ -23,21 +23,6 @@ set(SCCompSrcs
 include_directories(${COREGEN_INCLUDE_PATH})
 include_directories(${YAML_PATH}/include)
 
-set(llvm_codegens
-  x86codegen
-  AArch64codegen
-  ARMcodegen
-  Mipscodegen
-  PowerPCcodegen
-)
-set(llvm_parsers
-  x86asmparser
-  AArch64asmparser
-  ARMasmparser
-  Mipsasmparser
-  PowerPCasmparser
-)
-
 llvm_map_components_to_libnames(llvm_libs
   support
   core
@@ -52,9 +37,10 @@ llvm_map_components_to_libnames(llvm_libs
   instcombine
   bitreader
   bitwriter
-  ${llvm_codegens}
-  ${llvm_parsers}
-)
+  native)
+  #AllTargetsAsmParsers AllTargetsDescs AllTargetsDisassemblers AllTargetsInfos)
+
+message(STATUS "llvm_libs set to ${llvm_libs}")
 
 add_subdirectory(Intrinsics)
 add_subdirectory(Passes)

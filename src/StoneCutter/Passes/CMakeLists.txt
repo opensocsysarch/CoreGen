@@ -20,35 +20,7 @@ SCMetadataAdjust.cpp
 include_directories(${COREGEN_INCLUDE_PATH})
 include_directories(${YAML_PATH}/include)
 
-set(llvm_codegens
-  x86codegen
-  AArch64codegen
-  ARMcodegen
-  Mipscodegen
-  PowerPCcodegen
-)
-set(llvm_parsers
-  x86asmparser
-  AArch64asmparser
-  ARMasmparser
-  Mipsasmparser
-  PowerPCasmparser
-)
-
-llvm_map_components_to_libnames(llvm_libs
-  support
-  core irreader
-  mcjit
-  ipo
-  executionengine
-  instrumentation
-  transformutils
-  vectorize
-  scalaropts
-  instcombine
-  ${llvm_codegens}
-  ${llvm_parsers}
-)
+llvm_map_components_to_libnames(llvm_libs all)
 
 add_library(PassObjs OBJECT ${PassSrcs})
 
