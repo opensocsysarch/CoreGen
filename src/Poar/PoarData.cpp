@@ -115,6 +115,7 @@ bool PoarData::InitAccum(){
   Accums.push_back(static_cast<PoarAccum *>(new PoarALUCPathAccum(Top,SM)));
   Accums.push_back(static_cast<PoarAccum *>(new PoarROMAccum(Top,SM)));
   Accums.push_back(static_cast<PoarAccum *>(new PoarDPathAccum(Top,SM)));
+  Accums.push_back(static_cast<PoarAccum *>(new PoarCPathAccum(Top,SM)));
   return true;
 }
 

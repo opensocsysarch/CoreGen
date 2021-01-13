@@ -17,6 +17,7 @@ PoarALUCPathAccum.cpp
 PoarALUDPathAccum.cpp
 PoarROMAccum.cpp
 PoarDPathAccum.cpp
+PoarCPathAccum.cpp
 )
 
 
