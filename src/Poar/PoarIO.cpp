@@ -59,7 +59,7 @@ bool PoarIO::WriteText(){
         (CE.Type  != PoarConfig::UNK_ENTRY) ){
       std::cout << " - " << CE.Name;
       CGPrintSpace(CE.Name.length(),20);
-      std::cout << CE.Result << " metric" << std::endl;
+      std::cout << CE.Result << " mW" << std::endl;
     }
   }
   std::cout << "-----------------------------------------------------------------" << std::endl;
@@ -81,7 +81,7 @@ bool PoarIO::WriteText(){
 
   // -- print the totals
   std::cout << "Summary" << std::endl;
-  std::cout << "TOTAL POWER = " << TotalPower << " metric" << std::endl;
+  std::cout << "TOTAL POWER = " << TotalPower << " mW" << std::endl;
   std::cout << "TOTAL AREA  = " << TotalArea << " gates" << std::endl;
 
   return true;
@@ -372,7 +372,7 @@ bool PoarIO::WriteLatexTexfile(){
   ofs << "\\hline" << std::endl;
   ofs << "\\textbf{Total Area} & " << TotalArea << " gates\\\\" << std::endl;
   ofs << "\\hline" << std::endl;
-  ofs << "\\textbf{Total Power} & " << TotalPower << " metric\\\\" << std::endl;
+  ofs << "\\textbf{Total Power} & " << TotalPower << " mW\\\\" << std::endl;
   ofs << "\\hline" << std::endl;
   ofs << "\\caption{Power and Area Summary}" << std::endl;
   ofs << "\\label{tab:POARSummary}" << std::endl;
@@ -425,7 +425,7 @@ bool PoarIO::WriteLatexTexfile(){
 
     if( (CE.VType == PoarConfig::PoarPower) &&
         (CE.Type  != PoarConfig::UNK_ENTRY) ){
-      ofs << "\\texttt{" << EscapeUnderscore(CE.Name) << "} & " << CE.Result << " metric \\\\" << std::endl;
+      ofs << "\\texttt{" << EscapeUnderscore(CE.Name) << "} & " << CE.Result << " mW \\\\" << std::endl;
       ofs << "\\hline" << std::endl;
     }
   }
@@ -451,7 +451,7 @@ bool PoarIO::WriteLatexTexfile(){
 
     if( CE.Type  != PoarConfig::UNK_ENTRY ){
       if( CE.VType == PoarConfig::PoarPower ){
-        ofs << "\\texttt{" << EscapeUnderscore(CE.Name) << "} & Power & " << CE.DefaultVal << " metric\\\\" << std::endl;
+        ofs << "\\texttt{" << EscapeUnderscore(CE.Name) << "} & Power & " << CE.DefaultVal << " mW\\\\" << std::endl;
       }else{
         ofs << "\\texttt{" << EscapeUnderscore(CE.Name) << "} & Area & " << CE.DefaultVal << " gates\\\\" << std::endl;
       }
