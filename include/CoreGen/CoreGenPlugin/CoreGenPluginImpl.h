@@ -323,6 +323,9 @@ public:
   /// Insert a new DAG node
   bool InsertNode( CoreGenNode *N );
 
+  /// Deletes a DAG node
+  bool DeleteNode( CoreGenNode *N );
+
   /// Insert a new cache node
   CoreGenCache *InsertCache(std::string Name,
                           unsigned Sets,
