@@ -70,13 +70,16 @@ PoarConfig::PoarConfig(std::string C)
 PoarConfig::~PoarConfig(){
 }
 
-bool PoarConfig::SetResult(unsigned Entry, uint64_t Width){
+bool PoarConfig::SetResult(unsigned Entry, uint64_t Width, std::vector<double> MultiplierVect){
   unsigned i=0;
   bool done = false;
   while( !done ){
-
     if( i == Entry ){
       Entries[i].Result = Entries[i].Value * (double)(Width);
+      double TotalMultipliers = 1;
+      for( unsigned j=0; j<MultiplierVect.size(); j++ )
+        TotalMultipliers += MultiplierVect[j];
+      Entries[i].AdjustedResult = Entries[i].Result * TotalMultipliers;
       return true;
     }
 

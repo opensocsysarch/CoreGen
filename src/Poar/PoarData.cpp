@@ -132,7 +132,7 @@ bool PoarData::DeriveData(){
       // execute the accumulator
       if( (PA != nullptr) && (CE.PType == PoarConfig::PoarCG) ){
         PA->Accum();
-        PConfig->SetResult(i,PA->GetWidth());
+        PConfig->SetResult(i,PA->GetWidth(), POpts->GetMultiplierVect());
       }
     }
   }
@@ -149,11 +149,10 @@ bool PoarData::DeriveData(){
       // execute the accumulator
       if( (PA != nullptr) && (CE.PType == PoarConfig::PoarSM) ){
         PA->Accum();
-        PConfig->SetResult(i,PA->GetWidth());
+        PConfig->SetResult(i,PA->GetWidth(), POpts->GetMultiplierVect());
+        }
       }
     }
-  }
-
   return true;
 }
 

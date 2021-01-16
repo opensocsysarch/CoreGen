@@ -26,6 +26,7 @@
 #include <iostream>
 #include <iomanip>
 #include <fstream>
+#include <bits/stdc++.h>
 
 //-- Yaml headers
 #include "yaml-cpp/yaml.h"
@@ -63,8 +64,14 @@ private:
   /// PoarIO: Get the total power
   double GetTotalPower();
 
+  /// PoarIO: Get the total power before multipliers were applied
+  double GetTotalUnadjustedPower();
+  
   /// PoarIO: Get the total area
   double GetTotalArea();
+
+  /// PoarIO: Get the total area before multipliers were applied
+  double GetTotalUnadjustedArea();
 
   /// PoarIO: Write the LaTeX makefile
   bool WriteLatexMakefile();
