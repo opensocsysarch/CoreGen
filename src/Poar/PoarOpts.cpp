@@ -38,6 +38,7 @@ void PoarOpts::PrintHelp(){
   std::cout << "Input Files:" << std::endl;
   std::cout << "\t--design /path/to/design.yaml       : Set the CoreGen design input file" << std::endl;
   std::cout << "\t--sigmap /path/to/sigmap.yaml       : Set the StoneCutter signal map" << std::endl;
+  std::cout << "\t--overhead CONSTANT                 : Set constant routing/wire congestion overhead" << std::endl;
   std::cout << std::endl;
   std::cout << "Output Formats:" << std::endl;
   std::cout << "\t--text                              : Text output (default)" << std::endl;
@@ -110,7 +111,17 @@ bool PoarOpts::ParseOpts(bool *isHelp){
       std::string S(argv[i+1]);
       SCFile = S;
       i++;
-    }else if( s=="--text" ){
+    }else if( s=="--overhead") {
+      if( i+1 > (argc-1) ){
+        std::cout << "Error : --overhead requires an argument" << std::endl;
+        return false;
+      }
+      std::string S(argv[i+1]);
+      unsigned N = std::stoul(S);
+      MultiplierVect.push_back((double)(N * 0.01));
+      i++;
+    }
+    else if( s=="--text" ){
       TextOutput = true;
       YamlOutput = false;
       LatexOutput = false;

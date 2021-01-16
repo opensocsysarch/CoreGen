@@ -25,6 +25,20 @@ double PoarIO::GetTotalPower(){
 
     if( (CE.VType == PoarConfig::PoarPower) &&
         (CE.Type  != PoarConfig::UNK_ENTRY) ){
+      result += CE.AdjustedResult;
+    }
+  }
+  return result;
+}
+
+double PoarIO::GetTotalUnadjustedPower(){
+  double result = 0.;
+  for( unsigned i=0; i<PConfig->GetNumEntry(); i++ ){
+    // retrieve the i'th entry
+    PoarConfig::ConfigEntry CE = PConfig->GetEntry(i);
+
+    if( (CE.VType == PoarConfig::PoarPower) &&
+        (CE.Type  != PoarConfig::UNK_ENTRY) ){
       result += CE.Result;
     }
   }
@@ -32,6 +46,20 @@ double PoarIO::GetTotalPower(){
 }
 
 double PoarIO::GetTotalArea(){
+  double result = 0.;
+  for( unsigned i=0; i<PConfig->GetNumEntry(); i++ ){
+    // retrieve the i'th entry
+    PoarConfig::ConfigEntry CE = PConfig->GetEntry(i);
+
+    if( (CE.VType == PoarConfig::PoarArea) &&
+        (CE.Type  != PoarConfig::UNK_ENTRY) ){
+      result += CE.AdjustedResult;
+    }
+  }
+  return result;
+}
+
+double PoarIO::GetTotalUnadjustedArea(){
   double result = 0.;
   for( unsigned i=0; i<PConfig->GetNumEntry(); i++ ){
     // retrieve the i'th entry
@@ -59,7 +87,7 @@ bool PoarIO::WriteText(){
         (CE.Type  != PoarConfig::UNK_ENTRY) ){
       std::cout << " - " << CE.Name;
       CGPrintSpace(CE.Name.length(),20);
-      std::cout << CE.Result << " mW" << std::endl;
+      std::cout << CE.AdjustedResult << " mW" << std::endl;
     }
   }
   std::cout << "-----------------------------------------------------------------" << std::endl;
@@ -74,7 +102,7 @@ bool PoarIO::WriteText(){
         (CE.Type  != PoarConfig::UNK_ENTRY) ){
       std::cout << " - " << CE.Name;
       CGPrintSpace(CE.Name.length(),20);
-      std::cout << CE.Result << " gates" << std::endl;
+      std::cout << CE.AdjustedResult << " gates" << std::endl;
     }
   }
   std::cout << "-----------------------------------------------------------------" << std::endl;
@@ -118,7 +146,7 @@ bool PoarIO::WriteYaml(){
     if( (CE.VType == PoarConfig::PoarArea) &&
         (CE.Type  != PoarConfig::UNK_ENTRY) ){
       out << YAML::BeginMap;
-      out << YAML::Key << CE.Name << YAML::Value << CE.Result;
+      out << YAML::Key << CE.Name << YAML::Value << CE.AdjustedResult;
       out << YAML::EndMap;
     }
   }
@@ -134,7 +162,7 @@ bool PoarIO::WriteYaml(){
     if( (CE.VType == PoarConfig::PoarPower) &&
         (CE.Type  != PoarConfig::UNK_ENTRY) ){
       out << YAML::BeginMap;
-      out << YAML::Key << CE.Name << YAML::Value << CE.Result;
+      out << YAML::Key << CE.Name << YAML::Value << CE.AdjustedResult;
       out << YAML::EndMap;
     }
   }
@@ -170,7 +198,7 @@ bool PoarIO::WriteXML(){
     if( (CE.VType == PoarConfig::PoarArea) &&
         (CE.Type  != PoarConfig::UNK_ENTRY) ){
       Out << "\t\t<" << CE.Name << ">"
-          << CE.Result
+          << CE.AdjustedResult
           << "</" << CE.Name << ">" << std::endl;
     }
   }
@@ -183,7 +211,7 @@ bool PoarIO::WriteXML(){
     if( (CE.VType == PoarConfig::PoarPower) &&
         (CE.Type  != PoarConfig::UNK_ENTRY) ){
       Out << "\t\t<" << CE.Name << ">"
-          << CE.Result
+          << CE.AdjustedResult
           << "</" << CE.Name << ">" << std::endl;
     }
   }
@@ -397,7 +425,7 @@ bool PoarIO::WriteLatexTexfile(){
 
     if( (CE.VType == PoarConfig::PoarArea) &&
         (CE.Type  != PoarConfig::UNK_ENTRY) ){
-      ofs << "\\texttt{" << EscapeUnderscore(CE.Name) << "} & " << CE.Result << " gates \\\\" << std::endl;
+      ofs << "\\texttt{" << EscapeUnderscore(CE.Name) << "} & " << CE.AdjustedResult << " gates \\\\" << std::endl;
       ofs << "\\hline" << std::endl;
     }
   }
@@ -425,7 +453,7 @@ bool PoarIO::WriteLatexTexfile(){
 
     if( (CE.VType == PoarConfig::PoarPower) &&
         (CE.Type  != PoarConfig::UNK_ENTRY) ){
-      ofs << "\\texttt{" << EscapeUnderscore(CE.Name) << "} & " << CE.Result << " mW \\\\" << std::endl;
+      ofs << "\\texttt{" << EscapeUnderscore(CE.Name) << "} & " << CE.AdjustedResult << " mW \\\\" << std::endl;
       ofs << "\\hline" << std::endl;
     }
   }
