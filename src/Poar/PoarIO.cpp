@@ -25,6 +25,20 @@ double PoarIO::GetTotalPower(){
 
     if( (CE.VType == PoarConfig::PoarPower) &&
         (CE.Type  != PoarConfig::UNK_ENTRY) ){
+      result += CE.AdjustedResult;
+    }
+  }
+  return result;
+}
+
+double PoarIO::GetTotalUnadjustedPower(){
+  double result = 0.;
+  for( unsigned i=0; i<PConfig->GetNumEntry(); i++ ){
+    // retrieve the i'th entry
+    PoarConfig::ConfigEntry CE = PConfig->GetEntry(i);
+
+    if( (CE.VType == PoarConfig::PoarPower) &&
+        (CE.Type  != PoarConfig::UNK_ENTRY) ){
       result += CE.Result;
     }
   }
@@ -32,6 +46,20 @@ double PoarIO::GetTotalPower(){
 }
 
 double PoarIO::GetTotalArea(){
+  double result = 0.;
+  for( unsigned i=0; i<PConfig->GetNumEntry(); i++ ){
+    // retrieve the i'th entry
+    PoarConfig::ConfigEntry CE = PConfig->GetEntry(i);
+
+    if( (CE.VType == PoarConfig::PoarArea) &&
+        (CE.Type  != PoarConfig::UNK_ENTRY) ){
+      result += CE.AdjustedResult;
+    }
+  }
+  return result;
+}
+
+double PoarIO::GetTotalUnadjustedArea(){
   double result = 0.;
   for( unsigned i=0; i<PConfig->GetNumEntry(); i++ ){
     // retrieve the i'th entry
@@ -59,7 +87,7 @@ bool PoarIO::WriteText(){
         (CE.Type  != PoarConfig::UNK_ENTRY) ){
       std::cout << " - " << CE.Name;
       CGPrintSpace(CE.Name.length(),20);
-      std::cout << CE.Result << " metric" << std::endl;
+      std::cout << CE.AdjustedResult << " mW" << std::endl;
     }
   }
   std::cout << "-----------------------------------------------------------------" << std::endl;
@@ -74,14 +102,14 @@ bool PoarIO::WriteText(){
         (CE.Type  != PoarConfig::UNK_ENTRY) ){
       std::cout << " - " << CE.Name;
       CGPrintSpace(CE.Name.length(),20);
-      std::cout << CE.Result << " gates" << std::endl;
+      std::cout << CE.AdjustedResult << " gates" << std::endl;
     }
   }
   std::cout << "-----------------------------------------------------------------" << std::endl;
 
   // -- print the totals
   std::cout << "Summary" << std::endl;
-  std::cout << "TOTAL POWER = " << TotalPower << " metric" << std::endl;
+  std::cout << "TOTAL POWER = " << TotalPower << " mW" << std::endl;
   std::cout << "TOTAL AREA  = " << TotalArea << " gates" << std::endl;
 
   return true;
@@ -118,7 +146,7 @@ bool PoarIO::WriteYaml(){
     if( (CE.VType == PoarConfig::PoarArea) &&
         (CE.Type  != PoarConfig::UNK_ENTRY) ){
       out << YAML::BeginMap;
-      out << YAML::Key << CE.Name << YAML::Value << CE.Result;
+      out << YAML::Key << CE.Name << YAML::Value << CE.AdjustedResult;
       out << YAML::EndMap;
     }
   }
@@ -134,7 +162,7 @@ bool PoarIO::WriteYaml(){
     if( (CE.VType == PoarConfig::PoarPower) &&
         (CE.Type  != PoarConfig::UNK_ENTRY) ){
       out << YAML::BeginMap;
-      out << YAML::Key << CE.Name << YAML::Value << CE.Result;
+      out << YAML::Key << CE.Name << YAML::Value << CE.AdjustedResult;
       out << YAML::EndMap;
     }
   }
@@ -170,7 +198,7 @@ bool PoarIO::WriteXML(){
     if( (CE.VType == PoarConfig::PoarArea) &&
         (CE.Type  != PoarConfig::UNK_ENTRY) ){
       Out << "\t\t<" << CE.Name << ">"
-          << CE.Result
+          << CE.AdjustedResult
           << "</" << CE.Name << ">" << std::endl;
     }
   }
@@ -183,7 +211,7 @@ bool PoarIO::WriteXML(){
     if( (CE.VType == PoarConfig::PoarPower) &&
         (CE.Type  != PoarConfig::UNK_ENTRY) ){
       Out << "\t\t<" << CE.Name << ">"
-          << CE.Result
+          << CE.AdjustedResult
           << "</" << CE.Name << ">" << std::endl;
     }
   }
@@ -372,7 +400,7 @@ bool PoarIO::WriteLatexTexfile(){
   ofs << "\\hline" << std::endl;
   ofs << "\\textbf{Total Area} & " << TotalArea << " gates\\\\" << std::endl;
   ofs << "\\hline" << std::endl;
-  ofs << "\\textbf{Total Power} & " << TotalPower << " metric\\\\" << std::endl;
+  ofs << "\\textbf{Total Power} & " << TotalPower << " mW\\\\" << std::endl;
   ofs << "\\hline" << std::endl;
   ofs << "\\caption{Power and Area Summary}" << std::endl;
   ofs << "\\label{tab:POARSummary}" << std::endl;
@@ -397,7 +425,7 @@ bool PoarIO::WriteLatexTexfile(){
 
     if( (CE.VType == PoarConfig::PoarArea) &&
         (CE.Type  != PoarConfig::UNK_ENTRY) ){
-      ofs << "\\texttt{" << EscapeUnderscore(CE.Name) << "} & " << CE.Result << " gates \\\\" << std::endl;
+      ofs << "\\texttt{" << EscapeUnderscore(CE.Name) << "} & " << CE.AdjustedResult << " gates \\\\" << std::endl;
       ofs << "\\hline" << std::endl;
     }
   }
@@ -425,7 +453,7 @@ bool PoarIO::WriteLatexTexfile(){
 
     if( (CE.VType == PoarConfig::PoarPower) &&
         (CE.Type  != PoarConfig::UNK_ENTRY) ){
-      ofs << "\\texttt{" << EscapeUnderscore(CE.Name) << "} & " << CE.Result << " metric \\\\" << std::endl;
+      ofs << "\\texttt{" << EscapeUnderscore(CE.Name) << "} & " << CE.AdjustedResult << " mW \\\\" << std::endl;
       ofs << "\\hline" << std::endl;
     }
   }
@@ -451,7 +479,7 @@ bool PoarIO::WriteLatexTexfile(){
 
     if( CE.Type  != PoarConfig::UNK_ENTRY ){
       if( CE.VType == PoarConfig::PoarPower ){
-        ofs << "\\texttt{" << EscapeUnderscore(CE.Name) << "} & Power & " << CE.DefaultVal << " metric\\\\" << std::endl;
+        ofs << "\\texttt{" << EscapeUnderscore(CE.Name) << "} & Power & " << CE.DefaultVal << " mW\\\\" << std::endl;
       }else{
         ofs << "\\texttt{" << EscapeUnderscore(CE.Name) << "} & Area & " << CE.DefaultVal << " gates\\\\" << std::endl;
       }

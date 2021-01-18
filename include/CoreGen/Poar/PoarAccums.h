@@ -21,6 +21,7 @@
 #include "CoreGen/Poar/Accumulators/PoarALUCPathAccum.h"
 #include "CoreGen/Poar/Accumulators/PoarROMAccum.h"
 #include "CoreGen/Poar/Accumulators/PoarDPathAccum.h"
+#include "CoreGen/Poar/Accumulators/PoarCPathAccum.h"
 
 #endif
 
