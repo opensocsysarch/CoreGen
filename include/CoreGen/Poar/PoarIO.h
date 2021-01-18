@@ -26,7 +26,6 @@
 #include <iostream>
 #include <iomanip>
 #include <fstream>
-#include <bits/stdc++.h>
 
 //-- Yaml headers
 #include "yaml-cpp/yaml.h"
