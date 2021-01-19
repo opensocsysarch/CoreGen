@@ -879,6 +879,17 @@ void CoreGenYaml::WriteRegYaml(YAML::Emitter *out,
       *out << YAML:: Value << "false";
     }
 
+    if( Regs[i]->IsVector() ){
+      *out << YAML::Key << "Vector" << YAML::Value << "true";
+      *out << YAML::Key << "DimX" << YAML::Value << Regs[i]->GetDimX();
+    }
+
+    if( Regs[i]->IsMatrix() ){
+      *out << YAML::Key << "Matrix" << YAML::Value << "true";
+      *out << YAML::Key << "DimX" << YAML::Value << Regs[i]->GetDimX();
+      *out << YAML::Key << "DimY" << YAML::Value << Regs[i]->GetDimY();
+    }
+
 
     // write out the subregister encodings
     if( Regs[i]->GetNumSubRegs() > 0 ){
@@ -1735,6 +1746,10 @@ bool CoreGenYaml::ReadRegisterYaml(const YAML::Node& RegNodes,
     bool TUSReg = false;
     bool PCReg = false;
     bool IsShared = false;
+    bool IsVector = false;
+    bool IsMatrix = false;
+    unsigned DimX = 0;
+    unsigned DimY = 0;
 
     if( CheckValidNode(Node,"IsSIMD") ){
       try{
@@ -1816,6 +1831,64 @@ bool CoreGenYaml::ReadRegisterYaml(const YAML::Node& RegNodes,
       }
     }
 
+    if( CheckValidNode(Node,"Vector") ){
+      try{
+        IsVector = Node["Vector"].as<bool>();
+        if( IsVector ){
+          // parse DimX
+          try{
+            DimX = Node["DimX"].as<unsigned>();
+            if( DimX == 0 ){
+              Errno->SetError(CGERR_ERROR, "Error in parsing DimX: Cannot be '0'");
+              return false;
+            }
+          }catch(YAML::BadConversion& e){
+            Errno->SetError(CGERR_ERROR, "Error in parsing register Vector:DimX: "
+                            + std::string(e.what()));
+            return false;
+          }
+        }
+      }catch(YAML::BadConversion& e){
+        Errno->SetError(CGERR_ERROR, "Error in parsing register Vector: "
+                        + std::string(e.what()));
+        return false;
+      }
+    }
+
+    if( CheckValidNode(Node,"Matrix") ){
+      try{
+        IsMatrix = Node["Matrix"].as<bool>();
+        if( IsMatrix ){
+          // parse DimX
+          try{
+            DimX = Node["DimX"].as<unsigned>();
+          }catch(YAML::BadConversion& e){
+            Errno->SetError(CGERR_ERROR, "Error in parsing register Matrix:DimX: "
+                            + std::string(e.what()));
+            return false;
+          }
+          // parse DimY
+          try{
+            DimY = Node["DimY"].as<unsigned>();
+          }catch(YAML::BadConversion& e){
+            Errno->SetError(CGERR_ERROR, "Error in parsing register Matrix:DimY: "
+                            + std::string(e.what()));
+            return false;
+          }
+
+          if( (DimX==0) || (DimY==0) ){
+            Errno->SetError(CGERR_ERROR, "Error in parsing DimX/DimY: Cannot be '0'");
+            return false;
+          }
+        }
+      }catch(YAML::BadConversion& e){
+        Errno->SetError(CGERR_ERROR, "Error in parsing register Matrix: "
+                        + std::string(e.what()));
+        return false;
+      }
+    }
+
+
     // build a new register node
     CoreGenReg *R = new CoreGenReg(Name,Index,Width,Errno);
     if( R == nullptr ){
@@ -1869,6 +1942,13 @@ bool CoreGenYaml::ReadRegisterYaml(const YAML::Node& RegNodes,
     R->SetAttrs(Attrs);
 
     R->SetShared(IsShared);
+
+    if( IsVector ){
+      R->SetVector(DimX);
+    }
+    if( IsMatrix ){
+      R->SetMatrix(DimX,DimY);
+    }
 
     // Check for subregisters
     const YAML::Node& SNode = Node["SubRegs"];
