@@ -184,6 +184,21 @@ bool SpecDoc::WriteRegisterClassTex(CoreGenDAG *DAG, std::ofstream &ofs ){
           Attrs+="SH";
           OrVal = true;
         }
+        if( REG->IsVector() ){
+          if( OrVal ){
+            Attrs+=":";
+          }
+          Attrs+="VECT[" + std::to_string(REG->GetDimX()) + "]";
+          OrVal = true;
+        }
+        if( REG->IsMatrix() ){
+          if( OrVal ){
+            Attrs+=":";
+          }
+          Attrs+="MATRIX[" + std::to_string(REG->GetDimX()) +
+                 "," + std::to_string(REG->GetDimY()) + "]";
+          OrVal = true;
+        }
 
         ofs << EscapeUnderscore(REG->GetName())   << " & "  << std::hex << "0x" << REG->GetIndex() << std::dec
             << " & "

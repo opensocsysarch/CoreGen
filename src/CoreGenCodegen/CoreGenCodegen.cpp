@@ -728,6 +728,11 @@ bool CoreGenCodegen::BuildISAChisel( CoreGenISA *ISA,
       }else{
         // write out the register with no subregs
         MOutFile << " u" << REG->GetWidth() << " " << REGNAME;
+        if( REG->IsVector() ){
+          MOutFile << "<" << REG->GetDimX() << ">";
+        }else if( REG->IsMatrix() ){
+          MOutFile << "<" << REG->GetDimX() << "," << REG->GetDimY() << ">";
+        }
       }
 
       // print a comma between registers
