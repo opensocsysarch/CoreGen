@@ -548,6 +548,7 @@ bool SCParser::GetVarAttr( std::string Str, VarAttrs &V ){
     if( Str == VarAttrEntryTable[Idx].Name ){
       V.width     = VarAttrEntryTable[Idx].width;
       V.elems     = VarAttrEntryTable[Idx].elems;
+      V.elems2D   = VarAttrEntryTable[Idx].elems2D;
       V.defSign   = VarAttrEntryTable[Idx].IsDefSign;
       V.defVector = VarAttrEntryTable[Idx].IsDefVector;
       V.defFloat  = VarAttrEntryTable[Idx].IsDefFloat;
@@ -1354,6 +1355,7 @@ std::unique_ptr<RegClassAST> SCParser::ParseRegClassDef(){
     VAttr.defAMS        = false;
     VAttr.defTUS        = false;
     VAttr.defShared     = false;
+    VAttr.defVector     = false;
 
     // add them to our vector
     ArgAttrs.push_back(VAttr);
@@ -1417,7 +1419,60 @@ std::unique_ptr<RegClassAST> SCParser::ParseRegClassDef(){
         }
       }
     }
+    // --
+    // Parse an angle bracket, if an angle bracket exists, parse a vector/matrix
+    // --
+    if( CurTok == '<' ){
+      // attempt to parse the vector
+      // eat the <
+      GetNextToken();
 
+      unsigned L_VAttr = ArgAttrs.size()-1;
+
+      ArgAttrs[L_VAttr].defVector = true;
+      // will store dimensions of vector/mat reg
+      // std::vector<unsigned> Dimensions;
+
+      // parse a numeric value
+      if( CurTok != tok_number ){
+        return LogErrorR("Expected numerical value for dimension "); 
+      }
+      
+      while( CurTok == tok_number ){
+        
+        
+
+        // get dimension value
+        unsigned dim = (unsigned)(Lex->GetNumVal());
+
+        if( !ArgAttrs[L_VAttr].defMatrix )
+          ArgAttrs[L_VAttr].elems = dim;
+        else{ 
+          // check if matrix more than 2 dimesions
+          if( ArgAttrs[L_VAttr].elems2D )
+            return LogErrorR("Matrices greater than 2-Dimensions are not currently supported. Please adjust " + RegName);
+          // assign value after comma to ydim 
+          ArgAttrs[L_VAttr].elems2D = dim;
+        }
+
+        // eat the identifier
+        GetNextToken();
+
+        if( CurTok == ',' ){
+          // must be matrix 
+          ArgAttrs[L_VAttr].defVector = true;
+          ArgAttrs[L_VAttr].defMatrix = true;
+          // eat the comma
+          GetNextToken();
+        }else if( CurTok == '>' ){
+          // eat the closing angle bracket
+          GetNextToken();
+          break;
+        }else{
+          return LogErrorR("Expected ',' or closing brace '>' in matrix register dimension list for " + RegName);
+        }
+      }
+    }
     // --
     // Parse an open paren, if an open paren exists, parse a subregister list
     // --
@@ -2618,6 +2673,15 @@ Value *RegClassAST::codegen(){
       }
       if( Attrs[i].defShared ){
         val->addAttribute("shared", "true");
+      }
+      if( Attrs[i].defVector ){
+        val->addAttribute("vector", "true");
+        val->addAttribute("xdim", std::to_string(Attrs[i].elems));
+      }
+      if( Attrs[i].defMatrix ){
+        val->addAttribute("matrix", "true");
+        val->addAttribute("xdim", std::to_string(Attrs[i].elems));
+        val->addAttribute("ydim", std::to_string(Attrs[i].elems2D));
       }
     }else{
       // this is a register class

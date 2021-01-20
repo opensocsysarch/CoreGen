@@ -42,8 +42,10 @@ using namespace llvm;
 typedef struct{
   unsigned width;   ///< VarAttrs: width of the variable or register
   unsigned elems;   ///< VarAttrs: number of elements in the variable
+  unsigned elems2D; ///< VarAttrx: number of elements in the variable if matrix
   bool defSign;     ///< VarAtrrs: is the variable a signed integer
   bool defVector;   ///< VarAttrs: is the variable a vector (elems > 1)
+  bool defMatrix;   ///< VarAttrs: is the variable a matrix (elems2D > 0)
   bool defFloat;    ///< VarAttrs: is the variable a floating point variable
   bool defRegClass; ///< VarAttrs: does the variable represent a register class
   bool defReadOnly; ///< VarAttrs: read-only register
@@ -58,9 +60,11 @@ typedef struct{
 typedef struct{
   std::string Name;   ///< VarAttrEntry: base name of the datatype
   unsigned width;     ///< VarAttrEntry: width of the type in bits
-  unsigned elems;     ///< VarAttrEntry: number of elements in the type
+  unsigned elems;     ///< VarAttrEntry: number of elements in the type's X-dimesion
+  unsigned elems2D;   ///< VarAttrEntry: number of elements in the type's Y-dimension
   bool IsDefSign;     ///< VarAttrEntry: is the type a signed integer
   bool IsDefVector;   ///< VarAttrEntry: is the type a vector (elems > 1)
+  bool IsDefMatrix;   ///< VarAttrEntry: is the type a matrix (elems2D > 0)
   bool IsDefFloat;    ///< VarAttrEntry: is the type a floating point
 }VarAttrEntry;
 
