@@ -1531,14 +1531,7 @@ std::unique_ptr<RegClassAST> SCParser::ParseRegClassDef(){
             for( unsigned i=0; i<ArgAttrs[L_VAttr].elems; i++ ){
               for( unsigned j=0; j<ArgAttrs[L_VAttr].elems2D; j++ ){
                 std::string MatElemName = RegName + "_row" + std::to_string(i) + "_col" + std::to_string(j);
-                VarAttrs MatElemAttrs;
-                // init the register attrs
-                MatElemAttrs.defReadOnly   = false;
-                MatElemAttrs.defReadWrite  = true;  // default to true
-                MatElemAttrs.defCSR        = false;
-                MatElemAttrs.defAMS        = false;
-                MatElemAttrs.defTUS        = false;
-                MatElemAttrs.defShared     = false;
+                VarAttrs MatElemAttrs = ArgAttrs[L_VAttr];
                 MatElemAttrs.defMatrix     = true;
                 MatElemAttrs.defElem       = true;
                 MatElemAttrs.defVector     = false;
