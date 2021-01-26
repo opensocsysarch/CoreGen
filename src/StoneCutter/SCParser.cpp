@@ -552,6 +552,8 @@ bool SCParser::GetVarAttr( std::string Str, VarAttrs &V ){
       V.defSign   = VarAttrEntryTable[Idx].IsDefSign;
       V.defVector = VarAttrEntryTable[Idx].IsDefVector;
       V.defFloat  = VarAttrEntryTable[Idx].IsDefFloat;
+      V.defElem   = VarAttrEntryTable[Idx].IsDefElem;
+      V.defMatrix = VarAttrEntryTable[Idx].IsDefMatrix;
       V.defRegClass = false;
       return true;
     }
@@ -1356,6 +1358,11 @@ std::unique_ptr<RegClassAST> SCParser::ParseRegClassDef(){
     VAttr.defTUS        = false;
     VAttr.defShared     = false;
     VAttr.defVector     = false;
+    VAttr.defMatrix     = false;
+    VAttr.elems         = 0;
+    VAttr.elems2D       = 0;
+    // VAttr.xIdx          = 0;
+    // VAttr.yIdx          = 0;
 
     // add them to our vector
     ArgAttrs.push_back(VAttr);
@@ -1439,14 +1446,12 @@ std::unique_ptr<RegClassAST> SCParser::ParseRegClassDef(){
       }
       
       while( CurTok == tok_number ){
-        
-        
-
         // get dimension value
         unsigned dim = (unsigned)(Lex->GetNumVal());
 
         if( !ArgAttrs[L_VAttr].defMatrix )
           ArgAttrs[L_VAttr].elems = dim;
+
         else{ 
           // check if matrix more than 2 dimesions
           if( ArgAttrs[L_VAttr].elems2D )
@@ -1455,21 +1460,106 @@ std::unique_ptr<RegClassAST> SCParser::ParseRegClassDef(){
           ArgAttrs[L_VAttr].elems2D = dim;
         }
 
+        // add them to our vector
+        // ArgAttrs.push_back(VAttr);
         // eat the identifier
         GetNextToken();
 
         if( CurTok == ',' ){
           // must be matrix 
-          ArgAttrs[L_VAttr].defVector = true;
+          ArgAttrs[L_VAttr].defVector = false;
           ArgAttrs[L_VAttr].defMatrix = true;
           // eat the comma
           GetNextToken();
         }else if( CurTok == '>' ){
-          // eat the closing angle bracket
-          GetNextToken();
-          break;
-        }else{
-          return LogErrorR("Expected ',' or closing brace '>' in matrix register dimension list for " + RegName);
+          if( !ArgAttrs[L_VAttr].defMatrix ){
+            ArgAttrs[L_VAttr].defVector = true;
+            ArgAttrs[L_VAttr].defElem = false;
+            // ArgAttrs.push_back(VecVAttr);
+            // ArgNames.push_back(RegName);
+            for( unsigned i=0; i<ArgAttrs[L_VAttr].elems; i++ ){
+            // handle vectors
+            // create new name based on containing reg
+            std::string VecElemName = RegName + "_" + std::to_string(i);
+
+            // init the reg attrs for vector element
+            VarAttrs VecElemVAttr = ArgAttrs[L_VAttr];
+            VecElemVAttr.defVector     = true;
+            VecElemVAttr.defElem       = true;
+            VecElemVAttr.xIdx          = i;
+            VecElemVAttr.containers    = RegName;
+            
+            // add to vector
+            ArgAttrs.push_back(VecElemVAttr);
+            ArgNames.push_back(VecElemName);
+            }
+          }
+          // Matrix Handling
+          else{
+            VarAttrs MatVecVAttr = ArgAttrs[L_VAttr]; 
+            // MatVecVAttr.defMatrix     = true;
+            MatVecVAttr.defVector     = true;
+            MatVecVAttr.defElem       = false;
+            MatVecVAttr.containers    = RegName;
+            for( unsigned i=0; i<ArgAttrs[L_VAttr].elems; i++ ){
+              std::string MatColName = RegName + "_col" + std::to_string(i);
+              VarAttrs MatColVAttr = MatVecVAttr;
+              MatColVAttr.xIdx = i;
+              MatColVAttr.yIdx = -1;
+              MatColVAttr.elems = ArgAttrs[L_VAttr].elems;
+              ArgAttrs.push_back(MatColVAttr);
+              ArgNames.push_back(MatColName);
+            }
+            for( unsigned j=0; j<ArgAttrs[L_VAttr].elems2D; j++ ){
+              std::string MatRowName = RegName + "_row" + std::to_string(j);
+              VarAttrs MatRowVAttr = MatVecVAttr;
+              MatRowVAttr.yIdx = j;
+              MatRowVAttr.xIdx = -1;
+              MatRowVAttr.elems = ArgAttrs[L_VAttr].elems2D;
+              ArgAttrs.push_back(MatRowVAttr);
+              ArgNames.push_back(MatRowName);
+            }
+            if( ArgAttrs[L_VAttr].elems == ArgAttrs[L_VAttr].elems2D) {
+              std::string MatDiagName = RegName + "_diag";
+              VarAttrs MatDiagVAttr = MatVecVAttr;
+              MatDiagVAttr.xIdx = -1;
+              MatDiagVAttr.yIdx = -1;
+              MatDiagVAttr.elems = ArgAttrs[L_VAttr].elems;
+              ArgAttrs.push_back(MatDiagVAttr);
+              ArgNames.push_back(MatDiagName);
+            }
+            for( unsigned i=0; i<ArgAttrs[L_VAttr].elems; i++ ){
+              for( unsigned j=0; j<ArgAttrs[L_VAttr].elems2D; j++ ){
+                std::string MatElemName = RegName + "_row" + std::to_string(i) + "_col" + std::to_string(j);
+                VarAttrs MatElemAttrs;
+                // init the register attrs
+                MatElemAttrs.defReadOnly   = false;
+                MatElemAttrs.defReadWrite  = true;  // default to true
+                MatElemAttrs.defCSR        = false;
+                MatElemAttrs.defAMS        = false;
+                MatElemAttrs.defTUS        = false;
+                MatElemAttrs.defShared     = false;
+                MatElemAttrs.defMatrix     = true;
+                MatElemAttrs.defElem       = true;
+                MatElemAttrs.defVector     = false;
+                MatElemAttrs.xIdx          = i;
+                MatElemAttrs.yIdx          = j;
+                if( (i == j) && (ArgAttrs[L_VAttr].elems == ArgAttrs[L_VAttr].elems2D) ) {
+                  MatElemAttrs.containers += RegName + "_diag, " ;
+                }
+                MatElemAttrs.containers   += (RegName + "_row" + std::to_string(i) + ", ");
+                MatElemAttrs.containers   += RegName + "_col" + std::to_string(j) + ", ";
+                MatElemAttrs.containers   += RegName;
+                ArgAttrs.push_back(MatElemAttrs);
+                ArgNames.push_back(MatElemName);
+              }
+            }
+          }
+        // eat the closing angle bracket
+        GetNextToken();
+        break;
+      }else{
+        return LogErrorR("Expected ',' or closing brace '>' in matrix register dimension list for " + RegName);
         }
       }
     }
@@ -2674,15 +2764,50 @@ Value *RegClassAST::codegen(){
       if( Attrs[i].defShared ){
         val->addAttribute("shared", "true");
       }
-      if( Attrs[i].defVector ){
-        val->addAttribute("vector", "true");
-        val->addAttribute("xdim", std::to_string(Attrs[i].elems));
-      }
+      // if its a matrix reg
       if( Attrs[i].defMatrix ){
-        val->addAttribute("matrix", "true");
-        val->addAttribute("xdim", std::to_string(Attrs[i].elems));
-        val->addAttribute("ydim", std::to_string(Attrs[i].elems2D));
+        if( Attrs[i].defElem ){
+          val->addAttribute("xidx", std::to_string(Attrs[i].xIdx));
+          val->addAttribute("yidx", std::to_string(Attrs[i].yIdx));
+          val->addAttribute("containers", Attrs[i].containers);
+        }
+        // if vector within matrix
+        else if( Attrs[i].defVector ){
+          val->addAttribute("vector", "true");
+          val->addAttribute("containers", Attrs[i].containers);
+          // differentiate row / col
+          if( Attrs[i].xIdx + Attrs[i].yIdx == -2 ){
+            continue;
+          }
+          else if( Attrs[i].yIdx == -1 ){
+            val->addAttribute("xidx", std::to_string(Attrs[i].xIdx));
+            val->addAttribute("xdim", std::to_string(Attrs[i].elems));
+          }
+          else{
+            val->addAttribute("yidx", std::to_string(Attrs[i].yIdx));
+            val->addAttribute("ydim", std::to_string(Attrs[i].elems2D));
+          }
+          // val->addAttribute("elements", std::to_string(elems));
+        }
+        else{ 
+          val->addAttribute("matrix", "true");
+          val->addAttribute("xdim", std::to_string(Attrs[i].elems));
+          val->addAttribute("ydim", std::to_string(Attrs[i].elems2D));
+        }
       }
+      // if its a vector reg
+      if( Attrs[i].defVector && !Attrs[i].defMatrix ){
+        // if its a vector element
+        if( Attrs[i].defElem ){
+          val->addAttribute("xidx", std::to_string(Attrs[i].xIdx));
+          val->addAttribute("containers", Attrs[i].containers);
+        }else{
+          // not an element
+          val->addAttribute("xdim", std::to_string(Attrs[i].elems));
+          val->addAttribute("vector", "true");
+        }
+      }
+      
     }else{
       // this is a register class
       // add a special attribute token
