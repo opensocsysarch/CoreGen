@@ -31,6 +31,8 @@
 #include <memory>
 #include <string>
 #include <vector>
+#include <numeric>
+#include <string>
 
 // CoreGen headers
 #include "CoreGen/StoneCutter/SCLexer.h"
