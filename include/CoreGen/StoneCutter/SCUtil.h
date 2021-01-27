@@ -46,9 +46,9 @@ typedef struct{
   int xIdx;                ///< VarAttrs: is the X index for a register within a vector/matrix element
   int yIdx;                ///< VarAttrs: is the Y index for a register within a vector/matrix element
   bool defSign;            ///< VarAtrrs: is the variable a signed integer
+  bool defFloat;           ///< VarAttrs: is the variable a floating point variable
   bool defVector;          ///< VarAttrs: is the variable a vector (elems > 1)
   bool defMatrix;          ///< VarAttrs: is the variable a matrix (elems2D > 0)
-  bool defFloat;           ///< VarAttrs: is the variable a floating point variable
   bool defElem;            ///< VarAttrs: is the variable in a vect/mat
   bool defRegClass;        ///< VarAttrs: does the variable represent a register class
   bool defReadOnly;        ///< VarAttrs: read-only register
