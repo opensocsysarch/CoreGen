@@ -33,6 +33,9 @@
 class RegSafetyPass : public CoreGenPass{
 private:
 
+  /// Find any broken vector or matrix dimensions
+  bool FindBrokenVectMat(CoreGenReg *Reg);
+
   /// Find the missing register indices
   bool FindMissingRegIndices(CoreGenReg *Reg);
 

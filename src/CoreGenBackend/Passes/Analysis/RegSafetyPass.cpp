@@ -21,6 +21,35 @@ RegSafetyPass::RegSafetyPass(std::ostream *O,
 RegSafetyPass::~RegSafetyPass(){
 }
 
+// Find the registers whose vector/matrix dimensions are broken
+bool RegSafetyPass::FindBrokenVectMat(CoreGenReg *R){
+  if( R->IsVector() && R->IsMatrix() ){
+    WriteMsg("Identified a register with a vector and matrix definition; Registe=" +
+             R->GetName());
+    return false;
+  }
+
+  if( R->IsVector() ){
+    if( R->GetDimX() == 0 ){
+      WriteMsg("Identified a vector register with a 0 dimension; Register=" +
+               R->GetName());
+      return false;
+    }
+  }else if( R->IsMatrix() ){
+    if( R->GetDimX() == 0 ){
+      WriteMsg("Identified a matrix register with a 0 X-dimension; Register=" +
+               R->GetName());
+      return false;
+    }
+    if( R->GetDimY() == 0 ){
+      WriteMsg("Identified a matrix register with a 0 Y-dimension; Register=" +
+               R->GetName());
+      return false;
+    }
+  }
+  return true;
+}
+
 // Look for registers with unitialized indices
 bool RegSafetyPass::FindMissingRegIndices(CoreGenReg *R){
   if( !R->IsIndexSet() ){
@@ -253,6 +282,9 @@ bool RegSafetyPass::Execute(){
         rtn = false;
       }
       if( !TestSubRegs(REG) ){
+        rtn = false;
+      }
+      if( !FindBrokenVectMat(REG) ){
         rtn = false;
       }
     }
