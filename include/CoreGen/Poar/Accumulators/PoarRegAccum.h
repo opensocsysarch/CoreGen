@@ -24,6 +24,9 @@
 
 class PoarRegAccum : public PoarAccum {
 private:
+  /// PoarRegAccum: add the register to the data
+  void AddLocalRegister(CoreGenReg *Reg);
+
   /// PoarRegAccum: accumulate by core
   bool SearchCores(std::vector<CoreGenNode *> &Cores);
 
