@@ -270,6 +270,7 @@ public:
 
   /// BinaryExprAST - Expression class for a binary operator.
   class BinaryExprASTContainer : public ExprASTContainer {
+    // std::vector<std::tuple<std::string, std::string, unsigned, unsigned>> LocalContainers; ///< vector of all instances of mat and vec types 
     char Op;    ///< Binary operator
     std::unique_ptr<ExprASTContainer> LHS;    ///< Left hand side of the expression
     std::unique_ptr<ExprASTContainer> RHS;    ///< Right hand side of the expression
@@ -416,21 +417,23 @@ public:
   };
 
   // LLVM CodeGen Variables
-  static LLVMContext TheContext;                                                        ///< LLVM context
-  static IRBuilder<> Builder;                                                           ///< LLVM IR Builder
-  static std::unique_ptr<Module> TheModule;                                             ///< LLVM top-level Module
-  static std::map<std::string, AllocaInst*> NamedValues;                                ///< Map of named values in scope
-  static std::map<std::string, GlobalVariable*> GlobalNamedValues;                      ///< map of global values always in scope
-  static std::map<std::string, std::unique_ptr<PrototypeASTContainer>> FunctionProtos;  ///< map of function prototypes
-  static std::map<std::string,unsigned> PipeInstances;                                  ///< Pipe stage instance numbers
-  static std::unique_ptr<legacy::FunctionPassManager> TheFPM;                           ///< LLVM function pass manager
-  static unsigned LabelIncr;                                                            ///< Label incrementer
-  static bool IsOpt;                                                                    ///< Are optimizations enabled?
-  static bool IsPipe;                                                                   ///< Are we within a pipeline?
-  static SCMsg *GMsgs;                                                                  ///< Global message handler
-  static MDNode *NameMDNode;                                                            ///< Pipe name metadata node
-  static MDNode *InstanceMDNode;                                                        ///< Pipe instance metadata node
-  static MDNode *PipelineMDNode;                                                        ///< Pipeline name metadata node
+  static LLVMContext TheContext;                                                                ///< LLVM context
+  static IRBuilder<> Builder;                                                                   ///< LLVM IR Builder
+  static std::unique_ptr<Module> TheModule;                                                     ///< LLVM top-level Module
+  static std::map<std::string, AllocaInst*> NamedValues;                                        ///< Map of named values in scope
+  static std::map<std::string, GlobalVariable*> GlobalNamedValues;                              ///< map of global values always in scope
+  static std::vector<std::tuple<std::string, std::string, unsigned, unsigned>> LocalContainers; ///< vector of all instances of mat and vec types 
+  std::string CurrentFunction;                                                                  ///< current function name for tracking vecs and mats
+  static std::map<std::string, std::unique_ptr<PrototypeASTContainer>> FunctionProtos;          ///< map of function prototypes
+  static std::map<std::string,unsigned> PipeInstances;                                          ///< Pipe stage instance numbers
+  static std::unique_ptr<legacy::FunctionPassManager> TheFPM;                                   ///< LLVM function pass manager
+  static unsigned LabelIncr;                                                                    ///< Label incrementer
+  static bool IsOpt;                                                                            ///< Are optimizations enabled?
+  static bool IsPipe;                                                                           ///< Are we within a pipeline?
+  static SCMsg *GMsgs;                                                                          ///< Global message handler
+  static MDNode *NameMDNode;                                                                    ///< Pipe name metadata node
+  static MDNode *InstanceMDNode;                                                                ///< Pipe instance metadata node
+  static MDNode *PipelineMDNode;                                                                ///< Pipeline name metadata node
 
 private:
 
@@ -457,8 +460,11 @@ private:
   /// Inserts all the necessary intrinsic externs into the input stream
   bool InsertExternIntrin();
 
-  /// Checks the call expression and determines if it is an intrinsci
+  /// Checks the call expression and determines if it is an intrinsic
   bool CheckIntrinName(std::string Name);
+
+  /// Checks the call expression and determines if it is an intrinsic
+  static bool CheckLocalContainers(std::string FunctionName, std::string VarName, unsigned &DimX, unsigned &DimY);
 
   /// Get the number of required arguments for the target intrinsic
   unsigned GetNumIntrinArgs(std::string Name);

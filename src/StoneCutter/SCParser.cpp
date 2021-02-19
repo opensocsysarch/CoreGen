@@ -17,6 +17,8 @@ std::unique_ptr<legacy::FunctionPassManager> SCParser::TheFPM;
 std::map<std::string, std::unique_ptr<PrototypeAST>> SCParser::FunctionProtos;
 std::map<std::string, AllocaInst*> SCParser::NamedValues;
 std::map<std::string, GlobalVariable*> SCParser::GlobalNamedValues;
+std::string CurrentFunction;
+std::vector<std::tuple<std::string, std::string, unsigned, unsigned>> SCParser::LocalContainers; 
 std::map<std::string, unsigned> SCParser::PipeInstances;
 unsigned SCParser::LabelIncr;
 bool SCParser::IsOpt = false;
@@ -392,6 +394,20 @@ bool SCParser::CheckIntrinName( std::string Name ){
   }
 
   return false;
+}
+
+bool SCParser::CheckLocalContainers( std::string VarName, std::string FunctionName, unsigned &DimX, unsigned &DimY ){
+	std::vector<std::tuple<std::string,std::string, unsigned,unsigned>>::iterator it;
+	for( it=LocalContainers.begin(); it != LocalContainers.end(); ++it ){
+    LogErrorV(VarName);
+    if( (std::get<1>(*it) == FunctionName) && (VarName.find(std::get<0>(*it) ))){
+			// found an entry
+			DimX = std::get<2>(*it);
+			DimY = std::get<3>(*it);
+			return true; // return true when we find an entry
+		}
+	}
+	return false;	// no entry found
 }
 
 unsigned SCParser::GetNumIntrinArgs( std::string Name ){
@@ -914,6 +930,7 @@ std::unique_ptr<ExprAST> SCParser::ParseVarExpr(){
           // eat the comma
           GetNextToken();
         }else if( CurTok == '>' ){
+          LocalContainers.push_back(std::make_tuple(Name, CurrentFunction, Attrs[L_VAttr].dimX, Attrs[L_VAttr].dimY));
           if( !Attrs[L_VAttr].defMatrix ){
             Attrs[L_VAttr].defVector = true;
             Attrs[L_VAttr].defElem = false;
@@ -1809,7 +1826,8 @@ std::unique_ptr<FunctionAST> SCParser::ParseDefinition() {
   }
   GetNextToken(); // eat the '{'
   InFunc = true;
-
+  
+  CurrentFunction = Proto->getName();
   std::vector<std::unique_ptr<ExprAST>> Exprs;
   while( CurTok != '}' ){
     auto Body = ParseExpression();
@@ -2505,9 +2523,25 @@ Value *BinaryExprAST::codegen() {
     return nullptr;
   }
 
-  // interrogate the types of the operands, mutate the operands if necessary
+  Function *TheFunction = Builder.GetInsertBlock()->getParent();
+  unsigned DimX, DimY;
+  // LHS is of type vec or mat
+  if( SCParser::CheckLocalContainers(R->getName(), TheFunction->getName(), DimX, DimY ) ){
+    unsigned LDimX = DimX;
+    unsigned LDimY = DimY;
+    // RHS is of type vec or mat
+    if( SCParser::CheckLocalContainers(L->getName(), TheFunction->getName(), DimX, DimY )     ){
+
+      //if( Dim1X != Dim2X || Dim1Y != Dim2Y ){
+      //LogErrorV("No dice");
+      // }
+    }
+  }
   Type *LT = L->getType();
   Type *RT = R->getType();
+
+      
+  
 
   // test for type mismatches
   if( LT->getTypeID() != RT->getTypeID() ){
