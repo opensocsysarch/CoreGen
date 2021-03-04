@@ -99,14 +99,15 @@ bool SCPipeBuilder::FitPCSigs(){
   if( FetchStage.length() == 0 ){
     // we must split off a new stage
     FetchStage = "WRITE_BACK";
-    auto it = PipeVect.begin();
-    it = PipeVect.insert(it,FetchStage);
 
     // free the existing matrix
     if( !FreeMat() ){
       this->PrintMsg( L_ERROR, "FitPCSigs: Could not free adjacency matrix" );
       return false;
     }
+
+    auto it = PipeVect.begin();
+    it = PipeVect.insert(it,FetchStage);
 
     // allocate the new matrix and build it out
     if( !AllocMat() ){
@@ -1049,6 +1050,8 @@ bool SCPipeBuilder::WriteSigMap(){
 
 bool SCPipeBuilder::AllocMat(){
   if( AdjMat != nullptr )
+    return false;
+  if( SigMap->GetNumSignals() == 0 )
     return false;
 
   // no reason to allocate a zero width matrix
