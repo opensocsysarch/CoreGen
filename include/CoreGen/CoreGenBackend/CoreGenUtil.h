@@ -29,6 +29,9 @@
 #define STRINGIZE_INSTALL_PREFIX(CGIPREFIX) #CGIPREFIX
 #define _COREGEN_INSTALL_PREFIX_ STRINGIZE_INSTALL_PREFIX(CGIPREFIX)
 
+#define QuoteCGIPrefix(CGIPREFIX) #CGIPREFIX
+#define QuoteMacro(macro) QuoteCGIPrefix(macro)
+
 /// CoreGenUtil: Retrieve the build date
 inline std::string CGBuildDate(){
   const char *__CoreGenBuildDate = __DATE__;
@@ -205,7 +208,7 @@ inline std::string CGRemoveDot( std::string in ){
 
 /// CoreGenUtil: Return the default installation location
 inline std::string CGInstallPrefix(){
-  return _COREGEN_INSTALL_PREFIX_;
+  return QuoteMacro(CGIPREFIX);
 }
 
 #if defined(__clang__) || defined (__GNUC__)
