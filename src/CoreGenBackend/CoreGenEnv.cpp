@@ -10,8 +10,16 @@
 
 #include "CoreGen/CoreGenBackend/CoreGenEnv.h"
 
+#define QuoteCGIPrefix(CGIPREFIX) #CGIPREFIX
+#define QuoteMacro(macro) QuoteCGIPrefix(macro)
+
+std::string InstallPrefix(){
+  return QuoteMacro(CGIPREFIX);
+}
+
 CoreGenEnv::CoreGenEnv(CoreGenErrno *E)
   : Errno(E){
+  ArchRoot = InstallPrefix();
 }
 
 CoreGenEnv::CoreGenEnv(std::string A,
@@ -24,5 +32,6 @@ CoreGenEnv::CoreGenEnv(std::string A,
 
 CoreGenEnv::~CoreGenEnv(){
 }
+
 
 // EOF
