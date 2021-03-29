@@ -21,7 +21,12 @@ CoreGenPlugin::CoreGenPlugin(std::string N,
 
 CoreGenPlugin::~CoreGenPlugin(){
   destroy_t *destroy = Funcs.destroy;
-  destroy(Impl);
+  if( destroy != nullptr ){
+    destroy(Impl);
+    Funcs.destroy = nullptr;
+    Funcs.create  = nullptr;
+    Funcs.getname = nullptr;
+  }
 }
 
 unsigned CoreGenPlugin::GetNumFeatures(){
