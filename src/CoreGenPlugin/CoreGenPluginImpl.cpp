@@ -213,7 +213,7 @@ bool CoreGenPluginImpl::CopyPluginSrc(std::string Archive, std::string Path){
       return false;
     }
   }
-  std::string UncStr = "cp -R" + Archive + "/*" + Path + "/";
+  std::string UncStr = "cp -R " + Archive + "/* " + Path + "/";
   if( system( UncStr.c_str() ) != 0 ){
       Errno->SetError(CGERR_ERROR,
                       this->GetName() + ":Could not copy source from archive directory: " + Archive );

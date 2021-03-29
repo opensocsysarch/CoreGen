@@ -295,7 +295,7 @@ CoreGenNode *CoreGenChiselCodegen::GetParentNode(CoreGenNode *Target){
   for( unsigned i=0; i<Top->GetNumChild(); i++ ){
     Tmp = Top->GetChild(i);
     for( unsigned j=0; j<Tmp->GetNumChild(); j++ ){
-      if( Tmp->GetChild(i) == Target )
+      if( Tmp->GetChild(j) == Target )
         return Tmp;
     }
   }

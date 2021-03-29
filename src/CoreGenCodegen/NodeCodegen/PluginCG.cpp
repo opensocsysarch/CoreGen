@@ -21,7 +21,7 @@ PluginCG::~PluginCG(){
 
 bool PluginCG::Execute(CoreGenNode *Top, CoreGenNode *Parent){
 
-  CoreGenPlugin *PluginNode = static_cast<CoreGenPlugin *>(Node);
+  CoreGenPlugin *PluginNode = static_cast<CoreGenPlugin *>(Node->GetPlugin());
 
   if( !PluginNode->InitImpl(Path,CGRemoveDot(PluginNode->GetName())) )
     return false;

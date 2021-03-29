@@ -3400,7 +3400,7 @@ bool CoreGenYaml::ReadPluginYaml(const YAML::Node& PluginNodes,
       std::string PluginLib = Name + ".so";
       #endif
       std::string PluginPath = Env->GetPluginRoot() +
-                             Name + "/" +
+                             "/" + Name + "/" +
                              std::to_string(Major)+"."+
                              std::to_string(Minor)+"."+
                              std::to_string(Patch) + "/" +
@@ -3453,41 +3453,40 @@ bool CoreGenYaml::ReadPluginYaml(const YAML::Node& PluginNodes,
                              "FeatureValue" );
             return false;
           }
-          //QUESTION: This appears to be unused
           std::string FValStr = FNodeJ["FeatureValue"].as<std::string>();
           std::string::size_type sz;
 
           // convert o CGFeatureType and CGFeatureVal
           if( FTypeStr == "Unsigned" ){
-            FVal.UnsignedData = (unsigned)(std::stoi(FTypeStr,&sz));
+            FVal.UnsignedData = (unsigned)(std::stoi(FValStr,&sz));
           }
           if( FTypeStr == "Uint32t" ){
-            FVal.Uint32tData = (uint32_t)(std::stoi(FTypeStr,&sz));
+            FVal.Uint32tData = (uint32_t)(std::stoi(FValStr,&sz));
           }
           if( FTypeStr == "Int32t" ){
-            FVal.Int32tData = (int32_t)(std::stoi(FTypeStr,&sz));
+            FVal.Int32tData = (int32_t)(std::stoi(FValStr,&sz));
           }
           if( FTypeStr == "Uint64t" ){
-            FVal.Uint64tData = (uint64_t)(std::stoul(FTypeStr,nullptr,0));
+            FVal.Uint64tData = (uint64_t)(std::stoul(FValStr,nullptr,0));
           }
           if( FTypeStr == "Int64t" ){
-            FVal.Uint64tData = (int64_t)(std::stol(FTypeStr,nullptr,0));
+            FVal.Uint64tData = (int64_t)(std::stol(FValStr,nullptr,0));
           }
           if( FTypeStr == "Float" ){
-            FVal.FloatData = (float)(std::stof(FTypeStr,&sz));
+            FVal.FloatData = (float)(std::stof(FValStr,&sz));
           }
           if( FTypeStr == "Double" ){
-            FVal.DoubleData = (float)(std::stof(FTypeStr,&sz));
+            FVal.DoubleData = (float)(std::stof(FValStr,&sz));
           }
           if( FTypeStr == "String" ){
-            FVal.StringData = FTypeStr;
+            FVal.StringData = FValStr;
           }
           if( FTypeStr == "Bool" ){
-            FVal.BoolData = std::stoi(FTypeStr,&sz);
+            FVal.BoolData = std::stoi(FValStr,&sz);
           }
           if( FTypeStr == "Unknown" ){
             // default to unsigned integer
-            FVal.UnsignedData = (unsigned)(std::stoi(FTypeStr,&sz));
+            FVal.UnsignedData = (unsigned)(std::stoi(FValStr,&sz));
           }
           NewPlugin->SetFeatureValue(FeatureName, FVal);
         }
