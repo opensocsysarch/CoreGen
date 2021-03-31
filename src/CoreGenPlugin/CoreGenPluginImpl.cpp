@@ -230,47 +230,49 @@ bool CoreGenPluginImpl::PurgeNodes(){
   for( unsigned i=0; i<Top->GetNumChild(); i++ ){
     Top->DeleteChild( Top->GetChild(i) );
   }
-  for( unsigned i=0; i<Caches.size(); i++ ){
-    delete Caches[i];
-  }
-  for( unsigned i=0; i<Cores.size(); i++ ){
-    delete Cores[i];
-  }
-  for( unsigned i=0; i<Exts.size(); i++ ){
-    delete Exts[i];
-  }
-  for( unsigned i=0; i<Insts.size(); i++ ){
-    delete Insts[i];
-  }
-  for( unsigned i=0; i<PInsts.size(); i++ ){
-    delete PInsts[i];
-  }
-  for( unsigned i=0; i<Formats.size(); i++ ){
-    delete Formats[i];
-  }
-  for( unsigned i=0; i<Regs.size(); i++ ){
-    delete Regs[i];
-  }
-  for( unsigned i=0; i<RegClasses.size(); i++ ){
-    delete RegClasses[i];
-  }
-  for( unsigned i=0; i<Socs.size(); i++ ){
-    delete Socs[i];
-  }
-  for( unsigned i=0; i<ISAs.size(); i++ ){
-    delete ISAs[i];
-  }
-  for( unsigned i=0; i<Comms.size(); i++ ){
-    delete Comms[i];
-  }
-  for( unsigned i=0; i<Spads.size(); i++ ){
-    delete Spads[i];
-  }
-  for( unsigned i=0; i<MCtrls.size(); i++ ){
-    delete MCtrls[i];
-  }
-  for( unsigned i=0; i<VTPs.size(); i++ ){
-    delete VTPs[i];
+  if(Top->GetNumChild() > 0){
+    for( unsigned i=0; i<Caches.size(); i++ ){
+      delete Caches[i];
+    }
+    for( unsigned i=0; i<Cores.size(); i++ ){
+      delete Cores[i];
+    }
+    for( unsigned i=0; i<Exts.size(); i++ ){
+      delete Exts[i];
+   }
+    for( unsigned i=0; i<Insts.size(); i++ ){
+      delete Insts[i];
+   }
+    for( unsigned i=0; i<PInsts.size(); i++ ){
+      delete PInsts[i];
+    }
+    for( unsigned i=0; i<Formats.size(); i++ ){
+      delete Formats[i];
+   }
+   for( unsigned i=0; i<Regs.size(); i++ ){
+      delete Regs[i];
+    }
+    for( unsigned i=0; i<RegClasses.size(); i++ ){
+      delete RegClasses[i];
+    }
+    for( unsigned i=0; i<Socs.size(); i++ ){
+      delete Socs[i];
+    }
+    for( unsigned i=0; i<ISAs.size(); i++ ){
+      delete ISAs[i];
+    }
+    for( unsigned i=0; i<Comms.size(); i++ ){
+      delete Comms[i];
+    }
+    for( unsigned i=0; i<Spads.size(); i++ ){
+      delete Spads[i];
+    }
+    for( unsigned i=0; i<MCtrls.size(); i++ ){
+      delete MCtrls[i];
+    }
+    for( unsigned i=0; i<VTPs.size(); i++ ){
+      delete VTPs[i];
+    }
   }
 
   return true;

@@ -3393,14 +3393,14 @@ bool CoreGenYaml::ReadPluginYaml(const YAML::Node& PluginNodes,
     // check to see if the plugin is loaded
     // if not, load it
     // otherwise, clone it
-    if( !PluginMgr->GetPlugin(Name,Major,Minor,Patch) ){
+    if( !PluginMgr->GetPlugin(NodeName,Major,Minor,Patch) ){
       #if (COREGEN_PLATFORM == Darwin)
-      std::string PluginLib = Name + ".dylib";
+      std::string PluginLib = NodeName + ".dylib";
       #elif (COREGEN_PLATFORM == Linux)
       std::string PluginLib = Name + ".so";
       #endif
       std::string PluginPath = Env->GetPluginRoot() +
-                             "/" + Name + "/" +
+                             "/" + NodeName + "/" +
                              std::to_string(Major)+"."+
                              std::to_string(Minor)+"."+
                              std::to_string(Patch) + "/" +
@@ -3413,10 +3413,10 @@ bool CoreGenYaml::ReadPluginYaml(const YAML::Node& PluginNodes,
 
     // plugin should be loaded now
     // insert cloned copy
-    CoreGenPlugin *NewPlugin = PluginMgr->GetPlugin(Name,
+    CoreGenPlugin *NewPlugin = PluginMgr->GetPlugin(NodeName,
                                                     Major,
                                                     Minor,
-                                                    Patch)->ClonePlugin(NodeName);
+                                                    Patch)->ClonePlugin(Name);
     if( IsDuplicate(Node,
                     static_cast<CoreGenNode *>(NewPlugin),
                     std::vector<CoreGenNode *>(Plugins.begin(),Plugins.end()) ) ){
