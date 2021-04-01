@@ -447,6 +447,7 @@ bool CoreGenChiselCodegen::Execute(){
   CoreGenNode *SocNode = nullptr;
 
   for( unsigned i=0; i<Top->GetNumChild(); i++ ){
+    std::cout << "Exec chisel codegen for child " << i << std::endl;
 
     if( Top->GetChild(i)->IsOverridden() ){
       // the i'th node has been overridden with an external codegen

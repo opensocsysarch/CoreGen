@@ -4176,7 +4176,7 @@ bool CoreGenYaml::ReadYaml(  std::vector<CoreGenSoC *>  &Socs,
 
 CoreGenNode *CoreGenYaml::CheckOverridePlugin(std::string Name){
   for( unsigned i=0; i<(*PluginPtr).size(); i++ ){
-    if( (*PluginPtr)[i]->GetName() == Name ){
+    if( (*PluginPtr)[i]->GetPluginName() == Name ){
       return static_cast<CoreGenNode *>((*PluginPtr)[i]);
     }
   }

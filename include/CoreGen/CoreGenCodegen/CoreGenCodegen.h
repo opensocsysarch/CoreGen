@@ -55,6 +55,7 @@ private:
   CoreGenErrno *Errno;        ///< CoreGen Errno Structure
   CoreGenArchive *Archive;    ///< CoreGen Archive Object
   CoreGenArchEntry *LLEntry;  ///< CoreGen LLVM archive entry
+  CoreGenPluginMgr* PlugInMgr; ///< CoreGen PlugIn Manager
 
   std::string ChiselDir;      ///< CoreGen Chisel output directory
   std::string LLVMDir;        ///< CoreGen LLVM output directory
@@ -109,7 +110,7 @@ private:
 
 public:
   /// Default constructor
-  CoreGenCodegen(CoreGenNode *T, CoreGenProj *P, CoreGenEnv *V, CoreGenErrno *E);
+  CoreGenCodegen(CoreGenNode *T, CoreGenProj *P, CoreGenEnv *V, CoreGenErrno *E, CoreGenPluginMgr *PlugIn);
 
   /// Default destructor
   ~CoreGenCodegen();

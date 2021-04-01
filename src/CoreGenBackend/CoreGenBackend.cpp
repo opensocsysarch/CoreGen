@@ -115,7 +115,8 @@ bool CoreGenBackend::ExecuteLLVMCodegen(std::string CompVer){
   CoreGenCodegen *CG = new CoreGenCodegen(Top,
                                           Proj,
                                           Env,
-                                          Errno);
+                                          Errno,
+                                          PluginMgr);
 
   if( CG == nullptr ){
     Errno->SetError(CGERR_ERROR, "Could not create codegen object");
@@ -196,7 +197,9 @@ bool CoreGenBackend::ExecuteChiselCodegen(){
   CoreGenCodegen *CG = new CoreGenCodegen(Top,
                                           Proj,
                                           Env,
-                                          Errno);
+                                          Errno,
+                                          PluginMgr
+                                          );
 
   if( CG == nullptr ){
     Errno->SetError(CGERR_ERROR, "Could not create codegen object");
@@ -216,7 +219,8 @@ bool CoreGenBackend::ExecuteCodegen(){
   CoreGenCodegen *CG = new CoreGenCodegen(Top,
                                           Proj,
                                           Env,
-                                          Errno);
+                                          Errno,
+                                          PluginMgr);
 
   if( CG == nullptr ){
     Errno->SetError(CGERR_ERROR, "Could not create codegen object");
