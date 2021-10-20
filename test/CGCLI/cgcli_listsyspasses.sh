@@ -9,4 +9,6 @@ if [ ! $? -eq 0 ]; then
   exit $retVal
 fi
 
+echo "TESTING PASSED"
+
 exit 0

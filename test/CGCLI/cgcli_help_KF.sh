@@ -23,4 +23,6 @@ if [ ! $? -ne 255 ]; then
   exit $retVal
 fi
 
+echo "TESTING PASSED"
+
 exit 0

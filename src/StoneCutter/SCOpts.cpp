@@ -400,10 +400,6 @@ bool SCOpts::ParseOpts(bool *isHelp){
         return false;
       }
     }else{
-      if( FindDash(s) ){
-        Msgs->PrintMsg(L_ERROR, "Unknown argument: " + s );
-        return false;
-      }
       // assume this is a file space member
       FileList.push_back(s);
     }

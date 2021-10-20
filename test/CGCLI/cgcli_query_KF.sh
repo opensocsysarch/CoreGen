@@ -6,7 +6,9 @@ $CGCLI_PATH/cgcli --query
 retVal=$?
 if [[  "$retVal" -eq 0 ]]; then
   echo "$CGCLI_PATH/cgcli --query error was not caught"
-  exit $retVal
+  exit -1
 fi
+
+echo "TESTING PASSED"
 
 exit 0
