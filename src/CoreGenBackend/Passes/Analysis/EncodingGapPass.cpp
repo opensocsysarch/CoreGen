@@ -56,6 +56,20 @@ bool EncodingGapPass::ExamineGap( CoreGenDAG *D, CoreGenInstFormat *IF ){
     }
   }
 
+  // now count all the bits to see if the number of bits in the format width
+  // matches the number of bits defined
+  unsigned Width = 0;
+  for( unsigned i=0; i<StartBits.size(); i++){
+    Width += ((EndBits[i] - StartBits[i])+1);
+  }
+
+  if( Width != IF->GetFormatWidth() ){
+    WriteMsg( "Field definitions do not encapsulate instruction format width; InstFormat = " +
+              IF->GetName() + " defines " + std::to_string(IF->GetFormatWidth()) +
+              " bits; found " + std::to_string(Width) + " bits" );
+    rtn = false;
+  }
+
   return rtn;
 }
 
