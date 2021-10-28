@@ -2005,7 +2005,6 @@ bool CoreGenYaml::ReadRegisterYaml(const YAML::Node& RegNodes,
     }
 
     // Check for custom RTL
-    // QUESTION: RTL? I forgot what this is.
     if( CheckValidNode(Node,"RTL") ){
       R->SetRTL( Node["RTL"].as<std::string>());
     }
@@ -3039,6 +3038,8 @@ bool CoreGenYaml::ReadSocYaml(const YAML::Node& SocNodes,
 
     CoreGenSoC *S = new CoreGenSoC( Name, Errno );
     if( S == nullptr ){
+      Errno->SetError(CGERR_ERROR, "Could not create CoreGenSoC object for "
+                      + Name );
       return false;
     }
 
@@ -3055,6 +3056,7 @@ bool CoreGenYaml::ReadSocYaml(const YAML::Node& SocNodes,
           }
         }
         if( C == nullptr ){
+          Errno->SetError(CGERR_ERROR, "No core defined for " + CoreName );
           return false;
         }
         S->InsertCore(C);
