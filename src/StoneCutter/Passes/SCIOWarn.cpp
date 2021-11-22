@@ -63,10 +63,16 @@ void SCIOWarn::CheckPrototypeIO( Function &F, Instruction &I ){
           F.getFnAttribute("instformat").getValueAsString().str();
 
         // get a list of regclass types the  for the target instruction format
-        std::vector<std::string> Fields = this->GetRegClassInstTypes(InstFormat);
+        std::vector<std::string> Fields =
+          this->GetRegClassInstTypes(InstFormat);
         for( unsigned i=0; i<Fields.size(); i++ ){
           if( Fields[i] == RegClass )
             return ;
+        }
+      }else if( F.hasFnAttribute("vliw") ){
+        // this is a vliw isa; there is no inst format
+        if( F.getFnAttribute("vliw").getValueAsString().str() == "true"){
+          return ;
         }
       }
     }

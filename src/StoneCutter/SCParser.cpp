@@ -609,6 +609,37 @@ int SCParser::GetNextToken(){
   return CurTok;
 }
 
+bool SCParser::ParseVLIWStage(std::string Name, unsigned &Stage){
+  Stage = 0;
+  std::string delimiter = "_";
+  size_t pos = Name.find(delimiter);
+
+  if( pos == std::string::npos ){
+    return false;
+  }
+
+  pos++;
+
+  // parse the name to find the form:
+  // NAME_xx
+  // where "NAME" is the stage name
+  // and "xx" is the stage number 0->n
+  std::string token = Name.substr(pos,Name.size());
+
+  if( token.length() == 0 ){
+    return false;
+  }
+
+  for(std::string::iterator it=token.begin(); it!=token.end(); ++it){
+    if( !std::isdigit(*it) )
+      return false;
+  }
+
+  Stage = std::stoi(token);
+
+  return true;
+}
+
 int SCParser::GetTokPrecedence(){
   if( CurTok == tok_dyad ){
     return BinopPrecedence[StrToDyad()];
@@ -1291,12 +1322,24 @@ std::unique_ptr<PrototypeAST> SCParser::ParsePrototype() {
 
   // parse the optional inst format
   std::string InstFormat;
+  bool VLIW = false;
+  unsigned Stage = 0;
   if(CurTok == ':'){
     GetNextToken();
     if( CurTok != tok_identifier )
       return LogErrorP("Expected identifier in instruction prototype instruction format: 'name:format'");
     InstFormat = Lex->GetIdentifierStr();
+    if( (InstFormat == "VLIW") ||
+        (InstFormat == "vliw") ){
+      VLIW = true;
+    }
     GetNextToken(); // eat the identifier
+  }
+
+  // for VLIW definitions, parse the stage numbering scheme
+  if( VLIW ){
+    if( !ParseVLIWStage(FnName, Stage) )
+      return LogErrorP("VLIW pipeline stage names are in the form: 'NAME_x', where 'x' is an unsigned integer");
   }
 
   if (CurTok != '(')
@@ -1321,7 +1364,8 @@ std::unique_ptr<PrototypeAST> SCParser::ParsePrototype() {
   // success.
   GetNextToken(); // eat ')'.
 
-  return llvm::make_unique<PrototypeAST>(FnName, InstFormat, std::move(ArgNames));
+  return llvm::make_unique<PrototypeAST>(FnName, InstFormat, VLIW,
+                                         Stage, std::move(ArgNames));
 }
 
 VarAttrs SCParser::GetMaxVarAttr(std::vector<VarAttrs> ArgAttrs){
@@ -1870,9 +1914,11 @@ std::unique_ptr<InstFormatAST> SCParser::ParseInstFormat(){
 
 std::unique_ptr<FunctionAST> SCParser::ParseTopLevelExpr() {
   if (auto E = ParseExpression()) {
-    // Make an anonymous proto.
+    // Make an anonymous proto: disable VLIW by default
     auto Proto = llvm::make_unique<PrototypeAST>("__anon_expr",
                                                  "",
+                                                 false,
+                                                 0,
                                                  std::vector<std::string>());
     std::vector<std::unique_ptr<ExprAST>> Exprs;
     Exprs.push_back(std::move(E));
@@ -2752,8 +2798,11 @@ Function *PrototypeAST::codegen() {
   Function *F =
       Function::Create(FT, Function::ExternalLinkage, Name, SCParser::TheModule.get());
 
-  if( InstFormat.length() > 0 ){
+  if( (InstFormat.length() > 0) && (!VLIW) ){
     F->addFnAttr("instformat",InstFormat);
+  }else if( VLIW ){
+    F->addFnAttr("vliw", "true");
+    F->addFnAttr("vliwStage", std::to_string(Stage));
   }
 
   // Set names for all arguments.

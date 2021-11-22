@@ -382,16 +382,21 @@ public:
   class PrototypeASTContainer {
     std::string Name;               ///< Name of the instruction protoype
     std::string InstFormat;         ///< Name of the instruction format
+    bool VLIW;                      ///< Is this prototype a VLIW
+    unsigned Stage;                 ///< Pipeline stage for VLIW
     std::vector<std::string> Args;  ///< Argument vector of the prototype
 
   public:
     /// PrototypeASTContainer default constructor
     PrototypeASTContainer(const std::string &Name,
                           const std::string &IName,
+                          bool VLIW,
+                          unsigned Stage,
                           std::vector<std::string> Args)
-        : Name(Name), InstFormat(IName), Args(std::move(Args)) {}
+        : Name(Name), InstFormat(IName), VLIW(VLIW), Stage(Stage),
+          Args(std::move(Args)) {}
 
-    /// PrototypeASTContainer code generation driver
+    /// PrototypeASTContainer: code generation driver
     Function *codegen();
 
     /// PrototypeASTContainer: retrieve the name of the instruction definition
@@ -492,6 +497,9 @@ private:
 
   /// Get the next token
   int GetNextToken();
+
+  /// Parses VLIW stage numbering schemes
+  bool ParseVLIWStage(std::string Name, unsigned &Stage);
 
   /// Parse the variable definition and return the complementary VarAttr
   bool GetVarAttr( std::string Str, VarAttrs &V );
