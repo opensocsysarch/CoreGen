@@ -220,7 +220,7 @@ the ``HomeBrew`` package manager in order to fulfill these dependencies.
 
 1. Install the system dependencies (assuming HomeBrew is installed):
 ```
-brew cask install mactex
+brew install --cask mactex
 brew install cmake
 brew install llvm@8
 brew install pkg-config
