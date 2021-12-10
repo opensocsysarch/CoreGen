@@ -29,6 +29,8 @@
 
 class CoreGenISA : public CoreGenNode{
 private:
+  bool isVLIW;
+
 public:
   /// Default Constructor
   CoreGenISA(CoreGenErrno *Errno);
@@ -38,6 +40,12 @@ public:
 
   /// Default Destructor
   ~CoreGenISA();
+
+  /// Set the VLIW flag
+  void SetVLIW(bool VLIW) { isVLIW = VLIW; }
+
+  /// Retrieve the status of the VLIW flag
+  bool IsVLIW() { return isVLIW; }
 };
 
 #endif

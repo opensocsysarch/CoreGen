@@ -11,7 +11,7 @@
 #include "CoreGen/CoreGenBackend/CoreGenISA.h"
 
 CoreGenISA::CoreGenISA(CoreGenErrno *E)
-  : CoreGenNode(CGISA,E) {
+  : isVLIW(false), CoreGenNode(CGISA,E) {
 }
 
 CoreGenISA::CoreGenISA(std::string N, CoreGenErrno *E)

@@ -505,6 +505,8 @@ void CoreGenYaml::WriteISAYaml(YAML::Emitter *out,
     *out << YAML::BeginMap;
     *out << YAML::Key << "ISAName" << YAML::Value << ISAs[i]->GetName();
 
+    *out << YAML::Key << "VLIW" << YAML::Value << ISAs[i]->IsVLIW();
+
     if( ISAs[i]->IsRTL() ){
       *out << YAML::Key << "RTL";
       *out << YAML::Value << ISAs[i]->GetRTL();
@@ -2183,6 +2185,13 @@ bool CoreGenYaml::ReadISAYaml(const YAML::Node& ISANodes,
 
     CoreGenISA *ISA = new CoreGenISA(ISAName, Errno);
 
+    // check to see if the ISA is VLIW
+    bool isVLIW = false;
+    if( CheckValidNode(Node,"VLIW") ){
+      isVLIW = Node["VLIW"].as<bool>();
+    }
+    ISA->SetVLIW(isVLIW);
+
     if( CheckValidNode(Node,"RTL") ){
       ISA->SetRTL( Node["RTL"].as<std::string>());
     }
@@ -2394,7 +2403,7 @@ bool CoreGenYaml::ReadInstFormatYaml(const YAML::Node& InstFormatNodes,
                   + Name + " for field " + FieldName);
             return false;
           }
-        
+
           //Right now we are making it optional to specify whether a register is a destination
           // If the user does not specify we set it to "false" by default
           bool IsDest = false;
