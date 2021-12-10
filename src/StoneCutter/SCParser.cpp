@@ -2495,8 +2495,8 @@ Value *VarExprAST::codegen() {
       }else{
         InitVal = ConstantInt::get(SCParser::TheContext,
                                    APInt(Attrs[i].width,
-                                         0,
-                                         Attrs[i].defSign));
+                                   0,
+                                   Attrs[i].defSign));
       }
     }
 
@@ -2587,9 +2587,6 @@ Value *BinaryExprAST::codegen() {
   }
   Type *LT = L->getType();
   Type *RT = R->getType();
-
-      
-  
 
   // test for type mismatches
   if( LT->getTypeID() != RT->getTypeID() ){
@@ -2790,15 +2787,14 @@ Function *PrototypeAST::codegen() {
   // in the register class lists
   // If they are found, use the datatype from the register value
   // Otherwise, default to u64
-  //std::vector<Type *> Doubles(Args.size(), Type::getDoubleTy(SCParser::TheContext));
   std::vector<Type *> Doubles(Args.size(),
                               Type::getIntNTy(SCParser::TheContext,64));
   FunctionType *FT =
       FunctionType::get(Type::getIntNTy(SCParser::TheContext,64), Doubles, false);
-      //FunctionType::get(Type::getDoubleTy(SCParser::TheContext), Doubles, false);
 
   Function *F =
-      Function::Create(FT, Function::ExternalLinkage, Name, SCParser::TheModule.get());
+      Function::Create(FT, Function::ExternalLinkage, Name,
+                       SCParser::TheModule.get());
 
   if( (InstFormat.length() > 0) && (!VLIW) ){
     F->addFnAttr("instformat",InstFormat);
@@ -3246,7 +3242,7 @@ Value *IfExprAST::codegen() {
   PHINode *PN = nullptr;
   if( TV->getType()->isFloatingPointTy() ){
     PN = Builder.CreatePHI(TV->getType(),
-                                    2, "iftmp."+std::to_string(LocalLabel));
+                           2, "iftmp."+std::to_string(LocalLabel));
     if( SCParser::NameMDNode ){
       PN->setMetadata("pipe.pipeName",SCParser::NameMDNode);
       PN->setMetadata("pipe.pipeLine",SCParser::PipelineMDNode);
@@ -3254,7 +3250,7 @@ Value *IfExprAST::codegen() {
     }
   }else{
     PN = Builder.CreatePHI(TV->getType(),
-                                    2, "iftmp."+std::to_string(LocalLabel));
+                           2, "iftmp."+std::to_string(LocalLabel));
     if( SCParser::NameMDNode ){
       PN->setMetadata("pipe.pipeName",SCParser::NameMDNode);
       PN->setMetadata("pipe.pipeLine",SCParser::PipelineMDNode);
@@ -3262,14 +3258,15 @@ Value *IfExprAST::codegen() {
     }
   }
 
-  PN->addIncoming(TV, ThenBB);
+  // TODO: Disabling the incoming phi node calculations
+  //PN->addIncoming(TV, ThenBB);
   if( EV != nullptr ){
     // check to see if we need to adjust the size of the types
     if( TV->getType()->getPrimitiveSizeInBits() !=
         EV->getType()->getPrimitiveSizeInBits() ){
       EV->mutateType(TV->getType());
     }
-    PN->addIncoming(EV, ElseBB);
+    //PN->addIncoming(EV, ElseBB);
   }
   return PN;
 }

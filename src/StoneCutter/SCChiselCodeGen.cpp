@@ -519,7 +519,7 @@ void SCChiselCodeGen::EmitALU_OP(SCSig *Sig,
   for( unsigned i=0; i<Sig->GetNumInputs(); i++ ){
     if(IsInteger( Sig->GetInput( i ))){
       std::string::size_type sz;
-      Constant = (unsigned)(std::stoi(Sig->GetInput(i),&sz));
+      Constant = (unsigned)(std::stol(Sig->GetInput(i),&sz));
       isConstant = true;
     }else if( PInfo->IsRegisterField(Sig->GetInput(i)) ){
       ImmEn = Sig->GetInput(i);
