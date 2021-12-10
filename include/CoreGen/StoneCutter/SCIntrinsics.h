@@ -44,6 +44,8 @@
 #include "CoreGen/StoneCutter/Intrinsics/SCFence.h"
 #include "CoreGen/StoneCutter/Intrinsics/SCBsel.h"
 #include "CoreGen/StoneCutter/Intrinsics/SCNop.h"
+#include "CoreGen/StoneCutter/Intrinsics/SCIn.h"
+#include "CoreGen/StoneCutter/Intrinsics/SCOut.h"
 
 #endif
 

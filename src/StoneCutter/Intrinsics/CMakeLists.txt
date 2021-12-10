@@ -38,6 +38,8 @@ SCLss.cpp
 SCFence.cpp
 SCBsel.cpp
 SCNop.cpp
+SCIn.cpp
+SCOut.cpp
 )
 
 include_directories(${COREGEN_INCLUDE_PATH})
