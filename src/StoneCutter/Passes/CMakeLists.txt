@@ -15,7 +15,7 @@ SCFieldIO.cpp
 SCPipeBuilder.cpp
 SCSigMap.cpp
 SCMetadataAdjust.cpp
-SCVLIW.cpp
+SCVLIWPipeBuilder.cpp
 )
 
 include_directories(${COREGEN_INCLUDE_PATH})
