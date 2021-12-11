@@ -19,6 +19,7 @@
 #include "CoreGen/StoneCutter/Passes/SCPipeBuilder.h"
 #include "CoreGen/StoneCutter/Passes/SCSigMap.h"
 #include "CoreGen/StoneCutter/Passes/SCMetadataAdjust.h"
+#include "CoreGen/StoneCutter/Passes/SCVLIWPipeBuilder.h"
 
 #endif
 

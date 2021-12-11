@@ -60,6 +60,8 @@ void SCChiselCodeGen::InitIntrinsics(){
   Intrins.push_back(static_cast<SCIntrin *>(new SCFence()));
   Intrins.push_back(static_cast<SCIntrin *>(new SCBsel()));
   Intrins.push_back(static_cast<SCIntrin *>(new SCNop()));
+  Intrins.push_back(static_cast<SCIntrin *>(new SCIn()));
+  Intrins.push_back(static_cast<SCIntrin *>(new SCOut()));
 }
 
 void SCChiselCodeGen::InitPasses(){
