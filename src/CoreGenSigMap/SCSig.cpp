@@ -11,47 +11,50 @@
 #include "CoreGen/CoreGenSigMap/SCSig.h"
 
 SCSig::SCSig(SigType T)
-  : Type(T), SigWidth(0), DistanceTrue(0), DistanceFalse(0){
+  : Type(T), SigWidth(0), DistanceTrue(0), DistanceFalse(0), VLIW(false){
   Name = this->SigTypeToStr();
 }
 
 SCSig::SCSig(SigType T,unsigned W)
-  : Type(T), FType(FOP_UNK), SigWidth(W), DistanceTrue(0), DistanceFalse(0){
+  : Type(T), FType(FOP_UNK), SigWidth(W),
+    DistanceTrue(0), DistanceFalse(0), VLIW(false){
   Name = this->SigTypeToStr();
 }
 
 SCSig::SCSig(SigType T,std::string I)
   : Type(T), FType(FOP_UNK), SigWidth(0),
-    DistanceTrue(0), DistanceFalse(0), Inst(I){
+    DistanceTrue(0), DistanceFalse(0), Inst(I), VLIW(false){
   Name = this->SigTypeToStr();
 }
 
 SCSig::SCSig(SigType T,unsigned W,std::string I,std::string P)
   : Type(T), FType(FOP_UNK), SigWidth(W),
-    DistanceTrue(0), DistanceFalse(0), Inst(I),PipeName(P){
+    DistanceTrue(0), DistanceFalse(0), Inst(I), PipeName(P), VLIW(false){
   Name = this->SigTypeToStr();
 }
 
 SCSig::SCSig(SigType T,std::string I,std::string N)
   : Type(T), FType(FOP_UNK), SigWidth(0),
-    DistanceTrue(0), DistanceFalse(0), Inst(I), Name(N){
+    DistanceTrue(0), DistanceFalse(0), Inst(I), Name(N), VLIW(false){
 }
 
 SCSig::SCSig(SigType T,unsigned W,signed DT,signed DF,std::string I,std::string P)
   : Type(T), FType(FOP_UNK), SigWidth(W),
-    DistanceTrue(DT), DistanceFalse(DF), Inst(I), PipeName(P){
+    DistanceTrue(DT), DistanceFalse(DF), Inst(I), PipeName(P), VLIW(false){
   Name = this->SigTypeToStr();
 }
 
 SCSig::SCSig(SigType T,unsigned W,std::string I,std::string N,std::string P)
   : Type(T), FType(FOP_UNK), SigWidth(W),
-    DistanceTrue(0), DistanceFalse(0), Inst(I), Name(N), PipeName(P){
+    DistanceTrue(0), DistanceFalse(0), Inst(I), Name(N),
+    PipeName(P), VLIW(false){
 }
 
 SCSig::SCSig(SigType T,unsigned W,signed DT,signed DF,
              std::string I,std::string N,std::string P)
   : Type(T), FType(FOP_UNK), SigWidth(W),
-    DistanceTrue(DT), DistanceFalse(DF), Inst(I), Name(N), PipeName(P){
+    DistanceTrue(DT), DistanceFalse(DF), Inst(I), Name(N),
+    PipeName(P), VLIW(false){
 }
 
 SCSig::~SCSig(){
@@ -167,7 +170,7 @@ bool SCSig::SetWidth( unsigned W ){
 }
 
 bool SCSig::IsPipeDefined(){
-  if( PipeName.length() > 0 )
+  if( (PipeName.length() > 0) && (!VLIW) )
     return true;
   return false;
 }

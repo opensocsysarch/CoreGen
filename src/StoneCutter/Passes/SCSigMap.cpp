@@ -45,6 +45,9 @@ bool SCSigMap::TranslateLogicalOp( Function &F,
                                   F.getName().str(),
                                   GetMDPipeName(I)));
 
+  // set the VLIW flag
+  Signals->GetSignal(Signals->GetNumSignals()-1)->SetVLIW(VLIW);
+
   // we have the new signal, now we need to insert the target input requirements
   // by default, we use the last signal utilized
   if(!TranslateALUOperands(F,I,Signals->GetSignal(Signals->GetNumSignals()-1)))
@@ -80,6 +83,9 @@ bool SCSigMap::TranslateBinaryOp( Function &F,
                                   F.getName().str(),
                                   GetMDPipeName(I)));
 
+  // set the VLIW flag
+  Signals->GetSignal(Signals->GetNumSignals()-1)->SetVLIW(VLIW);
+
   // we have the new signal, now we need to insert the target input requirements
   // by default, we use the last signal utilized
   if(!TranslateALUOperands(F,I,Signals->GetSignal(Signals->GetNumSignals()-1)))
@@ -112,6 +118,8 @@ bool SCSigMap::IsLegalMemOp( Function &F,
                                       F.getName().str(),
                                       WOpName+"_WRITE",
                                       GetMDPipeName(I)));
+      // set the VLIW flag
+      Signals->GetSignal(Signals->GetNumSignals()-1)->SetVLIW(VLIW);
       return true;
     }
   }else if( I.getOpcode() == Instruction::Load ){
@@ -133,6 +141,8 @@ bool SCSigMap::IsLegalMemOp( Function &F,
                                       F.getName().str(),
                                       WOpName+"_READ",
                                       GetMDPipeName(I)));
+      // set the VLIW flag
+      Signals->GetSignal(Signals->GetNumSignals()-1)->SetVLIW(VLIW);
       return true;
     }
   }
@@ -160,6 +170,8 @@ bool SCSigMap::TranslateMemOp( Function &F,
                                       F.getName().str(),
                                       WOpName+"_WRITE",
                                       GetMDPipeName(I)));
+      // set the VLIW flag
+      Signals->GetSignal(Signals->GetNumSignals()-1)->SetVLIW(VLIW);
     }
   }else if( I.getOpcode() == Instruction::Load ){
     // load operations need to trace the address of the source (op 0)
@@ -180,6 +192,8 @@ bool SCSigMap::TranslateMemOp( Function &F,
                                       F.getName().str(),
                                       WOpName+"_READ",
                                       GetMDPipeName(I)));
+      // set the VLIW flag
+      Signals->GetSignal(Signals->GetNumSignals()-1)->SetVLIW(VLIW);
     }
   }else{
     this->PrintMsg( L_ERROR, "Encountered a memory operation that is not a Load or Store operation" );
@@ -207,6 +221,8 @@ bool SCSigMap::TranslateTargetOperands( Function &F, Instruction &I ){
                                       F.getName().str(),
                                       WOpName+"_WRITE",
                                       GetMDPipeName(I)));
+      // set the VLIW flag
+      Signals->GetSignal(Signals->GetNumSignals()-1)->SetVLIW(VLIW);
     }else if(!isWImm){
       // create a temporary register
 #if 0
@@ -220,6 +236,8 @@ bool SCSigMap::TranslateTargetOperands( Function &F, Instruction &I ){
                                       F.getName().str(),
                                       tmp+"_WRITE",
                                       GetMDPipeName(I)));
+      // set the VLIW flag
+      Signals->GetSignal(Signals->GetNumSignals()-1)->SetVLIW(VLIW);
     }
   }
   return true;
@@ -251,6 +269,8 @@ bool SCSigMap::TranslateOperands( Function &F, Instruction &I ){
                                       F.getName().str(),
                                       OpName+"_READ",
                                       GetMDPipeName(I)));
+      // set the VLIW flag
+      Signals->GetSignal(Signals->GetNumSignals()-1)->SetVLIW(VLIW);
     }else if(!isImm){
       // search for temporaries that match the instruction:irname mapping
       std::string TmpReg = Signals->GetTempMap(F.getName().str(),
@@ -265,6 +285,8 @@ bool SCSigMap::TranslateOperands( Function &F, Instruction &I ){
                                       F.getName().str(),
                                       TmpReg+"_READ",
                                       GetMDPipeName(I)));
+      // set the VLIW flag
+      Signals->GetSignal(Signals->GetNumSignals()-1)->SetVLIW(VLIW);
     }
   }
 
@@ -301,6 +323,8 @@ bool SCSigMap::TranslateCallSig(Function &F, Instruction &I){
                                             F.getName().str(),
                                             OpName+"_READ",
                                             GetMDPipeName(I)));
+            // set the VLIW flag
+            Signals->GetSignal(Signals->GetNumSignals()-1)->SetVLIW(VLIW);
           }else if(!isImm){
             // search for temporaries that match the instruction:irname mapping
             std::string TmpReg = Signals->GetTempMap(F.getName().str(),
@@ -314,6 +338,8 @@ bool SCSigMap::TranslateCallSig(Function &F, Instruction &I){
                                             F.getName().str(),
                                             TmpReg+"_READ",
                                             GetMDPipeName(I)));
+            // set the VLIW flag
+            Signals->GetSignal(Signals->GetNumSignals()-1)->SetVLIW(VLIW);
           }
         }// end for auto Arg
       }
@@ -336,6 +362,8 @@ bool SCSigMap::TranslateCallSig(Function &F, Instruction &I){
                                           F.getName().str(),
                                           WOpName+"_WRITE",
                                           GetMDPipeName(I)));
+          // set the VLIW flag
+          Signals->GetSignal(Signals->GetNumSignals()-1)->SetVLIW(VLIW);
         }else if(!isWImm){
           std::string tmp = Signals->GetTempReg(F.getName().str(),
                                             LHS->getName().str(), Width );
@@ -344,6 +372,8 @@ bool SCSigMap::TranslateCallSig(Function &F, Instruction &I){
                                           F.getName().str(),
                                           tmp+"_WRITE",
                                           GetMDPipeName(I)));
+          // set the VLIW flag
+          Signals->GetSignal(Signals->GetNumSignals()-1)->SetVLIW(VLIW);
         }// else, cannot write to immediates
       }
       return true;
@@ -356,10 +386,14 @@ bool SCSigMap::TranslateCallSig(Function &F, Instruction &I){
 }
 
 bool SCSigMap::TranslateSelectSig(Function &F, Instruction &I ){
-  return Signals->InsertSignal(new SCSig(MUX,
+  bool rtn = false;
+  rtn = Signals->InsertSignal(new SCSig(MUX,
                                          1,
                                          F.getName().str(),
                                          GetMDPipeName(I)));
+  // set the VLIW flag
+  Signals->GetSignal(Signals->GetNumSignals()-1)->SetVLIW(VLIW);
+  return rtn;
 }
 
 bool SCSigMap::IsNullBranchTarget(Instruction &I){
@@ -546,6 +580,8 @@ bool SCSigMap::TranslateBranch(Function &F, Instruction &I){
                                       0, // alternate branch is 0
                                       F.getName().str(),
                                       GetMDPipeName(I)));
+      // set the VLIW flag
+      Signals->GetSignal(Signals->GetNumSignals()-1)->SetVLIW(VLIW);
   }else{
     //
     // Conditional Branch
@@ -561,6 +597,8 @@ bool SCSigMap::TranslateBranch(Function &F, Instruction &I){
                                       GetBranchDistance(F,I,BI->getSuccessor(1)->front()),
                                       F.getName().str(),
                                       GetMDPipeName(I)));
+      // set the VLIW flag
+      Signals->GetSignal(Signals->GetNumSignals()-1)->SetVLIW(VLIW);
     }else if( !DTNull & DFNull ){
       // alternate branch is null, generate a single ended branch
       // this is effectively now an unconditional branch
@@ -570,6 +608,8 @@ bool SCSigMap::TranslateBranch(Function &F, Instruction &I){
                                       0,  // alternate branch
                                       F.getName().str(),
                                       GetMDPipeName(I)));
+      // set the VLIW flag
+      Signals->GetSignal(Signals->GetNumSignals()-1)->SetVLIW(VLIW);
     }else if( DTNull & !DFNull ){
       // primary branch is null, generate a single ended branch with alternate as the target
       // this is effectively now an unconditional branch
@@ -579,6 +619,8 @@ bool SCSigMap::TranslateBranch(Function &F, Instruction &I){
                                       0,  // alternate branch
                                       F.getName().str(),
                                       GetMDPipeName(I)));
+      // set the VLIW flag
+      Signals->GetSignal(Signals->GetNumSignals()-1)->SetVLIW(VLIW);
     }else{
       // both branches are null, return an error
       this->PrintMsg( L_ERROR, "Primary and alternate branch targets are unused uOps: " + 
@@ -601,81 +643,133 @@ bool SCSigMap::TranslateCmpOp(Function &F, Instruction &I){
     break;
   case CmpInst::FCMP_OEQ:
     Signals->InsertSignal(new SCSig(MUX_EQ,1,F.getName().str(),GetMDPipeName(I)));
+    // set the VLIW flag
+    Signals->GetSignal(Signals->GetNumSignals()-1)->SetVLIW(VLIW);
     break;
   case CmpInst::FCMP_OGT:
     Signals->InsertSignal(new SCSig(MUX_GTU,1,F.getName().str(),GetMDPipeName(I)));
+    // set the VLIW flag
+    Signals->GetSignal(Signals->GetNumSignals()-1)->SetVLIW(VLIW);
     break;
   case CmpInst::FCMP_OGE:
     Signals->InsertSignal(new SCSig(MUX_GEU,1,F.getName().str(),GetMDPipeName(I)));
+    // set the VLIW flag
+    Signals->GetSignal(Signals->GetNumSignals()-1)->SetVLIW(VLIW);
     break;
   case CmpInst::FCMP_OLT:
     Signals->InsertSignal(new SCSig(MUX_LTU,1,F.getName().str(),GetMDPipeName(I)));
+    // set the VLIW flag
+    Signals->GetSignal(Signals->GetNumSignals()-1)->SetVLIW(VLIW);
     break;
   case CmpInst::FCMP_OLE:
     Signals->InsertSignal(new SCSig(MUX_LEU,1,F.getName().str(),GetMDPipeName(I)));
+    // set the VLIW flag
+    Signals->GetSignal(Signals->GetNumSignals()-1)->SetVLIW(VLIW);
     break;
   case CmpInst::FCMP_ONE:
     Signals->InsertSignal(new SCSig(MUX_EQ,1,F.getName().str(),GetMDPipeName(I)));
+    // set the VLIW flag
+    Signals->GetSignal(Signals->GetNumSignals()-1)->SetVLIW(VLIW);
     break;
   case CmpInst::FCMP_ORD:
     Signals->InsertSignal(new SCSig(MUX_NE,1,F.getName().str(),GetMDPipeName(I)));
+    // set the VLIW flag
+    Signals->GetSignal(Signals->GetNumSignals()-1)->SetVLIW(VLIW);
     break;
   case CmpInst::FCMP_UNO:
     Signals->InsertSignal(new SCSig(MUX_NE,1,F.getName().str(),GetMDPipeName(I)));
+    // set the VLIW flag
+    Signals->GetSignal(Signals->GetNumSignals()-1)->SetVLIW(VLIW);
     break;
   case CmpInst::FCMP_UEQ:
     Signals->InsertSignal(new SCSig(MUX_EQ,1,F.getName().str(),GetMDPipeName(I)));
+    // set the VLIW flag
+    Signals->GetSignal(Signals->GetNumSignals()-1)->SetVLIW(VLIW);
     break;
   case CmpInst::FCMP_UGT:
     Signals->InsertSignal(new SCSig(MUX_GTU,1,F.getName().str(),GetMDPipeName(I)));
+    // set the VLIW flag
+    Signals->GetSignal(Signals->GetNumSignals()-1)->SetVLIW(VLIW);
     break;
   case CmpInst::FCMP_UGE:
     Signals->InsertSignal(new SCSig(MUX_GEU,1,F.getName().str(),GetMDPipeName(I)));
+    // set the VLIW flag
+    Signals->GetSignal(Signals->GetNumSignals()-1)->SetVLIW(VLIW);
     break;
   case CmpInst::FCMP_ULT:
     Signals->InsertSignal(new SCSig(MUX_LTU,1,F.getName().str(),GetMDPipeName(I)));
+    // set the VLIW flag
+    Signals->GetSignal(Signals->GetNumSignals()-1)->SetVLIW(VLIW);
     break;
   case CmpInst::FCMP_ULE:
     Signals->InsertSignal(new SCSig(MUX_LEU,1,F.getName().str(),GetMDPipeName(I)));
+    // set the VLIW flag
+    Signals->GetSignal(Signals->GetNumSignals()-1)->SetVLIW(VLIW);
     break;
   case CmpInst::FCMP_UNE:
     Signals->InsertSignal(new SCSig(MUX_NE,1,F.getName().str(),GetMDPipeName(I)));
+    // set the VLIW flag
+    Signals->GetSignal(Signals->GetNumSignals()-1)->SetVLIW(VLIW);
     break;
   case CmpInst::FCMP_TRUE:
     Signals->InsertSignal(new SCSig(MUX_EQ,1,F.getName().str(),GetMDPipeName(I)));
+    // set the VLIW flag
+    Signals->GetSignal(Signals->GetNumSignals()-1)->SetVLIW(VLIW);
     break;
   case CmpInst::ICMP_EQ:
     Signals->InsertSignal(new SCSig(MUX_EQ,1,F.getName().str(),GetMDPipeName(I)));
+    // set the VLIW flag
+    Signals->GetSignal(Signals->GetNumSignals()-1)->SetVLIW(VLIW);
     break;
   case CmpInst::ICMP_NE:
     Signals->InsertSignal(new SCSig(MUX_NE,1,F.getName().str(),GetMDPipeName(I)));
+    // set the VLIW flag
+    Signals->GetSignal(Signals->GetNumSignals()-1)->SetVLIW(VLIW);
     break;
   case CmpInst::ICMP_UGT:
     Signals->InsertSignal(new SCSig(MUX_GTU,1,F.getName().str(),GetMDPipeName(I)));
+    // set the VLIW flag
+    Signals->GetSignal(Signals->GetNumSignals()-1)->SetVLIW(VLIW);
     break;
   case CmpInst::ICMP_UGE:
     Signals->InsertSignal(new SCSig(MUX_GEU,1,F.getName().str(),GetMDPipeName(I)));
+    // set the VLIW flag
+    Signals->GetSignal(Signals->GetNumSignals()-1)->SetVLIW(VLIW);
     break;
   case CmpInst::ICMP_ULT:
     Signals->InsertSignal(new SCSig(MUX_LTU,1,F.getName().str(),GetMDPipeName(I)));
+    // set the VLIW flag
+    Signals->GetSignal(Signals->GetNumSignals()-1)->SetVLIW(VLIW);
     break;
   case CmpInst::ICMP_ULE:
     Signals->InsertSignal(new SCSig(MUX_LEU,1,F.getName().str(),GetMDPipeName(I)));
+    // set the VLIW flag
+    Signals->GetSignal(Signals->GetNumSignals()-1)->SetVLIW(VLIW);
     break;
   case CmpInst::ICMP_SGT:
     Signals->InsertSignal(new SCSig(MUX_GT,1,F.getName().str(),GetMDPipeName(I)));
+    // set the VLIW flag
+    Signals->GetSignal(Signals->GetNumSignals()-1)->SetVLIW(VLIW);
     break;
   case CmpInst::ICMP_SGE:
     Signals->InsertSignal(new SCSig(MUX_GE,1,F.getName().str(),GetMDPipeName(I)));
+    // set the VLIW flag
+    Signals->GetSignal(Signals->GetNumSignals()-1)->SetVLIW(VLIW);
     break;
   case CmpInst::ICMP_SLT:
     Signals->InsertSignal(new SCSig(MUX_LT,1,F.getName().str(),GetMDPipeName(I)));
+    // set the VLIW flag
+    Signals->GetSignal(Signals->GetNumSignals()-1)->SetVLIW(VLIW);
     break;
   case CmpInst::ICMP_SLE:
     Signals->InsertSignal(new SCSig(MUX_LE,1,F.getName().str(),GetMDPipeName(I)));
+    // set the VLIW flag
+    Signals->GetSignal(Signals->GetNumSignals()-1)->SetVLIW(VLIW);
     break;
   default:
     Signals->InsertSignal(new SCSig(SIGUNK,1,F.getName().str(),GetMDPipeName(I)));
+    // set the VLIW flag
+    Signals->GetSignal(Signals->GetNumSignals()-1)->SetVLIW(VLIW);
     break;
   }
 
@@ -903,6 +997,12 @@ bool SCSigMap::DiscoverSigMap(){
   for( auto &Func : TheModule->getFunctionList() ){
     // walk all the basic blocks
     for( auto &BB : Func.getBasicBlockList() ){
+      // determine whether we need to handle VLIW staging
+      if( IsVLIWStage(Func) ){
+        VLIW = true;
+      }else{
+        VLIW = false;
+      }
       if( !Func.isDeclaration() ){
         // walk all the instructions
         for( auto &Inst : BB.getInstList() ){
@@ -917,7 +1017,7 @@ bool SCSigMap::DiscoverSigMap(){
     }
 
     // check the target function for explicit PC signals
-    if( !Func.isDeclaration() ){
+    if( !Func.isDeclaration() && !IsVLIWStage(Func) ){
       if( !CheckPCReq(Func) ){
         Rtn = false;
       }

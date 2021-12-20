@@ -160,6 +160,12 @@ bool CoreGenSigMap::WriteSigMap( std::string File ){
     return false;
   }
 
+  // write the vliw signals
+  if( !WriteVLIWSignals(&out) ){
+    OutYaml.close();
+    return false;
+  }
+
   // write all the tmp reg info
   if( !WriteTempRegs(&out) ){
     OutYaml.close();
@@ -350,6 +356,81 @@ bool CoreGenSigMap::ReadPipelineData(const YAML::Node& PipeNodes){
   return true;
 }
 
+bool CoreGenSigMap::ReadVLIWSignals(const YAML::Node& VLIWNodes){
+  if( VLIWNodes.size() == 0 )
+    return false;
+
+  for( unsigned i=0; i<VLIWNodes.size(); i++ ){
+    const YAML::Node& Node = VLIWNodes[i];
+    if( !CheckValidNode(Node,"Stage") ){
+      Error = "VLIW definition has no stage name";
+      return false;
+    }
+    std::string Name = Node["Stage"].as<std::string>();
+    if( Node["Signals"] ){
+      const YAML::Node& SNode = Node["Signals"];
+      for( unsigned j=0; j<SNode.size(); j++ ){
+        const YAML::Node& LSNode = SNode[j];
+        if( !CheckValidNode(LSNode,"Signal") ){
+          Error = "Instruction signal has no name";
+          return false;
+        }
+        std::string SigName = LSNode["Signal"].as<std::string>();
+
+        if( !CheckValidNode(LSNode,"Type") ){
+          Error = "Instruction signal has no type: Instruction=" + Name;
+          return false;
+        }
+        SigType Type = StrToSigType(LSNode["Type"].as<std::string>());
+
+        if( !CheckValidNode(LSNode,"Width") ){
+          Error = "Instruction signal has no width: Instruction=" + Name;
+          return false;
+        }
+        unsigned Width = LSNode["Width"].as<unsigned>();
+
+        signed DT = 0;
+        if( CheckValidNode(LSNode,"DistanceTrue") ){
+          // if the node is valid, read it.
+          // otherwise, set the value to zero
+          DT = LSNode["DistanceTrue"].as<signed>();
+        }
+
+        signed DF = 0;
+        if( CheckValidNode(LSNode,"DistanceFalse") ){
+          // if the node is valid, read it.
+          // otherwise, set the value to zero
+          DF = LSNode["DistanceFalse"].as<signed>();
+        }
+
+        std::string FusedOp;
+        if( CheckValidNode(LSNode,"FusedOp") ){
+          FusedOp = LSNode["FusedOp"].as<std::string>();
+        }
+
+        Signals.push_back(new SCSig(Type,Width,DT,DF,Name,SigName,Name));
+        Signals[Signals.size()-1]->SetVLIW(true);
+        if( FusedOp.length() > 0 ){
+          // write the fused op to the latest signal
+          FusedOpType FType = StrToFusedOpType(FusedOp);
+          Signals[Signals.size()-1]->SetFusedType(FType);
+        }
+
+        // check for inputs
+        if( LSNode["Inputs"] ){
+          const YAML::Node& INode = LSNode["Inputs"];
+          for( unsigned k=0; k<INode.size(); k++ ){
+            std::string InputStr = INode[k].as<std::string>();
+            Signals[Signals.size()-1]->InsertInput(InputStr);
+          }
+        } // end inputs loop
+      }
+    }
+  }
+
+  return true;
+}
+
 bool CoreGenSigMap::ReadInstSignals(const YAML::Node& InstNodes){
   if( InstNodes.size() == 0 )
     return false;
@@ -510,6 +591,13 @@ bool CoreGenSigMap::ReadSigMap( std::string File ){
       return false;
   }
 
+  // read the vliw signals
+  const YAML::Node& VLIWNodes = IR["VLIW"];
+  if( CheckValidNode(IR,"VLIW") ){
+    if( !ReadVLIWSignals(VLIWNodes) )
+      return false;
+  }
+
   // read the temporary register values
   const YAML::Node& TmpNodes = IR["Temps"];
   if( CheckValidNode(IR,"Temps") ){
@@ -600,6 +688,72 @@ bool CoreGenSigMap::WritePipeData(YAML::Emitter *out){
   return true;
 }
 
+bool CoreGenSigMap::WriteVLIWSignals(YAML::Emitter *out){
+  if( out == nullptr ){
+    Error = "Output handle is null";
+    return false;
+  }
+
+  std::vector<std::string> VLIWPipeNames;
+  for( unsigned i=0; i<Signals.size(); i++ ){
+    if( Signals[i]->IsVLIW() ){
+      VLIWPipeNames.push_back(Signals[i]->GetPipeName());
+    }
+  }
+
+  std::sort(VLIWPipeNames.begin(), VLIWPipeNames.end());
+  VLIWPipeNames.erase( std::unique( VLIWPipeNames.begin(), VLIWPipeNames.end() ),
+                       VLIWPipeNames.end() );
+
+  if( VLIWPipeNames.size() == 0 ){
+    // nothing to write out
+    return true;
+  }
+
+  *out << YAML::Key << "VLIW" << YAML::BeginSeq;
+
+  for( unsigned i=0; i<VLIWPipeNames.size(); i++ ){
+    std::vector<SCSig *> CSigs;
+
+    // retrieve all the signals for the target vliw stage
+    for( unsigned j=0; j<Signals.size(); j++ ){
+      if( Signals[j]->GetPipeName() == VLIWPipeNames[i] ){
+        CSigs.push_back(Signals[j]);
+      }
+    }
+
+    // write out the vliw stage logic
+    *out << YAML::BeginMap << YAML::Key << "Stage"
+                           << YAML::Value << VLIWPipeNames[i];
+    *out << YAML::Key << "Signals" << YAML::Value << YAML::BeginSeq;
+    for( unsigned j=0; j<CSigs.size(); j++ ){
+      *out << YAML::BeginMap;
+      *out << YAML::Key << "Signal" << YAML::Value << CSigs[j]->GetName();
+      *out << YAML::Key << "Type" << YAML::Value << CSigs[j]->SigTypeToStr();
+      *out << YAML::Key << "Width" << YAML::Value << CSigs[j]->GetWidth();
+      *out << YAML::Key << "DistanceTrue" << YAML::Value << CSigs[j]->GetDistanceTrue();
+      *out << YAML::Key << "DistanceFalse" << YAML::Value << CSigs[j]->GetDistanceFalse();
+      if( CSigs[j]->GetFusedType() != FOP_UNK )
+        *out << YAML::Key << "FusedOp" << YAML::Value << CSigs[j]->FusedOpTypeToStr();
+
+      // determine whether we need to write out the input block
+      if( CSigs[j]->GetNumInputs() > 0 ){
+        *out << YAML::Key << "Inputs" << YAML::Value << YAML::BeginSeq;
+        for( unsigned k=0; k<CSigs[j]->GetNumInputs() ; k++ ){
+          *out << YAML::Key << CSigs[j]->GetInput(k);
+        }
+        *out << YAML::EndSeq;
+      }
+      *out << YAML::EndMap;
+    }
+    *out << YAML::EndSeq;
+    *out << YAML::EndMap;
+  }
+
+  *out << YAML::EndSeq;
+  return true;
+}
+
 bool CoreGenSigMap::WriteInstSignals(YAML::Emitter *out){
   if( out == nullptr ){
     Error = "Output handle is null";
@@ -618,7 +772,6 @@ bool CoreGenSigMap::WriteInstSignals(YAML::Emitter *out){
 
   // walk all the signal names, derive all the signals and write them out
   for( unsigned i=0; i<SigNames.size(); i++ ){
-    //std::vector<SCSig *> Sigs;
     std::vector<SCSig *> CSigs;
 
     // retrieve all the signals for the target instruction

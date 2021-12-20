@@ -67,6 +67,7 @@ private:
 protected:
   SCOpts *Opts;                       ///< StoneCutter options
   Module *TheModule;                  ///< LLVM IR Module
+  bool VLIW;                          ///< VLIW flag
 
 public:
 
@@ -100,6 +101,12 @@ public:
 
   /// Determines if the target variable is a local variable
   bool IsLocal( std::string Var );
+
+  /// Determines if the target function has been defined as a VLIW stage
+  bool IsVLIWStage(Function &F);
+
+  /// Retrieves the VLIW stage for the target function
+  unsigned GetVLIWStage(Function &F);
 
   /// Determines if the target variable has the target attribute
   bool HasGlobalAttribute(std::string Var, std::string Attribute );

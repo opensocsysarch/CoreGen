@@ -56,8 +56,14 @@ private:
   /// Writes the top-level signal map to the YAML file
   bool WriteTopLevelSignals(YAML::Emitter *out);
 
+  // Writes the VLIW stage signal blocks to the YAML file
+  bool WriteVLIWSignals(YAML::Emitter *out);
+
   /// Writes the individual instruction signal map to the YAML file
   bool WriteInstSignals(YAML::Emitter *out);
+
+  /// Writes the individual VLIW pipeline stage signals
+  bool WriteVLWISignals(YAML::Emitter *out);
 
   /// Writes the temporary register info and the associated mappings to the YAML file
   bool WriteTempRegs(YAML::Emitter *out);
@@ -73,6 +79,9 @@ private:
 
   /// Reads the instruction-level signal map
   bool ReadInstSignals(const YAML::Node& InstNodes);
+
+  /// Reads the VLIW signal map
+  bool ReadVLIWSignals(const YAML::Node& VLIWNodes);
 
   /// Reads the pipeline structure from the signal map
   bool ReadPipelineData(const YAML::Node& PipeNodes);
