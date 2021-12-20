@@ -101,14 +101,16 @@ void SCIOWarn::CheckPrototypeIO( Function &F, Instruction &I ){
 void SCIOWarn::CheckIOLayout(){
   // walk all the functions
   for( auto &Func : TheModule->getFunctionList() ){
-    // walk all the basic blocks
-    for( auto &BB : Func.getBasicBlockList() ){
-      // walk all the instructions
-      for( auto &Inst : BB.getInstList() ){
-        if( (Inst.getOpcode() == Instruction::Load) ||
-            (Inst.getOpcode() == Instruction::Store) ){
-          // Evaluate the load/store instruction
-          CheckPrototypeIO( Func, Inst );
+    // walk all the basic blocks of non-vliw stages
+    if( !IsVLIWStage(Func) ){
+      for( auto &BB : Func.getBasicBlockList() ){
+        // walk all the instructions
+        for( auto &Inst : BB.getInstList() ){
+          if( (Inst.getOpcode() == Instruction::Load) ||
+              (Inst.getOpcode() == Instruction::Store) ){
+            // Evaluate the load/store instruction
+            CheckPrototypeIO( Func, Inst );
+          }
         }
       }
     }
