@@ -643,7 +643,7 @@ std::vector<std::string> CoreGenSigMap::GetPipeVect(){
   std::vector<std::string> V;
 
   for( unsigned i=0; i<Signals.size(); i++ ){
-    if( Signals[i]->IsPipeDefined() ){
+    if( Signals[i]->IsPipeDefined() && !Signals[i]->IsVLIW() ){
       V.push_back(Signals[i]->GetPipeName());
     }
   }
@@ -979,7 +979,7 @@ std::vector<std::string> CoreGenSigMap::GetSignalsByPipeStage(std::string Pipeli
     return TmpSigVect;
 
   for( unsigned i=0; i<Signals.size(); i++ ){
-    if( Signals[i]->IsPipeDefined() ){
+    if( Signals[i]->IsPipeDefined() && !Signals[i]->IsVLIW() ){
       if( Signals[i]->GetPipeName() == Stage )
         TmpSigVect.push_back(Signals[i]->GetName());
     }

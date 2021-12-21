@@ -24,7 +24,7 @@ bool SCPipeBuilder::EmptySig(){
   bool ret = true;
 
   for( unsigned i=0; i<SigMap->GetNumSignals(); i++ ){
-    if( !SigMap->GetSignal(i)->IsPipeDefined() ){
+    if( !SigMap->GetSignal(i)->IsPipeDefined() && !SigMap->GetSignal(i)->IsVLIW() ){
       ret = false;
       if( Opts->IsVerbose() ){
         this->PrintRawMsg("EmptySig: signal=" +
@@ -974,7 +974,7 @@ bool SCPipeBuilder::BuildMat(){
 
   for( unsigned i=0; i<SigMap->GetNumSignals(); i++ ){
     Sig = SigMap->GetSignal(i);
-    if( Sig->IsPipeDefined() ){
+    if( Sig->IsPipeDefined() && !Sig->IsVLIW() ){
       Idx = PipeToIdx(Sig->GetPipeName());
       if( Idx == PipeVect.size() ){
         this->PrintMsg( L_ERROR, "Pipe stage unknown" );

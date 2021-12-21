@@ -28,7 +28,6 @@
 
 class SCVLIWPipeBuilder : public SCPass {
 private:
-
   CoreGenSigMap *SigMap;              ///< SCVLIWPipeBuilder: Signal map object
 
 public:
@@ -37,6 +36,9 @@ public:
 
   /// Default destructor
   ~SCVLIWPipeBuilder();
+
+  /// Set the signal map object
+  bool SetSignalMap(CoreGenSigMap *CSM){ SigMap = CSM; return true; }
 
   /// Execute the codegen
   virtual bool Execute() override;

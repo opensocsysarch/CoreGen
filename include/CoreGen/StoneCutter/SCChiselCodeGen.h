@@ -89,14 +89,16 @@ private:
   std::vector<SCPass *> Passes;               ///< StoneCutter CodeGen passes
 
   // private functions
-  bool ExecuteCodegen();                      ///< Generates chisel from the LLVM IR
-  void InitIntrinsics();                      ///< Init the intrinsics vector
-  void InitPasses();                          ///< Init the pass vector
-  bool ExecutePasses();                       ///< Executes all the code generation passes
-  bool ExecuteSignalMap();                    ///< Executes the signal map generator
-  bool ExecutePipelineOpt(CoreGenSigMap *SM); ///< Executes the pipeline optimizer
-  bool ExecuteUcodeCodegen();                 ///< Executes a microcode codegen using sigmaps
-  bool ExecuteManualCodegen();                ///< Executes a manual codegen
+  bool ExecuteCodegen();                          ///< Generates chisel from the LLVM IR
+  void InitIntrinsics();                          ///< Init the intrinsics vector
+  void InitPasses();                              ///< Init the pass vector
+  bool ExecutePasses();                           ///< Executes all the code generation passes
+  bool ExecuteSignalMap();                        ///< Executes the signal map generator
+  bool ExecuteRISCPipelineOpt(CoreGenSigMap *SM); ///< Executes the standard RISC pipeliner
+  bool ExecuteVLIWPipelineOpt(CoreGenSigMap *SM); ///< Executes the standard RISC pipeliner
+  bool ExecutePipelineOpt(CoreGenSigMap *SM);     ///< Executes the pipeline optimizer
+  bool ExecuteUcodeCodegen();                     ///< Executes a microcode codegen using sigmaps
+  bool ExecuteManualCodegen();                    ///< Executes a manual codegen
 
   void WriteChiselHeader(std::ofstream &out, std::string FName ); ///< Writes a header to the chisel output file
   bool DeriveBitPat(std::string &BP);         ///< Derives the bit pattern for the microcode generator
