@@ -22,6 +22,7 @@
 
 #include <vector>
 #include <fstream>
+#include <iostream>
 #include <algorithm>
 #include <string>
 
@@ -142,6 +143,12 @@ public:
   /// Reads the signal map file into the signal structure
   bool ReadSigMap( std::string File );
 
+  /// Retrieves the name of the signal map file
+  std::string GetSigFile() { return SigFile; }
+
+  /// Inserts a temporary register in the signal map
+  bool InsertTemp(SCTmp *T);
+
   /// Retrieve the number of temporary registers that need to exist in the ALUL
   unsigned GetNumTemps() { return TempRegs.size(); }
 
@@ -185,6 +192,15 @@ public:
   /// Retrieve the signal vector for each pipeline stage
   std::vector<SCSig *> GetSignalVectByPipeStage(std::string Pipeline,
                                                 std::string Stage);
+
+  /// Split the signal map and return a signal map object with only instruction signals
+  CoreGenSigMap *SplitInstSigMap();
+
+  /// Split the signal map and return a signal map object with only VLIW signals
+  CoreGenSigMap *SplitVLIWSigMap();
+
+  /// Fuse the instruction and VLIW signal maps
+  bool FuseSignalMaps(CoreGenSigMap *InstSigMap, CoreGenSigMap *VLIWSigMap);
 
   /// Execute all the signal map passes
   bool ExecutePasses();

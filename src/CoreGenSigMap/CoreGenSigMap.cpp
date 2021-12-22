@@ -18,6 +18,111 @@ CoreGenSigMap::~CoreGenSigMap(){
   Signals.clear();
 }
 
+CoreGenSigMap *CoreGenSigMap::SplitInstSigMap(){
+  CoreGenSigMap *SM = new CoreGenSigMap();
+
+  for( unsigned i=0; i<this->GetNumSignals(); i++ ){
+    if( !this->GetSignal(i)->IsVLIW() ){
+      SM->InsertSignal(this->GetSignal(i));
+    }
+  }
+
+  std::vector<std::string> Pipes = this->GetPipelines();
+  for( unsigned i=0; i<Pipes.size(); i++ ){
+    SM->InsertPipeline(Pipes[i]);
+    for( unsigned j=0; j<this->GetNumPipeStages(Pipes[i]); j++ ){
+      SM->InsertPipelineStage(Pipes[i],
+                              this->GetPipelineStage(Pipes[i],j));
+    }
+
+    if( this->GetNumPipeAttrs(Pipes[i]) > 0 ){
+      for( unsigned j=0; j<this->GetNumPipeAttrs(Pipes[i]); j++ ){
+             SM->InsertPipelineAttr(Pipes[i],
+                                    this->GetPipelineAttr(Pipes[i],
+                                                          j));
+      }
+    }
+  }
+
+  for( unsigned i=0; i<this->GetNumTemps(); i++ ){
+    SM->InsertTemp(this->GetTemp(i));
+  }
+
+  SM->WriteSigMap( this->GetSigFile() + ".inst" );
+
+  return SM;
+}
+
+CoreGenSigMap *CoreGenSigMap::SplitVLIWSigMap(){
+  CoreGenSigMap *SM = new CoreGenSigMap();
+
+  for( unsigned i=0; i<this->GetNumSignals(); i++ ){
+    if( this->GetSignal(i)->IsVLIW() ){
+      SM->InsertSignal(this->GetSignal(i));
+    }
+  }
+
+  for( unsigned i=0; i<this->GetNumTemps(); i++ ){
+    SM->InsertTemp(this->GetTemp(i));
+  }
+
+  SM->WriteSigMap( this->GetSigFile() + ".vliw" );
+
+  return SM;
+}
+
+bool CoreGenSigMap::FuseSignalMaps(CoreGenSigMap *InstSigMap,
+                                   CoreGenSigMap *VLIWSigMap){
+  Signals.clear();
+  Pipelines.clear();
+
+  if( (!InstSigMap) || (!VLIWSigMap) ){
+    return false;
+  }
+
+  // instruction signals
+  for( unsigned i=0; i<InstSigMap->GetNumSignals(); i++ ){
+    this->InsertSignal( InstSigMap->GetSignal(i) );
+  }
+
+  std::vector<std::string> Pipes = InstSigMap->GetPipelines();
+  for( unsigned i=0; i<Pipes.size(); i++ ){
+    this->InsertPipeline(Pipes[i]);
+    for( unsigned j=0; j<InstSigMap->GetNumPipeStages(Pipes[i]); j++ ){
+      this->InsertPipelineStage(Pipes[i],
+                                InstSigMap->GetPipelineStage(Pipes[i],j));
+    }
+
+    if( InstSigMap->GetNumPipeAttrs(Pipes[i]) > 0 ){
+      for( unsigned j=0; j<InstSigMap->GetNumPipeAttrs(Pipes[i]); j++ ){
+             this->InsertPipelineAttr(Pipes[i],
+                                      InstSigMap->GetPipelineAttr(Pipes[i],
+                                                                  j));
+      }
+    }
+  }
+
+  for( unsigned i=0; i<InstSigMap->GetNumTemps(); i++ ){
+    this->InsertTemp(InstSigMap->GetTemp(i));
+  }
+
+  // vliw signals
+  for( unsigned i=0; i<VLIWSigMap->GetNumSignals(); i++ ){
+    this->InsertSignal( VLIWSigMap->GetSignal(i) );
+  }
+
+  for( unsigned i=0; i<VLIWSigMap->GetNumTemps(); i++ ){
+    this->InsertTemp(VLIWSigMap->GetTemp(i));
+  }
+
+  this->WriteSigMap();
+
+  remove(InstSigMap->GetSigFile().c_str());
+  remove(VLIWSigMap->GetSigFile().c_str());
+
+  return true;
+}
+
 bool CoreGenSigMap::ExecutePasses(){
   bool rtn = true;
 
@@ -765,7 +870,9 @@ bool CoreGenSigMap::WriteInstSignals(YAML::Emitter *out){
   // walk all the signals and derive the names
   std::vector<std::string> SigNames;
   for( unsigned i=0; i<Signals.size(); i++ ){
-    SigNames.push_back(Signals[i]->GetInst());
+    if( !Signals[i]->IsVLIW() ){
+      SigNames.push_back(Signals[i]->GetInst());
+    }
   }
   std::sort(SigNames.begin(), SigNames.end());
   SigNames.erase( std::unique( SigNames.begin(), SigNames.end()), SigNames.end() );
@@ -865,6 +972,15 @@ bool CoreGenSigMap::WriteTopLevelSignals(YAML::Emitter *out){
   }
   *out << YAML::EndSeq;
 
+  return true;
+}
+
+bool CoreGenSigMap::InsertTemp(SCTmp *T){
+  if( !T )
+    return false;
+  TempRegs.push_back(T);
+  std::sort(TempRegs.begin(), TempRegs.end());
+  TempRegs.erase( std::unique(TempRegs.begin(),TempRegs.end()), TempRegs.end() );
   return true;
 }
 
