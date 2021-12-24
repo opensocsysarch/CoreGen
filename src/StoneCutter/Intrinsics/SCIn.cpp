@@ -10,7 +10,7 @@
 
 #include "CoreGen/StoneCutter/Intrinsics/SCIn.h"
 
-SCIn::SCIn() : SCIntrin(2,"IN",false) {
+SCIn::SCIn() : SCIntrin(1,"IN",false) {
 }
 
 SCIn::SCIn(unsigned NI, std::string K) : SCIntrin(NI,K,false) {
