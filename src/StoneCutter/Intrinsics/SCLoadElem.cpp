@@ -13,7 +13,7 @@
 SCLoadElem::SCLoadElem() : SCIntrin(2,"LOADELEM",false) {
 }
 
-SCLoadElem::SCLoadElem(unsigned NI, std::string K) : SCIntrin(NI,K,false) {
+SCLoadElem::SCLoadElem(unsigned NI, std::string K) : SCIntrin(NI,K, false) {
 }
 
 SCLoadElem::~SCLoadElem(){
@@ -26,11 +26,9 @@ Value *SCLoadElem::codegen(){
 bool SCLoadElem::GetSigMap(CoreGenSigMap *Sigs,
                            Instruction &I,
                            std::string Inst){
-  unsigned width = 0;
-  if( auto CInt = dyn_cast<ConstantInt>(I.getOperand(1)) ){
-    width = (unsigned)(CInt->getSExtValue());
-  }else{
-    width = I.getOperand(1)->getType()->getIntegerBitWidth();
+  unsigned width = DeriveWidth(I);
+  if( !width ) {
+    ErrMsg = "Invalid Width: Width cannot be 0";
   }
 
   std::string Str;
