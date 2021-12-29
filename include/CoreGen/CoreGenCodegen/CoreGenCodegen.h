@@ -95,6 +95,9 @@ private:
   /// Constructs full StoneCutter files for each ISA
   bool BuildStoneCutterFiles();
 
+  /// Constructs the raw StoneCutter files for all nodes in the graph
+  bool BuildRawStoneCutterFiles();
+
   /// Constructs an individual ISA Chisel File
   bool BuildISAChisel(CoreGenISA *ISA,
                       std::vector<CoreGenInst *> Insts);
@@ -117,6 +120,9 @@ public:
 
   /// Execute the LLVM codegen
   bool ExecuteLLVMCodegen(std::string CompVer);
+
+  /// Execute the StoneCutter codegen
+  bool ExecuteStoneCutterCodegen();
 
   /// Execute the Chisel codegen
   bool ExecuteChiselCodegen();

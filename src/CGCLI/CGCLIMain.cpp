@@ -299,6 +299,14 @@ int ExecuteCoregen( CGCLIOpts *Opts ){
       delete CG;
       return -1;
     }
+  }else if( Opts->IsStoneCutterEnabled() ){
+    // run the stonecutter codegen
+    if( !CG->ExecuteStoneCutterCodegen() ){
+      std::cout << "Error executing the StoneCutter codegen: "
+                << CG->GetErrStr() << std::endl;
+      delete CG;
+      return -1;
+    }
   }
 
   delete CG;
