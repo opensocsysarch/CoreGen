@@ -58,7 +58,7 @@ bool SCVLIWPipeBuilder::Execute(){
   // existing SCPipeBuilder.
   //
 
-#ifdef 0
+#if 0
   // TODO: Not sure if InstVect should use the same as PipeBuilder... seems like a BundleParser that would look at the sigmap may be more appropriate
   VLIWPipeVect = SigMap->GetVLIWPipeVect();
   // BundleVect = SigMap->GetBundleVect();
