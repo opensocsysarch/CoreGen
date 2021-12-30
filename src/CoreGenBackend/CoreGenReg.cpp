@@ -15,7 +15,7 @@ CoreGenReg::CoreGenReg(std::string N, int I, int W,
   : CoreGenNode(CGReg,N,E), isFixedValue(false), isSIMD(false), isIdxSet(true),
     isShared(false), isVector(false), isMatrix(false),
     index(I), width(W), SIMDwidth(1), DimX(1), DimY(0),
-    attrs(1<<CoreGenReg::CGRegRW){
+    attrs(CoreGenReg::CGRegRW){
 }
 
 std::string CoreGenReg::GetPseudoName(){

@@ -1942,7 +1942,6 @@ bool CoreGenYaml::ReadRegisterYaml(const YAML::Node& RegNodes,
       Attrs |= CoreGenReg::CGRegPC;
     }
     R->SetAttrs(Attrs);
-
     R->SetShared(IsShared);
 
     if( IsVector ){
