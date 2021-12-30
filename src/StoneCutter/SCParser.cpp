@@ -2783,17 +2783,17 @@ Value *CallExprAST::codegen() {
   // set the I/O Metadata
   if( (Callee=="IN") || (Callee=="OUT") ){
     std::string IOTypeStr;
-    std::string IOSrcStr;
+    std::string IOSrcTypeStr;
 
-    // IOType will be "CTRL" or "DATA"
-    MDNode *IOType = MDNode::get(SCParser::TheContext,
+    // IOSigType will be "CTRL" or "DATA"
+    MDNode *IOSigType = MDNode::get(SCParser::TheContext,
                                  MDString::get(SCParser::TheContext,IOTypeStr));
 
-    // IOSrc will be "REGCLASS", "VAR", or "ENC"
-    MDNode *IOSrc = MDNode::get(SCParser::TheContext,
-                                MDString::get(SCParser::TheContext,IOSrcStr));
-    cast<Instruction>(CI)->setMetadata("vliw.type",IOType);
-    cast<Instruction>(CI)->setMetadata("vliw.src",IOSrc);
+    // IOSrcType will be "REGCLASS", "VAR", or "ENC"
+    MDNode *IOSrcType = MDNode::get(SCParser::TheContext,
+                                MDString::get(SCParser::TheContext,IOSrcTypeStr));
+    cast<Instruction>(CI)->setMetadata("vliw.type",IOSigType);
+    cast<Instruction>(CI)->setMetadata("vliw.src",IOSrcType);
   }
 
   return CI;
