@@ -2779,6 +2779,23 @@ Value *CallExprAST::codegen() {
     cast<Instruction>(CI)->setMetadata("pipe.pipeLine",SCParser::PipelineMDNode);
     cast<Instruction>(CI)->setMetadata("pipe.pipeInstance",SCParser::InstanceMDNode);
   }
+
+  // set the I/O Metadata
+  if( (Callee=="IN") || (Callee=="OUT") ){
+    std::string IOTypeStr;
+    std::string IOSrcStr;
+
+    // IOType will be "CTRL" or "DATA"
+    MDNode *IOType = MDNode::get(SCParser::TheContext,
+                                 MDString::get(SCParser::TheContext,IOTypeStr));
+
+    // IOSrc will be "REGCLASS", "VAR", or "ENC"
+    MDNode *IOSrc = MDNode::get(SCParser::TheContext,
+                                MDString::get(SCParser::TheContext,IOSrcStr));
+    cast<Instruction>(CI)->setMetadata("vliw.type",IOType);
+    cast<Instruction>(CI)->setMetadata("vliw.src",IOSrc);
+  }
+
   return CI;
 }
 
