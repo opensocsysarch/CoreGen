@@ -285,6 +285,9 @@ public:
   /// Execute the LLVM codegen
   bool ExecuteLLVMCodegen(std::string CompVer);
 
+  /// Execute the StoneCutter codegen
+  bool ExecuteStoneCutterCodegen();
+
   /// Execute the Chisel codegen
   bool ExecuteChiselCodegen();
 

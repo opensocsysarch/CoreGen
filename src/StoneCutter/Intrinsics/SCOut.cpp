@@ -10,7 +10,7 @@
 
 #include "CoreGen/StoneCutter/Intrinsics/SCOut.h"
 
-SCOut::SCOut() : SCIntrin(2,"OUT",false) {
+SCOut::SCOut() : SCIntrin(1,"OUT",false) {
 }
 
 SCOut::SCOut(unsigned NI, std::string K) : SCIntrin(NI,K,false) {

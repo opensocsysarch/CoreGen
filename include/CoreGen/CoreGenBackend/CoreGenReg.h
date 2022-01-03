@@ -60,12 +60,12 @@ private:
 public:
   /// CoreGenReg: Register Attributes
   typedef enum{
-    CGRegRO   = 0x01,     ///< CGRegAttr: Read-Only Register
-    CGRegRW   = 0x02,     ///< CGRegAttr: Read-Write Register
-    CGRegCSR  = 0x04,     ///< CGRegAttr: CSR
-    CGRegAMS  = 0x08,     ///< CGRegAttr: Arithmetic Machine State
-    CGRegTUS  = 0x10,     ///< CGRegAttr: Thread unit shared
-    CGRegPC   = 0x20      ///< CGRegAttr: PC register (one per reg file)
+    CGRegRO   = 0x01,     ///< CGRegAttr: [bit 0] Read-Only Register
+    CGRegRW   = 0x02,     ///< CGRegAttr: [bit 1] Read-Write Register
+    CGRegCSR  = 0x04,     ///< CGRegAttr: [bit 2] CSR
+    CGRegAMS  = 0x08,     ///< CGRegAttr: [bit 3] Arithmetic Machine State
+    CGRegTUS  = 0x10,     ///< CGRegAttr: [bit 4] Thread unit shared
+    CGRegPC   = 0x20      ///< CGRegAttr: [bit 5] PC register (one per reg file)
   }CGRegAttr;             ///< CoreGenReg: Register attributes
 
   /// Default Constructor

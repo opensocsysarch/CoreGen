@@ -765,13 +765,6 @@ bool CoreGenCodegen::BuildISAChisel( CoreGenISA *ISA,
 
       // build the register attribute list
       std::string REGNAME = REG->GetName() + GetRegAttrStr(REG);
-#if 0
-      if( REG->IsPCAttr() ){
-        REGNAME = REG->GetName() + "[PC]";
-      }else{
-        REGNAME = REG->GetName();
-      }
-#endif
 
       if( REG->GetNumSubRegs() > 0 ){
         // write out the register with the subregs
@@ -843,6 +836,181 @@ bool CoreGenCodegen::BuildISAChisel( CoreGenISA *ISA,
   return true;
 }
 
+bool CoreGenCodegen::BuildRawStoneCutterFiles(){
+
+  // stage 1: generate the necessary vectors
+  std::vector<CoreGenInstFormat *> IF;
+  std::vector<CoreGenRegClass *> RC;
+  std::vector<CoreGenInst *> Insts;
+
+  for( unsigned i=0; i<Top->GetNumChild(); i++ ){
+    switch(Top->GetChild(i)->GetType()){
+    case CGInstF:
+      IF.push_back( static_cast<CoreGenInstFormat *>(Top->GetChild(i)) );
+      break;
+    case CGRegC:
+      RC.push_back( static_cast<CoreGenRegClass *>(Top->GetChild(i)) );
+      break;
+    case CGInst:
+      Insts.push_back( static_cast<CoreGenInst *>(Top->GetChild(i)) );
+      break;
+    default:
+      // do nothing
+      break;
+    }
+  }
+
+  // stage 2: generate the output chisel file
+  std::string OutFile = SCDir + "/stonecutter.sc";
+  std::ofstream MOutFile;
+  MOutFile.open(OutFile,std::ios::trunc);
+  if( !MOutFile.is_open() ){
+    Errno->SetError(CGERR_ERROR, "Could not open StoneCutter output file" + OutFile );
+    return false;
+  }
+
+  // stage 3: write the header
+  MOutFile << "#-- Raw StoneCutter source file" << std::endl;
+  MOutFile << std::endl << std::endl;
+
+  // stage 4: write out the instruction formats
+  if( IF.size() > 0 ){
+    MOutFile << "# Instruction Formats" << std::endl;
+  }
+  for( unsigned i=0; i<IF.size(); i++ ){
+    // protect against duplicates across instructions
+    if( std::find(InstFormatsVect.begin(),
+                  InstFormatsVect.end(),
+                  IF[i]->GetName()) == InstFormatsVect.end() ){
+      // inst format not found
+      // record it to the top-level instformats vector
+      // and write it to the file
+      InstFormatsVect.push_back(IF[i]->GetName());
+
+      MOutFile << "instformat " << IF[i]->GetName() << "(";
+      for( unsigned j=0; j<IF[i]->GetNumFields(); j++ ){
+        switch( IF[i]->GetFieldType(IF[i]->GetFieldName(j)) ){
+        case CoreGenInstFormat::CGInstReg:
+          MOutFile << "reg["
+                   << IF[i]->GetFieldRegClass(IF[i]->GetFieldName(j))->GetName()
+                   << "] "
+                   << IF[i]->GetFieldName(j)
+                   << ":" << IF[i]->GetFieldWidth(IF[i]->GetFieldName(j));
+          break;
+        case CoreGenInstFormat::CGInstCode:
+          MOutFile << "enc " << IF[i]->GetFieldName(j)
+                   << ":" << IF[i]->GetFieldWidth(IF[i]->GetFieldName(j));
+          break;
+        case CoreGenInstFormat::CGInstImm:
+          MOutFile << "imm " << IF[i]->GetFieldName(j)
+                   << ":" << IF[i]->GetFieldWidth(IF[i]->GetFieldName(j));
+          break;
+        default:
+          Errno->SetError(CGERR_ERROR,
+                          "No valid field type for instruction format=" +
+                          IF[i]->GetName() + "; field=" + IF[i]->GetFieldName(j) );
+          return false;
+          break;
+        }
+        // print a comma if necessary
+        if( j!=(IF[i]->GetNumFields()-1) ){
+          MOutFile << ",";
+        }
+      }
+      MOutFile << ")" << std::endl;
+    }// end if ( std::find )
+  }// end IF.size()
+
+  MOutFile << std::endl;
+
+  // stage 5: write out the register class definitions
+  if( RC.size() > 0 ){
+    MOutFile << "# Register Class Definitions" << std::endl;
+  }
+  for( unsigned i=0; i<RC.size(); i++ ){
+    MOutFile << "regclass " << RC[i]->GetName() << "(";
+
+    // write out all the registers
+    for( unsigned j=0; j<RC[i]->GetNumReg(); j++ ){
+
+      CoreGenReg *REG = static_cast<CoreGenReg *>(RC[i]->GetReg(j));
+
+      // build the register attribute list
+      std::string REGNAME = REG->GetName() + GetRegAttrStr(REG);
+
+      if( REG->GetNumSubRegs() > 0 ){
+        // write out the register with the subregs
+        MOutFile << " u" << REG->GetWidth() << " " << REGNAME << "(";
+        for( unsigned k=0; k<REG->GetNumSubRegs(); k++ ){
+          std::string Name;
+          unsigned Start;
+          unsigned End;
+          if( !REG->GetSubReg(k,Name,Start,End) ){
+            Errno->SetError(CGERR_ERROR, "Could not retrieve subreg from register=" + REG->GetName() );
+            MOutFile.close();
+            return false;
+          }
+          MOutFile << " u" << ((End-Start)+1) << " " << Name;
+          if( k != (REG->GetNumSubRegs()-1) ){
+            MOutFile << ",";
+          }
+        } // end subregs
+        MOutFile << ")";
+      }else{
+        // write out the register with no subregs
+        MOutFile << " u" << REG->GetWidth() << " " << REGNAME;
+        if( REG->IsVector() ){
+          MOutFile << "<" << REG->GetDimX() << ">";
+        }else if( REG->IsMatrix() ){
+          MOutFile << "<" << REG->GetDimX() << "," << REG->GetDimY() << ">";
+        }
+      }
+
+      // print a comma between registers
+      if( j != (RC[i]->GetNumReg()-1) ){
+        MOutFile << ",";
+      }
+    }// end writing out the registers
+
+    MOutFile << " )" << std::endl;
+  }// end writing register classes
+
+  MOutFile << std::endl << std::endl;
+
+  // stage 6: write out the instructions
+  if( Insts.size() > 0 ){
+    MOutFile << "# Instruction Definitions" << std::endl;
+  }
+
+  for( unsigned i=0; i<Insts.size(); i++ ){
+    MOutFile << "# " << Insts[i]->GetName() << std::endl;
+    if( Insts[i]->GetISA()->IsVLIW() ){
+      MOutFile << "def " << Insts[i]->GetName()
+               << ":VLIW" << "( ";
+    }else{
+      MOutFile << "def " << Insts[i]->GetName()
+               << ":" << Insts[i]->GetFormat()->GetName() << "( ";
+    }
+
+    // retrieve the instruction format and print out all the field
+    // names and immediate values
+    CoreGenInstFormat *LIF = Insts[i]->GetFormat();
+    for( unsigned j=0; j<LIF->GetNumFields(); j++ ){
+      if( (LIF->GetFieldType(LIF->GetFieldName(j)) == CoreGenInstFormat::CGInstReg) || 
+          (LIF->GetFieldType(LIF->GetFieldName(j)) == CoreGenInstFormat::CGInstImm) ){
+        MOutFile << LIF->GetFieldName(j) << " ";
+      }
+    }
+    MOutFile << ")" << std::endl;
+    MOutFile << "{" << std::endl << Insts[i]->GetImpl() << std::endl << "}" << std::endl << std::endl;
+  }
+
+  // stage 7 : close the file
+  MOutFile.close();
+
+  return true;
+}
+
 bool CoreGenCodegen::BuildStoneCutterFiles(){
 
   // for each ISA we have defined, build a vector
@@ -873,6 +1041,33 @@ bool CoreGenCodegen::BuildStoneCutterFiles(){
 
     }// end if
   }// end for
+
+  return true;
+}
+
+bool CoreGenCodegen::ExecuteStoneCutterCodegen(){
+  // Stage 1: Build the top-level makefile
+  if( !isTopMakefile ){
+    if( !BuildProjMakefile() ){
+      return false;
+    }
+    isTopMakefile = true;
+  }
+
+  // Stage 2: Build the Chisel directory structure
+  if( !BuildChiselDir() ){
+    return false;
+  }
+
+  // Stage 3: Build the StoneCutter directory structure
+  if( !BuildStoneCutterDir() ){
+    return false;
+  }
+
+  // Stage 4: Walk the ISA graphs and build StoneCutter source using inline RTL
+  if( !BuildRawStoneCutterFiles() ){
+    return false;
+  }
 
   return true;
 }

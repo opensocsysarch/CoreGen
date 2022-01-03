@@ -39,6 +39,7 @@ private:
   bool ArchQuery;       ///< CGCLIOpts: Query the archive
   bool ArchInit;        ///< CGCLIOpts: Init the archive
   bool ArchDestroy;     ///< CGCLIOpts: Destroy the archive
+  bool CGStoneCutter;   ///< CGCLIOpts: Run the stonecutter codegen
 
   std::string IRFile;   ///< CGCLIOpts: Input IR File
   std::string OutFile;  ///< CGCLIOpts: Output IR File
@@ -117,6 +118,9 @@ public:
 
   /// check if the compiler codegen is enabled
   bool IsCompilerEnabled() { return CGComp; }
+
+  /// check if the stonecutter codegen is enabled
+  bool IsStoneCutterEnabled() { return CGStoneCutter; }
 
   /// Check to see if manual pass control is enabled
   bool IsManualPasses() { return ManualPasses; }

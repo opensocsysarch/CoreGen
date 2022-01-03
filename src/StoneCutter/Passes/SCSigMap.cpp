@@ -302,6 +302,7 @@ bool SCSigMap::TranslateCallSig(Function &F, Instruction &I){
   // intrinsic is found
   for( auto i : *Intrins ){
     SCIntrin *Intrin = i;
+    // this->PrintMsg(L_MSG, "Intrin: " + Intrin->GetKeyword());
     if( Intrin->GetKeyword() == Callee ){
       // found a matching intrinsic
 
@@ -345,8 +346,10 @@ bool SCSigMap::TranslateCallSig(Function &F, Instruction &I){
       }
 
       // Generate the logic signals for the intrinsic
-      if( !Intrin->GetSigMap(Signals,I,F.getName().str()) )
+      if( !Intrin->GetSigMap(Signals,I,F.getName().str()) ){
+        this->PrintMsg(L_ERROR, Intrin->GetKeyword() + " intrinsic" + "\n\t----> " + Intrin->GetErrMsg());
         return false;
+      }
 
       // Walk the output arg and generate the write-enable intrinsics
       if( CInst->hasName() ){

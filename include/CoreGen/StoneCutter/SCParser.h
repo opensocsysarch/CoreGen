@@ -610,6 +610,9 @@ private:
   // Handles function closing
   void HandleFuncClose();
 
+  /// Retrieves the actual line number
+  unsigned GetLineNum();
+
   /// Logs an error
   std::unique_ptr<ExprASTContainer> LogError(std::string Str);
 

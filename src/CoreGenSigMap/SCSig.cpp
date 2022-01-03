@@ -157,6 +157,10 @@ bool SCSig::SetType( SigType T ){
   case MEM_READ:
   case MEM_WRITE:
   case FENCE:
+  case CTRL_IN:
+  case CTRL_OUT:
+  case DATA_IN:
+  case DATA_OUT:
     Type = T;
     return true;
   default:
@@ -413,6 +417,18 @@ const std::string SCSig::SigTypeToStr(){
       break;
     case FENCE:
       return "FENCE";
+      break;
+    case CTRL_IN:
+      return "CTRL_IN";
+      break;
+    case CTRL_OUT:
+      return "CTRL_OUT";
+      break;
+    case DATA_IN:
+      return "DATA_IN";
+      break;
+    case DATA_OUT:
+      return "DATA_OUT";
       break;
     default:
       return "SIGUNK";

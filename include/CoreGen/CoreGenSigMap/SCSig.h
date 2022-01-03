@@ -109,7 +109,15 @@ typedef enum{
   MEM_WRITE = 91,           ///< SigType: Memory write
 
   // Misc signals
-  FENCE     = 100           ///< SigType: Fence
+  FENCE     = 100,           ///< SigType: Fence
+
+  // VLIW signals
+  CTRL_IN   = 101,          ///< SigType: CtrlIn
+  CTRL_OUT  = 102,          ///< SigType: CtrlOut
+
+  DATA_IN   = 103,          ///< SigType: DataIn
+  DATA_OUT  = 104           ///< SigType: DataOut
+
 }SigType;                   ///< CoreGenSigMap: Emumerated types to represent signals
 
 class SCSig{

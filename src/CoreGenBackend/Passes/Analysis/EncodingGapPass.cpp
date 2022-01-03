@@ -21,6 +21,35 @@ EncodingGapPass::EncodingGapPass(std::ostream *O,
 EncodingGapPass::~EncodingGapPass(){
 }
 
+void EncodingGapPass::ExamineFieldGap( unsigned Width,
+                                       std::vector<unsigned> StartBits,
+                                       std::vector<unsigned> EndBits ){
+  std::vector<unsigned> UndefinedBits;
+  bool found = false;
+  // examine each bit in the instruction field and determine
+  // if it falls within a defined field
+  for( unsigned i=0; i<Width; i++ ){
+    for( unsigned j=0; j<StartBits.size(); j++ ){
+      if( (i >= StartBits[j]) && (i<=EndBits[j]) ){
+        found = true;
+      }
+    }
+    if( !found ){
+      UndefinedBits.push_back(i);
+    }
+    found = false;
+  }
+
+  // print the undefined bits
+  std::string Bits = "[";
+  for( unsigned i=0; i<UndefinedBits.size(); i++ ){
+    Bits += std::to_string(UndefinedBits[i]);
+    Bits += " ";
+  }
+  Bits += "]";
+  WriteMsg( "Undefined encoding bits = " + Bits );
+}
+
 bool EncodingGapPass::ExamineGap( CoreGenDAG *D, CoreGenInstFormat *IF ){
 
   // retrieve all the starting and ending bit positions
@@ -67,6 +96,9 @@ bool EncodingGapPass::ExamineGap( CoreGenDAG *D, CoreGenInstFormat *IF ){
     WriteMsg( "Field definitions do not encapsulate instruction format width; InstFormat = " +
               IF->GetName() + " defines " + std::to_string(IF->GetFormatWidth()) +
               " bits; found " + std::to_string(Width) + " bits" );
+    ExamineFieldGap(IF->GetFormatWidth(),
+                    StartBits,
+                    EndBits);
     rtn = false;
   }
 

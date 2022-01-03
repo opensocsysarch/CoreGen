@@ -110,6 +110,28 @@ CoreGenBackend::~CoreGenBackend(){
   delete Errno;
 }
 
+bool CoreGenBackend::ExecuteStoneCutterCodegen(){
+  // create the codegen object
+  CoreGenCodegen *CG = new CoreGenCodegen(Top,
+                                          Proj,
+                                          Env,
+                                          Errno,
+                                          PluginMgr);
+
+  if( CG == nullptr ){
+    Errno->SetError(CGERR_ERROR, "Could not create codegen object");
+    return false;
+  }
+
+  // Execute it
+  bool rtn = CG->ExecuteStoneCutterCodegen();
+
+  // delete and clean everything up
+  delete CG;
+  return rtn;
+  return true;
+}
+
 bool CoreGenBackend::ExecuteLLVMCodegen(std::string CompVer){
   // Create the codegen object
   CoreGenCodegen *CG = new CoreGenCodegen(Top,

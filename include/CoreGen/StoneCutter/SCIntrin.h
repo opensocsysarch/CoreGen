@@ -66,9 +66,22 @@ public:
   /// Retrieve the target keyword
   std::string GetKeyword() { return Keyword; }
 
+  /// Retrieve the error message
+  std::string GetErrMsg() { return ErrMsg; }
+
   /// Determine whether the target intrinsic implements a fused operation
   bool IsFusedOp() { return isFOp; }
 
+  /// Determine width of first intrinsic argument (TODO: Make for all operands) 
+  unsigned DeriveWidth(Instruction &I){
+    unsigned width = 0;
+    if( auto CInt = dyn_cast<ConstantInt>(I.getOperand(0)) ){
+      width = (unsigned)(CInt->getZExtValue());
+    }else{
+      width = I.getOperand(0)->getType()->getIntegerBitWidth();
+    }
+    return width;
+  }
   // virtual functions
 
   /// Executes the intrinsic codegenerator
@@ -88,6 +101,7 @@ public:
 
 protected:
   std::vector<SCSig *> ISignals;    ///< Intrinsic Signals
+  std::string ErrMsg;               ///< Error Message
 
 private:
   unsigned NumInputs;               ///< Number of required input arguments
