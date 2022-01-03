@@ -9,6 +9,10 @@
 //
 
 #include "CoreGen/StoneCutter/SCParser.h"
+#include "llvm/IR/Attributes.h"
+#include "llvm/IR/Instructions.h"
+#include <cstdlib>
+#include <string>
 
 LLVMContext SCParser::TheContext;
 IRBuilder<> SCParser::Builder(TheContext);
@@ -2766,6 +2770,8 @@ Value *CallExprAST::codegen() {
   if (CalleeF->arg_size() != Args.size())
     return LogErrorV("Incorrect # arguments passed");
 
+  // ----- Attributes "field_name" "field_type"
+  // TheModule (See SCPipeInfo.cpp)
   std::vector<Value *> ArgsV;
   for (unsigned i = 0, e = Args.size(); i != e; ++i) {
     ArgsV.push_back(Args[i]->codegen());
@@ -2774,26 +2780,51 @@ Value *CallExprAST::codegen() {
   }
 
   Value *CI = SCParser::Builder.CreateCall(CalleeF, ArgsV, "calltmp");
-  if( SCParser::NameMDNode ){
-    cast<Instruction>(CI)->setMetadata("pipe.pipeName",SCParser::NameMDNode);
-    cast<Instruction>(CI)->setMetadata("pipe.pipeLine",SCParser::PipelineMDNode);
-    cast<Instruction>(CI)->setMetadata("pipe.pipeInstance",SCParser::InstanceMDNode);
-  }
-
-  // set the I/O Metadata
+  std::string IOSigTypeStr;
+  std::string IOSrcTypeStr;
+  // VLIW IN/OUT
   if( (Callee=="IN") || (Callee=="OUT") ){
-    std::string IOTypeStr;
+    std::string IOSigTypeStr;
     std::string IOSrcTypeStr;
+
+    // Check if global (ie. Not a tmp)
+    if( auto IOArg = TheModule->getGlobalVariable(ArgsV.at(0)->getName()) ){
+      AttributeSet AttrSet = IOArg->getAttributes();
+      if( AttrSet.hasAttribute("fieldtype") ){
+        std::string FieldType = AttrSet.getAttribute("fieldtype").getAsString();
+        // InstFormatField of type register
+        if( FieldType == "register"){
+          IOSigTypeStr = "DATA";
+          IOSrcTypeStr = "REG";
+        }
+        else{ //if( FieldType == "encoding") TODO: Change to `Else if` so edge cases covered
+          IOSigTypeStr = "CTRL";
+          IOSrcTypeStr = "ENC";
+        }
+      }
+    // Not a global value ->  variable
+    }else{
+      IOSigTypeStr = "DATA"; 
+      IOSrcTypeStr = "VAR";
+    }
 
     // IOSigType will be "CTRL" or "DATA"
     MDNode *IOSigType = MDNode::get(SCParser::TheContext,
-                                 MDString::get(SCParser::TheContext,IOTypeStr));
+                                 MDString::get(SCParser::TheContext,IOSigTypeStr));
 
     // IOSrcType will be "REGCLASS", "VAR", or "ENC"
     MDNode *IOSrcType = MDNode::get(SCParser::TheContext,
                                 MDString::get(SCParser::TheContext,IOSrcTypeStr));
+
     cast<Instruction>(CI)->setMetadata("vliw.type",IOSigType);
     cast<Instruction>(CI)->setMetadata("vliw.src",IOSrcType);
+
+    }
+
+  if( SCParser::NameMDNode ){
+    cast<Instruction>(CI)->setMetadata("pipe.pipeName",SCParser::NameMDNode);
+    cast<Instruction>(CI)->setMetadata("pipe.pipeLine",SCParser::PipelineMDNode);
+    cast<Instruction>(CI)->setMetadata("pipe.pipeInstance",SCParser::InstanceMDNode);
   }
 
   return CI;
@@ -2808,7 +2839,7 @@ Function *PrototypeAST::codegen() {
                               Type::getIntNTy(SCParser::TheContext,64));
   FunctionType *FT =
       FunctionType::get(Type::getIntNTy(SCParser::TheContext,64), Doubles, false);
-
+ 
   Function *F =
       Function::Create(FT, Function::ExternalLinkage, Name,
                        SCParser::TheModule.get());
@@ -3292,12 +3323,8 @@ Value *IfExprAST::codegen() {
 // Error Handlers
 //===----------------------------------------------------------------------===//
 
-unsigned SCParser::GetLineNum(){
-  return Lex->GetLineNum() - Intrins.size();
-}
-
 std::unique_ptr<ExprAST> SCParser::LogError(std::string Str) {
-  Msgs->PrintMsg( L_ERROR, "Line " + std::to_string(GetLineNum()) + " : " + Str );
+  Msgs->PrintMsg( L_ERROR, "Line " + std::to_string(Lex->GetLineNum()) + " : " + Str );
   return nullptr;
 }
 
