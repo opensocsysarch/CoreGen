@@ -3323,8 +3323,14 @@ Value *IfExprAST::codegen() {
 // Error Handlers
 //===----------------------------------------------------------------------===//
 
+unsigned SCParser::GetLineNum(){
+  return Lex->GetLineNum() - Intrins.size();
+}
+
 std::unique_ptr<ExprAST> SCParser::LogError(std::string Str) {
-  Msgs->PrintMsg( L_ERROR, "Line " + std::to_string(Lex->GetLineNum()) + " : " + Str );
+  Msgs->PrintMsg( L_ERROR, "Line " +
+                  std::to_string(GetLineNum()) +
+                  " : " + Str );
   return nullptr;
 }
 
