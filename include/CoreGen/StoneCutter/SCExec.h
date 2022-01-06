@@ -75,6 +75,9 @@ private:
   /// SCExec: Print the list of StoneCutter passes
   bool PrintSCPassList();
 
+  /// SCExec: Validates whether the target file is a regular file
+  bool ValidateFile(std::string File);
+
 public:
   /// SCExec: Constructor
   SCExec(SCOpts *, SCMsg *);
