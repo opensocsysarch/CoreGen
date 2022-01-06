@@ -14,6 +14,7 @@ if(BUILD_COREGEN_STONECUTTER_TESTING)
   set(BUILD_COREGEN_STONECUTTER_CODEGEN_TESTING "ON")
   set(BUILD_COREGEN_STONECUTTER_SIGMAP_TESTING "ON")
   set(BUILD_COREGEN_STONECUTTER_SCSIGV_TESTING "ON")
+  set(BUILD_COREGEN_STONECUTTER_PIPELINER_TESTING "ON")
 endif()
 
 add_subdirectory(CLI)
@@ -22,5 +23,6 @@ add_subdirectory(Parser)
 add_subdirectory(CodeGen)
 add_subdirectory(SigMap)
 add_subdirectory(SCSigV)
+add_subdirectory(Pipeliner)
 
 #-- EOF
