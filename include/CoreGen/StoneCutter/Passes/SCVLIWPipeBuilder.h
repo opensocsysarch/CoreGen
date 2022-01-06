@@ -30,6 +30,29 @@ class SCVLIWPipeBuilder : public SCPass {
 private:
   CoreGenSigMap *SigMap;              ///< SCVLIWPipeBuilder: Signal map object
 
+  std::vector<std::pair<std::string,bool (SCVLIWPipeBuilder::*)()>> Enabled;   ///< SCVLIWPipeBuilder: Enabled sub-passes
+
+  std::vector<std::pair<std::string,unsigned>> VLIWStages;  ///< SCVLIWPipeBuilder: VLIW Stages
+
+  /// SCVLIWPipeBuilder: Enable sub-passes
+  bool EnableSubPasses();
+
+  /// SCVLIWPipeBuilder: Execute the various optimization phases
+  bool Optimize();
+
+  /// SCVLIWPipeBuilder: Write the signal map back
+  bool WriteSigMap();
+
+  /// SCVLIWPipeBuilder: Derive the pipeline stages that are VLIW
+  bool DeriveVLIWStages();
+
+  // ----------------------------------------------------------
+  // Sub Passes
+  // ----------------------------------------------------------
+
+  /// SCVLIWPipeBuilder SubPass: Determines whether the pipeline stages are monotonically increasing
+  bool DiscoverPipeSlots();
+
 public:
   /// Default cosntructor
   SCVLIWPipeBuilder(Module *TM, SCOpts *O, SCMsg *M);

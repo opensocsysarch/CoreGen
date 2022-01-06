@@ -118,7 +118,8 @@ bool SCInstArg::CheckInstArgs(){
     // we only need to examine local functions
     // our stonecutter intrinsics are currently defined as function decl's
     // with no bodies
-    if( Func.begin() != Func.end() ){
+    // we also don't need to examine VLIW functions
+    if( (Func.begin() != Func.end()) && !IsVLIWStage(Func) ){
       // walk all the arguments
       for( auto FuncArg = Func.arg_begin(); FuncArg != Func.arg_end(); ++FuncArg ){
         // registers and subregisters

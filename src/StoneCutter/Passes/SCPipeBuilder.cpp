@@ -1247,7 +1247,7 @@ bool SCPipeBuilder::Execute(){
     return false;
   }
 
-  // write everything back to the sigmapA
+  // write everything back to the sigmap
   if( !WriteSigMap() ){
     this->PrintMsg( L_ERROR, "Could not write signal map for the prescribed pipeline" );
     FreeMat();

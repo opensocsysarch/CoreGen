@@ -330,7 +330,9 @@ bool SCSigMap::TranslateCallSig(Function &F, Instruction &I){
             // search for temporaries that match the instruction:irname mapping
             std::string TmpReg = Signals->GetTempMap(F.getName().str(),
                                                      Arg->get()->getName().str());
-            if( TmpReg.length() == 0 ){
+            // we only eject if the instruction is no VLIW.  VLIW stages are permitted
+            // to pass temporaries between one another using arguments
+            if( TmpReg.length() == 0 && !IsVLIWStage(F) ){
               // we cannot create a new temp on register read
               return false;
             }
@@ -576,7 +578,7 @@ bool SCSigMap::TranslateBranch(Function &F, Instruction &I){
     // then insert a new signal.
     signed UncDist = GetBranchDistance(F,I,BI->getSuccessor(0)->front());
     if( (!IsNullBranchTarget(BI->getSuccessor(0)->front())) &&
-        (UncDist != 1) )
+        (UncDist != 1) ){
       Signals->InsertSignal(new SCSig(BR_N,
                                       1,
                                       UncDist,
@@ -585,6 +587,7 @@ bool SCSigMap::TranslateBranch(Function &F, Instruction &I){
                                       GetMDPipeName(I)));
       // set the VLIW flag
       Signals->GetSignal(Signals->GetNumSignals()-1)->SetVLIW(VLIW);
+    }
   }else{
     //
     // Conditional Branch
@@ -790,83 +793,178 @@ bool SCSigMap::CheckSigReq( Function &F, Instruction &I ){
   switch( I.getOpcode() ){
     // binary signals
   case Instruction::Add :
-    if( !TranslateBinaryOp(F,I,ALU_ADD) )
+    if( !TranslateBinaryOp(F,I,ALU_ADD) ){
+      this->PrintMsg( L_ERROR,
+                      "Failed to translate binary Add operation at Instruction=" +
+                      std::string(I.getOpcodeName()) + " within Function=" +
+                      F.getName().str() );
       return false;
+    }
     break;
   case Instruction::FAdd :
-    if( !TranslateBinaryOp(F,I,ALU_FADD) )
+    if( !TranslateBinaryOp(F,I,ALU_FADD) ){
+      this->PrintMsg( L_ERROR,
+                      "Failed to translate binary FAdd operation at Instruction=" +
+                      std::string(I.getOpcodeName()) + " within Function=" +
+                      F.getName().str() );
       return false;
+    }
     break;
   case Instruction::Sub :
-    if( !TranslateBinaryOp(F,I,ALU_SUB) )
+    if( !TranslateBinaryOp(F,I,ALU_SUB) ){
+      this->PrintMsg( L_ERROR,
+                      "Failed to translate binary Sub operation at Instruction=" +
+                      std::string(I.getOpcodeName()) + " within Function=" +
+                      F.getName().str() );
       return false;
+    }
     break;
   case Instruction::FSub :
-    if( !TranslateBinaryOp(F,I,ALU_FSUB) )
+    if( !TranslateBinaryOp(F,I,ALU_FSUB) ){
+      this->PrintMsg( L_ERROR,
+                      "Failed to translate binary FSub operation at Instruction=" +
+                      std::string(I.getOpcodeName()) + " within Function=" +
+                      F.getName().str() );
       return false;
+    }
     break;
   case Instruction::Mul :
-    if( !TranslateBinaryOp(F,I,ALU_MUL) )
+    if( !TranslateBinaryOp(F,I,ALU_MUL) ){
+      this->PrintMsg( L_ERROR,
+                      "Failed to translate binary Mul operation at Instruction=" +
+                      std::string(I.getOpcodeName()) + " within Function=" +
+                      F.getName().str() );
       return false;
+    }
     break;
   case Instruction::FMul :
-    if( !TranslateBinaryOp(F,I,ALU_FMUL) )
+    if( !TranslateBinaryOp(F,I,ALU_FMUL) ){
+      this->PrintMsg( L_ERROR,
+                      "Failed to translate binary FMul operation at Instruction=" +
+                      std::string(I.getOpcodeName()) + " within Function=" +
+                      F.getName().str() );
       return false;
+    }
     break;
   case Instruction::UDiv :
-    if( !TranslateBinaryOp(F,I,ALU_DIV) )
+    if( !TranslateBinaryOp(F,I,ALU_DIV) ){
+      this->PrintMsg( L_ERROR,
+                      "Failed to translate binary UDiv operation at Instruction=" +
+                      std::string(I.getOpcodeName()) + " within Function=" +
+                      F.getName().str() );
       return false;
+    }
     break;
   case Instruction::SDiv :
-    if( !TranslateBinaryOp(F,I,ALU_DIV) )
+    if( !TranslateBinaryOp(F,I,ALU_DIV) ){
+      this->PrintMsg( L_ERROR,
+                      "Failed to translate binary SDiv operation at Instruction=" +
+                      std::string(I.getOpcodeName()) + " within Function=" +
+                      F.getName().str() );
       return false;
+    }
     break;
   case Instruction::FDiv :
-    if( !TranslateBinaryOp(F,I,ALU_FDIV) )
+    if( !TranslateBinaryOp(F,I,ALU_FDIV) ){
+      this->PrintMsg( L_ERROR,
+                      "Failed to translate binary FDiv operation at Instruction=" +
+                      std::string(I.getOpcodeName()) + " within Function=" +
+                      F.getName().str() );
       return false;
+    }
     break;
   case Instruction::URem :
-    if( !TranslateBinaryOp(F,I,ALU_REM) )
+    if( !TranslateBinaryOp(F,I,ALU_REM) ){
+      this->PrintMsg( L_ERROR,
+                      "Failed to translate binary URem operation at Instruction=" +
+                      std::string(I.getOpcodeName()) + " within Function=" +
+                      F.getName().str() );
       return false;
+    }
     break;
   case Instruction::SRem :
-    if( !TranslateBinaryOp(F,I,ALU_REM) )
+    if( !TranslateBinaryOp(F,I,ALU_REM) ){
+      this->PrintMsg( L_ERROR,
+                      "Failed to translate binary SRem operation at Instruction=" +
+                      std::string(I.getOpcodeName()) + " within Function=" +
+                      F.getName().str() );
       return false;
+    }
     break;
   case Instruction::FRem :
-    if( !TranslateBinaryOp(F,I,ALU_FREM) )
+    if( !TranslateBinaryOp(F,I,ALU_FREM) ){
+      this->PrintMsg( L_ERROR,
+                      "Failed to translate binary FRem operation at Instruction=" +
+                      std::string(I.getOpcodeName()) + " within Function=" +
+                      F.getName().str() );
       return false;
+    }
     break;
     // logical signals
   case Instruction::Shl :
-    if( !TranslateLogicalOp(F,I,ALU_SLL) )
+    if( !TranslateLogicalOp(F,I,ALU_SLL) ){
+      this->PrintMsg( L_ERROR,
+                      "Failed to translate logical Shl operation at Instruction=" +
+                      std::string(I.getOpcodeName()) + " within Function=" +
+                      F.getName().str() );
       return false;
+    }
     break;
   case Instruction::LShr :
-    if( !TranslateLogicalOp(F,I,ALU_SRL) )
+    if( !TranslateLogicalOp(F,I,ALU_SRL) ){
+      this->PrintMsg( L_ERROR,
+                      "Failed to translate logical LShl operation at Instruction=" +
+                      std::string(I.getOpcodeName()) + " within Function=" +
+                      F.getName().str() );
       return false;
+    }
     break;
   case Instruction::AShr :
-    if( !TranslateLogicalOp(F,I,ALU_SRA) )
+    if( !TranslateLogicalOp(F,I,ALU_SRA) ){
+      this->PrintMsg( L_ERROR,
+                      "Failed to translate logical Ahl operation at Instruction=" +
+                      std::string(I.getOpcodeName()) + " within Function=" +
+                      F.getName().str() );
       return false;
+    }
     break;
   case Instruction::And :
-    if( !TranslateLogicalOp(F,I,ALU_AND) )
+    if( !TranslateLogicalOp(F,I,ALU_AND) ){
+      this->PrintMsg( L_ERROR,
+                      "Failed to translate logical And operation at Instruction=" +
+                      std::string(I.getOpcodeName()) + " within Function=" +
+                      F.getName().str() );
       return false;
+    }
     break;
   case Instruction::Or :
-    if( !TranslateLogicalOp(F,I,ALU_OR) )
+    if( !TranslateLogicalOp(F,I,ALU_OR) ){
+      this->PrintMsg( L_ERROR,
+                      "Failed to translate logical Or operation at Instruction=" +
+                      std::string(I.getOpcodeName()) + " within Function=" +
+                      F.getName().str() );
       return false;
+    }
     break;
   case Instruction::Xor :
-    if( !TranslateLogicalOp(F,I,ALU_XOR) )
+    if( !TranslateLogicalOp(F,I,ALU_XOR) ){
+      this->PrintMsg( L_ERROR,
+                      "Failed to translate logical Xor operation at Instruction=" +
+                      std::string(I.getOpcodeName()) + " within Function=" +
+                      F.getName().str() );
       return false;
+    }
     break;
     // memory access signals
   case Instruction::Load :
   case Instruction::Store :
-    if( !TranslateMemOp(F,I) )
+    if( !TranslateMemOp(F,I) ){
+      this->PrintMsg( L_ERROR,
+                      "Failed to translate memory operation at Instruction=" +
+                      std::string(I.getOpcodeName()) + " within Function=" +
+                      F.getName().str() );
       return false;
+    }
     break;
     // cast signals
   case Instruction::ZExt :
@@ -875,24 +973,49 @@ bool SCSigMap::CheckSigReq( Function &F, Instruction &I ){
     break;
     // other signals (cmp, etc)
   case Instruction::ICmp :
-    if( !TranslateCmpOp(F,I) )
+    if( !TranslateCmpOp(F,I) ){
+      this->PrintMsg( L_ERROR,
+                      "Failed to translate ICmp operation at Instruction=" +
+                      std::string(I.getOpcodeName()) + " within Function=" +
+                      F.getName().str() );
       return false;
+    }
     break;
   case Instruction::FCmp :
-    if( !TranslateCmpOp(F,I) )
+    if( !TranslateCmpOp(F,I) ){
+      this->PrintMsg( L_ERROR,
+                      "Failed to translate FCmp operation at Instruction=" +
+                      std::string(I.getOpcodeName()) + " within Function=" +
+                      F.getName().str() );
       return false;
+    }
     break;
   case Instruction::Call :
-    if( !TranslateCallSig(F,I) )
+    if( !TranslateCallSig(F,I) ){
+      this->PrintMsg( L_ERROR,
+                      "Failed to translate Call operation at Instruction=" +
+                      std::string(I.getOpcodeName()) + " within Function=" +
+                      F.getName().str() );
       return false;
+    }
     break;
   case Instruction::Select :
-    if( !TranslateSelectSig(F,I) )
+    if( !TranslateSelectSig(F,I) ){
+      this->PrintMsg( L_ERROR,
+                      "Failed to translate Select operation at Instruction=" +
+                      std::string(I.getOpcodeName()) + " within Function=" +
+                      F.getName().str() );
       return false;
+    }
     break;
   case Instruction::Br :
-    if( !TranslateBranch(F,I) )
+    if( !TranslateBranch(F,I) ){
+      this->PrintMsg( L_ERROR,
+                      "Failed to translate Branch operation at Instruction=" +
+                      std::string(I.getOpcodeName()) + " within Function=" +
+                      F.getName().str() );
       return false;
+    }
     break;
   case Instruction::FPToUI :
   case Instruction::FPToSI :

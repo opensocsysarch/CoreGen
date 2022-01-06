@@ -20,9 +20,111 @@ SCVLIWPipeBuilder::SCVLIWPipeBuilder(Module *TM,
 SCVLIWPipeBuilder::~SCVLIWPipeBuilder(){
 }
 
+bool SCVLIWPipeBuilder::DiscoverPipeSlots(){
+  std::vector<unsigned> Slots;
+
+  // build a vector of slot numbers
+  for( unsigned i=0; i<VLIWStages.size(); i++ ){
+    Slots.push_back(VLIWStages[i].second);
+  }
+
+  // sort and make the vector unique
+  std::sort(Slots.begin(), Slots.end());
+  Slots.erase( std::unique(Slots.begin(),Slots.end()), Slots.end());
+
+  // walk all the unique slots and look for monotonically increasing values
+  for( unsigned i=1; i<Slots.size(); i++ ){
+    if( Slots[i] != (Slots[i-1]+1) ){
+      this->PrintMsg( L_ERROR, "Found a gap in slot numbering between " +
+                              std::to_string(Slots[i-1]) + " and " +
+                              std::to_string(Slots[i]) );
+      return false;
+    }
+  }
+
+  return true;
+}
+
+bool SCVLIWPipeBuilder::DeriveVLIWStages(){
+  for( auto &Func : TheModule->getFunctionList() ){
+    if( IsVLIWStage(Func) ){
+      // found a vliw function
+      VLIWStages.push_back(std::make_pair(Func.getName(),
+                                          GetVLIWStage(Func)));
+    }
+  }
+  return true;
+}
+
+bool SCVLIWPipeBuilder::EnableSubPasses(){
+  if( Opts->IsVerbose() )
+    this->PrintRawMsg("Enabling VLIW Pipeline Passes");
+
+  Enabled.push_back(std::make_pair("DiscoverPipeSlots",
+                                   &SCVLIWPipeBuilder::DiscoverPipeSlots));
+  return true;
+}
+
+bool SCVLIWPipeBuilder::Optimize(){
+  bool (SCVLIWPipeBuilder::*Pass)() = nullptr;
+
+  for( unsigned i=0; i<Enabled.size(); i++ ){
+    Pass = Enabled[i].second;
+    if( Opts->IsVerbose() ){
+      this->PrintRawMsg("Executing subpass: " + Enabled[i].first );
+    }
+    if( !(*this.*Pass)() ){
+      this->PrintMsg( L_ERROR, "Subpass failed: " + Enabled[i].first );
+      return false;
+    }
+    if( !WriteSigMap() ){
+      this->PrintMsg( L_ERROR, "Failed to write signal map following " +
+                      Enabled[i].first);
+      return false;
+    }
+  }
+
+  return true;
+}
+
+bool SCVLIWPipeBuilder::WriteSigMap(){
+  return true;
+}
+
 bool SCVLIWPipeBuilder::Execute(){
   if( !TheModule ){
     this->PrintMsg( L_ERROR, "LLVM IR Module is null" );
+    return false;
+  }
+
+  // Retrieve the VLIW stages
+  if( !DeriveVLIWStages() ){
+    this->PrintMsg( L_ERROR, "Encountered errors deriving VLIW stages" );
+    return false;
+  }
+
+  if( VLIWStages.size() == 0 ){
+    // no stages to optimize, eject
+    if( Opts->IsVerbose() ){
+      this->PrintRawMsg("No VLIW stages found");
+    }
+    return true;
+  }
+
+  // Enable all the subpasses
+  if( !EnableSubPasses() ){
+    this->PrintMsg( L_ERROR, "Could not initialize sub-passes" );
+    return false;
+  }
+
+  // Execute the optimizations/checkers
+  if( !Optimize() ){
+    this->PrintMsg( L_ERROR, "Encountered errors executing the the optimization phases" );
+    return false;
+  }
+
+  // Write the signal map back out
+  if( !WriteSigMap() ){
     return false;
   }
 
