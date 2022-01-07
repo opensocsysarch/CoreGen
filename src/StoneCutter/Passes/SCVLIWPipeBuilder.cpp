@@ -20,6 +20,49 @@ SCVLIWPipeBuilder::SCVLIWPipeBuilder(Module *TM,
 SCVLIWPipeBuilder::~SCVLIWPipeBuilder(){
 }
 
+bool SCVLIWPipeBuilder::WireIO(VLIWGraph *Graph){
+  for( unsigned i=0; i<VLIWStages.size(); i++ ){
+    Function *Func = TheModule->getFunction(StringRef(VLIWStages[i].first));
+    if( !Func ){
+      this->PrintMsg( L_ERROR, "Failed to find VLIW function in the symbol table: " +
+                      VLIWStages[i].first);
+      return false;
+    }
+
+    for( auto &BB : Func->getBasicBlockList() ){
+      for( auto &Inst : BB.getInstList() ){
+        if( auto *CInst = dyn_cast<CallInst>(&Inst) ){
+          if( CInst->getCalledFunction()->getName().str() ==
+              "OUT" ){
+          }
+        }
+      }
+    }
+  }
+  return true;
+}
+
+bool SCVLIWPipeBuilder::WireUpStages(){
+  VLIWGraph *Graph = new VLIWGraph();
+
+  // insert all the stages into the graph w/o edges
+  for( unsigned i=0; i<VLIWStages.size(); i++ ){
+    VLIWNode *N = new VLIWNode(VLIWStages[i].first,
+                               VLIWStages[i].second);
+    Graph->InsertNode(N);
+  }
+
+  // walk the vliw stages in order.  wire up the necessary
+  // output I/O signals to the subsequent stages
+  if( !WireIO(Graph) ){
+    delete Graph;
+    return false;
+  }
+
+  delete Graph;
+  return true;
+}
+
 bool SCVLIWPipeBuilder::DiscoverPipeSlots(){
   std::vector<unsigned> Slots;
 
@@ -45,6 +88,11 @@ bool SCVLIWPipeBuilder::DiscoverPipeSlots(){
   return true;
 }
 
+bool SortBySec(const std::pair<std::string,unsigned> &a,
+               const std::pair<std::string,unsigned> &b){
+  return (a.second < b.second);
+}
+
 bool SCVLIWPipeBuilder::DeriveVLIWStages(){
   for( auto &Func : TheModule->getFunctionList() ){
     if( IsVLIWStage(Func) ){
@@ -53,6 +101,10 @@ bool SCVLIWPipeBuilder::DeriveVLIWStages(){
                                           GetVLIWStage(Func)));
     }
   }
+
+  // sort the vector by the stage (.second)
+  std::sort(VLIWStages.begin(), VLIWStages.end(), SortBySec);
+
   return true;
 }
 
@@ -62,6 +114,8 @@ bool SCVLIWPipeBuilder::EnableSubPasses(){
 
   Enabled.push_back(std::make_pair("DiscoverPipeSlots",
                                    &SCVLIWPipeBuilder::DiscoverPipeSlots));
+  Enabled.push_back(std::make_pair("WireUpStages",
+                                   &SCVLIWPipeBuilder::WireUpStages));
   return true;
 }
 

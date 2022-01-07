@@ -2454,6 +2454,7 @@ Value *ForExprAST::codegen() {
 Value *VariableExprAST::codegen() {
   // Look this variable up in the function.
   Value *V = SCParser::NamedValues[Name];
+
   if (!V){
     // variable wasn't in the function scope, check the globals
     V = SCParser::GlobalNamedValues[Name];
@@ -2786,6 +2787,8 @@ Value *CallExprAST::codegen() {
   if( (Callee=="IN") || (Callee=="OUT") ){
     std::string IOSigTypeStr;
     std::string IOSrcTypeStr;
+    std::string OrigName = ArgsV.at(0)->getName().str();
+    OrigName.pop_back();
 
     // Check if global (ie. Not a tmp)
     if( auto IOArg = TheModule->getGlobalVariable(ArgsV.at(0)->getName()) ){
@@ -2796,11 +2799,11 @@ Value *CallExprAST::codegen() {
         if( FieldType == "register"){
           IOSigTypeStr = "DATA";
           IOSrcTypeStr = "REG";
-        }
-        else{ //if( FieldType == "encoding") TODO: Change to `Else if` so edge cases covered
+        }else{ //if( FieldType == "encoding") TODO: Change to `Else if` so edge cases covered
           IOSigTypeStr = "CTRL";
           IOSrcTypeStr = "ENC";
         }
+        // TODO: also need to handle immediate values `imm`
       }
     // Not a global value ->  variable
     }else{
@@ -2816,10 +2819,15 @@ Value *CallExprAST::codegen() {
     MDNode *IOSrcType = MDNode::get(SCParser::TheContext,
                                 MDString::get(SCParser::TheContext,IOSrcTypeStr));
 
+    // ArgNamemD will be the original argument name from the intrinsic call
+    MDNode *ArgNameMD = MDNode::get(SCParser::TheContext,
+                                    MDString::get(SCParser::TheContext,OrigName));
+
+    // write the metadata
     cast<Instruction>(CI)->setMetadata("vliw.type",IOSigType);
     cast<Instruction>(CI)->setMetadata("vliw.src",IOSrcType);
-
-    }
+    cast<Instruction>(CI)->setMetadata("vliw.arg",ArgNameMD);
+  }
 
   if( SCParser::NameMDNode ){
     cast<Instruction>(CI)->setMetadata("pipe.pipeName",SCParser::NameMDNode);

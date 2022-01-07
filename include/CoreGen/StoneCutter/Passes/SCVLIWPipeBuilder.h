@@ -26,6 +26,76 @@
 #include "CoreGen/StoneCutter/SCPass.h"
 #include "CoreGen/CoreGenSigMap/CoreGenSigMap.h"
 
+class VLIWSig{
+private:
+  std::string Name;
+  unsigned Width;
+  SigType Type;
+
+public:
+  VLIWSig(std::string N,
+          unsigned W,
+          SigType T )
+    : Name(N), Width(W), Type(T) {}
+  ~VLIWSig();
+};
+
+class VLIWEdge{
+private:
+  std::string Src;
+  std::string Dest;
+  std::vector<VLIWSig *> Signals;
+
+public:
+  VLIWEdge(std::string S,
+           std::string D)
+    : Src(S), Dest(D) { }
+  ~VLIWEdge() {Signals.clear();}
+  void InsertSignal(VLIWSig *S){Signals.push_back(S);}
+  unsigned GetNumSignals(){return Signals.size();}
+  VLIWSig *GetSignal(unsigned J){
+    if( J >((Signals.size())-1) )
+      return nullptr;
+    return Signals[J];
+  }
+};
+
+class VLIWNode{
+private:
+  std::string Name;
+  unsigned Stage;
+  std::vector<VLIWEdge *> Edges;
+
+public:
+  VLIWNode(std::string N,
+           unsigned S)
+    : Name(N), Stage(S) {}
+  ~VLIWNode() {Edges.clear();}
+  void InsertEdge(VLIWEdge *E){Edges.push_back(E);}
+  unsigned GetNumEdges(){return Edges.size();}
+  VLIWEdge *GetEdge(unsigned J){
+    if( J > ((Edges.size())-1) )
+      return nullptr;
+    return Edges[J];
+  }
+};
+
+class VLIWGraph{
+private:
+  std::vector<VLIWNode *> Nodes;
+
+public:
+  VLIWGraph() { }
+  ~VLIWGraph() { Nodes.clear(); }
+  void InsertNode( VLIWNode *N) { Nodes.push_back(N); }
+  unsigned GetNumNodes() { return Nodes.size(); }
+  VLIWNode *GetNode(unsigned J){
+    if( J > ((Nodes.size())-1) )
+      return nullptr;
+    return Nodes[J];
+  }
+};
+
 class SCVLIWPipeBuilder : public SCPass {
 private:
   CoreGenSigMap *SigMap;              ///< SCVLIWPipeBuilder: Signal map object
@@ -52,6 +122,12 @@ private:
 
   /// SCVLIWPipeBuilder SubPass: Determines whether the pipeline stages are monotonically increasing
   bool DiscoverPipeSlots();
+
+  /// SCVLIWPipeBuilder SubPass: Peforms wireup of all input/output functions of each stage
+  bool WireUpStages();
+
+  /// SCVLIWPipeBuilder SubSubPass: Wires up all the I/Os between intrinsics and arguments
+  bool WireIO(VLIWGraph *Graph);
 
 public:
   /// Default cosntructor
