@@ -58,6 +58,8 @@ public:
       return nullptr;
     return Signals[J];
   }
+  std::string GetSrc() { return Src; }
+  std::string GetDest() { return Dest; }
 };
 
 class VLIWNode{
@@ -78,6 +80,8 @@ public:
       return nullptr;
     return Edges[J];
   }
+  std::string GetName() { return Name; }
+  unsigned GetStage() { return Stage; }
 };
 
 class VLIWGraph{
@@ -93,6 +97,17 @@ public:
     if( J > ((Nodes.size())-1) )
       return nullptr;
     return Nodes[J];
+  }
+  VLIWNode *GetNodeByName(std::string Func,
+                          unsigned Stage){
+    VLIWNode *N = nullptr;
+    for( unsigned i=0; i<Nodes.size(); i++ ){
+      if( (Nodes[i]->GetName() == Func) &&
+          (Nodes[i]->GetStage() == Stage) ){
+        N = Nodes[i];
+      }
+    }
+    return N;
   }
 };
 
@@ -128,6 +143,16 @@ private:
 
   /// SCVLIWPipeBuilder SubSubPass: Wires up all the I/Os between intrinsics and arguments
   bool WireIO(VLIWGraph *Graph);
+
+  /// SCVLIWPipeBuilder SubSubPass: Creates the correct edges and signals for the Src/Dest pairs
+  void InsertSignalEdge(VLIWGraph *Graph,
+                        std::string SrcFunc,
+                        std::string DestFunc,
+                        unsigned SrcStage,
+                        unsigned DestStage,
+                        std::string Arg,
+                        std::string Type,
+                        unsigned Width);
 
 public:
   /// Default cosntructor

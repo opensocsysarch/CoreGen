@@ -477,6 +477,30 @@ std::string SCPass::StrToUpper(std::string S){
   return S;
 }
 
+std::string SCPass::GetVLIWArgName(Instruction &I){
+  std::string Str;
+  if( MDNode *N = I.getMetadata("vliw.arg")) {
+    Str = cast<MDString>(N->getOperand(0))->getString().str();
+  }
+  return Str;
+}
+
+std::string SCPass::GetVLIWArgType(Instruction &I){
+  std::string Str = "DATA";
+  if( MDNode *N = I.getMetadata("vliw.type")) {
+    Str = cast<MDString>(N->getOperand(0))->getString().str();
+  }
+  return Str;
+}
+
+unsigned SCPass::GetVLIWArgWidth(Instruction &I){
+  auto *CInst = dyn_cast<CallInst>(&I);
+  if( CInst ){
+    return CInst->getOperand(0)->getType()->getIntegerBitWidth();
+  }
+  return 0;
+}
+
 std::string SCPass::GetMDPipeName(Instruction &I){
   std::string Str;
   if( !VLIW ){

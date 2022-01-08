@@ -20,6 +20,54 @@ SCVLIWPipeBuilder::SCVLIWPipeBuilder(Module *TM,
 SCVLIWPipeBuilder::~SCVLIWPipeBuilder(){
 }
 
+void SCVLIWPipeBuilder::InsertSignalEdge(VLIWGraph *Graph,
+                                         std::string SrcFunc,
+                                         std::string DestFunc,
+                                         unsigned SrcStage,
+                                         unsigned DestStage,
+                                         std::string Arg,
+                                         std::string Type,
+                                         unsigned Width){
+  // check to see if SrcFunc->DestFunc has an edge.
+  // If not, create one
+  VLIWNode *SrcNode = Graph->GetNodeByName(SrcFunc, SrcStage);
+
+  VLIWEdge *Edge = nullptr;
+  for( unsigned i=0; i<SrcNode->GetNumEdges(); i++ ){
+    VLIWEdge *E = SrcNode->GetEdge(i);
+    if( (E->GetSrc() == SrcFunc) &&
+        (E->GetDest() == DestFunc) ){
+      Edge = E;
+    }
+  }
+
+  if( !Edge ){
+    Edge = new VLIWEdge( SrcFunc, DestFunc );
+    SrcNode->InsertEdge(Edge);
+  }
+
+  // create the signal
+  VLIWSig *OutSig = nullptr;
+  VLIWSig *InSig  = nullptr;
+  if( (Type=="DATA") || (Type=="VAR") ){
+    OutSig = new VLIWSig(Arg,
+                         Width,
+                         DATA_OUT);
+    InSig = new VLIWSig(Arg,
+                        Width,
+                        DATA_IN);
+  }else{
+    OutSig = new VLIWSig(Arg,
+                         Width,
+                         CTRL_OUT);
+    InSig = new VLIWSig(Arg,
+                        Width,
+                        CTRL_IN);
+  }
+  Edge->InsertSignal(OutSig);
+  Edge->InsertSignal(InSig);
+}
+
 bool SCVLIWPipeBuilder::WireIO(VLIWGraph *Graph){
   for( unsigned i=0; i<VLIWStages.size(); i++ ){
     Function *Func = TheModule->getFunction(StringRef(VLIWStages[i].first));
@@ -34,6 +82,51 @@ bool SCVLIWPipeBuilder::WireIO(VLIWGraph *Graph){
         if( auto *CInst = dyn_cast<CallInst>(&Inst) ){
           if( CInst->getCalledFunction()->getName().str() ==
               "OUT" ){
+            // For each 'OUT' intrinsic, generate an edge and insert it into
+            // the appropriate nodes
+            // This requires us to for N+1 stages that include the appropriately
+            // named input arguments
+            bool FoundNextStage = false;
+            std::string Arg = GetVLIWArgName(Inst);
+            unsigned Width = GetVLIWArgWidth(Inst);
+            std::string Type = GetVLIWArgType(Inst);
+
+            for( unsigned j=0; j<VLIWStages.size(); j++ ){
+              if( VLIWStages[j].second == (VLIWStages[i].second+1) ){
+                // Nth+1 stage found
+                // Walk the target arguments and check for matches
+                // If a match is found, insert an edge
+                Function *TFunc = TheModule->getFunction(
+                  StringRef(VLIWStages[j].first));
+                if( !TFunc ){
+                  this->PrintMsg( L_ERROR,
+                                  "Failed to retrieve function pointer for VLIWStage: " +
+                                  VLIWStages[j].first);
+                  return false;
+                }
+                for( auto FArg = TFunc->arg_begin();
+                      FArg != TFunc->arg_end();
+                      ++FArg ){
+                  if(FArg->getName().str() == Arg){
+                    // found a matching argument, add signal into an edge
+                    FoundNextStage = true;
+                    InsertSignalEdge(Graph,
+                                     VLIWStages[i].first,
+                                     VLIWStages[j].first,
+                                     VLIWStages[i].second,
+                                     VLIWStages[j].second,
+                                     Arg,
+                                     Type,
+                                     Width);
+                  }
+                }
+              }
+            }
+            if( !FoundNextStage ){
+              this->PrintMsg( L_ERROR,
+                              "Failed to discover a downstream VLIW pipeline stage with an appropriate input; Stage=" +
+                              VLIWStages[i].first + "; Argument=" + Arg );
+            }
           }
         }
       }
