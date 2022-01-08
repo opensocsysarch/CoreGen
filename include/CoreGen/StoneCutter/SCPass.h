@@ -108,6 +108,15 @@ public:
   /// Retrieves the VLIW stage for the target function
   unsigned GetVLIWStage(Function &F);
 
+  /// Retrieves the VLIW IN/OUT intrinsic argument name
+  std::string GetVLIWArgName(Instruction &I);
+
+  /// Retrieves the VLIW IN/OUT intrinsics argument width
+  unsigned GetVLIWArgWidth(Instruction &I);
+
+  /// Retrieves the VLIW IN/OUT intrinsics argument type
+  std::string GetVLIWArgType(Instruction &I);
+
   /// Determines if the target variable has the target attribute
   bool HasGlobalAttribute(std::string Var, std::string Attribute );
 
