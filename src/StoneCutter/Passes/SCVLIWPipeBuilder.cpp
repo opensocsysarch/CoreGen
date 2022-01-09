@@ -18,6 +18,8 @@ SCVLIWPipeBuilder::SCVLIWPipeBuilder(Module *TM,
 }
 
 SCVLIWPipeBuilder::~SCVLIWPipeBuilder(){
+  if( Graph )
+    delete Graph;
 }
 
 void SCVLIWPipeBuilder::InsertSignalEdge(VLIWGraph *Graph,
@@ -136,7 +138,7 @@ bool SCVLIWPipeBuilder::WireIO(VLIWGraph *Graph){
 }
 
 bool SCVLIWPipeBuilder::WireUpStages(){
-  VLIWGraph *Graph = new VLIWGraph();
+  Graph = new VLIWGraph();
 
   // insert all the stages into the graph w/o edges
   for( unsigned i=0; i<VLIWStages.size(); i++ ){
@@ -148,11 +150,9 @@ bool SCVLIWPipeBuilder::WireUpStages(){
   // walk the vliw stages in order.  wire up the necessary
   // output I/O signals to the subsequent stages
   if( !WireIO(Graph) ){
-    delete Graph;
     return false;
   }
 
-  delete Graph;
   return true;
 }
 
