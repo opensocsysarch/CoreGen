@@ -33,6 +33,7 @@ void SCVLIWPipeBuilder::InsertSignalEdge(VLIWGraph *Graph,
   // check to see if SrcFunc->DestFunc has an edge.
   // If not, create one
   VLIWNode *SrcNode = Graph->GetNodeByName(SrcFunc, SrcStage);
+  VLIWNode *DestNode = Graph->GetNodeByName(DestFunc, DestStage);
 
   VLIWEdge *Edge = nullptr;
   for( unsigned i=0; i<SrcNode->GetNumEdges(); i++ ){
@@ -46,6 +47,7 @@ void SCVLIWPipeBuilder::InsertSignalEdge(VLIWGraph *Graph,
   if( !Edge ){
     Edge = new VLIWEdge( SrcFunc, DestFunc );
     SrcNode->InsertEdge(Edge);
+    DestNode->InsertEdge(Edge);
   }
 
   // create the signal
@@ -201,6 +203,81 @@ bool SCVLIWPipeBuilder::DeriveVLIWStages(){
   return true;
 }
 
+bool SCVLIWPipeBuilder::CheckSignalIntegrity(){
+  // Walk the graph object and ensure that all the OUT signals
+  // have complementary IN signals.
+  //
+  // Also check to ensure that the incoming function arguments
+  // are accounted for with IN statements.  If not, flag a warning
+  for( unsigned i=0; i<VLIWStages.size(); i++ ){
+    Function *Func = TheModule->getFunction(StringRef(VLIWStages[i].first));
+    if( !Func ){
+      this->PrintMsg( L_ERROR, "Failed to find VLIW function in the symbol table: " +
+                      VLIWStages[i].first);
+      return false;
+    }
+
+    unsigned Out = 0;
+    unsigned In  = 0;
+    for( auto &BB : Func->getBasicBlockList() ){
+      for( auto &Inst : BB.getInstList() ){
+        if( auto *CInst = dyn_cast<CallInst>(&Inst) ){
+          if( CInst->getCalledFunction()->getName().str() ==
+              "OUT" ){
+            Out++;
+          }else if( CInst->getCalledFunction()->getName().str() ==
+                    "IN" ){
+            In++;
+          }
+        }
+      }
+    }
+
+    // check that the number of args matches the number of IN intrinsics
+    if( (unsigned)(Func->arg_size()) != In ){
+      this->PrintMsg( L_ERROR,
+                      "The number of arguments does not match the number of defined input signals for Stage=" +
+                      VLIWStages[i].first);
+      return false;
+    }
+
+    // now we want to walk the graph for each output output statement and ensure
+    // that a complementary input statement somewhere else exists
+    unsigned TOut = 0;
+    unsigned TIn  = 0;
+    VLIWNode *Node = Graph->GetNodeByName(VLIWStages[i].first,
+                                          VLIWStages[i].second);
+    for( unsigned j=0; j<Node->GetNumEdges(); j++ ){
+      VLIWEdge *Edge = Node->GetEdge(j);
+      for( unsigned k=0; k<Edge->GetNumSignals(); k++ ){
+        VLIWSig *Sig = Edge->GetSignal(k);
+        if( (Edge->GetSrc() == VLIWStages[i].first) &&
+            (Sig->GetType() == DATA_OUT) ){
+          TOut++;
+        }else if( (Edge->GetDest() == VLIWStages[i].first) &&
+                  (Sig->GetType() == DATA_IN) ){
+          TIn++;
+        }
+      }
+    }
+
+    if( TOut != Out ){
+      this->PrintMsg( L_ERROR,
+                      "Unconnected outgoing signal for Stage=" +
+                      VLIWStages[i].first);
+      return false;
+    }
+    if( TIn != In ){
+      this->PrintMsg( L_ERROR,
+                      "Unconnected incoming signal for Stage=" +
+                      VLIWStages[i].first);
+      return false;
+    }
+  }
+
+  return true;
+}
+
 bool SCVLIWPipeBuilder::EnableSubPasses(){
   if( Opts->IsVerbose() )
     this->PrintRawMsg("Enabling VLIW Pipeline Passes");
@@ -209,6 +286,8 @@ bool SCVLIWPipeBuilder::EnableSubPasses(){
                                    &SCVLIWPipeBuilder::DiscoverPipeSlots));
   Enabled.push_back(std::make_pair("WireUpStages",
                                    &SCVLIWPipeBuilder::WireUpStages));
+  Enabled.push_back(std::make_pair("CheckSignalIntegrity",
+                                   &SCVLIWPipeBuilder::CheckSignalIntegrity));
   return true;
 }
 

@@ -204,6 +204,9 @@ private:
                         std::string Type,
                         unsigned Width);
 
+  /// SCVLIWPipeBuilder SubPass: Checks the integrity of the I/O graph
+  bool CheckSignalIntegrity();
+
 public:
   /// Default cosntructor
   SCVLIWPipeBuilder(Module *TM, SCOpts *O, SCMsg *M);
