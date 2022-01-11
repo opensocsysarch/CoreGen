@@ -71,6 +71,27 @@ bool CoreGenSigMap::InsertSignal( SCSig *S ){
   return true;
 }
 
+bool CoreGenSigMap::EmplaceSignal( SCSig *S){
+  if( S == nullptr )
+    return false;
+
+  if( this->GetNumSignals() > 0 ){
+    SCSig *Prev = this->GetSignal(this->GetNumSignals()-1);
+    if( (Prev->GetInst() == S->GetInst()) &&
+        (Prev->GetName() == S->GetName()) ){
+      // duplicate signal found, just return
+      return true;
+    }else{
+      // not a duplicate
+      Signals.insert( Signals.begin(), S );
+    }
+  }else{
+    Signals.insert( Signals.begin(), S );
+  }
+
+  return true;
+}
+
 SCSig *CoreGenSigMap::GetSignal( unsigned Idx ){
   if( Idx > (Signals.size()-1) )
     return nullptr;
