@@ -144,16 +144,14 @@ bool SCVLIWPipeBuilder::WireUpStages(){
 
   // insert all the stages into the graph w/o edges
   for( unsigned i=0; i<VLIWStages.size(); i++ ){
-    VLIWNode *N = new VLIWNode(VLIWStages[i].first,
-                               VLIWStages[i].second);
-    Graph->InsertNode(N);
+    Graph->InsertNode( new VLIWNode(VLIWStages[i].first,
+                           VLIWStages[i].second) );
   }
 
   // walk the vliw stages in order.  wire up the necessary
   // output I/O signals to the subsequent stages
-  if( !WireIO(Graph) ){
+  if( !WireIO(Graph) )
     return false;
-  }
 
   return true;
 }
@@ -303,18 +301,61 @@ bool SCVLIWPipeBuilder::Optimize(){
       this->PrintMsg( L_ERROR, "Subpass failed: " + Enabled[i].first );
       return false;
     }
-    if( !WriteSigMap() ){
-      this->PrintMsg( L_ERROR, "Failed to write signal map following " +
-                      Enabled[i].first);
-      return false;
-    }
   }
 
   return true;
 }
 
 bool SCVLIWPipeBuilder::WriteSigMap(){
-  return true;
+
+  // walk all the nodes and inject the signals into
+  // the appropriate VLIW stage
+  for( unsigned i=0; i<Graph->GetNumNodes(); i++ ){
+    for( unsigned j=0; j<Graph->GetNode(i)->GetNumEdges(); j++ ){
+      for( unsigned k=0; k<Graph->GetNode(i)->GetEdge(j)->GetNumSignals(); k++ ){
+        VLIWSig *VSig = Graph->GetNode(i)->GetEdge(j)->GetSignal(k);
+        if( (VSig->GetType() == DATA_IN) ||
+            (VSig->GetType() == CTRL_IN) ){
+          if( Graph->GetNode(i)->GetName() ==
+              Graph->GetNode(i)->GetEdge(j)->GetDest() ){
+            // insert an input signal
+            SCSig *Sig = new SCSig(VSig->GetType(),
+                               VSig->GetWidth());
+            Sig->InsertInput(VSig->GetName());
+            Sig->SetInst(Graph->GetNode(i)->GetEdge(j)->GetDest());
+            Sig->SetPipeName(Graph->GetNode(i)->GetEdge(j)->GetDest());
+            Sig->SetName(Graph->GetNode(i)->GetEdge(j)->GetSrc() + "_" +
+                         Graph->GetNode(i)->GetEdge(j)->GetDest() + "_" +
+                         VSig->GetName());
+            if( !SigMap->EmplaceSignal(Sig) ){
+              this->PrintMsg(L_ERROR, "Error injecting IN signal into signal map");
+              return false;
+            }
+          }
+        }else if( (VSig->GetType() == DATA_OUT) ||
+                  (VSig->GetType() == CTRL_OUT) ){
+          if( Graph->GetNode(i)->GetName() ==
+              Graph->GetNode(i)->GetEdge(j)->GetSrc() ){
+            // insert an output signal
+            SCSig *Sig = new SCSig(VSig->GetType(),
+                               VSig->GetWidth());
+            Sig->InsertInput(VSig->GetName());
+            Sig->SetInst(Graph->GetNode(i)->GetEdge(j)->GetSrc());
+            Sig->SetPipeName(Graph->GetNode(i)->GetEdge(j)->GetSrc());
+            Sig->SetName(Graph->GetNode(i)->GetEdge(j)->GetSrc() + "_" +
+                         Graph->GetNode(i)->GetEdge(j)->GetDest() + "_" +
+                         VSig->GetName());
+            if( !SigMap->InsertSignal(Sig) ){
+              this->PrintMsg(L_ERROR, "Error injecting OUT signal into signal map");
+              return false;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  return SigMap->WriteSigMap();
 }
 
 bool SCVLIWPipeBuilder::Execute(){

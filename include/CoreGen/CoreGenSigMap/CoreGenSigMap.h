@@ -63,9 +63,6 @@ private:
   /// Writes the individual instruction signal map to the YAML file
   bool WriteInstSignals(YAML::Emitter *out);
 
-  /// Writes the individual VLIW pipeline stage signals
-  bool WriteVLWISignals(YAML::Emitter *out);
-
   /// Writes the temporary register info and the associated mappings to the YAML file
   bool WriteTempRegs(YAML::Emitter *out);
 
@@ -118,6 +115,9 @@ public:
 
   /// Inserts a signal into the signal map
   bool InsertSignal( SCSig *Sig );
+
+  /// Inserts a signal at the beginning of the signal map
+  bool EmplaceSignal( SCSig *Sig );
 
   /// Retrieves the target signal from the signal map
   SCSig *GetSignal( unsigned Idx );
