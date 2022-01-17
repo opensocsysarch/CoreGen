@@ -680,6 +680,13 @@ bool CoreGenSigMap::ReadSigMap( std::string File ){
   if( File.length() == 0 )
     return false;
 
+  // make sure the file exists
+  struct stat buffer;
+  if( (stat (File.c_str(), &buffer) != 0) ){
+    Error = "File is not accessible: " + File;
+    return false;
+  }
+
   SigFile = File;
 
   // load the file
