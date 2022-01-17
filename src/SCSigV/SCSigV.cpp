@@ -191,7 +191,7 @@ int main( int argc, char **argv ){
     delete SM;
     return -1;
   }
-  
+
   if( stats ){
     PrintStats(SM);
   }
