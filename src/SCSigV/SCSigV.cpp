@@ -22,11 +22,13 @@ void PrintHelp(){
   std::cout << "     -h|-help|--help              : Print the help menu" << std::endl;
   std::cout << "     -s|-stats|--stats            : Print stats" << std::endl;
   std::cout << "     -p|-pipeline|--pipeline      : Print pipeline stats" << std::endl;
+  std::cout << "     -d|-datapath|--datapath      : Generate datapath diagram (dot graph)" << std::endl;
 }
 
 // ------------------------------------------------- ParseCommandLineOpts
 bool ParseCommandLineOpts( int argc, char **argv,
                            bool &help, bool &stats, bool &pipeline,
+                           bool &help, bool &stats, bool &pipeline, bool &datapath,
                            std::string &FName ){
   if( argc == 1 ){
     std::cout << "ERROR: No input files found" << std::endl;
@@ -42,6 +44,8 @@ bool ParseCommandLineOpts( int argc, char **argv,
       stats = true;
     }else if( (s=="-p") || (s=="-pipeline") || (s=="--pipeline") ){
       pipeline = true;
+    }else if( (s=="-d") || (s=="-datapath") || (s=="--datapath") ){
+      datapath = true;
     }else{
       FName = s;
     }
@@ -125,6 +129,33 @@ void PrintStats( CoreGenSigMap *SM ){
   std::cout << "---------------------------------------------------------------" << std::endl;
 }
 
+void GenDatapath(CoreGenSigMap* SM){
+  std::cout << "digraph g {" << std::endl;                        // outermost container (entire system)
+  unsigned NS = SM->GetNumSignals();                              // Get list of all signals
+  std::vector<std::string> PipeNames = SM->GetPipelines();        // Get list of all pipelines
+
+  for( unsigned i=0; i<PipeNames.size(); i++ ){                  // For each Pipeline 
+    std::string Pipe = PipeNames[i];                             // Get Pipeline Name
+    std::cout << "\tsubgraph " + Pipe + "{" << std::endl;        // Create subgraph for pipeline
+    std::cout << "\t\tlabel = '" + Pipe + "';" << std::endl;     // Label it the name of pipeline
+    unsigned NumStages = SM->GetNumPipeStages(Pipe); 
+    for( unsigned j=0; j<NumStages; j++ ){                                         // for each stage inside pipeline
+      std::string Stage = SM->GetPipelineStage(Pipe, j);                         // get current stage name
+      std::vector<SCSig *> PipeSigs = SM->GetSignalVectByPipeStage(Pipe, Stage); // get all signals inside pipe stage
+      std::cout << "\t\tsubgraph " + Stage + "{" << std::endl;                   // Make subgraph for stage sigs
+      std::cout << "\t\t\tlabel = '" + Stage + "';" << std::endl;                // name the subgraph (stage name)
+      std::string SignalString = "";
+      for( unsigned k=0; k<PipeSigs.size(); k++ ){
+        SignalString.append(PipeSigs[i]->GetName() + "->");                     // NOTE: Create separate bubbles for each signal 
+      }
+      std::cout << SignalString << std::endl;
+      std::cout << "}" << std::endl;
+    }
+  std::cout << "}" << std::endl;
+  } 
+  std::cout << "}" << std::endl;
+}
+
 // ------------------------------------------------- main
 int main( int argc, char **argv ){
 
@@ -132,9 +163,10 @@ int main( int argc, char **argv ){
   bool help   = false;
   bool stats  = false;
   bool pipeline = false;
+  bool datapath = false;
   std::string FName;
 
-  if( !ParseCommandLineOpts(argc,argv,help,stats,pipeline,FName) ){
+  if( !ParseCommandLineOpts(argc,argv,help,stats,pipeline, datapath, FName) ){
     return -1;
   }
 
@@ -161,12 +193,17 @@ int main( int argc, char **argv ){
     return -1;
   }
 
+  
   if( stats ){
     PrintStats(SM);
   }
 
   if( pipeline ){
     PrintPipeline(SM);
+  }
+
+  if( datapath ){
+    GenDatapath(SM);
   }
 
   delete SM;
