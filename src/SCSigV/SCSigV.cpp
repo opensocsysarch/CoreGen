@@ -27,7 +27,6 @@ void PrintHelp(){
 
 // ------------------------------------------------- ParseCommandLineOpts
 bool ParseCommandLineOpts( int argc, char **argv,
-                           bool &help, bool &stats, bool &pipeline,
                            bool &help, bool &stats, bool &pipeline, bool &datapath,
                            std::string &FName ){
   if( argc == 1 ){
@@ -192,7 +191,6 @@ int main( int argc, char **argv ){
     delete SM;
     return -1;
   }
-
   
   if( stats ){
     PrintStats(SM);
