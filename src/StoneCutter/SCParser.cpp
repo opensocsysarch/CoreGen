@@ -736,6 +736,7 @@ std::unique_ptr<ExprAST> SCParser::ParseIdentifierExpr() {
 
   // Check to see if the call is an intrinsic
   bool Intrin = false;
+  std::vector<std::string> OrigNames;
   if( CheckIntrinName(IdName) ){
     // we have an intrinsic, check the argument list
     Intrin = true;
@@ -746,9 +747,22 @@ std::unique_ptr<ExprAST> SCParser::ParseIdentifierExpr() {
                        std::to_string(GetNumIntrinArgs(IdName)) +
                        " arguments." );
     }
+
+    // if we have an intrinsic, then map all the expression args
+    if( (IdName == "IN") || (IdName == "OUT") ){
+      for( unsigned i=0; i<Args.size(); i++ ){
+        VariableExprAST *LHSE = static_cast<VariableExprAST *>(Args[i].get());
+        if( LHSE ){
+          OrigNames.push_back(LHSE->getName());
+        }
+      }
+    }
   }
 
-  return llvm::make_unique<CallExprAST>(IdName, std::move(Args), Intrin);
+  return llvm::make_unique<CallExprAST>(IdName,
+                                        std::move(Args),
+                                        std::move(OrigNames),
+                                        Intrin);
 }
 
 std::unique_ptr<ExprAST> SCParser::ParseIfExpr() {
@@ -2785,11 +2799,7 @@ Value *CallExprAST::codegen() {
   if( (Callee=="IN") || (Callee=="OUT") ){
     std::string IOSigTypeStr;
     std::string IOSrcTypeStr;
-    std::string OrigName = ArgsV.at(0)->getName().str();
-    //std::cout << "Inst = " << std::string(CI->getName()) << std::endl;
-    //std::cout << "Before OrigName = " << OrigName << std::endl;
-    OrigName.pop_back();
-    //std::cout << "After OrigName = " << OrigName << std::endl;
+    std::string OrigName = getOrigName(0);
 
     // Check if global (ie. Not a tmp)
     if( auto IOArg = TheModule->getGlobalVariable(ArgsV.at(0)->getName()) ){
