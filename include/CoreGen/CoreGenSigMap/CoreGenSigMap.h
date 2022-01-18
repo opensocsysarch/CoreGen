@@ -208,6 +208,12 @@ public:
   /// Fuse the instruction and VLIW signal maps
   bool FuseSignalMaps(CoreGenSigMap *InstSigMap, CoreGenSigMap *VLIWSigMap);
 
+  /// Retrieves teh signal vector for the VLIW pipeline stage
+  std::vector<SCSig *> GetVLIWSignalVectByPipeStage(std::string Stage);
+
+  /// Retreive the VLIW pipe stage vector
+  std::vector<std::string> GetVLIWPipeStages();
+
   /// Execute all the signal map passes
   bool ExecutePasses();
 };

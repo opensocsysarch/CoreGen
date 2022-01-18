@@ -12,6 +12,10 @@
 #include <iomanip>
 #include <algorithm>
 #include <string>
+#include <iostream>
+#include <fstream>
+#include <vector>
+#include <tuple>
 
 #include "CoreGen/CoreGenSigMap/CoreGenSigMap.h"
 
@@ -19,15 +23,18 @@
 void PrintHelp(){
   std::cout << "scsigv [Options] /path/to/sigmap.yaml" << std::endl;
   std::cout << "Options:" << std::endl;
-  std::cout << "     -h|-help|--help              : Print the help menu" << std::endl;
-  std::cout << "     -s|-stats|--stats            : Print stats" << std::endl;
-  std::cout << "     -p|-pipeline|--pipeline      : Print pipeline stats" << std::endl;
-  std::cout << "     -d|-datapath|--datapath      : Generate datapath diagram (dot graph)" << std::endl;
+  std::cout << "     -h|-help|--help                  : Print the help menu" << std::endl;
+  std::cout << "     -s|-stats|--stats                : Print stats" << std::endl;
+  std::cout << "     -p|-pipeline|--pipeline          : Print pipeline stats" << std::endl;
+  std::cout << "     -d|-datapath|--datapath file.dot : Generate datapath diagram (dot graph)" << std::endl;
+  std::cout << "     --vliw                           : Generate VLIW signal map only" << std::endl;
 }
 
 // ------------------------------------------------- ParseCommandLineOpts
 bool ParseCommandLineOpts( int argc, char **argv,
-                           bool &help, bool &stats, bool &pipeline, bool &datapath,
+                           bool &help, bool &stats, bool &pipeline,
+                           bool &datapath, bool &vliw,
+                           std::string &DName,
                            std::string &FName ){
   if( argc == 1 ){
     std::cout << "ERROR: No input files found" << std::endl;
@@ -44,7 +51,15 @@ bool ParseCommandLineOpts( int argc, char **argv,
     }else if( (s=="-p") || (s=="-pipeline") || (s=="--pipeline") ){
       pipeline = true;
     }else if( (s=="-d") || (s=="-datapath") || (s=="--datapath") ){
+      if( i+1 > (argc-1) ){
+        std::cout << "Error : --datapath requires an argument" << std::endl;
+        return false;
+      }
       datapath = true;
+      DName = argv[i+1];
+      i++;
+    }else if( s=="--vliw" ){
+      vliw = true;
     }else{
       FName = s;
     }
@@ -128,44 +143,182 @@ void PrintStats( CoreGenSigMap *SM ){
   std::cout << "---------------------------------------------------------------" << std::endl;
 }
 
-void GenDatapath(CoreGenSigMap* SM){
-  std::cout << "digraph g {" << std::endl;                        // outermost container (entire system)
-  unsigned NS = SM->GetNumSignals();                              // Get list of all signals
-  std::vector<std::string> PipeNames = SM->GetPipelines();        // Get list of all pipelines
+#define SIGNAME 0
+#define DOTNAME 1
+#define SIGTYPE 2
 
-  for( unsigned i=0; i<PipeNames.size(); i++ ){                  // For each Pipeline 
-    std::string Pipe = PipeNames[i];                             // Get Pipeline Name
-    std::cout << "\tsubgraph " + Pipe + "{" << std::endl;        // Create subgraph for pipeline
-    std::cout << "\t\tlabel = '" + Pipe + "';" << std::endl;     // Label it the name of pipeline
-    unsigned NumStages = SM->GetNumPipeStages(Pipe); 
-    for( unsigned j=0; j<NumStages; j++ ){                                         // for each stage inside pipeline
-      std::string Stage = SM->GetPipelineStage(Pipe, j);                         // get current stage name
-      std::vector<SCSig *> PipeSigs = SM->GetSignalVectByPipeStage(Pipe, Stage); // get all signals inside pipe stage
-      std::cout << "\t\tsubgraph " + Stage + "{" << std::endl;                   // Make subgraph for stage sigs
-      std::cout << "\t\t\tlabel = '" + Stage + "';" << std::endl;                // name the subgraph (stage name)
-      std::string SignalString = "";
-      for( unsigned k=0; k<PipeSigs.size(); k++ ){
-        SignalString.append(PipeSigs[i]->GetName() + "->");                     // NOTE: Create separate bubbles for each signal 
+bool GenVLIWGraph(CoreGenSigMap* SM,
+                  std::fstream &fs){
+  std::vector<std::string> VLIWPipeStages = SM->GetVLIWPipeStages();
+  std::vector<SCSig *> CSigs;
+
+  std::vector<std::tuple<std::string,std::string,SigType>> NodeTuple;
+
+  if( VLIWPipeStages.size() == 0 )
+    return true;
+
+  fs << "subgraph vliw {" << std::endl;
+  for( unsigned i=0; i<VLIWPipeStages.size(); i++ ){
+    // write a subgraph for the target stage
+    fs << "subgraph cluster" << VLIWPipeStages[i] << " {" << std::endl;
+    fs << "style=filled;" << std::endl;
+    fs << "node [style=filled,color=white];" << std::endl;
+    fs << "label = \"" << VLIWPipeStages[i] << "\";" << std::endl;
+
+    CSigs = SM->GetVLIWSignalVectByPipeStage(VLIWPipeStages[i]);
+
+    if( CSigs.size() > 0 ){
+      // write all the normal nodes
+      for( unsigned j=0; j<CSigs.size(); j++ ){
+        if( (CSigs[j]->GetType() != DATA_IN) &&
+            (CSigs[j]->GetType() != DATA_OUT) &&
+            (CSigs[j]->GetType() != CTRL_IN) &&
+            (CSigs[j]->GetType() != CTRL_OUT) ){
+          fs << "node" << i << j << " [label=\"" << CSigs[j]->GetName() << "\"];" << std::endl;
+        }
       }
-      std::cout << SignalString << std::endl;
-      std::cout << "}" << std::endl;
+
+      // write all the input/output nodes
+      for( unsigned j=0; j<CSigs.size(); j++ ){
+        if( (CSigs[j]->GetType() == DATA_IN) ||
+            (CSigs[j]->GetType() == DATA_OUT) ||
+            (CSigs[j]->GetType() == CTRL_IN) ||
+            (CSigs[j]->GetType() == CTRL_OUT) ){
+          fs << "vliwnode" << i << j
+             << " [label=\"" << CSigs[j]->GetName() << "\",shape=Mdiamond];"
+             << std::endl;
+          NodeTuple.push_back( std::tuple<std::string,std::string,SigType>(
+                                CSigs[j]->GetName(),
+                                "vliwnode" + std::to_string(i) + std::to_string(j),
+                                CSigs[j]->GetType()) );
+        }
+      }
+
+      // we have to record the location of the first and last nodes
+      // in order to ensure that we know which are the top and bottom
+      // most nodes in the graph that are NOT IN/OUT signals
+      unsigned FirstNode = 0;
+      unsigned LastNode = 0;
+      bool FN = false;
+      // wire all the normal signals
+      for( unsigned j=0; j<CSigs.size()-1; j++ ){
+        if( (CSigs[j]->GetType() != DATA_IN) &&
+            (CSigs[j]->GetType() != DATA_OUT) &&
+            (CSigs[j]->GetType() != CTRL_IN) &&
+            (CSigs[j]->GetType() != CTRL_OUT) &&
+            (CSigs[j+1]->GetType() != DATA_IN) &&
+            (CSigs[j+1]->GetType() != DATA_OUT) &&
+            (CSigs[j+1]->GetType() != CTRL_IN) &&
+            (CSigs[j+1]->GetType() != CTRL_OUT) ){
+          fs << "node" << i << j << " -> " << "node" << i << j+1 << ";" << std::endl;
+          if( !FN )
+            FirstNode = j;
+          LastNode = j+1;
+        }
+      }
+
+      // wire the input signals
+      for( unsigned j=0; j<CSigs.size(); j++ ){
+        if( (CSigs[j]->GetType() == DATA_IN) ||
+            (CSigs[j]->GetType() == CTRL_IN) ){
+          fs << "vliwnode" << i << j << " -> " << "node" << i << FirstNode << ";" << std::endl;
+        }
+      }
+
+      // wire the output signals
+      for( unsigned j=0; j<CSigs.size(); j++ ){
+        if( (CSigs[j]->GetType() == DATA_OUT) ||
+            (CSigs[j]->GetType() == CTRL_OUT) ){
+          fs << "node" << i << LastNode << " -> " << "vliwnode" << i << j << ";" << std::endl;
+        }
+      }
+
+      // wire the I/O signals together
+      for( unsigned j=0; j<NodeTuple.size(); j++ ){
+        if( (std::get<SIGTYPE>(NodeTuple[j]) == DATA_OUT) ||
+            (std::get<SIGTYPE>(NodeTuple[j]) == CTRL_OUT) ){
+          // found an output signal, find the complementary input signal
+          for( unsigned k=0; k<NodeTuple.size(); k++ ){
+            if( ((std::get<SIGTYPE>(NodeTuple[k]) == DATA_IN) ||
+                (std::get<SIGTYPE>(NodeTuple[k]) == CTRL_IN)) &&
+                (std::get<SIGNAME>(NodeTuple[j]) ==
+                                  std::get<SIGNAME>(NodeTuple[k])) ){
+                // wire to the I/O
+                fs << std::get<DOTNAME>(NodeTuple[j]) << " -> "
+                   << std::get<DOTNAME>(NodeTuple[k]) << ";" << std::endl;
+            }
+          }
+        }
+      }
     }
-  std::cout << "}" << std::endl;
-  } 
-  std::cout << "}" << std::endl;
+
+    CSigs.clear();
+
+    fs << "}" << std::endl;
+  }
+  fs << "}" << std::endl;
+  return true;
+}
+
+bool GenRISCGraph(CoreGenSigMap* SM,
+                  std::fstream &fs){
+  return true;
+}
+
+bool GenDatapath(CoreGenSigMap* SM, bool vliw,
+                 std::string DName){
+
+  std::fstream fs;
+
+  // open the output file
+  fs.open(DName, std::fstream::out);
+  if( !fs.is_open() ){
+    std::cout << "Error : Could not open output file: " << DName << std::endl;
+    return false;
+  }
+
+  fs << "#" << std::endl;
+  fs << "# Generate graph using \" dot  -Tpdf thisfile > thisfile.pdf\"" << std::endl;
+  fs << "#" << std::endl << std::endl;
+
+  // inject the header info
+  fs << "digraph G{" << std::endl;
+  fs << "compound=true;" << std::endl;
+
+  if( vliw ){
+    if( !GenVLIWGraph(SM,fs) ){
+      fs.close();
+      return false;
+    }
+  }else{
+    if( !GenRISCGraph(SM,fs) ){
+      fs.close();
+      return false;
+    }
+  }
+
+  // inject the footer info
+  fs << "}" << std::endl;
+
+  // close the output file
+  fs.close();
+  return true;
 }
 
 // ------------------------------------------------- main
 int main( int argc, char **argv ){
 
   // validate the command line options
-  bool help   = false;
-  bool stats  = false;
+  bool help     = false;
+  bool stats    = false;
   bool pipeline = false;
   bool datapath = false;
+  bool vliw     = false;
   std::string FName;
+  std::string DName;
 
-  if( !ParseCommandLineOpts(argc,argv,help,stats,pipeline, datapath, FName) ){
+  if( !ParseCommandLineOpts(argc,argv,help,stats,pipeline,
+                            datapath, vliw, DName, FName) ){
     return -1;
   }
 
@@ -201,7 +354,10 @@ int main( int argc, char **argv ){
   }
 
   if( datapath ){
-    GenDatapath(SM);
+    if( !GenDatapath(SM,vliw,DName) ){
+      delete SM;
+      return -1;
+    }
   }
 
   delete SM;
