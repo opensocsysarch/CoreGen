@@ -22,6 +22,7 @@
 
 #include <vector>
 #include <fstream>
+#include <iostream>
 #include <algorithm>
 #include <string>
 #include <sys/stat.h>
@@ -148,6 +149,12 @@ public:
   /// Reads the signal map file into the signal structure
   bool ReadSigMap( std::string File );
 
+  /// Retrieves the name of the signal map file
+  std::string GetSigFile() { return SigFile; }
+
+  /// Inserts a temporary register in the signal map
+  bool InsertTemp(SCTmp *T);
+
   /// Retrieve the number of temporary registers that need to exist in the ALUL
   unsigned GetNumTemps() { return TempRegs.size(); }
 
@@ -192,7 +199,7 @@ public:
   std::vector<SCSig *> GetSignalVectByPipeStage(std::string Pipeline,
                                                 std::string Stage);
 
-  /// Retrieves teh signal vector for the VLIW pipeline stage
+  /// Retrieves the signal vector for the VLIW pipeline stage
   std::vector<SCSig *> GetVLIWSignalVectByPipeStage(std::string Stage);
 
   /// Retreive the VLIW pipe stage vector

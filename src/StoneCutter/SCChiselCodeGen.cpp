@@ -1639,11 +1639,18 @@ bool SCChiselCodeGen::ExecuteRISCPipelineOpt(CoreGenSigMap *SM){
 
 bool SCChiselCodeGen::ExecutePipelineOpt(CoreGenSigMap *SM){
 
-  if( !ExecuteRISCPipelineOpt(SM) )
+  CoreGenSigMap *RSM = SM->SplitInstSigMap();
+  CoreGenSigMap *VSM = SM->SplitVLIWSigMap();
+
+  if( !ExecuteRISCPipelineOpt(RSM) )
     return false;
 
-  if( !ExecuteVLIWPipelineOpt(SM) )
+  if( !ExecuteVLIWPipelineOpt(VSM) )
     return false;
+
+  SM->FuseSignalMaps(RSM,VSM);
+  delete RSM;
+  delete VSM;
 
   return true;
 }
