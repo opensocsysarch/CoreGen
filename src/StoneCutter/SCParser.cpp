@@ -101,11 +101,9 @@ void SCParser::InitIntrinsics(){
 }
 
 void SCParser::InitPassMap(){
-//#if 0
   EPasses.insert(std::pair<std::string,bool>("PromoteMemoryToRegisterPass",true));
   EPasses.insert(std::pair<std::string,bool>("InstructionCombiningPass",true));
   EPasses.insert(std::pair<std::string,bool>("ReassociatePass",true));
-//#endif
   EPasses.insert(std::pair<std::string,bool>("GVNPass",true));
   EPasses.insert(std::pair<std::string,bool>("CFGSimplificationPass",true));
   EPasses.insert(std::pair<std::string,bool>("ConstantPropagationPass",true));
@@ -2788,7 +2786,10 @@ Value *CallExprAST::codegen() {
     std::string IOSigTypeStr;
     std::string IOSrcTypeStr;
     std::string OrigName = ArgsV.at(0)->getName().str();
+    //std::cout << "Inst = " << std::string(CI->getName()) << std::endl;
+    //std::cout << "Before OrigName = " << OrigName << std::endl;
     OrigName.pop_back();
+    //std::cout << "After OrigName = " << OrigName << std::endl;
 
     // Check if global (ie. Not a tmp)
     if( auto IOArg = TheModule->getGlobalVariable(ArgsV.at(0)->getName()) ){
@@ -2807,7 +2808,7 @@ Value *CallExprAST::codegen() {
       }
     // Not a global value ->  variable
     }else{
-      IOSigTypeStr = "DATA"; 
+      IOSigTypeStr = "DATA";
       IOSrcTypeStr = "VAR";
     }
 
@@ -2847,7 +2848,7 @@ Function *PrototypeAST::codegen() {
                               Type::getIntNTy(SCParser::TheContext,64));
   FunctionType *FT =
       FunctionType::get(Type::getIntNTy(SCParser::TheContext,64), Doubles, false);
- 
+
   Function *F =
       Function::Create(FT, Function::ExternalLinkage, Name,
                        SCParser::TheModule.get());
