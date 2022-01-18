@@ -289,20 +289,34 @@ public:
   class CallExprASTContainer : public ExprASTContainer {
     std::string Callee;   ///< Callee of the function
     std::vector<std::unique_ptr<ExprASTContainer>> Args; ///< Arguments to the function
+    std::vector<std::string> OrigNames; ///< Original argument names (unmangled)
     bool Intrin;    ///<  determines whether the call is an intrinsic
 
   public:
     /// CallExprASTContainer default constructor
     CallExprASTContainer(const std::string &Callee,
                          std::vector<std::unique_ptr<ExprASTContainer>> Args,
+                         std::vector<std::string> OrigNames,
                          bool Intrin)
-      : Callee(Callee), Args(std::move(Args)), Intrin(Intrin) {}
+      : Callee(Callee), Args(std::move(Args)), OrigNames(std::move(OrigNames)),
+        Intrin(Intrin) {}
 
     /// CallExprASTContainer code generation driver
     Value *codegen() override;
 
     /// CallExprASTContainer: determines whether the call is a StoneCutter intrinsic
     bool isIntrin() { return Intrin; }
+
+    /// CallExprASTContainer: retrieves the number of original argument names
+    unsigned getNumOrigNames() { return OrigNames.size(); }
+
+    /// CallExprASTContainer: retrieves the target original argument name
+    std::string getOrigName(unsigned Idx){
+      std::string Name;
+      if( Idx > (OrigNames.size()-1) )
+        return Name;
+      return OrigNames[Idx];
+    }
   };
 
   /// InstFormatASTContainer - This class represents an instruction format definition
