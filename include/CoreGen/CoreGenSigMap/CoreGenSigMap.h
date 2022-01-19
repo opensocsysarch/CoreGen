@@ -205,11 +205,14 @@ public:
   /// Retreive the VLIW pipe stage vector
   std::vector<std::string> GetVLIWPipeStages();
 
-  /// Retrieves teh signal vector for the VLIW pipeline stage
-  std::vector<SCSig *> GetVLIWSignalVectByPipeStage(std::string Stage);
+  /// Split the signal map and return a signal map object with only instruction signals
+  CoreGenSigMap *SplitInstSigMap();
 
-  /// Retreive the VLIW pipe stage vector
-  std::vector<std::string> GetVLIWPipeStages();
+  /// Split the signal map and return a signal map object with only VLIW signals
+  CoreGenSigMap *SplitVLIWSigMap();
+
+  /// Fuse the instruction and VLIW signal maps
+  bool FuseSignalMaps(CoreGenSigMap *InstSigMap, CoreGenSigMap *VLIWSigMap);
 
   /// Execute all the signal map passes
   bool ExecutePasses();
