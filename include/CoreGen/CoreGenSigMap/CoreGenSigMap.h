@@ -25,6 +25,12 @@
 #include <iostream>
 #include <algorithm>
 #include <string>
+#include <sys/stat.h>
+#include <sys/time.h>
+#include <cerrno>
+#include <time.h>
+#include <unistd.h>
+#include <stdio.h>
 
 // YAML headers
 #include "yaml-cpp/yaml.h"
@@ -62,9 +68,6 @@ private:
 
   /// Writes the individual instruction signal map to the YAML file
   bool WriteInstSignals(YAML::Emitter *out);
-
-  /// Writes the individual VLIW pipeline stage signals
-  bool WriteVLWISignals(YAML::Emitter *out);
 
   /// Writes the temporary register info and the associated mappings to the YAML file
   bool WriteTempRegs(YAML::Emitter *out);
@@ -118,6 +121,9 @@ public:
 
   /// Inserts a signal into the signal map
   bool InsertSignal( SCSig *Sig );
+
+  /// Inserts a signal at the beginning of the signal map
+  bool EmplaceSignal( SCSig *Sig );
 
   /// Retrieves the target signal from the signal map
   SCSig *GetSignal( unsigned Idx );
@@ -192,6 +198,12 @@ public:
   /// Retrieve the signal vector for each pipeline stage
   std::vector<SCSig *> GetSignalVectByPipeStage(std::string Pipeline,
                                                 std::string Stage);
+
+  /// Retrieves the signal vector for the VLIW pipeline stage
+  std::vector<SCSig *> GetVLIWSignalVectByPipeStage(std::string Stage);
+
+  /// Retreive the VLIW pipe stage vector
+  std::vector<std::string> GetVLIWPipeStages();
 
   /// Split the signal map and return a signal map object with only instruction signals
   CoreGenSigMap *SplitInstSigMap();

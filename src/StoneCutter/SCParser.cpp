@@ -101,11 +101,9 @@ void SCParser::InitIntrinsics(){
 }
 
 void SCParser::InitPassMap(){
-//#if 0
   EPasses.insert(std::pair<std::string,bool>("PromoteMemoryToRegisterPass",true));
   EPasses.insert(std::pair<std::string,bool>("InstructionCombiningPass",true));
   EPasses.insert(std::pair<std::string,bool>("ReassociatePass",true));
-//#endif
   EPasses.insert(std::pair<std::string,bool>("GVNPass",true));
   EPasses.insert(std::pair<std::string,bool>("CFGSimplificationPass",true));
   EPasses.insert(std::pair<std::string,bool>("ConstantPropagationPass",true));
@@ -738,6 +736,7 @@ std::unique_ptr<ExprAST> SCParser::ParseIdentifierExpr() {
 
   // Check to see if the call is an intrinsic
   bool Intrin = false;
+  std::vector<std::string> OrigNames;
   if( CheckIntrinName(IdName) ){
     // we have an intrinsic, check the argument list
     Intrin = true;
@@ -748,9 +747,22 @@ std::unique_ptr<ExprAST> SCParser::ParseIdentifierExpr() {
                        std::to_string(GetNumIntrinArgs(IdName)) +
                        " arguments." );
     }
+
+    // if we have an intrinsic, then map all the expression args
+    if( (IdName == "IN") || (IdName == "OUT") ){
+      for( unsigned i=0; i<Args.size(); i++ ){
+        VariableExprAST *LHSE = static_cast<VariableExprAST *>(Args[i].get());
+        if( LHSE ){
+          OrigNames.push_back(LHSE->getName());
+        }
+      }
+    }
   }
 
-  return llvm::make_unique<CallExprAST>(IdName, std::move(Args), Intrin);
+  return llvm::make_unique<CallExprAST>(IdName,
+                                        std::move(Args),
+                                        std::move(OrigNames),
+                                        Intrin);
 }
 
 std::unique_ptr<ExprAST> SCParser::ParseIfExpr() {
@@ -2454,6 +2466,7 @@ Value *ForExprAST::codegen() {
 Value *VariableExprAST::codegen() {
   // Look this variable up in the function.
   Value *V = SCParser::NamedValues[Name];
+
   if (!V){
     // variable wasn't in the function scope, check the globals
     V = SCParser::GlobalNamedValues[Name];
@@ -2786,6 +2799,7 @@ Value *CallExprAST::codegen() {
   if( (Callee=="IN") || (Callee=="OUT") ){
     std::string IOSigTypeStr;
     std::string IOSrcTypeStr;
+    std::string OrigName = getOrigName(0);
 
     // Check if global (ie. Not a tmp)
     if( auto IOArg = TheModule->getGlobalVariable(ArgsV.at(0)->getName()) ){
@@ -2796,15 +2810,15 @@ Value *CallExprAST::codegen() {
         if( FieldType == "register"){
           IOSigTypeStr = "DATA";
           IOSrcTypeStr = "REG";
-        }
-        else{ //if( FieldType == "encoding") TODO: Change to `Else if` so edge cases covered
+        }else{ //if( FieldType == "encoding") TODO: Change to `Else if` so edge cases covered
           IOSigTypeStr = "CTRL";
           IOSrcTypeStr = "ENC";
         }
+        // TODO: also need to handle immediate values `imm`
       }
     // Not a global value ->  variable
     }else{
-      IOSigTypeStr = "DATA"; 
+      IOSigTypeStr = "DATA";
       IOSrcTypeStr = "VAR";
     }
 
@@ -2816,10 +2830,15 @@ Value *CallExprAST::codegen() {
     MDNode *IOSrcType = MDNode::get(SCParser::TheContext,
                                 MDString::get(SCParser::TheContext,IOSrcTypeStr));
 
+    // ArgNamemD will be the original argument name from the intrinsic call
+    MDNode *ArgNameMD = MDNode::get(SCParser::TheContext,
+                                    MDString::get(SCParser::TheContext,OrigName));
+
+    // write the metadata
     cast<Instruction>(CI)->setMetadata("vliw.type",IOSigType);
     cast<Instruction>(CI)->setMetadata("vliw.src",IOSrcType);
-
-    }
+    cast<Instruction>(CI)->setMetadata("vliw.arg",ArgNameMD);
+  }
 
   if( SCParser::NameMDNode ){
     cast<Instruction>(CI)->setMetadata("pipe.pipeName",SCParser::NameMDNode);
@@ -2839,7 +2858,7 @@ Function *PrototypeAST::codegen() {
                               Type::getIntNTy(SCParser::TheContext,64));
   FunctionType *FT =
       FunctionType::get(Type::getIntNTy(SCParser::TheContext,64), Doubles, false);
- 
+
   Function *F =
       Function::Create(FT, Function::ExternalLinkage, Name,
                        SCParser::TheModule.get());
@@ -3323,8 +3342,14 @@ Value *IfExprAST::codegen() {
 // Error Handlers
 //===----------------------------------------------------------------------===//
 
+unsigned SCParser::GetLineNum(){
+  return Lex->GetLineNum() - Intrins.size();
+}
+
 std::unique_ptr<ExprAST> SCParser::LogError(std::string Str) {
-  Msgs->PrintMsg( L_ERROR, "Line " + std::to_string(Lex->GetLineNum()) + " : " + Str );
+  Msgs->PrintMsg( L_ERROR, "Line " +
+                  std::to_string(GetLineNum()) +
+                  " : " + Str );
   return nullptr;
 }
 

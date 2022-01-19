@@ -176,6 +176,27 @@ bool CoreGenSigMap::InsertSignal( SCSig *S ){
   return true;
 }
 
+bool CoreGenSigMap::EmplaceSignal( SCSig *S){
+  if( S == nullptr )
+    return false;
+
+  if( this->GetNumSignals() > 0 ){
+    SCSig *Prev = this->GetSignal(this->GetNumSignals()-1);
+    if( (Prev->GetInst() == S->GetInst()) &&
+        (Prev->GetName() == S->GetName()) ){
+      // duplicate signal found, just return
+      return true;
+    }else{
+      // not a duplicate
+      Signals.insert( Signals.begin(), S );
+    }
+  }else{
+    Signals.insert( Signals.begin(), S );
+  }
+
+  return true;
+}
+
 SCSig *CoreGenSigMap::GetSignal( unsigned Idx ){
   if( Idx > (Signals.size()-1) )
     return nullptr;
@@ -404,6 +425,14 @@ SigType CoreGenSigMap::StrToSigType( std::string Sig ){
     return MEM_WRITE;
   }else if( Sig == "FENCE" ){
     return FENCE;
+  }else if( Sig == "DATA_IN" ){
+    return DATA_IN;
+  }else if( Sig == "DATA_OUT" ){
+    return DATA_OUT;
+  }else if( Sig == "CTRL_IN" ){
+    return CTRL_IN;
+  }else if( Sig == "CTRL_OUT" ){
+    return CTRL_OUT;
   }
   return SIGUNK;
 }
@@ -513,12 +542,19 @@ bool CoreGenSigMap::ReadVLIWSignals(const YAML::Node& VLIWNodes){
           FusedOp = LSNode["FusedOp"].as<std::string>();
         }
 
-        Signals.push_back(new SCSig(Type,Width,DT,DF,Name,SigName,Name));
-        Signals[Signals.size()-1]->SetVLIW(true);
+        // Create the signal
+        SCSig *LSig = new SCSig(Type, Width);
+        LSig->SetInst(Name);
+        LSig->SetPipeName(Name);
+        LSig->SetName(SigName);
+        LSig->SetDistanceTrue(DT);
+        LSig->SetDistanceFalse(DF);
+        LSig->SetVLIW(true);
+
         if( FusedOp.length() > 0 ){
           // write the fused op to the latest signal
           FusedOpType FType = StrToFusedOpType(FusedOp);
-          Signals[Signals.size()-1]->SetFusedType(FType);
+          LSig->SetFusedType(FType);
         }
 
         // check for inputs
@@ -526,9 +562,18 @@ bool CoreGenSigMap::ReadVLIWSignals(const YAML::Node& VLIWNodes){
           const YAML::Node& INode = LSNode["Inputs"];
           for( unsigned k=0; k<INode.size(); k++ ){
             std::string InputStr = INode[k].as<std::string>();
-            Signals[Signals.size()-1]->InsertInput(InputStr);
+            LSig->InsertInput(InputStr);
           }
         } // end inputs loop
+
+
+        // insert the signal
+        if( (LSig->GetType() == DATA_IN) ||
+            (LSig->GetType() == CTRL_IN) ){
+          this->EmplaceSignal(LSig);
+        }else{
+          this->InsertSignal(LSig);
+        }
       }
     }
   }
@@ -658,6 +703,13 @@ bool CoreGenSigMap::ReadTmpRegs(const YAML::Node& TmpNodes){
 bool CoreGenSigMap::ReadSigMap( std::string File ){
   if( File.length() == 0 )
     return false;
+
+  // make sure the file exists
+  struct stat buffer;
+  if( (stat (File.c_str(), &buffer) != 0) ){
+    Error = "File is not accessible: " + File;
+    return false;
+  }
 
   SigFile = File;
 
@@ -791,6 +843,20 @@ bool CoreGenSigMap::WritePipeData(YAML::Emitter *out){
 
   *out << YAML::EndSeq;
   return true;
+}
+
+std::vector<std::string> CoreGenSigMap::GetVLIWPipeStages(){
+  std::vector<std::string> VLIWPipeNames;
+  for( unsigned i=0; i<Signals.size(); i++ ){
+    if( Signals[i]->IsVLIW() ){
+      VLIWPipeNames.push_back(Signals[i]->GetPipeName());
+    }
+  }
+
+  std::sort(VLIWPipeNames.begin(), VLIWPipeNames.end());
+  VLIWPipeNames.erase( std::unique( VLIWPipeNames.begin(), VLIWPipeNames.end() ),
+                       VLIWPipeNames.end() );
+  return VLIWPipeNames;
 }
 
 bool CoreGenSigMap::WriteVLIWSignals(YAML::Emitter *out){
@@ -1104,6 +1170,19 @@ std::vector<std::string> CoreGenSigMap::GetSignalsByPipeStage(std::string Pipeli
   // make the signal vector unique
   std::sort(TmpSigVect.begin(), TmpSigVect.end());
   TmpSigVect.erase( std::unique( TmpSigVect.begin(), TmpSigVect.end()), TmpSigVect.end() );
+
+  return TmpSigVect;
+}
+
+std::vector<SCSig *> CoreGenSigMap::GetVLIWSignalVectByPipeStage(std::string Stage){
+  std::vector<SCSig *> TmpSigVect;
+
+  for( unsigned i=0; i<Signals.size(); i++ ){
+    if( Signals[i]->IsVLIW() ){
+      if( Signals[i]->GetPipeName() == Stage )
+        TmpSigVect.push_back(Signals[i]);
+    }
+  }
 
   return TmpSigVect;
 }
