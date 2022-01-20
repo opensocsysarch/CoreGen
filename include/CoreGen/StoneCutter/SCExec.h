@@ -1,7 +1,7 @@
 //
 // _SCExec_h_
 //
-// Copyright (C) 2017-2020 Tactical Computing Laboratories, LLC
+// Copyright (C) 2017-2022 Tactical Computing Laboratories, LLC
 // All Rights Reserved
 // contact@tactcomplabs.com
 //
@@ -74,6 +74,9 @@ private:
 
   /// SCExec: Print the list of StoneCutter passes
   bool PrintSCPassList();
+
+  /// SCExec: Validates whether the target file is a regular file
+  bool ValidateFile(std::string File);
 
 public:
   /// SCExec: Constructor

@@ -1,7 +1,7 @@
 //
 // _SCSig_h_
 //
-// Copyright (C) 2017-2020 Tactical Computing Laboratories, LLC
+// Copyright (C) 2017-2022 Tactical Computing Laboratories, LLC
 // All Rights Reserved
 // contact@tactcomplabs.com
 //
@@ -109,7 +109,15 @@ typedef enum{
   MEM_WRITE = 91,           ///< SigType: Memory write
 
   // Misc signals
-  FENCE     = 100           ///< SigType: Fence
+  FENCE     = 100,           ///< SigType: Fence
+
+  // VLIW signals
+  CTRL_IN   = 101,          ///< SigType: CtrlIn
+  CTRL_OUT  = 102,          ///< SigType: CtrlOut
+
+  DATA_IN   = 103,          ///< SigType: DataIn
+  DATA_OUT  = 104           ///< SigType: DataOut
+
 }SigType;                   ///< CoreGenSigMap: Emumerated types to represent signals
 
 class SCSig{
@@ -121,7 +129,8 @@ private:
   signed DistanceFalse;     ///< SCSig: Branch distance (in uOps) for alternate targets
   std::string Inst;         ///< SCSig: Name of the instruction
   std::string Name;         ///< SCSig: Name of the signal
-  std::string PipeName;     ///< SCSIg: Name of the respective pipeline stage
+  std::string PipeName;     ///< SCSig: Name of the respective pipeline stage
+  bool VLIW;                ///< SCSig: Flags the signal as a VLIW stage signal
   std::vector<std::string> Inputs; ///< SCSig: vector of required inputs for ALU ops
 
 public:
@@ -220,6 +229,12 @@ public:
 
   /// Determines whether there is a specific pipe stage defined
   bool IsPipeDefined();
+
+  /// Determines if the target signal belongs to a VLIW pipe stage
+  bool IsVLIW() { return VLIW; }
+
+  /// Sets the VLIW flag
+  void SetVLIW(bool V){ VLIW = V; }
 
   /// Retrieves the pipeline name
   std::string GetPipeName() { return PipeName; }

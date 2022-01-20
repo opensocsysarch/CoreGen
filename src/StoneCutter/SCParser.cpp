@@ -1,7 +1,7 @@
 //
 // _SCParser_cpp_
 //
-// Copyright (C) 2017-2020 Tactical Computing Laboratories, LLC
+// Copyright (C) 2017-2022 Tactical Computing Laboratories, LLC
 // All Rights Reserved
 // contact@tactcomplabs.com
 //
@@ -9,6 +9,10 @@
 //
 
 #include "CoreGen/StoneCutter/SCParser.h"
+#include "llvm/IR/Attributes.h"
+#include "llvm/IR/Instructions.h"
+#include <cstdlib>
+#include <string>
 
 LLVMContext SCParser::TheContext;
 IRBuilder<> SCParser::Builder(TheContext);
@@ -17,6 +21,8 @@ std::unique_ptr<legacy::FunctionPassManager> SCParser::TheFPM;
 std::map<std::string, std::unique_ptr<PrototypeAST>> SCParser::FunctionProtos;
 std::map<std::string, AllocaInst*> SCParser::NamedValues;
 std::map<std::string, GlobalVariable*> SCParser::GlobalNamedValues;
+std::string CurrentFunction;
+std::vector<std::tuple<std::string, std::string, unsigned, unsigned>> SCParser::LocalContainers; 
 std::map<std::string, unsigned> SCParser::PipeInstances;
 unsigned SCParser::LabelIncr;
 bool SCParser::IsOpt = false;
@@ -90,14 +96,14 @@ void SCParser::InitIntrinsics(){
   Intrins.push_back(static_cast<SCIntrin *>(new SCFence()));
   Intrins.push_back(static_cast<SCIntrin *>(new SCBsel()));
   Intrins.push_back(static_cast<SCIntrin *>(new SCNop()));
+  Intrins.push_back(static_cast<SCIntrin *>(new SCIn()));
+  Intrins.push_back(static_cast<SCIntrin *>(new SCOut()));
 }
 
 void SCParser::InitPassMap(){
-//#if 0
   EPasses.insert(std::pair<std::string,bool>("PromoteMemoryToRegisterPass",true));
   EPasses.insert(std::pair<std::string,bool>("InstructionCombiningPass",true));
   EPasses.insert(std::pair<std::string,bool>("ReassociatePass",true));
-//#endif
   EPasses.insert(std::pair<std::string,bool>("GVNPass",true));
   EPasses.insert(std::pair<std::string,bool>("CFGSimplificationPass",true));
   EPasses.insert(std::pair<std::string,bool>("ConstantPropagationPass",true));
@@ -394,6 +400,20 @@ bool SCParser::CheckIntrinName( std::string Name ){
   return false;
 }
 
+bool SCParser::CheckLocalContainers( std::string VarName, std::string FunctionName, unsigned &DimX, unsigned &DimY ){
+	std::vector<std::tuple<std::string,std::string, unsigned,unsigned>>::iterator it;
+	for( it=LocalContainers.begin(); it != LocalContainers.end(); ++it ){
+    LogErrorV(VarName);
+    if( (std::get<1>(*it) == FunctionName) && (VarName.find(std::get<0>(*it) ))){
+			// found an entry
+			DimX = std::get<2>(*it);
+			DimY = std::get<3>(*it);
+			return true; // return true when we find an entry
+		}
+	}
+	return false;	// no entry found
+}
+
 unsigned SCParser::GetNumIntrinArgs( std::string Name ){
   if( Name.length() == 0 ){
     return 0;
@@ -547,10 +567,14 @@ bool SCParser::GetVarAttr( std::string Str, VarAttrs &V ){
   while( VarAttrEntryTable[Idx].Name != "." ){
     if( Str == VarAttrEntryTable[Idx].Name ){
       V.width     = VarAttrEntryTable[Idx].width;
-      V.elems     = VarAttrEntryTable[Idx].elems;
+      V.dimX      = VarAttrEntryTable[Idx].dimX;
+      V.dimY      = VarAttrEntryTable[Idx].dimY;
       V.defSign   = VarAttrEntryTable[Idx].IsDefSign;
       V.defVector = VarAttrEntryTable[Idx].IsDefVector;
+      V.defMatrix = VarAttrEntryTable[Idx].IsDefMatrix;
       V.defFloat  = VarAttrEntryTable[Idx].IsDefFloat;
+      V.defElem   = VarAttrEntryTable[Idx].IsDefElem;
+      V.defMatrix = VarAttrEntryTable[Idx].IsDefMatrix;
       V.defRegClass = false;
       return true;
     }
@@ -559,18 +583,22 @@ bool SCParser::GetVarAttr( std::string Str, VarAttrs &V ){
 
   if( Str[0] == 'u' ){
     // unsigned variable
-    V.elems     = 1;
+    V.dimX      = 1;
+    V.dimY      = 0;
     V.defSign   = false;
     V.defVector = false;
+    V.defMatrix = false;
     V.defFloat  = false;
     V.defRegClass = false;
     V.width     = std::stoi( Str.substr(1,Str.length()-1) );
     return true;
   }else if( Str[0] == 's' ){
     // signed variable
-    V.elems = 1;
+    V.dimX      = 1;
+    V.dimY      = 0;
     V.defSign   = true;
     V.defVector = false;
+    V.defMatrix = false;
     V.defFloat  = false;
     V.defRegClass = false;
     V.width     = std::stoi( Str.substr(1,Str.length()-1) );
@@ -583,6 +611,37 @@ bool SCParser::GetVarAttr( std::string Str, VarAttrs &V ){
 int SCParser::GetNextToken(){
   CurTok = Lex->GetTok();
   return CurTok;
+}
+
+bool SCParser::ParseVLIWStage(std::string Name, unsigned &Stage){
+  Stage = 0;
+  std::string delimiter = "_";
+  size_t pos = Name.find(delimiter);
+
+  if( pos == std::string::npos ){
+    return false;
+  }
+
+  pos++;
+
+  // parse the name to find the form:
+  // NAME_xx
+  // where "NAME" is the stage name
+  // and "xx" is the stage number 0->n
+  std::string token = Name.substr(pos,Name.size());
+
+  if( token.length() == 0 ){
+    return false;
+  }
+
+  for(std::string::iterator it=token.begin(); it!=token.end(); ++it){
+    if( !std::isdigit(*it) )
+      return false;
+  }
+
+  Stage = std::stoi(token);
+
+  return true;
 }
 
 int SCParser::GetTokPrecedence(){
@@ -677,6 +736,7 @@ std::unique_ptr<ExprAST> SCParser::ParseIdentifierExpr() {
 
   // Check to see if the call is an intrinsic
   bool Intrin = false;
+  std::vector<std::string> OrigNames;
   if( CheckIntrinName(IdName) ){
     // we have an intrinsic, check the argument list
     Intrin = true;
@@ -687,9 +747,22 @@ std::unique_ptr<ExprAST> SCParser::ParseIdentifierExpr() {
                        std::to_string(GetNumIntrinArgs(IdName)) +
                        " arguments." );
     }
+
+    // if we have an intrinsic, then map all the expression args
+    if( (IdName == "IN") || (IdName == "OUT") ){
+      for( unsigned i=0; i<Args.size(); i++ ){
+        VariableExprAST *LHSE = static_cast<VariableExprAST *>(Args[i].get());
+        if( LHSE ){
+          OrigNames.push_back(LHSE->getName());
+        }
+      }
+    }
   }
 
-  return llvm::make_unique<CallExprAST>(IdName, std::move(Args), Intrin);
+  return llvm::make_unique<CallExprAST>(IdName,
+                                        std::move(Args),
+                                        std::move(OrigNames),
+                                        Intrin);
 }
 
 std::unique_ptr<ExprAST> SCParser::ParseIfExpr() {
@@ -837,13 +910,27 @@ std::unique_ptr<ExprAST> SCParser::ParseVarExpr(){
   if( CurTok != tok_identifier )
     return LogError("expected identifier after variable datatype");
 
+  std::unique_ptr<ExprAST> Init = nullptr;
+  VarAttrs VAttr;
+  // init the variable attrs 
+  VAttr.defReadOnly   = false;
+  VAttr.defReadWrite  = true;  // default to true
+  VAttr.defCSR        = false;
+  VAttr.defAMS        = false;
+  VAttr.defTUS        = false;
+  VAttr.defShared     = false;
+  VAttr.defVector     = false;
+  VAttr.defMatrix     = false;
+  VAttr.dimX          = 0;
+  VAttr.dimY          = 0;
+  VAttr.xIdx          = 0;
+  VAttr.yIdx          = 0;
+
   while(true){
     std::string Name = Lex->GetIdentifierStr();
     GetNextToken(); // eat identifier.
-
     // Read the optional initializer.
-    std::unique_ptr<ExprAST> Init = nullptr;
-    if (CurTok == '=') {
+    if( CurTok == '=' ){
       GetNextToken(); // eat the '='.
 
       Init = ParseExpression();
@@ -855,6 +942,137 @@ std::unique_ptr<ExprAST> SCParser::ParseVarExpr(){
     VarNames.push_back(std::make_pair(Name, std::move(Init)));
     Attrs.push_back(Lex->GetVarAttrs());
 
+
+    if(CurTok == '<') {
+      // attempt to parse the vector
+      // eat the <
+      GetNextToken();
+
+      unsigned L_VAttr = Attrs.size()-1;
+      if( CurTok != tok_number ){
+        LogError("Expected numerical value for dimension ");
+      }
+      while( CurTok == tok_number ){
+
+        // get dimension value
+        unsigned dim = (unsigned)(Lex->GetNumVal());
+
+        if( !Attrs[L_VAttr].defMatrix ){
+          Attrs[L_VAttr].dimX = dim;
+        }else{
+          // check if matrix more than 2 dimesions
+          if( Attrs[L_VAttr].dimY )
+            return LogError("Matrices greater than 2-Dimensions are not currently supported. Please adjust " + Name);
+          // assign value after comma to ydim
+          Attrs[L_VAttr].dimY = dim;
+        }
+        // add them to our vector
+        // Attrs.push_back(VAttr);
+        // eat the identifier
+        GetNextToken();
+        // LogError(std::to_string(CurTok));
+
+        if( CurTok == ',' ){
+          // must be matrix
+          Attrs[L_VAttr].defVector = false;
+          Attrs[L_VAttr].defMatrix = true;
+          // eat the comma
+          GetNextToken();
+        }else if( CurTok == '>' ){
+          LocalContainers.push_back(std::make_tuple(Name, CurrentFunction, Attrs[L_VAttr].dimX, Attrs[L_VAttr].dimY));
+          if( !Attrs[L_VAttr].defMatrix ){
+            Attrs[L_VAttr].defVector = true;
+            Attrs[L_VAttr].defElem = false;
+            // Attrs.push_back(VecVAttr);
+            // VarNames.push_back(RegName);
+            for( unsigned i=0; i<Attrs[L_VAttr].dimX; i++ ){
+              // handle vectors
+              // create new name based on containing reg
+              std::string VecElemName = Name + "_" + std::to_string(i);
+              std::unique_ptr<ExprAST> VecElemInit = nullptr;
+              // init the reg attrs for vector element
+              VarAttrs VecElemVAttr = Attrs[L_VAttr];
+              VecElemVAttr.defVector     = true;
+              VecElemVAttr.defMatrix     = false;
+              VecElemVAttr.defElem       = true;
+              VecElemVAttr.xIdx          = i;
+              VecElemVAttr.containers    = Name;
+              // add to vector
+              Attrs.push_back(VecElemVAttr);
+              VarNames.push_back(std::make_pair(VecElemName, std::move(VecElemInit)));
+              }
+          } 
+          // Matrix Handling
+          else{
+            VarAttrs MatVecVAttr = Attrs[L_VAttr];
+            // MatVecVAttr.defMatrix     = true;
+            MatVecVAttr.defVector     = true;
+            MatVecVAttr.defElem       = false;
+            MatVecVAttr.containers    = Name;
+            for( unsigned i=0; i<Attrs[L_VAttr].dimX; i++ ){
+              std::string MatColName = Name + "_col" + std::to_string(i);
+              std::unique_ptr<ExprAST> MatColInit = nullptr;
+              VarAttrs MatColVAttr = MatVecVAttr;
+              MatColVAttr.xIdx = i;
+              MatColVAttr.yIdx = -1;
+              MatColVAttr.dimX = Attrs[L_VAttr].dimX;
+              MatColVAttr.dimY = 0;
+              Attrs.push_back(MatColVAttr);
+              VarNames.push_back(std::make_pair(MatColName, std::move(MatColInit)));
+            }
+            for( unsigned j=0; j<Attrs[L_VAttr].dimY; j++ ){
+              std::string MatRowName = Name + "_row" + std::to_string(j);
+              std::unique_ptr<ExprAST> MatRowInit = nullptr;
+              VarAttrs MatRowVAttr = MatVecVAttr;
+              MatRowVAttr.yIdx = j;
+              MatRowVAttr.xIdx = -1;
+              MatRowVAttr.dimX = Attrs[L_VAttr].dimY;
+              MatRowVAttr.dimY = 0;
+              Attrs.push_back(MatRowVAttr);
+              VarNames.push_back(std::make_pair(MatRowName, std::move(MatRowInit)));
+            }
+            if( Attrs[L_VAttr].dimX == Attrs[L_VAttr].dimY ) {
+              std::string MatDiagName = Name + "_diag";
+              std::unique_ptr<ExprAST> MatDiagInit = nullptr;
+              VarAttrs MatDiagVAttr = MatVecVAttr;
+              MatDiagVAttr.xIdx = -1;
+              MatDiagVAttr.yIdx = -1;
+              MatDiagVAttr.dimX = Attrs[L_VAttr].dimX;
+              MatDiagVAttr.dimY = 0;
+              Attrs.push_back(MatDiagVAttr);
+              VarNames.push_back(std::make_pair(MatDiagName, std::move(MatDiagInit)));
+            }
+            for( unsigned i=0; i<Attrs[L_VAttr].dimX; i++ ){
+              for( unsigned j=0; j<Attrs[L_VAttr].dimY; j++ ){
+                std::string MatElemName = Name + "_row" + std::to_string(i) + "_col" + std::to_string(j);
+                std::unique_ptr<ExprAST> MatElemInit = nullptr;
+                VarAttrs MatElemAttrs = Attrs[L_VAttr];
+                MatElemAttrs.defMatrix     = true;
+                MatElemAttrs.defElem       = true;
+                MatElemAttrs.defVector     = false;
+                MatElemAttrs.xIdx          = i;
+                MatElemAttrs.yIdx          = j;
+                if( (i == j) && (Attrs[L_VAttr].dimX == Attrs[L_VAttr].dimY) ) {
+                  MatElemAttrs.containers += Name + "_diag, " ;
+                }
+                MatElemAttrs.containers   += (Name + "_row" + std::to_string(i) + ", ");
+                MatElemAttrs.containers   += Name + "_col" + std::to_string(j) + ", ";
+                MatElemAttrs.containers   += Name;
+                Attrs.push_back(MatElemAttrs);
+                VarNames.push_back(std::make_pair(MatElemName, std::move(MatElemInit)));
+              }
+            }
+          }
+          // LogError(std::to_string(CurTok));
+          // eat the closing angle bracket
+          GetNextToken();
+          // LogError(std::to_string(CurTok));
+          break;
+        }else{
+          return LogError("Expected ',' or closing brace '>' in matrix register dimension list for " + Name);
+        }
+      }
+    }
     // check for the end of the variable list
     if( CurTok != ',' ){
       break;
@@ -864,16 +1082,18 @@ std::unique_ptr<ExprAST> SCParser::ParseVarExpr(){
 
     if( CurTok != tok_identifier )
       LogError("expected identifier list in variable definition");
-  }// end parsing the variable list
 
+  }// end parsing the variable list
+  
   auto Body = ParseExpression();
   if (!Body)
     return nullptr;
-
+  // LogError(std::to_string(CurTok));
   return llvm::make_unique<VarExprAST>(std::move(VarNames),
                                        std::move(Attrs),
                                        std::move(Body) );
 }
+
 
 std::unique_ptr<ExprAST> SCParser::ParseDoWhileExpr(){
 
@@ -1120,12 +1340,24 @@ std::unique_ptr<PrototypeAST> SCParser::ParsePrototype() {
 
   // parse the optional inst format
   std::string InstFormat;
+  bool VLIW = false;
+  unsigned Stage = 0;
   if(CurTok == ':'){
     GetNextToken();
     if( CurTok != tok_identifier )
       return LogErrorP("Expected identifier in instruction prototype instruction format: 'name:format'");
     InstFormat = Lex->GetIdentifierStr();
+    if( (InstFormat == "VLIW") ||
+        (InstFormat == "vliw") ){
+      VLIW = true;
+    }
     GetNextToken(); // eat the identifier
+  }
+
+  // for VLIW definitions, parse the stage numbering scheme
+  if( VLIW ){
+    if( !ParseVLIWStage(FnName, Stage) )
+      return LogErrorP("VLIW pipeline stage names are in the form: 'NAME_x', where 'x' is an unsigned integer");
   }
 
   if (CurTok != '(')
@@ -1150,15 +1382,18 @@ std::unique_ptr<PrototypeAST> SCParser::ParsePrototype() {
   // success.
   GetNextToken(); // eat ')'.
 
-  return llvm::make_unique<PrototypeAST>(FnName, InstFormat, std::move(ArgNames));
+  return llvm::make_unique<PrototypeAST>(FnName, InstFormat, VLIW,
+                                         Stage, std::move(ArgNames));
 }
 
 VarAttrs SCParser::GetMaxVarAttr(std::vector<VarAttrs> ArgAttrs){
   VarAttrs Attr;
-  Attr.elems = 1;
-  Attr.defSign = false;
-  Attr.defVector = false;
-  Attr.defFloat = false;
+  Attr.dimX       = 1;
+  Attr.dimY       = 0;
+  Attr.defSign    = false;
+  Attr.defVector  = false;
+  Attr.defMatrix  = false;
+  Attr.defFloat   = false;
 
   unsigned Max = 0;
   for( unsigned i=0; i<ArgAttrs.size(); i++ ){
@@ -1354,6 +1589,12 @@ std::unique_ptr<RegClassAST> SCParser::ParseRegClassDef(){
     VAttr.defAMS        = false;
     VAttr.defTUS        = false;
     VAttr.defShared     = false;
+    VAttr.defVector     = false;
+    VAttr.defMatrix     = false;
+    VAttr.dimX          = 0;
+    VAttr.dimY          = 0;
+    VAttr.xIdx          = 0;
+    VAttr.yIdx          = 0;
 
     // add them to our vector
     ArgAttrs.push_back(VAttr);
@@ -1417,7 +1658,140 @@ std::unique_ptr<RegClassAST> SCParser::ParseRegClassDef(){
         }
       }
     }
+    // --
+    // Parse an angle bracket, if an angle bracket exists, parse a vector/matrix
+    // --
+    if( CurTok == '<' ){
+      // attempt to parse the vector
+      // eat the <
+      GetNextToken();
 
+      unsigned L_VAttr = ArgAttrs.size()-1;
+
+      ArgAttrs[L_VAttr].defVector = true;
+      ArgAttrs[L_VAttr].defMatrix = false;
+      // will store dimensions of vector/mat reg
+      // std::vector<unsigned> Dimensions;
+
+      // parse a numeric value
+      if( CurTok != tok_number ){
+        return LogErrorR("Expected numerical value for dimension "); 
+      }
+
+      while( CurTok == tok_number ){
+        // get dimension value
+        unsigned dim = (unsigned)(Lex->GetNumVal());
+
+        if( !ArgAttrs[L_VAttr].defMatrix ){
+          ArgAttrs[L_VAttr].dimX = dim;
+        }else{
+          // check if matrix more than 2 dimesions
+          if( ArgAttrs[L_VAttr].dimY )
+            return LogErrorR("Matrices greater than 2-Dimensions are not currently supported. Please adjust " + RegName);
+          // assign value after comma to ydim
+          ArgAttrs[L_VAttr].dimY = dim;
+        }
+
+        // add them to our vector
+        // ArgAttrs.push_back(VAttr);
+        // eat the identifier
+        GetNextToken();
+
+        if( CurTok == ',' ){
+          // must be matrix
+          ArgAttrs[L_VAttr].defVector = false;
+          ArgAttrs[L_VAttr].defMatrix = true;
+          // eat the comma
+          GetNextToken();
+        }else if( CurTok == '>' ){
+          if( !ArgAttrs[L_VAttr].defMatrix ){
+            ArgAttrs[L_VAttr].defVector = true;
+            ArgAttrs[L_VAttr].defElem = false;
+            // ArgAttrs.push_back(VecVAttr);
+            // ArgNames.push_back(RegName);
+            for( unsigned i=0; i<ArgAttrs[L_VAttr].dimX; i++ ){
+            // handle vectors
+            // create new name based on containing reg
+            std::string VecElemName = RegName + "_" + std::to_string(i);
+
+            // init the reg attrs for vector element
+            VarAttrs VecElemVAttr = ArgAttrs[L_VAttr];
+            VecElemVAttr.defVector     = true;
+            VecElemVAttr.defMatrix     = false;
+            VecElemVAttr.defElem       = true;
+            VecElemVAttr.xIdx          = i;
+            VecElemVAttr.containers    = RegName;
+
+            // add to vector
+            ArgAttrs.push_back(VecElemVAttr);
+            ArgNames.push_back(VecElemName);
+            }
+          }
+          // Matrix Handling
+          else{
+            VarAttrs MatVecVAttr = ArgAttrs[L_VAttr];
+            // MatVecVAttr.defMatrix     = true;
+            MatVecVAttr.defVector     = true;
+            MatVecVAttr.defElem       = false;
+            MatVecVAttr.containers    = RegName;
+            for( unsigned i=0; i<ArgAttrs[L_VAttr].dimX; i++ ){
+              std::string MatColName = RegName + "_col" + std::to_string(i);
+              VarAttrs MatColVAttr = MatVecVAttr;
+              MatColVAttr.xIdx = i;
+              MatColVAttr.yIdx = -1;
+              MatColVAttr.dimX = ArgAttrs[L_VAttr].dimX;
+              MatColVAttr.dimY = 0;
+              ArgAttrs.push_back(MatColVAttr);
+              ArgNames.push_back(MatColName);
+            }
+            for( unsigned j=0; j<ArgAttrs[L_VAttr].dimY; j++ ){
+              std::string MatRowName = RegName + "_row" + std::to_string(j);
+              VarAttrs MatRowVAttr = MatVecVAttr;
+              MatRowVAttr.yIdx = j;
+              MatRowVAttr.xIdx = -1;
+              MatRowVAttr.dimX = ArgAttrs[L_VAttr].dimY;
+              MatRowVAttr.dimY = 0;
+              ArgAttrs.push_back(MatRowVAttr);
+              ArgNames.push_back(MatRowName);
+            }
+            if( ArgAttrs[L_VAttr].dimX == ArgAttrs[L_VAttr].dimY ) {
+              std::string MatDiagName = RegName + "_diag";
+              VarAttrs MatDiagVAttr = MatVecVAttr;
+              MatDiagVAttr.xIdx = -1;
+              MatDiagVAttr.yIdx = -1;
+              MatDiagVAttr.dimX = ArgAttrs[L_VAttr].dimX;
+              MatDiagVAttr.dimY = 0;
+              ArgAttrs.push_back(MatDiagVAttr);
+              ArgNames.push_back(MatDiagName);
+            }
+            for( unsigned i=0; i<ArgAttrs[L_VAttr].dimX; i++ ){
+              for( unsigned j=0; j<ArgAttrs[L_VAttr].dimY; j++ ){
+                std::string MatElemName = RegName + "_row" + std::to_string(i) + "_col" + std::to_string(j);
+                VarAttrs MatElemAttrs = ArgAttrs[L_VAttr];
+                MatElemAttrs.defMatrix     = true;
+                MatElemAttrs.defElem       = true;
+                MatElemAttrs.defVector     = false;
+                MatElemAttrs.xIdx          = i;
+                MatElemAttrs.yIdx          = j;
+                if( (i == j) && (ArgAttrs[L_VAttr].dimX == ArgAttrs[L_VAttr].dimY) ) {
+                  MatElemAttrs.containers += RegName + "_diag, " ;
+                }
+                MatElemAttrs.containers   += (RegName + "_row" + std::to_string(i) + ", ");
+                MatElemAttrs.containers   += RegName + "_col" + std::to_string(j) + ", ";
+                MatElemAttrs.containers   += RegName;
+                ArgAttrs.push_back(MatElemAttrs);
+                ArgNames.push_back(MatElemName);
+              }
+            }
+          }
+        // eat the closing angle bracket
+        GetNextToken();
+        break;
+      }else{
+        return LogErrorR("Expected ',' or closing brace '>' in matrix register dimension list for " + RegName);
+        }
+      }
+    }
     // --
     // Parse an open paren, if an open paren exists, parse a subregister list
     // --
@@ -1514,7 +1888,8 @@ std::unique_ptr<FunctionAST> SCParser::ParseDefinition() {
   }
   GetNextToken(); // eat the '{'
   InFunc = true;
-
+  
+  CurrentFunction = Proto->getName();
   std::vector<std::unique_ptr<ExprAST>> Exprs;
   while( CurTok != '}' ){
     auto Body = ParseExpression();
@@ -1557,9 +1932,11 @@ std::unique_ptr<InstFormatAST> SCParser::ParseInstFormat(){
 
 std::unique_ptr<FunctionAST> SCParser::ParseTopLevelExpr() {
   if (auto E = ParseExpression()) {
-    // Make an anonymous proto.
+    // Make an anonymous proto: disable VLIW by default
     auto Proto = llvm::make_unique<PrototypeAST>("__anon_expr",
                                                  "",
+                                                 false,
+                                                 0,
                                                  std::vector<std::string>());
     std::vector<std::unique_ptr<ExprAST>> Exprs;
     Exprs.push_back(std::move(E));
@@ -1701,11 +2078,23 @@ static AllocaInst *CreateEntryBlockAlloca(Function *TheFunction,
                                           const std::string &VarName) {
   // if variable attributes are undefined, define a dummy u64 value
   VarAttrs A;
-  A.width = 64;
-  A.elems = 1;
-  A.defSign = false;
-  A.defVector = false;
-  A.defFloat = false;
+  A.width         = 64;
+  A.dimX          = 1;
+  A.dimY          = 0;
+  A.xIdx          = -1;
+  A.yIdx          = -1;
+  A.defSign       = false;
+  A.defFloat      = false;
+  A.defVector     = false;
+  A.defMatrix     = false;
+  A.defElem       = false;
+  A.defRegClass   = false;
+  A.defReadOnly   = false;
+  A.defReadWrite  = true;
+  A.defCSR        = false;
+  A.defAMS        = false;
+  A.defTUS        = false;
+  A.defShared     = false;
   return CreateEntryBlockAllocaAttr(TheFunction,VarName,A);
 }
 
@@ -2077,6 +2466,7 @@ Value *ForExprAST::codegen() {
 Value *VariableExprAST::codegen() {
   // Look this variable up in the function.
   Value *V = SCParser::NamedValues[Name];
+
   if (!V){
     // variable wasn't in the function scope, check the globals
     V = SCParser::GlobalNamedValues[Name];
@@ -2122,8 +2512,8 @@ Value *VarExprAST::codegen() {
       }else{
         InitVal = ConstantInt::get(SCParser::TheContext,
                                    APInt(Attrs[i].width,
-                                         0,
-                                         Attrs[i].defSign));
+                                   0,
+                                   Attrs[i].defSign));
       }
     }
 
@@ -2198,7 +2588,20 @@ Value *BinaryExprAST::codegen() {
     return nullptr;
   }
 
-  // interrogate the types of the operands, mutate the operands if necessary
+  Function *TheFunction = Builder.GetInsertBlock()->getParent();
+  unsigned DimX, DimY;
+  // LHS is of type vec or mat
+  if( SCParser::CheckLocalContainers(R->getName(), TheFunction->getName(), DimX, DimY ) ){
+    unsigned LDimX = DimX;
+    unsigned LDimY = DimY;
+    // RHS is of type vec or mat
+    if( SCParser::CheckLocalContainers(L->getName(), TheFunction->getName(), DimX, DimY )     ){
+
+      //if( Dim1X != Dim2X || Dim1Y != Dim2Y ){
+      //LogErrorV("No dice");
+      // }
+    }
+  }
   Type *LT = L->getType();
   Type *RT = R->getType();
 
@@ -2380,6 +2783,8 @@ Value *CallExprAST::codegen() {
   if (CalleeF->arg_size() != Args.size())
     return LogErrorV("Incorrect # arguments passed");
 
+  // ----- Attributes "field_name" "field_type"
+  // TheModule (See SCPipeInfo.cpp)
   std::vector<Value *> ArgsV;
   for (unsigned i = 0, e = Args.size(); i != e; ++i) {
     ArgsV.push_back(Args[i]->codegen());
@@ -2388,11 +2793,59 @@ Value *CallExprAST::codegen() {
   }
 
   Value *CI = SCParser::Builder.CreateCall(CalleeF, ArgsV, "calltmp");
+  std::string IOSigTypeStr;
+  std::string IOSrcTypeStr;
+  // VLIW IN/OUT
+  if( (Callee=="IN") || (Callee=="OUT") ){
+    std::string IOSigTypeStr;
+    std::string IOSrcTypeStr;
+    std::string OrigName = getOrigName(0);
+
+    // Check if global (ie. Not a tmp)
+    if( auto IOArg = TheModule->getGlobalVariable(ArgsV.at(0)->getName()) ){
+      AttributeSet AttrSet = IOArg->getAttributes();
+      if( AttrSet.hasAttribute("fieldtype") ){
+        std::string FieldType = AttrSet.getAttribute("fieldtype").getAsString();
+        // InstFormatField of type register
+        if( FieldType == "register"){
+          IOSigTypeStr = "DATA";
+          IOSrcTypeStr = "REG";
+        }else{ //if( FieldType == "encoding") TODO: Change to `Else if` so edge cases covered
+          IOSigTypeStr = "CTRL";
+          IOSrcTypeStr = "ENC";
+        }
+        // TODO: also need to handle immediate values `imm`
+      }
+    // Not a global value ->  variable
+    }else{
+      IOSigTypeStr = "DATA";
+      IOSrcTypeStr = "VAR";
+    }
+
+    // IOSigType will be "CTRL" or "DATA"
+    MDNode *IOSigType = MDNode::get(SCParser::TheContext,
+                                 MDString::get(SCParser::TheContext,IOSigTypeStr));
+
+    // IOSrcType will be "REGCLASS", "VAR", or "ENC"
+    MDNode *IOSrcType = MDNode::get(SCParser::TheContext,
+                                MDString::get(SCParser::TheContext,IOSrcTypeStr));
+
+    // ArgNamemD will be the original argument name from the intrinsic call
+    MDNode *ArgNameMD = MDNode::get(SCParser::TheContext,
+                                    MDString::get(SCParser::TheContext,OrigName));
+
+    // write the metadata
+    cast<Instruction>(CI)->setMetadata("vliw.type",IOSigType);
+    cast<Instruction>(CI)->setMetadata("vliw.src",IOSrcType);
+    cast<Instruction>(CI)->setMetadata("vliw.arg",ArgNameMD);
+  }
+
   if( SCParser::NameMDNode ){
     cast<Instruction>(CI)->setMetadata("pipe.pipeName",SCParser::NameMDNode);
     cast<Instruction>(CI)->setMetadata("pipe.pipeLine",SCParser::PipelineMDNode);
     cast<Instruction>(CI)->setMetadata("pipe.pipeInstance",SCParser::InstanceMDNode);
   }
+
   return CI;
 }
 
@@ -2401,18 +2854,20 @@ Function *PrototypeAST::codegen() {
   // in the register class lists
   // If they are found, use the datatype from the register value
   // Otherwise, default to u64
-  //std::vector<Type *> Doubles(Args.size(), Type::getDoubleTy(SCParser::TheContext));
   std::vector<Type *> Doubles(Args.size(),
                               Type::getIntNTy(SCParser::TheContext,64));
   FunctionType *FT =
       FunctionType::get(Type::getIntNTy(SCParser::TheContext,64), Doubles, false);
-      //FunctionType::get(Type::getDoubleTy(SCParser::TheContext), Doubles, false);
 
   Function *F =
-      Function::Create(FT, Function::ExternalLinkage, Name, SCParser::TheModule.get());
+      Function::Create(FT, Function::ExternalLinkage, Name,
+                       SCParser::TheModule.get());
 
-  if( InstFormat.length() > 0 ){
+  if( (InstFormat.length() > 0) && (!VLIW) ){
     F->addFnAttr("instformat",InstFormat);
+  }else if( VLIW ){
+    F->addFnAttr("vliw", "true");
+    F->addFnAttr("vliwStage", std::to_string(Stage));
   }
 
   // Set names for all arguments.
@@ -2619,6 +3074,48 @@ Value *RegClassAST::codegen(){
       if( Attrs[i].defShared ){
         val->addAttribute("shared", "true");
       }
+      // if its a matrix reg
+      if( Attrs[i].defMatrix ){
+        if( Attrs[i].defElem ){
+          val->addAttribute("xidx", std::to_string(Attrs[i].xIdx));
+          val->addAttribute("yidx", std::to_string(Attrs[i].yIdx));
+          val->addAttribute("containers", Attrs[i].containers);
+        }
+        // if vector within matrix
+        else if( Attrs[i].defVector ){
+          val->addAttribute("vector", "true");
+          val->addAttribute("containers", Attrs[i].containers);
+          // differentiate row / col
+          if( Attrs[i].xIdx + Attrs[i].yIdx == -2 ){
+            continue;
+          }
+          else if( Attrs[i].yIdx == -1 ){
+            val->addAttribute("xidx", std::to_string(Attrs[i].xIdx));
+            val->addAttribute("xdim", std::to_string(Attrs[i].dimX));
+          }
+          else{
+            val->addAttribute("yidx", std::to_string(Attrs[i].yIdx));
+            val->addAttribute("ydim", std::to_string(Attrs[i].dimY));
+          }
+          // val->addAttribute("elements", std::to_string(dimX));
+        }else{
+          val->addAttribute("matrix", "true");
+          val->addAttribute("xdim", std::to_string(Attrs[i].dimX));
+          val->addAttribute("ydim", std::to_string(Attrs[i].dimY));
+        }
+      }
+      // if its a vector reg
+      if( Attrs[i].defVector && !Attrs[i].defMatrix ){
+        // if its a vector element
+        if( Attrs[i].defElem ){
+          val->addAttribute("xidx", std::to_string(Attrs[i].xIdx));
+          val->addAttribute("containers", Attrs[i].containers);
+        }else{
+          // not an element
+          val->addAttribute("xdim", std::to_string(Attrs[i].dimX));
+          val->addAttribute("vector", "true");
+        }
+      }
     }else{
       // this is a register class
       // add a special attribute token
@@ -2812,7 +3309,7 @@ Value *IfExprAST::codegen() {
   PHINode *PN = nullptr;
   if( TV->getType()->isFloatingPointTy() ){
     PN = Builder.CreatePHI(TV->getType(),
-                                    2, "iftmp."+std::to_string(LocalLabel));
+                           2, "iftmp."+std::to_string(LocalLabel));
     if( SCParser::NameMDNode ){
       PN->setMetadata("pipe.pipeName",SCParser::NameMDNode);
       PN->setMetadata("pipe.pipeLine",SCParser::PipelineMDNode);
@@ -2820,7 +3317,7 @@ Value *IfExprAST::codegen() {
     }
   }else{
     PN = Builder.CreatePHI(TV->getType(),
-                                    2, "iftmp."+std::to_string(LocalLabel));
+                           2, "iftmp."+std::to_string(LocalLabel));
     if( SCParser::NameMDNode ){
       PN->setMetadata("pipe.pipeName",SCParser::NameMDNode);
       PN->setMetadata("pipe.pipeLine",SCParser::PipelineMDNode);
@@ -2828,14 +3325,15 @@ Value *IfExprAST::codegen() {
     }
   }
 
-  PN->addIncoming(TV, ThenBB);
+  // TODO: Disabling the incoming phi node calculations
+  //PN->addIncoming(TV, ThenBB);
   if( EV != nullptr ){
     // check to see if we need to adjust the size of the types
     if( TV->getType()->getPrimitiveSizeInBits() !=
         EV->getType()->getPrimitiveSizeInBits() ){
       EV->mutateType(TV->getType());
     }
-    PN->addIncoming(EV, ElseBB);
+    //PN->addIncoming(EV, ElseBB);
   }
   return PN;
 }
@@ -2844,8 +3342,14 @@ Value *IfExprAST::codegen() {
 // Error Handlers
 //===----------------------------------------------------------------------===//
 
+unsigned SCParser::GetLineNum(){
+  return Lex->GetLineNum() - Intrins.size();
+}
+
 std::unique_ptr<ExprAST> SCParser::LogError(std::string Str) {
-  Msgs->PrintMsg( L_ERROR, "Line " + std::to_string(Lex->GetLineNum()) + " : " + Str );
+  Msgs->PrintMsg( L_ERROR, "Line " +
+                  std::to_string(GetLineNum()) +
+                  " : " + Str );
   return nullptr;
 }
 

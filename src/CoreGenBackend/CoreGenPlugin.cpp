@@ -1,7 +1,7 @@
 //
 // _CoreGenPlugin_cpp_
 //
-// Copyright (C) 2017-2020 Tactical Computing Laboratories, LLC
+// Copyright (C) 2017-2022 Tactical Computing Laboratories, LLC
 // All Rights Reserved
 // contact@tactcomplabs.com
 //
@@ -21,7 +21,12 @@ CoreGenPlugin::CoreGenPlugin(std::string N,
 
 CoreGenPlugin::~CoreGenPlugin(){
   destroy_t *destroy = Funcs.destroy;
-  destroy(Impl);
+  if( destroy != nullptr ){
+    destroy(Impl);
+    Funcs.destroy = nullptr;
+    Funcs.create  = nullptr;
+    Funcs.getname = nullptr;
+  }
 }
 
 unsigned CoreGenPlugin::GetNumFeatures(){

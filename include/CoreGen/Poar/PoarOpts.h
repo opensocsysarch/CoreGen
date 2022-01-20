@@ -1,7 +1,7 @@
 //
 // _PoarOpts_h_
 //
-// Copyright (C) 2017-2020 Tactical Computing Laboratories, LLC
+// Copyright (C) 2017-2022 Tactical Computing Laboratories, LLC
 // All Rights Reserved
 // contact@tactcomplabs.com
 //
@@ -22,6 +22,7 @@
 
 #include <iostream>
 #include <string>
+#include <vector>
 
 #ifndef POAR_MAJOR_VERSION
 #define POAR_MAJOR_VERSION 0
@@ -38,18 +39,19 @@
 class PoarOpts{
 private:
   // private variables
-  int argc;             ///< PoarOpts: ARGC command line info
-  char **argv;          ///< PoarOpts: ARGV command line info
-  std::string YamlFile; ///< PoarOpts: Yaml input file
-  std::string SCFile;   ///< PoarOpts: Signal map input file
-  std::string Config;   ///< PoarOpts: configuration file
-  std::string OutFile;  ///< PoarOpts: output files
-  std::string Root;     ///< PoarOpts: root node for the graph traversal
+  int argc;                             ///< PoarOpts: ARGC command line info
+  char **argv;                          ///< PoarOpts: ARGV command line info
+  std::string YamlFile;                 ///< PoarOpts: Yaml input file
+  std::string SCFile;                   ///< PoarOpts: Signal map input file
+  std::string Config;                   ///< PoarOpts: configuration file
+  std::string OutFile;                  ///< PoarOpts: output files
+  std::string Root;                     ///< PoarOpts: root node for the graph traversal
 
-  bool TextOutput;      ///< PoarOpts: defines textual output
-  bool YamlOutput;      ///< PoarOpts: defines yaml output
-  bool LatexOutput;     ///< PoarOpts: defines latex output
-  bool XmlOutput;       ///< PoarOpts: defines xml output
+  bool TextOutput;                      ///< PoarOpts: defines textual output
+  bool YamlOutput;                      ///< PoarOpts: defines yaml output
+  bool LatexOutput;                     ///< PoarOpts: defines latex output
+  bool XmlOutput;                       ///< PoarOpts: defines xml output
+  std::vector<double> MultiplierVect;   ///< PoarOpts: any multipliers to be applied (ie. Overhead Percent)
 
   // private functions
 
@@ -92,6 +94,9 @@ public:
 
   /// PoarOpts: Retrieves the signal map input file
   std::string GetSigMapFile() { return SCFile; }
+
+  /// PoarOpts: Retrieves the vector of multipliers to be applied (ie. overhead percentage)
+  std::vector<double> GetMultiplierVect() { return MultiplierVect; }
 
   /// PoarOpts: Retrieves the root node for the graph traversal
   std::string GetRoot() { return Root; }

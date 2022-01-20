@@ -1,0 +1,5 @@
+ISAs:
+  - ISAName: TEST3.isa
+Cores:
+  - Core: TEST3.core
+    ISA: TEST3.isa

@@ -1,7 +1,7 @@
 //
 // _CoreGenNode_cpp_
 //
-// Copyright (C) 2017-2020 Tactical Computing Laboratories, LLC
+// Copyright (C) 2017-2022 Tactical Computing Laboratories, LLC
 // All Rights Reserved
 // contact@tactcomplabs.com
 //
@@ -26,11 +26,6 @@ CoreGenNode::~CoreGenNode() {
       delete CNodes[i];
       CNodes[i] = nullptr;
     }
-  }else if( PluginNode ){
-    // delete the target plugin instance
-    // this will instantiate the plugin's destructor
-    delete PluginNode;
-    PluginNode = nullptr;
   }
 }
 

@@ -23,5 +23,6 @@ if [[  "$retVal" -ne 0 ]]; then
   exit $retVal
 fi
 
+echo "TESTING PASSED"
 
 exit 0

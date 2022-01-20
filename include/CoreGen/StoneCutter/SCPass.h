@@ -1,7 +1,7 @@
 //
 // _SCPass_h_
 //
-// Copyright (C) 2017-2020 Tactical Computing Laboratories, LLC
+// Copyright (C) 2017-2022 Tactical Computing Laboratories, LLC
 // All Rights Reserved
 // contact@tactcomplabs.com
 //
@@ -67,6 +67,7 @@ private:
 protected:
   SCOpts *Opts;                       ///< StoneCutter options
   Module *TheModule;                  ///< LLVM IR Module
+  bool VLIW;                          ///< VLIW flag
 
 public:
 
@@ -100,6 +101,21 @@ public:
 
   /// Determines if the target variable is a local variable
   bool IsLocal( std::string Var );
+
+  /// Determines if the target function has been defined as a VLIW stage
+  bool IsVLIWStage(Function &F);
+
+  /// Retrieves the VLIW stage for the target function
+  unsigned GetVLIWStage(Function &F);
+
+  /// Retrieves the VLIW IN/OUT intrinsic argument name
+  std::string GetVLIWArgName(Instruction &I);
+
+  /// Retrieves the VLIW IN/OUT intrinsics argument width
+  unsigned GetVLIWArgWidth(Instruction &I);
+
+  /// Retrieves the VLIW IN/OUT intrinsics argument type
+  std::string GetVLIWArgType(Instruction &I);
 
   /// Determines if the target variable has the target attribute
   bool HasGlobalAttribute(std::string Var, std::string Attribute );

@@ -1,7 +1,7 @@
 //
 // _RegSafetyPass_h_
 //
-// Copyright (C) 2017-2020 Tactical Computing Laboratories, LLC
+// Copyright (C) 2017-2022 Tactical Computing Laboratories, LLC
 // All Rights Reserved
 // contact@tactcomplabs.com
 //
@@ -32,6 +32,9 @@
 
 class RegSafetyPass : public CoreGenPass{
 private:
+
+  /// Find any broken vector or matrix dimensions
+  bool FindBrokenVectMat(CoreGenReg *Reg);
 
   /// Find the missing register indices
   bool FindMissingRegIndices(CoreGenReg *Reg);

@@ -1,7 +1,7 @@
 //
 // _CoreGenCodegen_h_
 //
-// Copyright (C) 2017-2020 Tactical Computing Laboratories, LLC
+// Copyright (C) 2017-2022 Tactical Computing Laboratories, LLC
 // All Rights Reserved
 // contact@tactcomplabs.com
 //
@@ -55,6 +55,7 @@ private:
   CoreGenErrno *Errno;        ///< CoreGen Errno Structure
   CoreGenArchive *Archive;    ///< CoreGen Archive Object
   CoreGenArchEntry *LLEntry;  ///< CoreGen LLVM archive entry
+  CoreGenPluginMgr* PlugInMgr; ///< CoreGen PlugIn Manager
 
   std::string ChiselDir;      ///< CoreGen Chisel output directory
   std::string LLVMDir;        ///< CoreGen LLVM output directory
@@ -94,6 +95,9 @@ private:
   /// Constructs full StoneCutter files for each ISA
   bool BuildStoneCutterFiles();
 
+  /// Constructs the raw StoneCutter files for all nodes in the graph
+  bool BuildRawStoneCutterFiles();
+
   /// Constructs an individual ISA Chisel File
   bool BuildISAChisel(CoreGenISA *ISA,
                       std::vector<CoreGenInst *> Insts);
@@ -109,13 +113,16 @@ private:
 
 public:
   /// Default constructor
-  CoreGenCodegen(CoreGenNode *T, CoreGenProj *P, CoreGenEnv *V, CoreGenErrno *E);
+  CoreGenCodegen(CoreGenNode *T, CoreGenProj *P, CoreGenEnv *V, CoreGenErrno *E, CoreGenPluginMgr *PlugIn);
 
   /// Default destructor
   ~CoreGenCodegen();
 
   /// Execute the LLVM codegen
   bool ExecuteLLVMCodegen(std::string CompVer);
+
+  /// Execute the StoneCutter codegen
+  bool ExecuteStoneCutterCodegen();
 
   /// Execute the Chisel codegen
   bool ExecuteChiselCodegen();

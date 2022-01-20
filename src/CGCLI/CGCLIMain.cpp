@@ -1,7 +1,7 @@
 //
 // _CGCLIMain_cpp_
 //
-// Copyright (C) 2017-2020 Tactical Computing Laboratories, LLC
+// Copyright (C) 2017-2022 Tactical Computing Laboratories, LLC
 // All Rights Reserved
 // contact@tactcomplabs.com
 //
@@ -295,6 +295,14 @@ int ExecuteCoregen( CGCLIOpts *Opts ){
     // run the compiler codegen
     if( !CG->ExecuteLLVMCodegen(Opts->GetCompilerVersion()) ){
       std::cout << "Error executing the LLVM codegen: "
+                << CG->GetErrStr() << std::endl;
+      delete CG;
+      return -1;
+    }
+  }else if( Opts->IsStoneCutterEnabled() ){
+    // run the stonecutter codegen
+    if( !CG->ExecuteStoneCutterCodegen() ){
+      std::cout << "Error executing the StoneCutter codegen: "
                 << CG->GetErrStr() << std::endl;
       delete CG;
       return -1;

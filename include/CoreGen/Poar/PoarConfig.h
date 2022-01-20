@@ -1,7 +1,7 @@
 //
 // _PoarConfig_h_
 //
-// Copyright (C) 2017-2020 Tactical Computing Laboratories, LLC
+// Copyright (C) 2017-2022 Tactical Computing Laboratories, LLC
 // All Rights Reserved
 // contact@tactcomplabs.com
 //
@@ -23,6 +23,7 @@
 #include <iostream>
 #include <string>
 #include <fstream>
+#include <vector>
 
 #include "yaml-cpp/yaml.h"
 
@@ -66,17 +67,16 @@ public:
   }PassType;
 
   typedef struct{
-    ConfigType Type;    ///< ConfigEntry: configuration type
-    ValueType VType;    ///< ConfigEntry: power or area value
-    PassType PType;     ///< ConfigEntry: CoreGen or StoneCutter pass
-    std::string Name;   ///< ConfigEntry: name of the config entry
-    std::string Accum;  ///< ConfigEntry: name of the corresponding accumulator
-    double DefaultVal;  ///< ConfigEntry: default value
-    double Value;       ///< ConfigEntry: the value of the entry
-    double Result;      ///< ConfigEntry: the resulting accumulated value
-  }ConfigEntry;         ///< PoarConfig: configuration entry structure
-
-
+    ConfigType Type;        ///< ConfigEntry: configuration type
+    ValueType VType;        ///< ConfigEntry: power or area value
+    PassType PType;         ///< ConfigEntry: CoreGen or StoneCutter pass
+    std::string Name;       ///< ConfigEntry: name of the config entry
+    std::string Accum;      ///< ConfigEntry: name of the corresponding accumulator
+    double DefaultVal;      ///< ConfigEntry: default value
+    double Value;           ///< ConfigEntry: the value of the entry
+    double Result;          ///< ConfigEntry: the resulting accumulated value
+    double AdjustedResult;  ///< ConfigEntry; the accumulated value post any adjustments
+  }ConfigEntry;             ///< PoarConfig: configuration entry structure
 
 private:
   std::string Config;   ///< PoarConfig: configuration file path
@@ -109,7 +109,8 @@ public:
   unsigned GetNumEntry();
 
   /// PoarConfig: set the resulting value for the target entry
-  bool SetResult(unsigned Entry, uint64_t Width);
+  bool SetResult(unsigned Entry, uint64_t Width, std::vector<double> MultiplierVect);
+
 };
 
 #endif

@@ -1,7 +1,7 @@
 //
 // _SCParser_h_
 //
-// Copyright (C) 2017-2020 Tactical Computing Laboratories, LLC
+// Copyright (C) 2017-2022 Tactical Computing Laboratories, LLC
 // All Rights Reserved
 // contact@tactcomplabs.com
 //
@@ -31,6 +31,8 @@
 #include <memory>
 #include <string>
 #include <vector>
+#include <numeric>
+#include <string>
 
 // CoreGen headers
 #include "CoreGen/StoneCutter/SCLexer.h"
@@ -268,6 +270,7 @@ public:
 
   /// BinaryExprAST - Expression class for a binary operator.
   class BinaryExprASTContainer : public ExprASTContainer {
+    // std::vector<std::tuple<std::string, std::string, unsigned, unsigned>> LocalContainers; ///< vector of all instances of mat and vec types 
     char Op;    ///< Binary operator
     std::unique_ptr<ExprASTContainer> LHS;    ///< Left hand side of the expression
     std::unique_ptr<ExprASTContainer> RHS;    ///< Right hand side of the expression
@@ -286,20 +289,34 @@ public:
   class CallExprASTContainer : public ExprASTContainer {
     std::string Callee;   ///< Callee of the function
     std::vector<std::unique_ptr<ExprASTContainer>> Args; ///< Arguments to the function
+    std::vector<std::string> OrigNames; ///< Original argument names (unmangled)
     bool Intrin;    ///<  determines whether the call is an intrinsic
 
   public:
     /// CallExprASTContainer default constructor
     CallExprASTContainer(const std::string &Callee,
                          std::vector<std::unique_ptr<ExprASTContainer>> Args,
+                         std::vector<std::string> OrigNames,
                          bool Intrin)
-      : Callee(Callee), Args(std::move(Args)), Intrin(Intrin) {}
+      : Callee(Callee), Args(std::move(Args)), OrigNames(std::move(OrigNames)),
+        Intrin(Intrin) {}
 
     /// CallExprASTContainer code generation driver
     Value *codegen() override;
 
     /// CallExprASTContainer: determines whether the call is a StoneCutter intrinsic
     bool isIntrin() { return Intrin; }
+
+    /// CallExprASTContainer: retrieves the number of original argument names
+    unsigned getNumOrigNames() { return OrigNames.size(); }
+
+    /// CallExprASTContainer: retrieves the target original argument name
+    std::string getOrigName(unsigned Idx){
+      std::string Name;
+      if( Idx > (OrigNames.size()-1) )
+        return Name;
+      return OrigNames[Idx];
+    }
   };
 
   /// InstFormatASTContainer - This class represents an instruction format definition
@@ -379,16 +396,21 @@ public:
   class PrototypeASTContainer {
     std::string Name;               ///< Name of the instruction protoype
     std::string InstFormat;         ///< Name of the instruction format
+    bool VLIW;                      ///< Is this prototype a VLIW
+    unsigned Stage;                 ///< Pipeline stage for VLIW
     std::vector<std::string> Args;  ///< Argument vector of the prototype
 
   public:
     /// PrototypeASTContainer default constructor
     PrototypeASTContainer(const std::string &Name,
                           const std::string &IName,
+                          bool VLIW,
+                          unsigned Stage,
                           std::vector<std::string> Args)
-        : Name(Name), InstFormat(IName), Args(std::move(Args)) {}
+        : Name(Name), InstFormat(IName), VLIW(VLIW), Stage(Stage),
+          Args(std::move(Args)) {}
 
-    /// PrototypeASTContainer code generation driver
+    /// PrototypeASTContainer: code generation driver
     Function *codegen();
 
     /// PrototypeASTContainer: retrieve the name of the instruction definition
@@ -414,21 +436,23 @@ public:
   };
 
   // LLVM CodeGen Variables
-  static LLVMContext TheContext;                                                        ///< LLVM context
-  static IRBuilder<> Builder;                                                           ///< LLVM IR Builder
-  static std::unique_ptr<Module> TheModule;                                             ///< LLVM top-level Module
-  static std::map<std::string, AllocaInst*> NamedValues;                                ///< Map of named values in scope
-  static std::map<std::string, GlobalVariable*> GlobalNamedValues;                      ///< map of global values always in scope
-  static std::map<std::string, std::unique_ptr<PrototypeASTContainer>> FunctionProtos;  ///< map of function prototypes
-  static std::map<std::string,unsigned> PipeInstances;                                  ///< Pipe stage instance numbers
-  static std::unique_ptr<legacy::FunctionPassManager> TheFPM;                           ///< LLVM function pass manager
-  static unsigned LabelIncr;                                                            ///< Label incrementer
-  static bool IsOpt;                                                                    ///< Are optimizations enabled?
-  static bool IsPipe;                                                                   ///< Are we within a pipeline?
-  static SCMsg *GMsgs;                                                                  ///< Global message handler
-  static MDNode *NameMDNode;                                                            ///< Pipe name metadata node
-  static MDNode *InstanceMDNode;                                                        ///< Pipe instance metadata node
-  static MDNode *PipelineMDNode;                                                        ///< Pipeline name metadata node
+  static LLVMContext TheContext;                                                                ///< LLVM context
+  static IRBuilder<> Builder;                                                                   ///< LLVM IR Builder
+  static std::unique_ptr<Module> TheModule;                                                     ///< LLVM top-level Module
+  static std::map<std::string, AllocaInst*> NamedValues;                                        ///< Map of named values in scope
+  static std::map<std::string, GlobalVariable*> GlobalNamedValues;                              ///< map of global values always in scope
+  static std::vector<std::tuple<std::string, std::string, unsigned, unsigned>> LocalContainers; ///< vector of all instances of mat and vec types 
+  std::string CurrentFunction;                                                                  ///< current function name for tracking vecs and mats
+  static std::map<std::string, std::unique_ptr<PrototypeASTContainer>> FunctionProtos;          ///< map of function prototypes
+  static std::map<std::string,unsigned> PipeInstances;                                          ///< Pipe stage instance numbers
+  static std::unique_ptr<legacy::FunctionPassManager> TheFPM;                                   ///< LLVM function pass manager
+  static unsigned LabelIncr;                                                                    ///< Label incrementer
+  static bool IsOpt;                                                                            ///< Are optimizations enabled?
+  static bool IsPipe;                                                                           ///< Are we within a pipeline?
+  static SCMsg *GMsgs;                                                                          ///< Global message handler
+  static MDNode *NameMDNode;                                                                    ///< Pipe name metadata node
+  static MDNode *InstanceMDNode;                                                                ///< Pipe instance metadata node
+  static MDNode *PipelineMDNode;                                                                ///< Pipeline name metadata node
 
 private:
 
@@ -455,8 +479,11 @@ private:
   /// Inserts all the necessary intrinsic externs into the input stream
   bool InsertExternIntrin();
 
-  /// Checks the call expression and determines if it is an intrinsci
+  /// Checks the call expression and determines if it is an intrinsic
   bool CheckIntrinName(std::string Name);
+
+  /// Checks the call expression and determines if it is an intrinsic
+  static bool CheckLocalContainers(std::string FunctionName, std::string VarName, unsigned &DimX, unsigned &DimY);
 
   /// Get the number of required arguments for the target intrinsic
   unsigned GetNumIntrinArgs(std::string Name);
@@ -484,6 +511,9 @@ private:
 
   /// Get the next token
   int GetNextToken();
+
+  /// Parses VLIW stage numbering schemes
+  bool ParseVLIWStage(std::string Name, unsigned &Stage);
 
   /// Parse the variable definition and return the complementary VarAttr
   bool GetVarAttr( std::string Str, VarAttrs &V );
@@ -593,6 +623,9 @@ private:
 
   // Handles function closing
   void HandleFuncClose();
+
+  /// Retrieves the actual line number
+  unsigned GetLineNum();
 
   /// Logs an error
   std::unique_ptr<ExprASTContainer> LogError(std::string Str);

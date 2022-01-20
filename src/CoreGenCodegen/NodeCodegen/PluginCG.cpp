@@ -1,7 +1,7 @@
 //
 // _PluginCG_cpp_
 //
-// Copyright (C) 2017-2020 Tactical Computing Laboratories, LLC
+// Copyright (C) 2017-2022 Tactical Computing Laboratories, LLC
 // All Rights Reserved
 // contact@tactcomplabs.com
 //
@@ -21,7 +21,7 @@ PluginCG::~PluginCG(){
 
 bool PluginCG::Execute(CoreGenNode *Top, CoreGenNode *Parent){
 
-  CoreGenPlugin *PluginNode = static_cast<CoreGenPlugin *>(Node);
+  CoreGenPlugin *PluginNode = static_cast<CoreGenPlugin *>(Node->GetPlugin());
 
   if( !PluginNode->InitImpl(Path,CGRemoveDot(PluginNode->GetName())) )
     return false;

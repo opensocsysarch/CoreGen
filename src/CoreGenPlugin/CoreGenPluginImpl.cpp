@@ -1,7 +1,7 @@
 //
 // _CoreGenPluginImpl_cpp_
 //
-// Copyright (C) 2017-2019 Tactical Computing Laboratories, LLC
+// Copyright (C) 2017-2022 Tactical Computing Laboratories, LLC
 // All Rights Reserved
 // contact@tactcomplabs.com
 //
@@ -213,7 +213,7 @@ bool CoreGenPluginImpl::CopyPluginSrc(std::string Archive, std::string Path){
       return false;
     }
   }
-  std::string UncStr = "cp -R" + Archive + "/*" + Path + "/";
+  std::string UncStr = "cp -R " + Archive + "/* " + Path + "/";
   if( system( UncStr.c_str() ) != 0 ){
       Errno->SetError(CGERR_ERROR,
                       this->GetName() + ":Could not copy source from archive directory: " + Archive );
@@ -230,47 +230,49 @@ bool CoreGenPluginImpl::PurgeNodes(){
   for( unsigned i=0; i<Top->GetNumChild(); i++ ){
     Top->DeleteChild( Top->GetChild(i) );
   }
-  for( unsigned i=0; i<Caches.size(); i++ ){
-    delete Caches[i];
-  }
-  for( unsigned i=0; i<Cores.size(); i++ ){
-    delete Cores[i];
-  }
-  for( unsigned i=0; i<Exts.size(); i++ ){
-    delete Exts[i];
-  }
-  for( unsigned i=0; i<Insts.size(); i++ ){
-    delete Insts[i];
-  }
-  for( unsigned i=0; i<PInsts.size(); i++ ){
-    delete PInsts[i];
-  }
-  for( unsigned i=0; i<Formats.size(); i++ ){
-    delete Formats[i];
-  }
-  for( unsigned i=0; i<Regs.size(); i++ ){
-    delete Regs[i];
-  }
-  for( unsigned i=0; i<RegClasses.size(); i++ ){
-    delete RegClasses[i];
-  }
-  for( unsigned i=0; i<Socs.size(); i++ ){
-    delete Socs[i];
-  }
-  for( unsigned i=0; i<ISAs.size(); i++ ){
-    delete ISAs[i];
-  }
-  for( unsigned i=0; i<Comms.size(); i++ ){
-    delete Comms[i];
-  }
-  for( unsigned i=0; i<Spads.size(); i++ ){
-    delete Spads[i];
-  }
-  for( unsigned i=0; i<MCtrls.size(); i++ ){
-    delete MCtrls[i];
-  }
-  for( unsigned i=0; i<VTPs.size(); i++ ){
-    delete VTPs[i];
+  if(Top->GetNumChild() > 0){
+    for( unsigned i=0; i<Caches.size(); i++ ){
+      delete Caches[i];
+    }
+    for( unsigned i=0; i<Cores.size(); i++ ){
+      delete Cores[i];
+    }
+    for( unsigned i=0; i<Exts.size(); i++ ){
+      delete Exts[i];
+   }
+    for( unsigned i=0; i<Insts.size(); i++ ){
+      delete Insts[i];
+   }
+    for( unsigned i=0; i<PInsts.size(); i++ ){
+      delete PInsts[i];
+    }
+    for( unsigned i=0; i<Formats.size(); i++ ){
+      delete Formats[i];
+   }
+   for( unsigned i=0; i<Regs.size(); i++ ){
+      delete Regs[i];
+    }
+    for( unsigned i=0; i<RegClasses.size(); i++ ){
+      delete RegClasses[i];
+    }
+    for( unsigned i=0; i<Socs.size(); i++ ){
+      delete Socs[i];
+    }
+    for( unsigned i=0; i<ISAs.size(); i++ ){
+      delete ISAs[i];
+    }
+    for( unsigned i=0; i<Comms.size(); i++ ){
+      delete Comms[i];
+    }
+    for( unsigned i=0; i<Spads.size(); i++ ){
+      delete Spads[i];
+    }
+    for( unsigned i=0; i<MCtrls.size(); i++ ){
+      delete MCtrls[i];
+    }
+    for( unsigned i=0; i<VTPs.size(); i++ ){
+      delete VTPs[i];
+    }
   }
 
   return true;
@@ -367,6 +369,112 @@ bool CoreGenPluginImpl::SetFeatureValue( unsigned Idx,
   }
   FeatureTable[Idx].Value = Val;
   return true;
+}
+
+bool CoreGenPluginImpl::DeleteNode( CoreGenNode *N ){
+  //Top->DeleteChild( Top->GetChild(i) );
+  // add all the subnodes
+  for( unsigned i=0; i<Caches.size(); i++ ){
+    if(static_cast<CoreGenNode *>(Caches[i]) == N){
+      Caches.erase(Caches.begin()+i);
+      Top->DeleteChild(N);
+      return true;
+    }
+  }
+  for( unsigned i=0; i<Cores.size(); i++ ){
+    if(static_cast<CoreGenNode *>(Cores[i]) == N){
+      Cores.erase(Cores.begin()+i);
+      Top->DeleteChild(N);
+      return true;
+    }
+  }
+  for( unsigned i=0; i<Insts.size(); i++ ){
+    if(static_cast<CoreGenNode *>(Insts[i]) == N){
+      Insts.erase(Insts.begin()+i);
+      Top->DeleteChild(N);
+      return true;
+    }
+  }
+  for( unsigned i=0; i<PInsts.size(); i++ ){
+    if(static_cast<CoreGenNode *>(PInsts[i]) == N){
+      PInsts.erase(PInsts.begin()+i);
+      Top->DeleteChild(N);
+      return true;
+    }
+  }
+  for( unsigned i=0; i<Formats.size(); i++ ){
+    if(static_cast<CoreGenNode *>(Formats[i]) == N){
+      Formats.erase(Formats.begin()+i);
+      Top->DeleteChild(N);
+      return true;
+    }
+  }
+  for( unsigned i=0; i<Regs.size(); i++ ){
+    if(static_cast<CoreGenNode *>(Regs[i]) == N){
+      Regs.erase(Regs.begin()+i);
+      Top->DeleteChild(N);
+      return true;
+    }
+  }
+  for( unsigned i=0; i<RegClasses.size(); i++ ){
+    if(static_cast<CoreGenNode *>(RegClasses[i]) == N){
+      RegClasses.erase(RegClasses.begin()+i);
+      Top->DeleteChild(N);
+      return true;
+    }
+  }
+  for( unsigned i=0; i<Socs.size(); i++ ){
+    if(static_cast<CoreGenNode *>(Socs[i]) == N){
+      Socs.erase(Socs.begin()+i);
+      Top->DeleteChild(N);
+      return true;
+    }
+  }
+  for( unsigned i=0; i<ISAs.size(); i++ ){
+    if(static_cast<CoreGenNode *>(ISAs[i]) == N){
+      ISAs.erase(ISAs.begin()+i);
+      Top->DeleteChild(N);
+      return true;
+    }
+  }
+  for( unsigned i=0; i<Exts.size(); i++ ){
+    if(static_cast<CoreGenNode *>(Exts[i]) == N){
+      Exts.erase(Exts.begin()+i);
+      Top->DeleteChild(N);
+      return true;
+    }
+  }
+  for( unsigned i=0; i<Comms.size(); i++ ){
+    if(static_cast<CoreGenNode *>(Comms[i]) == N){
+      Comms.erase(Comms.begin()+i);
+      Top->DeleteChild(N);
+      return true;
+    }
+  }
+  for( unsigned i=0; i<Spads.size(); i++ ){
+    if(static_cast<CoreGenNode *>(Spads[i]) == N){
+      Spads.erase(Spads.begin()+i);
+      Top->DeleteChild(N);
+      return true;
+    }
+  }
+  for( unsigned i=0; i<MCtrls.size(); i++ ){
+    if(static_cast<CoreGenNode *>(MCtrls[i]) == N){
+      MCtrls.erase(MCtrls.begin()+i);
+      Top->DeleteChild(N);
+      return true;
+    }
+  }
+  for( unsigned i=0; i<VTPs.size(); i++ ){
+    if(static_cast<CoreGenNode *>(VTPs[i]) == N){
+      VTPs.erase(VTPs.begin()+i);
+      Top->DeleteChild(N);
+      return true;
+    }
+  }
+
+  // just remove it from Top
+  return Top->DeleteChild( N );
 }
 
 bool CoreGenPluginImpl::InsertNode( CoreGenNode *N ){

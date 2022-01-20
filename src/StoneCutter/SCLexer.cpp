@@ -1,7 +1,7 @@
 //
 // _SCLexer_cpp_
 //
-// Copyright (C) 2017-2020 Tactical Computing Laboratories, LLC
+// Copyright (C) 2017-2022 Tactical Computing Laboratories, LLC
 // All Rights Reserved
 // contact@tactcomplabs.com
 //
@@ -145,9 +145,11 @@ bool SCLexer::IsVarDef(){
   while( VarAttrEntryTable[Idx].Name != "." ){
     if( IdentifierStr == VarAttrEntryTable[Idx].Name ){
       Var.width     = VarAttrEntryTable[Idx].width;
-      Var.elems     = VarAttrEntryTable[Idx].elems;
+      Var.dimX      = VarAttrEntryTable[Idx].dimX;
+      Var.dimY      = 0;
       Var.defSign   = VarAttrEntryTable[Idx].IsDefSign;
       Var.defVector = VarAttrEntryTable[Idx].IsDefVector;
+      Var.defMatrix = VarAttrEntryTable[Idx].IsDefMatrix;
       Var.defFloat  = VarAttrEntryTable[Idx].IsDefFloat;
       Var.defRegClass = false;
       return true;
@@ -162,18 +164,22 @@ bool SCLexer::IsVarDef(){
   // all other types
   if( IdentifierStr[0] == 'u' ){
     // unsigned variable
-    Var.elems     = 1;
+    Var.dimX      = 1;
+    Var.dimY      = 0;
     Var.defSign   = false;
     Var.defVector = false;
+    Var.defMatrix = false;
     Var.defFloat  = false;
     Var.defRegClass = false;
     Var.width     = std::stoi( IdentifierStr.substr(1,IdentifierStr.length()-1) );
     return true;
   }else if( IdentifierStr[0] == 's' ){
     // signed variable
-    Var.elems = 1;
+    Var.dimX      = 1;
+    Var.dimY      = 0;
     Var.defSign   = true;
     Var.defVector = false;
+    Var.defMatrix = false;
     Var.defFloat  = false;
     Var.defRegClass = false;
     Var.width     = std::stoi( IdentifierStr.substr(1,IdentifierStr.length()-1) );

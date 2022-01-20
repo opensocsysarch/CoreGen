@@ -1,7 +1,7 @@
 //
 // _SCChiselCodeGen_cpp_
 //
-// Copyright (C) 2017-2020 Tactical Computing Laboratories, LLC
+// Copyright (C) 2017-2022 Tactical Computing Laboratories, LLC
 // All Rights Reserved
 // contact@tactcomplabs.com
 //
@@ -60,6 +60,8 @@ void SCChiselCodeGen::InitIntrinsics(){
   Intrins.push_back(static_cast<SCIntrin *>(new SCFence()));
   Intrins.push_back(static_cast<SCIntrin *>(new SCBsel()));
   Intrins.push_back(static_cast<SCIntrin *>(new SCNop()));
+  Intrins.push_back(static_cast<SCIntrin *>(new SCIn()));
+  Intrins.push_back(static_cast<SCIntrin *>(new SCOut()));
 }
 
 void SCChiselCodeGen::InitPasses(){
@@ -517,7 +519,7 @@ void SCChiselCodeGen::EmitALU_OP(SCSig *Sig,
   for( unsigned i=0; i<Sig->GetNumInputs(); i++ ){
     if(IsInteger( Sig->GetInput( i ))){
       std::string::size_type sz;
-      Constant = (unsigned)(std::stoi(Sig->GetInput(i),&sz));
+      Constant = (unsigned)(std::stol(Sig->GetInput(i),&sz));
       isConstant = true;
     }else if( PInfo->IsRegisterField(Sig->GetInput(i)) ){
       ImmEn = Sig->GetInput(i);
@@ -1516,13 +1518,15 @@ bool SCChiselCodeGen::WriteUCodeCompiler(){
   return true;
 }
 
-bool SCChiselCodeGen::ExecutePipelineOpt(CoreGenSigMap *SM){
-  SCPipeBuilder *PB = new SCPipeBuilder(SCParser::TheModule.get(),
-                                        Opts,
-                                        Msgs);
-  if( !PB )
-    return false;
+bool SCChiselCodeGen::ExecuteVLIWPipelineOpt(CoreGenSigMap *SM){
   if( !SM )
+    return false;
+
+  SCVLIWPipeBuilder *PB = new SCVLIWPipeBuilder(SCParser::TheModule.get(),
+                                                Opts,
+                                                Msgs);
+
+  if( !PB )
     return false;
 
   if( Opts->IsVerbose() ){
@@ -1572,6 +1576,83 @@ bool SCChiselCodeGen::ExecutePipelineOpt(CoreGenSigMap *SM){
   delete PB;
 
   return rtn;
+}
+
+bool SCChiselCodeGen::ExecuteRISCPipelineOpt(CoreGenSigMap *SM){
+  if( !SM )
+    return false;
+
+  SCPipeBuilder *PB = new SCPipeBuilder(SCParser::TheModule.get(),
+                                        Opts,
+                                        Msgs);
+  if( !PB )
+    return false;
+
+  if( Opts->IsVerbose() ){
+    Msgs->PrintRawMsg( "Executing StoneCutter Pass: " + PB->GetName() );
+  }
+
+  // set the options
+  std::map<std::string,std::string> PassOpts = Opts->GetSCPassOptions();
+  std::map<std::string,std::string>::iterator mit;
+  mit = PassOpts.find(PB->GetName());
+  if( mit != PassOpts.end() )
+    PB->SetExecOpts(mit->second);
+
+  // set the signal map
+  if( !PB->SetSignalMap(SM) ){
+    delete PB;
+    return false;
+  }
+
+  // execute the pass
+  bool rtn = true;
+  if( !Opts->IsDisableSCPass() && !Opts->IsEnableSCPass() ){
+    if( !PB->Execute() )
+      rtn = false;
+  }else if( Opts->IsEnableSCPass() ){
+    // manually enabled passes
+    std::vector<std::string> E = Opts->GetEnableSCPass();
+    std::vector<std::string>::iterator str;
+    str = std::find(E.begin(),E.end(),PB->GetName());
+    if( str != E.end() ){
+      if( !PB->Execute() )
+        rtn = false;
+    }
+
+  }else if( Opts->IsDisableSCPass() ){
+    // manually disabled passes
+    std::vector<std::string> D = Opts->GetDisabledSCPass();
+    std::vector<std::string>::iterator str;
+    str = std::find(D.begin(),D.end(),PB->GetName());
+    if( str == D.end() ){
+      if( !PB->Execute() )
+        rtn = false;
+    }
+  }
+
+  // delete the signal map object
+  delete PB;
+
+  return rtn;
+}
+
+bool SCChiselCodeGen::ExecutePipelineOpt(CoreGenSigMap *SM){
+
+  CoreGenSigMap *RSM = SM->SplitInstSigMap();
+  CoreGenSigMap *VSM = SM->SplitVLIWSigMap();
+
+  if( !ExecuteRISCPipelineOpt(RSM) )
+    return false;
+
+  if( !ExecuteVLIWPipelineOpt(VSM) )
+    return false;
+
+  SM->FuseSignalMaps(RSM,VSM);
+  delete RSM;
+  delete VSM;
+
+  return true;
 }
 
 bool SCChiselCodeGen::ExecuteCodegen(){

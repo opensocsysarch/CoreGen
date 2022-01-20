@@ -1,7 +1,7 @@
 //
 // _SCIOWarn_cpp_
 //
-// Copyright (C) 2017-2020 Tactical Computing Laboratories, LLC
+// Copyright (C) 2017-2022 Tactical Computing Laboratories, LLC
 // All Rights Reserved
 // contact@tactcomplabs.com
 //
@@ -63,10 +63,16 @@ void SCIOWarn::CheckPrototypeIO( Function &F, Instruction &I ){
           F.getFnAttribute("instformat").getValueAsString().str();
 
         // get a list of regclass types the  for the target instruction format
-        std::vector<std::string> Fields = this->GetRegClassInstTypes(InstFormat);
+        std::vector<std::string> Fields =
+          this->GetRegClassInstTypes(InstFormat);
         for( unsigned i=0; i<Fields.size(); i++ ){
           if( Fields[i] == RegClass )
             return ;
+        }
+      }else if( F.hasFnAttribute("vliw") ){
+        // this is a vliw isa; there is no inst format
+        if( F.getFnAttribute("vliw").getValueAsString().str() == "true"){
+          return ;
         }
       }
     }
@@ -95,14 +101,16 @@ void SCIOWarn::CheckPrototypeIO( Function &F, Instruction &I ){
 void SCIOWarn::CheckIOLayout(){
   // walk all the functions
   for( auto &Func : TheModule->getFunctionList() ){
-    // walk all the basic blocks
-    for( auto &BB : Func.getBasicBlockList() ){
-      // walk all the instructions
-      for( auto &Inst : BB.getInstList() ){
-        if( (Inst.getOpcode() == Instruction::Load) ||
-            (Inst.getOpcode() == Instruction::Store) ){
-          // Evaluate the load/store instruction
-          CheckPrototypeIO( Func, Inst );
+    // walk all the basic blocks of non-vliw stages
+    if( !IsVLIWStage(Func) ){
+      for( auto &BB : Func.getBasicBlockList() ){
+        // walk all the instructions
+        for( auto &Inst : BB.getInstList() ){
+          if( (Inst.getOpcode() == Instruction::Load) ||
+              (Inst.getOpcode() == Instruction::Store) ){
+            // Evaluate the load/store instruction
+            CheckPrototypeIO( Func, Inst );
+          }
         }
       }
     }

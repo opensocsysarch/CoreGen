@@ -1,0 +1,131 @@
+ISAs:
+  - ISAName: TEST6.isa
+Cores:
+  - Core: TEST6.0.core
+    ISA: TEST6.isa
+  - Core: TEST6.1.core
+    ISA: TEST6.isa
+  - Core: TEST6.2.core
+    ISA: TEST6.isa
+  - Core: TEST6.3.core
+    ISA: TEST6.isa
+  - Core: TEST6.4.core
+    ISA: TEST6.isa
+  - Core: TEST6.5.core
+    ISA: TEST6.isa
+  - Core: TEST6.6.core
+    ISA: TEST6.isa
+  - Core: TEST6.7.core
+    ISA: TEST6.isa
+  - Core: TEST6.8.core
+    ISA: TEST6.isa
+  - Core: TEST6.9.core
+    ISA: TEST6.isa
+  - Core: TEST6.10.core
+    ISA: TEST6.isa
+  - Core: TEST6.11.core
+    ISA: TEST6.isa
+  - Core: TEST6.12.core
+    ISA: TEST6.isa
+  - Core: TEST6.13.core
+    ISA: TEST6.isa
+  - Core: TEST6.14.core
+    ISA: TEST6.isa
+  - Core: TEST6.15.core
+    ISA: TEST6.isa
+  - Core: TEST6.16.core
+    ISA: TEST6.isa
+  - Core: TEST6.17.core
+    ISA: TEST6.isa
+  - Core: TEST6.18.core
+    ISA: TEST6.isa
+  - Core: TEST6.19.core
+    ISA: TEST6.isa
+  - Core: TEST6.20.core
+    ISA: TEST6.isa
+  - Core: TEST6.21.core
+    ISA: TEST6.isa
+  - Core: TEST6.22.core
+    ISA: TEST6.isa
+  - Core: TEST6.23.core
+    ISA: TEST6.isa
+  - Core: TEST6.24.core
+    ISA: TEST6.isa
+  - Core: TEST6.25.core
+    ISA: TEST6.isa
+  - Core: TEST6.26.core
+    ISA: TEST6.isa
+  - Core: TEST6.27.core
+    ISA: TEST6.isa
+  - Core: TEST6.28.core
+    ISA: TEST6.isa
+  - Core: TEST6.29.core
+    ISA: TEST6.isa
+  - Core: TEST6.30.core
+    ISA: TEST6.isa
+  - Core: TEST6.31.core
+    ISA: TEST6.isa
+  - Core: TEST6.32.core
+    ISA: TEST6.isa
+  - Core: TEST6.33.core
+    ISA: TEST6.isa
+  - Core: TEST6.34.core
+    ISA: TEST6.isa
+  - Core: TEST6.35.core
+    ISA: TEST6.isa
+  - Core: TEST6.36.core
+    ISA: TEST6.isa
+  - Core: TEST6.37.core
+    ISA: TEST6.isa
+  - Core: TEST6.38.core
+    ISA: TEST6.isa
+  - Core: TEST6.39.core
+    ISA: TEST6.isa
+  - Core: TEST6.40.core
+    ISA: TEST6.isa
+  - Core: TEST6.41.core
+    ISA: TEST6.isa
+  - Core: TEST6.42.core
+    ISA: TEST6.isa
+  - Core: TEST6.43.core
+    ISA: TEST6.isa
+  - Core: TEST6.44.core
+    ISA: TEST6.isa
+  - Core: TEST6.45.core
+    ISA: TEST6.isa
+  - Core: TEST6.46.core
+    ISA: TEST6.isa
+  - Core: TEST6.47.core
+    ISA: TEST6.isa
+  - Core: TEST6.48.core
+    ISA: TEST6.isa
+  - Core: TEST6.49.core
+    ISA: TEST6.isa
+  - Core: TEST6.50.core
+    ISA: TEST6.isa
+  - Core: TEST6.51.core
+    ISA: TEST6.isa
+  - Core: TEST6.52.core
+    ISA: TEST6.isa
+  - Core: TEST6.53.core
+    ISA: TEST6.isa
+  - Core: TEST6.54.core
+    ISA: TEST6.isa
+  - Core: TEST6.55.core
+    ISA: TEST6.isa
+  - Core: TEST6.56.core
+    ISA: TEST6.isa
+  - Core: TEST6.57.core
+    ISA: TEST6.isa
+  - Core: TEST6.58.core
+    ISA: TEST6.isa
+  - Core: TEST6.59.core
+    ISA: TEST6.isa
+  - Core: TEST6.60.core
+    ISA: TEST6.isa
+  - Core: TEST6.61.core
+    ISA: TEST6.isa
+  - Core: TEST6.62.core
+    ISA: TEST6.isa
+  - Core: TEST6.63.core
+    ISA: TEST6.isa

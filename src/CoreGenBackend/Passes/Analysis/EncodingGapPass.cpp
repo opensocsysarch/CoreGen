@@ -1,7 +1,7 @@
 //
 // _EncodingGapPass_cpp_
 //
-// Copyright (C) 2017-2020 Tactical Computing Laboratories, LLC
+// Copyright (C) 2017-2022 Tactical Computing Laboratories, LLC
 // All Rights Reserved
 // contact@tactcomplabs.com
 //
@@ -19,6 +19,35 @@ EncodingGapPass::EncodingGapPass(std::ostream *O,
 }
 
 EncodingGapPass::~EncodingGapPass(){
+}
+
+void EncodingGapPass::ExamineFieldGap( unsigned Width,
+                                       std::vector<unsigned> StartBits,
+                                       std::vector<unsigned> EndBits ){
+  std::vector<unsigned> UndefinedBits;
+  bool found = false;
+  // examine each bit in the instruction field and determine
+  // if it falls within a defined field
+  for( unsigned i=0; i<Width; i++ ){
+    for( unsigned j=0; j<StartBits.size(); j++ ){
+      if( (i >= StartBits[j]) && (i<=EndBits[j]) ){
+        found = true;
+      }
+    }
+    if( !found ){
+      UndefinedBits.push_back(i);
+    }
+    found = false;
+  }
+
+  // print the undefined bits
+  std::string Bits = "[";
+  for( unsigned i=0; i<UndefinedBits.size(); i++ ){
+    Bits += std::to_string(UndefinedBits[i]);
+    Bits += " ";
+  }
+  Bits += "]";
+  WriteMsg( "Undefined encoding bits = " + Bits );
 }
 
 bool EncodingGapPass::ExamineGap( CoreGenDAG *D, CoreGenInstFormat *IF ){
@@ -54,6 +83,23 @@ bool EncodingGapPass::ExamineGap( CoreGenDAG *D, CoreGenInstFormat *IF ){
                 " and " + std::to_string(StartBits[i+1]) );
       rtn = false;
     }
+  }
+
+  // now count all the bits to see if the number of bits in the format width
+  // matches the number of bits defined
+  unsigned Width = 0;
+  for( unsigned i=0; i<StartBits.size(); i++){
+    Width += ((EndBits[i] - StartBits[i])+1);
+  }
+
+  if( Width != IF->GetFormatWidth() ){
+    WriteMsg( "Field definitions do not encapsulate instruction format width; InstFormat = " +
+              IF->GetName() + " defines " + std::to_string(IF->GetFormatWidth()) +
+              " bits; found " + std::to_string(Width) + " bits" );
+    ExamineFieldGap(IF->GetFormatWidth(),
+                    StartBits,
+                    EndBits);
+    rtn = false;
   }
 
   return rtn;

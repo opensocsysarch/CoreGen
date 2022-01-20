@@ -1,7 +1,7 @@
 //
 // _CoreGenYaml_cpp_
 //
-// Copyright (C) 2017-2020 Tactical Computing Laboratories, LLC
+// Copyright (C) 2017-2022 Tactical Computing Laboratories, LLC
 // All Rights Reserved
 // contact@tactcomplabs.com
 //
@@ -505,6 +505,8 @@ void CoreGenYaml::WriteISAYaml(YAML::Emitter *out,
     *out << YAML::BeginMap;
     *out << YAML::Key << "ISAName" << YAML::Value << ISAs[i]->GetName();
 
+    *out << YAML::Key << "VLIW" << YAML::Value << ISAs[i]->IsVLIW();
+
     if( ISAs[i]->IsRTL() ){
       *out << YAML::Key << "RTL";
       *out << YAML::Value << ISAs[i]->GetRTL();
@@ -877,6 +879,17 @@ void CoreGenYaml::WriteRegYaml(YAML::Emitter *out,
       *out << YAML:: Value << "true";
     }else{
       *out << YAML:: Value << "false";
+    }
+
+    if( Regs[i]->IsVector() ){
+      *out << YAML::Key << "Vector" << YAML::Value << "true";
+      *out << YAML::Key << "DimX" << YAML::Value << Regs[i]->GetDimX();
+    }
+
+    if( Regs[i]->IsMatrix() ){
+      *out << YAML::Key << "Matrix" << YAML::Value << "true";
+      *out << YAML::Key << "DimX" << YAML::Value << Regs[i]->GetDimX();
+      *out << YAML::Key << "DimY" << YAML::Value << Regs[i]->GetDimY();
     }
 
 
@@ -1735,6 +1748,10 @@ bool CoreGenYaml::ReadRegisterYaml(const YAML::Node& RegNodes,
     bool TUSReg = false;
     bool PCReg = false;
     bool IsShared = false;
+    bool IsVector = false;
+    bool IsMatrix = false;
+    unsigned DimX = 0;
+    unsigned DimY = 0;
 
     if( CheckValidNode(Node,"IsSIMD") ){
       try{
@@ -1816,6 +1833,64 @@ bool CoreGenYaml::ReadRegisterYaml(const YAML::Node& RegNodes,
       }
     }
 
+    if( CheckValidNode(Node,"Vector") ){
+      try{
+        IsVector = Node["Vector"].as<bool>();
+        if( IsVector ){
+          // parse DimX
+          try{
+            DimX = Node["DimX"].as<unsigned>();
+            if( DimX == 0 ){
+              Errno->SetError(CGERR_ERROR, "Error in parsing DimX: Cannot be '0'");
+              return false;
+            }
+          }catch(YAML::BadConversion& e){
+            Errno->SetError(CGERR_ERROR, "Error in parsing register Vector:DimX: "
+                            + std::string(e.what()));
+            return false;
+          }
+        }
+      }catch(YAML::BadConversion& e){
+        Errno->SetError(CGERR_ERROR, "Error in parsing register Vector: "
+                        + std::string(e.what()));
+        return false;
+      }
+    }
+
+    if( CheckValidNode(Node,"Matrix") ){
+      try{
+        IsMatrix = Node["Matrix"].as<bool>();
+        if( IsMatrix ){
+          // parse DimX
+          try{
+            DimX = Node["DimX"].as<unsigned>();
+          }catch(YAML::BadConversion& e){
+            Errno->SetError(CGERR_ERROR, "Error in parsing register Matrix:DimX: "
+                            + std::string(e.what()));
+            return false;
+          }
+          // parse DimY
+          try{
+            DimY = Node["DimY"].as<unsigned>();
+          }catch(YAML::BadConversion& e){
+            Errno->SetError(CGERR_ERROR, "Error in parsing register Matrix:DimY: "
+                            + std::string(e.what()));
+            return false;
+          }
+
+          if( (DimX==0) || (DimY==0) ){
+            Errno->SetError(CGERR_ERROR, "Error in parsing DimX/DimY: Cannot be '0'");
+            return false;
+          }
+        }
+      }catch(YAML::BadConversion& e){
+        Errno->SetError(CGERR_ERROR, "Error in parsing register Matrix: "
+                        + std::string(e.what()));
+        return false;
+      }
+    }
+
+
     // build a new register node
     CoreGenReg *R = new CoreGenReg(Name,Index,Width,Errno);
     if( R == nullptr ){
@@ -1867,8 +1942,14 @@ bool CoreGenYaml::ReadRegisterYaml(const YAML::Node& RegNodes,
       Attrs |= CoreGenReg::CGRegPC;
     }
     R->SetAttrs(Attrs);
-
     R->SetShared(IsShared);
+
+    if( IsVector ){
+      R->SetVector(DimX);
+    }
+    if( IsMatrix ){
+      R->SetMatrix(DimX,DimY);
+    }
 
     // Check for subregisters
     const YAML::Node& SNode = Node["SubRegs"];
@@ -1925,7 +2006,6 @@ bool CoreGenYaml::ReadRegisterYaml(const YAML::Node& RegNodes,
     }
 
     // Check for custom RTL
-    // QUESTION: RTL? I forgot what this is.
     if( CheckValidNode(Node,"RTL") ){
       R->SetRTL( Node["RTL"].as<std::string>());
     }
@@ -2103,6 +2183,13 @@ bool CoreGenYaml::ReadISAYaml(const YAML::Node& ISANodes,
     }
 
     CoreGenISA *ISA = new CoreGenISA(ISAName, Errno);
+
+    // check to see if the ISA is VLIW
+    bool isVLIW = false;
+    if( CheckValidNode(Node,"VLIW") ){
+      isVLIW = Node["VLIW"].as<bool>();
+    }
+    ISA->SetVLIW(isVLIW);
 
     if( CheckValidNode(Node,"RTL") ){
       ISA->SetRTL( Node["RTL"].as<std::string>());
@@ -2315,7 +2402,7 @@ bool CoreGenYaml::ReadInstFormatYaml(const YAML::Node& InstFormatNodes,
                   + Name + " for field " + FieldName);
             return false;
           }
-        
+
           //Right now we are making it optional to specify whether a register is a destination
           // If the user does not specify we set it to "false" by default
           bool IsDest = false;
@@ -2959,6 +3046,8 @@ bool CoreGenYaml::ReadSocYaml(const YAML::Node& SocNodes,
 
     CoreGenSoC *S = new CoreGenSoC( Name, Errno );
     if( S == nullptr ){
+      Errno->SetError(CGERR_ERROR, "Could not create CoreGenSoC object for "
+                      + Name );
       return false;
     }
 
@@ -2975,6 +3064,7 @@ bool CoreGenYaml::ReadSocYaml(const YAML::Node& SocNodes,
           }
         }
         if( C == nullptr ){
+          Errno->SetError(CGERR_ERROR, "No core defined for " + CoreName );
           return false;
         }
         S->InsertCore(C);
@@ -3313,14 +3403,14 @@ bool CoreGenYaml::ReadPluginYaml(const YAML::Node& PluginNodes,
     // check to see if the plugin is loaded
     // if not, load it
     // otherwise, clone it
-    if( !PluginMgr->GetPlugin(Name,Major,Minor,Patch) ){
+    if( !PluginMgr->GetPlugin(NodeName,Major,Minor,Patch) ){
       #if (COREGEN_PLATFORM == Darwin)
-      std::string PluginLib = Name + ".dylib";
+      std::string PluginLib = NodeName + ".dylib";
       #elif (COREGEN_PLATFORM == Linux)
       std::string PluginLib = Name + ".so";
       #endif
       std::string PluginPath = Env->GetPluginRoot() +
-                             Name + "/" +
+                             "/" + NodeName + "/" +
                              std::to_string(Major)+"."+
                              std::to_string(Minor)+"."+
                              std::to_string(Patch) + "/" +
@@ -3333,10 +3423,10 @@ bool CoreGenYaml::ReadPluginYaml(const YAML::Node& PluginNodes,
 
     // plugin should be loaded now
     // insert cloned copy
-    CoreGenPlugin *NewPlugin = PluginMgr->GetPlugin(Name,
+    CoreGenPlugin *NewPlugin = PluginMgr->GetPlugin(NodeName,
                                                     Major,
                                                     Minor,
-                                                    Patch)->ClonePlugin(NodeName);
+                                                    Patch)->ClonePlugin(Name);
     if( IsDuplicate(Node,
                     static_cast<CoreGenNode *>(NewPlugin),
                     std::vector<CoreGenNode *>(Plugins.begin(),Plugins.end()) ) ){
@@ -3373,41 +3463,40 @@ bool CoreGenYaml::ReadPluginYaml(const YAML::Node& PluginNodes,
                              "FeatureValue" );
             return false;
           }
-          //QUESTION: This appears to be unused
           std::string FValStr = FNodeJ["FeatureValue"].as<std::string>();
           std::string::size_type sz;
 
           // convert o CGFeatureType and CGFeatureVal
           if( FTypeStr == "Unsigned" ){
-            FVal.UnsignedData = (unsigned)(std::stoi(FTypeStr,&sz));
+            FVal.UnsignedData = (unsigned)(std::stoi(FValStr,&sz));
           }
           if( FTypeStr == "Uint32t" ){
-            FVal.Uint32tData = (uint32_t)(std::stoi(FTypeStr,&sz));
+            FVal.Uint32tData = (uint32_t)(std::stoi(FValStr,&sz));
           }
           if( FTypeStr == "Int32t" ){
-            FVal.Int32tData = (int32_t)(std::stoi(FTypeStr,&sz));
+            FVal.Int32tData = (int32_t)(std::stoi(FValStr,&sz));
           }
           if( FTypeStr == "Uint64t" ){
-            FVal.Uint64tData = (uint64_t)(std::stoul(FTypeStr,nullptr,0));
+            FVal.Uint64tData = (uint64_t)(std::stoul(FValStr,nullptr,0));
           }
           if( FTypeStr == "Int64t" ){
-            FVal.Uint64tData = (int64_t)(std::stol(FTypeStr,nullptr,0));
+            FVal.Uint64tData = (int64_t)(std::stol(FValStr,nullptr,0));
           }
           if( FTypeStr == "Float" ){
-            FVal.FloatData = (float)(std::stof(FTypeStr,&sz));
+            FVal.FloatData = (float)(std::stof(FValStr,&sz));
           }
           if( FTypeStr == "Double" ){
-            FVal.DoubleData = (float)(std::stof(FTypeStr,&sz));
+            FVal.DoubleData = (float)(std::stof(FValStr,&sz));
           }
           if( FTypeStr == "String" ){
-            FVal.StringData = FTypeStr;
+            FVal.StringData = FValStr;
           }
           if( FTypeStr == "Bool" ){
-            FVal.BoolData = std::stoi(FTypeStr,&sz);
+            FVal.BoolData = std::stoi(FValStr,&sz);
           }
           if( FTypeStr == "Unknown" ){
             // default to unsigned integer
-            FVal.UnsignedData = (unsigned)(std::stoi(FTypeStr,&sz));
+            FVal.UnsignedData = (unsigned)(std::stoi(FValStr,&sz));
           }
           NewPlugin->SetFeatureValue(FeatureName, FVal);
         }
@@ -4097,7 +4186,7 @@ bool CoreGenYaml::ReadYaml(  std::vector<CoreGenSoC *>  &Socs,
 
 CoreGenNode *CoreGenYaml::CheckOverridePlugin(std::string Name){
   for( unsigned i=0; i<(*PluginPtr).size(); i++ ){
-    if( (*PluginPtr)[i]->GetName() == Name ){
+    if( (*PluginPtr)[i]->GetPluginName() == Name ){
       return static_cast<CoreGenNode *>((*PluginPtr)[i]);
     }
   }

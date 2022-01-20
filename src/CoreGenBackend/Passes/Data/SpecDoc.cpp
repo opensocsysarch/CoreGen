@@ -1,7 +1,7 @@
 //
 // _SpecDoc_cpp_
 //
-// Copyright (C) 2017-2020 Tactical Computing Laboratories, LLC
+// Copyright (C) 2017-2022 Tactical Computing Laboratories, LLC
 // All Rights Reserved
 // contact@tactcomplabs.com
 //
@@ -182,6 +182,21 @@ bool SpecDoc::WriteRegisterClassTex(CoreGenDAG *DAG, std::ofstream &ofs ){
             Attrs+=":";
           }
           Attrs+="SH";
+          OrVal = true;
+        }
+        if( REG->IsVector() ){
+          if( OrVal ){
+            Attrs+=":";
+          }
+          Attrs+="VECT[" + std::to_string(REG->GetDimX()) + "]";
+          OrVal = true;
+        }
+        if( REG->IsMatrix() ){
+          if( OrVal ){
+            Attrs+=":";
+          }
+          Attrs+="MATRIX[" + std::to_string(REG->GetDimX()) +
+                 "," + std::to_string(REG->GetDimY()) + "]";
           OrVal = true;
         }
 

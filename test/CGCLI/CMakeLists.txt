@@ -21,7 +21,7 @@ foreach(testSrc ${TEST_SRCS})
   add_test(NAME ${testName}
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
     COMMAND ${BASH_EXECUTABLE} ${testSrc} ${COREGEN_BUILD_DIR}/src/CGCLI )
-  set_tests_properties( ${testName} PROPERTIES PASS_REGULAR_EXPRESSION "")
+  set_tests_properties( ${testName} PROPERTIES PASS_REGULAR_EXPRESSION "TESTING PASSED")
 endforeach(testSrc)
 endif()
 

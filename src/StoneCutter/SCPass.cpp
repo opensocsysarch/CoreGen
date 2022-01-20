@@ -1,7 +1,7 @@
 //
 // _SCPass_cpp_
 //
-// Copyright (C) 2017-2020 Tactical Computing Laboratories, LLC
+// Copyright (C) 2017-2022 Tactical Computing Laboratories, LLC
 // All Rights Reserved
 // contact@tactcomplabs.com
 //
@@ -15,7 +15,7 @@ SCPass::SCPass(std::string N,
                Module *TM,
                SCOpts *O,
                SCMsg *M)
-  : Name(N), Options(Opt), Msgs(M), Opts(O), TheModule(TM) {
+  : Name(N), Options(Opt), Msgs(M), Opts(O), TheModule(TM), VLIW(false) {
 #if 0
   if( Opts->IsVerbose() )
     Msgs->PrintRawMsg( "Executing Pass: " + this->GetName() );
@@ -386,6 +386,30 @@ unsigned SCPass::GetNumRegClasses( std::string Var ){
   return 0;
 }
 
+bool SCPass::IsVLIWStage(Function &F){
+  AttributeSet AttrSet = F.getAttributes().getFnAttributes();
+  if( AttrSet.hasAttribute("vliw") ){
+    if( AttrSet.getAttribute("vliw").getValueAsString().str() == "true" ){
+      return true;
+    }
+  }
+  return false;
+}
+
+unsigned SCPass::GetVLIWStage(Function &F){
+  unsigned Stage = 0;
+  AttributeSet AttrSet = F.getAttributes().getFnAttributes();
+
+  if( IsVLIWStage(F) ){
+    if( AttrSet.hasAttribute("vliwStage") ){
+      std::string S = AttrSet.getAttribute("vliwStage").getValueAsString().str();
+      Stage = std::stoi(S);
+    }
+  }
+
+  return Stage;
+}
+
 unsigned SCPass::GetNumPipeStages(Function &F){
   unsigned Val = 0;
   AttributeSet AttrSet = F.getAttributes().getFnAttributes();
@@ -453,10 +477,43 @@ std::string SCPass::StrToUpper(std::string S){
   return S;
 }
 
+std::string SCPass::GetVLIWArgName(Instruction &I){
+  std::string Str;
+  if( MDNode *N = I.getMetadata("vliw.arg")) {
+    Str = cast<MDString>(N->getOperand(0))->getString().str();
+  }
+  return Str;
+}
+
+std::string SCPass::GetVLIWArgType(Instruction &I){
+  std::string Str = "DATA";
+  if( MDNode *N = I.getMetadata("vliw.type")) {
+    Str = cast<MDString>(N->getOperand(0))->getString().str();
+  }
+  return Str;
+}
+
+unsigned SCPass::GetVLIWArgWidth(Instruction &I){
+  auto *CInst = dyn_cast<CallInst>(&I);
+  if( CInst ){
+    return CInst->getOperand(0)->getType()->getIntegerBitWidth();
+  }
+  return 0;
+}
+
 std::string SCPass::GetMDPipeName(Instruction &I){
   std::string Str;
-  if( MDNode *N = I.getMetadata("pipe.pipeName")) {
-    Str = cast<MDString>(N->getOperand(0))->getString().str();
+  if( !VLIW ){
+    // If this is an operation within a normal RISC instruction,
+    // return the normal metadata pipe name
+    if( MDNode *N = I.getMetadata("pipe.pipeName")) {
+      Str = cast<MDString>(N->getOperand(0))->getString().str();
+    }
+  }else{
+    // If this is an operation within a VLIW pipe stage,
+    // return the pipe stage name (function name)
+    //Str = I.getFunction()->getName().str();
+    Str = I.getParent()->getParent()->getName();
   }
   return Str;
 }

@@ -1,7 +1,7 @@
 //
 // _CoreGenISA_cpp_
 //
-// Copyright (C) 2017-2020 Tactical Computing Laboratories, LLC
+// Copyright (C) 2017-2022 Tactical Computing Laboratories, LLC
 // All Rights Reserved
 // contact@tactcomplabs.com
 //
@@ -11,7 +11,7 @@
 #include "CoreGen/CoreGenBackend/CoreGenISA.h"
 
 CoreGenISA::CoreGenISA(CoreGenErrno *E)
-  : CoreGenNode(CGISA,E) {
+  : isVLIW(false), CoreGenNode(CGISA,E) {
 }
 
 CoreGenISA::CoreGenISA(std::string N, CoreGenErrno *E)

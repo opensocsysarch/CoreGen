@@ -1,7 +1,7 @@
 //
 // _CoreGenBackend_cpp_
 //
-// Copyright (C) 2017-2020 Tactical Computing Laboratories, LLC
+// Copyright (C) 2017-2022 Tactical Computing Laboratories, LLC
 // All Rights Reserved
 // contact@tactcomplabs.com
 //
@@ -110,12 +110,35 @@ CoreGenBackend::~CoreGenBackend(){
   delete Errno;
 }
 
+bool CoreGenBackend::ExecuteStoneCutterCodegen(){
+  // create the codegen object
+  CoreGenCodegen *CG = new CoreGenCodegen(Top,
+                                          Proj,
+                                          Env,
+                                          Errno,
+                                          PluginMgr);
+
+  if( CG == nullptr ){
+    Errno->SetError(CGERR_ERROR, "Could not create codegen object");
+    return false;
+  }
+
+  // Execute it
+  bool rtn = CG->ExecuteStoneCutterCodegen();
+
+  // delete and clean everything up
+  delete CG;
+  return rtn;
+  return true;
+}
+
 bool CoreGenBackend::ExecuteLLVMCodegen(std::string CompVer){
   // Create the codegen object
   CoreGenCodegen *CG = new CoreGenCodegen(Top,
                                           Proj,
                                           Env,
-                                          Errno);
+                                          Errno,
+                                          PluginMgr);
 
   if( CG == nullptr ){
     Errno->SetError(CGERR_ERROR, "Could not create codegen object");
@@ -196,7 +219,9 @@ bool CoreGenBackend::ExecuteChiselCodegen(){
   CoreGenCodegen *CG = new CoreGenCodegen(Top,
                                           Proj,
                                           Env,
-                                          Errno);
+                                          Errno,
+                                          PluginMgr
+                                          );
 
   if( CG == nullptr ){
     Errno->SetError(CGERR_ERROR, "Could not create codegen object");
@@ -216,7 +241,8 @@ bool CoreGenBackend::ExecuteCodegen(){
   CoreGenCodegen *CG = new CoreGenCodegen(Top,
                                           Proj,
                                           Env,
-                                          Errno);
+                                          Errno,
+                                          PluginMgr);
 
   if( CG == nullptr ){
     Errno->SetError(CGERR_ERROR, "Could not create codegen object");

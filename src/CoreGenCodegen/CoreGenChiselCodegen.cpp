@@ -1,7 +1,7 @@
 //
 // _CoreGenChiselCodegen_cpp_
 //
-// Copyright (C) 2017-2020 Tactical Computing Laboratories, LLC
+// Copyright (C) 2017-2022 Tactical Computing Laboratories, LLC
 // All Rights Reserved
 // contact@tactcomplabs.com
 //
@@ -295,7 +295,7 @@ CoreGenNode *CoreGenChiselCodegen::GetParentNode(CoreGenNode *Target){
   for( unsigned i=0; i<Top->GetNumChild(); i++ ){
     Tmp = Top->GetChild(i);
     for( unsigned j=0; j<Tmp->GetNumChild(); j++ ){
-      if( Tmp->GetChild(i) == Target )
+      if( Tmp->GetChild(j) == Target )
         return Tmp;
     }
   }
@@ -447,6 +447,7 @@ bool CoreGenChiselCodegen::Execute(){
   CoreGenNode *SocNode = nullptr;
 
   for( unsigned i=0; i<Top->GetNumChild(); i++ ){
+    std::cout << "Exec chisel codegen for child " << i << std::endl;
 
     if( Top->GetChild(i)->IsOverridden() ){
       // the i'th node has been overridden with an external codegen

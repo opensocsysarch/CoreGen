@@ -1,7 +1,7 @@
 //
 // _CoreGenSigMap_h_
 //
-// Copyright (C) 2017-2020 Tactical Computing Laboratories, LLC
+// Copyright (C) 2017-2022 Tactical Computing Laboratories, LLC
 // All Rights Reserved
 // contact@tactcomplabs.com
 //
@@ -22,8 +22,15 @@
 
 #include <vector>
 #include <fstream>
+#include <iostream>
 #include <algorithm>
 #include <string>
+#include <sys/stat.h>
+#include <sys/time.h>
+#include <cerrno>
+#include <time.h>
+#include <unistd.h>
+#include <stdio.h>
 
 // YAML headers
 #include "yaml-cpp/yaml.h"
@@ -56,6 +63,9 @@ private:
   /// Writes the top-level signal map to the YAML file
   bool WriteTopLevelSignals(YAML::Emitter *out);
 
+  // Writes the VLIW stage signal blocks to the YAML file
+  bool WriteVLIWSignals(YAML::Emitter *out);
+
   /// Writes the individual instruction signal map to the YAML file
   bool WriteInstSignals(YAML::Emitter *out);
 
@@ -73,6 +83,9 @@ private:
 
   /// Reads the instruction-level signal map
   bool ReadInstSignals(const YAML::Node& InstNodes);
+
+  /// Reads the VLIW signal map
+  bool ReadVLIWSignals(const YAML::Node& VLIWNodes);
 
   /// Reads the pipeline structure from the signal map
   bool ReadPipelineData(const YAML::Node& PipeNodes);
@@ -109,6 +122,9 @@ public:
   /// Inserts a signal into the signal map
   bool InsertSignal( SCSig *Sig );
 
+  /// Inserts a signal at the beginning of the signal map
+  bool EmplaceSignal( SCSig *Sig );
+
   /// Retrieves the target signal from the signal map
   SCSig *GetSignal( unsigned Idx );
 
@@ -132,6 +148,12 @@ public:
 
   /// Reads the signal map file into the signal structure
   bool ReadSigMap( std::string File );
+
+  /// Retrieves the name of the signal map file
+  std::string GetSigFile() { return SigFile; }
+
+  /// Inserts a temporary register in the signal map
+  bool InsertTemp(SCTmp *T);
 
   /// Retrieve the number of temporary registers that need to exist in the ALUL
   unsigned GetNumTemps() { return TempRegs.size(); }
@@ -176,6 +198,21 @@ public:
   /// Retrieve the signal vector for each pipeline stage
   std::vector<SCSig *> GetSignalVectByPipeStage(std::string Pipeline,
                                                 std::string Stage);
+
+  /// Retrieves the signal vector for the VLIW pipeline stage
+  std::vector<SCSig *> GetVLIWSignalVectByPipeStage(std::string Stage);
+
+  /// Retreive the VLIW pipe stage vector
+  std::vector<std::string> GetVLIWPipeStages();
+
+  /// Split the signal map and return a signal map object with only instruction signals
+  CoreGenSigMap *SplitInstSigMap();
+
+  /// Split the signal map and return a signal map object with only VLIW signals
+  CoreGenSigMap *SplitVLIWSigMap();
+
+  /// Fuse the instruction and VLIW signal maps
+  bool FuseSignalMaps(CoreGenSigMap *InstSigMap, CoreGenSigMap *VLIWSigMap);
 
   /// Execute all the signal map passes
   bool ExecutePasses();

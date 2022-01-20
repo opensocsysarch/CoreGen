@@ -1,6 +1,6 @@
 # StoneCutter/Passes CMakeLists.txt
 #
-# Copyright (C) 2017-2020 Tactical Computing Laboratories, LLC
+# Copyright (C) 2017-2022 Tactical Computing Laboratories, LLC
 # All Rights Reserved
 # contact@tactcomplabs.com
 #
@@ -15,6 +15,7 @@ SCFieldIO.cpp
 SCPipeBuilder.cpp
 SCSigMap.cpp
 SCMetadataAdjust.cpp
+SCVLIWPipeBuilder.cpp
 )
 
 include_directories(${COREGEN_INCLUDE_PATH})

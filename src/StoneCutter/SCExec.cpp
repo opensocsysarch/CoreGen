@@ -1,7 +1,7 @@
 //
 // _SCExec_cpp_
 //
-// Copyright (C) 2017-2020 Tactical Computing Laboratories, LLC
+// Copyright (C) 2017-2022 Tactical Computing Laboratories, LLC
 // All Rights Reserved
 // contact@tactcomplabs.com
 //
@@ -76,6 +76,23 @@ bool SCExec::PrintPassList(){
   return true;
 }
 
+// ------------------------------------------------- VALIDATEFILE
+bool SCExec::ValidateFile(std::string File){
+  struct stat s;
+  if( stat(File.c_str(), &s) == 0 ){
+    if( s.st_mode & S_IFDIR ){
+      return false;
+    }else if( s.st_mode & S_IFREG ){
+      return true;
+    }else{
+      return false;
+    }
+  }else{
+    return false;
+  }
+  return true;
+}
+
 // ------------------------------------------------- EXEC
 bool SCExec::Exec(){
 
@@ -99,6 +116,11 @@ bool SCExec::Exec(){
     }
     std::ofstream of(tmpname);
     for( unsigned i=0; i<Opts->GetNumInputFiles(); i++ ){
+      if( !ValidateFile(Opts->GetInputFile(i)) ){
+        Msgs->PrintMsg( L_ERROR, "Input file is not a valid input: "
+                        + Opts->GetInputFile(i));
+        return false;
+      }
       std::ifstream infile( Opts->GetInputFile(i) );
       of << infile.rdbuf();
       infile.close();
@@ -112,9 +134,12 @@ bool SCExec::Exec(){
   }else{
     // single file
     LTmpFile = Opts->GetInputFile(0);
-    //LTmpFile = Opts->GetOutputFile();
-    //OTmpFile = LTmpFile;
     OTmpFile = Opts->GetOutputFile();
+    if( !ValidateFile(Opts->GetInputFile(0)) ){
+      Msgs->PrintMsg( L_ERROR, "Input file is not a valid input: "
+                      + Opts->GetInputFile(0));
+      return false;
+    }
     if( OTmpFile.length() == 0 ){
       OTmpFile = LTmpFile + ".chisel";
     }

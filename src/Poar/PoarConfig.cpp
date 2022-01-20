@@ -1,7 +1,7 @@
 //
 // _PoarConfig_cpp_
 //
-// Copyright (C) 2017-2020 Tactical Computing Laboratories, LLC
+// Copyright (C) 2017-2022 Tactical Computing Laboratories, LLC
 // All Rights Reserved
 // contact@tactcomplabs.com
 //
@@ -27,7 +27,7 @@ PoarConfig::ConfigEntry PoarConfig::Entries[] = {
   // -- POWER --
   {PoarConfig::POWER_REGBIT,   PoarConfig::PoarPower, PoarConfig::PoarCG, "POWER_REGBIT",   "CoreGenReg",   0.1, 0., 0.},
   {PoarConfig::POWER_DPATHBIT, PoarConfig::PoarPower, PoarConfig::PoarCG, "POWER_DPATHBIT", "CoreGenDPath", 0.1, 0., 0.},
-  {PoarConfig::POWER_CPATHBIT, PoarConfig::PoarPower, PoarConfig::PoarCG, "POWER_CPATHBIT", "",             0.1, 0., 0.},
+  {PoarConfig::POWER_CPATHBIT, PoarConfig::PoarPower, PoarConfig::PoarCG, "POWER_CPATHBIT", "CoreGenCPath", 0.1, 0., 0.},
   {PoarConfig::POWER_CACHEBIT, PoarConfig::PoarPower, PoarConfig::PoarCG, "POWER_CACHEBIT", "CoreGenCache", 0.1, 0., 0.},
   {PoarConfig::POWER_SPADBIT,  PoarConfig::PoarPower, PoarConfig::PoarCG, "POWER_SPADBIT",  "CoreGenSpad",  0.1, 0., 0.},
   {PoarConfig::POWER_ROMBIT,   PoarConfig::PoarPower, PoarConfig::PoarCG, "POWER_ROMBIT",   "CoreGenROM",   0.1, 0., 0.},
@@ -39,7 +39,7 @@ PoarConfig::ConfigEntry PoarConfig::Entries[] = {
   // -- AREA --
   {PoarConfig::AREA_REGBIT,    PoarConfig::PoarArea, PoarConfig::PoarCG, "AREA_REGBIT",    "CoreGenReg",    1.0, 0., 0.},
   {PoarConfig::AREA_DPATHBIT,  PoarConfig::PoarArea, PoarConfig::PoarCG, "AREA_DPATHBIT",  "CoreGenDPath",  1.0, 0., 0.},
-  {PoarConfig::AREA_CPATHBIT,  PoarConfig::PoarArea, PoarConfig::PoarCG, "AREA_CPATHBIT",  "",              1.0, 0., 0.},
+  {PoarConfig::AREA_CPATHBIT,  PoarConfig::PoarArea, PoarConfig::PoarCG, "AREA_CPATHBIT",  "CoreGenCPath",  1.0, 0., 0.},
   {PoarConfig::AREA_CACHEBIT,  PoarConfig::PoarArea, PoarConfig::PoarCG, "AREA_CACHEBIT",  "CoreGenCache",  1.0, 0., 0.},
   {PoarConfig::AREA_SPADBIT,   PoarConfig::PoarArea, PoarConfig::PoarCG, "AREA_SPADBIT",   "CoreGenSpad",   1.0, 0., 0.},
   {PoarConfig::AREA_ROMBIT,    PoarConfig::PoarArea, PoarConfig::PoarCG, "AREA_ROMBIT",    "CoreGenROM",    1.0, 0., 0.},
@@ -70,13 +70,16 @@ PoarConfig::PoarConfig(std::string C)
 PoarConfig::~PoarConfig(){
 }
 
-bool PoarConfig::SetResult(unsigned Entry, uint64_t Width){
+bool PoarConfig::SetResult(unsigned Entry, uint64_t Width, std::vector<double> MultiplierVect){
   unsigned i=0;
   bool done = false;
   while( !done ){
-
     if( i == Entry ){
       Entries[i].Result = Entries[i].Value * (double)(Width);
+      double TotalMultipliers = 1;
+      for( unsigned j=0; j<MultiplierVect.size(); j++ )
+        TotalMultipliers += MultiplierVect[j];
+      Entries[i].AdjustedResult = Entries[i].Result * TotalMultipliers;
       return true;
     }
 

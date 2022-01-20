@@ -1,7 +1,7 @@
 //
 // _CoreGenPluginImpl_h_
 //
-// Copyright (C) 2017-2020 Tactical Computing Laboratories, LLC
+// Copyright (C) 2017-2022 Tactical Computing Laboratories, LLC
 // All Rights Reserved
 // contact@tactcomplabs.com
 //
@@ -322,6 +322,9 @@ public:
 
   /// Insert a new DAG node
   bool InsertNode( CoreGenNode *N );
+
+  /// Deletes a DAG node
+  bool DeleteNode( CoreGenNode *N );
 
   /// Insert a new cache node
   CoreGenCache *InsertCache(std::string Name,

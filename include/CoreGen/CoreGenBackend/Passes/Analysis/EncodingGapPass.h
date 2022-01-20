@@ -1,7 +1,7 @@
 //
 // _EncodingGapPass_h_
 //
-// Copyright (C) 2017-2020 Tactical Computing Laboratories, LLC
+// Copyright (C) 2017-2022 Tactical Computing Laboratories, LLC
 // All Rights Reserved
 // contact@tactcomplabs.com
 //
@@ -34,6 +34,10 @@ private:
   /// Examines the encoding gaps
   bool ExamineGap( CoreGenDAG *D, CoreGenInstFormat *IF );
 
+  /// Examines the specific undefined fields
+  void ExamineFieldGap( unsigned Width,
+                        std::vector<unsigned> StartBits,
+                        std::vector<unsigned> EndBits );
 public:
   /// Default Constructor
   EncodingGapPass(std::ostream *O, CoreGenDAG *D, CoreGenErrno *E);

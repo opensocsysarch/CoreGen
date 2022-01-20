@@ -1,7 +1,7 @@
 //
 // _SCPipeBuilder_cpp_
 //
-// Copyright (C) 2017-2020 Tactical Computing Laboratories, LLC
+// Copyright (C) 2017-2022 Tactical Computing Laboratories, LLC
 // All Rights Reserved
 // contact@tactcomplabs.com
 //
@@ -24,7 +24,7 @@ bool SCPipeBuilder::EmptySig(){
   bool ret = true;
 
   for( unsigned i=0; i<SigMap->GetNumSignals(); i++ ){
-    if( !SigMap->GetSignal(i)->IsPipeDefined() ){
+    if( !SigMap->GetSignal(i)->IsPipeDefined() && !SigMap->GetSignal(i)->IsVLIW() ){
       ret = false;
       if( Opts->IsVerbose() ){
         this->PrintRawMsg("EmptySig: signal=" +
@@ -99,14 +99,15 @@ bool SCPipeBuilder::FitPCSigs(){
   if( FetchStage.length() == 0 ){
     // we must split off a new stage
     FetchStage = "WRITE_BACK";
-    auto it = PipeVect.begin();
-    it = PipeVect.insert(it,FetchStage);
 
     // free the existing matrix
     if( !FreeMat() ){
       this->PrintMsg( L_ERROR, "FitPCSigs: Could not free adjacency matrix" );
       return false;
     }
+
+    auto it = PipeVect.begin();
+    it = PipeVect.insert(it,FetchStage);
 
     // allocate the new matrix and build it out
     if( !AllocMat() ){
@@ -973,7 +974,7 @@ bool SCPipeBuilder::BuildMat(){
 
   for( unsigned i=0; i<SigMap->GetNumSignals(); i++ ){
     Sig = SigMap->GetSignal(i);
-    if( Sig->IsPipeDefined() ){
+    if( Sig->IsPipeDefined() && !Sig->IsVLIW() ){
       Idx = PipeToIdx(Sig->GetPipeName());
       if( Idx == PipeVect.size() ){
         this->PrintMsg( L_ERROR, "Pipe stage unknown" );
@@ -1049,6 +1050,8 @@ bool SCPipeBuilder::WriteSigMap(){
 
 bool SCPipeBuilder::AllocMat(){
   if( AdjMat != nullptr )
+    return false;
+  if( SigMap->GetNumSignals() == 0 )
     return false;
 
   // no reason to allocate a zero width matrix
@@ -1244,7 +1247,7 @@ bool SCPipeBuilder::Execute(){
     return false;
   }
 
-  // write everything back to the sigmapA
+  // write everything back to the sigmap
   if( !WriteSigMap() ){
     this->PrintMsg( L_ERROR, "Could not write signal map for the prescribed pipeline" );
     FreeMat();

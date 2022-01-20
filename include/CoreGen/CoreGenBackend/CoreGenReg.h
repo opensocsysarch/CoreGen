@@ -1,7 +1,7 @@
 //
 // _CoreGenReg_h_
 //
-// Copyright (C) 2017-2020 Tactical Computing Laboratories, LLC
+// Copyright (C) 2017-2022 Tactical Computing Laboratories, LLC
 // All Rights Reserved
 // contact@tactcomplabs.com
 //
@@ -38,11 +38,16 @@ private:
   bool isFixedValue;      ///< CoreGenReg: Is the register value fixed?
   bool isSIMD;            ///< CoreGenReg: Is this a SIMD register
   bool isIdxSet;          ///< CoreGenReg: Is the register index set?
-  bool isShared;          ///< CoreGenReg: Is the register file shared across cores?
+  bool isShared;          ///< CoreGenReg: Is the register shared across cores?
+  bool isVector;          ///< CoreGenReg: Is the register a vector register
+  bool isMatrix;          ///< CoreGenReg: Is the register a matrix register
 
   int index;              ///< CoreGenReg: Register Index
   int width;              ///< CoreGenReg: Register width
   int SIMDwidth;          ///< CoreGenReg: SIMD width
+
+  unsigned DimX;          ///< CoreGenReg: X dimension of a vector or matrix
+  unsigned DimY;          ///< CoreGenReg: Y dimension of a matrix
 
   uint32_t attrs;         ///< CoreGenReg: Register Attributes
 
@@ -55,12 +60,12 @@ private:
 public:
   /// CoreGenReg: Register Attributes
   typedef enum{
-    CGRegRO   = 0x01,     ///< CGRegAttr: Read-Only Register
-    CGRegRW   = 0x02,     ///< CGRegAttr: Read-Write Register
-    CGRegCSR  = 0x04,     ///< CGRegAttr: CSR
-    CGRegAMS  = 0x08,     ///< CGRegAttr: Arithmetic Machine State
-    CGRegTUS  = 0x10,     ///< CGRegAttr: Thread unit shared
-    CGRegPC   = 0x20      ///< CGRegAttr: PC register (one per reg file)
+    CGRegRO   = 0x01,     ///< CGRegAttr: [bit 0] Read-Only Register
+    CGRegRW   = 0x02,     ///< CGRegAttr: [bit 1] Read-Write Register
+    CGRegCSR  = 0x04,     ///< CGRegAttr: [bit 2] CSR
+    CGRegAMS  = 0x08,     ///< CGRegAttr: [bit 3] Arithmetic Machine State
+    CGRegTUS  = 0x10,     ///< CGRegAttr: [bit 4] Thread unit shared
+    CGRegPC   = 0x20      ///< CGRegAttr: [bit 5] PC register (one per reg file)
   }CGRegAttr;             ///< CoreGenReg: Register attributes
 
   /// Default Constructor
@@ -96,6 +101,19 @@ public:
 
   /// Is the register index set?
   bool IsIndexSet() { return isIdxSet; }
+
+  /// Is the register a vector register
+  bool IsVector() { return isVector; }
+
+  /// Is the register a matrix register
+  bool IsMatrix() { return isMatrix; }
+
+  /// Retrieve the X dimension of the register
+  unsigned GetDimX() { return DimX; }
+
+  /// Retrieve the Y dimension of the register
+  unsigned GetDimY() { return DimY; }
+
 
   /// Retrieve the register index
   int GetIndex() { return index; }
@@ -141,6 +159,18 @@ public:
 
   /// Set the register attributes
   bool SetAttrs( uint32_t Attr );
+
+  /// Set the X dimension of the matrix/vector
+  bool SetDimX(unsigned DimX);
+
+  /// Set the Y dimension of the matrix
+  bool SetDimY(unsigned DimY);
+
+  /// Set the register as a vector
+  bool SetVector(unsigned DimX);
+
+  /// Set the register as a matrix
+  bool SetMatrix(unsigned DimX, unsigned DimY);
 
   /// Unset the register attributes
   bool UnsetAttrs( uint32_t Attr );

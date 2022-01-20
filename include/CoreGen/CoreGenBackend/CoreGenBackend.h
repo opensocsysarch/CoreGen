@@ -1,7 +1,7 @@
 //
 // _CoreGenBackend_h_
 //
-// Copyright (C) 2017-2020 Tactical Computing Laboratories, LLC
+// Copyright (C) 2017-2022 Tactical Computing Laboratories, LLC
 // All Rights Reserved
 // contact@tactcomplabs.com
 //
@@ -284,6 +284,9 @@ public:
 
   /// Execute the LLVM codegen
   bool ExecuteLLVMCodegen(std::string CompVer);
+
+  /// Execute the StoneCutter codegen
+  bool ExecuteStoneCutterCodegen();
 
   /// Execute the Chisel codegen
   bool ExecuteChiselCodegen();

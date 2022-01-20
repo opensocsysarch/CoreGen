@@ -1,7 +1,7 @@
 //
 // _PoarRegAccum_cpp_
 //
-// Copyright (C) 2017-2020 Tactical Computing Laboratories, LLC
+// Copyright (C) 2017-2022 Tactical Computing Laboratories, LLC
 // All Rights Reserved
 // contact@tactcomplabs.com
 //
@@ -9,6 +9,18 @@
 //
 
 #include "CoreGen/Poar/Accumulators/PoarRegAccum.h"
+
+void PoarRegAccum::AddLocalRegister(CoreGenReg *Reg){
+  AddNode(static_cast<CoreGenNode *>(Reg));
+
+  if( Reg->IsVector() ){
+    AddWidth(Reg->GetWidth() * Reg->GetDimX());
+  }else if( Reg->IsMatrix() ){
+    AddWidth(Reg->GetWidth() * Reg->GetDimX() * Reg->GetDimY());
+  }else{
+    AddWidth(Reg->GetWidth());
+  }
+}
 
 bool PoarRegAccum::SearchCores(std::vector<CoreGenNode *> &Cores){
 
@@ -27,17 +39,14 @@ bool PoarRegAccum::SearchCores(std::vector<CoreGenNode *> &Cores){
 
       if( Reg->IsShared() && !Exists(Regs[j]) ){
         // if the register is shared across cores, but not yet accumulated
-        AddNode(Regs[j]);
-        AddWidth(Reg->GetWidth());
+        AddLocalRegister(Reg);
       }else if( Reg->IsTUSAttr() ){
         // thread unit shared, add it once
-        AddNode(Regs[j]);
-        AddWidth(Reg->GetWidth());
+        AddLocalRegister(Reg);
       }else{
         // thread unit private, add it TU times
         for( unsigned k=0; k<TU; k++ ){
-          AddNode(Regs[j]);
-          AddWidth(Reg->GetWidth());
+          AddLocalRegister(Reg);
         }
       }
     }

@@ -1,7 +1,7 @@
 //
 // _CoreGenCodegen_cpp_
 //
-// Copyright (C) 2017-2020 Tactical Computing Laboratories, LLC
+// Copyright (C) 2017-2022 Tactical Computing Laboratories, LLC
 // All Rights Reserved
 // contact@tactcomplabs.com
 //
@@ -13,12 +13,14 @@
 CoreGenCodegen::CoreGenCodegen(CoreGenNode *T,
                                CoreGenProj *P,
                                CoreGenEnv *V,
-                               CoreGenErrno *E)
-  : Top(T), Proj(P), Env(V), Errno(E), Archive(nullptr) {
+                               CoreGenErrno *E,
+                               CoreGenPluginMgr *PlugIn)
+  : Top(T), Proj(P), Env(V), Errno(E), PlugInMgr(PlugIn), Archive(nullptr) {
   Archive = new CoreGenArchive(Env->GetArchRoot());
 }
 
 CoreGenCodegen::~CoreGenCodegen(){
+  PlugInMgr = NULL;
   if( Archive )
     delete Archive;
 }
@@ -401,6 +403,17 @@ bool CoreGenCodegen::BuildChiselSBT(){
     return false;
   }
 
+  unsigned Major = 0;
+  unsigned Minor = 0;
+  if( !Proj->GetChiselVersion(&Major,&Minor) ){
+    Errno->SetError(CGERR_ERROR, "Could not retrieve Chisel version" );
+    SOutFile.close();
+    return false;
+  }
+  SOutFile << "version := \"" << std::endl;
+  SOutFile << "import complete.DefaultParsers._" << std::endl;
+  SOutFile << "import scala.sys.process._"       << std::endl;
+
   // def scalacOptionsVerion
   SOutFile << "def scalacOptionsVersion(scalaVersion: String): Seq[String] = {" << std::endl;
   SOutFile << "  Seq() ++ {" << std::endl;
@@ -416,49 +429,102 @@ bool CoreGenCodegen::BuildChiselSBT(){
   SOutFile << "  Seq() ++ {" << std::endl;
   SOutFile << "    CrossVersion.partialVersion(scalaVersion) match {" << std::endl;
   SOutFile << "      case Some((2, scalaMajor: Long)) if scalaMajor < 12 =>" << std::endl;
-  SOutFile << "        Seq(\"-source\", \"1.7\", \"-target\", \"1.7\")" << std::endl;
+  SOutFile << "        Seq(\"-source\", \"1.8\", \"-target\", \"1.8\")" << std::endl;
   SOutFile << "      case _ =>" << std::endl;
   SOutFile << "        Seq(\"-source\", \"1.8\", \"-target\", \"1.8\")" << std::endl;
   SOutFile << "    }" << std::endl;
   SOutFile << "  }" << std::endl;
   SOutFile << "}" << std::endl << std::endl;
 
-  // everything else
-  SOutFile << "name := \"" << Proj->GetProjName() << "\"" << std::endl << std::endl;
+  // Set the versions of chisel, firrtl, etc. that we will be using
+	SOutFile << " val defaultVersions = Map(" << std::endl;
+	SOutFile << "  \"chisel3\" -> \"" << std::to_string(Major) << ".";
+  SOutFile << std::to_string(Minor) << "-SNAPSHOT\"," << std::endl;
+	SOutFile << "  \"firrtl\" -> \"1.4-SNAPSHOT\"," << std::endl;
+	SOutFile << "  \"firrtl-interpreter\" -> \"1.4-SNAPSHOT\"," << std::endl;
+	SOutFile << "  \"chisel-iotesters\" -> \"1.4.1+\"," << std::endl;
+	SOutFile << "  \"chiseltest\" -> \"0.3-SNAPSHOT\"," << std::endl;
+	SOutFile << "  \"treadle\" -> \"1.3-SNAPSHOT\"" << std::endl;
+	SOutFile << " )" << std::endl;
 
-  unsigned Major = 0;
-  unsigned Minor = 0;
-  if( !Proj->GetChiselVersion(&Major,&Minor) ){
-    Errno->SetError(CGERR_ERROR, "Could not retrieve Chisel version" );
-    SOutFile.close();
-    return false;
+  //Set up the common settings that will be used for the various chisel projects in  
+  // SystemArchitect
+	SOutFile << " lazy val commonSettings = Seq (" << std::endl;
+	SOutFile << "  organization := \"OpenSoC System Architect\"," << std::endl;
+	SOutFile << "  name := \"" << Proj->GetProjName() << "\"," << std::endl;
+	SOutFile << "  scalaVersion := \"2.12.10\"," << std::endl;
+	SOutFile << "  crossScalaVersions := Seq(\"2.12.10\", \"2.11.12\")," << std::endl;
+	SOutFile << "  libraryDependencies ++= Seq(" << std::endl;
+	SOutFile << "    \"com.github.scopt\" %% \"scopt\" % \"3.7.0\"," << std::endl;
+	SOutFile << "    \"org.scalatest\" %% \"scalatest\" % \"3.0.8\"," << std::endl;
+	SOutFile << "    \"com.lihaoyi\" %% \"utest\" % \"0.6.6\"" << std::endl;
+	SOutFile << "  )," << std::endl;
+	SOutFile << "  libraryDependencies ++= Seq(\"org.scala-lang\" % \"scala-reflect\" % scalaVersion.value)," << std::endl;
+	SOutFile << "  libraryDependencies ++= Seq(\"chisel3\",\"firrtl\",\"firrtl-interpreter\",\"chisel-iotesters\",\"chiseltest\", \"treadle\").map { dep: String =>" << std::endl;
+	SOutFile << "    \"edu.berkeley.cs\" %% dep % sys.props.getOrElse(dep + \"Version\", defaultVersions(dep))" << std::endl;
+	SOutFile << "  }," << std::endl;
+	SOutFile << "  resolvers ++= Seq(" << std::endl;
+	SOutFile << "    Resolver.sonatypeRepo(\"snapshots\")," << std::endl;
+	SOutFile << "    Resolver.sonatypeRepo(\"releases\")" << std::endl;
+	SOutFile << "  )," << std::endl;
+	SOutFile << "  scalacOptions ++= scalacOptionsVersion(scalaVersion.value)," << std::endl;
+	SOutFile << "  javacOptions ++= javacOptionsVersion(scalaVersion.value)," << std::endl;
+	SOutFile << "  addCompilerPlugin(\"org.scalamacros\" % \"paradise\" % \"2.1.0\" cross CrossVersion.full)" << std::endl;
+	SOutFile << " )" << std::endl;
+
+  unsigned PlugInCount = PlugInMgr->GetNumPlugins();
+
+	SOutFile << " lazy val top = (project in file(\".\"))." << std::endl;
+	SOutFile << "  settings(commonSettings:_*)." << std::endl;
+	SOutFile << "  aggregate(common, test,templates,cde"; 
+  for( int i=0; i < PlugInCount; i++){
+    CoreGenPlugin *P = PlugInMgr->GetPlugin(i);
+    if(P->HasHDLCodegen()){
+      SOutFile << ", " << P->GetPluginName() ;
+    }
   }
-  SOutFile << "version := \""
-           << std::to_string(Major) << "."
-           << std::to_string(Minor) << "\"" << std::endl << std::endl;
+  SOutFile << ")." << std::endl;
+	SOutFile << "  dependsOn(common,cde";
+  for( int i=0; i < PlugInCount; i++){
+    CoreGenPlugin *P = PlugInMgr->GetPlugin(i);
+    if(P->HasHDLCodegen()){
+      SOutFile << ", " << P->GetPluginName() ;
+    }
+  }
+  SOutFile << ")." << std::endl;
+	SOutFile << "  dependsOn(templates)" << std::endl;
+	SOutFile << " lazy val common = (project in file(\"src/common\"))." << std::endl;
+	SOutFile << "  settings(commonSettings:_*)" << std::endl;
 
-  SOutFile << "scalaVersion := \"2.11.12\"" << std::endl << std::endl;
+	SOutFile << " lazy val cde = (project in file(\"src/cde\"))." << std::endl;
+	SOutFile << "  settings(commonSettings:_*)" << std::endl;
 
-  SOutFile << "crossScalaVersions := Seq(\"2.11.12\",\"2.12.4\")" << std::endl << std::endl;
+	SOutFile << " lazy val templates = (project in file(\"src/main/scala/SysArchPipelines\"))." << std::endl;
+	SOutFile << "  settings(commonSettings:_*)." << std::endl;
+	SOutFile << "  dependsOn(common"; 
+  for( int i=0; i < PlugInCount; i++){
+    CoreGenPlugin *P = PlugInMgr->GetPlugin(i);
+    if(P->HasHDLCodegen()){
+      SOutFile << ", " << P->GetPluginName() ;
+    }
+  }
+  SOutFile << ")" << std::endl;
 
-  SOutFile << "resolvers ++= Seq(" << std::endl;
-  SOutFile << "  Resolver.sonatypeRepo(\"snapshots\")," << std::endl;
-  SOutFile << "  Resolver.sonatypeRepo(\"releases\")" << std::endl;
-  SOutFile << ")" << std::endl << std::endl;
+  for( int i=0; i < PlugInCount; i++){
+    CoreGenPlugin *P = PlugInMgr->GetPlugin(i);
+    if(P->HasHDLCodegen()){
+	    SOutFile << " lazy val " << P->GetPluginName() << "= (project in file";
+      SOutFile << " (\"src/common/" << P->GetPluginName() << "\"))." << std::endl;
+	    SOutFile << "  settings(commonSettings:_*)." << std::endl;
+	    SOutFile << "  dependsOn(cde)" << std::endl;
+    }
+  }
 
-  SOutFile << "defaultVersions = Map(" << std::endl;
-  SOutFile << "  \"chisel3\" -> \"3.1.+\"," << std::endl;
-  SOutFile << "  \"chisel-iotesters\" -> \"[1.2.4,1.3.0[\"" << std::endl;
-  SOutFile << "  )" << std::endl << std::endl;
+	SOutFile << " lazy val test = (project in file(\"src/test/scala/SysArchPipelines\"))." << std::endl;
+	SOutFile << "  settings(commonSettings:_*)." << std::endl;
+	SOutFile << "  dependsOn(common, templates)" << std::endl;
 
-  SOutFile << "libraryDependencies ++= Seq(\"chisel3\",\"chisel-iotesters\").map {" << std::endl;
-  SOutFile << "  dep: String => \"edu.berkeley.cs\" \%\% dep \% sys.props.getOrElse(dep + \"Version\", defaultVersions(dep)) }"
-           << std::endl << std::endl;
-
-  SOutFile << "scalacOptions ++= scalacOptionsVersion(scalaVersion.value)" << std::endl << std::endl;
-
-  SOutFile << "javacOptions ++= javacOptionsVersion(scalaVersion.value)" << std::endl << std::endl;
-
+  // close file
   SOutFile.close();
   return true;
 }
@@ -699,13 +765,6 @@ bool CoreGenCodegen::BuildISAChisel( CoreGenISA *ISA,
 
       // build the register attribute list
       std::string REGNAME = REG->GetName() + GetRegAttrStr(REG);
-#if 0
-      if( REG->IsPCAttr() ){
-        REGNAME = REG->GetName() + "[PC]";
-      }else{
-        REGNAME = REG->GetName();
-      }
-#endif
 
       if( REG->GetNumSubRegs() > 0 ){
         // write out the register with the subregs
@@ -728,6 +787,11 @@ bool CoreGenCodegen::BuildISAChisel( CoreGenISA *ISA,
       }else{
         // write out the register with no subregs
         MOutFile << " u" << REG->GetWidth() << " " << REGNAME;
+        if( REG->IsVector() ){
+          MOutFile << "<" << REG->GetDimX() << ">";
+        }else if( REG->IsMatrix() ){
+          MOutFile << "<" << REG->GetDimX() << "," << REG->GetDimY() << ">";
+        }
       }
 
       // print a comma between registers
@@ -745,8 +809,13 @@ bool CoreGenCodegen::BuildISAChisel( CoreGenISA *ISA,
   // stage 7: write out the instructions
   for( unsigned i=0; i<Insts.size(); i++ ){
     MOutFile << "# " << Insts[i]->GetName() << std::endl;
-    MOutFile << "def " << Insts[i]->GetName()
-              << ":" << Insts[i]->GetFormat()->GetName() << "( ";
+    if( Insts[i]->GetISA()->IsVLIW() ){
+      MOutFile << "def " << Insts[i]->GetName()
+               << ":VLIW" << "( ";
+    }else{
+      MOutFile << "def " << Insts[i]->GetName()
+               << ":" << Insts[i]->GetFormat()->GetName() << "( ";
+    }
 
     // retrieve the instruction format and print out all the field
     // names and immediate values
@@ -762,6 +831,181 @@ bool CoreGenCodegen::BuildISAChisel( CoreGenISA *ISA,
   }
 
   // stage 8: close the file
+  MOutFile.close();
+
+  return true;
+}
+
+bool CoreGenCodegen::BuildRawStoneCutterFiles(){
+
+  // stage 1: generate the necessary vectors
+  std::vector<CoreGenInstFormat *> IF;
+  std::vector<CoreGenRegClass *> RC;
+  std::vector<CoreGenInst *> Insts;
+
+  for( unsigned i=0; i<Top->GetNumChild(); i++ ){
+    switch(Top->GetChild(i)->GetType()){
+    case CGInstF:
+      IF.push_back( static_cast<CoreGenInstFormat *>(Top->GetChild(i)) );
+      break;
+    case CGRegC:
+      RC.push_back( static_cast<CoreGenRegClass *>(Top->GetChild(i)) );
+      break;
+    case CGInst:
+      Insts.push_back( static_cast<CoreGenInst *>(Top->GetChild(i)) );
+      break;
+    default:
+      // do nothing
+      break;
+    }
+  }
+
+  // stage 2: generate the output chisel file
+  std::string OutFile = SCDir + "/stonecutter.sc";
+  std::ofstream MOutFile;
+  MOutFile.open(OutFile,std::ios::trunc);
+  if( !MOutFile.is_open() ){
+    Errno->SetError(CGERR_ERROR, "Could not open StoneCutter output file" + OutFile );
+    return false;
+  }
+
+  // stage 3: write the header
+  MOutFile << "#-- Raw StoneCutter source file" << std::endl;
+  MOutFile << std::endl << std::endl;
+
+  // stage 4: write out the instruction formats
+  if( IF.size() > 0 ){
+    MOutFile << "# Instruction Formats" << std::endl;
+  }
+  for( unsigned i=0; i<IF.size(); i++ ){
+    // protect against duplicates across instructions
+    if( std::find(InstFormatsVect.begin(),
+                  InstFormatsVect.end(),
+                  IF[i]->GetName()) == InstFormatsVect.end() ){
+      // inst format not found
+      // record it to the top-level instformats vector
+      // and write it to the file
+      InstFormatsVect.push_back(IF[i]->GetName());
+
+      MOutFile << "instformat " << IF[i]->GetName() << "(";
+      for( unsigned j=0; j<IF[i]->GetNumFields(); j++ ){
+        switch( IF[i]->GetFieldType(IF[i]->GetFieldName(j)) ){
+        case CoreGenInstFormat::CGInstReg:
+          MOutFile << "reg["
+                   << IF[i]->GetFieldRegClass(IF[i]->GetFieldName(j))->GetName()
+                   << "] "
+                   << IF[i]->GetFieldName(j)
+                   << ":" << IF[i]->GetFieldWidth(IF[i]->GetFieldName(j));
+          break;
+        case CoreGenInstFormat::CGInstCode:
+          MOutFile << "enc " << IF[i]->GetFieldName(j)
+                   << ":" << IF[i]->GetFieldWidth(IF[i]->GetFieldName(j));
+          break;
+        case CoreGenInstFormat::CGInstImm:
+          MOutFile << "imm " << IF[i]->GetFieldName(j)
+                   << ":" << IF[i]->GetFieldWidth(IF[i]->GetFieldName(j));
+          break;
+        default:
+          Errno->SetError(CGERR_ERROR,
+                          "No valid field type for instruction format=" +
+                          IF[i]->GetName() + "; field=" + IF[i]->GetFieldName(j) );
+          return false;
+          break;
+        }
+        // print a comma if necessary
+        if( j!=(IF[i]->GetNumFields()-1) ){
+          MOutFile << ",";
+        }
+      }
+      MOutFile << ")" << std::endl;
+    }// end if ( std::find )
+  }// end IF.size()
+
+  MOutFile << std::endl;
+
+  // stage 5: write out the register class definitions
+  if( RC.size() > 0 ){
+    MOutFile << "# Register Class Definitions" << std::endl;
+  }
+  for( unsigned i=0; i<RC.size(); i++ ){
+    MOutFile << "regclass " << RC[i]->GetName() << "(";
+
+    // write out all the registers
+    for( unsigned j=0; j<RC[i]->GetNumReg(); j++ ){
+
+      CoreGenReg *REG = static_cast<CoreGenReg *>(RC[i]->GetReg(j));
+
+      // build the register attribute list
+      std::string REGNAME = REG->GetName() + GetRegAttrStr(REG);
+
+      if( REG->GetNumSubRegs() > 0 ){
+        // write out the register with the subregs
+        MOutFile << " u" << REG->GetWidth() << " " << REGNAME << "(";
+        for( unsigned k=0; k<REG->GetNumSubRegs(); k++ ){
+          std::string Name;
+          unsigned Start;
+          unsigned End;
+          if( !REG->GetSubReg(k,Name,Start,End) ){
+            Errno->SetError(CGERR_ERROR, "Could not retrieve subreg from register=" + REG->GetName() );
+            MOutFile.close();
+            return false;
+          }
+          MOutFile << " u" << ((End-Start)+1) << " " << Name;
+          if( k != (REG->GetNumSubRegs()-1) ){
+            MOutFile << ",";
+          }
+        } // end subregs
+        MOutFile << ")";
+      }else{
+        // write out the register with no subregs
+        MOutFile << " u" << REG->GetWidth() << " " << REGNAME;
+        if( REG->IsVector() ){
+          MOutFile << "<" << REG->GetDimX() << ">";
+        }else if( REG->IsMatrix() ){
+          MOutFile << "<" << REG->GetDimX() << "," << REG->GetDimY() << ">";
+        }
+      }
+
+      // print a comma between registers
+      if( j != (RC[i]->GetNumReg()-1) ){
+        MOutFile << ",";
+      }
+    }// end writing out the registers
+
+    MOutFile << " )" << std::endl;
+  }// end writing register classes
+
+  MOutFile << std::endl << std::endl;
+
+  // stage 6: write out the instructions
+  if( Insts.size() > 0 ){
+    MOutFile << "# Instruction Definitions" << std::endl;
+  }
+
+  for( unsigned i=0; i<Insts.size(); i++ ){
+    MOutFile << "# " << Insts[i]->GetName() << std::endl;
+    if( Insts[i]->GetISA()->IsVLIW() ){
+      MOutFile << "def " << Insts[i]->GetName()
+               << ":VLIW" << "( ";
+    }else{
+      MOutFile << "def " << Insts[i]->GetName()
+               << ":" << Insts[i]->GetFormat()->GetName() << "( ";
+    }
+
+    // retrieve the instruction format and print out all the field
+    // names and immediate values
+    CoreGenInstFormat *LIF = Insts[i]->GetFormat();
+    for( unsigned j=0; j<LIF->GetNumFields(); j++ ){
+      if( (LIF->GetFieldType(LIF->GetFieldName(j)) == CoreGenInstFormat::CGInstReg) || 
+          (LIF->GetFieldType(LIF->GetFieldName(j)) == CoreGenInstFormat::CGInstImm) ){
+        MOutFile << LIF->GetFieldName(j) << " ";
+      }
+    }
+    MOutFile << ")" << std::endl;
+    MOutFile << "{" << std::endl << Insts[i]->GetImpl() << std::endl << "}" << std::endl << std::endl;
+  }
+
+  // stage 7 : close the file
   MOutFile.close();
 
   return true;
@@ -797,6 +1041,33 @@ bool CoreGenCodegen::BuildStoneCutterFiles(){
 
     }// end if
   }// end for
+
+  return true;
+}
+
+bool CoreGenCodegen::ExecuteStoneCutterCodegen(){
+  // Stage 1: Build the top-level makefile
+  if( !isTopMakefile ){
+    if( !BuildProjMakefile() ){
+      return false;
+    }
+    isTopMakefile = true;
+  }
+
+  // Stage 2: Build the Chisel directory structure
+  if( !BuildChiselDir() ){
+    return false;
+  }
+
+  // Stage 3: Build the StoneCutter directory structure
+  if( !BuildStoneCutterDir() ){
+    return false;
+  }
+
+  // Stage 4: Walk the ISA graphs and build StoneCutter source using inline RTL
+  if( !BuildRawStoneCutterFiles() ){
+    return false;
+  }
 
   return true;
 }

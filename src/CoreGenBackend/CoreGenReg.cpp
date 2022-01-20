@@ -1,7 +1,7 @@
 //
 // _CoreGenReg_cpp_
 //
-// Copyright (C) 2017-2020 Tactical Computing Laboratories, LLC
+// Copyright (C) 2017-2022 Tactical Computing Laboratories, LLC
 // All Rights Reserved
 // contact@tactcomplabs.com
 //
@@ -13,14 +13,48 @@
 CoreGenReg::CoreGenReg(std::string N, int I, int W,
                        CoreGenErrno *E)
   : CoreGenNode(CGReg,N,E), isFixedValue(false), isSIMD(false), isIdxSet(true),
-    isShared(false),
-    index(I), width(W), SIMDwidth(1), attrs(1<<CoreGenReg::CGRegRW){
+    isShared(false), isVector(false), isMatrix(false),
+    index(I), width(W), SIMDwidth(1), DimX(1), DimY(0),
+    attrs(CoreGenReg::CGRegRW){
 }
 
 std::string CoreGenReg::GetPseudoName(){
   std::string N = pName;
   std::transform( N.begin(), N.end(), N.begin(), ::tolower );
   return N;
+}
+
+bool CoreGenReg::SetDimX(unsigned D){
+  DimX = D;
+  return true;
+}
+
+bool CoreGenReg::SetDimY(unsigned D){
+  DimY = D;
+  return true;
+}
+
+bool CoreGenReg::SetVector(unsigned X){
+  if( X == 0 )
+    return false;
+
+  DimX = X;
+  isVector = true;
+  isMatrix = false;
+
+  return true;
+}
+
+bool CoreGenReg::SetMatrix(unsigned X, unsigned Y){
+  if( (X==0) || (Y==0) )
+    return false;
+
+  DimX = X;
+  DimY = Y;
+  isMatrix = true;
+  isVector = false;
+
+  return true;
 }
 
 bool CoreGenReg::SetSIMD( int width ){

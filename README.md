@@ -220,7 +220,7 @@ the ``HomeBrew`` package manager in order to fulfill these dependencies.
 
 1. Install the system dependencies (assuming HomeBrew is installed):
 ```
-brew cask install mactex
+brew install --cask mactex
 brew install cmake
 brew install llvm@8
 brew install pkg-config
@@ -318,6 +318,7 @@ cgcli --init /path/to/installation/archive/master.yaml
 * -DBUILD\_COREGEN\_YAML\_WRITER\_TESTING=ON : Enable yaml writer test harness
 * -DBUILD\_COREGEN\_STONECUTTER\_TESTING=ON : Enables the StoneCutter test harness
 * -DBUILD\_COREGEN\_STONECUTTER\_CLI\_TESTING=ON : Enables the StoneCutter CLI test harness
+* -DBUILD\_COREGEN\_STONECUTTER\_PIPELINER\_TESTING=ON : Enables the StoneCutter pipeliner test harness
 * -DBUILD\_COREGEN\_STONECUTTER\_PARSER\_TESTING=ON : Enables the StoneCutter parser test harness
 * -DBUILD\_COREGEN\_STONECUTTER\_PARSER\_KNOWNFAIL\_TESTING=ON : Enables the StoneCutter parser known fail test harness
 * -DBUILD\_COREGEN\_STONECUTTER\_PARSER\_KNOWNPASS\_MULTIFILE\_TESTING=ON : Enables the StoneCutter parser multi-file test harness
