@@ -30,7 +30,7 @@ bool SCFieldIO::RetrieveFields(){
       if( this->GetGlobalAttribute( TmpFields[j], "fieldtype" ) !=
           "register" ){
         // this is an encoding or immediate field
-        Fields.push_back(TmpFields[i]);
+        Fields.push_back(TmpFields[j]);
       }
     }
   }
