@@ -1887,8 +1887,11 @@ std::unique_ptr<FunctionAST> SCParser::ParseDefinition() {
     return LogErrorF("Found mismatch '{'");
   }
   GetNextToken(); // eat the '{'
+  if( CurTok == '}' )
+    return LogErrorF("Empty function bodies are not permitted");
+
   InFunc = true;
-  
+
   CurrentFunction = Proto->getName();
   std::vector<std::unique_ptr<ExprAST>> Exprs;
   while( CurTok != '}' ){
