@@ -131,7 +131,7 @@ public:
   VLIWGraph() { }
 
   /// VLIWGraph: default destructor
-  ~VLIWGraph() { Nodes.clear(); }
+  ~VLIWGraph() { if(Nodes.size() > 0){ Nodes.clear();} }
 
   /// VLIWGraph: Insert a new node into the graph
   void InsertNode( VLIWNode *N) { Nodes.push_back(N); }

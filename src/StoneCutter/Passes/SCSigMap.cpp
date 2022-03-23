@@ -330,10 +330,13 @@ bool SCSigMap::TranslateCallSig(Function &F, Instruction &I){
             // search for temporaries that match the instruction:irname mapping
             std::string TmpReg = Signals->GetTempMap(F.getName().str(),
                                                      Arg->get()->getName().str());
-            // we only eject if the instruction is no VLIW.  VLIW stages are permitted
+            // we only eject if the instruction is not VLIW.  VLIW stages are permitted
             // to pass temporaries between one another using arguments
             if( TmpReg.length() == 0 && !IsVLIWStage(F) ){
               // we cannot create a new temp on register read
+              this->PrintMsg(L_ERROR,
+                             "Cannot create temporary on register read for " +
+                             Intrin->GetKeyword() );
               return false;
             }
             Signals->InsertSignal(new SCSig(AREG_READ,
