@@ -13,6 +13,7 @@
 DHDTOpts::DHDTOpts(int a, char **v)
   : argc(a), argv(v),
     isHazard(false), isPower(false), isVerbose(false) {}
+  : argc(a), argv(v), isHazard(false), isPower(false) {}
 
 DHDTOpts::~DHDTOpts(){}
 
@@ -37,6 +38,13 @@ void DHDTOpts::PrintHelp(){
   std::cout << "\t-hazard|--hazard                  : Enable hazard discovery tests" << std::endl;
   std::cout << "\t-power|--power [/path/to/power]   : Enable power discovery tests" << std::endl;
   std::cout << "\t-verbose|--verbose                : Enable verbosity" << std::endl;
+  std::cout << "dhdt [Options] --llvm /path/to/llvm.ir --coregen /path/to/design.yaml" << std::endl;
+  std::cout << "Options: " << std::endl;
+  std::cout << "\t-h|-help|--help                   : Print the help menu" << std::endl;
+  std::cout << "\t-o|-output|--output               : Output file for reports" << std::endl;
+  std::cout << "[Runtime Options]" << std::endl;
+  std::cout << "\t-hazard|--hazard                  : Enable hazard discovery tests" << std::endl;
+  std::cout << "\t-power|--power /path/to/power     : Enable power discovery tests" << std::endl;
   std::cout << std::endl;
 }
 
@@ -69,6 +77,17 @@ bool DHDTOpts::ParseOpts(bool &isHelp){
           i++;
         }
       }
+    }else if( (s=="-hazard") || (s=="--hazard") ){
+      isHazard = true;
+    }else if( (s=="-power") || (s=="--power") ){
+      if( i+1 > (argc-1) ){
+        std::cout << "Error : --power requires an argument" << std::endl;
+        return false;
+      }
+      std::string TmpS(argv[i+1]);
+      PFile = TmpS;
+      i++;
+      isPower = true;
     }else if( s == "--llvm" ){
       if( i+1 > (argc-1) ){
         std::cout << "Error : --llvm requires an argument" << std::endl;

@@ -61,6 +61,11 @@ DHDTGraph::~DHDTGraph(){
 }
 
 bool DHDTGraph::ReadLLVMIR(std::string IR){
+DHDTGraph::DHDTGraph(){}
+
+DHDTGraph::~DHDTGraph(){}
+
+bool DHDTGraph::ReadLLVMIRGraph(std::string IR){
   if( IR.length() == 0 ){
     return false;
   }
@@ -68,6 +73,7 @@ bool DHDTGraph::ReadLLVMIR(std::string IR){
   Mod = parseIRFile(IR.c_str(), Err, Context);
   if( !Mod ){
     std::cout << "Error parsing LLVM IR File: " << IR << std::endl;
+    std::cout << "Error parsing IR File: " << IR << std::endl;
     Err.print(IR.c_str(), errs());
     return false;
   }
