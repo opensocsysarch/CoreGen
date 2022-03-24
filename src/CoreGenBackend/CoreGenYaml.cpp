@@ -533,6 +533,43 @@ void CoreGenYaml::WriteISAYaml(YAML::Emitter *out,
   *out << YAML::EndSeq;
 }
 
+void CoreGenYaml::WriteVLIWStageYaml(YAML::Emitter *out,
+                                     std::vector<CoreGenVLIWStage *> const &Stages ){
+  *out << YAML::Key << "VLIWStages";
+  *out << YAML::BeginSeq;
+
+  for( unsigned i=0; i<Stages.size(); i++ ){
+    *out << YAML::BeginMap;
+    *out << YAML::Key << "VLIWStageName" << YAML::Value << Stages[i]->GetName();
+    *out << YAML::Key << "InstFormat" <<
+            YAML::Value << Stages[i]->GetFormat()->GetName();
+
+    // inputs
+    *out << YAML::Key << "Inputs" << YAML::Value << YAML::BeginSeq;
+    std::vector<std::string> Inputs = Stages[i]->GetInputs();
+    for( unsigned i=0; i<Inputs.size(); i++ ){
+      *out << YAML::Key << Inputs[i];
+    }
+    *out << YAML::EndSeq;
+
+    // outputs
+    *out << YAML::Key << "Outputs" << YAML::Value << YAML::BeginSeq;
+    std::vector<std::string> Outputs= Stages[i]->GetInputs();
+    for( unsigned i=0; i<Outputs.size(); i++ ){
+      *out << YAML::Key << Outputs[i];
+    }
+    *out << YAML::EndSeq;
+
+    if( Stages[i]->IsImpl() ){
+      *out << YAML::Key << "Impl";
+      *out << YAML::Value << Stages[i]->GetImpl();
+    }
+
+    *out << YAML::EndMap;
+  }
+  *out << YAML::EndSeq; // End VLIW Stages
+}
+
 void CoreGenYaml::WriteInstFormatYaml(YAML::Emitter *out,
                                       std::vector<CoreGenInstFormat *> const &Formats ){
   *out << YAML::Key << "InstFormats";
@@ -1452,6 +1489,7 @@ bool CoreGenYaml::WriteYaml(  std::vector<CoreGenSoC *> const &Socs,
                               std::vector<CoreGenSpad *> const &Spads,
                               std::vector<CoreGenMCtrl *> const &MCtrls,
                               std::vector<CoreGenVTP *> const &VTPs,
+                              std::vector<CoreGenVLIWStage *> const &Stages,
                               std::vector<CoreGenExt *> const &Exts,
                               std::vector<CoreGenPlugin *> const &Plugins ){
 
@@ -1499,6 +1537,11 @@ bool CoreGenYaml::WriteYaml(  std::vector<CoreGenSoC *> const &Socs,
   // -- Formats
   if( Formats.size() > 0 ){
     WriteInstFormatYaml(&out,Formats);
+  }
+
+  // -- VLIWStages
+  if( Stages.size() > 0 ){
+    WriteVLIWStageYaml(&out,Stages);
   }
 
   // -- Insts
@@ -2042,6 +2085,76 @@ bool CoreGenYaml::ReadRegisterYaml(const YAML::Node& RegNodes,
     // add the register object
     Regs.push_back(R);
   }
+  return true;
+}
+
+bool CoreGenYaml::ReadVLIWStageYaml(const YAML::Node& StageNodes,
+                                    std::vector<CoreGenVLIWStage *> &Stages,
+                                    std::vector<CoreGenInstFormat *> &Formats){
+  for( unsigned i=0; i<StageNodes.size(); i++ ){
+    const YAML::Node& Node = StageNodes[i];
+    if( !CheckValidNode(Node, "VLIWStageName") ){
+      PrintParserError(Node,
+                      "VLIWStages",
+                      "VLIWStageName");
+      return false;
+    }
+    std::string Name = Node["VLIWStageName"].as<std::string>();
+
+    if( !IsValidName(Name) ){
+      Errno->SetError(CGERR_ERROR, "Invalid IR Node Name: " + Name );
+      return false;
+    }
+
+    if( !CheckValidNode(Node, "InstFormat") ){
+      PrintParserError(Node,
+                       "VLIWStages",
+                       "InstFormat");
+      return false;
+    }
+    std::string FormatName = Node["InstFormat"].as<std::string>();
+    CoreGenInstFormat *Format = nullptr;
+
+    // derive the instformat object
+    for( unsigned j=0; j<Formats.size(); j++ ){
+      if( Formats[j]->GetName() == FormatName ){
+        Format = Formats[j];
+      }
+    }
+    if( Format == nullptr ){
+      Errno->SetError(CGERR_ERROR,
+                      "No instruction format found for InstFormat: " +
+                      FormatName);
+      return false;
+    }
+
+    // create the object
+    CoreGenVLIWStage *Stage = new CoreGenVLIWStage(Name, Format, Errno);
+
+    if( Node["Inputs"] ){
+      const YAML::Node& INode = Node["Inputs"];
+      for( unsigned j=0; j<INode.size(); j++ ){
+        Stage->InsertInput(INode[j].as<std::string>());
+      }
+    }
+
+    if( Node["Outputs"] ){
+      const YAML::Node& ONode = Node["Outputs"];
+      for( unsigned j=0; j<ONode.size(); j++ ){
+        Stage->InsertOutput(ONode[j].as<std::string>());
+      }
+    }
+
+    if( Node["Impl"] ){
+      if( !Stage->SetImpl( Node["Impl"].as<std::string>() ) ){
+        return false;
+      }
+    }
+
+    // insert the stage
+    Stages.push_back(Stage);
+  }
+
   return true;
 }
 
@@ -4017,6 +4130,7 @@ bool CoreGenYaml::ReadYaml(  std::vector<CoreGenSoC *>  &Socs,
                              std::vector<CoreGenSpad *> &Spads,
                              std::vector<CoreGenMCtrl *> &MCtrls,
                              std::vector<CoreGenVTP *> &VTPs,
+                             std::vector<CoreGenVLIWStage *> &Stages,
                              std::vector<CoreGenExt *>  &Exts,
                              std::vector<CoreGenDataPath *> &DataPaths,
                              std::vector<CoreGenPlugin *> &Plugins ){
@@ -4083,6 +4197,15 @@ bool CoreGenYaml::ReadYaml(  std::vector<CoreGenSoC *>  &Socs,
   //-- Inst Formats
   const YAML::Node& InstFormatNodes = IR["InstFormats"];
   if( !ReadInstFormatYaml(InstFormatNodes,Formats,ISAs,RegClasses) ){
+    fin.close();
+    return false;
+  }
+
+  //-- Read VLIW Stages
+  const YAML::Node& VLIWStageNodes = IR["VLIWStages"];
+  if( !ReadVLIWStageYaml(VLIWStageNodes,
+                         Stages,
+                         Formats) ){
     fin.close();
     return false;
   }

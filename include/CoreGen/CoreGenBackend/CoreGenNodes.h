@@ -32,6 +32,7 @@
 #include "CoreGen/CoreGenBackend/CoreGenVTP.h"
 #include "CoreGen/CoreGenBackend/CoreGenProj.h"
 #include "CoreGen/CoreGenBackend/CoreGenPlugin.h"
+#include "CoreGen/CoreGenBackend/CoreGenVLIWStage.h"
 
 #endif
 

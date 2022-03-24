@@ -61,6 +61,9 @@ CoreGenBackend::~CoreGenBackend(){
   for( unsigned i=0; i<PInsts.size(); i++ ){
     delete PInsts[i];
   }
+  for( unsigned i=0; i<VLIWStages.size(); i++ ){
+    delete VLIWStages[i];
+  }
   for( unsigned i=0; i<Formats.size(); i++ ){
     delete Formats[i];
   }
@@ -324,7 +327,7 @@ bool CoreGenBackend::WriteIR( std::string FileName ){
 
   if( !IR->WriteYaml( Socs, Cores, Caches, ISAs, Formats, Insts,
                       PInsts, RegClasses, Regs, Comms, Spads,
-                      MCtrls, VTPs, Exts, Plugins) ){
+                      MCtrls, VTPs, VLIWStages, Exts, Plugins) ){
     delete IR;
     return false;
   }
@@ -352,7 +355,7 @@ bool CoreGenBackend::ReadIR( std::string FileName ){
 
   if( !IR->ReadYaml( Socs, Cores, Caches, ISAs, Formats, Insts,
                       PInsts, RegClasses, Regs, Comms, Spads,
-                      MCtrls, VTPs, Exts, DataPaths, Plugins) ){
+                      MCtrls, VTPs, VLIWStages, Exts, DataPaths, Plugins) ){
     delete IR;
     return false;
   }
@@ -552,6 +555,9 @@ bool CoreGenBackend::BuildDAG(){
   }
   for( unsigned i=0; i<MCtrls.size(); i++ ){
     Top->InsertChild(static_cast<CoreGenNode *>(MCtrls[i]));
+  }
+  for( unsigned i=0; i<VLIWStages.size(); i++ ){
+    Top->InsertChild(static_cast<CoreGenNode *>(VLIWStages[i]));
   }
   for( unsigned i=0; i<VTPs.size(); i++ ){
     Top->InsertChild(static_cast<CoreGenNode *>(VTPs[i]));
@@ -757,6 +763,39 @@ bool CoreGenBackend::DeletePInstNode(CoreGenPseudoInst *P){
   return true;
 }
 
+bool CoreGenBackend::DeleteVLIWStageNode(CoreGenVLIWStage *V){
+  // stage 1: walk all the top-level nodes and ensure that we remove the node
+  if( !DAG )
+    this->BuildDAG();
+
+  for( unsigned i=0; i<Top->GetNumChild(); i++ ){
+    if( static_cast<CoreGenVLIWStage *>(V) ==
+        Top->GetChild(i) ){
+      Top->DeleteChild(Top->GetChild(i));
+    }
+  }
+
+  // stage 2: walk all the nodes and determine if anyone is pointing to us
+  DeleteDepChild( static_cast<CoreGenNode *>(V) );
+
+  // stage 3: walk all the instructions and nullify any candidates
+  // null
+
+  // stage 4: remove from the vector
+  std::vector<unsigned> DIdx;
+  for( unsigned i=0; i<VLIWStages.size(); i++ ){
+    if( VLIWStages[i] == V )
+      DIdx.push_back(i);
+  }
+  for( unsigned i=0; i<DIdx.size(); i++ ){
+    VLIWStages.erase(VLIWStages.begin()+DIdx[i]);
+  }
+
+  delete V;
+
+  return true;
+}
+
 bool CoreGenBackend::DeleteInstFormatNode(CoreGenInstFormat *I){
   // stage 1: walk all the top-level nodes and ensure that we remove the node
   if( !DAG )
@@ -772,12 +811,22 @@ bool CoreGenBackend::DeleteInstFormatNode(CoreGenInstFormat *I){
   // stage 2: walk all the nodes and determine if anyone is pointing to us
   DeleteDepChild( static_cast<CoreGenNode *>(I) );
 
-  // stage 3: walk all the instructions and nullify any candidates
+  // stage 3a: walk all the instructions and nullify any candidates
   for( unsigned i=0; i<Top->GetNumChild(); i++ ){
     if( Top->GetChild(i)->GetType() == CGInst ){
       CoreGenInst *Inst = static_cast<CoreGenInst *>(Top->GetChild(i));
       if( Inst->GetFormat() == I ){
         Inst->SetNullFormat();
+      }
+    }
+  }
+
+  // stage 3b: walk all the vliw stages and nullify any candidates
+  for( unsigned i=0; i<Top->GetNumChild(); i++ ){
+    if( Top->GetChild(i)->GetType() == CGVLIW ){
+      CoreGenVLIWStage *Stage = static_cast<CoreGenVLIWStage *>(Top->GetChild(i));
+      if( Stage->GetFormat() == I ){
+        Stage->SetNullFormat();
       }
     }
   }
@@ -1248,6 +1297,13 @@ bool CoreGenBackend::DeleteNode( CoreGenNode *N ){
   return false;
 }
 
+CoreGenVLIWStage *CoreGenBackend::InsertVLIWStage(std::string Name,
+                                                  CoreGenInstFormat *F){
+  CoreGenVLIWStage *V = new CoreGenVLIWStage(Name,F,Errno);
+  VLIWStages.push_back(V);
+  return V;
+}
+
 CoreGenCache *CoreGenBackend::InsertCache(std::string Name,
                                           unsigned Sets,
                                           unsigned Ways){
@@ -1496,6 +1552,14 @@ CoreGenMCtrl* CoreGenBackend::GetMCtrlNodeByName(std::string Name){
     }
   }
   return NULL;
+}
+
+CoreGenVLIWStage *CoreGenBackend::GetVLIWStageNodeByName(std::string Name){
+  for( unsigned int i=0; i < this->VLIWStages.size(); i++ ){
+    if(this->VLIWStages[i]->GetName() == Name){
+      return this->VLIWStages[i];
+    }
+  }
 }
 
 CoreGenVTP* CoreGenBackend::GetVTPNodeByName(std::string Name){

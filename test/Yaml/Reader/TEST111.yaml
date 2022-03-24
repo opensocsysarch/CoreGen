@@ -1,0 +1,310 @@
+ProjectInfo:
+  - ProjectName: TEST94
+    ProjectRoot: ./
+    ProjectType: unknown
+    ChiselMajorVersion: 3
+    ChiselMinorVersion: 0
+Registers:
+  - RegName: TEST94.0.reg
+    Width: 64
+    Index: 0
+    PseudoName: pseudoreg.0
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: false
+    AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
+  - RegName: TEST94.1.reg
+    Width: 64
+    Index: 1
+    PseudoName: pseudoreg.1
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: false
+    AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
+  - RegName: TEST94.2.reg
+    Width: 64
+    Index: 2
+    PseudoName: pseudoreg.2
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: false
+    AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
+  - RegName: TEST94.3.reg
+    Width: 64
+    Index: 3
+    PseudoName: pseudoreg.3
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: false
+    AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
+  - RegName: TEST94.4.reg
+    Width: 64
+    Index: 4
+    PseudoName: pseudoreg.4
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: false
+    AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
+  - RegName: TEST94.5.reg
+    Width: 64
+    Index: 5
+    PseudoName: pseudoreg.5
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: false
+    AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
+  - RegName: TEST94.6.reg
+    Width: 64
+    Index: 6
+    PseudoName: pseudoreg.6
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: false
+    AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
+  - RegName: TEST94.7.reg
+    Width: 64
+    Index: 7
+    PseudoName: pseudoreg.7
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: false
+    AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
+  - RegName: TEST94.8.reg
+    Width: 64
+    Index: 8
+    PseudoName: pseudoreg.8
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: false
+    AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
+  - RegName: TEST94.9.reg
+    Width: 64
+    Index: 9
+    PseudoName: pseudoreg.9
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: false
+    AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
+  - RegName: TEST94.10.reg
+    Width: 64
+    Index: 10
+    PseudoName: pseudoreg.10
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: false
+    AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
+  - RegName: TEST94.11.reg
+    Width: 64
+    Index: 11
+    PseudoName: pseudoreg.11
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: false
+    AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
+  - RegName: TEST94.12.reg
+    Width: 64
+    Index: 12
+    PseudoName: pseudoreg.12
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: false
+    AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
+  - RegName: TEST94.13.reg
+    Width: 64
+    Index: 13
+    PseudoName: pseudoreg.13
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: false
+    AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
+  - RegName: TEST94.14.reg
+    Width: 64
+    Index: 14
+    PseudoName: pseudoreg.14
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: false
+    AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
+  - RegName: TEST94.15.reg
+    Width: 64
+    Index: 15
+    PseudoName: pseudoreg.15
+    IsFixedValue: false
+    IsSIMD: false
+    RWReg: true
+    ROReg: false
+    CSRReg: false
+    AMSReg: false
+    TUSReg: false
+    PCReg: false
+    Shared: false
+RegClasses:
+  - RegisterClassName: TEST94.regclass
+    Registers:
+      - TEST94.0.reg
+      - TEST94.1.reg
+      - TEST94.2.reg
+      - TEST94.3.reg
+      - TEST94.4.reg
+      - TEST94.5.reg
+      - TEST94.6.reg
+      - TEST94.7.reg
+      - TEST94.8.reg
+      - TEST94.9.reg
+      - TEST94.10.reg
+      - TEST94.11.reg
+      - TEST94.12.reg
+      - TEST94.13.reg
+      - TEST94.14.reg
+      - TEST94.15.reg
+    ReadPorts: 2
+    WritePorts: 1
+ISAs:
+  - ISAName: TEST94.isa
+    VLIW: false
+InstFormats:
+  - InstFormatName: TEST94.if
+    ISA: TEST94.isa
+    FormatWidth: 32
+    Fields:
+      - FieldName: opcode
+        FieldType: CGInstCode
+        FieldWidth: 8
+        StartBit: 0
+        EndBit: 7
+        MandatoryField: true
+      - FieldName: RB
+        FieldType: CGInstReg
+        FieldWidth: 8
+        StartBit: 8
+        EndBit: 15
+        MandatoryField: false
+        RegClass: TEST94.regclass
+        RegIsDestination: false
+      - FieldName: RA
+        FieldType: CGInstReg
+        FieldWidth: 8
+        StartBit: 16
+        EndBit: 23
+        MandatoryField: false
+        RegClass: TEST94.regclass
+        RegIsDestination: false
+      - FieldName: RT
+        FieldType: CGInstReg
+        FieldWidth: 8
+        StartBit: 24
+        EndBit: 31
+        MandatoryField: false
+        RegClass: TEST94.regclass
+        RegIsDestination: true
+VLIWStages:
+  - VLIWStageName: VStage_0
+    InstFormat: TEST94.if
+    Inputs:
+      - Input0
+      - Input1
+      - Input2
+      - Input3
+      - Input4
+      - Input5
+      - Input6
+      - Input7
+      - Input8
+      - Input9
+    Outputs:
+      - Input0
+      - Input1
+      - Input2
+      - Input3
+      - Input4
+      - Input5
+      - Input6
+      - Input7
+      - Input8
+      - Input9
+Cores:
+  - Core: TEST94.core
+    ThreadUnits: 1
+    ISA: TEST94.isa
+    RegisterClasses:
+      - RegClass: TEST94.regclass
+    Scheduler: Unknown
+Socs:
+  - Soc: TEST94.soc
+    Cores:
+      - Core: TEST94.core
