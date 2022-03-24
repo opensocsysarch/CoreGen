@@ -2101,11 +2101,6 @@ bool CoreGenYaml::ReadVLIWStageYaml(const YAML::Node& StageNodes,
     }
     std::string Name = Node["VLIWStageName"].as<std::string>();
 
-    if( !IsValidName(Name) ){
-      Errno->SetError(CGERR_ERROR, "Invalid IR Node Name: " + Name );
-      return false;
-    }
-
     if( !CheckValidNode(Node, "InstFormat") ){
       PrintParserError(Node,
                        "VLIWStages",
