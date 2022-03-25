@@ -52,6 +52,7 @@ void CoreGenPassMgr::InitSoCPasses(std::ostream *O){
   Passes.push_back(static_cast<CoreGenPass *>(new SpadSafetyPass(O,DAG,Errno)));
   Passes.push_back(static_cast<CoreGenPass *>(new CoreSafetyPass(O,DAG,Errno)));
   Passes.push_back(static_cast<CoreGenPass *>(new CommSafetyPass(O,DAG,Errno)));
+  Passes.push_back(static_cast<CoreGenPass *>(new VLIWSafetyPass(O,DAG,Errno)));
   Passes.push_back(static_cast<CoreGenPass *>(new RegClassSafetyPass(O,DAG,Errno)));
   Passes.push_back(static_cast<CoreGenPass *>(new CacheLevelPass(O,DAG,Errno)));
   Passes.push_back(static_cast<CoreGenPass *>(new DanglingNodePass(O,DAG,Errno)));
@@ -78,6 +79,7 @@ void CoreGenPassMgr::InitModPasses(std::ostream *O){
   Passes.push_back(static_cast<CoreGenPass *>(new SpadSafetyPass(O,DAG,Errno)));
   Passes.push_back(static_cast<CoreGenPass *>(new CoreSafetyPass(O,DAG,Errno)));
   Passes.push_back(static_cast<CoreGenPass *>(new CommSafetyPass(O,DAG,Errno)));
+  Passes.push_back(static_cast<CoreGenPass *>(new VLIWSafetyPass(O,DAG,Errno)));
   Passes.push_back(static_cast<CoreGenPass *>(new RegClassSafetyPass(O,DAG,Errno)));
   Passes.push_back(static_cast<CoreGenPass *>(new CacheLevelPass(O,DAG,Errno)));
   Passes.push_back(static_cast<CoreGenPass *>(new DanglingNodePass(O,DAG,Errno)));
@@ -103,6 +105,7 @@ void CoreGenPassMgr::InitExtPasses(std::ostream *O){
   Passes.push_back(static_cast<CoreGenPass *>(new SpadSafetyPass(O,DAG,Errno)));
   Passes.push_back(static_cast<CoreGenPass *>(new CoreSafetyPass(O,DAG,Errno)));
   Passes.push_back(static_cast<CoreGenPass *>(new CommSafetyPass(O,DAG,Errno)));
+  Passes.push_back(static_cast<CoreGenPass *>(new VLIWSafetyPass(O,DAG,Errno)));
   Passes.push_back(static_cast<CoreGenPass *>(new RegClassSafetyPass(O,DAG,Errno)));
   Passes.push_back(static_cast<CoreGenPass *>(new CacheLevelPass(O,DAG,Errno)));
   Passes.push_back(static_cast<CoreGenPass *>(new DanglingNodePass(O,DAG,Errno)));
