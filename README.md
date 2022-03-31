@@ -12,6 +12,7 @@
 * CMake 3.4.3+
 * LLVM 7.X or LLVM 8.X
 * Curl
+* Doxygen (for docs and install)
 
 ## Building
 
@@ -24,9 +25,9 @@ are listed below, each with their respective build options.
 Generally speaking, CoreGen is built using the following steps:
 
 1. Clone the CoreGen repository.  There are currently no git dependencies
-1. Create a ``build`` directory within the CoreGen source tree (and change to that directory)
-1. Execute cmake to generate the target-specific makefiles
-1. Execute the build
+2. Create a ``build`` directory within the CoreGen source tree (and change to that directory)
+3. Execute cmake to generate the target-specific makefiles
+4. Execute the build
 
 
 ### Building with Clang/LLVM
