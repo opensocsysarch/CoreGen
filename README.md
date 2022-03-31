@@ -49,9 +49,9 @@ versions, we do not currently test these scenarios.
 
 1.  Install the necessary apt repositories
 ```
-wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
-sudo apt-add-repository "deb http://apt.llvm.org/xenial/ llvm-toolchain-xenial-8 main"
-sudo apt-get update
+wget https://apt.llvm.org/llvm.sh
+chmod +x llvm.sh
+sudo ./llvm.sh 8
 ```
 2.  Install the system dependencies:
 ```
@@ -81,9 +81,9 @@ make
 
 1.  Install the necessary apt repositories
 ```
-wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
-sudo apt-add-repository "deb http://apt.llvm.org/bionic/ llvm-toolchain-bionic-8.0 main"
-sudo apt-get update
+wget https://apt.llvm.org/llvm.sh
+chmod +x llvm.sh
+sudo ./llvm.sh 8
 ```
 2.  Install the system dependencies:
 ```
@@ -112,9 +112,9 @@ make
 
 1.  Install the necessary apt repositories
 ```
-wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
-sudo apt-add-repository "deb http://apt.llvm.org/focal/ llvm-toolchain-focal-9 main"
-sudo apt-get update
+wget https://apt.llvm.org/llvm.sh
+chmod +x llvm.sh
+sudo ./llvm.sh 8
 ```
 2.  Install the system dependencies:
 ```
