@@ -842,6 +842,7 @@ bool CoreGenCodegen::BuildRawStoneCutterFiles(){
   std::vector<CoreGenInstFormat *> IF;
   std::vector<CoreGenRegClass *> RC;
   std::vector<CoreGenInst *> Insts;
+  std::vector<CoreGenVLIWStage *> Stages;
 
   for( unsigned i=0; i<Top->GetNumChild(); i++ ){
     switch(Top->GetChild(i)->GetType()){
@@ -853,6 +854,9 @@ bool CoreGenCodegen::BuildRawStoneCutterFiles(){
       break;
     case CGInst:
       Insts.push_back( static_cast<CoreGenInst *>(Top->GetChild(i)) );
+      break;
+    case CGVLIW:
+      Stages.push_back( static_cast<CoreGenVLIWStage *>(Top->GetChild(i)) );
       break;
     default:
       // do nothing
@@ -1005,7 +1009,33 @@ bool CoreGenCodegen::BuildRawStoneCutterFiles(){
     MOutFile << "{" << std::endl << Insts[i]->GetImpl() << std::endl << "}" << std::endl << std::endl;
   }
 
-  // stage 7 : close the file
+  // stage 7: write out the vliw stages
+  if( Stages.size() > 0 ){
+    MOutFile << "# VLIW Stages" << std::endl;
+  }
+
+  for( unsigned i=0; i<Stages.size(); i++ ){
+    std::vector<std::string> Inputs = Stages[i]->GetInputs();
+    std::vector<std::string> Outputs = Stages[i]->GetOutputs();
+
+    MOutFile << "# " << Stages[i]->GetName() << std::endl;
+    MOutFile << "def " << Stages[i]->GetName() << ":VLIW" << "( ";
+    for( unsigned j=0; j<Inputs.size(); j++ ){
+      MOutFile << Inputs[j] << std::endl;
+    }
+    MOutFile << ")" << std::endl;
+    MOutFile << "{" << std::endl;
+    for( unsigned j=0; j<Inputs.size(); j++ ){
+      MOutFile << "IN(" << Inputs[j] << ")" << std::endl;
+    }
+    MOutFile << Stages[i]->GetImpl() << std::endl;
+    for( unsigned j=0; j<Outputs.size(); j++ ){
+      MOutFile << "OUT(" << Outputs[j] << ")" << std::endl;
+    }
+    MOutFile << "}" << std::endl;
+  }
+
+  // stage 8 : close the file
   MOutFile.close();
 
   return true;

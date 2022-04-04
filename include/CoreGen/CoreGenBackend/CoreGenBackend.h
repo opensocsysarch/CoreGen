@@ -63,6 +63,7 @@
 #include "CoreGen/CoreGenBackend/CoreGenVTP.h"
 #include "CoreGen/CoreGenBackend/CoreGenPlugin.h"
 #include "CoreGen/CoreGenBackend/CoreGenDataPath.h"
+#include "CoreGen/CoreGenBackend/CoreGenVLIWStage.h"
 
 // Codegen Headers
 #include "CoreGen/CoreGenCodegen/CoreGenCodegen.h"
@@ -81,22 +82,23 @@ private:
 
   CoreGenPassMgr *PassMgr;                  ///< CoreGenBackend: Pass Manager
 
-  std::vector<CoreGenCache *> Caches;       ///< CoreGenBackend: Caches
-  std::vector<CoreGenCore *> Cores;         ///< CoreGenBackend: Cores
-  std::vector<CoreGenInst *> Insts;         ///< CoreGenBackend: Instructions
-  std::vector<CoreGenPseudoInst *> PInsts;  ///< CoreGenBackend: Pseudo Instructions
-  std::vector<CoreGenInstFormat *> Formats; ///< CoreGenBackend: Instruction Formats
-  std::vector<CoreGenReg *> Regs;           ///< CoreGenBackend: Registers
-  std::vector<CoreGenRegClass *> RegClasses;///< CoreGenBackend: Register Classes
-  std::vector<CoreGenSoC *> Socs;           ///< CoreGenBackend: SoC's
-  std::vector<CoreGenISA *> ISAs;           ///< CoreGenBackend: ISA's
-  std::vector<CoreGenExt *> Exts;           ///< CoreGenBackend: Extensions
-  std::vector<CoreGenComm *> Comms;         ///< CoreGenBackend: Communication channels
-  std::vector<CoreGenSpad *> Spads;         ///< CoreGenBackend: Scratchpads
-  std::vector<CoreGenMCtrl *> MCtrls;       ///< CoreGenBackend: Memory Controllers
-  std::vector<CoreGenVTP *> VTPs;           ///< CoreGenBackend: Virtual to Physical Controllers
-  std::vector<CoreGenPlugin *> Plugins;     ///< CoreGenBackend: Plugins
-  std::vector<CoreGenDataPath *> DataPaths; ///< CoreGenBackend: Data Path Implementations
+  std::vector<CoreGenCache *> Caches;         ///< CoreGenBackend: Caches
+  std::vector<CoreGenCore *> Cores;           ///< CoreGenBackend: Cores
+  std::vector<CoreGenInst *> Insts;           ///< CoreGenBackend: Instructions
+  std::vector<CoreGenPseudoInst *> PInsts;    ///< CoreGenBackend: Pseudo Instructions
+  std::vector<CoreGenInstFormat *> Formats;   ///< CoreGenBackend: Instruction Formats
+  std::vector<CoreGenReg *> Regs;             ///< CoreGenBackend: Registers
+  std::vector<CoreGenRegClass *> RegClasses;  ///< CoreGenBackend: Register Classes
+  std::vector<CoreGenSoC *> Socs;             ///< CoreGenBackend: SoC's
+  std::vector<CoreGenISA *> ISAs;             ///< CoreGenBackend: ISA's
+  std::vector<CoreGenExt *> Exts;             ///< CoreGenBackend: Extensions
+  std::vector<CoreGenComm *> Comms;           ///< CoreGenBackend: Communication channels
+  std::vector<CoreGenSpad *> Spads;           ///< CoreGenBackend: Scratchpads
+  std::vector<CoreGenMCtrl *> MCtrls;         ///< CoreGenBackend: Memory Controllers
+  std::vector<CoreGenVTP *> VTPs;             ///< CoreGenBackend: Virtual to Physical Controllers
+  std::vector<CoreGenPlugin *> Plugins;       ///< CoreGenBackend: Plugins
+  std::vector<CoreGenDataPath *> DataPaths;   ///< CoreGenBackend: Data Path Implementations
+  std::vector<CoreGenVLIWStage *> VLIWStages; ///< CoreGenBackend: VLIW Pipe Stages
 
   CoreGenNode *Top;                         ///< CoreGenBackend: Top-level project node
 
@@ -119,6 +121,7 @@ private:
   bool DeleteVTPNode(CoreGenVTP *V);                ///< CoreGenBackend: deletes a VTP node
   bool DeletePluginNode(CoreGenPlugin *P);          ///< CoreGenBackend: deletes a plugin node
   bool DeleteDPathNode(CoreGenDataPath *D);         ///< CoreGenBackend: deletes a Data Path node
+  bool DeleteVLIWStageNode(CoreGenVLIWStage *V);    ///< CoreGenBackend: deletesa VLIW Stage node
 
 public:
 
@@ -215,6 +218,9 @@ public:
 
   /// Insert a new ISA node
   CoreGenISA *InsertISA( std::string Name );
+
+  /// Insert a new VLIW Stage node
+  CoreGenVLIWStage *InsertVLIWStage( std::string Name, CoreGenInstFormat *F );
 
   /// Insert a new Data Path node TODO:Specify a type, arch, etc.  depending on RISC, OOO, SS, etc
   CoreGenDataPath *InsertDPath( std::string Name, std::string Style );
@@ -350,6 +356,9 @@ public:
 
   /// Get a VTP node by name
   CoreGenVTP* GetVTPNodeByName(std::string Name);
+
+  /// Get a VLIW Stage node by name
+  CoreGenVLIWStage *GetVLIWStageNodeByName(std::string Name);
 
   /// Get a Plugin node by name
   CoreGenPlugin* GetPluginNodeByName(std::string Name);

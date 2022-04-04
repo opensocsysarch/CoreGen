@@ -144,22 +144,22 @@ bool CoreGenReg::SetShared( bool S ){
 
 bool CoreGenReg::UnsetAttrs( uint32_t Attr ){
   if( (Attr & CoreGenReg::CGRegRO) > 0 ){
-    attrs &= ~(1 << CoreGenReg::CGRegRO);
+    attrs &= ~CoreGenReg::CGRegRO;
   }
   if( (Attr & CoreGenReg::CGRegRW) > 0 ){
-    attrs &= ~(1 << CoreGenReg::CGRegRW);
+    attrs &= ~CoreGenReg::CGRegRW;
   }
   if( (Attr & CoreGenReg::CGRegAMS) > 0 ){
-    attrs &= ~(1 << CoreGenReg::CGRegAMS);
+    attrs &= ~CoreGenReg::CGRegAMS;
   }
   if( (Attr & CoreGenReg::CGRegCSR) > 0 ){
-    attrs &= ~(1 << CoreGenReg::CGRegCSR);
+    attrs &= ~CoreGenReg::CGRegCSR;
   }
   if( (Attr & CoreGenReg::CGRegTUS) > 0 ){
-    attrs &= ~(1 << CoreGenReg::CGRegTUS);
+    attrs &= ~CoreGenReg::CGRegTUS;
   }
   if( (Attr & CoreGenReg::CGRegPC) > 0 ){
-    attrs &= ~(1 << CoreGenReg::CGRegTUS);
+    attrs &= ~CoreGenReg::CGRegTUS;
   }
   return true;
 }
@@ -181,16 +181,16 @@ bool CoreGenReg::SetAttrs( uint32_t Attr ){
 
   if( (Attr & CoreGenReg::CGRegRO) > 0 ){
     // unset RW
-    attrs &= ~(1 << CoreGenReg::CGRegRW);
+    attrs &= ~CoreGenReg::CGRegRW;
   }else if( (Attr & CoreGenReg::CGRegRW) > 0 ){
     // unset RO
-    attrs &= ~(1 << CoreGenReg::CGRegRO);
+    attrs &= ~CoreGenReg::CGRegRO;
   }else if( (Attr & CoreGenReg::CGRegCSR) > 0 ){
     // unset AMS
-    attrs &= ~(1 << CoreGenReg::CGRegAMS);
+    attrs &= ~CoreGenReg::CGRegAMS;
   }else if( (Attr & CoreGenReg::CGRegAMS) > 0 ){
     // unset CSR
-    attrs &= ~(1 << CoreGenReg::CGRegCSR);
+    attrs &= ~CoreGenReg::CGRegCSR;
   }else if( (Attr & CoreGenReg::CGRegTUS) > 0 ){
     // TUS registers cannot be shared across cores
     isShared = false;
