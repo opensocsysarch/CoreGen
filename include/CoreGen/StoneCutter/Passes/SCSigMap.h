@@ -84,8 +84,14 @@ private:
   /// Translates the branch operation to the appropriate signals
   bool TranslateBranch(Function &F, Instruction &I);
 
+  /// Translates the switch operation to the appropriate signals
+  bool TranslateSwitch(Function &F, Instruction &I);
+
   /// Determines the branch distance in instructions between the branch source and the branch target
   signed GetBranchDistance(Function &F, Instruction &BI, Instruction &Target);
+
+  /// Determines the branch disance in instructions for switch sources and target cases
+  signed GetSwitchCaseDistance(Function &F, Instruction &BI, BasicBlock *Target );
 
   /// Determines if the target memory operation is legal for translation to a signal
   /// Similar in function to TranslateMemOp, but NEVER inserts signals into the signal map
