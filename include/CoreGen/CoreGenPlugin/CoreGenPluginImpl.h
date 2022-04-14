@@ -53,6 +53,7 @@
 #include "CoreGen/CoreGenBackend/CoreGenVTP.h"
 #include "CoreGen/CoreGenBackend/CoreGenDataPath.h"
 
+
 /*! \enum CGPluginType
  *  \brief Defnes the type of the CoreGenPlugin
  *
@@ -454,6 +455,19 @@ public:
   /// Default Destructor
   virtual ~CoreGenPluginImpl();
 };
+
+/*
+ * Plugin Header Macros
+ *
+ */
+
+#define __COREGENPLUGIN(p)                                                \
+ extern "C" CoreGenPluginImpl* __create(CoreGenEnv *EV, CoreGenErrno *E){ \
+ return new p(EV,E);}                                                     \
+ extern "C" void __destroy(CoreGenPluginImpl *I){                         \
+ delete I;}                                                               \
+ extern "C" char *__getname(){                                            \
+ return __PLUGIN_NAME;}
 
 #endif
 // EOF
