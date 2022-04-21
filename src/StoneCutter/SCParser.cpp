@@ -1,4 +1,3 @@
-//
 // _SCParser_cpp_
 //
 // Copyright (C) 2017-2022 Tactical Computing Laboratories, LLC
@@ -403,7 +402,7 @@ bool SCParser::CheckIntrinName( std::string Name ){
 bool SCParser::CheckLocalContainers( std::string VarName, std::string FunctionName, unsigned &DimX, unsigned &DimY ){
 	std::vector<std::tuple<std::string,std::string, unsigned,unsigned>>::iterator it;
 	for( it=LocalContainers.begin(); it != LocalContainers.end(); ++it ){
-    LogErrorV(VarName);
+    // LogErrorV(VarName);
     if( (std::get<1>(*it) == FunctionName) && (VarName.find(std::get<0>(*it) ))){
 			// found an entry
 			DimX = std::get<2>(*it);
@@ -567,14 +566,10 @@ bool SCParser::GetVarAttr( std::string Str, VarAttrs &V ){
   while( VarAttrEntryTable[Idx].Name != "." ){
     if( Str == VarAttrEntryTable[Idx].Name ){
       V.width     = VarAttrEntryTable[Idx].width;
-      V.dimX      = VarAttrEntryTable[Idx].dimX;
-      V.dimY      = VarAttrEntryTable[Idx].dimY;
+      V.xDim      = VarAttrEntryTable[Idx].xDim;
+      V.yDim      = VarAttrEntryTable[Idx].yDim;
       V.defSign   = VarAttrEntryTable[Idx].IsDefSign;
-      V.defVector = VarAttrEntryTable[Idx].IsDefVector;
-      V.defMatrix = VarAttrEntryTable[Idx].IsDefMatrix;
       V.defFloat  = VarAttrEntryTable[Idx].IsDefFloat;
-      V.defElem   = VarAttrEntryTable[Idx].IsDefElem;
-      V.defMatrix = VarAttrEntryTable[Idx].IsDefMatrix;
       V.defRegClass = false;
       return true;
     }
@@ -583,22 +578,18 @@ bool SCParser::GetVarAttr( std::string Str, VarAttrs &V ){
 
   if( Str[0] == 'u' ){
     // unsigned variable
-    V.dimX      = 1;
-    V.dimY      = 0;
+    V.xDim      = 0;
+    V.yDim      = 0;
     V.defSign   = false;
-    V.defVector = false;
-    V.defMatrix = false;
     V.defFloat  = false;
     V.defRegClass = false;
     V.width     = std::stoi( Str.substr(1,Str.length()-1) );
     return true;
   }else if( Str[0] == 's' ){
     // signed variable
-    V.dimX      = 1;
-    V.dimY      = 0;
+    V.xDim      = 0;
+    V.yDim      = 0;
     V.defSign   = true;
-    V.defVector = false;
-    V.defMatrix = false;
     V.defFloat  = false;
     V.defRegClass = false;
     V.width     = std::stoi( Str.substr(1,Str.length()-1) );
@@ -919,10 +910,8 @@ std::unique_ptr<ExprAST> SCParser::ParseVarExpr(){
   VAttr.defAMS        = false;
   VAttr.defTUS        = false;
   VAttr.defShared     = false;
-  VAttr.defVector     = false;
-  VAttr.defMatrix     = false;
-  VAttr.dimX          = 0;
-  VAttr.dimY          = 0;
+  VAttr.xDim          = 0;
+  VAttr.yDim          = 0;
   VAttr.xIdx          = 0;
   VAttr.yIdx          = 0;
 
@@ -942,8 +931,7 @@ std::unique_ptr<ExprAST> SCParser::ParseVarExpr(){
     VarNames.push_back(std::make_pair(Name, std::move(Init)));
     Attrs.push_back(Lex->GetVarAttrs());
 
-
-    if(CurTok == '<') {
+    if( CurTok == '<' ) {
       // attempt to parse the vector
       // eat the <
       GetNextToken();
@@ -956,105 +944,117 @@ std::unique_ptr<ExprAST> SCParser::ParseVarExpr(){
 
         // get dimension value
         unsigned dim = (unsigned)(Lex->GetNumVal());
-
-        if( !Attrs[L_VAttr].defMatrix ){
-          Attrs[L_VAttr].dimX = dim;
+        if( !Attrs[L_VAttr].xDim ){ // Check that this is the first dimension 
+          Attrs[L_VAttr].xDim = dim;
         }else{
           // check if matrix more than 2 dimesions
-          if( Attrs[L_VAttr].dimY )
+          if( Attrs[L_VAttr].yDim > 1) // yDim has been set already
             return LogError("Matrices greater than 2-Dimensions are not currently supported. Please adjust " + Name);
-          // assign value after comma to ydim
-          Attrs[L_VAttr].dimY = dim;
+          Attrs[L_VAttr].yDim = dim; // assign value after comma to ydim
         }
-        // add them to our vector
-        // Attrs.push_back(VAttr);
-        // eat the identifier
         GetNextToken();
-        // LogError(std::to_string(CurTok));
 
-        if( CurTok == ',' ){
-          // must be matrix
-          Attrs[L_VAttr].defVector = false;
-          Attrs[L_VAttr].defMatrix = true;
-          // eat the comma
-          GetNextToken();
+        if( CurTok == ',' ){ // multi-dimensional => Matrix
+          Attrs[L_VAttr].yDim = 1; 
+          GetNextToken(); // eat the comma
         }else if( CurTok == '>' ){
-          LocalContainers.push_back(std::make_tuple(Name, CurrentFunction, Attrs[L_VAttr].dimX, Attrs[L_VAttr].dimY));
-          if( !Attrs[L_VAttr].defMatrix ){
-            Attrs[L_VAttr].defVector = true;
-            Attrs[L_VAttr].defElem = false;
-            // Attrs.push_back(VecVAttr);
-            // VarNames.push_back(RegName);
-            for( unsigned i=0; i<Attrs[L_VAttr].dimX; i++ ){
-              // handle vectors
+          LocalContainers.push_back(std::make_tuple(Name, CurrentFunction, Attrs[L_VAttr].xDim, Attrs[L_VAttr].yDim));
+          // if yDim == 0 => Standalone Vector
+          if ( !Attrs[L_VAttr].yDim ){
+            for( unsigned i=0; i<Attrs[L_VAttr].xDim; i++ ){
               // create new name based on containing reg
               std::string VecElemName = Name + "_" + std::to_string(i);
               std::unique_ptr<ExprAST> VecElemInit = nullptr;
               // init the reg attrs for vector element
               VarAttrs VecElemVAttr = Attrs[L_VAttr];
-              VecElemVAttr.defVector     = true;
-              VecElemVAttr.defMatrix     = false;
-              VecElemVAttr.defElem       = true;
-              VecElemVAttr.xIdx          = i;
-              VecElemVAttr.containers    = Name;
+              VecElemVAttr.xIdx       = i;
+              VecElemVAttr.yIdx       = -1; // NOTE: Potentially Redundant
+              VecElemVAttr.xDim       = 1; 
+              VecElemVAttr.yDim       = 0;
+              VecElemVAttr.containers = Name;
               // add to vector
               Attrs.push_back(VecElemVAttr);
               VarNames.push_back(std::make_pair(VecElemName, std::move(VecElemInit)));
-              }
-          } 
+            }
+          } // END STANDALONE VECTOR
+
           // Matrix Handling
           else{
+            /* Matrix Column Vector Generation */
             VarAttrs MatVecVAttr = Attrs[L_VAttr];
-            // MatVecVAttr.defMatrix     = true;
-            MatVecVAttr.defVector     = true;
-            MatVecVAttr.defElem       = false;
             MatVecVAttr.containers    = Name;
-            for( unsigned i=0; i<Attrs[L_VAttr].dimX; i++ ){
+            for( unsigned i=0; i<Attrs[L_VAttr].xDim; i++ ){
               std::string MatColName = Name + "_col" + std::to_string(i);
               std::unique_ptr<ExprAST> MatColInit = nullptr;
               VarAttrs MatColVAttr = MatVecVAttr;
               MatColVAttr.xIdx = i;
               MatColVAttr.yIdx = -1;
-              MatColVAttr.dimX = Attrs[L_VAttr].dimX;
-              MatColVAttr.dimY = 0;
+              MatColVAttr.xDim = 1;
+              MatVecVAttr.yDim = Attrs[L_VAttr].yDim;
               Attrs.push_back(MatColVAttr);
               VarNames.push_back(std::make_pair(MatColName, std::move(MatColInit)));
-            }
-            for( unsigned j=0; j<Attrs[L_VAttr].dimY; j++ ){
+            } /* END COLUMN VECTOR GEN */
+
+            for( unsigned j=0; j<Attrs[L_VAttr].yDim; j++ ){
               std::string MatRowName = Name + "_row" + std::to_string(j);
               std::unique_ptr<ExprAST> MatRowInit = nullptr;
               VarAttrs MatRowVAttr = MatVecVAttr;
               MatRowVAttr.yIdx = j;
               MatRowVAttr.xIdx = -1;
-              MatRowVAttr.dimX = Attrs[L_VAttr].dimY;
-              MatRowVAttr.dimY = 0;
+              MatRowVAttr.xDim = Attrs[L_VAttr].xDim;
+              MatRowVAttr.yDim = 1;
               Attrs.push_back(MatRowVAttr);
               VarNames.push_back(std::make_pair(MatRowName, std::move(MatRowInit)));
-            }
-            if( Attrs[L_VAttr].dimX == Attrs[L_VAttr].dimY ) {
+            } /* END ROW VECTOR GEN */
+
+            if( Attrs[L_VAttr].xDim == Attrs[L_VAttr].yDim ) {
               std::string MatDiagName = Name + "_diag";
-              std::unique_ptr<ExprAST> MatDiagInit = nullptr;
+              std::string MatNP1DiagName = Name + "_np1_diag"; // N + 1 diagonal
+              std::string MatNM1DiagName = Name + "_nm1_diag"; // N - 1 diagonal
+              std::unique_ptr<ExprAST> MatDiagInit = nullptr;  
+              std::unique_ptr<ExprAST> MatNM1DiagInit = nullptr;  // N - 1 diagonal
+              std::unique_ptr<ExprAST> MatNP1DiagInit = nullptr;  // N + 1 diagonal
               VarAttrs MatDiagVAttr = MatVecVAttr;
               MatDiagVAttr.xIdx = -1;
               MatDiagVAttr.yIdx = -1;
-              MatDiagVAttr.dimX = Attrs[L_VAttr].dimX;
-              MatDiagVAttr.dimY = 0;
+              MatDiagVAttr.xDim = Attrs[L_VAttr].xDim;
+              MatDiagVAttr.yDim = 1;
+
+              VarAttrs MatNDiagVAttr = MatVecVAttr;
+              MatNDiagVAttr.xIdx = -1;
+              MatNDiagVAttr.yIdx = -1;
+              MatNDiagVAttr.xDim = Attrs[L_VAttr].xDim - 1;
+              MatNDiagVAttr.yDim = 1;
+
+              VarAttrs MatNM1DiagVAttr = MatNDiagVAttr;
+              VarAttrs MatNP1DiagVAttr = MatNDiagVAttr;
               Attrs.push_back(MatDiagVAttr);
               VarNames.push_back(std::make_pair(MatDiagName, std::move(MatDiagInit)));
+              Attrs.push_back(MatNM1DiagVAttr);
+              VarNames.push_back(std::make_pair(MatNM1DiagName, std::move(MatNM1DiagInit)));
+              Attrs.push_back(MatNP1DiagVAttr);
+              VarNames.push_back(std::make_pair(MatNP1DiagName, std::move(MatNP1DiagInit)));
             }
-            for( unsigned i=0; i<Attrs[L_VAttr].dimX; i++ ){
-              for( unsigned j=0; j<Attrs[L_VAttr].dimY; j++ ){
+
+            for( unsigned i=0; i<Attrs[L_VAttr].xDim; i++ ){
+              for( unsigned j=0; j<Attrs[L_VAttr].yDim; j++ ){
                 std::string MatElemName = Name + "_row" + std::to_string(i) + "_col" + std::to_string(j);
                 std::unique_ptr<ExprAST> MatElemInit = nullptr;
                 VarAttrs MatElemAttrs = Attrs[L_VAttr];
-                MatElemAttrs.defMatrix     = true;
-                MatElemAttrs.defElem       = true;
-                MatElemAttrs.defVector     = false;
-                MatElemAttrs.xIdx          = i;
-                MatElemAttrs.yIdx          = j;
-                if( (i == j) && (Attrs[L_VAttr].dimX == Attrs[L_VAttr].dimY) ) {
+                MatElemAttrs.xIdx = i;
+                MatElemAttrs.yIdx = j;
+                // NOTE: If xDim == yDim == 1: Element of Matrix
+                MatElemAttrs.xDim = 1; 
+                MatElemAttrs.yDim = 1;        
+                if( (i == j) && (Attrs[L_VAttr].xDim == Attrs[L_VAttr].yDim) ) {
                   MatElemAttrs.containers += Name + "_diag, " ;
-                }
+                } // diag
+                else if( (i == j - 1) && (Attrs[L_VAttr].xDim == Attrs[L_VAttr].yDim) ) {
+                  MatElemAttrs.containers += Name + "_nm1_diag, " ;
+                } // nm1_diag
+                else if( (i == j + 1) && (Attrs[L_VAttr].xDim == Attrs[L_VAttr].yDim) ) {
+                  MatElemAttrs.containers += Name + "_np1_diag, " ;
+                } // nm1_diag
                 MatElemAttrs.containers   += (Name + "_row" + std::to_string(i) + ", ");
                 MatElemAttrs.containers   += Name + "_col" + std::to_string(j) + ", ";
                 MatElemAttrs.containers   += Name;
@@ -1063,7 +1063,6 @@ std::unique_ptr<ExprAST> SCParser::ParseVarExpr(){
               }
             }
           }
-          // LogError(std::to_string(CurTok));
           // eat the closing angle bracket
           GetNextToken();
           // LogError(std::to_string(CurTok));
@@ -1073,6 +1072,7 @@ std::unique_ptr<ExprAST> SCParser::ParseVarExpr(){
         }
       }
     }
+
     // check for the end of the variable list
     if( CurTok != ',' ){
       break;
@@ -1388,11 +1388,9 @@ std::unique_ptr<PrototypeAST> SCParser::ParsePrototype() {
 
 VarAttrs SCParser::GetMaxVarAttr(std::vector<VarAttrs> ArgAttrs){
   VarAttrs Attr;
-  Attr.dimX       = 1;
-  Attr.dimY       = 0;
+  Attr.xDim       = 1;
+  Attr.yDim       = 0;
   Attr.defSign    = false;
-  Attr.defVector  = false;
-  Attr.defMatrix  = false;
   Attr.defFloat   = false;
 
   unsigned Max = 0;
@@ -1589,10 +1587,8 @@ std::unique_ptr<RegClassAST> SCParser::ParseRegClassDef(){
     VAttr.defAMS        = false;
     VAttr.defTUS        = false;
     VAttr.defShared     = false;
-    VAttr.defVector     = false;
-    VAttr.defMatrix     = false;
-    VAttr.dimX          = 0;
-    VAttr.dimY          = 0;
+    VAttr.xDim          = 1;
+    VAttr.yDim          = 0;
     VAttr.xIdx          = 0;
     VAttr.yIdx          = 0;
 
@@ -1661,119 +1657,127 @@ std::unique_ptr<RegClassAST> SCParser::ParseRegClassDef(){
     // --
     // Parse an angle bracket, if an angle bracket exists, parse a vector/matrix
     // --
-    if( CurTok == '<' ){
+ 
+    if(CurTok == '<') {
       // attempt to parse the vector
       // eat the <
       GetNextToken();
 
       unsigned L_VAttr = ArgAttrs.size()-1;
 
-      ArgAttrs[L_VAttr].defVector = true;
-      ArgAttrs[L_VAttr].defMatrix = false;
-      // will store dimensions of vector/mat reg
-      // std::vector<unsigned> Dimensions;
+      // ArgAttrs[L_VAttr].xDim = 1;
 
-      // parse a numeric value
       if( CurTok != tok_number ){
-        return LogErrorR("Expected numerical value for dimension "); 
+        LogError("Expected numerical value for dimension ");
       }
 
       while( CurTok == tok_number ){
         // get dimension value
         unsigned dim = (unsigned)(Lex->GetNumVal());
 
-        if( !ArgAttrs[L_VAttr].defMatrix ){
-          ArgAttrs[L_VAttr].dimX = dim;
+        if( ArgAttrs[L_VAttr].xDim == 0 ){
+          // set first dimension
+          ArgAttrs[L_VAttr].xDim = dim;
+        }else if( ArgAttrs[L_VAttr].yDim == 0){
+          // set second dimension
+          ArgAttrs[L_VAttr].yDim = dim;
         }else{
-          // check if matrix more than 2 dimesions
-          if( ArgAttrs[L_VAttr].dimY )
-            return LogErrorR("Matrices greater than 2-Dimensions are not currently supported. Please adjust " + RegName);
-          // assign value after comma to ydim
-          ArgAttrs[L_VAttr].dimY = dim;
+          return LogErrorR("Matrices greater than 2-Dimensions are not currently supported. Please adjust " + RegName);
         }
 
-        // add them to our vector
-        // ArgAttrs.push_back(VAttr);
         // eat the identifier
         GetNextToken();
 
-        if( CurTok == ',' ){
-          // must be matrix
-          ArgAttrs[L_VAttr].defVector = false;
-          ArgAttrs[L_VAttr].defMatrix = true;
-          // eat the comma
-          GetNextToken();
+        if( CurTok == ',' ){ // multi-dimensional => Matrix
+          GetNextToken(); // eat the comma
         }else if( CurTok == '>' ){
-          if( !ArgAttrs[L_VAttr].defMatrix ){
-            ArgAttrs[L_VAttr].defVector = true;
-            ArgAttrs[L_VAttr].defElem = false;
-            // ArgAttrs.push_back(VecVAttr);
-            // ArgNames.push_back(RegName);
-            for( unsigned i=0; i<ArgAttrs[L_VAttr].dimX; i++ ){
-            // handle vectors
-            // create new name based on containing reg
-            std::string VecElemName = RegName + "_" + std::to_string(i);
-
-            // init the reg attrs for vector element
-            VarAttrs VecElemVAttr = ArgAttrs[L_VAttr];
-            VecElemVAttr.defVector     = true;
-            VecElemVAttr.defMatrix     = false;
-            VecElemVAttr.defElem       = true;
-            VecElemVAttr.xIdx          = i;
-            VecElemVAttr.containers    = RegName;
-
-            // add to vector
-            ArgAttrs.push_back(VecElemVAttr);
-            ArgNames.push_back(VecElemName);
+          LocalContainers.push_back(std::make_tuple(RegName, CurrentFunction, ArgAttrs[L_VAttr].xDim, ArgAttrs[L_VAttr].yDim));
+          // if yDim == 0 => Standalone Vector
+          if ( !ArgAttrs[L_VAttr].yDim ){
+            for( unsigned i=0; i<ArgAttrs[L_VAttr].xDim; i++ ){
+              // create new name based on containing reg
+              std::string VecElemName = RegName + "_" + std::to_string(i);
+              std::unique_ptr<ExprAST> VecElemInit = nullptr;
+              // init the reg attrs for vector element
+              VarAttrs VecElemVAttr = ArgAttrs[L_VAttr];
+              VecElemVAttr.xIdx       = i;
+              VecElemVAttr.yIdx       = -1; // NOTE: Potentially Redundant
+              VecElemVAttr.xDim       = 1; 
+              VecElemVAttr.yDim       = 0;
+              VecElemVAttr.containers = RegName;
+              // add to vector
+              ArgAttrs.push_back(VecElemVAttr);
+              ArgNames.push_back(VecElemName);
             }
-          }
+          } // END STANDALONE VECTOR
+
           // Matrix Handling
           else{
+            /* Matrix Column Vector Generation */
             VarAttrs MatVecVAttr = ArgAttrs[L_VAttr];
-            // MatVecVAttr.defMatrix     = true;
-            MatVecVAttr.defVector     = true;
-            MatVecVAttr.defElem       = false;
             MatVecVAttr.containers    = RegName;
-            for( unsigned i=0; i<ArgAttrs[L_VAttr].dimX; i++ ){
+            for( unsigned i=0; i<ArgAttrs[L_VAttr].xDim; i++ ){
               std::string MatColName = RegName + "_col" + std::to_string(i);
+              std::unique_ptr<ExprAST> MatColInit = nullptr;
               VarAttrs MatColVAttr = MatVecVAttr;
               MatColVAttr.xIdx = i;
               MatColVAttr.yIdx = -1;
-              MatColVAttr.dimX = ArgAttrs[L_VAttr].dimX;
-              MatColVAttr.dimY = 0;
+              MatColVAttr.xDim = 1;
+              MatVecVAttr.yDim = ArgAttrs[L_VAttr].yDim;
               ArgAttrs.push_back(MatColVAttr);
               ArgNames.push_back(MatColName);
-            }
-            for( unsigned j=0; j<ArgAttrs[L_VAttr].dimY; j++ ){
+            } /* END COLUMN VECTOR GEN */
+
+            for( unsigned j=0; j<ArgAttrs[L_VAttr].yDim; j++ ){
               std::string MatRowName = RegName + "_row" + std::to_string(j);
+              std::unique_ptr<ExprAST> MatRowInit = nullptr;
               VarAttrs MatRowVAttr = MatVecVAttr;
               MatRowVAttr.yIdx = j;
               MatRowVAttr.xIdx = -1;
-              MatRowVAttr.dimX = ArgAttrs[L_VAttr].dimY;
-              MatRowVAttr.dimY = 0;
+              MatRowVAttr.xDim = ArgAttrs[L_VAttr].xDim;
+              MatRowVAttr.yDim = 1;
               ArgAttrs.push_back(MatRowVAttr);
               ArgNames.push_back(MatRowName);
-            }
-            if( ArgAttrs[L_VAttr].dimX == ArgAttrs[L_VAttr].dimY ) {
+            } /* END ROW VECTOR GEN */
+
+            if( ArgAttrs[L_VAttr].xDim == ArgAttrs[L_VAttr].yDim ) {
               std::string MatDiagName = RegName + "_diag";
+              std::string MatNP1DiagName = RegName + "_np1_diag"; // N + 1 diagonal
+              std::string MatNM1DiagName = RegName + "_nm1_diag"; // N - 1 diagonal
+              std::unique_ptr<ExprAST> MatDiagInit = nullptr;  
+              std::unique_ptr<ExprAST> MatNM1DiagInit = nullptr;  // N - 1 diagonal
+              std::unique_ptr<ExprAST> MatNP1DiagInit = nullptr;  // N + 1 diagonal
               VarAttrs MatDiagVAttr = MatVecVAttr;
               MatDiagVAttr.xIdx = -1;
               MatDiagVAttr.yIdx = -1;
-              MatDiagVAttr.dimX = ArgAttrs[L_VAttr].dimX;
-              MatDiagVAttr.dimY = 0;
+              MatDiagVAttr.xDim = ArgAttrs[L_VAttr].xDim;
+              MatDiagVAttr.yDim = 1;
+
+              VarAttrs MatNDiagVAttr = MatVecVAttr;
+              MatNDiagVAttr.xIdx = -1;
+              MatNDiagVAttr.yIdx = -1;
+              MatNDiagVAttr.xDim = ArgAttrs[L_VAttr].xDim - 1;
+              MatNDiagVAttr.yDim = 1;
+
+              VarAttrs MatNM1DiagVAttr = MatNDiagVAttr;
+              VarAttrs MatNP1DiagVAttr = MatNDiagVAttr;
               ArgAttrs.push_back(MatDiagVAttr);
               ArgNames.push_back(MatDiagName);
+              ArgAttrs.push_back(MatNM1DiagVAttr);
+              ArgNames.push_back(MatNM1DiagName);
+              ArgAttrs.push_back(MatNP1DiagVAttr);
+              ArgNames.push_back(MatNP1DiagName);
             }
-            for( unsigned i=0; i<ArgAttrs[L_VAttr].dimX; i++ ){
-              for( unsigned j=0; j<ArgAttrs[L_VAttr].dimY; j++ ){
+
+            for( unsigned i=0; i<ArgAttrs[L_VAttr].xDim; i++ ){
+              for( unsigned j=0; j<ArgAttrs[L_VAttr].yDim; j++ ){
                 std::string MatElemName = RegName + "_row" + std::to_string(i) + "_col" + std::to_string(j);
                 VarAttrs MatElemAttrs = ArgAttrs[L_VAttr];
-                MatElemAttrs.defMatrix     = true;
-                MatElemAttrs.defElem       = true;
-                MatElemAttrs.defVector     = false;
                 MatElemAttrs.xIdx          = i;
                 MatElemAttrs.yIdx          = j;
-                if( (i == j) && (ArgAttrs[L_VAttr].dimX == ArgAttrs[L_VAttr].dimY) ) {
+                MatElemAttrs.xDim          = 1;
+                MatElemAttrs.yDim          = 1;
+                if( (i == j) && (ArgAttrs[L_VAttr].xDim == ArgAttrs[L_VAttr].yDim) ) {
                   MatElemAttrs.containers += RegName + "_diag, " ;
                 }
                 MatElemAttrs.containers   += (RegName + "_row" + std::to_string(i) + ", ");
@@ -2082,15 +2086,12 @@ static AllocaInst *CreateEntryBlockAlloca(Function *TheFunction,
   // if variable attributes are undefined, define a dummy u64 value
   VarAttrs A;
   A.width         = 64;
-  A.dimX          = 1;
-  A.dimY          = 0;
+  A.xDim          = 1;
+  A.yDim          = 0;
   A.xIdx          = -1;
   A.yIdx          = -1;
   A.defSign       = false;
   A.defFloat      = false;
-  A.defVector     = false;
-  A.defMatrix     = false;
-  A.defElem       = false;
   A.defRegClass   = false;
   A.defReadOnly   = false;
   A.defReadWrite  = true;
@@ -2595,8 +2596,8 @@ Value *BinaryExprAST::codegen() {
   unsigned DimX, DimY;
   // LHS is of type vec or mat
   if( SCParser::CheckLocalContainers(R->getName(), TheFunction->getName(), DimX, DimY ) ){
-    unsigned LDimX = DimX;
-    unsigned LDimY = DimY;
+    // unsigned LDimX = DimX;
+    // unsigned LDimY = DimY;
     // RHS is of type vec or mat
     if( SCParser::CheckLocalContainers(L->getName(), TheFunction->getName(), DimX, DimY )     ){
 
@@ -3024,6 +3025,8 @@ Value *RegClassAST::codegen(){
 
   // registers
   for( unsigned i=0; i<Args.size(); i++ ){
+    // handle vector & matrix regs
+    unsigned NumElems = Attrs[i].xDim * Attrs[i].yDim;
     Type *VType;
     if( (Attrs[i].defFloat) && (Attrs[i].width==32) ){
       VType = Type::getFloatTy(SCParser::TheContext);
@@ -3032,7 +3035,23 @@ Value *RegClassAST::codegen(){
     }else{
       VType = Type::getIntNTy(SCParser::TheContext,Attrs[i].width);
     }
-
+    
+    // All linalg types will have xDim >= 1
+    if( Attrs[i].xDim > 1 || Attrs[i].yDim > 1 ){ 
+      if( NumElems == 0 && Attrs[i].xDim > 1 ){                // Standalone Vector
+        Type *TmpType = VectorType::get(VType, Attrs[i].xDim); 
+        VType = TmpType;   
+      } else if( NumElems == Attrs[i].xDim ){                  // Row Vector
+        Type *TmpType = VectorType::get(VType, Attrs[i].xDim);
+        VType = TmpType;   
+      } else if( NumElems == Attrs[i].yDim ){                  // Column Vector
+        Type *TmpType = VectorType::get(VType, Attrs[i].yDim);
+        VType = TmpType;   
+      } else if( Attrs[i].xDim > 1 && Attrs[i].yDim > 1 ){     // Matrix 
+        Type *TmpType = VectorType::get(VType, NumElems);
+        VType = TmpType;
+      } 
+    }
     GlobalVariable *val = new GlobalVariable(*SCParser::TheModule,
                                              VType,
                                              false,
@@ -3077,45 +3096,43 @@ Value *RegClassAST::codegen(){
       if( Attrs[i].defShared ){
         val->addAttribute("shared", "true");
       }
-      // if its a matrix reg
-      if( Attrs[i].defMatrix ){
-        if( Attrs[i].defElem ){
+      
+      // unsigned NumElems = Attrs[i].xDim * Attrs[i].yDim;
+
+      // if its related to a matrix reg
+      if( Attrs[i].yDim ){ // NOTE: yDim would be 0 if just a vector
+        if( NumElems == 1 ){ // NOTE: 1x1 is only case 
           val->addAttribute("xidx", std::to_string(Attrs[i].xIdx));
           val->addAttribute("yidx", std::to_string(Attrs[i].yIdx));
           val->addAttribute("containers", Attrs[i].containers);
         }
         // if vector within matrix
-        else if( Attrs[i].defVector ){
+        else if( NumElems == Attrs[i].xDim || NumElems == Attrs[i].yDim ){
           val->addAttribute("vector", "true");
           val->addAttribute("containers", Attrs[i].containers);
-          // differentiate row / col
-          if( Attrs[i].xIdx + Attrs[i].yIdx == -2 ){
-            continue;
-          }
-          else if( Attrs[i].yIdx == -1 ){
-            val->addAttribute("xidx", std::to_string(Attrs[i].xIdx));
-            val->addAttribute("xdim", std::to_string(Attrs[i].dimX));
-          }
-          else{
+
+          if( Attrs[i].yDim == 1 ){ // Row Vector (ie. 6x1)
             val->addAttribute("yidx", std::to_string(Attrs[i].yIdx));
-            val->addAttribute("ydim", std::to_string(Attrs[i].dimY));
+            val->addAttribute("xdim", std::to_string(Attrs[i].yDim));
           }
-          // val->addAttribute("elements", std::to_string(dimX));
-        }else{
+          else if( Attrs[i].xDim == 1 ){ // Column Vector (ie. 1x6)
+            val->addAttribute("xidx", std::to_string(Attrs[i].yIdx));
+            val->addAttribute("ydim", std::to_string(Attrs[i].xDim));
+          }
+        }else if( NumElems > Attrs[i].xDim && NumElems > Attrs[i].yDim ){
           val->addAttribute("matrix", "true");
-          val->addAttribute("xdim", std::to_string(Attrs[i].dimX));
-          val->addAttribute("ydim", std::to_string(Attrs[i].dimY));
+          val->addAttribute("xdim", std::to_string(Attrs[i].xDim));
+          val->addAttribute("ydim", std::to_string(Attrs[i].yDim));
         }
-      }
-      // if its a vector reg
-      if( Attrs[i].defVector && !Attrs[i].defMatrix ){
-        // if its a vector element
-        if( Attrs[i].defElem ){
+      } // END IF( yDIM != 0 )
+      
+      if( Attrs[i].xDim ){ // Standalone Vector
+        if( Attrs[i].xDim == 1 ){ // Vector Element
           val->addAttribute("xidx", std::to_string(Attrs[i].xIdx));
           val->addAttribute("containers", Attrs[i].containers);
         }else{
           // not an element
-          val->addAttribute("xdim", std::to_string(Attrs[i].dimX));
+          val->addAttribute("xdim", std::to_string(Attrs[i].xDim));
           val->addAttribute("vector", "true");
         }
       }
@@ -3127,6 +3144,7 @@ Value *RegClassAST::codegen(){
   }
 
   // subregisters
+  // TODO: Figure out the difference between this and ~3044
   std::vector<std::tuple<std::string,std::string,VarAttrs>>::iterator it;
   for( it=SubRegs.begin(); it != SubRegs.end(); ++it ){
     Type *SType;

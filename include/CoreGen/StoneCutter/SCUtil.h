@@ -41,15 +41,12 @@ using namespace llvm;
 /** VarAttrs struct: contains the potential parameters for variable attributes */
 typedef struct{
   unsigned width;          ///< VarAttrs: width of the variable or register
-  unsigned dimX;           ///< VarAttrs: number of elements in X dimension
-  unsigned dimY;           ///< VarAttrs: number of elements in Y dimension
+  unsigned xDim;           ///< VarAttrs: number of elements in X dimension
+  unsigned yDim;           ///< VarAttrs: number of elements in Y dimension
   int xIdx;                ///< VarAttrs: is the X index for a register within a vector/matrix element
   int yIdx;                ///< VarAttrs: is the Y index for a register within a vector/matrix element
   bool defSign;            ///< VarAtrrs: is the variable a signed integer
   bool defFloat;           ///< VarAttrs: is the variable a floating point variable
-  bool defVector;          ///< VarAttrs: is the variable a vector (elems > 1)
-  bool defMatrix;          ///< VarAttrs: is the variable a matrix (elems2D > 0)
-  bool defElem;            ///< VarAttrs: is the variable in a vect/mat
   bool defRegClass;        ///< VarAttrs: does the variable represent a register class
   bool defReadOnly;        ///< VarAttrs: read-only register
   bool defReadWrite;       ///< VarAttrs: read-write register
@@ -64,13 +61,10 @@ typedef struct{
 typedef struct{
   std::string Name;       ///< VarAttrEntry: base name of the datatype
   unsigned width;         ///< VarAttrEntry: width of the type in bits
-  unsigned dimX;          ///< VarAttrEntry: number of elements in the type's X-dimesion
-  unsigned dimY;          ///< VarAttrEntry: number of elements in the type's Y-dimension
+  unsigned xDim;          ///< VarAttrEntry: number of elements in the type's X-dimesion
+  unsigned yDim;          ///< VarAttrEntry: number of elements in the type's Y-dimension
   bool IsDefSign;         ///< VarAttrEntry: is the type a signed integer
   bool IsDefFloat;        ///< VarAttrEntry: is the type a floating point
-  bool IsDefVector;       ///< VarAttrEntry: is the type a vector (elems > 1)
-  bool IsDefMatrix;       ///< VarAttrEntry: is the type a matrix (elems2D > 0)
-  bool IsDefElem;         ///< VarAttrEntry: is this an element of a vector/matrix
   int xIdx;               ///< VarAttrEntry: is the X index for a register within a vector/matrix element
   int yIdx;               ///< VarAttrEntry: is the Y index for a register within a vector/matrix element
   std::vector<std::string> containers;  ///< VarAttrEntry: name of containing vectors/matrix if applicable 
@@ -78,19 +72,19 @@ typedef struct{
 
 /** Contains a list of commonly found datatypes in StoneCutter */
 const VarAttrEntry VarAttrEntryTable[] = {
-  // NAME WIDTH DIMX DIMY ISDEFSIGN ISDEFFLOAT ISDEFVECTOR ISDEFMATRIX ISDEFELEM XIDX YIDX CONTAINER
-  { "float",  32, 1, 0, false, true,  false, false, false, -1, -1},
-  { "double", 64, 1, 0, false, true,  false, false, false, -1, -1},
-  { "bool",    1, 1, 0, false, false, false, false, false, -1, -1},
-  { "u8",      8, 1, 0, false, false, false, false, false, -1, -1},
-  { "u16",    16, 1, 0, false, false, false, false, false, -1, -1},
-  { "u32",    32, 1, 0, false, false, false, false, false, -1, -1},
-  { "u64",    64, 1, 0, false, false, false, false, false, -1, -1},
-  { "s8",      8, 1, 0, true,  false, false, false, false, -1, -1},
-  { "s16",    16, 1, 0, true,  false, false, false, false, -1, -1},
-  { "s32",    32, 1, 0, true,  false, false, false, false, -1, -1},
-  { "s64",    32, 1, 0, true,  false, false, false, false, -1, -1},
-  { ".",       0, 0, 0, false, false, false, false, false, -1, -1}  // disable flag
+  // NAME WIDTH DIMX DIMY ISDEFSIGN ISDEFFLOAT ISDEFELEM XIDX YIDX CONTAINER
+  { "float",  32, 1, 0, false, true,  -1, -1},
+  { "double", 64, 1, 0, false, true,  -1, -1},
+  { "bool",    1, 1, 0, false, false, -1, -1},
+  { "u8",      8, 1, 0, false, false, -1, -1},
+  { "u16",    16, 1, 0, false, false, -1, -1},
+  { "u32",    32, 1, 0, false, false, -1, -1},
+  { "u64",    64, 1, 0, false, false, -1, -1},
+  { "s8",      8, 1, 0, true,  false, -1, -1},
+  { "s16",    16, 1, 0, true,  false, -1, -1},
+  { "s32",    32, 1, 0, true,  false, -1, -1},
+  { "s64",    32, 1, 0, true,  false, -1, -1},
+  { ".",       0, 0, 0, false, false, -1, -1}  // disable flag
 };
 
 /** Contains a list of pipeline attributes */
