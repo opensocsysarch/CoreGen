@@ -26,8 +26,8 @@ void DHDTOpts::PrintVersion(){
 }
 
 void DHDTOpts::PrintHelp(){
-  std::cout << "dhdt [Options] --llvm /path/to/llvm.ir --coregen /path/to/design.yaml" << std::endl;
-  std::cout << "Options: " << std::endl;
+  std::cout << "dhdt [Options] [Runtime Options] --llvm /path/to/llvm.ir --coregen /path/to/design.yaml" << std::endl;
+  std::cout << "[Options]" << std::endl;
   std::cout << "\t-h|-help|--help                   : Print the help menu" << std::endl;
   std::cout << "\t-o|-output|--output               : Output file for reports" << std::endl;
   std::cout << "[Runtime Options]" << std::endl;
