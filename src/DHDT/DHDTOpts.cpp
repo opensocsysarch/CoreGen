@@ -30,6 +30,7 @@ void DHDTOpts::PrintHelp(){
   std::cout << "[Options]" << std::endl;
   std::cout << "\t-h|-help|--help                   : Print the help menu" << std::endl;
   std::cout << "\t-o|-output|--output               : Output file for reports" << std::endl;
+  std::cout << "\t-d|-dot|--dot /path/to/file.dot   : Output the LLVM IR graph in DOT format" << std::endl;
   std::cout << "[Runtime Options]" << std::endl;
   std::cout << "\t-hazard|--hazard                  : Enable hazard discovery tests" << std::endl;
   std::cout << "\t-power|--power /path/to/power     : Enable power discovery tests" << std::endl;
@@ -83,6 +84,14 @@ bool DHDTOpts::ParseOpts(bool &isHelp){
       }
       std::string TmpS(argv[i+1]);
       OutFile = TmpS;
+      i++;
+    }else if( (s=="-d") || (s=="-dot") || (s=="--dot") ){
+      if( i+1 > (argc-1) ){
+        std::cout << "Error : --dot requires an argument" << std::endl;
+        return false;
+      }
+      std::string TmpS(argv[i+1]);
+      DotFile = TmpS;
       i++;
     }else{
       std::cout << "Error : unknown option: " << s << std::endl;

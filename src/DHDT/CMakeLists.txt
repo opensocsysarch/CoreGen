@@ -37,7 +37,8 @@ include_directories(${COREGEN_INCLUDE_PATH})
 include_directories(${YAML_PATH}/include)
 
 # -- LINK LIBS
-target_link_libraries(dhdt DHDTBackend ${llvm_libs} ${COREGEN_LINK_LIBS})
+target_link_libraries(dhdt DHDTBackend CoreGenBackend SCComp CoreGenSigMap
+                      ${llvm_libs} ${COREGEN_LINK_LIBS})
 
 # -- INSTALL TARGETS
 install(TARGETS DHDTBackend DESTINATION lib)

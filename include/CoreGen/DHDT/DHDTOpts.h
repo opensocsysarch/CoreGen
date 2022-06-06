@@ -48,6 +48,7 @@ private:
   std::string CFile;        ///< DHDTOpts: CoreGen IR File
   std::string OutFile;      ///< DHDTOpts: Output File
   std::string PFile;        ///< DHDTOpts: Power file
+  std::string DotFile;      ///< DHDTOpts: Dot output file
 
   // private functions
   /// DHDTOpts: Print the help menu
@@ -72,6 +73,9 @@ public:
   /// DHDTOpts: Is the power estimation enabled?
   bool IsPower() { return isPower; }
 
+  /// DHDTOpts: Is the DOT output enabled
+  bool IsDot() { return (DotFile.length() > 0 ); }
+
   /// DHDTOpts: Retrieve the LLVM IR file name
   std::string GetLLVMIRFile() { return IRFile; }
 
@@ -83,6 +87,9 @@ public:
 
   /// DHDTOpts: Retrieve the output file name
   std::string GetOutFile() { return OutFile; }
+
+  /// DHDTOpts: Retrieve the DOT output file name
+  std::string GetDotFile() { return DotFile; }
 };
 
 #endif

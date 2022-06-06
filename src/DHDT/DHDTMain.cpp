@@ -10,6 +10,7 @@
 
 #include <iostream>
 #include <string>
+
 #include "CoreGen/DHDT/DHDTOpts.h"
 #include "CoreGen/DHDT/DHDTGraph.h"
 
@@ -34,9 +35,24 @@ int main( int argc, char **argv ){
   // create the graph structure
   DHDTGraph Graph;
 
-  if( !Graph.ReadLLVMIRGraph(Opts->GetLLVMIRFile()) ){
+  if( !Graph.ReadIR(Opts->GetLLVMIRFile(),
+                    Opts->GetCoreGenIRFile()) ){
     delete Opts;
     return -1;
+  }
+
+  // build the graph
+  if( !Graph.BuildGraph() ){
+    delete Opts;
+    return -1;
+  }
+
+  // analyze it
+  if( Opts->IsDot() ){
+    if( !Graph.BuildDot(Opts->GetDotFile()) ){
+      delete Opts;
+      return -1;
+    }
   }
 
   delete Opts;
