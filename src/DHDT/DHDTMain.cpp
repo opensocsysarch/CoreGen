@@ -47,9 +47,27 @@ int main( int argc, char **argv ){
     return -1;
   }
 
-  // analyze it
+  // output the dot file?
   if( Opts->IsDot() ){
     if( !Graph.BuildDot(Opts->GetDotFile()) ){
+      delete Opts;
+      return -1;
+    }
+  }
+
+  // analyze it
+  if( Opts->IsHazard() ){
+    if( !Graph.HazardAnalysis(Opts->GetInstFile(),
+                              Opts->GetOutFile()) ){
+      delete Opts;
+      return -1;
+    }
+  }
+
+  if( Opts->IsPower() ){
+    if( !Graph.PowerAnalysis(Opts->GetInstFile(),
+                             Opts->GetPowerFile(),
+                             Opts->GetOutFile()) ){
       delete Opts;
       return -1;
     }

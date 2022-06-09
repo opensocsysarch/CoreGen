@@ -22,6 +22,7 @@
 
 // C++ Headers
 #include <iostream>
+#include <fstream>
 #include <string>
 
 // LLVM Headers
@@ -55,6 +56,7 @@
 // CoreGen Headers
 #include "CoreGen/CoreGenBackend/CoreGenBackend.h"
 #include "CoreGen/StoneCutter/SCIntrinsics.h"
+#include "CoreGen/DHDT/DHDTInst.h"
 
 using namespace llvm;
 
@@ -239,6 +241,15 @@ public:
 
   /// DHDTGraph: Build the DOT output file
   bool BuildDot(std::string DotFile);
+
+  /// DHDTGraph: Initiate hazard analysis
+  bool HazardAnalysis(std::string InstFile,
+                      std::string OutFile);
+
+  /// DHDTGraph: Initiate power analysis
+  bool PowerAnalysis(std::string InstFile,
+                     std::string PowerFile,
+                     std::string OutFile);
 
 };
 

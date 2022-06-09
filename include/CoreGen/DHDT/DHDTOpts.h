@@ -49,6 +49,7 @@ private:
   std::string OutFile;      ///< DHDTOpts: Output File
   std::string PFile;        ///< DHDTOpts: Power file
   std::string DotFile;      ///< DHDTOpts: Dot output file
+  std::string InstFile;     ///< DHDTOpts: Instruction input file
 
   // private functions
   /// DHDTOpts: Print the help menu
@@ -90,6 +91,9 @@ public:
 
   /// DHDTOpts: Retrieve the DOT output file name
   std::string GetDotFile() { return DotFile; }
+
+  /// DHDTOpts: Retrieve the instruction input file
+  std::string GetInstFile() { return InstFile; }
 };
 
 #endif

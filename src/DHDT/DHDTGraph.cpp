@@ -616,4 +616,15 @@ bool DHDTGraph::BuildDot(std::string DotFile){
   return true;
 }
 
+bool DHDTGraph::HazardAnalysis(std::string InstFile,
+                               std::string OutFile ){
+  return true;
+}
+
+bool DHDTGraph::PowerAnalysis(std::string InstFile,
+                              std::string PowerFile,
+                              std::string OutFile ){
+  return true;
+}
+
 // EOF
