@@ -88,6 +88,8 @@ private:
 
   CoreGenBackend &CG;     ///< DHDTInst: CoreGenBackend object
 
+  std::vector<CoreGenInst *> Insts; ///< DHDTInst: Vector of instruction objects
+
   /// Determine if the current line is a comment
   bool IsComment(std::string Line);
 
@@ -102,6 +104,17 @@ private:
 
   /// Build assembly instruction payload
   DInst *BuildAsmInstPayload(std::string Inst);
+
+  /// Assemble a payload from an asm bundle
+  DInst *AssemblePayload(CoreGenInst *Inst,
+                         std::string AsmArgs,
+                         std::string InstArgs);
+
+  /// Cache the instruction nodes
+  bool CacheInstNodes();
+
+  /// Tokenizer for asm strings
+  std::vector<std::string> GetAsmTokens(std::string Inst, char delim);
 
 public:
   /// DHDTInst: Default constructor

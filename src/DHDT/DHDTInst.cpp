@@ -103,9 +103,68 @@ DInst *DHDTInst::BuildBinaryInstPayload(std::string Inst){
   return payload;
 }
 
-DInst *DHDTInst::BuildAsmInstPayload(std::string Inst){
+bool DHDTInst::CacheInstNodes(){
+  CoreGenNode *Top = CG.GetTop();
+  if( Top == nullptr ){
+    return false;
+  }
+
+  for( unsigned i=0; i<Top->GetNumChild(); i++ ){
+    if( Top->GetChild(i)->GetType() == CGInst ){
+      Insts.push_back( static_cast<CoreGenInst *>(Top->GetChild(i)) );
+    }
+  }
+
+  return true;
+}
+
+std::vector<std::string> DHDTInst::GetAsmTokens(std::string Inst, char delim){
+  std::vector<std::string> tokens;
+  std::string token;
+  std::istringstream tokenStream(Inst);
+  while(std::getline(tokenStream, token, delim)){
+    tokens.push_back(token);
+  }
+
+  return tokens;
+}
+
+DInst *DHDTInst::AssemblePayload(CoreGenInst *Inst,
+                                 std::string AsmArgs,
+                                 std::string InstArgs){
   DInst *payload = nullptr;
+  std::vector<std::string> AVect = GetAsmTokens(AsmArgs,',');
+  std::vector<std::string> IVect = GetAsmTokens(InstArgs,',');
   return payload;
+}
+
+DInst *DHDTInst::BuildAsmInstPayload(std::string Inst){
+
+  // first, we need to cache all the instruction objects
+  if( Insts.size() == 0 ){
+    if( !CacheInstNodes() ){
+      std::cout << "Error : CoreGen object is invalid" << std::endl;
+      return nullptr;
+    }
+  }
+
+  // tokenize the instruction string
+  std::vector<std::string> AsmTokens = GetAsmTokens(Inst, ' ');
+
+  // now token[0] is the instruction name
+  for( unsigned i=0; i<Insts.size(); i++ ){
+    if( Insts[i]->IsSyntax() ){
+      std::string InstSyntax = Insts[i]->GetSyntax();
+      std::vector<std::string> InstTokens = GetAsmTokens(InstSyntax, ' ');
+
+      if( AsmTokens[0] == InstTokens[0] ){
+        // found a match, assemble the payload
+        return AssemblePayload(Insts[i], AsmTokens[1], InstTokens[1]);
+      }
+    }
+  }
+
+  return nullptr;
 }
 
 DInst *DHDTInst::BuildInstPayload(std::string Inst){
