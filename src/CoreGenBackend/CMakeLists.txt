@@ -33,6 +33,7 @@ CoreGenPlugin.cpp
 CoreGenPassMgr.cpp
 CoreGenEnv.cpp
 CoreGenDataPath.cpp
+CoreGenVLIWStage.cpp
 )
 
 add_subdirectory(Passes)

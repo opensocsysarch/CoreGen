@@ -12,6 +12,7 @@
 * CMake 3.4.3+
 * LLVM 7.X or LLVM 8.X
 * Curl
+* Doxygen (for docs and install)
 
 ## Building
 
@@ -24,9 +25,9 @@ are listed below, each with their respective build options.
 Generally speaking, CoreGen is built using the following steps:
 
 1. Clone the CoreGen repository.  There are currently no git dependencies
-1. Create a ``build`` directory within the CoreGen source tree (and change to that directory)
-1. Execute cmake to generate the target-specific makefiles
-1. Execute the build
+2. Create a ``build`` directory within the CoreGen source tree (and change to that directory)
+3. Execute cmake to generate the target-specific makefiles
+4. Execute the build
 
 
 ### Building with Clang/LLVM
@@ -49,9 +50,9 @@ versions, we do not currently test these scenarios.
 
 1.  Install the necessary apt repositories
 ```
-wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
-sudo apt-add-repository "deb http://apt.llvm.org/xenial/ llvm-toolchain-xenial-8 main"
-sudo apt-get update
+wget https://apt.llvm.org/llvm.sh
+chmod +x llvm.sh
+sudo ./llvm.sh 8
 ```
 2.  Install the system dependencies:
 ```
@@ -81,9 +82,9 @@ make
 
 1.  Install the necessary apt repositories
 ```
-wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
-sudo apt-add-repository "deb http://apt.llvm.org/bionic/ llvm-toolchain-bionic-8.0 main"
-sudo apt-get update
+wget https://apt.llvm.org/llvm.sh
+chmod +x llvm.sh
+sudo ./llvm.sh 8
 ```
 2.  Install the system dependencies:
 ```
@@ -112,9 +113,9 @@ make
 
 1.  Install the necessary apt repositories
 ```
-wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
-sudo apt-add-repository "deb http://apt.llvm.org/focal/ llvm-toolchain-focal-9 main"
-sudo apt-get update
+wget https://apt.llvm.org/llvm.sh
+chmod +x llvm.sh
+sudo ./llvm.sh 8
 ```
 2.  Install the system dependencies:
 ```

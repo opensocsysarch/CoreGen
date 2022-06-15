@@ -41,6 +41,7 @@
 #include "CoreGen/CoreGenBackend/CoreGenVTP.h"
 #include "CoreGen/CoreGenBackend/CoreGenProj.h"
 #include "CoreGen/CoreGenBackend/CoreGenDataPath.h"
+#include "CoreGen/CoreGenBackend/CoreGenVLIWStage.h"
 
 #include "CoreGen/CoreGenBackend/CoreGenDAG.h"
 
@@ -142,6 +143,9 @@ private:
   /// Write Yaml: Virtual to Physical Units
   void WriteVTPYaml( YAML::Emitter *out, std::vector<CoreGenVTP *> const &VTPs);
 
+  /// Write Yaml: VLIW Stages
+  void WriteVLIWStageYaml( YAML::Emitter *out, std::vector<CoreGenVLIWStage *> const &Stages);
+
   /// Write Yaml: Exts
   void WriteExtYaml(YAML::Emitter *out, std::vector<CoreGenExt *> const &Exts);
 
@@ -214,6 +218,11 @@ private:
   /// Read Yaml: Virtual to Physical Units
   bool ReadVTPYaml(const YAML::Node& VTPNodes,
                    std::vector<CoreGenVTP *> &VTPs);
+
+  /// Read Yaml: VLIW Stages
+  bool ReadVLIWStageYaml(const YAML::Node& StageNodes,
+                         std::vector<CoreGenVLIWStage *> &Stages,
+                         std::vector<CoreGenInstFormat *> &Formats);
 
   /// Read Yaml: Exts
   bool ReadExtYaml(const YAML::Node& ExtNodes,
@@ -292,6 +301,7 @@ public:
                   std::vector<CoreGenSpad *> const &Spads,
                   std::vector<CoreGenMCtrl *> const &MCtrls,
                   std::vector<CoreGenVTP *> const &VTPs,
+                  std::vector<CoreGenVLIWStage *> const &Stages,
                   std::vector<CoreGenExt *> const &Exts,
                   std::vector<CoreGenPlugin *> const &Plugins );
 
@@ -309,6 +319,7 @@ public:
                  std::vector<CoreGenSpad *> &Spads,
                  std::vector<CoreGenMCtrl *> &MCtrls,
                  std::vector<CoreGenVTP *> &VTPs,
+                 std::vector<CoreGenVLIWStage *> &Stages,
                  std::vector<CoreGenExt *>  &Exts,
                  std::vector<CoreGenDataPath *> &DataPaths,
                  std::vector<CoreGenPlugin *> &Plugins );

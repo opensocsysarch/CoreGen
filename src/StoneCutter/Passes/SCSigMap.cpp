@@ -455,6 +455,38 @@ bool SCSigMap::IsIgnoreInst(Instruction &I){
   return false;
 }
 
+signed SCSigMap::GetSwitchCaseDistance(Function &F, Instruction &BI, BasicBlock *Target ){
+  // This is slightly different than traditional branch target calculation
+  // Switch instructions with cases generate branch targets with BasicBlocks
+  // that always follow the current BasicBlock.  In which case, we need to
+  // start the search at our current BasicBlock and walk the instructions to the
+  // appropriate BB target
+
+  if( BI.getParent() == Target )
+    return 0;
+
+  bool enableCount = false;
+  signed Count = 0;
+  for( auto &BB : F.getBasicBlockList() ){
+    if( BB.getName() == Target->getName() ){
+      // found the target
+      return Count+1;
+    }
+    for( auto &Inst : BB.getInstList() ){
+      if( !F.isDeclaration() ){
+        if( Inst.isIdenticalTo( &BI ) && (&BI == &Inst) ){
+          // found the starting point
+          enableCount = true;
+        }else if( enableCount && !IsIgnoreInst(Inst) ){
+          Count++;
+        }
+      }
+    }
+  }
+
+  return 0; // we should never reach this point
+}
+
 signed SCSigMap::GetBranchDistance(Function &F, Instruction &BI, Instruction &Target ){
   signed SourceID   = 0;
   signed TargetID   = 0;
@@ -479,14 +511,13 @@ signed SCSigMap::GetBranchDistance(Function &F, Instruction &BI, Instruction &Ta
     }
   }
 
-#if 0
   // debug messages
+#if 0
   std::cout << "Function           = " << F.getName().str() << std::endl;
   std::cout << "Source Instruction = " << BI.getOpcodeName() << std::endl;
   std::cout << "Target Instruction = " << Target.getOpcodeName() << std::endl;
   std::cout << "Distance           = " << TargetID - SourceID << std::endl;
 #endif
-
   return TargetID - SourceID;
 }
 
@@ -638,6 +669,54 @@ bool SCSigMap::TranslateBranch(Function &F, Instruction &I){
       return false;
     }
   }
+
+  return true;
+}
+
+bool SCSigMap::TranslateSwitch(Function &F, Instruction &I){
+  // Examine the switch statement and create a set of mux signals based upon the
+  // switch contents.
+  // - mux_1 : first case
+  // - mux_2 : second case
+  // - ...
+  // - mux_n : n'th case
+  // - mux   : default branch
+  auto *SI = dyn_cast<SwitchInst>(&I);
+  signed CaseDistance = 0;
+
+  // the branch stack includes two instructions (cmp+branch) for every case
+  // statement and a single instruction (br) for the default statement
+  // we decrement this value by two for every new case statement then the default
+  // branch target uOp is simply the label target
+  signed BranchStack = ((SI->getNumSuccessors()-1)*2)-1;
+
+  for( SwitchInst::CaseIt it = SI->case_begin(), ie = SI->case_end();
+       it != ie; ++it ){
+    // insert compare
+    Signals->InsertSignal(new SCSig(MUX_EQ,1,F.getName().str(),GetMDPipeName(I)));
+    Signals->GetSignal(Signals->GetNumSignals()-1)->SetVLIW(VLIW);
+
+    // insert conditional branch
+    CaseDistance = GetSwitchCaseDistance(F,I,it->getCaseSuccessor()) + BranchStack;
+    Signals->InsertSignal(new SCSig(BR_EQ,
+                                    1,
+                                    CaseDistance,
+                                    1,    // fall through to the next case statement
+                                    F.getName().str(),
+                                    GetMDPipeName(I)));
+    Signals->GetSignal(Signals->GetNumSignals()-1)->SetVLIW(VLIW);
+    BranchStack -= 2; // decrement for the next case statement
+  }
+
+  // insert the default branch
+  // this will be unconditional as none of the previous case statements were met
+  Signals->InsertSignal(new SCSig(BR_N,
+                                  1,
+                                  GetSwitchCaseDistance(F,I,SI->getDefaultDest()),
+                                  0, // alternate branch is 0
+                                  F.getName().str(),
+                                  GetMDPipeName(I)));
+  Signals->GetSignal(Signals->GetNumSignals()-1)->SetVLIW(VLIW);
 
   return true;
 }
@@ -1015,6 +1094,15 @@ bool SCSigMap::CheckSigReq( Function &F, Instruction &I ){
     if( !TranslateBranch(F,I) ){
       this->PrintMsg( L_ERROR,
                       "Failed to translate Branch operation at Instruction=" +
+                      std::string(I.getOpcodeName()) + " within Function=" +
+                      F.getName().str() );
+      return false;
+    }
+    break;
+  case Instruction::Switch :
+    if( !TranslateSwitch(F,I) ){
+      this->PrintMsg( L_ERROR,
+                      "Failed to translate Switch operation at Instruction=" +
                       std::string(I.getOpcodeName()) + " within Function=" +
                       F.getName().str() );
       return false;

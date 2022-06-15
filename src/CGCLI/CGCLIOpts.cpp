@@ -179,7 +179,12 @@ std::vector<std::string> CGCLIOpts::ParsePasses( std::string P ){
     return V;
   }
 
-  std::string Str = P;  // local parsing string
+  std::string Str;
+  for( unsigned i=0; i<P.length(); i++ ){
+    if( std::isalpha(P[i]) || std::isdigit(P[i]) || (P[i] == ',')){
+      Str += P[i];
+    }
+  }
 
   // break the string into tokens
   Split( Str, ',', V );

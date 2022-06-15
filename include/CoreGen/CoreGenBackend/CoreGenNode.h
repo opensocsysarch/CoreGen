@@ -46,6 +46,7 @@ typedef enum{
   CGMCtrl = 13,                         ///< CGNodeType: Memory Controller
   CGVTP   = 14,                         ///< CGNodeType: Virtual to Physical Node
   CGDPath = 15,                         ///< CGNodeType: DataPath
+  CGVLIW  = 16,                         ///< CGNodeType: VLIW Stage
   CGPlugin= 30,                         ///< CGNodeType: Plugin
   CGTop   = 100                         ///< CGNodeType: Top-Level Node
 }CGNodeType;                            ///< CoreGenNode: CoreGen Node Types
