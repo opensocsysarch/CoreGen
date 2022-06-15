@@ -14,4 +14,6 @@ add_subdirectory(CoreGenSigMap)
 add_subdirectory(StoneCutter)
 add_subdirectory(CoreGenArchive)
 add_subdirectory(Poar)
+add_subdirectory(DHDT)
+
 #-- EOF

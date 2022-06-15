@@ -1,4 +1,4 @@
-# include/CoreGen/Poar/Accumulators CMakeLists.txt
+# include/CoreGen/DHDT CMakeLists.txt
 #
 # Copyright (C) 2017-2022 Tactical Computing Laboratories, LLC
 # All Rights Reserved
@@ -9,10 +9,9 @@
 
 
 install(DIRECTORY "."
-        DESTINATION "include/CoreGen/Poar"
+        DESTINATION "include/CoreGen/DHDT"
         FILES_MATCHING
         PATTERN "*.h")
 
-add_subdirectory(Accumulators)
 
 #-- EOF

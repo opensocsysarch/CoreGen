@@ -2474,7 +2474,7 @@ Value *VariableExprAST::codegen() {
     // variable wasn't in the function scope, check the globals
     V = SCParser::GlobalNamedValues[Name];
     if( !V ){
-      return LogErrorV("Unknown variable name: " + Name );
+      return LogErrorV("Unknown variable name in variable expression: " + Name );
     }
   }
 
@@ -2570,7 +2570,7 @@ Value *BinaryExprAST::codegen() {
     if (!Variable){
       Variable = SCParser::GlobalNamedValues[LHSE->getName()];
       if( !Variable ){
-        return LogErrorV("Unknown variable name: " + LHSE->getName());
+        return LogErrorV("Unknown variable name in binary expression: " + LHSE->getName());
       }
     }
 
