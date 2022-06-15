@@ -238,7 +238,7 @@ bool DHDTGraph::AddCallNode(Instruction &Inst,
   }else if( CInst->getCalledFunction()->getName().str() == "STOREELEM" ){
     // Store element to memory
     unsigned Width = 0;
-    if( CInst->arg_size() == 3 ){
+    if( CInst->getNumArgOperands() == 3 ){
       Value *V = CInst->getOperand(2); // retrieve the SIZE field
       if( V->getType()->isIntegerTy() )
         Width = V->getType()->getIntegerBitWidth();
