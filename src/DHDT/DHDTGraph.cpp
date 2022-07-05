@@ -45,7 +45,8 @@ std::vector<SCIntrin *> DHDTGraph::Intrins = {
   static_cast<SCIntrin *>(new SCOut())
 };
 
-DHDTGraph::DHDTGraph(){}
+DHDTGraph::DHDTGraph(DHDTConfig &Config)
+  : Config(Config) {}
 
 DHDTGraph::~DHDTGraph(){
   for( unsigned i=0; i<Nodes.size(); i++ ){

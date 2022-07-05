@@ -57,6 +57,7 @@
 #include "CoreGen/CoreGenBackend/CoreGenBackend.h"
 #include "CoreGen/StoneCutter/SCIntrinsics.h"
 #include "CoreGen/DHDT/DHDTInst.h"
+#include "CoreGen/DHDT/DHDTConfig.h"
 
 using namespace llvm;
 
@@ -177,6 +178,7 @@ private:
   std::unique_ptr<Module> Mod;    ///< DHDTGraph: LLVM module pointer
   LLVMContext Context;            ///< DHDTGraph: LLVM Context
   CoreGenBackend CG;              ///< DHDTGraph: CoreGen Infrastructure
+  DHDTConfig Config;              ///< DHDTGraph: DHDT Power Configuration
 
   std::vector<DHDTNode *> Nodes;  ///< DHDTGraph: DHDT Node vector
   std::vector<DHDTLink *> Links;  ///< DHDTGraph: DHDT Link vector
@@ -228,7 +230,7 @@ private:
 
 public:
   /// DHDTGraph: Constructor
-  DHDTGraph();
+  DHDTGraph(DHDTConfig &Config);
 
   /// DHDTGraph: Destructor
   ~DHDTGraph();
