@@ -57,6 +57,7 @@
 #include "CoreGen/CoreGenBackend/CoreGenBackend.h"
 #include "CoreGen/StoneCutter/SCIntrinsics.h"
 #include "CoreGen/DHDT/DHDTInst.h"
+#include "CoreGen/DHDT/DHDTConfig.h"
 
 using namespace llvm;
 
@@ -108,21 +109,28 @@ private:
   unsigned Width;         ///< DHDTLink: width of the link (in bits)
   DHDTNode *Target;       ///< DHDTLink: target node
 
+  double IVal;            ///< DHDTLink: instruction power value
+  double AVal;            ///< DHDTLink: accumulated power value
+
+  DHDTConfig::ConfigEntry Entry;  ///< DHDTLink: power configuration
+
+
 public:
   /// DHDTLink: constructor
-  DHDTLink(std::string N, DHDTLinkType L) : Name(N), Type(L) {}
+  DHDTLink(std::string N, DHDTLinkType L)
+    : Name(N), Type(L), IVal(0.), AVal(0.) {}
 
   /// DHDTLink: overloaded constructor
   DHDTLink(std::string N, DHDTLinkType L, unsigned W)
-    : Name(N), Type(L), Width(W) {}
+    : Name(N), Type(L), Width(W), IVal(0.), AVal(0.) {}
 
   /// DHDTLink: overloaded constructor
   DHDTLink(std::string N, DHDTLinkType L, DHDTNode *T)
-    : Name(N), Type(L), Target(T) {}
+    : Name(N), Type(L), Target(T), IVal(0.), AVal(0.) {}
 
   /// DHDTLink: overloaded constructor
   DHDTLink(std::string N, DHDTLinkType L, unsigned W, DHDTNode *T)
-    : Name(N), Type(L), Width(W), Target(T) {}
+    : Name(N), Type(L), Width(W), Target(T), IVal(0.), AVal(0.) {}
 
   /// DHDTLink: destructor
   ~DHDTLink() {}
@@ -138,6 +146,9 @@ public:
 
   /// DHDTLink: Get the target node
   DHDTNode *GetTarget() { return Target; }
+
+  /// DHDTLink: Set the power config entry
+  void SetEntry(DHDTConfig::ConfigEntry E){ Entry = E; }
 };
 
 class DHDTNode{
@@ -145,11 +156,17 @@ private:
   std::string Name;                 ///< DHDTNode: name of the node
   DHDTNodeType Type;                ///< DHDTNode: type of the node
 
+  double IVal;                      ///< DHDTNode: instruction power value
+  double AVal;                      ///< DHDTNode: accumulated power value
+
+  DHDTConfig::ConfigEntry Entry;    ///< DHDTNode: power configuration
+
   std::vector<DHDTLink *> Links;    ///< DHDTnode: link vector
 
 public:
   /// DHDTNode: constructor
-  DHDTNode(std::string N, DHDTNodeType T) : Name(N), Type(T) {}
+  DHDTNode(std::string N, DHDTNodeType T)
+    : Name(N), Type(T), IVal(0.), AVal(0.) {}
 
   /// DHDTNode: destructor
   ~DHDTNode() {}
@@ -168,6 +185,9 @@ public:
 
   /// DHDTNode: Retrieve the links vector
   std::vector<DHDTLink *> GetLinks() { return Links; }
+
+  /// DHDTNode: Set the power config entry
+  void SetEntry(DHDTConfig::ConfigEntry E){ Entry = E; }
 };
 
 class DHDTGraph{
@@ -177,6 +197,7 @@ private:
   std::unique_ptr<Module> Mod;    ///< DHDTGraph: LLVM module pointer
   LLVMContext Context;            ///< DHDTGraph: LLVM Context
   CoreGenBackend CG;              ///< DHDTGraph: CoreGen Infrastructure
+  DHDTConfig Config;              ///< DHDTGraph: DHDT Power Configuration
 
   std::vector<DHDTNode *> Nodes;  ///< DHDTGraph: DHDT Node vector
   std::vector<DHDTLink *> Links;  ///< DHDTGraph: DHDT Link vector
@@ -226,9 +247,18 @@ private:
                      std::vector<std::string> Outs,
                      std::vector<std::string> Types);
 
+  /// DHDTGraph: Initialize all the internal link power configuration data
+  bool InitLinkPower();
+
+  /// DHDTGraph: converts the LLVM instruction opcode to a DHDT power config entry
+  DHDTConfig::ConfigEntry LLVMInstToConfigType(unsigned Inst);
+
+  /// DHDTGraph: converts an intrinsic name to the appropriate DHDT power config entry
+  DHDTConfig::ConfigEntry IntrinToConfigType(std::string Intrin);
+
 public:
   /// DHDTGraph: Constructor
-  DHDTGraph();
+  DHDTGraph(DHDTConfig &Config);
 
   /// DHDTGraph: Destructor
   ~DHDTGraph();

@@ -13,6 +13,7 @@
 
 #include "CoreGen/DHDT/DHDTOpts.h"
 #include "CoreGen/DHDT/DHDTGraph.h"
+#include "CoreGen/DHDT/DHDTConfig.h"
 
 int main( int argc, char **argv ){
   // parse the command line opts
@@ -32,8 +33,11 @@ int main( int argc, char **argv ){
     return -1;
   }
 
+  // read the config
+  DHDTConfig Config(Opts->GetPowerFile());
+
   // create the graph structure
-  DHDTGraph Graph;
+  DHDTGraph Graph(Config);
 
   if( !Graph.ReadIR(Opts->GetLLVMIRFile(),
                     Opts->GetCoreGenIRFile()) ){

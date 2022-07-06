@@ -11,6 +11,7 @@ set(DHDTSrcs
   DHDTOpts.cpp
   DHDTGraph.cpp
   DHDTInst.cpp
+  DHDTConfig.cpp
 )
 
 llvm_map_components_to_libnames(llvm_libs
@@ -38,7 +39,7 @@ include_directories(${COREGEN_INCLUDE_PATH})
 include_directories(${YAML_PATH}/include)
 
 # -- LINK LIBS
-target_link_libraries(dhdt DHDTBackend CoreGenBackend SCComp CoreGenSigMap
+target_link_libraries(dhdt DHDTBackend CoreGenBackend SCComp CoreGenSigMap yaml-cpp
                       ${llvm_libs} ${COREGEN_LINK_LIBS})
 
 # -- INSTALL TARGETS
