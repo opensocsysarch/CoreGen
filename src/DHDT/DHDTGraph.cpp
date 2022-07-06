@@ -145,6 +145,137 @@ bool DHDTGraph::IsTopVLIWStage(Function &Func){
   return true;
 }
 
+DHDTConfig::ConfigEntry DHDTGraph::LLVMInstToConfigType(unsigned Inst){
+  switch(Inst){
+  case Instruction::Add:
+    return Config.GetEntryByType(DHDTConfig::ALUADD);
+    break;
+  case Instruction::FAdd:
+    return Config.GetEntryByType(DHDTConfig::ALUFADD);
+    break;
+  case Instruction::Sub:
+    return Config.GetEntryByType(DHDTConfig::ALUSUB);
+    break;
+  case Instruction::FSub:
+    return Config.GetEntryByType(DHDTConfig::ALUFSUB);
+    break;
+  case Instruction::Mul:
+    return Config.GetEntryByType(DHDTConfig::ALUMUL);
+    break;
+  case Instruction::FMul:
+    return Config.GetEntryByType(DHDTConfig::ALUFMUL);
+    break;
+  case Instruction::UDiv:
+    return Config.GetEntryByType(DHDTConfig::ALUUDIV);
+    break;
+  case Instruction::SDiv:
+    return Config.GetEntryByType(DHDTConfig::ALUSDIV);
+    break;
+  case Instruction::FDiv:
+    return Config.GetEntryByType(DHDTConfig::ALUFDIV);
+    break;
+  case Instruction::URem:
+    return Config.GetEntryByType(DHDTConfig::ALUUREM);
+    break;
+  case Instruction::SRem:
+    return Config.GetEntryByType(DHDTConfig::ALUSREM);
+    break;
+  case Instruction::FRem:
+    return Config.GetEntryByType(DHDTConfig::ALUFREM);
+    break;
+  case Instruction::Shl:
+    return Config.GetEntryByType(DHDTConfig::ALUSHL);
+    break;
+  case Instruction::LShr:
+    return Config.GetEntryByType(DHDTConfig::ALULSHR);
+    break;
+  case Instruction::AShr:
+    return Config.GetEntryByType(DHDTConfig::ALUASHR);
+    break;
+  case Instruction::And:
+    return Config.GetEntryByType(DHDTConfig::ALUAND);
+    break;
+  case Instruction::Or:
+    return Config.GetEntryByType(DHDTConfig::ALUOR);
+    break;
+  case Instruction::Xor:
+    return Config.GetEntryByType(DHDTConfig::ALUXOR);
+    break;
+  case Instruction::Load:
+    return Config.GetEntryByType(DHDTConfig::REGLOAD);
+    break;
+  case Instruction::Store:
+    return Config.GetEntryByType(DHDTConfig::REGSTORE);
+    break;
+  case Instruction::ICmp:
+  case Instruction::FCmp:
+    return Config.GetEntryByType(DHDTConfig::ALUMUX);
+    break;
+  case Instruction::Call:
+    break;
+  default:
+    return Config.GetEntryByType(DHDTConfig::UNK_ENTRY);
+  }
+}
+
+DHDTConfig::ConfigEntry DHDTGraph::IntrinToConfigType(std::string Intrin){
+  if( Intrin == "MAX" ){
+    return Config.GetEntryByType(DHDTConfig::ALUMAX);
+  }else if( Intrin == "MIN" ){
+    return Config.GetEntryByType(DHDTConfig::ALUMIN);
+  }else if( Intrin == "NOT" ){
+    return Config.GetEntryByType(DHDTConfig::ALUNOT);
+  }else if( Intrin == "NEG" ){
+    return Config.GetEntryByType(DHDTConfig::ALUNEG);
+  }else if( Intrin == "REVERSE" ){
+    return Config.GetEntryByType(DHDTConfig::ALUREV);
+  }else if( Intrin == "POPCOUNT" ){
+    return Config.GetEntryByType(DHDTConfig::ALUPOPC);
+  }else if( Intrin == "CLZ" ){
+    return Config.GetEntryByType(DHDTConfig::ALUCLZ);
+  }else if( Intrin == "CTZ" ){
+    return Config.GetEntryByType(DHDTConfig::ALUCTZ);
+  }else if( Intrin == "SEXT" ){
+    return Config.GetEntryByType(DHDTConfig::ALUSEXT);
+  }else if( Intrin == "ZEXT" ){
+    return Config.GetEntryByType(DHDTConfig::ALUZEXT);
+  }else if( Intrin == "ROTATEL" ){
+    return Config.GetEntryByType(DHDTConfig::ALUROTL);
+  }else if( Intrin == "ROTATER" ){
+    return Config.GetEntryByType(DHDTConfig::ALUROTR);
+  }else if( Intrin == "MAJ" ){
+    return Config.GetEntryByType(DHDTConfig::ALUMAJ);
+  }else if( Intrin == "DOZ" ){
+    return Config.GetEntryByType(DHDTConfig::ALUDOZ);
+  }else if( Intrin == "COMPRESS" ){
+    return Config.GetEntryByType(DHDTConfig::ALUCOMP);
+  }else if( Intrin == "COMPRESSM" ){
+    return Config.GetEntryByType(DHDTConfig::ALUCOMPM);
+  }else if( Intrin == "INSERTS" ){
+    return Config.GetEntryByType(DHDTConfig::ALUINSERTS);
+  }else if( Intrin == "INSERTZ" ){
+    return Config.GetEntryByType(DHDTConfig::ALUINSERTZ);
+  }else if( Intrin == "EXTRACTS" ){
+    return Config.GetEntryByType(DHDTConfig::ALUEXTRS);
+  }else if( Intrin == "EXTRACTZ" ){
+    return Config.GetEntryByType(DHDTConfig::ALUEXTRZ);
+  }else if( Intrin == "MERGE" ){
+    return Config.GetEntryByType(DHDTConfig::ALUMERGE);
+  }else if( Intrin == "CONCAT" ){
+    return Config.GetEntryByType(DHDTConfig::ALUCONCAT);
+  }else if( Intrin == "LSS" ){
+    return Config.GetEntryByType(DHDTConfig::ALULSS);
+  }else if( Intrin == "FENCE" ){
+    return Config.GetEntryByType(DHDTConfig::ALUFENCE);
+  }else if( Intrin == "BSEL" ){
+    return Config.GetEntryByType(DHDTConfig::ALUBSEL);
+  }else if( Intrin == "NOP" ){
+    return Config.GetEntryByType(DHDTConfig::ALUNOP);
+  }else{
+    return Config.GetEntryByType(DHDTConfig::UNK_ENTRY);
+  }
+}
+
 bool DHDTGraph::AddFunctionNode(Function &Func, unsigned &Stage){
   // retrieve the metadata and determine if this function
   // is a vliw pipe stage or a standard instruction
@@ -236,6 +367,7 @@ bool DHDTGraph::AddCallNode(Instruction &Inst,
       Links.push_back(Link);
       CurNode->InsertLink(Link);
     }
+    return true;
   }else if( CInst->getCalledFunction()->getName().str() == "STOREELEM" ){
     // Store element to memory
     unsigned Width = 0;
@@ -253,15 +385,17 @@ bool DHDTGraph::AddCallNode(Instruction &Inst,
     Nodes.push_back(Node);
     Links.push_back(Link);
     CurNode->InsertLink(Link);
+    return true;
   }
-
 
   // handle the rest of the intrinsics
   bool Found = false;
+  unsigned LIntrin = 0;
   for( unsigned i=0; i<Intrins.size(); i++ ){
     if( CInst->getCalledFunction()->getName().str() ==
         Intrins[i]->GetKeyword() ){
       Found = true;
+      LIntrin = i;
     }
   }
 
@@ -272,8 +406,24 @@ bool DHDTGraph::AddCallNode(Instruction &Inst,
     return false;
   }
 
-  // get the set of signals
-  // TODO: is this required?
+  // Build a new call node
+  unsigned Width = 0;
+  if( CInst->getNumArgOperands() > 0 ){
+    Value *V = CInst->getOperand(1); // retrieve the SIZE field
+    if( V->getType()->isIntegerTy() )
+      Width = V->getType()->getIntegerBitWidth();
+  }
+  Node = new DHDTNode(CInst->getCalledFunction()->getName().str(),
+                      DNodeArith);
+  Link = new DHDTLink(CurNode->GetName()+".next",
+                      LNodeScalar,
+                      Width,
+                      Node);
+  Nodes.push_back(Node);
+  Links.push_back(Link);
+  CurNode->InsertLink(Link);
+  CurNode->SetEntry(
+    IntrinToConfigType(CInst->getCalledFunction()->getName().str()));
 
   return true;
 }
@@ -314,6 +464,7 @@ bool DHDTGraph::AddInstNode(Function &Func,
     Nodes.push_back(Node);
     Links.push_back(Link);
     CurNode->InsertLink(Link);
+    CurNode->SetEntry(LLVMInstToConfigType(Inst.getOpcode()));
     break;
   case Instruction::Load:
     LHS = cast<Value>(&Inst);
@@ -326,6 +477,7 @@ bool DHDTGraph::AddInstNode(Function &Func,
     Nodes.push_back(Node);
     Links.push_back(Link);
     CurNode->InsertLink(Link);
+    CurNode->SetEntry(LLVMInstToConfigType(Inst.getOpcode()));
     break;
   case Instruction::Store:
     Node = new DHDTNode(std::string(Inst.getOpcodeName()),
@@ -337,6 +489,7 @@ bool DHDTGraph::AddInstNode(Function &Func,
     Nodes.push_back(Node);
     Links.push_back(Link);
     CurNode->InsertLink(Link);
+    CurNode->SetEntry(LLVMInstToConfigType(Inst.getOpcode()));
     break;
   case Instruction::ICmp:
   case Instruction::FCmp:
@@ -349,6 +502,7 @@ bool DHDTGraph::AddInstNode(Function &Func,
     Nodes.push_back(Node);
     Links.push_back(Link);
     CurNode->InsertLink(Link);
+    CurNode->SetEntry(LLVMInstToConfigType(Inst.getOpcode()));
     break;
   case Instruction::Call:
     if( !AddCallNode(Inst,CurNode) ){
@@ -459,6 +613,40 @@ bool DHDTGraph::FindFuncMatch( DHDTNode *Parent,
   return false;
 }
 
+bool DHDTGraph::InitLinkPower(){
+  if( Links.size() == 0 ){
+    std::cout << "Error : no links to initialize power values" << std::endl;
+    return false;
+  }
+
+  for( unsigned i=0; i<Links.size(); i++ ){
+    switch( Links[i]->GetType() ){
+    case LNodeScalar:
+      Links[i]->SetEntry(Config.GetEntryByType(DHDTConfig::ALUDPATH));
+      break;
+    case LNodeCtrlIn:
+      Links[i]->SetEntry(Config.GetEntryByType(DHDTConfig::CPATHBIT));
+      break;
+    case LNodeCtrlOut:
+      Links[i]->SetEntry(Config.GetEntryByType(DHDTConfig::CPATHBIT));
+      break;
+    case LNodeDataIn:
+      Links[i]->SetEntry(Config.GetEntryByType(DHDTConfig::DPATHBIT));
+      break;
+    case LNodeDataOut:
+      Links[i]->SetEntry(Config.GetEntryByType(DHDTConfig::DPATHBIT));
+      break;
+    default:
+      std::cout << "Error : unknown link type: "
+                << (unsigned)(Links[i]->GetType()) << std::endl;
+      return false;
+      break;
+    }
+  }
+
+  return true;
+}
+
 bool DHDTGraph::HandleInOutIntrin(){
   std::vector<std::string> Outs;
   std::vector<std::string> Types;
@@ -549,6 +737,12 @@ bool DHDTGraph::BuildLLVMGraph(){
   // stage 3:
   // handle all the in/out intrinsics for VLIW nodes
   if( !HandleInOutIntrin() ){
+    return false;
+  }
+
+  // stage 4:
+  // initialize all the link power values
+  if( !InitLinkPower() ){
     return false;
   }
 

@@ -110,6 +110,26 @@ DHDTConfig::DHDTConfig(std::string C)
 DHDTConfig::~DHDTConfig(){
 }
 
+DHDTConfig::ConfigEntry DHDTConfig::GetEntryByType(DHDTConfig::ConfigType Type){
+  unsigned i  = 0;
+  bool done   = false;
+  DHDTConfig::ConfigEntry NullEntry = {DHDTConfig::UNK_ENTRY,
+                                       "UNK",
+                                       0.,
+                                       0.};
+  while( !done ){
+    if( Entries[i].Type == Type ){
+      return Entries[i];
+    }
+    i++;
+    if( Entries[i].Type == UNK_ENTRY )
+      return Entries[i];
+  }
+
+  return NullEntry;
+}
+
+
 DHDTConfig::ConfigEntry DHDTConfig::GetEntry(unsigned Entry){
   unsigned i  = 0;
   bool done   = false;

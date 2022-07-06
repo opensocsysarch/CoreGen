@@ -34,8 +34,8 @@ public:
     // generic components
     UNK_ENTRY   = 0,      ///< ConfigType: null type
     REGBIT      = 10,     ///< ConfigType: Power per register bit
-    DPATHBIT    = 11,     ///< ConfigType: Power per data path bit
-    CPATHBIT    = 12,     ///< ConfigType: Power per control path bit
+    DPATHBIT    = 11,     ///< ConfigType: Power per data path bit (pipeline)
+    CPATHBIT    = 12,     ///< ConfigType: Power per control path bit (pipeline)
     SPADBIT     = 13,     ///< ConfigType: Power per scratchpad bit
     ROMBIT      = 14,     ///< ConfigType: Power per ROM bit
 
@@ -138,6 +138,9 @@ public:
 
   /// DHDTConfig: retrieve the target cofiguration
   DHDTConfig::ConfigEntry GetEntry(unsigned Entry);
+
+  /// DHDTConfig: retrieve the target configuration
+  DHDTConfig::ConfigEntry GetEntryByType(ConfigType Type);
 
   /// DHDTConfig: retrieve the number of entries
   unsigned GetNumEntry();
