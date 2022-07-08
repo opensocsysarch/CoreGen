@@ -18,6 +18,14 @@ DHDTInst::DHDTInst(std::string InstFile,
     std::cout << "Error : could not open instruction file: " << InstFile << std::endl;
   }
   isOpen = true;
+
+  // cache all the instruction nodes
+  if( Insts.size() == 0 ){
+    if( !CacheInstNodes() ){
+      std::cout << "Error : CoreGen object is invalid" << std::endl;
+    }
+  }
+
 }
 
 DHDTInst::~DHDTInst(){
@@ -139,14 +147,6 @@ DInst *DHDTInst::AssemblePayload(CoreGenInst *Inst,
 }
 
 DInst *DHDTInst::BuildAsmInstPayload(std::string Inst){
-
-  // first, we need to cache all the instruction objects
-  if( Insts.size() == 0 ){
-    if( !CacheInstNodes() ){
-      std::cout << "Error : CoreGen object is invalid" << std::endl;
-      return nullptr;
-    }
-  }
 
   // tokenize the instruction string
   std::vector<std::string> AsmTokens = GetAsmTokens(Inst, ' ');

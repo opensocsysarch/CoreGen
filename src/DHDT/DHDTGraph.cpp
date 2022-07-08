@@ -796,7 +796,8 @@ bool DHDTGraph::BuildDot(std::string DotFile){
       for( unsigned k=0; k<Nodes.size(); k++ ){
         if( Nodes[k] == Links[j]->GetTarget() ){
           // write the target
-          fs << "node" << i << "-> node" << k << ";" << std::endl;
+          fs << "node" << i << "-> node" << k << " [ label=\""
+             << Links[j]->GetName() << "\"];" << std::endl;
         }
       }
     }
@@ -819,6 +820,28 @@ bool DHDTGraph::HazardAnalysis(std::string InstFile,
 bool DHDTGraph::PowerAnalysis(std::string InstFile,
                               std::string PowerFile,
                               std::string OutFile ){
+  DHDTInst Stack(InstFile,CG);
+
+  if( !Stack.IsOpen() ){
+    std::cout << "Failed to open the instruction input file : " << InstFile << std::endl;
+    return false;
+  }
+
+  DInst *Inst = nullptr;
+  Inst = Stack.ReadInst();
+  while( Inst ){
+    // process the instruction
+
+    // crack and decode the instruction
+
+    // delete the instruction
+    delete Inst;
+    Inst = nullptr;
+
+    // read the next instruction
+    Inst = Stack.ReadInst();
+  }
+
   return true;
 }
 

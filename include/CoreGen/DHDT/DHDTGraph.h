@@ -58,6 +58,7 @@
 #include "CoreGen/StoneCutter/SCIntrinsics.h"
 #include "CoreGen/DHDT/DHDTInst.h"
 #include "CoreGen/DHDT/DHDTConfig.h"
+#include "CoreGen/DHDT/DHDTInst.h"
 
 using namespace llvm;
 
