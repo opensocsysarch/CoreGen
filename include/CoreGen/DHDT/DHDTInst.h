@@ -89,9 +89,7 @@ private:
   CoreGenBackend &CG;     ///< DHDTInst: CoreGenBackend object
 
   std::vector<CoreGenInst *> Insts;         ///< DHDTInst: Vector of instruction objects
-  std::vector<CoreGenVLIWStage *> Stages;   ///< DHDTInst: Vector of VLIW stages
-
-  // todo: do we need a vector of VLIW stages?
+  std::vector<DInst *> Masks;               ///< DHDTInst: Vector of instruction masks
 
   /// Determine if the current line is a comment
   bool IsComment(std::string Line);
@@ -115,6 +113,9 @@ private:
 
   /// Cache the instruction nodes
   bool CacheInstNodes();
+
+  /// Build an instruction mask
+  bool BuildInstMask(CoreGenInst *Inst);
 
   /// Tokenizer for asm strings
   std::vector<std::string> GetAsmTokens(std::string Inst, char delim);

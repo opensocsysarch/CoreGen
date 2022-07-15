@@ -33,6 +33,9 @@ DHDTInst::~DHDTInst(){
     IFile.close();
     isOpen = false;
   }
+
+  if( Masks.size() > 0 )
+    Masks.clear();
 }
 
 bool DHDTInst::IsComment(std::string Inst){
@@ -111,6 +114,43 @@ DInst *DHDTInst::BuildBinaryInstPayload(std::string Inst){
   return payload;
 }
 
+bool DHDTInst::BuildInstMask(CoreGenInst *Inst){
+  // create a new DInst object
+  CoreGenInstFormat *F = Inst->GetFormat();
+  if( !F )
+    return false;
+
+  DInst *TI = new DInst(Inst->GetName(), F->GetFormatWidth());
+  if( !TI )
+    return false;
+
+  Masks.push_back(I);
+
+  // build up the instruction mask
+  char BA[TI->GetByteLen()];
+
+  // write the encoded fields (aka, InstCodes)
+  for( unsigned i=0; i<Inst->GetNumEncodings(); i++ ){
+    CoreGenEncoding *E = Inst->GetEncoding[i];
+  }
+
+  // write the register and immediate fields
+  for( unsigned i=0; i<F->GetNumFields(); i++ ){
+    if( F->GetFieldType(F->GetFieldName(i)) != CoreGenInstFormat::CGInstCode ){
+      // found an immediate or register field
+      unsigned StartBit = F->GetStartBit( F->GetFieldName(i) );
+      unsigned EndBit   = F->GetEndBit( F->GetFieldName(i) );
+    }
+  }
+
+  // write the encoded block back to the DInst object
+  for( unsigned i=0; i<TI->GetByteLen(); i++ ){
+    TI->WriteByte(i,BA[i]);
+  }
+
+  return true;
+}
+
 bool DHDTInst::CacheInstNodes(){
   CoreGenNode *Top = CG.GetTop();
   if( Top == nullptr ){
@@ -120,6 +160,8 @@ bool DHDTInst::CacheInstNodes(){
   for( unsigned i=0; i<Top->GetNumChild(); i++ ){
     if( Top->GetChild(i)->GetType() == CGInst ){
       Insts.push_back( static_cast<CoreGenInst *>(Top->GetChild(i)) );
+      if( !BuildInstMask(Insts[Insts.size()-1]) )
+        return false;
     }
   }
 
