@@ -30,6 +30,41 @@
 // CoreGen Headers
 #include "CoreGen/CoreGenBackend/CoreGenBackend.h"
 
+class DInstMask{
+private:
+  CoreGenInst *Inst;                    ///< DInstMask: Target instruction
+  CoreGenInstFormat *Format;            ///< DInstMask: Instruction format
+  std::vector<CoreGenEncoding *> Encs;  ///< DInstMask: Encodings
+
+public:
+  /// DInstMask: Default constructor
+  DInstMask(CoreGenInst *I,
+            CoreGenInstFormat *F)
+    : Inst(I), Format(F) { }
+
+  /// DInstMask: Default destructor
+  ~DInstMask();
+
+  /// DInstMask: Add an encoding
+  void AddEncoding(CoreGenEncoding *E) { Encs.push_back(E); }
+
+  /// DInstMask: Retrieve the instruction pointer
+  CoreGenInst *GetInst() { return Inst; }
+
+  /// DInstMask: Retrieve the instruction format
+  CoreGenInstFormat *GetFormat() { return Format; }
+
+  /// DInstMask: Retrieve the number of encodings
+  unsigned GetNumEncodings() { return Encs.size(); }
+
+  /// DInstMask: Retrieve the target encoding
+  CoreGenEncoding *GetEncoding(unsigned E){
+    if( E > (Encs.size()-1) )
+      return nullptr;
+    return Encs[E];
+  }
+};
+
 class DInst{
 private:
   std::string Inst;       ///< DInst: instruction text
@@ -56,11 +91,40 @@ public:
   /// DInst: Default destructor
   ~DInst(){if(Buf){delete Buf;}}
 
+  /// DInst: Retrieve the text of the instruction
+  std::string GetStr() { return Inst; }
+
   /// DInst: Retrieve the bit length
   unsigned GetBitLen() { return BitLen; }
 
   /// DInst: Retrieve the byte length
   unsigned GetByteLen() { return ByteLen; }
+
+  /// DInst: Extract the target bits
+  uint64_t ExtractBits( unsigned StartBit, unsigned EndBit ){
+    unsigned CurElem = StartBit/8;
+    unsigned CurBit  = StartBit%8;
+    uint64_t bits = 0x00ull;
+    unsigned shift = 0;
+
+    for( unsigned i=StartBit; i<EndBit; i++ ){
+
+      if( (Buf[CurElem] & (1<<CurBit)) ){
+        bits |= (1<<shift);
+      }
+
+      // increment the bit
+      CurBit++;
+      if( CurBit == 8 ){
+        CurElem++;
+        CurBit = 0;
+      }
+      // increment the shift
+      shift++;
+    }
+
+    return bits;
+  }
 
   /// DInst: Write the target byte with the input integer
   bool WriteByte( unsigned TargetByte, uint8_t Byte ){
@@ -89,7 +153,8 @@ private:
   CoreGenBackend &CG;     ///< DHDTInst: CoreGenBackend object
 
   std::vector<CoreGenInst *> Insts;         ///< DHDTInst: Vector of instruction objects
-  std::vector<DInst *> Masks;               ///< DHDTInst: Vector of instruction masks
+  std::vector<DInstMask *> Masks;           ///< DHDTInst: Vector of instruction masks
+  std::vector<CoreGenVLIWStage *> Stages;   ///< DHDTInst: Vector of vliw stage objects
 
   /// Determine if the current line is a comment
   bool IsComment(std::string Line);
@@ -114,6 +179,9 @@ private:
   /// Cache the instruction nodes
   bool CacheInstNodes();
 
+  /// Cache the VLIW stage nodes
+  bool CacheVLIWNodes();
+
   /// Build an instruction mask
   bool BuildInstMask(CoreGenInst *Inst);
 
@@ -136,6 +204,9 @@ public:
 
   /// DHDTInst: Read the next instruction payload.  If nothing to read, return nullptr
   DInst *ReadInst();
+
+  /// DHDTInst: Crack the target instruction payload.  If crack fails, return empty string
+  std::string CrackInst(DInst *Inst);
 };
 
 #endif

@@ -26,6 +26,13 @@ DHDTInst::DHDTInst(std::string InstFile,
     }
   }
 
+  // cache all the vliw stages
+  if( Stages.size() == 0 ){
+    if( !CacheVLIWNodes() ){
+      std::cout << "Error : CoreGen object is invalid" << std::endl;
+    }
+  }
+
 }
 
 DHDTInst::~DHDTInst(){
@@ -115,37 +122,26 @@ DInst *DHDTInst::BuildBinaryInstPayload(std::string Inst){
 }
 
 bool DHDTInst::BuildInstMask(CoreGenInst *Inst){
-  // create a new DInst object
-  CoreGenInstFormat *F = Inst->GetFormat();
-  if( !F )
-    return false;
 
-  DInst *TI = new DInst(Inst->GetName(), F->GetFormatWidth());
-  if( !TI )
-    return false;
-
-  Masks.push_back(I);
-
-  // build up the instruction mask
-  char BA[TI->GetByteLen()];
-
-  // write the encoded fields (aka, InstCodes)
+  DInstMask *M = new DInstMask(Inst,Inst->GetFormat());
+  Masks.push_back(M);
   for( unsigned i=0; i<Inst->GetNumEncodings(); i++ ){
-    CoreGenEncoding *E = Inst->GetEncoding[i];
+    M->AddEncoding(Inst->GetEncoding(i));
   }
 
-  // write the register and immediate fields
-  for( unsigned i=0; i<F->GetNumFields(); i++ ){
-    if( F->GetFieldType(F->GetFieldName(i)) != CoreGenInstFormat::CGInstCode ){
-      // found an immediate or register field
-      unsigned StartBit = F->GetStartBit( F->GetFieldName(i) );
-      unsigned EndBit   = F->GetEndBit( F->GetFieldName(i) );
+  return true;
+}
+
+bool DHDTInst::CacheVLIWNodes(){
+  CoreGenNode *Top = CG.GetTop();
+  if( Top == nullptr ){
+    return false;
+  }
+
+  for( unsigned i=0; i<Top->GetNumChild(); i++ ){
+    if( Top->GetChild(i)->GetType() == CGVLIW ){
+      Stages.push_back( static_cast<CoreGenVLIWStage *>(Top->GetChild(i)) );
     }
-  }
-
-  // write the encoded block back to the DInst object
-  for( unsigned i=0; i<TI->GetByteLen(); i++ ){
-    TI->WriteByte(i,BA[i]);
   }
 
   return true;
@@ -243,6 +239,38 @@ DInst *DHDTInst::ReadInst(){
   }
 
   return nullptr;
+}
+
+std::string DHDTInst::CrackInst(DInst *Inst){
+  std::string Name;
+
+  // check the payload to see if it matches an instruction mask
+  for( unsigned i=0; i<Masks.size(); i++ ){
+    bool match = true;
+    if( Masks[i]->GetFormat()->GetFormatWidth() == Inst->GetBitLen() ){
+      // same number of bits, continue matching
+      for( unsigned j=0; j<Masks[i]->GetNumEncodings(); j++ ){
+        CoreGenEncoding *E = Masks[i]->GetEncoding(j);
+        if( Inst->ExtractBits(Masks[i]->GetFormat()->GetStartBit(E->GetField()),
+                              Masks[i]->GetFormat()->GetEndBit(E->GetField())) != 
+            E->GetEncoding() ){
+          match = false;
+        }
+      }
+      if( match ){
+        return Masks[i]->GetInst()->GetName();
+      }
+    }
+  }
+
+  // check the payload to see if it matches a vliw stage
+  // if we make it this far, then it must be a vliw stage
+  // otherwise, we didn't match anything
+  if( Stages.size() > 0 ){
+    Name = "_VLIW"; // special keyword to trigger VLIW handler
+  }
+
+  return Name;
 }
 
 // EOF

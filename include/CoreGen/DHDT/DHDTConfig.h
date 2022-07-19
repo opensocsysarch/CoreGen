@@ -142,6 +142,9 @@ public:
   /// DHDTConfig: retrieve the target configuration
   DHDTConfig::ConfigEntry GetEntryByType(ConfigType Type);
 
+  /// DHDTConfig: retrieve the value by configuration type
+  double GetValueByType(DHDTConfig::ConfigType Type);
+
   /// DHDTConfig: retrieve the number of entries
   unsigned GetNumEntry();
 
