@@ -175,15 +175,6 @@ std::vector<std::string> DHDTInst::GetAsmTokens(std::string Inst, char delim){
   return tokens;
 }
 
-DInst *DHDTInst::AssemblePayload(CoreGenInst *Inst,
-                                 std::string AsmArgs,
-                                 std::string InstArgs){
-  DInst *payload = nullptr;
-  std::vector<std::string> AVect = GetAsmTokens(AsmArgs,',');
-  std::vector<std::string> IVect = GetAsmTokens(InstArgs,',');
-  return payload;
-}
-
 DInst *DHDTInst::BuildAsmInstPayload(std::string Inst){
 
   // tokenize the instruction string
@@ -197,7 +188,7 @@ DInst *DHDTInst::BuildAsmInstPayload(std::string Inst){
 
       if( AsmTokens[0] == InstTokens[0] ){
         // found a match, assemble the payload
-        return AssemblePayload(Insts[i], AsmTokens[1], InstTokens[1]);
+        return new DInst(Inst,Insts[i]);
       }
     }
   }
@@ -244,6 +235,11 @@ DInst *DHDTInst::ReadInst(){
 std::string DHDTInst::CrackInst(DInst *Inst){
   std::string Name;
 
+  // see if we've pre-cracked the payload
+  if( Inst->GetInstPtr() ){
+    return Inst->GetInstPtr()->GetName();
+  }
+
   // check the payload to see if it matches an instruction mask
   for( unsigned i=0; i<Masks.size(); i++ ){
     bool match = true;
@@ -267,7 +263,7 @@ std::string DHDTInst::CrackInst(DInst *Inst){
   // if we make it this far, then it must be a vliw stage
   // otherwise, we didn't match anything
   if( Stages.size() > 0 ){
-    Name = "_VLIW"; // special keyword to trigger VLIW handler
+    Name = "__VLIW"; // special keyword to trigger VLIW handler
   }
 
   return Name;

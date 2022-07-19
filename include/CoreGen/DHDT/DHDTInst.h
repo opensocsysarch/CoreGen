@@ -72,10 +72,28 @@ private:
   unsigned ByteLen;       ///< DInst: Byte length
   char *Buf;              ///< DInst: Buffer
 
+  CoreGenInst *IPtr;      ///< DInst: Instruction payload pointer
+
 public:
   /// DInst: Default constructor
   DInst(std::string Inst,unsigned BitLen)
-    : Inst(Inst), BitLen(BitLen), Buf(nullptr) {
+    : Inst(Inst), BitLen(BitLen), Buf(nullptr), IPtr(nullptr) {
+    if( BitLen%8 != 0 ){
+      // adjust for non byte aligned payloads
+      ByteLen = (BitLen/8)+1;
+    }else{
+      ByteLen = (BitLen/8);
+    }
+    Buf = new char[ByteLen];
+    for( unsigned i=0; i<ByteLen; i++ ){
+      Buf[i] = 0b00000000;
+    }
+  }
+
+  /// DInst: Overloaded constructor
+  DInst(std::string Inst, CoreGenInst *I)
+    : Inst(Inst), BitLen(I->GetFormat()->GetFormatWidth()),
+      Buf(nullptr), IPtr(I) {
     if( BitLen%8 != 0 ){
       // adjust for non byte aligned payloads
       ByteLen = (BitLen/8)+1;
@@ -93,6 +111,9 @@ public:
 
   /// DInst: Retrieve the text of the instruction
   std::string GetStr() { return Inst; }
+
+  /// DInst: Retrieve the instruction pointer
+  CoreGenInst *GetInstPtr() { return IPtr; }
 
   /// DInst: Retrieve the bit length
   unsigned GetBitLen() { return BitLen; }
@@ -170,11 +191,6 @@ private:
 
   /// Build assembly instruction payload
   DInst *BuildAsmInstPayload(std::string Inst);
-
-  /// Assemble a payload from an asm bundle
-  DInst *AssemblePayload(CoreGenInst *Inst,
-                         std::string AsmArgs,
-                         std::string InstArgs);
 
   /// Cache the instruction nodes
   bool CacheInstNodes();
