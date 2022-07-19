@@ -427,6 +427,26 @@ bool DHDTGraph::AddCallNode(Instruction &Inst,
   return true;
 }
 
+unsigned DHDTGraph::GetValueWidth(Value *Op){
+  Type *TmpType = Op->getType();
+  if( TmpType->isVoidTy() ){
+    return 64;
+  }else if( TmpType->isHalfTy() ){
+    return 16;
+  }else if( TmpType->isFloatTy() ){
+    return 32;
+  }else if( TmpType->isDoubleTy() ){
+    return 64;
+  }else if( TmpType->isFP128Ty() ){
+    return 128;
+  }else if( TmpType->isIntegerTy() ){
+    return TmpType->getIntegerBitWidth();
+  }else if( TmpType->isPointerTy() ){
+    return 64;
+  }
+  return 1;
+}
+
 bool DHDTGraph::AddInstNode(Function &Func,
                             Instruction &Inst,
                             DHDTNode *CurNode){
@@ -483,7 +503,7 @@ bool DHDTGraph::AddInstNode(Function &Func,
   case Instruction::Store:
     Node = new DHDTNode(std::string(Inst.getOpcodeName()),
                         DNodeRegWrite,
-                        LHS->getType()->getIntegerBitWidth());
+                        GetValueWidth(Inst.getOperand(0)));
     Link = new DHDTLink(CurNode->GetName()+".next",
                         LNodeScalar,
                         GetStoreWidth(Inst),
@@ -496,8 +516,8 @@ bool DHDTGraph::AddInstNode(Function &Func,
   case Instruction::ICmp:
   case Instruction::FCmp:
     Node = new DHDTNode(std::string(Inst.getOpcodeName()),
-                        DNodeRegWrite,
-                        LHS->getType()->getIntegerBitWidth());
+                        DNodeMux,
+                        GetValueWidth(Inst.getOperand(0)));
     Link = new DHDTLink(CurNode->GetName()+".next",
                         LNodeScalar,
                         1,

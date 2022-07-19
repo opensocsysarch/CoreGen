@@ -296,6 +296,9 @@ private:
   /// DHDTGraph: Accumulate the target node power
   double AccumNodePower(DHDTNode *Node);
 
+  /// DHDTGraph: Retrieve the width of the target operand
+  unsigned GetValueWidth(Value *Op);
+
 public:
   /// DHDTGraph: Constructor
   DHDTGraph(DHDTConfig &Config);
