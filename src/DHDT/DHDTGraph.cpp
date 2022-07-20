@@ -976,7 +976,7 @@ bool DHDTGraph::PowerAnalysis(std::string InstFile,
     // print the individual power value
     if( Out.is_open() ){
       Out << Stack.GetLineNumber() << ","
-          << Inst->GetStr() << ","
+          << "\"" << Inst->GetStr() << "\"" << ","
           << Power << std::endl;
     }else{
       std::cout << " - "

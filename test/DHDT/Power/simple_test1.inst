@@ -1,0 +1,9 @@
+# this is a comment
+add r5, r4, r3
+mul r5, r4, r3
+sub r5, r4, r3
+div r5, r4, r3
+divu r5, r4, r3
+bra r5
+
+# this is the end
