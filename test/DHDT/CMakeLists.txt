@@ -9,9 +9,11 @@
 if(BUILD_COREGEN_DHDT_TESTING)
   set(BUILD_COREGEN_DHDT_CLI_TESTING "ON")
   set(BUILD_COREGEN_DHDT_POWER_TESTING "ON")
+  set(BUILD_COREGEN_DHDT_HAZARD_TESTING "ON")
 endif()
 
 add_subdirectory(CLI)
 add_subdirectory(Power)
+add_subdirectory(Hazard)
 
 # EOF

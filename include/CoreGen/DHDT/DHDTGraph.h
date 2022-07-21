@@ -290,6 +290,18 @@ private:
   /// DHDTGraph: Execute the graph from the target root node
   bool ExecuteGraph(DHDTNode *Root, double &Power);
 
+  /// DHDTGraph: Execute the hazard graph and accumulate the traversed nodes from the target root
+  bool ExecuteHazardGraph(DHDTNode *Root, std::vector<uint64_t> &Vect);
+
+  /// DHDTGraph: Recursively execute hazard graph
+  bool RecurseHazardGraph(DHDTNode *Node,
+                          std::vector<uint64_t> &Vect);
+
+  /// DHDTGraph: Examine the hazard vectors
+  bool ExamineHazardResults(std::vector<std::vector<uint64_t>> HVect,
+                            std::vector<unsigned> LineNo,
+                            std::ofstream &Out);
+
   /// DHDTGraph: Accumulate the target link power
   double AccumLinkPower(DHDTLink *Link);
 
