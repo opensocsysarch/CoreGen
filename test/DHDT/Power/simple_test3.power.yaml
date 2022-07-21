@@ -1,0 +1,4 @@
+DHDTConfig:
+  - ALUADD: 0.01
+  - ALUSUB: 0.10
+  - ALUMUL: 0.20

@@ -212,7 +212,6 @@ DHDTConfig::ConfigEntry DHDTGraph::LLVMInstToConfigType(unsigned Inst){
     return Config.GetEntryByType(DHDTConfig::ALUMUX);
     break;
   case Instruction::Call:
-    break;
   default:
     return Config.GetEntryByType(DHDTConfig::UNK_ENTRY);
   }
@@ -428,6 +427,26 @@ bool DHDTGraph::AddCallNode(Instruction &Inst,
   return true;
 }
 
+unsigned DHDTGraph::GetValueWidth(Value *Op){
+  Type *TmpType = Op->getType();
+  if( TmpType->isVoidTy() ){
+    return 64;
+  }else if( TmpType->isHalfTy() ){
+    return 16;
+  }else if( TmpType->isFloatTy() ){
+    return 32;
+  }else if( TmpType->isDoubleTy() ){
+    return 64;
+  }else if( TmpType->isFP128Ty() ){
+    return 128;
+  }else if( TmpType->isIntegerTy() ){
+    return TmpType->getIntegerBitWidth();
+  }else if( TmpType->isPointerTy() ){
+    return 64;
+  }
+  return 1;
+}
+
 bool DHDTGraph::AddInstNode(Function &Func,
                             Instruction &Inst,
                             DHDTNode *CurNode){
@@ -456,10 +475,11 @@ bool DHDTGraph::AddInstNode(Function &Func,
   case Instruction::Xor:
     LHS = cast<Value>(&Inst);
     Node = new DHDTNode(std::string(Inst.getOpcodeName()),
-                        DNodeArith);
+                        DNodeArith,
+                        LHS->getType()->getIntegerBitWidth());
     Link = new DHDTLink(CurNode->GetName()+".next",
                         LNodeScalar,
-                        LHS->getType()->getIntegerBitWidth(),
+                        1,
                         Node);
     Nodes.push_back(Node);
     Links.push_back(Link);
@@ -469,7 +489,8 @@ bool DHDTGraph::AddInstNode(Function &Func,
   case Instruction::Load:
     LHS = cast<Value>(&Inst);
     Node = new DHDTNode(std::string(Inst.getOpcodeName()),
-                        DNodeRegRead);
+                        DNodeRegRead,
+                        LHS->getType()->getIntegerBitWidth());
     Link = new DHDTLink(CurNode->GetName()+".next",
                         LNodeScalar,
                         LHS->getType()->getIntegerBitWidth(),
@@ -481,7 +502,8 @@ bool DHDTGraph::AddInstNode(Function &Func,
     break;
   case Instruction::Store:
     Node = new DHDTNode(std::string(Inst.getOpcodeName()),
-                        DNodeRegWrite);
+                        DNodeRegWrite,
+                        GetValueWidth(Inst.getOperand(0)));
     Link = new DHDTLink(CurNode->GetName()+".next",
                         LNodeScalar,
                         GetStoreWidth(Inst),
@@ -494,7 +516,8 @@ bool DHDTGraph::AddInstNode(Function &Func,
   case Instruction::ICmp:
   case Instruction::FCmp:
     Node = new DHDTNode(std::string(Inst.getOpcodeName()),
-                        DNodeRegWrite);
+                        DNodeMux,
+                        GetValueWidth(Inst.getOperand(0)));
     Link = new DHDTLink(CurNode->GetName()+".next",
                         LNodeScalar,
                         1,
@@ -796,7 +819,8 @@ bool DHDTGraph::BuildDot(std::string DotFile){
       for( unsigned k=0; k<Nodes.size(); k++ ){
         if( Nodes[k] == Links[j]->GetTarget() ){
           // write the target
-          fs << "node" << i << "-> node" << k << ";" << std::endl;
+          fs << "node" << i << "-> node" << k << " [ label=\""
+             << Links[j]->GetName() << "\"];" << std::endl;
         }
       }
     }
@@ -811,14 +835,365 @@ bool DHDTGraph::BuildDot(std::string DotFile){
   return true;
 }
 
+double DHDTGraph::AccumLinkPower(DHDTLink *Link){
+  double Tmp = Link->GetEntry().Value*Link->GetWidth();
+  Link->AccumPower(Tmp);
+  return Tmp;
+}
+
+double DHDTGraph::AccumNodePower(DHDTNode *Node){
+  double Tmp = Node->GetEntry().Value*Node->GetWidth();
+  Node->AccumPower(Tmp);
+  return Tmp;
+}
+
+double DHDTGraph::RecurseGraph(DHDTNode *Node){
+  double IVal = 0.;
+
+  IVal += AccumNodePower(Node);
+  std::vector<DHDTLink *> Links = Node->GetLinks();
+  for( unsigned i=0; i<Links.size(); i++ ){
+    IVal += AccumLinkPower(Links[i]);
+    IVal += RecurseGraph(Links[i]->GetTarget());
+  }
+
+  return IVal;
+}
+
+bool DHDTGraph::ExecuteGraph(DHDTNode *Root, double &Power){
+  if( Root == nullptr ){
+    return false;
+  }
+
+  // this value will contain our per-instruction power values
+  double IVal = 0.;
+
+  std::vector<DHDTLink *> Links = Root->GetLinks();
+  if( Root->GetType() == DNodeInst ){
+    // instruction node
+    // -- walk all the links and accumulate the power, then recurse
+    for( unsigned i=0; i<Links.size(); i++ ){
+      IVal += AccumLinkPower(Links[i]);
+    }
+    // choose the first link to recurse
+    IVal += RecurseGraph(Links[0]->GetTarget());
+  }else{
+    // Top Node: vliw node walker
+    // -- walk all the nodes descendent from Top and recurse
+    for( unsigned i=0; i<Links.size(); i++ ){
+      DHDTNode *TmpNode = Links[i]->GetTarget();
+      std::vector<DHDTLink *> TmpLinks = TmpNode->GetLinks();
+      std::vector<DHDTNode *> NodeVect;
+      for( unsigned j=0; j<TmpLinks.size(); j++ ){
+        IVal += AccumLinkPower(TmpLinks[j]);
+        NodeVect.push_back(TmpLinks[j]->GetTarget());
+      }
+
+      // remove the duplicate target nodes
+      std::sort(NodeVect.begin(), NodeVect.end());
+      NodeVect.erase(std::unique(NodeVect.begin(), NodeVect.end()),
+                     NodeVect.end());
+
+      // recurse through the VLIW nodes
+      for( unsigned j=0; j<NodeVect.size(); j++ ){
+        IVal += RecurseGraph(NodeVect[j]);
+      }
+    }
+  }
+
+  Power = IVal;
+  return true;
+}
+
+bool DHDTGraph::RecurseHazardGraph(DHDTNode *Node,
+                                   std::vector<uint64_t> &Vect){
+
+  Vect.push_back((uint64_t)(Node));
+  std::vector<DHDTLink *> Links = Node->GetLinks();
+  for( unsigned i=0; i<Links.size(); i++ ){
+    Vect.push_back((uint64_t)(Links[i]));
+    RecurseHazardGraph(Links[i]->GetTarget(),Vect);
+  }
+
+  return true;
+}
+
+bool DHDTGraph::ExecuteHazardGraph(DHDTNode *Root,
+                                   std::vector<uint64_t> &Vect){
+  if( Root == nullptr ){
+    return false;
+  }
+
+  // add the top-level node
+  if( Root->GetType() == DNodeInst ){
+    // instruction node
+    // -- walk all the links and accumulate the pointers, then recurse
+    Vect.push_back((uint64_t)(Root));
+    for( unsigned i=0; i<Links.size(); i++ ){
+      Vect.push_back((uint64_t)(Links[i]));
+    }
+    if( !RecurseHazardGraph(Links[0]->GetTarget(),Vect) ){
+      return false;
+    }
+  }else{
+    // vliw node
+    // -- walk all the nodes descendents from Top and recurse
+    for( unsigned i=0; i<Links.size(); i++ ){
+      DHDTNode *TmpNode = Links[i]->GetTarget();
+      std::vector<DHDTLink *> TmpLinks = TmpNode->GetLinks();
+      std::vector<DHDTNode *> NodeVect;
+      for( unsigned j=0; j<TmpLinks.size(); j++ ){
+        NodeVect.push_back(TmpLinks[j]->GetTarget());
+      }
+
+      // remove the duplicate target nodes
+      std::sort(NodeVect.begin(), NodeVect.end());
+      NodeVect.erase(std::unique(NodeVect.begin(), NodeVect.end()),
+                     NodeVect.end());
+
+      // recurse through the VLIW nodes
+      for( unsigned j=0; j<NodeVect.size(); j++ ){
+        if( !RecurseHazardGraph(NodeVect[j],Vect) ){
+          return false;
+        }
+      }
+    }
+  }
+
+  return true;
+}
+
+bool DHDTGraph::ExamineHazardResults(std::vector<std::vector<uint64_t>> HVect,
+                                     std::vector<unsigned> LineNo,
+                                     std::ofstream &Out){
+
+  if( HVect.size() == 1 ){
+    if( Out.is_open() ){
+      Out << "No hazards present; only a single instruction" << std::endl;
+    }else{
+      std::cout << "No hazards present; only a single instruction" << std::endl;
+    }
+    return true;
+  }
+
+  for( unsigned i=1; i<HVect.size(); i++ ){
+    // compare the i'th and i-1'th instructions
+    unsigned Cur = i;
+    unsigned Prev = i-1;
+
+    for( unsigned j=0; j<HVect[Cur].size(); j++ ){
+      if( (j+1) < HVect[Prev].size() ){
+        // look at the [i][j+1] element
+        if( HVect[Cur][j] == HVect[Prev][j+1] ){
+          if( Out.is_open() ){
+            Out << "Potential hazard found between instructions at Lines "
+                << LineNo[Prev] << " and " << LineNo[Cur] << std::endl;
+          }else{
+            std::cout << "Potential hazard found between instructions at Lines "
+                      << LineNo[Prev] << " and " << LineNo[Cur] << std::endl;
+          }
+        }
+      } // else, don't examine the hazard
+    }
+  }
+
+  return true;
+}
+
 bool DHDTGraph::HazardAnalysis(std::string InstFile,
                                std::string OutFile ){
+  DHDTInst Stack(InstFile,CG);
+
+  if( !Stack.IsOpen() ){
+    std::cout << "Failed to open the instruction input file : " << InstFile << std::endl;
+    return false;
+  }
+
+  std::ofstream Out;
+  if( OutFile.length() > 0 ){
+    Out.open(OutFile.c_str());
+    if( !Out.is_open() ){
+      std::cout << "Failed to open output file : " << OutFile << std::endl;
+      return false;
+    }
+  }
+
+  // hazard vector
+  std::vector<std::vector<uint64_t>> HVect;
+  std::vector<unsigned> LineNo;
+
+  // execute the graph
+  DInst *Inst = Stack.ReadInst();
+  while( Inst ){
+    // crack and decode the instruction
+    std::string NodeName = Stack.CrackInst(Inst);
+    if( NodeName.length() == 0 ){
+      std::cout << "Failed to crack instruction payload = "
+                << Inst->GetStr() << " at line number = "
+                << Stack.GetLineNumber() << std::endl;
+      return false;
+    }
+
+    // retrieve the top node and execute it
+    if( NodeName == "__VLIW" ){
+      // this is a vliw payload; execute all the top-level entry nodes
+      std::vector<uint64_t> TVect;
+      if( !ExecuteHazardGraph(GetTop(), TVect) ){
+        std::cout << "Failed to execute hazard graph starting at node = "
+                  << NodeName << std::endl;
+        delete Inst;
+        if( Out.is_open() )
+          Out.close();
+        return false;
+      }
+      HVect.push_back(TVect);
+    }else{
+      // this is a scalar node; find it and execute it
+      auto pos = NodeMap.find(NodeName);
+      if( pos != NodeMap.end() ){
+        std::vector<uint64_t> TVect;
+        if( !ExecuteHazardGraph(pos->second, TVect) ){
+          std::cout << "Failed to execute hazard graph starting at node = "
+                    << NodeName << std::endl;
+          delete Inst;
+          if( Out.is_open() )
+            Out.close();
+          return false;
+        }
+        HVect.push_back(TVect);
+      }else{
+        std::cout << "Failed to find graph node = " << NodeName << std::endl;
+        delete Inst;
+        if( Out.is_open() )
+          Out.close();
+        return false;
+      }
+    }
+
+    // record the line number
+    LineNo.push_back(Stack.GetLineNumber());
+
+    // delete the instruction
+    delete Inst;
+    Inst = nullptr;
+
+    // read the next instruction
+    Inst = Stack.ReadInst();
+  }
+
+  // Examine the results
+  if( !ExamineHazardResults(HVect, LineNo, Out) ){
+    Out.close();
+    return false;
+  }
+
+  if( Out.is_open() ){
+    Out.close();
+  }
+
   return true;
 }
 
 bool DHDTGraph::PowerAnalysis(std::string InstFile,
                               std::string PowerFile,
                               std::string OutFile ){
+  DHDTInst Stack(InstFile,CG);
+
+  if( !Stack.IsOpen() ){
+    std::cout << "Failed to open the instruction input file : " << InstFile << std::endl;
+    return false;
+  }
+
+  std::ofstream Out;
+  if( OutFile.length() > 0 ){
+    Out.open(OutFile.c_str());
+    if( !Out.is_open() ){
+      std::cout << "Failed to open output file : " << OutFile << std::endl;
+      return false;
+    }
+  }
+
+  DInst *Inst = Stack.ReadInst();
+  double Power = 0.;
+  while( Inst ){
+    // crack and decode the instruction
+    std::string NodeName = Stack.CrackInst(Inst);
+    if( NodeName.length() == 0 ){
+      std::cout << "Failed to crack instruction payload = "
+                << Inst->GetStr() << " at line number = "
+                << Stack.GetLineNumber() << std::endl;
+      return false;
+    }
+
+    // retrieve the top node and execute it
+    if( NodeName == "__VLIW" ){
+      // this is a vliw payload; execute all the top-level entry nodes
+      if( !ExecuteGraph(GetTop(), Power) ){
+        std::cout << "Failed to execute power graph starting at node = "
+                  << NodeName << std::endl;
+        delete Inst;
+        if( Out.is_open() )
+          Out.close();
+        return false;
+      }
+    }else{
+      // this is a scalar node; find it and execute it
+      auto pos = NodeMap.find(NodeName);
+      if( pos != NodeMap.end() ){
+        if( !ExecuteGraph(pos->second, Power) ){
+          std::cout << "Failed to execute power graph starting at node = "
+                    << NodeName << std::endl;
+          delete Inst;
+          if( Out.is_open() )
+            Out.close();
+          return false;
+        }
+      }else{
+        std::cout << "Failed to find graph node = " << NodeName << std::endl;
+        delete Inst;
+        if( Out.is_open() )
+          Out.close();
+        return false;
+      }
+    }
+
+    // print the individual power value
+    if( Out.is_open() ){
+      Out << Stack.GetLineNumber() << ","
+          << "\"" << Inst->GetStr() << "\"" << ","
+          << Power << std::endl;
+    }else{
+      std::cout << " - "
+                << Stack.GetLineNumber() << " "
+                << Inst->GetStr() << " "
+                << Power << std::endl;
+    }
+    Power = 0.;
+
+    // delete the instruction
+    delete Inst;
+    Inst = nullptr;
+
+    // read the next instruction
+    Inst = Stack.ReadInst();
+  }
+
+  // accumulate all the power values and print the total
+  Power = 0.;
+  for( unsigned i=0; i<Nodes.size(); i++ ){
+    Power += Nodes[i]->GetTotalPower();
+  }
+  for( unsigned i=0; i<Links.size(); i++ ){
+    Power += Links[i]->GetTotalPower();
+  }
+
+  if( Out.is_open() ){
+    Out << "*,TOTAL_POWER," << Power;
+    Out.close();
+  }else{
+    std::cout << " ====== TOTAL POWER = " << Power << std::endl;
+  }
+
   return true;
 }
 

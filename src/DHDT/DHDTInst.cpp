@@ -18,6 +18,21 @@ DHDTInst::DHDTInst(std::string InstFile,
     std::cout << "Error : could not open instruction file: " << InstFile << std::endl;
   }
   isOpen = true;
+
+  // cache all the instruction nodes
+  if( Insts.size() == 0 ){
+    if( !CacheInstNodes() ){
+      std::cout << "Error : CoreGen object is invalid" << std::endl;
+    }
+  }
+
+  // cache all the vliw stages
+  if( Stages.size() == 0 ){
+    if( !CacheVLIWNodes() ){
+      std::cout << "Error : CoreGen object is invalid" << std::endl;
+    }
+  }
+
 }
 
 DHDTInst::~DHDTInst(){
@@ -25,6 +40,9 @@ DHDTInst::~DHDTInst(){
     IFile.close();
     isOpen = false;
   }
+
+  if( Masks.size() > 0 )
+    Masks.clear();
 }
 
 bool DHDTInst::IsComment(std::string Inst){
@@ -103,6 +121,32 @@ DInst *DHDTInst::BuildBinaryInstPayload(std::string Inst){
   return payload;
 }
 
+bool DHDTInst::BuildInstMask(CoreGenInst *Inst){
+
+  DInstMask *M = new DInstMask(Inst,Inst->GetFormat());
+  Masks.push_back(M);
+  for( unsigned i=0; i<Inst->GetNumEncodings(); i++ ){
+    M->AddEncoding(Inst->GetEncoding(i));
+  }
+
+  return true;
+}
+
+bool DHDTInst::CacheVLIWNodes(){
+  CoreGenNode *Top = CG.GetTop();
+  if( Top == nullptr ){
+    return false;
+  }
+
+  for( unsigned i=0; i<Top->GetNumChild(); i++ ){
+    if( Top->GetChild(i)->GetType() == CGVLIW ){
+      Stages.push_back( static_cast<CoreGenVLIWStage *>(Top->GetChild(i)) );
+    }
+  }
+
+  return true;
+}
+
 bool DHDTInst::CacheInstNodes(){
   CoreGenNode *Top = CG.GetTop();
   if( Top == nullptr ){
@@ -112,6 +156,8 @@ bool DHDTInst::CacheInstNodes(){
   for( unsigned i=0; i<Top->GetNumChild(); i++ ){
     if( Top->GetChild(i)->GetType() == CGInst ){
       Insts.push_back( static_cast<CoreGenInst *>(Top->GetChild(i)) );
+      if( !BuildInstMask(Insts[Insts.size()-1]) )
+        return false;
     }
   }
 
@@ -129,24 +175,7 @@ std::vector<std::string> DHDTInst::GetAsmTokens(std::string Inst, char delim){
   return tokens;
 }
 
-DInst *DHDTInst::AssemblePayload(CoreGenInst *Inst,
-                                 std::string AsmArgs,
-                                 std::string InstArgs){
-  DInst *payload = nullptr;
-  std::vector<std::string> AVect = GetAsmTokens(AsmArgs,',');
-  std::vector<std::string> IVect = GetAsmTokens(InstArgs,',');
-  return payload;
-}
-
 DInst *DHDTInst::BuildAsmInstPayload(std::string Inst){
-
-  // first, we need to cache all the instruction objects
-  if( Insts.size() == 0 ){
-    if( !CacheInstNodes() ){
-      std::cout << "Error : CoreGen object is invalid" << std::endl;
-      return nullptr;
-    }
-  }
 
   // tokenize the instruction string
   std::vector<std::string> AsmTokens = GetAsmTokens(Inst, ' ');
@@ -159,7 +188,7 @@ DInst *DHDTInst::BuildAsmInstPayload(std::string Inst){
 
       if( AsmTokens[0] == InstTokens[0] ){
         // found a match, assemble the payload
-        return AssemblePayload(Insts[i], AsmTokens[1], InstTokens[1]);
+        return new DInst(Inst,Insts[i]);
       }
     }
   }
@@ -201,6 +230,43 @@ DInst *DHDTInst::ReadInst(){
   }
 
   return nullptr;
+}
+
+std::string DHDTInst::CrackInst(DInst *Inst){
+  std::string Name;
+
+  // see if we've pre-cracked the payload
+  if( Inst->GetInstPtr() ){
+    return Inst->GetInstPtr()->GetName();
+  }
+
+  // check the payload to see if it matches an instruction mask
+  for( unsigned i=0; i<Masks.size(); i++ ){
+    bool match = true;
+    if( Masks[i]->GetFormat()->GetFormatWidth() == Inst->GetBitLen() ){
+      // same number of bits, continue matching
+      for( unsigned j=0; j<Masks[i]->GetNumEncodings(); j++ ){
+        CoreGenEncoding *E = Masks[i]->GetEncoding(j);
+        if( Inst->ExtractBits(Masks[i]->GetFormat()->GetStartBit(E->GetField()),
+                              Masks[i]->GetFormat()->GetEndBit(E->GetField())) != 
+            E->GetEncoding() ){
+          match = false;
+        }
+      }
+      if( match ){
+        return Masks[i]->GetInst()->GetName();
+      }
+    }
+  }
+
+  // check the payload to see if it matches a vliw stage
+  // if we make it this far, then it must be a vliw stage
+  // otherwise, we didn't match anything
+  if( Stages.size() > 0 ){
+    Name = "__VLIW"; // special keyword to trigger VLIW handler
+  }
+
+  return Name;
 }
 
 // EOF

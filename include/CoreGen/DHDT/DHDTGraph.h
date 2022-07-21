@@ -58,6 +58,7 @@
 #include "CoreGen/StoneCutter/SCIntrinsics.h"
 #include "CoreGen/DHDT/DHDTInst.h"
 #include "CoreGen/DHDT/DHDTConfig.h"
+#include "CoreGen/DHDT/DHDTInst.h"
 
 using namespace llvm;
 
@@ -109,7 +110,6 @@ private:
   unsigned Width;         ///< DHDTLink: width of the link (in bits)
   DHDTNode *Target;       ///< DHDTLink: target node
 
-  double IVal;            ///< DHDTLink: instruction power value
   double AVal;            ///< DHDTLink: accumulated power value
 
   DHDTConfig::ConfigEntry Entry;  ///< DHDTLink: power configuration
@@ -118,19 +118,19 @@ private:
 public:
   /// DHDTLink: constructor
   DHDTLink(std::string N, DHDTLinkType L)
-    : Name(N), Type(L), IVal(0.), AVal(0.) {}
+    : Name(N), Type(L), AVal(0.) {}
 
   /// DHDTLink: overloaded constructor
   DHDTLink(std::string N, DHDTLinkType L, unsigned W)
-    : Name(N), Type(L), Width(W), IVal(0.), AVal(0.) {}
+    : Name(N), Type(L), Width(W), AVal(0.) {}
 
   /// DHDTLink: overloaded constructor
   DHDTLink(std::string N, DHDTLinkType L, DHDTNode *T)
-    : Name(N), Type(L), Target(T), IVal(0.), AVal(0.) {}
+    : Name(N), Type(L), Target(T), AVal(0.) {}
 
   /// DHDTLink: overloaded constructor
   DHDTLink(std::string N, DHDTLinkType L, unsigned W, DHDTNode *T)
-    : Name(N), Type(L), Width(W), Target(T), IVal(0.), AVal(0.) {}
+    : Name(N), Type(L), Width(W), Target(T), AVal(0.) {}
 
   /// DHDTLink: destructor
   ~DHDTLink() {}
@@ -149,14 +149,23 @@ public:
 
   /// DHDTLink: Set the power config entry
   void SetEntry(DHDTConfig::ConfigEntry E){ Entry = E; }
+
+  /// DHDTLink: add the power for the accumulated total
+  void AccumPower(double P){ AVal += P; }
+
+  /// DHDTLink: retrieve the total accumulated power
+  double GetTotalPower() { return AVal; }
+
+  /// DHDTLink: Get config entry
+  DHDTConfig::ConfigEntry GetEntry() { return Entry; }
 };
 
 class DHDTNode{
 private:
   std::string Name;                 ///< DHDTNode: name of the node
   DHDTNodeType Type;                ///< DHDTNode: type of the node
+  unsigned Width;                   ///< DHDTNode: width of the operation
 
-  double IVal;                      ///< DHDTNode: instruction power value
   double AVal;                      ///< DHDTNode: accumulated power value
 
   DHDTConfig::ConfigEntry Entry;    ///< DHDTNode: power configuration
@@ -166,7 +175,11 @@ private:
 public:
   /// DHDTNode: constructor
   DHDTNode(std::string N, DHDTNodeType T)
-    : Name(N), Type(T), IVal(0.), AVal(0.) {}
+    : Name(N), Type(T), Width(1), AVal(0.) {}
+
+  /// DHDNode: overloaded constructor
+  DHDTNode(std::string N, DHDTNodeType T, unsigned W)
+    : Name(N), Type(T), Width(W), AVal(0.) {}
 
   /// DHDTNode: destructor
   ~DHDTNode() {}
@@ -183,11 +196,23 @@ public:
   /// DHDTNode: Get the number of links
   unsigned GetNumLinks() { return Links.size(); }
 
+  /// DHDTNode: Get the width of the operation
+  unsigned GetWidth() { return Width; }
+
   /// DHDTNode: Retrieve the links vector
   std::vector<DHDTLink *> GetLinks() { return Links; }
 
   /// DHDTNode: Set the power config entry
   void SetEntry(DHDTConfig::ConfigEntry E){ Entry = E; }
+
+  /// DHDTNode: add the power for the accumulated total
+  void AccumPower(double P){ AVal += P; }
+
+  /// DHDTNode: retrieve the total accumulated power
+  double GetTotalPower() { return AVal; }
+
+  /// DHDTNode: Get config entry
+  DHDTConfig::ConfigEntry GetEntry() { return Entry; }
 };
 
 class DHDTGraph{
@@ -214,6 +239,9 @@ private:
 
   /// DHDTGraph: build the LLVM graph
   bool BuildLLVMGraph();
+
+  /// DHDTGraph: retrieve the top node
+  DHDTNode *GetTop() { return Nodes[0]; }
 
   /// DHDTGraph: retrieve the target function node
   DHDTNode *GetFuncNode(std::string N);
@@ -255,6 +283,33 @@ private:
 
   /// DHDTGraph: converts an intrinsic name to the appropriate DHDT power config entry
   DHDTConfig::ConfigEntry IntrinToConfigType(std::string Intrin);
+
+  /// DHDTGraph: Recursively execute the graph
+  double RecurseGraph(DHDTNode *Node);
+
+  /// DHDTGraph: Execute the graph from the target root node
+  bool ExecuteGraph(DHDTNode *Root, double &Power);
+
+  /// DHDTGraph: Execute the hazard graph and accumulate the traversed nodes from the target root
+  bool ExecuteHazardGraph(DHDTNode *Root, std::vector<uint64_t> &Vect);
+
+  /// DHDTGraph: Recursively execute hazard graph
+  bool RecurseHazardGraph(DHDTNode *Node,
+                          std::vector<uint64_t> &Vect);
+
+  /// DHDTGraph: Examine the hazard vectors
+  bool ExamineHazardResults(std::vector<std::vector<uint64_t>> HVect,
+                            std::vector<unsigned> LineNo,
+                            std::ofstream &Out);
+
+  /// DHDTGraph: Accumulate the target link power
+  double AccumLinkPower(DHDTLink *Link);
+
+  /// DHDTGraph: Accumulate the target node power
+  double AccumNodePower(DHDTNode *Node);
+
+  /// DHDTGraph: Retrieve the width of the target operand
+  unsigned GetValueWidth(Value *Op);
 
 public:
   /// DHDTGraph: Constructor
