@@ -530,9 +530,6 @@ bool SCParser::Parse(){
     case '}':
       HandleFuncClose();
       break;
-    case tok_error:
-      LogError("<========= Encountered tok_error =========> ");
-      HandleLexerError();
     default:
       HandleTopLevelExpression();
       break;
@@ -2043,14 +2040,6 @@ void SCParser::HandleFuncClose(){
     GetNextToken();
   }
 }
-
-void SCParser::HandleLexerError() {
-  // Print Error from Lexer
-  LogError(Lex->GetErrorStr());
-  // Retrieve Error Code
-  Rtn = false;
-}
-
 
 //===----------------------------------------------------------------------===//
 // Code Generation

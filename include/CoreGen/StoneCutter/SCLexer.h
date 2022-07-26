@@ -86,10 +86,7 @@ enum SCToken {
 
   // pipeline
   tok_pipeline    = -50,
-  tok_pipeattr    = -51,
-
-  // error
-  tok_error       = -99
+  tok_pipeattr    = -51
 };
 
 
@@ -106,12 +103,6 @@ public:
 
   /// Retrieve the identifier string
   std::string GetIdentifierStr() { return IdentifierStr; }
-
-  /// Retrieve the error string
-  std::string GetErrorStr() { return ErrorStr; }
-
-  /// Retrieve the error string
-  SCError GetErrno() { return Errno; }
 
   /// Retrieve the immediate numeric value
   double GetNumVal() { return NumVal; }
@@ -131,8 +122,6 @@ public:
 private:
   std::string InBuf;                ///< Input buffer
   std::string IdentifierStr;        ///< Utilized for tok_identifier
-  std::string ErrorStr;             ///< Utilized for tok_error
-  SCError Errno;                    ///< Utilized for tok_error (See: SCError enum)
   double NumVal;                    ///< Utilized for tok_number
   unsigned long LineNum;            ///< Current line number
   int CurChar;                      ///< Current parsed character
