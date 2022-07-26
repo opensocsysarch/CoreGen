@@ -1,4 +1,4 @@
-#-- sc_parser_test161.sc
+#-- sc_parser_test162.sc
 
 def foo(n){
   u16 tmp0 = 0b1111000011110000
