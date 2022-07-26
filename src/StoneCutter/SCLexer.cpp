@@ -9,9 +9,11 @@
 //
 
 #include "CoreGen/StoneCutter/SCLexer.h"
+#include "CoreGen/StoneCutter/SCUtil.h"
+#include <_ctype.h>
 
 SCLexer::SCLexer()
-  : InBuf(""), IdentifierStr(""), NumVal(0.), LineNum(1), CurChar(0),
+  : InBuf(""), IdentifierStr(""), ErrorStr(""), Errno(), NumVal(0.), LineNum(1), CurChar(0),
     LC(nullptr), isReset(false) {
 }
 
@@ -256,6 +258,45 @@ int SCLexer::GetTok(){
 
     // the identifier
     return tok_identifier;
+  }
+  // NOTE: toupper() provides case insensitivity for users
+  if( LastChar == '0' && toupper(PeekNext()) == 'X' ){
+    std::string HexNumStr;
+    // for a hex formatted number 0x...., consume the prefix
+    LastChar = GetNext();  // Eat '0'
+    LastChar = GetNext();  // Eat 'x'
+    // consume the remainder of the digits [0-9]|[a-F]
+    while( ishexnumber(LastChar) || LastChar == '_' ){
+      HexNumStr += LastChar;
+      LastChar = GetNext();
+    }
+    // If alpha but not hex digit: Invalid
+    if( isalpha(LastChar) ){// NOTE: Originally had this but redundant: && !ishexnumber(LastChar) ){
+      ErrorStr = "Invalid Hex: " + InBuf + " @ line " + std::to_string(LineNum);
+      Errno = INV_HEX;
+      return tok_error;
+    }
+    // Strip HexNumStr of underscores
+    HexNumStr.erase(std::remove(HexNumStr.begin(), HexNumStr.end(), '_'), HexNumStr.end()); 
+    return tok_number;
+  }
+  if( LastChar == '0' && toupper(PeekNext()) == 'B' ){
+    std::string BinNumStr;
+    LastChar = GetNext();  // Eat '0'
+    LastChar = GetNext();  // Eat 'b'
+
+    while( LastChar == '0' || LastChar == '1' || LastChar == '_' ){
+        BinNumStr += LastChar;
+        LastChar = GetNext();
+    }
+    // If alpha but not hex digit: Invalid
+    if( (isdigit(LastChar) && LastChar > 1) || isalpha(LastChar) ){
+      ErrorStr = "Invalid Binary: " + InBuf + " @ line " + std::to_string(LineNum);
+      Errno = INV_BIN;
+      return tok_error;
+    }
+    NumVal = strtoll(BinNumStr.c_str(), nullptr, 2);
+    return tok_number;
   }
 
   if (isdigit(LastChar) || LastChar == '.') { // Number: [0-9.]+

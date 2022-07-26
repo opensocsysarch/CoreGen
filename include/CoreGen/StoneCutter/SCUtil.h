@@ -76,6 +76,12 @@ typedef struct{
   std::vector<std::string> containers;  ///< VarAttrEntry: name of containing vectors/matrix if applicable 
 }VarAttrEntry;
 
+/* Error Code Enum */
+enum SCError {
+  // Lexer Errors
+  INV_BIN = -1,
+  INV_HEX = -16,
+};
 /** Contains a list of commonly found datatypes in StoneCutter */
 const VarAttrEntry VarAttrEntryTable[] = {
   // NAME WIDTH DIMX DIMY ISDEFSIGN ISDEFFLOAT ISDEFVECTOR ISDEFMATRIX ISDEFELEM XIDX YIDX CONTAINER

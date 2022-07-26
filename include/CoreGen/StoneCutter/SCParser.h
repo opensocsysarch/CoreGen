@@ -624,8 +624,15 @@ private:
   // Handles function closing
   void HandleFuncClose();
 
+  /// Handles lexer errors
+  void HandleLexerError();
+
+  /// Error Code 
+  SCError Errno;
+
   /// Retrieves the actual line number
   unsigned GetLineNum();
+
 
   /// Logs an error
   std::unique_ptr<ExprASTContainer> LogError(std::string Str);
