@@ -9,6 +9,7 @@
 //
 
 #include "CoreGen/DHDT/DHDTInst.h"
+#include <bitset>
 
 DHDTInst::DHDTInst(std::string InstFile,
                    CoreGenBackend &CG)
@@ -58,31 +59,103 @@ bool DHDTInst::IsComment(std::string Inst){
   return false;
 }
 
+uint8_t DHDTInst::HexToInt(char C){
+  switch(C){
+  case '1':
+    return 1;
+    break;
+  case '2':
+    return 2;
+    break;
+  case '3':
+    return 3;
+    break;
+  case '4':
+    return 4;
+    break;
+  case '5':
+    return 5;
+    break;
+  case '6':
+    return 6;
+    break;
+  case '7':
+    return 7;
+    break;
+  case '8':
+    return 8;
+    break;
+  case '9':
+    return 9;
+    break;
+  case 'a':
+  case 'A':
+    return 10;
+    break;
+  case 'b':
+  case 'B':
+    return 11;
+    break;
+  case 'c':
+  case 'C':
+    return 12;
+    break;
+  case 'd':
+  case 'D':
+    return 13;
+    break;
+  case 'e':
+  case 'E':
+    return 14;
+    break;
+  case 'f':
+  case 'F':
+    return 15;
+    break;
+  case '0':
+  default:
+    return 0;
+    break;
+  }
+
+  return 0;
+}
+
 DInst *DHDTInst::BuildHexInstPayload(std::string Inst){
   DInst *payload = nullptr;
 
   // strip the first two characters
-  Inst.erase(Inst.begin()+2);
+  Inst.erase(0,2);
 
   // allocate the buffer for the appropriate number of bits
-  payload = new DInst(Inst, Inst.length()*16);
+  payload = new DInst("0x"+Inst, Inst.length()*4);
 
   // Write the byte pattern (little-endian)
   // we have to parse the string right to left
-  unsigned BytePos = 0;
-  std::stringstream ss;
-  uint16_t TmpInt;
-  for( unsigned pos=Inst.length(); pos >= 0; pos-- ){
-    std::string Tmp = std::string(1, Inst[pos]);
-    ss << std::hex << Tmp;
-    ss >> TmpInt;
-    if( !payload->Write2Byte(BytePos,TmpInt) ){
+  //unsigned BytePos = payload->GetByteLen()-1;
+
+  signed pos = Inst.length()-1;
+  for( unsigned i=0; i<payload->GetByteLen(); i++ ){
+    uint8_t Tmp = 0;
+
+    // first nibble
+    std::string T1 = std::string(1,Inst[pos]);
+    Tmp |= HexToInt(T1[0]);
+    pos--;
+
+    // second nibble
+    if( (pos) >= 0 ){
+      std::string T2 = std::string(1,Inst[pos]);
+      Tmp |= (HexToInt(T2[0])<<4);
+      pos--;
+    }
+
+    if( !payload->WriteByte(i,Tmp) ){
       std::cout << "Failed to convert hex to payload at line: "
                 << this->GetLineNumber() << std::endl;
       delete payload;
       return nullptr;
     }
-    BytePos+=2;
   }
 
   return payload;
@@ -92,15 +165,14 @@ DInst *DHDTInst::BuildBinaryInstPayload(std::string Inst){
   DInst *payload = nullptr;
 
   // strip the first two characters
-  Inst.erase(Inst.begin()+2);
+  Inst.erase(0,2);
 
   // allocate the buffer for the appropriate number of bits
-  payload = new DInst(Inst, Inst.length());
+  payload = new DInst("0b"+Inst, Inst.length());
 
   signed pos  = Inst.length()-1;
-  uint8_t Tmp   = 0;
   for( unsigned i=0; i<payload->GetByteLen(); i++ ){
-    Tmp = 0;
+    uint8_t Tmp = 0;
     for( unsigned j=0; j<8; j++ ){
       if( (pos-j) >= 0 ){
         // read the bit
@@ -109,6 +181,9 @@ DInst *DHDTInst::BuildBinaryInstPayload(std::string Inst){
         }
       }
     }
+
+    // reset pos
+    pos = (pos-8);
 
     if( !payload->WriteByte(i,Tmp) ){
       std::cout << "Failed to convert binary to payload at line: "
@@ -197,6 +272,7 @@ DInst *DHDTInst::BuildAsmInstPayload(std::string Inst){
 }
 
 DInst *DHDTInst::BuildInstPayload(std::string Inst){
+
   // determine what type of payload it is
   if( (Inst[0] == '0') && (Inst[1] == 'x') ){
     // hex number
@@ -212,6 +288,22 @@ DInst *DHDTInst::BuildInstPayload(std::string Inst){
   return nullptr;
 }
 
+std::string DHDTInst::rtrim(const std::string &s){
+  const std::string WHITESPACE = " \n\r\t\f\v";
+  size_t end = s.find_last_not_of(WHITESPACE);
+  return (end == std::string::npos) ? "" : s.substr(0, end + 1);
+}
+
+std::string DHDTInst::ltrim(const std::string &s){
+  const std::string WHITESPACE = " \n\r\t\f\v";
+  size_t start = s.find_first_not_of(WHITESPACE);
+  return (start == std::string::npos) ? "" : s.substr(start);
+}
+
+std::string DHDTInst::Trim(const std::string &s){
+  return rtrim(ltrim(s));
+}
+
 DInst *DHDTInst::ReadInst(){
   if( !this->IsOpen() )
     return nullptr;
@@ -221,11 +313,15 @@ DInst *DHDTInst::ReadInst(){
     return nullptr;
 
   std::string tp;
+  std::string ts;
   while(getline(IFile,tp)){
     LineNo++;
-    if( !IsComment(tp) ){
-      // build an instruction payload
-      return BuildInstPayload(tp);
+    ts = Trim(tp);
+    if( ts.length() > 0 ){
+      if( !IsComment(ts) ){
+        // build an instruction payload
+        return BuildInstPayload(ts);
+      }
     }
   }
 
@@ -234,6 +330,9 @@ DInst *DHDTInst::ReadInst(){
 
 std::string DHDTInst::CrackInst(DInst *Inst){
   std::string Name;
+
+  // Uncomment this line to print debug info
+  // Inst->PrintEncBits();
 
   // see if we've pre-cracked the payload
   if( Inst->GetInstPtr() ){

@@ -25,6 +25,7 @@
 #include <sstream>
 #include <fstream>
 #include <string>
+#include <algorithm>
 #include <stdio.h>
 
 // CoreGen Headers
@@ -109,6 +110,15 @@ public:
   /// DInst: Default destructor
   ~DInst(){if(Buf){delete Buf;}}
 
+  /// DInst: print the encoded bits
+  void PrintEncBits() {
+    for( unsigned i=0; i<ByteLen; i++ ){
+      std::cout << "0x" << std::hex << (unsigned)(Buf[i])
+                << std::dec << " ";
+    }
+    std::cout << std::endl;
+  }
+
   /// DInst: Retrieve the text of the instruction
   std::string GetStr() { return Inst; }
 
@@ -159,8 +169,10 @@ public:
   bool Write2Byte( unsigned TargetByte, uint16_t TwoByte ){
     if( TargetByte > (this->GetByteLen()-1) )
       return false;
+    //if( (TargetByte) == 0 )
+    //  return false;
     Buf[TargetByte] = (uint8_t)(TwoByte & 0b11111111);
-    Buf[TargetByte+1] = (uint8_t)(TwoByte >> 8);
+    Buf[TargetByte+1] = (uint8_t)((TwoByte & 0b1111111100000000)>>8);
     return true;
   }
 };
@@ -179,6 +191,18 @@ private:
 
   /// Determine if the current line is a comment
   bool IsComment(std::string Line);
+
+  /// Convert a character to an integer
+  uint8_t HexToInt(char C);
+
+  /// Trim the trailing spaces from a string
+  std::string rtrim(const std::string &s);
+
+  /// Trim the leading spaces from a string
+  std::string ltrim(const std::string &s);
+
+  /// Trim the leading and trailing spaces from a string
+  std::string Trim(const std::string &s);
 
   /// Build an instruction payload
   DInst *BuildInstPayload(std::string Inst);

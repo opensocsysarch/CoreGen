@@ -1,8 +1,8 @@
 #!/bin/bash
-# dhdt_simple_hazard_test4.sh
+# dhdt_simple_hazard_test5.sh
 
 DHDT_PATH=$1
-TEST=simple_test4
+TEST=simple_test5
 
 $DHDT_PATH/dhdt --llvm $TEST.ll --coregen $TEST.yaml --hazard --inst $TEST.inst --output $TEST.csv
 retVal=$?

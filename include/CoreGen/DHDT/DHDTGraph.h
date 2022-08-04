@@ -218,6 +218,7 @@ public:
 class DHDTGraph{
 private:
   // private variables
+  bool Verbose;                   ///< DHDTGraph: Verbosity
   SMDiagnostic Err;               ///< DHDTGraph: LLVM diagnostic errors
   std::unique_ptr<Module> Mod;    ///< DHDTGraph: LLVM module pointer
   LLVMContext Context;            ///< DHDTGraph: LLVM Context
@@ -313,7 +314,7 @@ private:
 
 public:
   /// DHDTGraph: Constructor
-  DHDTGraph(DHDTConfig &Config);
+  DHDTGraph(DHDTConfig &Config, bool Verbose);
 
   /// DHDTGraph: Destructor
   ~DHDTGraph();

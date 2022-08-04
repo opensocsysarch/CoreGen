@@ -11,7 +11,8 @@
 #include "CoreGen/DHDT/DHDTOpts.h"
 
 DHDTOpts::DHDTOpts(int a, char **v)
-  : argc(a), argv(v), isHazard(false), isPower(false) {}
+  : argc(a), argv(v),
+    isHazard(false), isPower(false), isVerbose(false) {}
 
 DHDTOpts::~DHDTOpts(){}
 
@@ -35,6 +36,7 @@ void DHDTOpts::PrintHelp(){
   std::cout << "[Runtime Options]" << std::endl;
   std::cout << "\t-hazard|--hazard                  : Enable hazard discovery tests" << std::endl;
   std::cout << "\t-power|--power [/path/to/power]   : Enable power discovery tests" << std::endl;
+  std::cout << "\t-verbose|--verbose                : Enable verbosity" << std::endl;
   std::cout << std::endl;
 }
 
@@ -51,6 +53,8 @@ bool DHDTOpts::ParseOpts(bool &isHelp){
       isHelp = true;
       PrintHelp();
       return true;
+    }else if( (s=="-verbose") || (s=="--verbose") ){
+      isVerbose = true;
     }else if( (s=="-hazard") || (s=="--hazard") ){
       isHazard = true;
     }else if( (s=="-power") || (s=="--power") ){

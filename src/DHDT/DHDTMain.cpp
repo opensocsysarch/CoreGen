@@ -37,7 +37,7 @@ int main( int argc, char **argv ){
   DHDTConfig Config(Opts->GetPowerFile());
 
   // create the graph structure
-  DHDTGraph Graph(Config);
+  DHDTGraph Graph(Config, Opts->IsVerbose());
 
   if( !Graph.ReadIR(Opts->GetLLVMIRFile(),
                     Opts->GetCoreGenIRFile()) ){

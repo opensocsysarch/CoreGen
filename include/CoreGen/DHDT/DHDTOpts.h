@@ -43,6 +43,7 @@ private:
 
   bool isHazard;            ///< DHDTOpts: Is hazard detection enabled
   bool isPower;             ///< DHDTOpts: Is power estimation enabled
+  bool isVerbose;           ///< DHDTOpts: Is verbosity enabled
 
   std::string IRFile;       ///< DHDTOpts: LLVM IR File
   std::string CFile;        ///< DHDTOpts: CoreGen IR File
@@ -76,6 +77,9 @@ public:
 
   /// DHDTOpts: Is the DOT output enabled
   bool IsDot() { return (DotFile.length() > 0 ); }
+
+  /// DHDTOpts: Is the verbosity enabled
+  bool IsVerbose() { return isVerbose; }
 
   /// DHDTOpts: Retrieve the LLVM IR file name
   std::string GetLLVMIRFile() { return IRFile; }

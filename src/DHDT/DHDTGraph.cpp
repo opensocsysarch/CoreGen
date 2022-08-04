@@ -45,8 +45,8 @@ std::vector<SCIntrin *> DHDTGraph::Intrins = {
   static_cast<SCIntrin *>(new SCOut())
 };
 
-DHDTGraph::DHDTGraph(DHDTConfig &Config)
-  : Config(Config) {}
+DHDTGraph::DHDTGraph(DHDTConfig &Config, bool Verbose)
+  : Verbose(Verbose), Config(Config) {}
 
 DHDTGraph::~DHDTGraph(){
   for( unsigned i=0; i<Nodes.size(); i++ ){
@@ -1125,6 +1125,10 @@ bool DHDTGraph::PowerAnalysis(std::string InstFile,
       return false;
     }
 
+    if( Verbose ){
+      std::cout << "Processing instruction = " << NodeName << std::endl;
+    }
+
     // retrieve the top node and execute it
     if( NodeName == "__VLIW" ){
       // this is a vliw payload; execute all the top-level entry nodes
@@ -1188,7 +1192,7 @@ bool DHDTGraph::PowerAnalysis(std::string InstFile,
   }
 
   if( Out.is_open() ){
-    Out << "*,TOTAL_POWER," << Power;
+    Out << "*,TOTAL_POWER," << Power << std::endl;
     Out.close();
   }else{
     std::cout << " ====== TOTAL POWER = " << Power << std::endl;
