@@ -27,7 +27,7 @@ CoreGenVLIWStage::~CoreGenVLIWStage(){
 bool CoreGenVLIWStage::ParseVLIWStage(std::string Name){
   Id = 0;
   std::string delimiter = "_";
-  size_t pos = Name.find(delimiter);
+  size_t pos = Name.find_last_of(delimiter);
 
   if( pos == std::string::npos ){
     return false;

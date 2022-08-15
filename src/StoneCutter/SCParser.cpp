@@ -616,7 +616,7 @@ int SCParser::GetNextToken(){
 bool SCParser::ParseVLIWStage(std::string Name, unsigned &Stage){
   Stage = 0;
   std::string delimiter = "_";
-  size_t pos = Name.find(delimiter);
+  size_t pos = Name.find_last_of("_");
 
   if( pos == std::string::npos ){
     return false;
