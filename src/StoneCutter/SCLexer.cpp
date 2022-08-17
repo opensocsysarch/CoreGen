@@ -214,7 +214,7 @@ int SCLexer::GetTok(){
   while (isspace(LastChar))
     LastChar = GetNext();
 
-  if (isalpha(LastChar)) { // identifier: [a-zA-Z][a-zA-Z0-9]*
+  if ( isalpha(LastChar) || (LastChar == '_') ) { // identifier: [a-zA-Z][a-zA-Z0-9]*
     IdentifierStr = LastChar;
     while (IsValidChar(&LastChar)){
       IdentifierStr += LastChar;
