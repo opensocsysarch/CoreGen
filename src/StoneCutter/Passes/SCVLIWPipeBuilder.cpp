@@ -14,9 +14,7 @@
 SCVLIWPipeBuilder::SCVLIWPipeBuilder(Module *TM,
                      SCOpts *O,
                      SCMsg *M)
-  : SCPass("VLIWPipeBuilder","",TM,O,M) {
-  SigMap = nullptr;
-  Graph = nullptr;
+  : SCPass("VLIWPipeBuilder","",TM,O,M), SigMap(nullptr), Graph(nullptr) {
 }
 
 SCVLIWPipeBuilder::~SCVLIWPipeBuilder(){

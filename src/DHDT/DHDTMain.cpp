@@ -14,8 +14,6 @@
 #include "CoreGen/DHDT/DHDTOpts.h"
 #include "CoreGen/DHDT/DHDTGraph.h"
 #include "CoreGen/DHDT/DHDTConfig.h"
-#include "CoreGen/DHDT/DHDTOpts.h"
-#include "CoreGen/DHDT/DHDTGraph.h"
 
 int main( int argc, char **argv ){
   // parse the command line opts
@@ -49,10 +47,6 @@ int main( int argc, char **argv ){
 
   // build the graph
   if( !Graph.BuildGraph() ){
-  // create the graph structure
-  DHDTGraph Graph;
-
-  if( !Graph.ReadLLVMIRGraph(Opts->GetLLVMIRFile()) ){
     delete Opts;
     return -1;
   }
