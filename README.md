@@ -245,21 +245,6 @@ cmake -DLLVM_DIR=/usr/local/opt/llvm\@8/lib/cmake/llvm ../
 make
 ```
 
-## Post Installation
-Once the CoreGen infrastructure has been installed, it is advisable that you initialize the CoreGen archive.  
-The CoreGen archive provides LLVM compiler templates and libraries that will be made available to all 
-CoreGen-derived projects without repeatedly downloading large packages.  The contents of the 
-archive is determined by a master YAML file.  The master 
-YAML file is located in the installation directory at `~/INSTALL_PREFIX/archive/master.yaml`.  Initializing 
-the archive will initiate downloads from a number of public source code repositories, including LLVM.  Note 
-that anyone initializing the archive must ensure that sufficient disk space is available and they 
-have the necessary permissions to populate the archive directory.  All the archive contents will be downloaded 
-to `~/INSTALL_PREFIX/archive/`.  Initializing the archive can be performed using the CGCLI tool as follows:
-
-```
-cgcli --init /path/to/installation/archive/master.yaml
-```
-
 ## CMake Build Options
 
 ### Standard Build Options
