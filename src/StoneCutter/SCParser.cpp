@@ -2649,12 +2649,13 @@ Value *BinaryExprAST::codegen() {
   Function *TheFunction = Builder.GetInsertBlock()->getParent();
   unsigned DimX, DimY;
   // LHS is of type vec or mat
-  if( SCParser::CheckLocalContainers(R->getName(), TheFunction->getName(), DimX, DimY ) ){
-    unsigned LDimX = DimX;
-    unsigned LDimY = DimY;
+  if( SCParser::CheckLocalContainers(R->getName(),
+                                     TheFunction->getName(),
+                                     DimX, DimY ) ){
     // RHS is of type vec or mat
-    if( SCParser::CheckLocalContainers(L->getName(), TheFunction->getName(), DimX, DimY )     ){
-
+    if( SCParser::CheckLocalContainers(L->getName(),
+                                       TheFunction->getName(),
+                                       DimX, DimY )){
       //if( Dim1X != Dim2X || Dim1Y != Dim2Y ){
       //LogErrorV("No dice");
       // }
