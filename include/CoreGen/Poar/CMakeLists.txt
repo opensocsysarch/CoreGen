@@ -9,7 +9,7 @@
 
 
 install(DIRECTORY "."
-        DESTINATION "include/CoreGen/Poar/Accumulators"
+        DESTINATION "include/CoreGen/Poar"
         FILES_MATCHING
         PATTERN "*.h")
 

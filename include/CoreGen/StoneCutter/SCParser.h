@@ -226,16 +226,16 @@ public:
 
   /// IfExprAST - Expression class for conditionals
   class IfExprASTContainer : public ExprASTContainer {
-    std::unique_ptr<ExprASTContainer> Cond;   ///< Conditional expression container
-    std::vector<std::unique_ptr<ExprASTContainer>> ThenV;  ///< Vector of then body expressions
-    std::vector<std::unique_ptr<ExprASTContainer>> ElseV;  ///< Vector of else body expressions
+    std::vector<std::unique_ptr<ExprASTContainer>> Conds;                   ///< Conditional expression container
+    std::vector<std::vector<std::unique_ptr<ExprASTContainer>>> ThenBodies; ///< Vector of then body expressions
+    std::vector<std::unique_ptr<ExprASTContainer>> ElseBody;                ///< Vector of else body expressions
 
   public:
     /// IfExprASTContainer default constructor
-    IfExprASTContainer(std::unique_ptr<ExprASTContainer> Cond,
-                       std::vector<std::unique_ptr<ExprASTContainer>> ThenExpr,
-                       std::vector<std::unique_ptr<ExprASTContainer>> ElseExpr)
-      : Cond(std::move(Cond)), ThenV(std::move(ThenExpr)), ElseV(std::move(ElseExpr)) {}
+    IfExprASTContainer( std::vector<std::unique_ptr<ExprASTContainer>> Conds,                   ///< Conditional expression container
+                        std::vector<std::vector<std::unique_ptr<ExprASTContainer>>> ThenBodies, ///< Vector of then body expressions
+                        std::vector<std::unique_ptr<ExprASTContainer>> ElseBody)                ///< Vector of else body expressions
+    : Conds(std::move(Conds)), ThenBodies(std::move(ThenBodies)), ElseBody(std::move(ElseBody)) {}
 
     /// IfExprASTContainer code generation driver
     Value *codegen() override;

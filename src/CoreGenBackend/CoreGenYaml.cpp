@@ -2141,8 +2141,22 @@ bool CoreGenYaml::ReadVLIWStageYaml(const YAML::Node& StageNodes,
     }
 
     if( Node["Impl"] ){
-      if( !Stage->SetImpl( Node["Impl"].as<std::string>() ) ){
-        return false;
+      std::string Tmp = Node["Impl"].as<std::string>();
+
+      // try to open this file 
+      std::ifstream ExtFile (Tmp.c_str());
+      // temp string for holding implementation
+      std::stringstream ExtImpl; 
+      if( ExtFile.is_open() ){ // File Exists 
+        ExtImpl << ExtFile.rdbuf();
+        ExtFile.close();
+        if( !Stage->SetImpl(ExtImpl.str()) ){
+          return false;
+        }
+      }else{ // not external file
+        if( !Stage->SetImpl( Node["Impl"].as<std::string>() ) ){
+          return false;
+        }
       }
     }
 

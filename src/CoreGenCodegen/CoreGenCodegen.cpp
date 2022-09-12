@@ -437,46 +437,46 @@ bool CoreGenCodegen::BuildChiselSBT(){
   SOutFile << "}" << std::endl << std::endl;
 
   // Set the versions of chisel, firrtl, etc. that we will be using
-	SOutFile << " val defaultVersions = Map(" << std::endl;
-	SOutFile << "  \"chisel3\" -> \"" << std::to_string(Major) << ".";
+  SOutFile << " val defaultVersions = Map(" << std::endl;
+  SOutFile << "  \"chisel3\" -> \"" << std::to_string(Major) << ".";
   SOutFile << std::to_string(Minor) << "-SNAPSHOT\"," << std::endl;
-	SOutFile << "  \"firrtl\" -> \"1.4-SNAPSHOT\"," << std::endl;
-	SOutFile << "  \"firrtl-interpreter\" -> \"1.4-SNAPSHOT\"," << std::endl;
-	SOutFile << "  \"chisel-iotesters\" -> \"1.4.1+\"," << std::endl;
-	SOutFile << "  \"chiseltest\" -> \"0.3-SNAPSHOT\"," << std::endl;
-	SOutFile << "  \"treadle\" -> \"1.3-SNAPSHOT\"" << std::endl;
-	SOutFile << " )" << std::endl;
+  SOutFile << "  \"firrtl\" -> \"1.4-SNAPSHOT\"," << std::endl;
+  SOutFile << "  \"firrtl-interpreter\" -> \"1.4-SNAPSHOT\"," << std::endl;
+  SOutFile << "  \"chisel-iotesters\" -> \"1.4.1+\"," << std::endl;
+  SOutFile << "  \"chiseltest\" -> \"0.3-SNAPSHOT\"," << std::endl;
+  SOutFile << "  \"treadle\" -> \"1.3-SNAPSHOT\"" << std::endl;
+  SOutFile << " )" << std::endl;
 
-  //Set up the common settings that will be used for the various chisel projects in  
+  // Set up the common settings that will be used for the various chisel projects in  
   // SystemArchitect
-	SOutFile << " lazy val commonSettings = Seq (" << std::endl;
-	SOutFile << "  organization := \"OpenSoC System Architect\"," << std::endl;
-	SOutFile << "  name := \"" << Proj->GetProjName() << "\"," << std::endl;
-	SOutFile << "  scalaVersion := \"2.12.10\"," << std::endl;
-	SOutFile << "  crossScalaVersions := Seq(\"2.12.10\", \"2.11.12\")," << std::endl;
-	SOutFile << "  libraryDependencies ++= Seq(" << std::endl;
-	SOutFile << "    \"com.github.scopt\" %% \"scopt\" % \"3.7.0\"," << std::endl;
-	SOutFile << "    \"org.scalatest\" %% \"scalatest\" % \"3.0.8\"," << std::endl;
-	SOutFile << "    \"com.lihaoyi\" %% \"utest\" % \"0.6.6\"" << std::endl;
-	SOutFile << "  )," << std::endl;
-	SOutFile << "  libraryDependencies ++= Seq(\"org.scala-lang\" % \"scala-reflect\" % scalaVersion.value)," << std::endl;
-	SOutFile << "  libraryDependencies ++= Seq(\"chisel3\",\"firrtl\",\"firrtl-interpreter\",\"chisel-iotesters\",\"chiseltest\", \"treadle\").map { dep: String =>" << std::endl;
-	SOutFile << "    \"edu.berkeley.cs\" %% dep % sys.props.getOrElse(dep + \"Version\", defaultVersions(dep))" << std::endl;
-	SOutFile << "  }," << std::endl;
-	SOutFile << "  resolvers ++= Seq(" << std::endl;
-	SOutFile << "    Resolver.sonatypeRepo(\"snapshots\")," << std::endl;
-	SOutFile << "    Resolver.sonatypeRepo(\"releases\")" << std::endl;
-	SOutFile << "  )," << std::endl;
-	SOutFile << "  scalacOptions ++= scalacOptionsVersion(scalaVersion.value)," << std::endl;
-	SOutFile << "  javacOptions ++= javacOptionsVersion(scalaVersion.value)," << std::endl;
-	SOutFile << "  addCompilerPlugin(\"org.scalamacros\" % \"paradise\" % \"2.1.0\" cross CrossVersion.full)" << std::endl;
-	SOutFile << " )" << std::endl;
+  SOutFile << " lazy val commonSettings = Seq (" << std::endl;
+  SOutFile << "  organization := \"OpenSoC System Architect\"," << std::endl;
+  SOutFile << "  name := \"" << Proj->GetProjName() << "\"," << std::endl;
+  SOutFile << "  scalaVersion := \"2.12.10\"," << std::endl;
+  SOutFile << "  crossScalaVersions := Seq(\"2.12.10\", \"2.11.12\")," << std::endl;
+  SOutFile << "  libraryDependencies ++= Seq(" << std::endl;
+  SOutFile << "    \"com.github.scopt\" %% \"scopt\" % \"3.7.0\"," << std::endl;
+  SOutFile << "    \"org.scalatest\" %% \"scalatest\" % \"3.0.8\"," << std::endl;
+  SOutFile << "    \"com.lihaoyi\" %% \"utest\" % \"0.6.6\"" << std::endl;
+  SOutFile << "  )," << std::endl;
+  SOutFile << "  libraryDependencies ++= Seq(\"org.scala-lang\" % \"scala-reflect\" % scalaVersion.value)," << std::endl;
+  SOutFile << "  libraryDependencies ++= Seq(\"chisel3\",\"firrtl\",\"firrtl-interpreter\",\"chisel-iotesters\",\"chiseltest\", \"treadle\").map { dep: String =>" << std::endl;
+  SOutFile << "    \"edu.berkeley.cs\" %% dep % sys.props.getOrElse(dep + \"Version\", defaultVersions(dep))" << std::endl;
+  SOutFile << "  }," << std::endl;
+  SOutFile << "  resolvers ++= Seq(" << std::endl;
+  SOutFile << "    Resolver.sonatypeRepo(\"snapshots\")," << std::endl;
+  SOutFile << "    Resolver.sonatypeRepo(\"releases\")" << std::endl;
+  SOutFile << "  )," << std::endl;
+  SOutFile << "  scalacOptions ++= scalacOptionsVersion(scalaVersion.value)," << std::endl;
+  SOutFile << "  javacOptions ++= javacOptionsVersion(scalaVersion.value)," << std::endl;
+  SOutFile << "  addCompilerPlugin(\"org.scalamacros\" % \"paradise\" % \"2.1.0\" cross CrossVersion.full)" << std::endl;
+  SOutFile << " )" << std::endl;
 
   unsigned PlugInCount = PlugInMgr->GetNumPlugins();
 
-	SOutFile << " lazy val top = (project in file(\".\"))." << std::endl;
-	SOutFile << "  settings(commonSettings:_*)." << std::endl;
-	SOutFile << "  aggregate(common, test,templates,cde"; 
+  SOutFile << " lazy val top = (project in file(\".\"))." << std::endl;
+  SOutFile << "  settings(commonSettings:_*)." << std::endl;
+  SOutFile << "  aggregate(common, test,templates,cde"; 
   for( int i=0; i < PlugInCount; i++){
     CoreGenPlugin *P = PlugInMgr->GetPlugin(i);
     if(P->HasHDLCodegen()){
@@ -492,16 +492,15 @@ bool CoreGenCodegen::BuildChiselSBT(){
     }
   }
   SOutFile << ")." << std::endl;
-	SOutFile << "  dependsOn(templates)" << std::endl;
-	SOutFile << " lazy val common = (project in file(\"src/common\"))." << std::endl;
-	SOutFile << "  settings(commonSettings:_*)" << std::endl;
+  SOutFile << "  dependsOn(templates)" << std::endl;
+  SOutFile << " lazy val common = (project in file(\"src/common\"))." << std::endl;
+  SOutFile << "  settings(commonSettings:_*)" << std::endl;
+  SOutFile << " lazy val cde = (project in file(\"src/cde\"))." << std::endl;
+  SOutFile << "  settings(commonSettings:_*)" << std::endl;
 
-	SOutFile << " lazy val cde = (project in file(\"src/cde\"))." << std::endl;
-	SOutFile << "  settings(commonSettings:_*)" << std::endl;
-
-	SOutFile << " lazy val templates = (project in file(\"src/main/scala/SysArchPipelines\"))." << std::endl;
-	SOutFile << "  settings(commonSettings:_*)." << std::endl;
-	SOutFile << "  dependsOn(common"; 
+  SOutFile << " lazy val templates = (project in file(\"src/main/scala/SysArchPipelines\"))." << std::endl;
+  SOutFile << "  settings(commonSettings:_*)." << std::endl;
+  SOutFile << "  dependsOn(common";
   for( int i=0; i < PlugInCount; i++){
     CoreGenPlugin *P = PlugInMgr->GetPlugin(i);
     if(P->HasHDLCodegen()){
@@ -513,16 +512,16 @@ bool CoreGenCodegen::BuildChiselSBT(){
   for( int i=0; i < PlugInCount; i++){
     CoreGenPlugin *P = PlugInMgr->GetPlugin(i);
     if(P->HasHDLCodegen()){
-	    SOutFile << " lazy val " << P->GetPluginName() << "= (project in file";
+      SOutFile << " lazy val " << P->GetPluginName() << "= (project in file";
       SOutFile << " (\"src/common/" << P->GetPluginName() << "\"))." << std::endl;
-	    SOutFile << "  settings(commonSettings:_*)." << std::endl;
-	    SOutFile << "  dependsOn(cde)" << std::endl;
+      SOutFile << "  settings(commonSettings:_*)." << std::endl;
+      SOutFile << "  dependsOn(cde)" << std::endl;
     }
   }
 
-	SOutFile << " lazy val test = (project in file(\"src/test/scala/SysArchPipelines\"))." << std::endl;
-	SOutFile << "  settings(commonSettings:_*)." << std::endl;
-	SOutFile << "  dependsOn(common, templates)" << std::endl;
+  SOutFile << " lazy val test = (project in file(\"src/test/scala/SysArchPipelines\"))." << std::endl;
+  SOutFile << "  settings(commonSettings:_*)." << std::endl;
+  SOutFile << "  dependsOn(common, templates)" << std::endl;
 
   // close file
   SOutFile.close();

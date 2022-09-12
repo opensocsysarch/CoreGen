@@ -99,18 +99,40 @@ private:
   bool ExecutePipelineOpt(CoreGenSigMap *SM);     ///< Executes the pipeline optimizer
   bool ExecuteUcodeCodegen();                     ///< Executes a microcode codegen using sigmaps
   bool ExecuteManualCodegen();                    ///< Executes a manual codegen
+  bool ExecuteVLIWCodegen();                      ///< Executes a vliw microcode codegen using sigmaps
+  bool ExecuteVLIWUcodeCodegen(CoreGenSigMap *SM,
+                               SCPipeInfo *Pinfo,
+                               std::string Stage);///< Executes a vliw microcode table builder for the target pipeline
 
   void WriteChiselHeader(std::ofstream &out, std::string FName ); ///< Writes a header to the chisel output file
   bool DeriveBitPat(std::string &BP);         ///< Derives the bit pattern for the microcode generator
   bool WriteUCodeCompiler();                  ///< Writes the microcode compiler
 
   void WriteUCodeTableComment(SCPipeInfo *P); ///< Writes the microcode table comment to the Chisel file
+  void WriteVLIWUCodeTableComment(std::ofstream &LOutFile,
+                                  SCPipeInfo *P); ///< Writes the microcode table comment to the Chisel file
+
   void WriteFETCHUOp(SCPipeInfo *PInfo);      ///< Writes the Fetch micro op
   void WriteNOPUOp(SCPipeInfo *PInfo);        ///< Writes the NOP micro op
   void WriteILLEGALUOp(SCPipeInfo *PInfo);    ///< Writes the ILLEGAL micro op
   void WriteUNIMPLUOp(SCPipeInfo *PInfo);     ///< Writes the UNIMPL micro op
   void WriteINITPCUOp(SCPipeInfo *PInfo);     ///< Writes the INITPC micro op
-  void WriteUOp(SCSig *Sig, unsigned NumSigs, unsigned NSig, SCPipeInfo *PInfo);  ///< Write all the micro ops
+  void WriteUOp(SCSig *Sig, unsigned NumSigs,
+                unsigned NSig, SCPipeInfo *PInfo);  ///< Write all the micro ops
+
+  void WriteVLIWFETCHUOp(std::ofstream &LOutFile,
+                         SCPipeInfo *PInfo);      ///< Writes the VLIW Fetch micro op
+  void WriteVLIWNOPUOp(std::ofstream &LOutFIle,
+                       SCPipeInfo *PInfo);        ///< Writes the VLIW NOP micro op
+  void WriteVLIWILLEGALUOp(std::ofstream &LOutFile,
+                           SCPipeInfo *PInfo);    ///< Writes the VLIW ILLEGAL micro op
+  void WriteVLIWUNIMPLUOp(std::ofstream &LOutFile,
+                          SCPipeInfo *PInfo);     ///< Writes the VLIW UNIMPL micro op
+  void WriteVLIWINITPCUOp(std::ofstream &LOutFile,
+                          SCPipeInfo *PInfo);     ///< Writes the VLIW INITPC micro op
+  void WriteVLIWUOp(std::ofstream &LOutFile,
+                    SCSig *Sig, unsigned NumSigs,
+                    unsigned NSig, SCPipeInfo *PInfo);  ///< Write all the VLIW micro ops
 
   inline bool IsFinalUOp( unsigned NumSigs, unsigned NSig );  ///< Determines if this is the final micro op
 
@@ -123,7 +145,8 @@ private:
 
 
   ///< Emit the NOP uOP
-  void EmitNOP(SCSig *Sig,
+  void EmitNOP(std::ofstream &LOutFile,
+               SCSig *Sig,
                unsigned NumSigs,
                unsigned NSig,
                std::string &BrTarget,
@@ -131,71 +154,80 @@ private:
                SCPipeInfo *PInfo );
 
   ///< Emit the SIGINSTF uOp
-  void EmitSIGINSTF(SCSig *Sig,
-                unsigned NumSigs,
-                unsigned NSig,
-                std::string &BrTarget,
-                std::string &UOpBr,
-                SCPipeInfo *PInfo );
+  void EmitSIGINSTF(std::ofstream &LOutFile,
+                    SCSig *Sig,
+                    unsigned NumSigs,
+                    unsigned NSig,
+                    std::string &BrTarget,
+                    std::string &UOpBr,
+                    SCPipeInfo *PInfo );
 
   ///< Emit the ALU uOP's
-  void EmitALU_OP(SCSig *Sig,
-                unsigned NumSigs,
-                unsigned NSig,
-                std::string &BrTarget,
-                std::string &UOpBr,
-                SCPipeInfo *PInfo );
+  void EmitALU_OP(std::ofstream &LOutFile,
+                  SCSig *Sig,
+                  unsigned NumSigs,
+                  unsigned NSig,
+                  std::string &BrTarget,
+                  std::string &UOpBr,
+                  SCPipeInfo *PInfo );
 
   ///< Emit the SLT uOp
-  void EmitALU_SLT(SCSig *Sig,
-                unsigned NumSigs,
-                unsigned NSig,
-                std::string &BrTarget,
-                std::string &UOpBr,
-                SCPipeInfo *PInfo );
+  void EmitALU_SLT(std::ofstream &LOutFile,
+                   SCSig *Sig,
+                  unsigned NumSigs,
+                  unsigned NSig,
+                  std::string &BrTarget,
+                  std::string &UOpBr,
+                  SCPipeInfo *PInfo );
 
   ///< Emit the SLTU uOp
-  void EmitALU_SLTU(SCSig *Sig,
-                unsigned NumSigs,
-                unsigned NSig,
-                std::string &BrTarget,
-                std::string &UOpBr,
-                SCPipeInfo *PInfo );
+  void EmitALU_SLTU(std::ofstream &LOutFile,
+                    SCSig *Sig,
+                    unsigned NumSigs,
+                    unsigned NSig,
+                    std::string &BrTarget,
+                    std::string &UOpBr,
+                    SCPipeInfo *PInfo );
 
   ///< Emit the COPY uOp
-  void EmitALU_COPY(SCSig *Sig,
-                unsigned NumSigs,
-                unsigned NSig,
-                std::string &BrTarget,
-                std::string &UOpBr,
-                SCPipeInfo *PInfo );
+  void EmitALU_COPY(std::ofstream &LOutFile,
+                    SCSig *Sig,
+                    unsigned NumSigs,
+                    unsigned NSig,
+                    std::string &BrTarget,
+                    std::string &UOpBr,
+                    SCPipeInfo *PInfo );
 
   ///< Emit the PC_INCR uOp
-  void EmitPC_INCR(SCSig *Sig,
-                unsigned NumSigs,
-                unsigned NSig,
-                std::string &BrTarget,
-                std::string &UOpBr,
-                SCPipeInfo *PInfo );
+  void EmitPC_INCR(std::ofstream &LOutFile,
+                   SCSig *Sig,
+                   unsigned NumSigs,
+                   unsigned NSig,
+                   std::string &BrTarget,
+                   std::string &UOpBr,
+                   SCPipeInfo *PInfo );
 
   ///< Emit the PC_BRJMP uOp
-  void EmitPC_BRJMP(SCSig *Sig,
-                unsigned NumSigs,
-                unsigned NSig,
-                std::string &BrTarget,
-                std::string &UOpBr,
-                SCPipeInfo *PInfo );
+  void EmitPC_BRJMP(std::ofstream &LOutFile,
+                    SCSig *Sig,
+                    unsigned NumSigs,
+                    unsigned NSig,
+                    std::string &BrTarget,
+                    std::string &UOpBr,
+                    SCPipeInfo *PInfo );
 
   ///< Emit the PC_JALR uOp
-  void EmitPC_JALR(SCSig *Sig,
-                unsigned NumSigs,
-                unsigned NSig,
-                std::string &BrTarget,
-                std::string &UOpBr,
-                SCPipeInfo *PInfo );
+  void EmitPC_JALR(std::ofstream &LOutFile,
+                   SCSig *Sig,
+                   unsigned NumSigs,
+                   unsigned NSig,
+                   std::string &BrTarget,
+                   std::string &UOpBr,
+                   SCPipeInfo *PInfo );
 
   ///< Emit the BR_N uOp
-  void EmitBR_N(SCSig *Sig,
+  void EmitBR_N(std::ofstream &LOutFile,
+                SCSig *Sig,
                 unsigned NumSigs,
                 unsigned NSig,
                 std::string &BrTarget,
@@ -203,97 +235,108 @@ private:
                 SCPipeInfo *PInfo );
 
   ///< Emit the BR_NE uOp
-  void EmitBR_NE(SCSig *Sig,
-                unsigned NumSigs,
-                unsigned NSig,
-                std::string &BrTarget,
-                std::string &AltTarget,
-                std::string &UOpBr,
-                SCPipeInfo *PInfo );
+  void EmitBR_NE(std::ofstream &LOutFile,
+                 SCSig *Sig,
+                 unsigned NumSigs,
+                 unsigned NSig,
+                 std::string &BrTarget,
+                 std::string &AltTarget,
+                 std::string &UOpBr,
+                 SCPipeInfo *PInfo );
 
   ///< Emit the BR_EQ uOp
-  void EmitBR_EQ(SCSig *Sig,
-                unsigned NumSigs,
-                unsigned NSig,
-                std::string &BrTarget,
-                std::string &AltTarget,
-                std::string &UOpBr,
-                SCPipeInfo *PInfo );
+  void EmitBR_EQ(std::ofstream &LOutFile,
+                 SCSig *Sig,
+                 unsigned NumSigs,
+                 unsigned NSig,
+                 std::string &BrTarget,
+                 std::string &AltTarget,
+                 std::string &UOpBr,
+                 SCPipeInfo *PInfo );
 
   ///< Emit the BR_GT uOp
-  void EmitBR_GT(SCSig *Sig,
-                unsigned NumSigs,
-                unsigned NSig,
-                std::string &BrTarget,
-                std::string &AltTarget,
-                std::string &UOpBr,
-                SCPipeInfo *PInfo );
+  void EmitBR_GT(std::ofstream &LOutFile,
+                 SCSig *Sig,
+                 unsigned NumSigs,
+                 unsigned NSig,
+                 std::string &BrTarget,
+                 std::string &AltTarget,
+                 std::string &UOpBr,
+                 SCPipeInfo *PInfo );
 
   ///< Emit thte BR_GTU uOp
-  void EmitBR_GTU(SCSig *Sig,
-                unsigned NumSigs,
-                unsigned NSig,
-                std::string &BrTarget,
-                std::string &AltTarget,
-                std::string &UOpBr,
-                SCPipeInfo *PInfo );
+  void EmitBR_GTU(std::ofstream &LOutFile,
+                  SCSig *Sig,
+                  unsigned NumSigs,
+                  unsigned NSig,
+                  std::string &BrTarget,
+                  std::string &AltTarget,
+                  std::string &UOpBr,
+                  SCPipeInfo *PInfo );
 
   ///< Emit the BR_GE uOp
-  void EmitBR_GE(SCSig *Sig,
-                unsigned NumSigs,
-                unsigned NSig,
-                std::string &BrTarget,
-                std::string &AltTarget,
-                std::string &UOpBr,
-                SCPipeInfo *PInfo );
+  void EmitBR_GE(std::ofstream &LOutFile,
+                 SCSig *Sig,
+                 unsigned NumSigs,
+                 unsigned NSig,
+                 std::string &BrTarget,
+                 std::string &AltTarget,
+                 std::string &UOpBr,
+                 SCPipeInfo *PInfo );
 
   ///< Emit the BR_GEU uOp
-  void EmitBR_GEU(SCSig *Sig,
-                unsigned NumSigs,
-                unsigned NSig,
-                std::string &BrTarget,
-                std::string &AltTarget,
-                std::string &UOpBr,
-                SCPipeInfo *PInfo );
+  void EmitBR_GEU(std::ofstream &LOutFile,
+                  SCSig *Sig,
+                  unsigned NumSigs,
+                  unsigned NSig,
+                  std::string &BrTarget,
+                  std::string &AltTarget,
+                  std::string &UOpBr,
+                  SCPipeInfo *PInfo );
 
   ///< Emit the BR_LT uOp
-  void EmitBR_LT(SCSig *Sig,
-                unsigned NumSigs,
-                unsigned NSig,
-                std::string &BrTarget,
-                std::string &AltTarget,
-                std::string &UOpBr,
-                SCPipeInfo *PInfo );
+  void EmitBR_LT(std::ofstream &LOutFile,
+                 SCSig *Sig,
+                 unsigned NumSigs,
+                 unsigned NSig,
+                 std::string &BrTarget,
+                 std::string &AltTarget,
+                 std::string &UOpBr,
+                 SCPipeInfo *PInfo );
 
   ///< Emit the BR_LTU uOp
-  void EmitBR_LTU(SCSig *Sig,
-                unsigned NumSigs,
-                unsigned NSig,
-                std::string &BrTarget,
-                std::string &AltTarget,
-                std::string &UOpBr,
-                SCPipeInfo *PInfo );
+  void EmitBR_LTU(std::ofstream &LOutFile,
+                  SCSig *Sig,
+                  unsigned NumSigs,
+                  unsigned NSig,
+                  std::string &BrTarget,
+                  std::string &AltTarget,
+                  std::string &UOpBr,
+                  SCPipeInfo *PInfo );
 
   ///< Emit the BR_LE uOp
-  void EmitBR_LE(SCSig *Sig,
-                unsigned NumSigs,
-                unsigned NSig,
-                std::string &BrTarget,
-                std::string &AltTarget,
-                std::string &UOpBr,
-                SCPipeInfo *PInfo );
+  void EmitBR_LE(std::ofstream &LOutFile,
+                 SCSig *Sig,
+                 unsigned NumSigs,
+                 unsigned NSig,
+                 std::string &BrTarget,
+                 std::string &AltTarget,
+                 std::string &UOpBr,
+                 SCPipeInfo *PInfo );
 
   ///< Emit the BR_LEU uOp
-  void EmitBR_LEU(SCSig *Sig,
-                unsigned NumSigs,
-                unsigned NSig,
-                std::string &BrTarget,
-                std::string &AltTarget,
-                std::string &UOpBr,
-                SCPipeInfo *PInfo );
+  void EmitBR_LEU(std::ofstream &LOutFile,
+                  SCSig *Sig,
+                  unsigned NumSigs,
+                  unsigned NSig,
+                  std::string &BrTarget,
+                  std::string &AltTarget,
+                  std::string &UOpBr,
+                  SCPipeInfo *PInfo );
 
   ///< Emit the BR_J uOp
-  void EmitBR_J(SCSig *Sig,
+  void EmitBR_J(std::ofstream &LOutFile,
+                SCSig *Sig,
                 unsigned NumSigs,
                 unsigned NSig,
                 std::string &BrTarget,
@@ -301,156 +344,175 @@ private:
                 SCPipeInfo *PInfo );
 
   ///< Emit the BR_JR uOp
-  void EmitBR_JR(SCSig *Sig,
-                unsigned NumSigs,
-                unsigned NSig,
-                std::string &BrTarget,
-                std::string &UOpBr,
-                SCPipeInfo *PInfo );
+  void EmitBR_JR(std::ofstream &LOutFile,
+                 SCSig *Sig,
+                 unsigned NumSigs,
+                 unsigned NSig,
+                 std::string &BrTarget,
+                 std::string &UOpBr,
+                 SCPipeInfo *PInfo );
 
   ///< Emit the MUX_NE uOp
-  void EmitMUX_NE(SCSig *Sig,
-                unsigned NumSigs,
-                unsigned NSig,
-                std::string &BrTarget,
-                std::string &UOpBr,
-                SCPipeInfo *PInfo );
+  void EmitMUX_NE(std::ofstream &LOutFile,
+                  SCSig *Sig,
+                  unsigned NumSigs,
+                  unsigned NSig,
+                  std::string &BrTarget,
+                  std::string &UOpBr,
+                  SCPipeInfo *PInfo );
 
   ///< Emit the MUX_EQ uOp
-  void EmitMUX_EQ(SCSig *Sig,
-                unsigned NumSigs,
-                unsigned NSig,
-                std::string &BrTarget,
-                std::string &UOpBr,
-                SCPipeInfo *PInfo );
+  void EmitMUX_EQ(std::ofstream &LOutFile,
+                  SCSig *Sig,
+                  unsigned NumSigs,
+                  unsigned NSig,
+                  std::string &BrTarget,
+                  std::string &UOpBr,
+                  SCPipeInfo *PInfo );
 
   ///< Emit the MUX_GT uOp
-  void EmitMUX_GT(SCSig *Sig,
-                unsigned NumSigs,
-                unsigned NSig,
-                std::string &BrTarget,
-                std::string &UOpBr,
-                SCPipeInfo *PInfo );
+  void EmitMUX_GT(std::ofstream &LOutFile,
+                  SCSig *Sig,
+                  unsigned NumSigs,
+                  unsigned NSig,
+                  std::string &BrTarget,
+                  std::string &UOpBr,
+                  SCPipeInfo *PInfo );
 
   ///< Emit the MUX_GTU uOp
-  void EmitMUX_GTU(SCSig *Sig,
-                unsigned NumSigs,
-                unsigned NSig,
-                std::string &BrTarget,
-                std::string &UOpBr,
-                SCPipeInfo *PInfo );
+  void EmitMUX_GTU(std::ofstream &LOutFile,
+                   SCSig *Sig,
+                   unsigned NumSigs,
+                   unsigned NSig,
+                   std::string &BrTarget,
+                   std::string &UOpBr,
+                   SCPipeInfo *PInfo );
 
   ///< Emit the MUX_GE uOp
-  void EmitMUX_GE(SCSig *Sig,
-                unsigned NumSigs,
-                unsigned NSig,
-                std::string &BrTarget,
-                std::string &UOpBr,
-                SCPipeInfo *PInfo );
+  void EmitMUX_GE(std::ofstream &LOutFile,
+                  SCSig *Sig,
+                  unsigned NumSigs,
+                  unsigned NSig,
+                  std::string &BrTarget,
+                  std::string &UOpBr,
+                  SCPipeInfo *PInfo );
 
   ///< Emit the MUX_GEU uOp
-  void EmitMUX_GEU(SCSig *Sig,
-                unsigned NumSigs,
-                unsigned NSig,
-                std::string &BrTarget,
-                std::string &UOpBr,
-                SCPipeInfo *PInfo );
+  void EmitMUX_GEU(std::ofstream &LOutFile,
+                   SCSig *Sig,
+                   unsigned NumSigs,
+                   unsigned NSig,
+                   std::string &BrTarget,
+                   std::string &UOpBr,
+                   SCPipeInfo *PInfo );
 
   ///< Emit the MUX_LT uOp
-  void EmitMUX_LT(SCSig *Sig,
-                unsigned NumSigs,
-                unsigned NSig,
-                std::string &BrTarget,
-                std::string &UOpBr,
-                SCPipeInfo *PInfo );
+  void EmitMUX_LT(std::ofstream &LOutFile,
+                  SCSig *Sig,
+                  unsigned NumSigs,
+                  unsigned NSig,
+                  std::string &BrTarget,
+                  std::string &UOpBr,
+                  SCPipeInfo *PInfo );
 
   ///< Emit the MUX_LTU uOp
-  void EmitMUX_LTU(SCSig *Sig,
-                unsigned NumSigs,
-                unsigned NSig,
-                std::string &BrTarget,
-                std::string &UOpBr,
-                SCPipeInfo *PInfo );
+  void EmitMUX_LTU(std::ofstream &LOutFile,
+                   SCSig *Sig,
+                   unsigned NumSigs,
+                   unsigned NSig,
+                   std::string &BrTarget,
+                   std::string &UOpBr,
+                   SCPipeInfo *PInfo );
 
   ///< Emit the MUX_LE uOp
-  void EmitMUX_LE(SCSig *Sig,
-                unsigned NumSigs,
-                unsigned NSig,
-                std::string &BrTarget,
-                std::string &UOpBr,
-                SCPipeInfo *PInfo );
+  void EmitMUX_LE(std::ofstream &LOutFile,
+                  SCSig *Sig,
+                  unsigned NumSigs,
+                  unsigned NSig,
+                  std::string &BrTarget,
+                  std::string &UOpBr,
+                  SCPipeInfo *PInfo );
 
   ///< Emit the MUX_LEU uOp
-  void EmitMUX_LEU(SCSig *Sig,
-                unsigned NumSigs,
-                unsigned NSig,
-                std::string &BrTarget,
-                std::string &UOpBr,
-                SCPipeInfo *PInfo );
+  void EmitMUX_LEU(std::ofstream &LOutFile,
+                   SCSig *Sig,
+                   unsigned NumSigs,
+                   unsigned NSig,
+                   std::string &BrTarget,
+                   std::string &UOpBr,
+                   SCPipeInfo *PInfo );
 
   ///< Emit the MUX uOp
-  void EmitMUX(SCSig *Sig,
-                unsigned NumSigs,
-                unsigned NSig,
-                std::string &BrTarget,
-                std::string &UOpBr,
-                SCPipeInfo *PInfo );
+  void EmitMUX(std::ofstream &LOutFile,
+               SCSig *Sig,
+               unsigned NumSigs,
+               unsigned NSig,
+               std::string &BrTarget,
+               std::string &UOpBr,
+               SCPipeInfo *PInfo );
 
   ///< Emit the REG_READ uOp
-  void EmitREG_READ(SCSig *Sig,
-                unsigned NumSigs,
-                unsigned NSig,
-                std::string &BrTarget,
-                std::string &UOpBr,
-                SCPipeInfo *PInfo );
+  void EmitREG_READ(std::ofstream &LOutFile,
+                    SCSig *Sig,
+                    unsigned NumSigs,
+                    unsigned NSig,
+                    std::string &BrTarget,
+                    std::string &UOpBr,
+                    SCPipeInfo *PInfo );
 
   ///< Emit the REG_WRITE uOp
-  void EmitREG_WRITE(SCSig *Sig,
-                unsigned NumSigs,
-                unsigned NSig,
-                std::string &BrTarget,
-                std::string &UOpBr,
-                SCPipeInfo *PInfo );
+  void EmitREG_WRITE(std::ofstream &LOutFile,
+                     SCSig *Sig,
+                     unsigned NumSigs,
+                     unsigned NSig,
+                     std::string &BrTarget,
+                     std::string &UOpBr,
+                     SCPipeInfo *PInfo );
 
   ///< Emit the AREG_READ uOp
-  void EmitAREG_READ(SCSig *Sig,
-                unsigned NumSigs,
-                unsigned NSig,
-                std::string &BrTarget,
-                std::string &UOpBr,
-                SCPipeInfo *PInfo );
+  void EmitAREG_READ(std::ofstream &LOutFile,
+                     SCSig *Sig,
+                     unsigned NumSigs,
+                     unsigned NSig,
+                     std::string &BrTarget,
+                     std::string &UOpBr,
+                     SCPipeInfo *PInfo );
 
   ///< Emit the AREG_WRITE uOp
-  void EmitAREG_WRITE(SCSig *Sig,
-                unsigned NumSigs,
-                unsigned NSig,
-                std::string &BrTarget,
-                std::string &UOpBr,
-                SCPipeInfo *PInfo );
+  void EmitAREG_WRITE(std::ofstream &LOutFile,
+                      SCSig *Sig,
+                      unsigned NumSigs,
+                      unsigned NSig,
+                      std::string &BrTarget,
+                      std::string &UOpBr,
+                      SCPipeInfo *PInfo );
 
   ///< Emit the MEM_READ uOp
-  void EmitMEM_READ(SCSig *Sig,
-                unsigned NumSigs,
-                unsigned NSig,
-                std::string &BrTarget,
-                std::string &UOpBr,
-                SCPipeInfo *PInfo );
+  void EmitMEM_READ(std::ofstream &LOutFile,
+                    SCSig *Sig,
+                    unsigned NumSigs,
+                    unsigned NSig,
+                    std::string &BrTarget,
+                    std::string &UOpBr,
+                    SCPipeInfo *PInfo );
 
   ///< Emit the MEM_WRITE uOp
-  void EmitMEM_WRITE(SCSig *Sig,
-                unsigned NumSigs,
-                unsigned NSig,
-                std::string &BrTarget,
-                std::string &UOpBr,
-                SCPipeInfo *PInfo );
+  void EmitMEM_WRITE(std::ofstream &LOutFile,
+                     SCSig *Sig,
+                     unsigned NumSigs,
+                     unsigned NSig,
+                     std::string &BrTarget,
+                     std::string &UOpBr,
+                     SCPipeInfo *PInfo );
 
   ///< Emit the FENCE uOp
-  void EmitFENCE(SCSig *Sig,
-                unsigned NumSigs,
-                unsigned NSig,
-                std::string &BrTarget,
-                std::string &UOpBr,
-                SCPipeInfo *PInfo );
+  void EmitFENCE(std::ofstream &LOutFile,
+                 SCSig *Sig,
+                 unsigned NumSigs,
+                 unsigned NSig,
+                 std::string &BrTarget,
+                 std::string &UOpBr,
+                 SCPipeInfo *PInfo );
 
 public:
 

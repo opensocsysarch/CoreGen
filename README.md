@@ -340,6 +340,10 @@ cgcli --init /path/to/installation/archive/master.yaml
 * -DBUILD\_COREGEN\_POAR\_XML\_TESTING=ON : Enable the POAR XML output tests
 * -DBUILD\_COREGEN\_POAR\_LATEX\_TESTING=ON : Enable the POAR LaTeX output tests
 * -DBUILD\_COREGEN\_POAR\_SIGMAP\_TESTING=ON : Enable the POAR sigmap output tests
+* -DBUILD\_COREGEN\_DHDT\_TESTING=ON : Enables all the DHDT tests
+* -DBUILD\_COREGEN\_DHDT\_CLI\_TESTING=ON : Enables the DHDT CLI tests
+* -DBUILD\_COREGEN\_DHDT\_POWER\_TESTING=ON : Enables the DHDT Power tests
+* -DBUILD\_COREGEN\_DHDT\_HAZARD\_TESTING=ON : Enables the DHDT Hazard tests
 
 ## Contributing
 We welcome outside contributions from corporate, acaddemic and individual developers.  However, 

@@ -616,7 +616,7 @@ int SCParser::GetNextToken(){
 bool SCParser::ParseVLIWStage(std::string Name, unsigned &Stage){
   Stage = 0;
   std::string delimiter = "_";
-  size_t pos = Name.find(delimiter);
+  size_t pos = Name.find_last_of("_");
 
   if( pos == std::string::npos ){
     return false;
@@ -766,21 +766,28 @@ std::unique_ptr<ExprAST> SCParser::ParseIdentifierExpr() {
 }
 
 std::unique_ptr<ExprAST> SCParser::ParseIfExpr() {
-  GetNextToken();  // eat the if.
+  // Initialize data structures
+  std::vector<std::unique_ptr<ExprASTContainer>> Conds;                   ///< Conditional expression container
+  std::vector<std::vector<std::unique_ptr<ExprASTContainer>>> ThenBodies; ///< Vector of then body expressions
+  std::vector<std::unique_ptr<ExprASTContainer>> ElseBody;                ///< Vector of else body expressions
+
+  GetNextToken();  // eat the if
 
   if( CurTok != '(' )
     return LogError("expected '(' for conditional statement");
 
   GetNextToken(); // eat the '('
 
-  // condition.
-  auto Cond = ParseExpression();
-  if (!Cond){
+  // Parse if conditon
+  auto IfCond = ParseExpression();
+  if (!IfCond){
     return nullptr;
   }
+  /* First entry of Conds is ALWAYS ifcond */
+  Conds.push_back(std::move(IfCond));
 
   if( CurTok != ')' )
-    return LogError("expected ')' for conditional statement");
+    return LogError("expected ')' for conditional if statement");
 
   GetNextToken(); // eat the ')'
 
@@ -788,44 +795,92 @@ std::unique_ptr<ExprAST> SCParser::ParseIfExpr() {
     return LogError("expected '{' for conditional expression body");
   GetNextToken(); // eat the '{'
 
-  std::vector<std::unique_ptr<ExprAST>> ThenExpr;
+  std::vector<std::unique_ptr<ExprAST>> ThenBody;
   while( CurTok != '}' ){
-    auto Body = ParseExpression();
-    if( !Body )
+    auto BodyExpr = ParseExpression();
+    if( !BodyExpr )
       return nullptr;
-    ThenExpr.push_back(std::move(Body));
+    ThenBody.push_back(std::move(BodyExpr));
   }
+  ThenBodies.push_back(std::move(ThenBody));
 
   if( CurTok != '}' )
     return LogError("expected '}' for conditional expression body");
+    
   GetNextToken(); // eat the '}'
 
-  // parse the optional else block
-  std::unique_ptr<ExprAST> Else = nullptr;
-  std::vector<std::unique_ptr<ExprAST>> ElseExpr;
-  if( CurTok == tok_else ){
-    // parse else{ <Expression> }
-    GetNextToken(); // eat the else
-    if( CurTok != '{' ){
-      LogError("expected '{' for conditional else statement");
-    }
-    GetNextToken(); // eat the '{'
+  bool isElse = false;
+  // parse the optional elseif/else block(s)
+  while( !isElse ){
+    if( CurTok == tok_else ){
+      GetNextToken(); // eat the else
+      
+      // check if its an 'else if'
+      if( CurTok == tok_if ){ // this is an else if
+        GetNextToken(); // eat if
+        
+        if( CurTok != '(' )
+          return LogError("expected '(' for conditional else if statement");
 
-    while( CurTok != '}' ){
-      auto Body = ParseExpression();
-      if( !Body )
-        return nullptr;
-      ElseExpr.push_back(std::move(Body));
-    }
-    if( CurTok != '}' ){
-      LogError("expected '}' for conditional else statement");
-    }
-    GetNextToken(); // eat the '}'
-  }
+        GetNextToken(); // eat the '('
 
-  return llvm::make_unique<IfExprAST>(std::move(Cond),
-                                      std::move(ThenExpr),
-                                      std::move(ElseExpr));
+        // parse else if conditon
+        auto ElseIfCond = ParseExpression();
+        if (!ElseIfCond){
+          return nullptr;
+        }
+        Conds.push_back(std::move(ElseIfCond));
+
+        if( CurTok != ')' )
+          return LogError("expected ')' for conditional else if statement");
+
+        GetNextToken(); // eat the ')'
+
+      if( CurTok != '{' )
+        return LogError("expected '{' for conditional expression body");
+
+      GetNextToken(); // eat the '{'
+
+      std::vector<std::unique_ptr<ExprAST>> ElseIfThenBody;
+      while( CurTok != '}' ){
+        auto BodyExpr = ParseExpression();
+        if( !BodyExpr )
+          return nullptr;
+        ElseIfThenBody.push_back(std::move(BodyExpr));
+      }
+      ThenBodies.push_back(std::move(ElseIfThenBody));
+
+      if( CurTok != '}' )
+        return LogError("expected '}' for conditional expression body");
+      
+      GetNextToken(); // eat the '}'
+
+      } // END ELSEIF
+    }
+    // parse else
+    else {
+        isElse = true;
+        if( CurTok == '{' ){
+          GetNextToken(); // eat the '{'
+
+          // Build up BodyExprs
+          while( CurTok != '}' ){
+            auto BodyExpr = ParseExpression();
+            if( !BodyExpr )
+              return nullptr;
+            ElseBody.push_back(std::move(BodyExpr));
+          }
+          if( CurTok != '}' )
+            return LogError("expected '}' for conditional expression body");
+          GetNextToken(); // eat the '}'
+        }
+      }
+    }
+
+  return llvm::make_unique<IfExprAST>(std::move(Conds),
+                                      std::move(ThenBodies),
+                                      std::move(ElseBody)
+                                      );
 }
 
 std::unique_ptr<ExprAST> SCParser::ParsePrimary() {
@@ -2474,7 +2529,7 @@ Value *VariableExprAST::codegen() {
     // variable wasn't in the function scope, check the globals
     V = SCParser::GlobalNamedValues[Name];
     if( !V ){
-      return LogErrorV("Unknown variable name: " + Name );
+      return LogErrorV("Unknown variable name in variable expression: " + Name );
     }
   }
 
@@ -2570,7 +2625,7 @@ Value *BinaryExprAST::codegen() {
     if (!Variable){
       Variable = SCParser::GlobalNamedValues[LHSE->getName()];
       if( !Variable ){
-        return LogErrorV("Unknown variable name: " + LHSE->getName());
+        return LogErrorV("Unknown variable name in binary expression: " + LHSE->getName());
       }
     }
 
@@ -2594,12 +2649,13 @@ Value *BinaryExprAST::codegen() {
   Function *TheFunction = Builder.GetInsertBlock()->getParent();
   unsigned DimX, DimY;
   // LHS is of type vec or mat
-  if( SCParser::CheckLocalContainers(R->getName(), TheFunction->getName(), DimX, DimY ) ){
-    unsigned LDimX = DimX;
-    unsigned LDimY = DimY;
+  if( SCParser::CheckLocalContainers(R->getName(),
+                                     TheFunction->getName(),
+                                     DimX, DimY ) ){
     // RHS is of type vec or mat
-    if( SCParser::CheckLocalContainers(L->getName(), TheFunction->getName(), DimX, DimY )     ){
-
+    if( SCParser::CheckLocalContainers(L->getName(),
+                                       TheFunction->getName(),
+                                       DimX, DimY )){
       //if( Dim1X != Dim2X || Dim1Y != Dim2Y ){
       //LogErrorV("No dice");
       // }
@@ -3226,118 +3282,128 @@ Function *FunctionAST::codegen() {
 }
 
 Value *IfExprAST::codegen() {
-  Value *CondV = Cond->codegen();
-  if (!CondV){
-    return nullptr;
-  }
-
-  // Retrieve a unique local label
-  unsigned LocalLabel = GetLocalLabel();
-
-  CondV = Builder.CreateICmpNE(
-        CondV, ConstantInt::get(SCParser::TheContext, APInt(1,0,false)),
-        "ifcond."+std::to_string(LocalLabel));
-  if( SCParser::NameMDNode ){
-    cast<Instruction>(CondV)->setMetadata("pipe.pipeName",SCParser::NameMDNode);
-    cast<Instruction>(CondV)->setMetadata("pipe.pipeLine",SCParser::PipelineMDNode);
-    cast<Instruction>(CondV)->setMetadata("pipe.pipeInstance",SCParser::InstanceMDNode);
-  }
-
+  
+  PHINode *PN = nullptr;
   Function *TheFunction = Builder.GetInsertBlock()->getParent();
 
-  // Create blocks for the then and else cases.  Insert the 'then' block at the
-  // end of the function.
-  BasicBlock *ThenBB = BasicBlock::Create(SCParser::TheContext,
-                                          "then."+std::to_string(LocalLabel),
-                                          TheFunction);
-  BasicBlock *ElseBB = BasicBlock::Create(SCParser::TheContext,
-                                          "else."+std::to_string(LocalLabel));
-  BasicBlock *MergeBB = BasicBlock::Create(SCParser::TheContext,
-                                           "ifcont."+std::to_string(LocalLabel));
+  for( unsigned i=0; i<Conds.size(); i++ ){
 
-  BranchInst *BI = Builder.CreateCondBr(CondV, ThenBB, ElseBB);
-  if( SCParser::NameMDNode ){
-    BI->setMetadata("pipe.pipeName",SCParser::NameMDNode);
-    BI->setMetadata("pipe.pipeLine",SCParser::PipelineMDNode);
-    BI->setMetadata("pipe.pipeInstance",SCParser::InstanceMDNode);
-  }
-
-  // Emit then value.
-  Builder.SetInsertPoint(ThenBB);
-
-  // Emit all the Then body values
-  Value *TV = nullptr;
-  for( unsigned i=0; i<ThenV.size(); i++ ){
-    TV = ThenV[i]->codegen();
-    if( !TV )
+    Value *CondV = Conds[i]->codegen();
+    if (!CondV){
       return nullptr;
-  }
+    }
 
-  BI = Builder.CreateBr(MergeBB);
-  if( SCParser::NameMDNode ){
-    BI->setMetadata("pipe.pipeName",SCParser::NameMDNode);
-    BI->setMetadata("pipe.pipeLine",SCParser::PipelineMDNode);
-    BI->setMetadata("pipe.pipeInstance",SCParser::InstanceMDNode);
-  }
+    // Retrieve a unique local label
+    unsigned LocalLabel = GetLocalLabel();
 
-  // Codegen of 'Then' can change the current block, update ThenBB for the PHI.
-  ThenBB = Builder.GetInsertBlock();
-
-  // Emit else block.
-  TheFunction->getBasicBlockList().push_back(ElseBB);
-  Builder.SetInsertPoint(ElseBB);
-
-
-  Value *EV = nullptr;
-  for( unsigned i=0; i<ElseV.size(); i++ ){
-    EV = ElseV[i]->codegen();
-    if( !EV )
-      return nullptr;
-  }
-
-  BI = Builder.CreateBr(MergeBB);
-  if( SCParser::NameMDNode ){
-    BI->setMetadata("pipe.pipeName",SCParser::NameMDNode);
-    BI->setMetadata("pipe.pipeLine",SCParser::PipelineMDNode);
-    BI->setMetadata("pipe.pipeInstance",SCParser::InstanceMDNode);
-  }
-
-  // Codegen of 'Else' can change the current block, update ElseBB for the PHI.
-  ElseBB = Builder.GetInsertBlock();
-
-  // Emit merge block.
-  TheFunction->getBasicBlockList().push_back(MergeBB);
-  Builder.SetInsertPoint(MergeBB);
-
-  PHINode *PN = nullptr;
-  if( TV->getType()->isFloatingPointTy() ){
-    PN = Builder.CreatePHI(TV->getType(),
-                           2, "iftmp."+std::to_string(LocalLabel));
+    CondV = Builder.CreateICmpNE(
+          CondV, ConstantInt::get(SCParser::TheContext, APInt(1,0,false)),
+          "ifcond."+std::to_string(LocalLabel));
     if( SCParser::NameMDNode ){
-      PN->setMetadata("pipe.pipeName",SCParser::NameMDNode);
-      PN->setMetadata("pipe.pipeLine",SCParser::PipelineMDNode);
-      PN->setMetadata("pipe.pipeInstance",SCParser::InstanceMDNode);
+      cast<Instruction>(CondV)->setMetadata("pipe.pipeName",SCParser::NameMDNode);
+      cast<Instruction>(CondV)->setMetadata("pipe.pipeLine",SCParser::PipelineMDNode);
+      cast<Instruction>(CondV)->setMetadata("pipe.pipeInstance",SCParser::InstanceMDNode);
     }
-  }else{
-    PN = Builder.CreatePHI(TV->getType(),
-                           2, "iftmp."+std::to_string(LocalLabel));
+
+    // Create blocks for the then and else cases.  Insert the 'then' block at the
+    // end of the function.
+    BasicBlock *ThenBB = BasicBlock::Create(SCParser::TheContext,
+                                            "then."+std::to_string(LocalLabel),
+                                            TheFunction);
+    BasicBlock *ElseBB = BasicBlock::Create(SCParser::TheContext,
+                                            "else."+std::to_string(LocalLabel));
+    BasicBlock *MergeBB = BasicBlock::Create(SCParser::TheContext,
+                                             "ifcont."+std::to_string(LocalLabel));
+
+    BranchInst *BI = Builder.CreateCondBr(CondV, ThenBB, ElseBB);
     if( SCParser::NameMDNode ){
-      PN->setMetadata("pipe.pipeName",SCParser::NameMDNode);
-      PN->setMetadata("pipe.pipeLine",SCParser::PipelineMDNode);
-      PN->setMetadata("pipe.pipeInstance",SCParser::InstanceMDNode);
+      BI->setMetadata("pipe.pipeName",SCParser::NameMDNode);
+      BI->setMetadata("pipe.pipeLine",SCParser::PipelineMDNode);
+      BI->setMetadata("pipe.pipeInstance",SCParser::InstanceMDNode);
+    }
+
+    // Emit then value.
+    Builder.SetInsertPoint(ThenBB);
+
+    // Emit all the Then body values
+    Value *TV = nullptr;
+    for( unsigned j=0; j<ThenBodies[i].size(); j++ ){
+      TV = ThenBodies[i][j]->codegen();
+      if( !TV )
+        return nullptr;
+    }
+
+    BI = Builder.CreateBr(MergeBB);
+    if( SCParser::NameMDNode ){
+      BI->setMetadata("pipe.pipeName",SCParser::NameMDNode);
+      BI->setMetadata("pipe.pipeLine",SCParser::PipelineMDNode);
+      BI->setMetadata("pipe.pipeInstance",SCParser::InstanceMDNode);
+    }
+
+    // Codegen of 'Then' can change the current block, update ThenBB for the PHI.
+    ThenBB = Builder.GetInsertBlock();
+
+    // Emit else block.
+    TheFunction->getBasicBlockList().push_back(ElseBB);
+    Builder.SetInsertPoint(ElseBB);
+
+
+    Value *EV = nullptr;
+    for( unsigned i=0; i<ElseBody.size(); i++ ){
+      EV = ElseBody[i]->codegen();
+      if( !EV )
+        return nullptr;
+    }
+
+    BI = Builder.CreateBr(MergeBB);
+    if( SCParser::NameMDNode ){
+      BI->setMetadata("pipe.pipeName",SCParser::NameMDNode);
+      BI->setMetadata("pipe.pipeLine",SCParser::PipelineMDNode);
+      BI->setMetadata("pipe.pipeInstance",SCParser::InstanceMDNode);
+    }
+
+    // Codegen of 'Else' can change the current block, update ElseBB for the PHI.
+    ElseBB = Builder.GetInsertBlock();
+
+    // Emit merge block.
+    TheFunction->getBasicBlockList().push_back(MergeBB);
+    Builder.SetInsertPoint(MergeBB);
+
+
+    if( TV->getType()->isFloatingPointTy()){
+      if( !PN ){
+        PN = Builder.CreatePHI(TV->getType(),
+                               2, "iftmp."+std::to_string(LocalLabel));
+        if( SCParser::NameMDNode ){
+          PN->setMetadata("pipe.pipeName",SCParser::NameMDNode);
+          PN->setMetadata("pipe.pipeLine",SCParser::PipelineMDNode);
+          PN->setMetadata("pipe.pipeInstance",SCParser::InstanceMDNode);
+        }
+      }
+    }else{
+      if( !PN ){
+        PN = Builder.CreatePHI(TV->getType(),
+                               2, "iftmp."+std::to_string(LocalLabel));
+        if( SCParser::NameMDNode ){
+          PN->setMetadata("pipe.pipeName",SCParser::NameMDNode);
+          PN->setMetadata("pipe.pipeLine",SCParser::PipelineMDNode);
+          PN->setMetadata("pipe.pipeInstance",SCParser::InstanceMDNode);
+        }
+      }
+    }
+
+    // TODO: Disabling the incoming phi node calculations
+    //PN->addIncoming(TV, ThenBB);
+    if( EV != nullptr ){
+      // check to see if we need to adjust the size of the types
+      if( TV->getType()->getPrimitiveSizeInBits() !=
+          EV->getType()->getPrimitiveSizeInBits() ){
+        EV->mutateType(TV->getType());
+      }
+      //PN->addIncoming(EV, ElseBB);
     }
   }
 
-  // TODO: Disabling the incoming phi node calculations
-  //PN->addIncoming(TV, ThenBB);
-  if( EV != nullptr ){
-    // check to see if we need to adjust the size of the types
-    if( TV->getType()->getPrimitiveSizeInBits() !=
-        EV->getType()->getPrimitiveSizeInBits() ){
-      EV->mutateType(TV->getType());
-    }
-    //PN->addIncoming(EV, ElseBB);
-  }
   return PN;
 }
 
