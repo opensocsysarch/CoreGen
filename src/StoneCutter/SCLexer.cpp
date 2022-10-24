@@ -264,7 +264,7 @@ int SCLexer::GetTok(){
     LastChar = GetNext();  // Eat '0'
     LastChar = GetNext();  // Eat 'x'
     // consume the remainder of the digits [0-9]|[a-F]
-    while( ishexnumber(LastChar) || LastChar == '_' ){
+    while( isxdigit(LastChar) || LastChar == '_' ){
       HexNumStr += LastChar;
       LastChar = GetNext();
     }
