@@ -2096,6 +2096,13 @@ void SCParser::HandleFuncClose(){
   }
 }
 
+void SCParser::HandleLexerError(){
+  // Print error from lexer
+  LogError(Lex->GetErrorStr());
+  Rtn = false;
+}
+
+
 //===----------------------------------------------------------------------===//
 // Code Generation
 //===----------------------------------------------------------------------===//
@@ -3347,7 +3354,6 @@ Value *IfExprAST::codegen() {
     TheFunction->getBasicBlockList().push_back(ElseBB);
     Builder.SetInsertPoint(ElseBB);
 
-
     Value *EV = nullptr;
     for( unsigned i=0; i<ElseBody.size(); i++ ){
       EV = ElseBody[i]->codegen();
@@ -3369,25 +3375,30 @@ Value *IfExprAST::codegen() {
     TheFunction->getBasicBlockList().push_back(MergeBB);
     Builder.SetInsertPoint(MergeBB);
 
-
-    if( TV->getType()->isFloatingPointTy()){
-      if( !PN ){
-        PN = Builder.CreatePHI(TV->getType(),
-                               2, "iftmp."+std::to_string(LocalLabel));
-        if( SCParser::NameMDNode ){
-          PN->setMetadata("pipe.pipeName",SCParser::NameMDNode);
-          PN->setMetadata("pipe.pipeLine",SCParser::PipelineMDNode);
-          PN->setMetadata("pipe.pipeInstance",SCParser::InstanceMDNode);
+    // if( !TV ){
+    //   TV = EV;
+    // }
+    //  NOTE: If something is messed up in the control flow for empty if blocks look here
+    if( TV != nullptr ){ 
+      if( TV->getType()->isFloatingPointTy()){
+        if( !PN ){
+          PN = Builder.CreatePHI(TV->getType(),
+                                 2, "iftmp."+std::to_string(LocalLabel));
+          if( SCParser::NameMDNode ){
+            PN->setMetadata("pipe.pipeName",SCParser::NameMDNode);
+            PN->setMetadata("pipe.pipeLine",SCParser::PipelineMDNode);
+            PN->setMetadata("pipe.pipeInstance",SCParser::InstanceMDNode);
+          }
         }
-      }
-    }else{
-      if( !PN ){
-        PN = Builder.CreatePHI(TV->getType(),
-                               2, "iftmp."+std::to_string(LocalLabel));
-        if( SCParser::NameMDNode ){
-          PN->setMetadata("pipe.pipeName",SCParser::NameMDNode);
-          PN->setMetadata("pipe.pipeLine",SCParser::PipelineMDNode);
-          PN->setMetadata("pipe.pipeInstance",SCParser::InstanceMDNode);
+      }else if( TV ){
+        if( !PN ){
+          PN = Builder.CreatePHI(TV->getType(),
+                                 2, "iftmp."+std::to_string(LocalLabel));
+          if( SCParser::NameMDNode ){
+            PN->setMetadata("pipe.pipeName",SCParser::NameMDNode);
+            PN->setMetadata("pipe.pipeLine",SCParser::PipelineMDNode);
+            PN->setMetadata("pipe.pipeInstance",SCParser::InstanceMDNode);
+          }
         }
       }
     }
