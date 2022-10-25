@@ -1814,7 +1814,7 @@ bool SCChiselCodeGen::ExecuteVLIWUcodeCodegen(CoreGenSigMap *SM,
 
   // TODO: build the microcode compiler??
 
-  return true;
+  return rtn;
 }
 
 bool SCChiselCodeGen::ExecuteUcodeCodegen(){

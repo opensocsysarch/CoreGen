@@ -1560,6 +1560,7 @@ CoreGenVLIWStage *CoreGenBackend::GetVLIWStageNodeByName(std::string Name){
       return this->VLIWStages[i];
     }
   }
+  return nullptr;
 }
 
 CoreGenVTP* CoreGenBackend::GetVTPNodeByName(std::string Name){

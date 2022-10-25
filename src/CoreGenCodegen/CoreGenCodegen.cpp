@@ -15,7 +15,7 @@ CoreGenCodegen::CoreGenCodegen(CoreGenNode *T,
                                CoreGenEnv *V,
                                CoreGenErrno *E,
                                CoreGenPluginMgr *PlugIn)
-  : Top(T), Proj(P), Env(V), Errno(E), PlugInMgr(PlugIn), Archive(nullptr) {
+  : Top(T), Proj(P), Env(V), Errno(E), Archive(nullptr), PlugInMgr(PlugIn) {
   Archive = new CoreGenArchive(Env->GetArchRoot());
 }
 
@@ -477,7 +477,7 @@ bool CoreGenCodegen::BuildChiselSBT(){
   SOutFile << " lazy val top = (project in file(\".\"))." << std::endl;
   SOutFile << "  settings(commonSettings:_*)." << std::endl;
   SOutFile << "  aggregate(common, test,templates,cde"; 
-  for( int i=0; i < PlugInCount; i++){
+  for( unsigned i=0; i < PlugInCount; i++){
     CoreGenPlugin *P = PlugInMgr->GetPlugin(i);
     if(P->HasHDLCodegen()){
       SOutFile << ", " << P->GetPluginName() ;
@@ -485,7 +485,7 @@ bool CoreGenCodegen::BuildChiselSBT(){
   }
   SOutFile << ")." << std::endl;
 	SOutFile << "  dependsOn(common,cde";
-  for( int i=0; i < PlugInCount; i++){
+  for( unsigned i=0; i < PlugInCount; i++){
     CoreGenPlugin *P = PlugInMgr->GetPlugin(i);
     if(P->HasHDLCodegen()){
       SOutFile << ", " << P->GetPluginName() ;
@@ -501,7 +501,7 @@ bool CoreGenCodegen::BuildChiselSBT(){
   SOutFile << " lazy val templates = (project in file(\"src/main/scala/SysArchPipelines\"))." << std::endl;
   SOutFile << "  settings(commonSettings:_*)." << std::endl;
   SOutFile << "  dependsOn(common";
-  for( int i=0; i < PlugInCount; i++){
+  for( unsigned i=0; i < PlugInCount; i++){
     CoreGenPlugin *P = PlugInMgr->GetPlugin(i);
     if(P->HasHDLCodegen()){
       SOutFile << ", " << P->GetPluginName() ;
@@ -509,7 +509,7 @@ bool CoreGenCodegen::BuildChiselSBT(){
   }
   SOutFile << ")" << std::endl;
 
-  for( int i=0; i < PlugInCount; i++){
+  for( unsigned i=0; i < PlugInCount; i++){
     CoreGenPlugin *P = PlugInMgr->GetPlugin(i);
     if(P->HasHDLCodegen()){
       SOutFile << " lazy val " << P->GetPluginName() << "= (project in file";
