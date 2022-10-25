@@ -872,6 +872,8 @@ bool SCSigMap::CheckSigReq( Function &F, Instruction &I ){
   // For each one of the relevant signals decoded, generate a signal map
   // and push it into the master vector of signals
   // Decode everything else
+  //DEBUG: this->PrintMsg( L_WARN, "Generating signals for Func:Op = " +
+  //                F.getName().str() + ":" + std::string(I.getOpcodeName()) );
   switch( I.getOpcode() ){
     // binary signals
   case Instruction::Add :
@@ -1213,6 +1215,7 @@ bool SCSigMap::DiscoverSigMap(){
   // Walk all the functions
   for( auto &Func : TheModule->getFunctionList() ){
     // walk all the basic blocks
+    //DEBUG: this->PrintMsg( L_WARN, "SigMap Func = " + Func.getName().str() );
     for( auto &BB : Func.getBasicBlockList() ){
       // determine whether we need to handle VLIW staging
       if( IsVLIWStage(Func) ){
