@@ -3388,15 +3388,15 @@ Value *IfExprAST::codegen() {
           PN->setMetadata("pipe.pipeLine",SCParser::PipelineMDNode);
           PN->setMetadata("pipe.pipeInstance",SCParser::InstanceMDNode);
         }
-      }else if( TV ){
-        if( !PN ){
-          PN = Builder.CreatePHI(TV->getType(),
-                                 2, "iftmp."+std::to_string(LocalLabel));
-          if( SCParser::NameMDNode ){
-            PN->setMetadata("pipe.pipeName",SCParser::NameMDNode);
-            PN->setMetadata("pipe.pipeLine",SCParser::PipelineMDNode);
-            PN->setMetadata("pipe.pipeInstance",SCParser::InstanceMDNode);
-          }
+      }
+    }else if( TV ){
+      if( !PN ){
+        PN = Builder.CreatePHI(TV->getType(),
+                               2, "iftmp."+std::to_string(LocalLabel));
+        if( SCParser::NameMDNode ){
+          PN->setMetadata("pipe.pipeName",SCParser::NameMDNode);
+          PN->setMetadata("pipe.pipeLine",SCParser::PipelineMDNode);
+          PN->setMetadata("pipe.pipeInstance",SCParser::InstanceMDNode);
         }
       }
     }
