@@ -261,14 +261,12 @@ bool SCVLIWPipeBuilder::CheckSignalIntegrity(){
       }
     }
 
-    //if( TOut != Out ){
     if( TOut < Out ){
       this->PrintMsg( L_ERROR,
                       "Unconnected outgoing signal for Stage=" +
                       VLIWStages[i].first);
       return false;
     }
-    //if( TIn != In ){
     if( TIn < In ){
       this->PrintMsg( L_ERROR,
                       "Unconnected incoming signal for Stage=" +
