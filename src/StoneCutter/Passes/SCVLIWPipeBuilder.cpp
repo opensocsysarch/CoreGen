@@ -190,7 +190,6 @@ bool SortBySec(const std::pair<std::string,unsigned> &a,
 
 bool SCVLIWPipeBuilder::DeriveVLIWStages(){
   for( auto &Func : TheModule->getFunctionList() ){
-    std::cout << "looking at : " << Func.getName().str() << std::endl;
     if( IsVLIWStage(Func) ){
       // found a vliw function
       VLIWStages.push_back(std::make_pair(Func.getName(),
@@ -200,11 +199,6 @@ bool SCVLIWPipeBuilder::DeriveVLIWStages(){
 
   // sort the vector by the stage (.second)
   std::sort(VLIWStages.begin(), VLIWStages.end(), SortBySec);
-
-  for( unsigned i=0; i<VLIWStages.size(); i++ ){
-    std::cout << "VLIW_STAGE = " << VLIWStages[i].first << ":"
-              << VLIWStages[i].second << std::endl;
-  }
 
   return true;
 }
@@ -267,13 +261,15 @@ bool SCVLIWPipeBuilder::CheckSignalIntegrity(){
       }
     }
 
-    if( TOut != Out ){
+    //if( TOut != Out ){
+    if( TOut < Out ){
       this->PrintMsg( L_ERROR,
                       "Unconnected outgoing signal for Stage=" +
                       VLIWStages[i].first);
       return false;
     }
-    if( TIn != In ){
+    //if( TIn != In ){
+    if( TIn < In ){
       this->PrintMsg( L_ERROR,
                       "Unconnected incoming signal for Stage=" +
                       VLIWStages[i].first);
