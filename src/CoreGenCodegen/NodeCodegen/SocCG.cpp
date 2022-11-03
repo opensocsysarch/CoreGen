@@ -45,6 +45,8 @@ bool SocCG::WriteSoc(std::ofstream &O){
     O << "\tcore" << i << ".reset := debug.io.resetcore | reset.toBool" << std::endl;
   }
 
+  O << "}" << std::endl;
+
   return true;
 }
 
@@ -83,7 +85,7 @@ bool SocCG::Execute(){
 
   // write out the package block
   if( !WriteSoc(OutFile) ){
-    Errno->SetError(CGERR_ERROR, "Could not write scratchpad block to file : " +
+    Errno->SetError(CGERR_ERROR, "Could not write SoC block to file : " +
                     Path );
     OutFile.close();
     return false;

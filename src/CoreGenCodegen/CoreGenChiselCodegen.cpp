@@ -42,7 +42,7 @@ CoreGenNode *CoreGenChiselCodegen::GetRegClassISANode(CoreGenNode *N){
 }
 
 bool CoreGenChiselCodegen::ExecSocCodegen(CoreGenNode *N){
-  std::string FullPath = ChiselRoot + "/top/soc.chisel";
+  std::string FullPath = ChiselRoot + "/top/soc.scala";
   std::string Package = Proj->GetProjName();
 
   SocCG *CG = new SocCG(N,Proj,Package,FullPath,true,Errno);
@@ -58,7 +58,7 @@ bool CoreGenChiselCodegen::ExecSocCodegen(CoreGenNode *N){
 
 bool CoreGenChiselCodegen::ExecSpadCodegen(CoreGenNode *N){
   std::string FullPath = ChiselRoot + "/common/" +
-                         CGRemoveDot(N->GetName()) + ".chisel";
+                         CGRemoveDot(N->GetName()) + ".scala";
   std::string Package = "Common";
   bool Common = true;
 
@@ -86,7 +86,7 @@ bool CoreGenChiselCodegen::ExecDataPathCodegen(CoreGenNode *N){
     return false;
   }
 
-  FullPath += "/DataPath.chisel";
+  FullPath += "/DataPath.scala";
 
   DPathCG *CG = new DPathCG(N,Proj,Package,FullPath,false,Errno);
   bool rtn = true;
@@ -134,7 +134,7 @@ bool CoreGenChiselCodegen::ExecISACodegen(CoreGenNode *N){
     return false;
   }
 
-  FullPath += "/instructions.chisel";
+  FullPath += "/instructions.scala";
 
   ISACG *CG = new ISACG(N,Proj,Package,FullPath,false,Errno);
   bool rtn = true;
@@ -156,7 +156,7 @@ bool CoreGenChiselCodegen::ExecRegClassCodegen(CoreGenNode *N){
   bool Common = false;
   if( N->HasAttr(AttrISAReg) ){
     // shared across cores, put it in the common directory
-    FullPath += "/common/" + CGRemoveDot(N->GetName()) + ".chisel";
+    FullPath += "/common/" + CGRemoveDot(N->GetName()) + ".scala";
     Package = "Common";
     Common = true;
   }else{
@@ -177,7 +177,7 @@ bool CoreGenChiselCodegen::ExecRegClassCodegen(CoreGenNode *N){
       return false;
     }
 
-    FullPath += ("/" + CGRemoveDot(N->GetName()) + ".chisel");
+    FullPath += ("/" + CGRemoveDot(N->GetName()) + ".scala");
   }
 
   RegClassCG *CG = new RegClassCG(N,Proj,Package,FullPath,Common,Errno);
@@ -194,7 +194,7 @@ bool CoreGenChiselCodegen::ExecRegClassCodegen(CoreGenNode *N){
 bool CoreGenChiselCodegen::ExecCacheTemplateCodegen(CoreGenNode *N){
   std::string FullPath = ChiselRoot + "/common/"
                                     + CGRemoveDot(N->GetName())
-                                    + ".chisel";
+                                    + ".scala";
   std::string Package = Proj->GetProjName();
 
   CacheCG *CG = new CacheCG(N,Proj,Package,FullPath,true,Errno);
@@ -263,7 +263,7 @@ bool CoreGenChiselCodegen::ExecPluginTemplateCodegen(CoreGenNode *N){
 bool CoreGenChiselCodegen::ExecCacheCodegen(CoreGenNode *N){
   std::string FullPath = ChiselRoot + "/common/"
                                     + CGRemoveDot(N->GetName())
-                                    + ".chisel";
+                                    + ".scala";
   std::string Package = Proj->GetProjName();
 
   CacheCG *CG = new CacheCG(N,Proj,Package,FullPath,true,Errno);

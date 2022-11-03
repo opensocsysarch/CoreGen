@@ -1712,6 +1712,9 @@ bool SCChiselCodeGen::ExecuteVLIWCodegen(){
 
   // TODO: wire up the stages
 
+  // write the footer
+  OutFile << "}" << std::endl;
+
   // For each of the stages, write out a microcode compiler and
   // the microcode tables
   std::vector<std::string> VLIWStages = VSM->GetVLIWPipeStages();
@@ -1742,7 +1745,7 @@ bool SCChiselCodeGen::ExecuteVLIWUcodeCodegen(CoreGenSigMap *SM,
 
   // construct the output file name
   std::string CompFile = ChiselFile.substr(0,ChiselFile.find_last_of("\\/")) +
-                          "/microcodecompiler_" + Stage + ".scala";
+                          "/microcode_" + Stage + ".scala";
 
   // open the output file
   std::ofstream LOutFile;
@@ -1769,7 +1772,7 @@ bool SCChiselCodeGen::ExecuteVLIWUcodeCodegen(CoreGenSigMap *SM,
   // write out the microcode object
   LOutFile << "object " << Stage << "Microcode" << std::endl;
   LOutFile << "{" << std::endl;
-  LOutFile << "\tval codes = Array[" << ISA << "MicroOp](" << std::endl;
+  LOutFile << "\tval codes = Array[" << Stage << "MicroOp](" << std::endl;
 
   // Stage 1: write out the predefined operations
   // These include:
@@ -1792,7 +1795,7 @@ bool SCChiselCodeGen::ExecuteVLIWUcodeCodegen(CoreGenSigMap *SM,
     rtn = false;
     Msgs->PrintMsg( L_ERROR, "Signal map contains no VLIW pipeline stages" );
   }else if( SM->GetVLIWSignalVectByPipeStage(Stage).size() == 0 ){
-    rtn - false;
+    rtn = false;
     Msgs->PrintMsg( L_ERROR, "Signal map VLIW Stage=" + Stage + " contains no signals" );
   }else{
     std::vector<SCSig *> Sigs = SM->GetVLIWSignalVectByPipeStage(Stage);

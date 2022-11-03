@@ -128,7 +128,7 @@ bool CoreGenCodegen::BuildProjMakefile(){
   MOutFile << "\t@echo \"project:   Verifies the design, creates Chisel and LLVM compiler\"" << std::endl;
   MOutFile << "\t@echo \"compiler:  Builds the LLVM compiler\"" << std::endl;
   MOutFile << "\t@echo \"chisel:    Builds the Chisel HDL\"" << std::endl;
-  MOutFile << "\t@echo \"simulaotr: Builds the cycle-accurate simulator\"" << std::endl;
+  MOutFile << "\t@echo \"simulator: Builds the cycle-accurate simulator\"" << std::endl;
   MOutFile << "\t@echo \"coregen:   Executes coregen to verify the design\"" << std::endl;
   MOutFile << "\t@echo \"-----------------------------------------------------------------\"" << std::endl;
 
