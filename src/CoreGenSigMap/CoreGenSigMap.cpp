@@ -845,6 +845,20 @@ bool CoreGenSigMap::WritePipeData(YAML::Emitter *out){
   return true;
 }
 
+unsigned CoreGenSigMap::GetNumVLIWPipeStages(){
+  std::vector<std::string> VLIWPipeNames;
+  for( unsigned i=0; i<Signals.size(); i++ ){
+    if( Signals[i]->IsVLIW() ){
+      VLIWPipeNames.push_back(Signals[i]->GetPipeName());
+    }
+  }
+
+  std::sort(VLIWPipeNames.begin(), VLIWPipeNames.end());
+  VLIWPipeNames.erase( std::unique( VLIWPipeNames.begin(), VLIWPipeNames.end() ),
+                       VLIWPipeNames.end() );
+  return VLIWPipeNames.size();
+}
+
 std::vector<std::string> CoreGenSigMap::GetVLIWPipeStages(){
   std::vector<std::string> VLIWPipeNames;
   for( unsigned i=0; i<Signals.size(); i++ ){
