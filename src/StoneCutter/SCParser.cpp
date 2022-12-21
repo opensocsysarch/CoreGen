@@ -2702,6 +2702,13 @@ Value *BinaryExprAST::codegen() {
   }
 
   Value *VI = nullptr;
+  //ConstantInt::get(SCParser::TheContext, APInt(1,0,false));
+  //llvm::ConstantInt* CI = dyn_cast<llvm::ConstantInt>(R);
+  //ConstantInt *TCI = dyn_cast<ConstantInt>(R);
+  //if( R ){
+  //  Constant *CI = llvm::ConstantInt::get(LT,TCI->getSExtValue(),true);
+  //  R = dyn_cast<Value>(CI);
+  //}
 
   if( LT->isFloatingPointTy() ){
     // float ops
@@ -2856,6 +2863,15 @@ Value *CallExprAST::codegen() {
     ArgsV.push_back(Args[i]->codegen());
     if (!ArgsV.back())
       return nullptr;
+  }
+  for( unsigned i=0; i<ArgsV.size(); i++ ){
+    if( ArgsV[i]->getType()->isIntegerTy() ){
+      // found an integer type
+      if( ArgsV[i]->getType()->getIntegerBitWidth() != 64 ){
+        // mutate the type
+        ArgsV[i]->mutateType(Type::getInt64Ty(SCParser::TheContext));
+      }
+    }
   }
 
   Value *CI = SCParser::Builder.CreateCall(CalleeF, ArgsV, "calltmp");

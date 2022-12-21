@@ -1781,11 +1781,13 @@ bool SCChiselCodeGen::ExecuteVLIWUcodeCodegen(CoreGenSigMap *SM,
   // - ILLEGAL : illegal operation
   // - UNIMPL : unimplemented instruction
   // - INIT_PC : init the PC
+#if 0
   WriteVLIWFETCHUOp(LOutFile, PInfo);
   WriteVLIWNOPUOp(LOutFile, PInfo);
   WriteVLIWILLEGALUOp(LOutFile, PInfo);
   WriteVLIWUNIMPLUOp(LOutFile, PInfo);
   WriteVLIWINITPCUOp(LOutFile, PInfo);
+#endif
 
   // Stage 2: for each instruction in the signal map,
   //          walk the list of signals and generate the uOp
