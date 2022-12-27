@@ -621,8 +621,11 @@ private:
   /// Handles top-level expressions
   void HandleTopLevelExpression();
 
-  // Handles function closing
+  /// Handles function closing
   void HandleFuncClose();
+
+  /// Handles lexer errors
+  void HandleLexerError();
 
   /// Retrieves the actual line number
   unsigned GetLineNum();

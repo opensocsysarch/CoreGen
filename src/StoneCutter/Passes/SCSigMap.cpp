@@ -521,6 +521,76 @@ signed SCSigMap::GetBranchDistance(Function &F, Instruction &BI, Instruction &Ta
   return TargetID - SourceID;
 }
 
+bool SCSigMap::RecursiveBranchType(Function &F, Instruction &I,
+                                   Value *V, SigType &Type){
+  for( auto &BB : F.getBasicBlockList() ){
+    if( !F.isDeclaration() ){
+      for( auto &Inst : BB.getInstList() ){
+        Value *LHS = cast<Value>(&Inst);
+        if( LHS == V ){
+          // found a possible match
+          auto *CI = dyn_cast<CmpInst>(&Inst);
+          if(CI){
+            switch( CI->getPredicate() ){
+            case CmpInst::FCMP_UNO:
+            case CmpInst::FCMP_ORD:
+            case CmpInst::FCMP_ONE:
+            case CmpInst::FCMP_FALSE:
+            case CmpInst::FCMP_UNE:
+            case CmpInst::ICMP_NE:
+              Type = BR_NE;
+              break;
+            case CmpInst::FCMP_TRUE:
+            case CmpInst::FCMP_UEQ:
+            case CmpInst::FCMP_OEQ:
+            case CmpInst::ICMP_EQ:
+              Type = BR_EQ;
+              break;
+            case CmpInst::FCMP_OGT:
+            case CmpInst::ICMP_SGT:
+              Type = BR_GT;
+              break;
+            case CmpInst::FCMP_OGE:
+            case CmpInst::ICMP_SGE:
+              Type = BR_GE;
+              break;
+            case CmpInst::FCMP_OLT:
+            case CmpInst::ICMP_SLT:
+              Type = BR_LT;
+              break;
+            case CmpInst::FCMP_OLE:
+            case CmpInst::ICMP_SLE:
+              Type = BR_LE;
+              break;
+            case CmpInst::FCMP_UGT:
+            case CmpInst::ICMP_UGT:
+              Type = BR_GTU;
+              break;
+            case CmpInst::FCMP_UGE:
+            case CmpInst::ICMP_UGE:
+              Type = BR_GEU;
+              break;
+            case CmpInst::FCMP_ULT:
+            case CmpInst::ICMP_ULT:
+              Type = BR_LTU;
+              break;
+            case CmpInst::FCMP_ULE:
+            case CmpInst::ICMP_ULE:
+              Type = BR_LEU;
+              break;
+            default:
+              Type = BR_N;
+              break;
+            }
+            return true;
+          }//else, ignore it
+        }
+      }
+    }
+  }
+  return false;
+}
+
 SigType SCSigMap::GetBranchType(Function &F, Instruction &I){
   SigType Type = BR_N;          // default type
   Value *V = I.getOperand(0);   // conditional branch var
@@ -536,57 +606,69 @@ SigType SCSigMap::GetBranchType(Function &F, Instruction &I){
         if( V == LHS ){
           // found the initial cmp operation
           auto *CI = dyn_cast<CmpInst>(&Inst);
-
-          switch( CI->getPredicate() ){
-          case CmpInst::FCMP_UNO:
-          case CmpInst::FCMP_ORD:
-          case CmpInst::FCMP_ONE:
-          case CmpInst::FCMP_FALSE:
-          case CmpInst::FCMP_UNE:
-          case CmpInst::ICMP_NE:
-            return BR_NE;
-            break;
-          case CmpInst::FCMP_TRUE:
-          case CmpInst::FCMP_UEQ:
-          case CmpInst::FCMP_OEQ:
-          case CmpInst::ICMP_EQ:
-            return BR_EQ;
-            break;
-          case CmpInst::FCMP_OGT:
-          case CmpInst::ICMP_SGT:
-            return BR_GT;
-            break;
-          case CmpInst::FCMP_OGE:
-          case CmpInst::ICMP_SGE:
-            return BR_GE;
-            break;
-          case CmpInst::FCMP_OLT:
-          case CmpInst::ICMP_SLT:
-            return BR_LT;
-            break;
-          case CmpInst::FCMP_OLE:
-          case CmpInst::ICMP_SLE:
-            return BR_LE;
-            break;
-          case CmpInst::FCMP_UGT:
-          case CmpInst::ICMP_UGT:
-            return BR_GTU;
-            break;
-          case CmpInst::FCMP_UGE:
-          case CmpInst::ICMP_UGE:
-            return BR_GEU;
-            break;
-          case CmpInst::FCMP_ULT:
-          case CmpInst::ICMP_ULT:
-            return BR_LTU;
-            break;
-          case CmpInst::FCMP_ULE:
-          case CmpInst::ICMP_ULE:
-            return BR_LEU;
-            break;
-          default:
-            return BR_N;
-            break;
+          if( !CI ){
+            // this is not a compare instruction
+            // in which case, we need to walk up the def-use tree
+            // to find the last compare instruction with a target operand
+            // used in this chain
+            for( unsigned op=1; op < Inst.getNumOperands(); op++ ){
+              Value *TmpV = Inst.getOperand(op);
+              if( RecursiveBranchType(F,I,TmpV, Type) ){
+                return Type;
+              }
+            }
+          }else{
+            switch( CI->getPredicate() ){
+            case CmpInst::FCMP_UNO:
+            case CmpInst::FCMP_ORD:
+            case CmpInst::FCMP_ONE:
+            case CmpInst::FCMP_FALSE:
+            case CmpInst::FCMP_UNE:
+            case CmpInst::ICMP_NE:
+              return BR_NE;
+              break;
+            case CmpInst::FCMP_TRUE:
+            case CmpInst::FCMP_UEQ:
+            case CmpInst::FCMP_OEQ:
+            case CmpInst::ICMP_EQ:
+              return BR_EQ;
+              break;
+            case CmpInst::FCMP_OGT:
+            case CmpInst::ICMP_SGT:
+              return BR_GT;
+              break;
+            case CmpInst::FCMP_OGE:
+            case CmpInst::ICMP_SGE:
+              return BR_GE;
+              break;
+            case CmpInst::FCMP_OLT:
+            case CmpInst::ICMP_SLT:
+              return BR_LT;
+              break;
+            case CmpInst::FCMP_OLE:
+            case CmpInst::ICMP_SLE:
+              return BR_LE;
+              break;
+            case CmpInst::FCMP_UGT:
+            case CmpInst::ICMP_UGT:
+              return BR_GTU;
+              break;
+            case CmpInst::FCMP_UGE:
+            case CmpInst::ICMP_UGE:
+              return BR_GEU;
+              break;
+            case CmpInst::FCMP_ULT:
+            case CmpInst::ICMP_ULT:
+              return BR_LTU;
+              break;
+            case CmpInst::FCMP_ULE:
+            case CmpInst::ICMP_ULE:
+              return BR_LEU;
+              break;
+            default:
+              return BR_N;
+              break;
+            }
           }
         }
       }
@@ -872,6 +954,8 @@ bool SCSigMap::CheckSigReq( Function &F, Instruction &I ){
   // For each one of the relevant signals decoded, generate a signal map
   // and push it into the master vector of signals
   // Decode everything else
+  //DEBUG: this->PrintMsg( L_WARN, "Generating signals for Func:Op = " +
+  //                F.getName().str() + ":" + std::string(I.getOpcodeName()) );
   switch( I.getOpcode() ){
     // binary signals
   case Instruction::Add :
@@ -1213,6 +1297,7 @@ bool SCSigMap::DiscoverSigMap(){
   // Walk all the functions
   for( auto &Func : TheModule->getFunctionList() ){
     // walk all the basic blocks
+    //DEBUG: this->PrintMsg( L_WARN, "SigMap Func = " + Func.getName().str() );
     for( auto &BB : Func.getBasicBlockList() ){
       // determine whether we need to handle VLIW staging
       if( IsVLIWStage(Func) ){

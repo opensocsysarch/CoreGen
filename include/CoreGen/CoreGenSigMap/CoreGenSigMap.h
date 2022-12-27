@@ -113,6 +113,9 @@ public:
   /// Retrieves the number of unique instructions represented in the signal map
   unsigned GetNumInst();
 
+  /// Retrieves the number of unique VLIW pipeline stages in the signal map
+  unsigned GetNumVLIWPipeStages();
+
   /// Retrieves a vector of all the instruction names in the signal map
   std::vector<std::string> GetInstVect();
 

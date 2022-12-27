@@ -2096,6 +2096,13 @@ void SCParser::HandleFuncClose(){
   }
 }
 
+void SCParser::HandleLexerError(){
+  // Print error from lexer
+  LogError(Lex->GetErrorStr());
+  Rtn = false;
+}
+
+
 //===----------------------------------------------------------------------===//
 // Code Generation
 //===----------------------------------------------------------------------===//
@@ -2695,6 +2702,13 @@ Value *BinaryExprAST::codegen() {
   }
 
   Value *VI = nullptr;
+  //ConstantInt::get(SCParser::TheContext, APInt(1,0,false));
+  //llvm::ConstantInt* CI = dyn_cast<llvm::ConstantInt>(R);
+  //ConstantInt *TCI = dyn_cast<ConstantInt>(R);
+  //if( R ){
+  //  Constant *CI = llvm::ConstantInt::get(LT,TCI->getSExtValue(),true);
+  //  R = dyn_cast<Value>(CI);
+  //}
 
   if( LT->isFloatingPointTy() ){
     // float ops
@@ -2849,6 +2863,15 @@ Value *CallExprAST::codegen() {
     ArgsV.push_back(Args[i]->codegen());
     if (!ArgsV.back())
       return nullptr;
+  }
+  for( unsigned i=0; i<ArgsV.size(); i++ ){
+    if( ArgsV[i]->getType()->isIntegerTy() ){
+      // found an integer type
+      if( ArgsV[i]->getType()->getIntegerBitWidth() != 64 ){
+        // mutate the type
+        ArgsV[i]->mutateType(Type::getInt64Ty(SCParser::TheContext));
+      }
+    }
   }
 
   Value *CI = SCParser::Builder.CreateCall(CalleeF, ArgsV, "calltmp");
@@ -3282,7 +3305,7 @@ Function *FunctionAST::codegen() {
 }
 
 Value *IfExprAST::codegen() {
-  
+
   PHINode *PN = nullptr;
   Function *TheFunction = Builder.GetInsertBlock()->getParent();
 
@@ -3347,7 +3370,6 @@ Value *IfExprAST::codegen() {
     TheFunction->getBasicBlockList().push_back(ElseBB);
     Builder.SetInsertPoint(ElseBB);
 
-
     Value *EV = nullptr;
     for( unsigned i=0; i<ElseBody.size(); i++ ){
       EV = ElseBody[i]->codegen();
@@ -3369,7 +3391,10 @@ Value *IfExprAST::codegen() {
     TheFunction->getBasicBlockList().push_back(MergeBB);
     Builder.SetInsertPoint(MergeBB);
 
-
+    // if( !TV ){
+    //   TV = EV;
+    // }
+    //  NOTE: If something is messed up in the control flow for empty if blocks look here
     if( TV->getType()->isFloatingPointTy()){
       if( !PN ){
         PN = Builder.CreatePHI(TV->getType(),
@@ -3380,7 +3405,7 @@ Value *IfExprAST::codegen() {
           PN->setMetadata("pipe.pipeInstance",SCParser::InstanceMDNode);
         }
       }
-    }else{
+    }else if( TV ){
       if( !PN ){
         PN = Builder.CreatePHI(TV->getType(),
                                2, "iftmp."+std::to_string(LocalLabel));

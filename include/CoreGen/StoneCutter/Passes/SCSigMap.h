@@ -106,6 +106,9 @@ private:
   /// Derives the branch type using def-use chains from a source branch instruction
   SigType GetBranchType(Function &F, Instruction &I);
 
+  /// Recursively derives the branch type from SSA target values
+  bool RecursiveBranchType(Function &F, Instruction &I, Value *V, SigType &Type);
+
 public:
   /// Default cosntructor
   SCSigMap(Module *TM, SCOpts *O, SCMsg *M);

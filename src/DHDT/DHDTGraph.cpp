@@ -389,12 +389,10 @@ bool DHDTGraph::AddCallNode(Instruction &Inst,
 
   // handle the rest of the intrinsics
   bool Found = false;
-  unsigned LIntrin = 0;
   for( unsigned i=0; i<Intrins.size(); i++ ){
     if( CInst->getCalledFunction()->getName().str() ==
         Intrins[i]->GetKeyword() ){
       Found = true;
-      LIntrin = i;
     }
   }
 
